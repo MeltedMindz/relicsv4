@@ -1,11 +1,12 @@
 import { getRegistry } from "@/lib/registry";
+import { collectionConfig } from "@config";
 
 export default function AcquirePage() {
   const registry = getRegistry();
 
   return (
     <div>
-      <h1>Acquire the token</h1>
+      <h1>Acquire {collectionConfig.tokenSymbol}</h1>
       <p className="muted">
         The art token trades on a single Uniswap v4 pool. At genesis the whole supply sits in a
         one-sided position: it is executable ask liquidity, with no bid depth until a real buyer

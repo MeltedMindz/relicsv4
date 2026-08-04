@@ -29,12 +29,14 @@ contract DeploymentFlowTest is HookTestBase {
 
     function setUp() public {
         _deployCore();
-        token = new ExampleToken(address(this));
+        token = new ExampleToken("Test Token", "TT", 1_000_000 ether, address(this));
         renderer = new ExampleOnchainRenderer();
         weth = new MintableERC20("Wrapped Ether (mock)", "WETH");
 
         hook = _mineAndDeployHook(address(token));
-        nft = new ExampleArtNFT(address(token), address(hook), address(renderer));
+        nft = new ExampleArtNFT(
+            "Test Art", "TA", 10_000, address(token), address(hook), address(renderer)
+        );
 
         (Currency c0, Currency c1) = _sorted(address(token), address(weth));
         key = _poolKey(hook, c0, c1);
@@ -46,13 +48,13 @@ contract DeploymentFlowTest is HookTestBase {
         // 1) Add two-sided liquidity around the launch tick.
         _addLiquidityMixed(-600, 600, 1e21);
 
-        IExampleHook.GlobalMarketState memory beforeSwap = hook.getGlobalState();
+        IExampleHook.MarketState memory beforeSwap = hook.getMarketState();
         assertEq(beforeSwap.swapCount, 0);
         assertEq(beforeSwap.liquidityEventCount, 1);
 
         // 2) A real swap moves market state (art entropy).
         _buyArt(1e16);
-        IExampleHook.GlobalMarketState memory afterSwap = hook.getGlobalState();
+        IExampleHook.MarketState memory afterSwap = hook.getMarketState();
         assertEq(afterSwap.swapCount, 1);
         assertGt(afterSwap.cumulativeBuyVolume, 0);
 
@@ -64,7 +66,7 @@ contract DeploymentFlowTest is HookTestBase {
 
         // 4) The tokenURI reflects live market state: awaken a second piece and confirm the
         // renderer sees the non-zero swap count via the hook.
-        assertTrue(hook.getGlobalState().swapCount > 0);
+        assertTrue(hook.getMarketState().swapCount > 0);
     }
 
     function test_wiringIsImmutableAndConsistent() public view {

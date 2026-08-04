@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import { ChainConfig } from "./ChainConfig.s.sol";
+import { DeployConfig } from "./config/DeployConfig.s.sol";
 import { console2 } from "forge-std/Script.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IHooks } from "@uniswap/v4-core/src/interfaces/IHooks.sol";
@@ -30,16 +30,18 @@ interface IPermit2Approve {
 ///   LP_RECIPIENT=0x... LAUNCH_TICK=-23040 LIQUIDITY=1000000000000000000000 \
 ///     forge script script/AddLiquidity.s.sol --tc AddLiquidity \
 ///     --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $DEPLOYER_PRIVATE_KEY
-contract AddLiquidity is ChainConfig {
+contract AddLiquidity is DeployConfig {
     function run() external {
         IPositionManager positionManager = IPositionManager(_positionManager());
         address permit2 = vm.envAddress("PERMIT2");
         address artToken = vm.envAddress("ART_TOKEN");
         address weth = _weth();
         address recipient = vm.envAddress("LP_RECIPIENT");
-        int24 launchTick = int24(vm.envInt("LAUNCH_TICK"));
-        uint256 liquidity = vm.envUint("LIQUIDITY");
-        require(launchTick % TICK_SPACING == 0, "LAUNCH_TICK misaligned");
+        uint24 fee = _poolFee();
+        int24 tickSpacing = _tickSpacing();
+        int24 launchTick = _launchTick();
+        uint256 liquidity = _liquidity();
+        require(launchTick % tickSpacing == 0, "LAUNCH_TICK misaligned");
 
         bool artIsCurrency0 = artToken < weth;
         (Currency c0, Currency c1) = artIsCurrency0
@@ -49,16 +51,16 @@ contract AddLiquidity is ChainConfig {
         PoolKey memory key = PoolKey({
             currency0: c0,
             currency1: c1,
-            fee: POOL_FEE,
-            tickSpacing: TICK_SPACING,
+            fee: fee,
+            tickSpacing: tickSpacing,
             hooks: IHooks(vm.envAddress("HOOK"))
         });
 
         // Single-sided range. If the art token is currency0, the active range is
         // [launchTick, maxUsableTick); if currency1, it is (minUsableTick, launchTick]. Here we
         // show the currency0 case; mirror it for currency1 (see docs/12).
-        int24 maxTick = (TickMath.MAX_TICK / TICK_SPACING) * TICK_SPACING;
-        int24 minTick = (TickMath.MIN_TICK / TICK_SPACING) * TICK_SPACING;
+        int24 maxTick = (TickMath.MAX_TICK / tickSpacing) * tickSpacing;
+        int24 minTick = (TickMath.MIN_TICK / tickSpacing) * tickSpacing;
         (int24 tickLower, int24 tickUpper) =
             artIsCurrency0 ? (launchTick, maxTick) : (minTick, launchTick);
 

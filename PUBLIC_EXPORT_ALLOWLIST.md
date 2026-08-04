@@ -7,11 +7,14 @@ inventory with per-file hashes and verdicts is `PUBLIC_EXPORT_MANIFEST.json`.
 
 ## Allowlisted categories (what MAY be in this repo)
 
-1. **Original Solidity source** (`src/**`) — genericized example contracts written for this
-   starter. No production contract source, no production addresses, salts, position ids, pool ids,
-   or tx hashes.
-2. **Original Foundry scripts** (`script/**`) — deployment/verification templates that read all
-   infrastructure addresses from environment variables. No baked-in production address book.
+1. **Original Solidity source** (`src/**`) — genericized example contracts (token, hook, NFT,
+   `RendererBase` + three sample art systems, locker) written for this starter. No production
+   contract source, no production addresses, salts, position ids, pool ids, or tx hashes.
+2. **Original config surface** (`config/collection.config.ts`) — a neutral, editable collection
+   config with empty per-chain address maps. No production addresses.
+3. **Original Foundry scripts** (`script/**`, incl. `script/config/DeployConfig.s.sol`) —
+   parameterized deployment/verification templates that read all identity + infrastructure values
+   from environment variables. No baked-in production address book.
 3. **Original tests** (`test/**`) — unit, fuzz, invariant, fork (self-skipping), and deployment
    integration tests, plus local mocks.
 4. **Original web app** (`apps/web/**`) — a neutral Next.js starter. No production addresses; no

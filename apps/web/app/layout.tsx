@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Nav } from "@/components/Nav";
+import { collectionConfig } from "@config";
 
 export const metadata: Metadata = {
-  title: "relics-v4-starter",
-  description:
-    "Educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not audited, not affiliated with any production collection.",
+  title: collectionConfig.nftName,
+  description: collectionConfig.description,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

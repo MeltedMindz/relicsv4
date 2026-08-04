@@ -1,10 +1,13 @@
+import { collectionConfig } from "@config";
+
 export default function TechnicalPage() {
   return (
     <div>
       <h1>Technical overview</h1>
       <p className="muted">
-        Three contracts, one canonical pool, all metadata on chain. Full write-ups live in the{" "}
-        <code>docs/</code> folder of the repo.
+        Five contracts, one canonical pool, all metadata on chain. This build ships the{" "}
+        <code>{collectionConfig.rendererStyle}</code> art system. Full write-ups live in the{" "}
+        <code>docs/</code> folder — start with <code>docs/00-make-it-your-own.md</code>.
       </p>
 
       <h2>Contracts</h2>

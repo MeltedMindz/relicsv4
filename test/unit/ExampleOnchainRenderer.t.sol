@@ -12,7 +12,7 @@ contract ExampleOnchainRendererTest is Test {
         renderer = new ExampleOnchainRenderer();
     }
 
-    function _emptyMarket() internal pure returns (IExampleHook.GlobalMarketState memory m) {
+    function _emptyMarket() internal pure returns (IExampleHook.MarketState memory m) {
         // all zero
     }
 
@@ -30,12 +30,12 @@ contract ExampleOnchainRendererTest is Test {
 
     function test_deterministicForSameInputs() public view {
         bytes32 dna = keccak256("determinism");
-        IExampleHook.GlobalMarketState memory m = _emptyMarket();
+        IExampleHook.MarketState memory m = _emptyMarket();
         assertEq(renderer.renderSVG(3, dna, m), renderer.renderSVG(3, dna, m));
     }
 
     function test_differentDnaProducesDifferentArt() public view {
-        IExampleHook.GlobalMarketState memory m = _emptyMarket();
+        IExampleHook.MarketState memory m = _emptyMarket();
         string memory a = renderer.renderSVG(3, keccak256("a"), m);
         string memory b = renderer.renderSVG(3, keccak256("b"), m);
         assertTrue(
@@ -45,8 +45,8 @@ contract ExampleOnchainRendererTest is Test {
 
     function test_marketStateModulatesRender() public view {
         bytes32 dna = keccak256("same-dna");
-        IExampleHook.GlobalMarketState memory calm = _emptyMarket();
-        IExampleHook.GlobalMarketState memory stressed = _emptyMarket();
+        IExampleHook.MarketState memory calm = _emptyMarket();
+        IExampleHook.MarketState memory stressed = _emptyMarket();
         stressed.drawdownBand = 5000;
         stressed.volatility = 30;
         stressed.swapCount = 9;
@@ -60,7 +60,7 @@ contract ExampleOnchainRendererTest is Test {
 
     function test_orbitersAreBoundedByMaxCap() public view {
         // Even an absurd swap count must not blow up: the renderer hard-caps orbiters.
-        IExampleHook.GlobalMarketState memory m = _emptyMarket();
+        IExampleHook.MarketState memory m = _emptyMarket();
         m.swapCount = type(uint64).max;
         string memory svg = renderer.renderSVG(1, keccak256("cap"), m);
         assertTrue(_contains(svg, "</text>"), "renders footer despite huge swap count");

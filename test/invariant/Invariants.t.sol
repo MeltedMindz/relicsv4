@@ -48,10 +48,12 @@ contract InvariantsTest is Test {
     address[4] internal actors;
 
     function setUp() public {
-        token = new ExampleToken(address(this));
+        token = new ExampleToken("Test Token", "TT", 1_000_000 ether, address(this));
         renderer = new ExampleOnchainRenderer();
         hook = new MockHook();
-        nft = new ExampleArtNFT(address(token), address(hook), address(renderer));
+        nft = new ExampleArtNFT(
+            "Test Art", "TA", 10_000, address(token), address(hook), address(renderer)
+        );
 
         actors[0] = makeAddr("a0");
         actors[1] = makeAddr("a1");

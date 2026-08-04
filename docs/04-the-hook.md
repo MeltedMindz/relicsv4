@@ -1,7 +1,7 @@
 # 04 — The hook in detail (`ExampleV4Hook`)
 
 `ExampleV4Hook` extends OpenZeppelin's `uniswap-hooks` `BaseHook`. It observes one canonical pool
-and maintains a compact `GlobalMarketState` struct used purely as **art entropy**.
+and maintains a compact `MarketState` struct used purely as **art entropy**.
 
 ## Declared permissions
 
@@ -65,18 +65,29 @@ A spoofed pool — same hook, different fee/currencies — produces a different 
 rejected. Crucially it also checks `key.hooks == address(this)`: a pool that *names* your hook but
 is otherwise different cannot drive your state.
 
-## Bounded state, no NFT work, no rendering
+## Plumbing vs mapping — the one function you customize
 
-`afterSwap` and `afterAddLiquidity` only:
+The callbacks split cleanly into **plumbing** (validate the pool, read the tick, build a normalized
+`MarketEvent`) and **mapping** (turn that event into the next `MarketState`). The mapping is one
+pure function:
 
-- read the current tick via `StateLibrary.getSlot0`,
-- update a **fixed-size** struct (counts, cumulative volumes with saturating adds, high tick,
-  a drawdown band, an EMA volatility, and a rolling entropy hash),
-- emit events.
+```solidity
+function _evolveState(MarketState memory s, MarketEvent memory e) internal view returns (MarketState memory)
+```
 
-There are **no arrays**, **no loops over user input**, **no external calls into untrusted code**,
-**no NFT reads/writes**, and **no renderer calls**. This keeps every swap's hook cost O(1) and
+`_afterSwap` and `_afterAddLiquidity` each build a `MarketEvent` and call `_evolveState`. To change
+how the market drives the art, you edit `_evolveState` and the `CUSTOMIZE` weight constants above
+it — you never touch the PoolKey validation or the callback wiring. See
+[00 — Make it your own](00-make-it-your-own.md).
+
+`_evolveState` only updates a **fixed-size** struct (counts, saturating volumes, high/low tick, a
+drawdown band, a recovery band, an EMA volatility, and a rolling entropy hash) and reads block
+data. There are **no arrays**, **no loops over user input**, **no external calls into untrusted
+code**, **no NFT reads/writes**, and **no renderer calls**. Every swap's hook cost stays O(1) and
 predictable — see lessons in [10](10-twenty-lessons.md).
+
+The holder-growth signal is NOT computed here: it is a token fact, so `ExampleArtNFT` reads
+`token.activeHolderCount()` and injects it into `MarketState.holderCount` at render time.
 
 ## Buy/sell sign convention
 

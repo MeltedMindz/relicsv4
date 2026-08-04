@@ -3,11 +3,11 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not audited; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains no production addresses, keys, proofs, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 107,
+  "fileCount": 114,
   "files": [
     {
       "path": ".env.example",
-      "sha256": "a56f5ce1679c1c4b702803594cb25d6d50f892e5728f9553f08c19eea684005a",
+      "sha256": "ba3f45218daad3ab3ff70273927462c8f43b61a4f2a370a867fc3d3b2d6421d9",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -84,7 +84,7 @@
     },
     {
       "path": "CLAUDE.md",
-      "sha256": "72980b23138c3bd557da4fab6007bd6ee97478390034edfb6a9fac482c9536d6",
+      "sha256": "d0b272915fceff46f06d4597d2e360f0909eff9bda6dabb49984e92d5c7e1535",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -119,14 +119,14 @@
     },
     {
       "path": "PUBLIC_EXPORT_ALLOWLIST.md",
-      "sha256": "2c4774a888a8a7f5d86dd07579ddfdfb346bb86a07a03945d9d52e3af51c93db",
+      "sha256": "9a37135f13f9c363371d4894e120e284370bff5c8cb0a30d893e4bdb379aea0e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "README.md",
-      "sha256": "ea883e97cc8005b2593ba2a7e9f9e3792261bb53a19bbef3acd5bc0a2053d347",
+      "sha256": "13d985a1d83c5e5dfe217b4e6788d77d3fdd606f41c6181106d6ba7c2f358457",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -154,14 +154,14 @@
     },
     {
       "path": "apps/web/app/acquire/page.tsx",
-      "sha256": "35b5142d0d8b96c77797b2a242f36647e21dafdef1b276056d1443675530095d",
+      "sha256": "78220698bb23e90a0364291b837a9edf81f72a7c02a9a36f01cce278aa98a021",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "apps/web/app/explore/page.tsx",
-      "sha256": "3e35e7eb3c2726db02aaa4c951142df60c34c9796a421a32d4ca16e482820d44",
+      "sha256": "7310fa085fee4ef68757a80466f509d2eb6dc034147d432dc96262c81a0a2473",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -175,7 +175,7 @@
     },
     {
       "path": "apps/web/app/layout.tsx",
-      "sha256": "ebced59c8b0cfc23ddc62d1404aceb2c76935aa30cf2496451c689ada519da13",
+      "sha256": "05ada3990591b12983cd992364eeac60f2ca065fa0c74a73c6a6c11d94621140",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -189,21 +189,21 @@
     },
     {
       "path": "apps/web/app/page.tsx",
-      "sha256": "0f1db10c0f17750367202e53306b9ed2ae6c0a4ea2fbf4f0209439a89f07ed1c",
+      "sha256": "bace60b2acd2c425cb9e05e1c17c9cfe51d1ce2ff60701078da85132276d9b54",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "apps/web/app/technical/page.tsx",
-      "sha256": "6b645dfd5e560f10ecfaf14d1c7f920257dac49b8d8491b128bb57c33716816f",
+      "sha256": "3b87cc8e6ad2b603a8decc0f5f107a450a915121362ccc800cf96a88d06f969e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "apps/web/components/Nav.tsx",
-      "sha256": "b02a489ea3f398c60072853a41e011e8dd0ca43d365dcb834b96ececd76853fe",
+      "sha256": "f48c62db102d1cfb4253a4e9fc3e1200a539925406405c62e274d40a28807032",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -238,14 +238,14 @@
     },
     {
       "path": "apps/web/lib/abis.ts",
-      "sha256": "ad8c7a2f0f2d67070b7a0d445ac816d16811378d12301fa1925284d3818b35a8",
+      "sha256": "13d7c774a9c91a2117a498062a6a5e2de62db7efcab3f8cb42b9885a3fd8f7b1",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "apps/web/lib/env.ts",
-      "sha256": "8bf90a1518b4c800df6338d9d85a0d495814f30bf1237fec37d54c23fe4f1d58",
+      "sha256": "f7b368b366bd7728a80ef8fa9832437ef8f84907608809cf7a6af9bccc7d62d8",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -259,14 +259,14 @@
     },
     {
       "path": "apps/web/lib/fixtures.ts",
-      "sha256": "47fef73e042452287080d2c3edc569157a27c8daa104e087f53cc371de1fb2db",
+      "sha256": "8b0afabb7800616260c2d2bd222801b0bf2883a3a3d0b75e1a8e265228e540ad",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "apps/web/lib/registry.ts",
-      "sha256": "3cf41fad474833f92213f4398128e574c9ce479f6e1408c940a6cbc818d51455",
+      "sha256": "1a43d378102f53c102e6d983357fa77ac100e979454c1737b98741191afee24a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -301,7 +301,7 @@
     },
     {
       "path": "apps/web/tests/smoke.spec.ts",
-      "sha256": "3687e772184ce3bb78c3a5fdacbbeb824c916a933f5c7b4688f6c8c7bb769091",
+      "sha256": "49510898c03cdd73be0fed04e164631cfc3f18dc38a4638eb81501be85538bfc",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -315,14 +315,28 @@
     },
     {
       "path": "apps/web/tsconfig.json",
-      "sha256": "0a8886de0ab3b77157ae6024887a02a0a1abb264f2185ef8e3e23015e5cc082f",
+      "sha256": "2fc4d8087513d3c084421614f35d2b904680909961644deccbbecf8a9e00adfa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "config/collection.config.ts",
+      "sha256": "186027c511eeed28fea0a3b5b5d3f162abe312ecdd3bcf2117346f173ba0b6c3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/00-make-it-your-own.md",
+      "sha256": "795693118652b2bf2a2e3bf31e91258742ba5749aa0f5e1680c82d77749748ec",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/01-system-overview.md",
-      "sha256": "515bf21a43284f142e1e56493651ff22c2a53fddf18bec4fe28007769b0e2f07",
+      "sha256": "975e2163d16448197e3fad8880f7f82d43e7e680f66816eba8256d73b753730a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -343,7 +357,7 @@
     },
     {
       "path": "docs/04-the-hook.md",
-      "sha256": "268b38a99208d4363e3928b70ee58285215582f0954437941ea71c6dd3932c01",
+      "sha256": "f8b2a35800f6a35c64175789379eaad8a3902c7f77022f3e0d8dfc3ed820c246",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -357,14 +371,14 @@
     },
     {
       "path": "docs/06-onchain-renderer.md",
-      "sha256": "4ed845e5a225a37c7cdd4f9d1efdab3c186b3b1f0c9be6d2c69fdfc67759c654",
+      "sha256": "2905fd3cbe3ba55fd0e65320b9ff03127a48b0fe13b43467ded81e4eb39e37c5",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/07-market-state-as-art.md",
-      "sha256": "819b2f3ef2664c467672980fdfc95f1716b14de995b26a883fbe58e26afbdc53",
+      "sha256": "5f1960e89570cad136e0a42596c1f59e49d1e67641be07b42b26b6e942cf6419",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -511,14 +525,14 @@
     },
     {
       "path": "script/AddLiquidity.s.sol",
-      "sha256": "c688a77cb1be09a122f365530ac136148cc3a8338641d1441e5bc5fb7a8d15f5",
+      "sha256": "d464cb075858365251fbc0ef4b2e2818b6747ebe392e2205e3ba12d34c1d0867",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "script/BindAndCreatePool.s.sol",
-      "sha256": "53dd35b0d25220872a99436bc99043aeb2f50d51611c8b4966a2eae60d955a80",
+      "sha256": "36071b5a3b48da4ab90f90ff39f2ca1b33990a48efc029e3484f418e87290620",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -532,14 +546,14 @@
     },
     {
       "path": "script/DeployExample.s.sol",
-      "sha256": "55355c7f3e204843ea2256cc8d5135f8912000a7fc2087c1246a4904c96fad5b",
+      "sha256": "dfd3e1a48dc04aef5c7e86990045d8c5667976f980002af33c6b337078fa6607",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "script/GenerateExamples.s.sol",
-      "sha256": "e3ee872ab1b9720ca96ddbb4c462ed52ba45e347d895a31b02fd59605c6c6792",
+      "sha256": "db03d81cefbcb524c3372967d6bbc5969e7ea62b1bf1ea26592c63c406776330",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -561,6 +575,13 @@
     {
       "path": "script/VerifyDeployment.s.sol",
       "sha256": "2783839a8c0651606ee8791ed079fee606b87acb38fec1580644c80f004fd7ea",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "script/config/DeployConfig.s.sol",
+      "sha256": "5cfe3dbb1e39fa0b5ed9f6ecfeccae9e8909bdc27e57a38ede8ce9d8c2d77158",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -588,28 +609,28 @@
     },
     {
       "path": "src/ExampleArtNFT.sol",
-      "sha256": "7fa4530004262e440fc552ac782c9f4101f64fb69918dd7e141d193f4931435c",
+      "sha256": "5697ca5fa158105d8e730ec906baa79d4ebf4ff1ec8785b88e6bb4880b9fd047",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "src/ExampleOnchainRenderer.sol",
-      "sha256": "7e9dc389c7619bcb6fe50a941c1bf0d6d6f4c6b4ca473609edcc786b8f550fe3",
+      "sha256": "de3d5102dc8a56bb3a813ce01d5c1d50fb56ee7f8eb23deedb9761985b68446f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "src/ExampleToken.sol",
-      "sha256": "2486c74f057369267d1b03f80e604187528ed0e9a981668c0b12f23794371bda",
+      "sha256": "60d441020b64bfd2ae8f0f1a73f950f17068444f2f558d7b8e6728f2d72c7763",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "src/ExampleV4Hook.sol",
-      "sha256": "f916e988f067370a21bae4e2c51877c0f570e1ce9692f5802cb9cc6d687fd4cf",
+      "sha256": "805a25824b427307f23d8c16dad91750268168adfc727f5adf59749348bf58d4",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -617,6 +638,27 @@
     {
       "path": "src/ImmutablePositionLocker.sol",
       "sha256": "b5e86baab9efd07439c2c6a9cd68593c5f4a04b01899db659c21ef157c1a2fdd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "src/OrbitalRenderer.sol",
+      "sha256": "4ddc83e76488f45f0f479b7221ae5627551975578ce38acb46f58eecf355220c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "src/RendererBase.sol",
+      "sha256": "27e7257472dd72db216c677a7544ec75034262741e5356cccc1aaa8d4760afd6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "src/StrataRenderer.sol",
+      "sha256": "814e3f23de795a8191159cc61a5dc1bde781677dfe37568407627e798b08625a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -630,14 +672,14 @@
     },
     {
       "path": "src/interfaces/IExampleHook.sol",
-      "sha256": "48ba05ff6e55bd427e4fae6de7140575d2e3f43f509e30ef7f6be6886338a45e",
+      "sha256": "c7f70f4ab71736193c88819d708d2cffefdc7522bf9d9de4803bf35d8f25ba21",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "src/interfaces/IExampleRenderer.sol",
-      "sha256": "571998f418ea1001dac8307fa281813ca323481eba6180ebb5f0c4922d3ff312",
+      "sha256": "057e1e9a642659e85df68655f53ac1283b32d86911b69add746e346a6fa38dec",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -665,7 +707,7 @@
     },
     {
       "path": "test/deployment/DeploymentFlow.t.sol",
-      "sha256": "ee51db406015fc833666d8066eeecd4dc90a74ac22740c9458e01c4fb0e194d2",
+      "sha256": "f4f333c4e760e9afd6a48a1215c1660af40e9172b863ef5adeb2e0ef9b3a615b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -679,14 +721,14 @@
     },
     {
       "path": "test/fuzz/Fuzz.t.sol",
-      "sha256": "465ac5728906371222b0126a9ff7b65af7c0f02d26b62b5d1eef665bb4484d08",
+      "sha256": "30fb5f53836b184de36388be704c1a0f8e58e6a7b35fdd85485aa837d460a95c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "test/invariant/Invariants.t.sol",
-      "sha256": "52d89c551cb9e7b69039d8bd6e003d8fd4a2618fc9e62acf678f93be11851bef",
+      "sha256": "8bd52e7ef8a26682e39523f464973421caab51736988420ba330d5f93452cb59",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -700,7 +742,7 @@
     },
     {
       "path": "test/mocks/MockHook.sol",
-      "sha256": "8108e9df02f088800e0e1b25eec2ec39c3b0d0b2ebfc69c1cf2c5a8b4a87db2e",
+      "sha256": "9eba810d52e6c19c1c1cf3ecd311b765eb3ccd788b61c039c0c7850cf840d64a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -714,28 +756,28 @@
     },
     {
       "path": "test/unit/ExampleArtNFT.t.sol",
-      "sha256": "3bc444f3e096bb8c347615f06e1a8ce9d52e6e35f8d68c1f4512e4e182a6bd63",
+      "sha256": "428771613250df3d82908996e4f1d47ba922d25c6f47ffde5df69d4503413850",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "test/unit/ExampleOnchainRenderer.t.sol",
-      "sha256": "90e19a7938d5dbf461386a63275c7e97e6ca7663294ae2da25a09557be11dcb3",
+      "sha256": "307ca8490012b9a99a4a08940c525e40810669cebc712e2781399479cdca7676",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "test/unit/ExampleToken.t.sol",
-      "sha256": "23bda47440450fa87909447cc1b607b0b857c06513a6fca7b140e0b411fef855",
+      "sha256": "a4e8906c7073fc561be7dfee8623023fdffca7e9f818d0ee9905e180f76c8f09",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "test/unit/ExampleV4Hook.t.sol",
-      "sha256": "845a6d9b4b2dbd1e5aed75a3888642780bf2e99219d8ba55d04cfcf75c437d73",
+      "sha256": "28b65c6b86c11f7e81b23ec091e7795703c640a1ae8139d8401458462c761356",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -743,6 +785,13 @@
     {
       "path": "test/unit/ImmutablePositionLocker.t.sol",
       "sha256": "8f575470cd13684c92d136351c2799448b03cbe93b8ba20cbbb7e94f858daec9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "test/unit/Renderers.t.sol",
+      "sha256": "077bd9b2275b5ce41bab051ffabcee324c9494c5a3d8d78b55dd152c321b3f61",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

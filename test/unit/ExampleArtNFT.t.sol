@@ -18,15 +18,17 @@ contract ExampleArtNFTTest is Test {
     address internal alice = makeAddr("alice");
 
     function setUp() public {
-        token = new ExampleToken(deployer);
+        token = new ExampleToken("Test Token", "TT", 1_000_000 ether, deployer);
         renderer = new ExampleOnchainRenderer();
         hook = new MockHook();
-        nft = new ExampleArtNFT(address(token), address(hook), address(renderer));
+        nft = new ExampleArtNFT(
+            "Test Art", "TA", 10_000, address(token), address(hook), address(renderer)
+        );
     }
 
     function test_constructorRejectsZeroDeps() public {
         vm.expectRevert(ExampleArtNFT.ZeroAddress.selector);
-        new ExampleArtNFT(address(0), address(hook), address(renderer));
+        new ExampleArtNFT("Test Art", "TA", 10_000, address(0), address(hook), address(renderer));
     }
 
     function test_inflowDoesNotMint() public {

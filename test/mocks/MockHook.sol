@@ -6,13 +6,13 @@ import { IExampleHook } from "../../src/interfaces/IExampleHook.sol";
 /// @dev A settable IExampleHook stand-in so NFT/renderer tests do not need a CREATE2-mined,
 /// PoolManager-bound real hook. The real hook is exercised in ExampleV4Hook.t.sol.
 contract MockHook is IExampleHook {
-    GlobalMarketState internal _state;
+    MarketState internal _state;
 
-    function setState(GlobalMarketState calldata s) external {
+    function setState(MarketState calldata s) external {
         _state = s;
     }
 
-    function getGlobalState() external view returns (GlobalMarketState memory) {
+    function getMarketState() external view returns (MarketState memory) {
         return _state;
     }
 

@@ -1,12 +1,12 @@
 import { publicEnv, readAddress, readChainId } from "./env";
+import { collectionConfig, type ChainAddresses } from "@config";
 
 /**
- * Fail-closed contract registry. If an address is unset or a zero placeholder, the app treats
- * that surface as "not configured" and renders an honest empty state — it never invents data,
- * and it never shows a production-looking address it does not actually have.
- *
- * There are NO production addresses baked into this starter. You point it at YOUR deployment
- * via NEXT_PUBLIC_* env vars (see .env.example). Local Anvil is the default chain.
+ * Fail-closed contract registry. Addresses come from TWO places, in priority order:
+ *   1. NEXT_PUBLIC_* env vars (runtime override — handy for previews / per-deploy hosting), then
+ *   2. `config/collection.config.ts` -> `addressesByChain[chainId]` (the committed source).
+ * If neither provides a valid, non-placeholder address, that surface is "not configured" and the
+ * UI renders an honest empty state. There are NO production addresses baked into this starter.
  */
 export interface Registry {
   chainId: number;
@@ -18,24 +18,28 @@ export interface Registry {
   configured: boolean;
 }
 
+function bytes32(value: string | undefined): `0x${string}` | undefined {
+  if (value && /^0x[0-9a-fA-F]{64}$/.test(value.trim())) return value.trim() as `0x${string}`;
+  return undefined;
+}
+
 export function getRegistry(): Registry {
-  const token = readAddress(publicEnv.tokenAddress);
-  const nft = readAddress(publicEnv.nftAddress);
-  const hook = readAddress(publicEnv.hookAddress);
-  const renderer = readAddress(publicEnv.rendererAddress);
-  const poolId =
-    publicEnv.poolId && /^0x[0-9a-fA-F]{64}$/.test(publicEnv.poolId.trim())
-      ? (publicEnv.poolId.trim() as `0x${string}`)
-      : undefined;
+  const chainId = readChainId();
+  const fromConfig: ChainAddresses = collectionConfig.addressesByChain[chainId] ?? {};
+
+  const token = readAddress(publicEnv.tokenAddress) ?? fromConfig.token;
+  const nft = readAddress(publicEnv.nftAddress) ?? fromConfig.nft;
+  const hook = readAddress(publicEnv.hookAddress) ?? fromConfig.hook;
+  const renderer = readAddress(publicEnv.rendererAddress) ?? fromConfig.renderer;
+  const poolId = bytes32(publicEnv.poolId) ?? fromConfig.poolId;
 
   return {
-    chainId: readChainId(),
+    chainId,
     token,
     nft,
     hook,
     renderer,
     poolId,
-    // "Configured enough to read the collection" == token + nft present.
     configured: Boolean(token && nft),
   };
 }

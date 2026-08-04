@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import { ChainConfig } from "./ChainConfig.s.sol";
+import { DeployConfig } from "./config/DeployConfig.s.sol";
 import { console2 } from "forge-std/Script.sol";
 import { IPoolManager } from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
 import { IHooks } from "@uniswap/v4-core/src/interfaces/IHooks.sol";
@@ -17,14 +17,16 @@ import { ExampleV4Hook } from "../src/ExampleV4Hook.sol";
 ///   POOL_MANAGER=0x... HOOK=0x... ART_TOKEN=0x... WETH=0x... LAUNCH_TICK=-23040 \
 ///     forge script script/BindAndCreatePool.s.sol --tc BindAndCreatePool \
 ///     --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $HOOK_OWNER_PRIVATE_KEY
-contract BindAndCreatePool is ChainConfig {
+contract BindAndCreatePool is DeployConfig {
     function run() external {
         IPoolManager poolManager = IPoolManager(_poolManager());
         ExampleV4Hook hook = ExampleV4Hook(vm.envAddress("HOOK"));
         address artToken = vm.envAddress("ART_TOKEN");
         address weth = _weth();
-        int24 launchTick = int24(vm.envInt("LAUNCH_TICK"));
-        require(launchTick % TICK_SPACING == 0, "LAUNCH_TICK must be a multiple of tickSpacing");
+        uint24 fee = _poolFee();
+        int24 tickSpacing = _tickSpacing();
+        int24 launchTick = _launchTick();
+        require(launchTick % tickSpacing == 0, "LAUNCH_TICK must be a multiple of tickSpacing");
 
         (Currency c0, Currency c1) = artToken < weth
             ? (Currency.wrap(artToken), Currency.wrap(weth))
@@ -33,8 +35,8 @@ contract BindAndCreatePool is ChainConfig {
         PoolKey memory key = PoolKey({
             currency0: c0,
             currency1: c1,
-            fee: POOL_FEE,
-            tickSpacing: TICK_SPACING,
+            fee: fee,
+            tickSpacing: tickSpacing,
             hooks: IHooks(address(hook))
         });
         uint160 sqrtPriceX96 = TickMath.getSqrtPriceAtTick(launchTick);
@@ -45,8 +47,8 @@ contract BindAndCreatePool is ChainConfig {
             poolId,
             Currency.unwrap(c0),
             Currency.unwrap(c1),
-            POOL_FEE,
-            TICK_SPACING,
+            fee,
+            tickSpacing,
             sqrtPriceX96,
             launchTick
         );

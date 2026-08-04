@@ -1,27 +1,38 @@
-# 06 — The on-chain renderer (`ExampleOnchainRenderer`)
+# 06 — The on-chain renderer (three systems + your own)
 
-The renderer is a **pure/view** contract with no storage and no owner. Given `(tokenId, dna,
+A renderer is a **pure/view** contract with no storage and no owner. Given `(tokenId, dna,
 marketState)` it returns a complete `data:application/json;base64,...` URI containing a base64
-SVG. Determinism + immutable DNA is what makes the collection verifiable: anyone can recompute
-the exact bytes.
+SVG. Determinism + immutable DNA is what makes the collection verifiable: anyone can recompute the
+exact bytes.
 
-## Neutral placeholder identity
+## Three sample systems + a single seam
 
-The visual language here — concentric rings around a rotating polygon "core", tinted by market
-state — is a **generic starter identity**. It is **not** the art of any production collection.
-Replace `_svg`, the palettes, and `libraries/ArtDNA.sol` with your own visual language.
+This starter ships **three distinct art systems** so the range is obvious, all built on
+[`RendererBase`](../src/RendererBase.sol):
 
-## How it composes
+| Contract | Style | Leans on |
+| --- | --- | --- |
+| `ExampleOnchainRenderer` | **Sigil** — rings + rotating polygon core | volatility, drawdown, recovery, swaps |
+| `StrataRenderer` | **Strata** — market history as sediment bands | epoch, buy/sell, drawdown, recovery |
+| `OrbitalRenderer` | **Orbital** — nucleus + orbiting bodies | holders, swaps, volatility, drawdown |
 
+`RendererBase` does the JSON + base64 + 500×500 canvas wrapping and provides shared palette/number
+helpers. Each concrete renderer implements ONE seam:
+
+```solidity
+function _renderArt(uint256 tokenId, bytes32 dna, MarketState memory market)
+    internal pure override returns (string memory);
 ```
-ArtDNA.decode(dna)  ->  palette, sides, ringCount, rotation, coreScale, jitter
-Trig.cosDir/sinDir  ->  polygon vertex geometry (no floats; 15° snapping)
-marketState         ->  volatility twists the core; drawdownBand fades the accent;
-                        swapCount adds orbiting marks (HARD-CAPPED)
-```
 
-The key on-chain-art discipline: **market activity can add detail, but the render cost must not
-grow without bound.** Orbiting marks are capped at `MAX_ORBITERS = 12`, and ring/vertex counts
+**Bring your own art:** extend `RendererBase`, implement `_renderArt` (and optionally
+`_styleName` / `_description` / `_attributes`), deploy it, and point the NFT at it. Pick a shipped
+style with `RENDERER_STYLE` / `config.rendererStyle`. These are **neutral placeholder identities**,
+not the art of any production collection — replace them.
+
+## The discipline: bounded, no floats
+
+**Market activity can add detail, but the render cost must not grow without bound.** Every
+market-driven loop is hard-capped (orbiters/bodies ≤ 12–16, bands ≤ 16), and ring/vertex counts
 come from DNA ranges (2–6 rings, 3–8 sides). No loop iterates over unbounded input.
 
 ## No floats on the EVM

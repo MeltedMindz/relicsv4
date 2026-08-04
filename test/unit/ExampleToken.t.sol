@@ -11,7 +11,7 @@ contract ExampleTokenTest is Test {
     address internal bob = makeAddr("bob");
 
     function setUp() public {
-        token = new ExampleToken(deployer);
+        token = new ExampleToken("Example Onchain Token", "EXON", 1_000_000 ether, deployer);
     }
 
     function test_fixedSupplyMintedToInitialHolder() public view {
@@ -22,8 +22,13 @@ contract ExampleTokenTest is Test {
     }
 
     function test_constructorRejectsZeroHolder() public {
-        vm.expectRevert(bytes("EXON: zero holder"));
-        new ExampleToken(address(0));
+        vm.expectRevert(ExampleToken.ZeroHolder.selector);
+        new ExampleToken("Example Onchain Token", "EXON", 1_000_000 ether, address(0));
+    }
+
+    function test_constructorRejectsZeroSupply() public {
+        vm.expectRevert(ExampleToken.ZeroSupply.selector);
+        new ExampleToken("Example Onchain Token", "EXON", 0, deployer);
     }
 
     function test_noMintFunctionExists() public view {

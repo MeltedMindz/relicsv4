@@ -9,6 +9,8 @@
  *
  * Nothing secret belongs here. Only NEXT_PUBLIC_* values, which are public by definition.
  */
+import { collectionConfig } from "@config";
+
 export const publicEnv = {
   chainId: process.env.NEXT_PUBLIC_CHAIN_ID,
   rpcUrl: process.env.NEXT_PUBLIC_RPC_URL,
@@ -31,8 +33,12 @@ export function readAddress(value: string | undefined): `0x${string}` | undefine
   return v as `0x${string}`;
 }
 
-/** The configured chain id, defaulting to a local Anvil chain (31337). */
+/**
+ * The active chain id: NEXT_PUBLIC_CHAIN_ID overrides, else the config's default. Imported here
+ * (not passed around) to keep a single source of truth for the default.
+ */
 export function readChainId(): number {
   const parsed = Number.parseInt(publicEnv.chainId ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 31337;
+  if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  return collectionConfig.defaultChainId;
 }

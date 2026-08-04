@@ -1,15 +1,22 @@
 # CLAUDE.md — relics-v4-starter
 
-> Project memory for anyone (human or AI) working on this **public, clean-room educational
-> starter**. This is not the memory of any private project; it is original to this repo.
+> Project memory for anyone (human or AI) working on this **public, clean-room, fork-and-launch
+> template**. This is not the memory of any private project; it is original to this repo.
 
 ## What this repo is
 
-A teaching starter for **fully on-chain generative art driven by a Uniswap v4 hook**. Five
-contracts: `ExampleToken` (fixed-supply ERC-20), `ExampleV4Hook` (observes one canonical pool),
-`ExampleArtNFT` (ERC-721, on-chain metadata, explicit awakening), `ExampleOnchainRenderer`
-(deterministic SVG/JSON, neutral placeholder art), `ImmutablePositionLocker` (ownerless LP
-custodian). Plus Foundry scripts/tests and a neutral Next.js app under `apps/web/`.
+A **fork-and-launch template** for fully on-chain generative art linked to an ERC-20, with a
+Uniswap v4 hook turning market activity into live artistic evolution. Contracts: `ExampleToken`
+(fixed-supply ERC-20, constructor-driven identity), `ExampleV4Hook` (observes one canonical pool;
+maps events → `MarketState` in one `_evolveState` seam), `ExampleArtNFT` (ERC-721, on-chain
+metadata, swappable awaken model, injects `holderCount`), `RendererBase` + THREE sample art
+systems (`ExampleOnchainRenderer`/Sigil, `StrataRenderer`, `OrbitalRenderer`) behind a single
+`_renderArt` seam, and `ImmutablePositionLocker` (ownerless LP custodian). Plus parameterized
+Foundry scripts/tests and a config-driven Next.js app.
+
+**Config surface:** `config/collection.config.ts` (web/human) + `.env` → `script/config/DeployConfig.s.sol`
+(contracts). A forker edits these + the `CUSTOMIZE`-marked knobs; nothing else. See
+`docs/00-make-it-your-own.md`.
 
 It is **educational and unaudited**, and **not affiliated** with Uniswap, OpenZeppelin, OpenSea,
 or any production collection. Keep every public word true.
@@ -48,10 +55,12 @@ or any production collection. Keep every public word true.
 
 ## Renderer
 
-Neutral "sigil" identity (rings + rotating polygon), NOT any production art. Deterministic; pure
-`view`. Respect **EIP-170 (24,576 bytes)** — a test pins the runtime size. Measure with
-`forge build --sizes | grep ExampleOnchainRenderer` after every edit. Trig uses 15°-snapped
-integer tables (no floats). All market-driven loops (rings, vertices, orbiters) are hard-capped.
+Three neutral sample systems (Sigil/Strata/Orbital) on `RendererBase`, NOT any production art. The
+seam is `_renderArt(tokenId, dna, market)`; the base does JSON+base64+canvas. Deterministic; pure
+`view`. Respect **EIP-170 (24,576 bytes)** — `test/unit/Renderers.t.sol` pins every renderer's
+size. Measure with `forge build --sizes | grep Renderer` after every edit. Trig uses 15°-snapped
+integer tables (no floats). All market-driven loops (rings, vertices, orbiters, bands, bodies) are
+hard-capped. Add your own by extending `RendererBase`.
 
 ## Web app
 

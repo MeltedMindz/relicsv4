@@ -14,5 +14,6 @@ test("explore page renders local sample sigils and export controls", async ({ pa
 
 test("acquire page fails closed when not configured", async ({ page }) => {
   await page.goto("/acquire");
-  await expect(page.getByText(/Acquire the token/i)).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Acquire/i })).toBeVisible();
+  await expect(page.getByText(/Not configured/i)).toBeVisible();
 });

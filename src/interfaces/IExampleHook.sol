@@ -2,26 +2,32 @@
 pragma solidity ^0.8.26;
 
 /// @title IExampleHook
-/// @notice Read surface + events for the Uniswap v4 hook that maintains compact global
-/// "market state" used purely as ARTISTIC ENTROPY by the renderer.
+/// @notice Read surface + events for the Uniswap v4 hook that turns pool activity into the
+/// `MarketState` used as ARTISTIC ENTROPY by the renderer.
 ///
-/// @dev This is deliberately NOT a price oracle. Every field here is a coarse, cumulative
-/// or bounded signal. None of it must ever gate a financial outcome (payout, mint access,
-/// lottery, reward). See docs/07-market-state-as-art.md.
+/// @dev This is deliberately NOT a price oracle. Every field is a coarse, cumulative, or bounded
+/// signal. None of it must ever gate a financial outcome (payout, mint access, lottery, reward).
+/// See docs/07-market-state-as-art.md.
 interface IExampleHook {
-    /// @notice Compact, single-slot-friendly snapshot of observed pool activity.
-    /// Packed to keep hook callbacks cheap and bounded — no arrays, no per-token work.
-    struct GlobalMarketState {
-        uint64 swapCount; // number of observed swaps on the canonical pool
-        uint64 liquidityEventCount; // number of observed add-liquidity events
+    /// @notice Compact snapshot of the market signals that drive the art.
+    ///
+    /// Each field is a "signal" a renderer can read. To ADD a signal, add a field here, populate
+    /// it in the hook's `_evolveState`, and read it in your renderer. To REMOVE one, stop reading
+    /// it (leaving a field unused is harmless). See docs/00-make-it-your-own.md.
+    struct MarketState {
+        uint64 swapCount; // how many swaps have been observed
+        uint64 liquidityEventCount; // how many add-liquidity events have been observed
+        uint64 epoch; // coarse "age" bucket derived from activity
         uint64 lastActivityBlock; // block.number of the most recent observation
-        uint64 epoch; // coarse "age" bucket derived from activity counts
-        uint128 cumulativeBuyVolume; // cumulative token-in flow (bounded add)
-        uint128 cumulativeSellVolume; // cumulative token-out flow (bounded add)
+        uint128 cumulativeBuyVolume; // cumulative art-token buy flow (saturating)
+        uint128 cumulativeSellVolume; // cumulative art-token sell flow (saturating)
         int24 lastTick; // most recently observed pool tick
         int24 highTick; // highest tick ever observed (all-time-high proxy)
-        uint32 drawdownBand; // 0..10000 how far below highTick we currently sit
-        uint32 volatility; // EMA of tick movement magnitude
+        int24 lowTick; // lowest tick since the last all-time-high (for recovery)
+        uint32 drawdownBand; // 0..10000: how far BELOW highTick we currently sit
+        uint32 recoveryBand; // 0..10000: how far we have climbed back from lowTick
+        uint32 volatility; // EMA of tick-movement magnitude
+        uint64 holderCount; // active token holders (injected by the NFT at render time)
         bytes32 entropy; // rolling hash mixed on every observation
     }
 
@@ -41,10 +47,14 @@ interface IExampleHook {
         bytes32 indexed poolId, int256 liquidityDelta, int24 tick, uint64 liquidityEventCount
     );
     event MarketStateUpdated(
-        uint64 indexed epoch, uint32 drawdownBand, uint32 volatility, bytes32 entropy
+        uint64 indexed epoch,
+        uint32 drawdownBand,
+        uint32 recoveryBand,
+        uint32 volatility,
+        bytes32 entropy
     );
 
-    function getGlobalState() external view returns (GlobalMarketState memory);
+    function getMarketState() external view returns (MarketState memory);
     function canonicalPoolId() external view returns (bytes32);
     function isPoolBound() external view returns (bool);
     function expectedSqrtPriceX96() external view returns (uint160);

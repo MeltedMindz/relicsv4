@@ -40,7 +40,7 @@ contract ExampleV4HookTest is HookTestBase {
     function test_bindThenInitAtExpectedPrice() public {
         (ExampleV4Hook hook, PoolKey memory key,) = _boundPool(address(tokenA), 0);
         assertTrue(hook.isPoolBound());
-        IExampleHook.GlobalMarketState memory s = hook.getGlobalState();
+        IExampleHook.MarketState memory s = hook.getMarketState();
         assertEq(s.lastTick, 0);
         assertEq(s.highTick, 0);
     }
@@ -105,7 +105,7 @@ contract ExampleV4HookTest is HookTestBase {
         // Buy art (currency0): swapper receives currency0 -> zeroForOne = false, exact input.
         _swap(key, false, -1e15);
 
-        IExampleHook.GlobalMarketState memory s = hook.getGlobalState();
+        IExampleHook.MarketState memory s = hook.getMarketState();
         assertEq(s.swapCount, 1);
         assertGt(s.cumulativeBuyVolume, 0);
         assertEq(s.cumulativeSellVolume, 0);
@@ -122,7 +122,7 @@ contract ExampleV4HookTest is HookTestBase {
         // zeroForOne=false means swap currency1 -> currency0, i.e. paying art (currency1): SELL.
         _swap(key, false, -1e15);
 
-        IExampleHook.GlobalMarketState memory s = hook.getGlobalState();
+        IExampleHook.MarketState memory s = hook.getMarketState();
         assertEq(s.swapCount, 1);
         assertGt(s.cumulativeSellVolume, 0);
         assertEq(s.cumulativeBuyVolume, 0);
@@ -131,17 +131,17 @@ contract ExampleV4HookTest is HookTestBase {
     function test_liquidityObservationIncrementsCounter() public {
         (ExampleV4Hook hook, PoolKey memory key,) = _boundPool(address(tokenA), 0);
         _addLiquidity(key, -600, 600, 1e21);
-        IExampleHook.GlobalMarketState memory s = hook.getGlobalState();
+        IExampleHook.MarketState memory s = hook.getMarketState();
         assertEq(s.liquidityEventCount, 1);
     }
 
     function test_entropyChangesOnEveryObservation() public {
         (ExampleV4Hook hook, PoolKey memory key,) = _boundPool(address(tokenA), 0);
-        bytes32 e0 = hook.getGlobalState().entropy;
+        bytes32 e0 = hook.getMarketState().entropy;
         _addLiquidity(key, -600, 600, 1e21);
-        bytes32 e1 = hook.getGlobalState().entropy;
+        bytes32 e1 = hook.getMarketState().entropy;
         _swap(key, false, -1e15);
-        bytes32 e2 = hook.getGlobalState().entropy;
+        bytes32 e2 = hook.getMarketState().entropy;
         assertTrue(e0 != e1 && e1 != e2, "entropy must advance");
     }
 

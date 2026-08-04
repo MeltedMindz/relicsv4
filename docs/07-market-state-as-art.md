@@ -1,17 +1,22 @@
 # 07 — Market state as art (never an oracle)
 
-The hook maintains a compact `GlobalMarketState`:
+The hook maintains a compact `MarketState`:
 
 | Field | Meaning | Used for |
 | --- | --- | --- |
-| `swapCount` | observed swaps | orbiting marks, epoch |
+| `swapCount` | observed swaps | orbiting marks/bodies, epoch |
 | `liquidityEventCount` | observed adds | epoch |
-| `epoch` | coarse age bucket | metadata attribute |
-| `cumulativeBuyVolume` / `cumulativeSellVolume` | flow magnitudes (saturating) | attributes |
-| `lastTick` / `highTick` | current + all-time-high tick | drawdown |
-| `drawdownBand` | 0..10000, how far below the high | accent fade |
-| `volatility` | EMA of tick movement | core twist |
+| `epoch` | coarse age bucket | strata depth, metadata |
+| `cumulativeBuyVolume` / `cumulativeSellVolume` | flow magnitudes (saturating) | palette/band skew |
+| `lastTick` / `highTick` / `lowTick` | current, all-time-high, and low-since-high | drawdown + recovery |
+| `drawdownBand` | 0..10000, how far below the high | fade / darken |
+| `recoveryBand` | 0..10000, how far back up from the low | brighten / horizon |
+| `volatility` | EMA of tick movement | geometry twist / spread |
+| `holderCount` | active token holders (injected by the NFT at render) | nucleus size (Orbital) |
 | `entropy` | rolling keccak hash | future mixing |
+
+You change how each maps to art in the hook's `_evolveState` (the mapping) and your renderer's
+`_renderArt` (the drawing). See [00 — Make it your own](00-make-it-your-own.md).
 
 ## The one rule
 

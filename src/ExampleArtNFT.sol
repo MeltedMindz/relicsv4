@@ -9,71 +9,78 @@ import { IExampleHook } from "./interfaces/IExampleHook.sol";
 import { IExampleRenderer } from "./interfaces/IExampleRenderer.sol";
 import { IExampleArtNFT } from "./interfaces/IExampleArtNFT.sol";
 
-/// @title ExampleArtNFT
+/// @title ExampleArtNFT — the collection
 /// @notice A fully on-chain ERC-721 whose metadata is computed at query time from immutable
-/// per-token DNA plus live Uniswap v4 market state. There is no base URI, no owner, no proxy,
-/// and no way to override metadata off chain.
+/// per-token DNA plus live Uniswap v4 market state. No base URI, no owner, no proxy, no off-chain
+/// override.
 ///
-/// AWAKENING MODEL (the core lesson — generalized, NOT any production mechanism):
-///   - Receiving ExampleToken does NOTHING on its own. There is no auto-mint on inflow.
-///   - A holder must EXPLICITLY call {awaken}. It is `msg.sender`-only and bounded per call.
-///   - Mint capacity is DERIVED from token holdings (`latentCapacity`), never stored, and the
-///     NFT is independent once minted (this starter does NOT retire NFTs on token outflow —
-///     that coupling is a separate, advanced design; see docs/05-nft-and-awakening.md).
+/// ┌──────────────────────────────────────────────────────────────────────────────────────┐
+/// │ HOW TO CUSTOMIZE (see docs/00-make-it-your-own.md)                                      │
+/// │  - name / symbol / max supply: constructor params (set them in your config/.env).       │
+/// │  - the ACQUISITION MODEL is `awaken` below — a clear, swappable pattern:                 │
+/// │      * receiving the token mints NOTHING (no auto-mint on inflow),                       │
+/// │      * a holder explicitly calls `awaken(count)`, `msg.sender`-only and bounded,         │
+/// │      * capacity is DERIVED from token holdings, never stored.                            │
+/// │    Want a paid public sale, an allowlist, or a free mint instead? Replace `awaken` with  │
+/// │    your model — the rest of the system (hook, renderer) does not care how pieces are      │
+/// │    minted, only that each has immutable DNA.                                             │
+/// └──────────────────────────────────────────────────────────────────────────────────────┘
 ///
 /// EDUCATIONAL — NOT AUDITED. See SECURITY.md.
 contract ExampleArtNFT is ERC721, IERC4906, IExampleArtNFT {
     error ZeroAddress();
+    error ZeroMaxSupply();
     error AwakenCountZero();
     error AwakenCountTooLarge(uint256 requested, uint256 maxPerCall);
     error NoLatentCapacity(address account);
     error MaxSupplyReached();
     error NonexistentToken(uint256 tokenId);
 
-    /// @notice Hard cap on the collection size.
-    uint256 public constant MAX_SUPPLY = 10_000;
+    /// @notice Hard cap on the collection size (immutable; set at deploy from your config).
+    uint256 public immutable MAX_SUPPLY;
 
-    /// @notice Maximum pieces one {awaken} call may materialize. Bounds the only loop that
-    /// mints, so gas is predictable and no call can be griefed into an out-of-gas revert.
+    // CUSTOMIZE: maximum pieces one `awaken` call may materialize. Bounds the only minting loop.
     uint256 public constant MAX_AWAKEN_PER_CALL = 8;
 
-    /// @notice One whole ExampleToken unit establishes capacity for one active piece.
+    // CUSTOMIZE: how many whole token units establish capacity for one piece (one, by default).
     uint256 public constant UNIT = 1 ether;
 
     IExampleToken public immutable token;
     IExampleHook public immutable hook;
     IExampleRenderer public immutable renderer;
 
-    uint256 private _nextId; // last minted id; ids are 1-based and strictly increasing
+    uint256 private _nextId;
     mapping(uint256 tokenId => bytes32 dna) private _dna;
 
     event Awakened(address indexed owner, uint256 indexed tokenId, bytes32 dna);
 
     constructor(
+        string memory name_,
+        string memory symbol_,
+        uint256 maxSupply_,
         address token_,
         address hook_,
         address renderer_
     )
-        ERC721("Example Onchain Art", "EXART")
+        ERC721(name_, symbol_)
     {
         if (token_ == address(0) || hook_ == address(0) || renderer_ == address(0)) {
             revert ZeroAddress();
         }
+        if (maxSupply_ == 0) revert ZeroMaxSupply();
+        MAX_SUPPLY = maxSupply_;
         token = IExampleToken(token_);
         hook = IExampleHook(hook_);
         renderer = IExampleRenderer(renderer_);
     }
 
     // ------------------------------------------------------------------
-    // awakening
+    // acquisition model (swappable)
     // ------------------------------------------------------------------
 
     /// @notice Materialize up to `count` pieces to the caller, bounded by both
     /// {MAX_AWAKEN_PER_CALL} and the caller's {latentCapacity}. Reverts if the caller has no
-    /// capacity at all, so an unsolicited token transfer alone can never mint.
-    /// @param count How many pieces the caller wishes to awaken this call (1..8).
-    /// @return firstId The id of the first piece minted (ids are contiguous within the call).
-    /// @return minted The number of pieces actually minted (min of count, capacity, headroom).
+    /// capacity, so an unsolicited token transfer alone can never mint.
     function awaken(uint256 count) external returns (uint256 firstId, uint256 minted) {
         if (count == 0) revert AwakenCountZero();
         if (count > MAX_AWAKEN_PER_CALL) revert AwakenCountTooLarge(count, MAX_AWAKEN_PER_CALL);
@@ -95,9 +102,7 @@ contract ExampleArtNFT is ERC721, IERC4906, IExampleArtNFT {
                 )
             );
             _dna[tokenId] = dna;
-            // `_mint` (not `_safeMint`): the recipient is `msg.sender`, who initiated this
-            // call, so a receiver callback would only add a reentrancy/revert surface without
-            // adding any real acceptance check. See docs/05-nft-and-awakening.md.
+            // `_mint` (not `_safeMint`): the recipient is `msg.sender`. See docs/05.
             _mint(msg.sender, tokenId);
             emit Awakened(msg.sender, tokenId, dna);
             emit MetadataUpdate(tokenId); // ERC-4906
@@ -128,14 +133,17 @@ contract ExampleArtNFT is ERC721, IERC4906, IExampleArtNFT {
         return _dna[tokenId];
     }
 
-    /// @notice Fully on-chain metadata: immutable DNA rendered against live market state.
+    /// @notice Fully on-chain metadata: immutable DNA rendered against live market state. The
+    /// "holder growth" signal is a TOKEN fact, so we read it here and inject it into the state the
+    /// renderer sees — it stays live without any per-swap work in the hook.
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         _requireMinted(tokenId);
-        IExampleHook.GlobalMarketState memory market = hook.getGlobalState();
+        IExampleHook.MarketState memory market = hook.getMarketState();
+        market.holderCount = uint64(token.activeHolderCount());
         return renderer.tokenURI(tokenId, _dna[tokenId], market);
     }
 
-    /// @dev ERC-165: advertise ERC-4906 (metadata update events) in addition to ERC-721.
+    /// @dev ERC-165: advertise ERC-4906 in addition to ERC-721.
     function supportsInterface(bytes4 interfaceId)
         public
         view

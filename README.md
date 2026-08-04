@@ -1,24 +1,37 @@
 # relics-v4-starter
 
-**A beginner-friendly starter for building fully on-chain generative art whose look is forged by a
-Uniswap v4 pool.** Three contracts compose into a living collection: a fixed-supply ERC-20, an
-ERC-721 whose SVG is computed on chain, and a v4 hook that turns real market activity into visual
-entropy.
+**Fork it and launch your own fully on-chain, fully customizable art collection — linked to an
+ERC-20, with Uniswap v4 hooks transforming swaps, liquidity, volatility, and market history into
+live artistic evolution.** Contracts. Renderer. Hook logic. Deployment tooling.
 
-> ⚠️ **Educational starter. NOT audited. NOT affiliated with Uniswap, OpenZeppelin, OpenSea, or
-> any production collection or auditor.** It contains no private or production material. Get your
-> own security, legal, and economic review before deploying or trading anything. See the
-> [Disclaimer](#26-disclaimer).
+**The market becomes the art.**
+
+> ⚠️ **Educational fork-and-launch template. NOT audited. NOT affiliated with or endorsed by
+> Uniswap, OpenZeppelin, OpenSea, or any auditor or production collection.** It contains no private
+> or production material. Get your own security, legal, and economic review before deploying or
+> trading anything. See the [Disclaimer](#26-disclaimer).
 
 ---
 
-## 1. What this is
+## 1. The promise
 
-`relics-v4-starter` is a clean-room teaching repo. It shows, end to end, the architecture behind
-"market-forged" on-chain art:
+Fork this repo, change a small, clearly-marked set of things, and ship YOUR collection — without
+reading the whole codebase. You customize **four layers**, then launch:
+
+1. the **ERC-20 token** (name, symbol, supply),
+2. the **v4 hook logic** (which market signals drive the art, and how strongly),
+3. the **on-chain renderer** (your art — three sample systems ship, or bring your own),
+4. the **deployment tooling** (fully parameterized: mine → bind → pool → liquidity → lock).
+
+Then: **generate art locally → deploy to a testnet → create the pool → add + lock liquidity →
+go to mainnet after your own review.** Everything a forker edits lives in one config surface
+([`config/collection.config.ts`](config/collection.config.ts) + your `.env`) or is pointed to
+from there. Start with **[docs/00 — Make it your own](docs/00-make-it-your-own.md)**.
+
+The core idea:
 
 ```
-immutable per-token DNA  +  global market state  =  live phenotype
+immutable per-token DNA  +  live market state  =  a phenotype that evolves with the market
 ```
 
 There is no stored image, no IPFS, no API. `tokenURI` reads Ethereum state at query time and
@@ -26,17 +39,17 @@ returns a base64 JSON with an embedded base64 SVG.
 
 ## 2. What you will build
 
-By the end you will have deployed and wired together:
+Deployed and wired together, driven by your config:
 
 - **`ExampleToken`** — a fixed-supply ERC-20 with no tax, blacklist, or hidden mint.
-- **`ExampleV4Hook`** — a Uniswap v4 hook mined to the correct address, observing one canonical
-  pool and maintaining compact market state.
-- **`ExampleArtNFT`** — an ERC-721 with fully on-chain metadata and explicit, capacity-gated
-  awakening.
-- **`ExampleOnchainRenderer`** — a deterministic SVG/JSON generator (neutral placeholder art).
+- **`ExampleV4Hook`** — a Uniswap v4 hook mined to the correct address, distilling pool activity
+  into a `MarketState` via one clearly-marked mapping function you customize.
+- **`ExampleArtNFT`** — an ERC-721 with fully on-chain metadata and a swappable acquisition model.
+- **A renderer** — one of three shipped art systems (**Sigil**, **Strata**, **Orbital**) or your
+  own, behind a single `_renderArt(dna, marketState)` seam.
 - **`ImmutablePositionLocker`** — an ownerless custodian that locks LP principal forever while
   keeping fee collection permissionless.
-- A **neutral Next.js web app** to browse and interact with it.
+- A **config-driven Next.js web app** (Home / Acquire / Mint / Explore / Technical).
 
 ## 3. Who this is for
 
@@ -65,9 +78,11 @@ No prior v4 knowledge is assumed. Every term is defined in [Glossary](#glossary)
           ▼                       │ read (view)
    ┌──────────────┐               ▼
    │PositionManager│      ┌──────────────────┐   ┌────────────────────────┐
-   │  (v4 NFT)     │      │  ExampleArtNFT   │──▶│ ExampleOnchainRenderer │
-   └──────────────┘      │  ERC-721 + 4906  │   │  base64 JSON + SVG     │
-                         └──────────────────┘   └────────────────────────┘
+   │  (v4 NFT)     │      │  ExampleArtNFT   │──▶│  Renderer (your art):  │
+   └──────────────┘      │  ERC-721 + 4906  │   │  Sigil / Strata /      │
+                         │ injects holder ct │   │  Orbital / bring-your- │
+                         └──────────────────┘   │  own via RendererBase  │
+                                                └────────────────────────┘
 ```
 
 ## 5. How it works (5 steps)
@@ -114,7 +129,7 @@ taking it on-chain.
 ```bash
 forge test                       # unit + fuzz + invariant + local deployment integration
 forge test --match-path "test/fork/*"   # fork tests (self-skip if MAINNET_RPC_URL is unset)
-forge build --sizes | grep ExampleOnchainRenderer   # EIP-170 budget check
+forge build --sizes | grep -E "Renderer"   # EIP-170 budget check (all art systems)
 ```
 
 Test layout: `test/unit`, `test/fuzz`, `test/invariant`, `test/fork`, `test/deployment`, with
@@ -124,8 +139,9 @@ mocks under `test/mocks` and shared v4 scaffolding in `test/utils`.
 
 ```bash
 mkdir -p output/examples   # first time only
-forge script script/GenerateExamples.s.sol --tc GenerateExamples
-# optional knobs: EXAMPLE_COUNT, MARKET_DRAWDOWN, MARKET_SWAPS, MARKET_VOLATILITY
+RENDERER_STYLE=orbital forge script script/GenerateExamples.s.sol --tc GenerateExamples
+# styles: sigil (default) | strata | orbital
+# optional knobs: EXAMPLE_COUNT, MARKET_DRAWDOWN, MARKET_SWAPS, MARKET_VOLATILITY, MARKET_HOLDERS, MARKET_EPOCH
 ```
 
 Regeneration at the same commit is byte-identical — that reproducibility is your art-integrity
@@ -144,16 +160,22 @@ surface you have not configured.
 
 ## 11. Customize the art
 
-Edit `src/ExampleOnchainRenderer.sol` (the `_svg`, `_palette`, geometry) and
-`src/libraries/ArtDNA.sol` (trait decoding). Keep every market-driven loop bounded, and after
-every edit run `forge build --sizes` — the renderer must stay under 24,576 bytes. See
-[`docs/06`](docs/06-onchain-renderer.md) and [`docs/16`](docs/16-renderer-size-budget.md).
+Pick one of three shipped art systems with `rendererStyle` (`sigil` | `strata` | `orbital`), or
+**bring your own**: extend [`RendererBase`](src/RendererBase.sol) and implement the single seam
+`_renderArt(tokenId, dna, market)`. The base handles JSON + base64 + canvas and gives you shared
+palette/number helpers. Keep every market-driven loop bounded, and after every edit run
+`forge build --sizes` — every renderer must stay under 24,576 bytes. See
+[`docs/00`](docs/00-make-it-your-own.md), [`docs/06`](docs/06-onchain-renderer.md), and
+[`docs/16`](docs/16-renderer-size-budget.md).
 
-## 12. Customize the hook
+## 12. Customize the hook (market → art mapping)
 
-Edit `src/ExampleV4Hook.sol`. If you change which callbacks it uses, update `getHookPermissions`
-**and** the flag constant, then re-mine the address (the bits must match). Keep callbacks bounded
-and never render or loop over NFTs inside them. See [`docs/04`](docs/04-the-hook.md).
+Edit `src/ExampleV4Hook.sol` in two clearly-marked places: the `CUSTOMIZE` signal weights, and
+`_evolveState(MarketState, MarketEvent)` — the single function mapping each market event to the
+next state. You do NOT touch the v4 plumbing. If you change which callbacks the hook uses, update
+`getHookPermissions` **and** the flag constant, then re-mine the address. Keep callbacks bounded;
+never render or loop over NFTs inside them. See [`docs/04`](docs/04-the-hook.md) and
+[`docs/00`](docs/00-make-it-your-own.md).
 
 ## 13. Mine the hook address
 
@@ -223,9 +245,11 @@ block explorer for your chain.
 
 ## 19. Configure the website
 
-Set `NEXT_PUBLIC_*` values in `apps/web/.env.local` (see `apps/web/.env.example`): chain id, RPC,
-and your token/NFT/hook/renderer addresses. Unset surfaces stay "not configured." Public env is
-read **statically** — never dynamically ([`docs/17`](docs/17-frontend-integration.md)).
+Put your identity and deployed addresses in [`config/collection.config.ts`](config/collection.config.ts)
+(`addressesByChain[<chainId>]`). For per-deploy hosting you can also set `NEXT_PUBLIC_*` in
+`apps/web/.env.local` (see `apps/web/.env.example`), which override the config. Unset surfaces stay
+"not configured." Public env is read **statically** — never dynamically
+([`docs/17`](docs/17-frontend-integration.md)).
 
 ## 20. Mainnet safety checklist
 
@@ -252,11 +276,12 @@ canonical `tokenURI`.
 ## 22. Project structure
 
 ```
-src/            example contracts + interfaces/ + libraries/
-script/         Foundry deployment/verification/art scripts
+config/         collection.config.ts — the ONE web/human config surface
+src/            contracts: token, hook, NFT, RendererBase + 3 art systems, locker, interfaces/, libraries/
+script/         Foundry tooling (config/DeployConfig.s.sol + mine/deploy/bind/liquidity/lock/verify/art)
 test/           unit/ fuzz/ invariant/ fork/ deployment/ + mocks/ + utils/
-apps/web/       neutral Next.js starter (wagmi/viem, EIP-6963)
-docs/           18 numbered guides (01-system-overview … 18-faq)
+apps/web/       config-driven Next.js app (wagmi/viem, EIP-6963)
+docs/           make-it-your-own guide + 18 numbered guides
 scripts/        secret scan, manifest generator, link checker (Node)
 .github/        CI workflows + issue/PR templates
 lib/            git submodules (forge-std, uniswap-hooks → v4-core/v4-periphery/OZ)
@@ -266,6 +291,7 @@ lib/            git submodules (forge-std, uniswap-hooks → v4-core/v4-peripher
 
 | # | Guide |
 | --- | --- |
+| 00 | [Make it your own (start here)](docs/00-make-it-your-own.md) |
 | 01 | [System overview](docs/01-system-overview.md) |
 | 02 | [Contracts and the token](docs/02-contracts-and-token.md) |
 | 03 | [Uniswap v4 hooks, from zero](docs/03-uniswap-v4-hooks.md) |

@@ -42,11 +42,12 @@ from Ethereum state at the moment of the call. Trade activity literally reshapes
 | `ExampleToken` | Fixed-supply ERC-20. The asset that trades on the pool. |
 | `ExampleV4Hook` | Observes one canonical pool and maintains bounded market state (art entropy). |
 | `ExampleArtNFT` | ERC-721 with fully on-chain metadata; pieces are explicitly awakened. |
-| `ExampleOnchainRenderer` | Deterministic SVG/JSON generator. Neutral placeholder art. |
+| Renderer | One of three sample systems (`ExampleOnchainRenderer`/Sigil, `StrataRenderer`, `OrbitalRenderer`) on `RendererBase`, or your own. Neutral placeholder art. |
 | `ImmutablePositionLocker` | Ownerless custodian: principal locked, fees forwarded immutably. |
 
 ## What to read next
 
+- [00 — Make it your own (start here to fork + launch)](00-make-it-your-own.md)
 - [02 — Contracts and the token](02-contracts-and-token.md)
 - [03 — Uniswap v4 hooks, from zero](03-uniswap-v4-hooks.md)
 - [10 — Twenty hard-won lessons](10-twenty-lessons.md)

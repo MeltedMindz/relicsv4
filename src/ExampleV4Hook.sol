@@ -13,28 +13,55 @@ import { SwapParams, ModifyLiquidityParams } from "@uniswap/v4-core/src/types/Po
 import { StateLibrary } from "@uniswap/v4-core/src/libraries/StateLibrary.sol";
 import { IExampleHook } from "./interfaces/IExampleHook.sol";
 
-/// @title ExampleV4Hook
-/// @notice A Uniswap v4 hook that OBSERVES one canonical pool and maintains compact global
-/// "market state" used purely as ARTISTIC ENTROPY. It never returns a delta, never touches
-/// NFTs, never renders, and never loops over user-controlled input.
+/// @title ExampleV4Hook — the market becomes the art
+/// @notice A Uniswap v4 hook that OBSERVES one canonical pool and distills its activity into a
+/// `MarketState` used purely as ARTISTIC ENTROPY. It never returns a delta, never touches NFTs,
+/// never renders, and never loops over user-controlled input.
 ///
-/// KEY LESSONS THIS HOOK TEACHES (see docs/03-uniswap-v4-hooks.md and docs/04-the-hook.md):
-///   1. A hook's ADDRESS encodes its permission flags. The low 14 bits of this contract's
-///      deployed address MUST equal 0x1440 = AFTER_INITIALIZE (1<<12) | AFTER_ADD_LIQUIDITY
-///      (1<<10) | AFTER_SWAP (1<<6). You mine a CREATE2 salt to find such an address; see
-///      script/MineHookAddress.s.sol. BaseHook's constructor validates this and reverts
-///      otherwise.
-///   2. Bind the canonical PoolKey (one-shot) BEFORE the pool is initialized, and reject any
-///      unexpected initial price in `_afterInitialize`.
-///   3. Validate the FULL PoolKey — including `hooks == address(this)` — in every callback,
-///      so no spoofed pool can drive the art state.
-///   4. Keep callbacks BOUNDED: fixed-size struct writes only. No arrays, no external calls
-///      into untrusted code, no NFT work, no rendering.
+/// ┌──────────────────────────────────────────────────────────────────────────────────────┐
+/// │ HOW TO CUSTOMIZE (see docs/00-make-it-your-own.md)                                      │
+/// │                                                                                        │
+/// │ You almost never touch the v4 "plumbing" (the callbacks + PoolKey validation). To      │
+/// │ change how the MARKET drives the ART, edit exactly TWO things, both marked `CUSTOMIZE`: │
+/// │   1. the signal WEIGHTS / scales (the constants block below), and                      │
+/// │   2. `_evolveState(...)` — the single pure function that maps each market EVENT         │
+/// │      (a swap or a liquidity add) into the next `MarketState`.                           │
+/// │                                                                                        │
+/// │ Signals captured today: swap count, buy vs sell volume, volatility, all-time-high tick,│
+/// │ drawdown, recovery, and liquidity events. (Holder growth is a TOKEN signal, injected    │
+/// │ into `MarketState.holderCount` by the NFT at render time.) To add a signal, add a field │
+/// │ to `IExampleHook.MarketState`, populate it in `_evolveState`, and read it in your        │
+/// │ renderer. To remove one, stop reading it.                                               │
+/// └──────────────────────────────────────────────────────────────────────────────────────┘
 ///
 /// EDUCATIONAL — NOT AUDITED. See SECURITY.md.
 contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
     using BalanceDeltaLibrary for BalanceDelta;
     using StateLibrary for IPoolManager;
+
+    // =====================================================================================
+    // CUSTOMIZE ── market → art signal weights & scales
+    // These are the "how strongly does each signal drive the art" knobs. Change them freely.
+    // =====================================================================================
+
+    /// @notice Volatility is an EMA of tick movement: `v = (v*NUM + move) / DEN`. Higher NUM/DEN
+    /// ratio == smoother, slower-reacting volatility. (7/8 ≈ react over ~8 events.)
+    uint256 internal constant VOLATILITY_SMOOTHING_NUM = 7;
+    uint256 internal constant VOLATILITY_SMOOTHING_DEN = 8;
+
+    /// @notice Ticks below the all-time-high that read as "maximum drawdown" (band == 10000).
+    /// Smaller == the art reacts to shallower dips.
+    int256 internal constant DRAWDOWN_FULL_SCALE_TICKS = 10_000;
+
+    /// @notice How much each event type ages the collection, and how many weighted events make
+    /// one epoch. Larger EVENTS_PER_EPOCH == the collection ages more slowly.
+    uint64 internal constant EPOCH_SWAP_WEIGHT = 1;
+    uint64 internal constant EPOCH_LIQUIDITY_WEIGHT = 2;
+    uint64 internal constant EVENTS_PER_EPOCH = 20;
+
+    // =====================================================================================
+    // v4 plumbing (you rarely need to touch anything below this line)
+    // =====================================================================================
 
     error ZeroAddress();
     error InvalidPool();
@@ -51,6 +78,16 @@ contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
     );
     error Int128Overflow();
 
+    /// @notice A normalized market event handed to `_evolveState`. Building this from the raw v4
+    /// callback data is "plumbing"; interpreting it is "art".
+    struct MarketEvent {
+        bool isSwap; // true for a swap, false for a liquidity add
+        bool isBuy; // (swaps) did the swapper receive the art token?
+        uint256 volume; // (swaps) magnitude of the art-token flow
+        int128 liquidityDelta; // (liquidity) signed liquidity change
+        int24 tick; // pool tick after the event
+    }
+
     /// @notice The art ERC-20 that must be one of the pool currencies.
     address public immutable artToken;
 
@@ -65,7 +102,7 @@ contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
     bool public artTokenIsCurrency0;
     bool public isPoolBound;
 
-    GlobalMarketState private _state;
+    MarketState private _state;
 
     constructor(
         IPoolManager poolManager_,
@@ -100,8 +137,7 @@ contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
     }
 
     /// @notice One-shot binding of the canonical pool. MUST be called before the pool is
-    /// initialized. Records the exact PoolKey fields and the exact expected opening price, so
-    /// initialization at any other price reverts.
+    /// initialized. Records the exact PoolKey fields and the exact expected opening price.
     function bindCanonicalPool(
         bytes32 poolId,
         address currency0_,
@@ -140,12 +176,12 @@ contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
         );
     }
 
-    function getGlobalState() external view returns (GlobalMarketState memory) {
+    function getMarketState() external view returns (MarketState memory) {
         return _state;
     }
 
     // ------------------------------------------------------------------
-    // hook callbacks (bounded, observation only)
+    // hook callbacks (bounded, observation only) — build a MarketEvent, then evolve state
     // ------------------------------------------------------------------
 
     function _afterInitialize(
@@ -166,9 +202,43 @@ contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
         }
         _state.lastTick = tick;
         _state.highTick = tick;
+        _state.lowTick = tick;
         _state.lastActivityBlock = uint64(block.number);
         _state.entropy = keccak256(abi.encode(_state.entropy, tick, block.number));
         return BaseHook.afterInitialize.selector;
+    }
+
+    function _afterSwap(
+        address,
+        PoolKey calldata key,
+        SwapParams calldata,
+        BalanceDelta delta,
+        bytes calldata
+    )
+        internal
+        override
+        returns (bytes4, int128)
+    {
+        _validatePoolKey(key);
+        (, int24 tick,,) = poolManager.getSlot0(key.toId());
+
+        // v4 deltas are from the swapper's perspective. A positive art-token amount means the
+        // swapper RECEIVED the art token: a BUY.
+        int256 amount0 = delta.amount0();
+        int256 amount1 = delta.amount1();
+        int256 artAmount = artTokenIsCurrency0 ? amount0 : amount1;
+
+        MarketEvent memory e = MarketEvent({
+            isSwap: true,
+            isBuy: artAmount >= 0,
+            volume: _abs(artAmount),
+            liquidityDelta: 0,
+            tick: tick
+        });
+        _state = _evolveState(_state, e);
+        emit SwapObserved(canonicalPoolId, amount0, amount1, tick, _state.swapCount);
+        _emitStateUpdated();
+        return (BaseHook.afterSwap.selector, 0);
     }
 
     function _afterAddLiquidity(
@@ -185,85 +255,92 @@ contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
     {
         _validatePoolKey(key);
         (, int24 tick,,) = poolManager.getSlot0(key.toId());
-        _recordLiquidity(_toInt128(params.liquidityDelta), tick);
+        MarketEvent memory e = MarketEvent({
+            isSwap: false,
+            isBuy: false,
+            volume: 0,
+            liquidityDelta: _toInt128(params.liquidityDelta),
+            tick: tick
+        });
+        _state = _evolveState(_state, e);
+        emit LiquidityObserved(canonicalPoolId, e.liquidityDelta, tick, _state.liquidityEventCount);
+        _emitStateUpdated();
         return (BaseHook.afterAddLiquidity.selector, BalanceDeltaLibrary.ZERO_DELTA);
     }
 
-    function _afterSwap(
-        address,
-        PoolKey calldata key,
-        SwapParams calldata,
-        BalanceDelta delta,
-        bytes calldata
+    // =====================================================================================
+    // CUSTOMIZE ── THE MARKET → ART MAPPING
+    //
+    // This is the heart of the collection. Given the current `MarketState` and one `MarketEvent`,
+    // return the next `MarketState`. It is `view` (reads block data) and does NOTHING external —
+    // keep it that way so it can never affect swaps. No loops, no external calls, no NFT work.
+    //
+    // Ideas: make buys warm the palette (via drawdown/recovery), make volatility fracture the
+    // geometry, make sell pressure darken it, make liquidity events add structure. See the
+    // "recipes" in docs/00-make-it-your-own.md.
+    // =====================================================================================
+    function _evolveState(
+        MarketState memory s,
+        MarketEvent memory e
     )
         internal
-        override
-        returns (bytes4, int128)
+        view
+        returns (MarketState memory)
     {
-        _validatePoolKey(key);
-        (, int24 tick,,) = poolManager.getSlot0(key.toId());
-        _recordSwap(delta.amount0(), delta.amount1(), tick);
-        return (BaseHook.afterSwap.selector, 0);
-    }
-
-    // ------------------------------------------------------------------
-    // state math (private, bounded, no external calls)
-    // ------------------------------------------------------------------
-
-    function _recordSwap(int256 amount0, int256 amount1, int24 tick) private {
-        GlobalMarketState memory s = _state;
-
-        // v4 deltas are from the swapper's perspective. A positive art-token amount means the
-        // swapper received the art token: treat that as a BUY.
-        int256 artAmount = artTokenIsCurrency0 ? amount0 : amount1;
-        uint256 volume = _abs(artAmount);
-        if (artAmount >= 0) {
-            s.cumulativeBuyVolume = _addU128(s.cumulativeBuyVolume, volume);
+        // --- counts + volume ---
+        if (e.isSwap) {
+            uint32 move = s.swapCount == 0 ? 0 : _tickDistance(s.lastTick, e.tick);
+            s.volatility = uint32(
+                (uint256(s.volatility) * VOLATILITY_SMOOTHING_NUM + move) / VOLATILITY_SMOOTHING_DEN
+            );
+            if (e.isBuy) s.cumulativeBuyVolume = _addU128(s.cumulativeBuyVolume, e.volume);
+            else s.cumulativeSellVolume = _addU128(s.cumulativeSellVolume, e.volume);
+            unchecked {
+                ++s.swapCount;
+            }
         } else {
-            s.cumulativeSellVolume = _addU128(s.cumulativeSellVolume, volume);
+            unchecked {
+                ++s.liquidityEventCount;
+            }
         }
 
-        uint32 move = s.swapCount == 0 ? 0 : _tickDistance(s.lastTick, tick);
-        if (tick > s.highTick) s.highTick = tick;
-
-        unchecked {
-            ++s.swapCount;
+        // --- price extremes: high ratchets up (and resets the low), low ratchets down ---
+        if (e.tick > s.highTick) {
+            s.highTick = e.tick;
+            s.lowTick = e.tick; // a fresh high resets the recovery window
+        } else if (e.tick < s.lowTick) {
+            s.lowTick = e.tick;
         }
-        s.lastTick = tick;
+
+        // --- drawdown: how far BELOW the all-time-high, scaled 0..10000 ---
+        s.drawdownBand = _band(int256(s.highTick) - int256(e.tick), DRAWDOWN_FULL_SCALE_TICKS);
+
+        // --- recovery: how far back UP from the low within the drawdown window, 0..10000 ---
+        // After the extremes update above, lowTick <= tick <= highTick, so the ratio is a clean
+        // non-negative value in [0, 10000] and the cast is safe.
+        int256 window = int256(s.highTick) - int256(s.lowTick);
+        if (window <= 0) {
+            s.recoveryBand = 10_000;
+        } else {
+            uint256 climbed = uint256(int256(e.tick) - int256(s.lowTick));
+            s.recoveryBand = uint32((climbed * 10_000) / uint256(window));
+        }
+
+        // --- coarse age + bookkeeping ---
+        s.epoch = (s.swapCount * EPOCH_SWAP_WEIGHT + s.liquidityEventCount * EPOCH_LIQUIDITY_WEIGHT)
+            / EVENTS_PER_EPOCH;
+        s.lastTick = e.tick;
         s.lastActivityBlock = uint64(block.number);
-        s.volatility = uint32((uint256(s.volatility) * 7 + move) / 8);
-        s.drawdownBand = _drawdown(tick, s.highTick);
-        s.epoch = _epoch(s.swapCount, s.liquidityEventCount);
         s.entropy = keccak256(
-            abi.encode(s.entropy, amount0, amount1, tick, block.number, block.prevrandao)
+            abi.encode(
+                s.entropy, e.isSwap, e.isBuy, e.volume, e.tick, block.number, block.prevrandao
+            )
         );
-
-        _state = s;
-        emit SwapObserved(canonicalPoolId, amount0, amount1, tick, s.swapCount);
-        emit MarketStateUpdated(s.epoch, s.drawdownBand, s.volatility, s.entropy);
-    }
-
-    function _recordLiquidity(int128 liquidityDelta, int24 tick) private {
-        GlobalMarketState memory s = _state;
-        if (tick > s.highTick) s.highTick = tick;
-
-        unchecked {
-            ++s.liquidityEventCount;
-        }
-        s.lastTick = tick;
-        s.lastActivityBlock = uint64(block.number);
-        s.drawdownBand = _drawdown(tick, s.highTick);
-        s.epoch = _epoch(s.swapCount, s.liquidityEventCount);
-        s.entropy =
-            keccak256(abi.encode(s.entropy, liquidityDelta, tick, block.number, block.prevrandao));
-
-        _state = s;
-        emit LiquidityObserved(canonicalPoolId, liquidityDelta, tick, s.liquidityEventCount);
-        emit MarketStateUpdated(s.epoch, s.drawdownBand, s.volatility, s.entropy);
+        return s;
     }
 
     // ------------------------------------------------------------------
-    // validation
+    // validation (do not weaken)
     // ------------------------------------------------------------------
 
     function _validatePoolKey(PoolKey calldata key) private view {
@@ -278,20 +355,25 @@ contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
         }
     }
 
+    function _emitStateUpdated() private {
+        emit MarketStateUpdated(
+            _state.epoch,
+            _state.drawdownBand,
+            _state.recoveryBand,
+            _state.volatility,
+            _state.entropy
+        );
+    }
+
     // ------------------------------------------------------------------
     // pure helpers
     // ------------------------------------------------------------------
 
-    /// @dev Drawdown band in [0, 10000]: 1 tick below the high == 1 unit, capped at 10000.
-    function _drawdown(int24 tick, int24 highTick) private pure returns (uint32) {
-        if (tick >= highTick) return 0;
-        uint256 distance = uint256(int256(highTick) - int256(tick));
-        return distance > 10_000 ? 10_000 : uint32(distance);
-    }
-
-    /// @dev Coarse "age" bucket. Monotonic, bounded, cheap.
-    function _epoch(uint64 swaps, uint64 liq) private pure returns (uint64) {
-        return (swaps + liq * 2) / 20;
+    /// @dev Scale a non-negative tick distance into a 0..10000 band, capped.
+    function _band(int256 distance, int256 fullScaleTicks) private pure returns (uint32) {
+        if (distance <= 0) return 0;
+        if (distance >= fullScaleTicks) return 10_000;
+        return uint32(uint256((distance * 10_000) / fullScaleTicks));
     }
 
     function _tickDistance(int24 a, int24 b) private pure returns (uint32) {

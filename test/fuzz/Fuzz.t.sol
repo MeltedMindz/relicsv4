@@ -17,7 +17,7 @@ contract FuzzTest is Test {
 
     function setUp() public {
         renderer = new ExampleOnchainRenderer();
-        token = new ExampleToken(deployer);
+        token = new ExampleToken("Test Token", "TT", 1_000_000 ether, deployer);
     }
 
     /// @dev DNA decoding must ALWAYS yield in-range traits, for any 32 bytes.
@@ -50,7 +50,7 @@ contract FuzzTest is Test {
         public
         view
     {
-        IExampleHook.GlobalMarketState memory m;
+        IExampleHook.MarketState memory m;
         m.drawdownBand = drawdown;
         m.swapCount = swaps;
         string memory a = renderer.renderSVG(id, dna, m);

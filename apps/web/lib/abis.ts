@@ -64,7 +64,7 @@ export const nftAbi = [
 export const hookAbi = [
   {
     type: "function",
-    name: "getGlobalState",
+    name: "getMarketState",
     stateMutability: "view",
     inputs: [],
     outputs: [
@@ -73,14 +73,17 @@ export const hookAbi = [
         components: [
           { name: "swapCount", type: "uint64" },
           { name: "liquidityEventCount", type: "uint64" },
-          { name: "lastActivityBlock", type: "uint64" },
           { name: "epoch", type: "uint64" },
+          { name: "lastActivityBlock", type: "uint64" },
           { name: "cumulativeBuyVolume", type: "uint128" },
           { name: "cumulativeSellVolume", type: "uint128" },
           { name: "lastTick", type: "int24" },
           { name: "highTick", type: "int24" },
+          { name: "lowTick", type: "int24" },
           { name: "drawdownBand", type: "uint32" },
+          { name: "recoveryBand", type: "uint32" },
           { name: "volatility", type: "uint32" },
+          { name: "holderCount", type: "uint64" },
           { name: "entropy", type: "bytes32" },
         ],
       },
