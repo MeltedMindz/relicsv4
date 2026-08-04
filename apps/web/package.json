@@ -1,0 +1,33 @@
+{
+  "name": "@relics-v4-starter/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test",
+    "test:unit": "node --import tsx --test tests/unit/*.test.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.101.4",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "viem": "^2.40.1",
+    "wagmi": "^2.19.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "^16.2.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.0"
+  }
+}

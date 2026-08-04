@@ -1,0 +1,2 @@
+# Generated example SVGs land here (gitignored). Run:
+#   forge script script/GenerateExamples.s.sol --tc GenerateExamples

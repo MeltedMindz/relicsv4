@@ -1,0 +1,60 @@
+name: contracts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Default CI needs NO secrets: no private repo, no private registry, no RPC credentials.
+permissions:
+  contents: read
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks (tracked content, working tree)
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest \
+            dir /repo --config /repo/.gitleaks.toml --redact --verbose --exit-code 1
+
+  foundry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: forge fmt --check
+        run: forge fmt --check
+
+      - name: forge build --sizes (EIP-170 visibility)
+        # Informational: the hard 24,576-byte gate on the renderer is enforced by
+        # test_runtimeSizeUnderEip170 in the test job below.
+        run: forge build --sizes
+
+      - name: forge test (unit + fuzz + invariant; fork tests self-skip)
+        run: forge test -vvv
+
+  fork:
+    # Fork tests run on demand; they SKIP cleanly when MAINNET_RPC_URL is unset, so this job is
+    # green with no secrets. Provide the secret in your own fork to actually exercise it.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+      - name: forge test (fork suite)
+        env:
+          MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+        run: forge test --match-path "test/fork/*" -vvv

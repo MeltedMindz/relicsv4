@@ -1,0 +1,22 @@
+{
+  "name": "relics-v4-starter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not audited. Not affiliated with Uniswap, OpenZeppelin, or any production collection.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "web:dev": "npm run dev --workspace @relics-v4-starter/web",
+    "web:build": "npm run build --workspace @relics-v4-starter/web",
+    "web:lint": "npm run lint --workspace @relics-v4-starter/web",
+    "web:typecheck": "npm run typecheck --workspace @relics-v4-starter/web",
+    "web:test": "npm run test --workspace @relics-v4-starter/web",
+    "web:test:unit": "npm run test:unit --workspace @relics-v4-starter/web",
+    "secrets:scan": "bash scripts/secret-scan.sh"
+  }
+}

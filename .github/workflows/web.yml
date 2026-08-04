@@ -1,0 +1,33 @@
+name: web
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: install (public registry only)
+        run: npm ci || npm install
+      - name: lint
+        run: npm run web:lint
+      - name: typecheck
+        run: npm run web:typecheck
+      - name: unit tests (node:test)
+        run: npm run web:test:unit
+      - name: build
+        run: npm run web:build
+      - name: install Playwright chromium
+        run: npx --workspace @relics-v4-starter/web playwright install --with-deps chromium
+      - name: smoke tests
+        run: npm run web:test

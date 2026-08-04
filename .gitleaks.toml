@@ -1,0 +1,53 @@
+# gitleaks config for relics-v4-starter.
+#
+# Goal: fail on any real secret while suppressing this repo's known false-positive classes. A
+# clean-room public starter should contain ZERO secrets; this config plus scripts/secret-scan.sh
+# and CI enforce that.
+
+title = "relics-v4-starter gitleaks config"
+
+[extend]
+# Keep the full default gitleaks ruleset (cloud keys, tokens, generic, etc.).
+useDefault = true
+
+# Ethereum-style 32-byte private key bound to a key-like field (env or JSON). Bare 64-hex
+# strings are deliberately NOT flagged on their own: tx hashes, salts, and pool ids share that
+# shape and are public.
+[[rules]]
+id = "eth-private-key-assignment"
+description = "Ethereum 32-byte private key assigned to a key-like field"
+regex = '''(?i)(?:private[_-]?key|secret[_-]?key)["']?\s*[:=]\s*["']?(?:0x)?[0-9a-f]{64}'''
+keywords = ["privatekey", "private_key", "private-key", "secretkey", "secret_key"]
+
+# 12+ word BIP-39 seed phrase bound to a mnemonic-like field.
+[[rules]]
+id = "bip39-mnemonic-assignment"
+description = "12+ word seed phrase assigned to a mnemonic/seed field"
+regex = '''(?i)(?:mnemonic|seed[_-]?phrase)["']?\s*[:=]\s*["']?(?:[a-z]+[ ,]+){11,}[a-z]+'''
+keywords = ["mnemonic", "seed_phrase", "seed-phrase", "seedphrase"]
+
+# --- Allowlists ---------------------------------------------------------------
+
+[[allowlists]]
+description = "Vendored third-party libraries (forge-std, OpenZeppelin, Uniswap v4, uniswap-hooks). They ship well-known Anvil/test keys and example fixtures; upstream is reviewed, not edited here."
+paths = ['''^lib/''']
+
+[[allowlists]]
+description = "Untracked build outputs and installs (present only in local directory scans)."
+paths = [
+    '''^node_modules/''',
+    '''^out/''',
+    '''^cache/''',
+    '''^broadcast/''',
+    '''^apps/web/\.next/''',
+    '''^output/''',
+]
+
+[[allowlists]]
+description = "Local operator secret stores. Gitignored; never tracked. Allowlisted so local `gitleaks dir` scans stay green — CI scans tracked content where these never exist."
+paths = [
+    '''^\.env(\..*)?$''',
+    '''\.wallet(\.json)?$''',
+    '''\.mnemonic$''',
+    '''\.private-key$''',
+]

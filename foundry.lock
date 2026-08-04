@@ -1,0 +1,14 @@
+{
+  "lib/forge-std": {
+    "tag": {
+      "name": "v1.9.6",
+      "rev": "3b20d60d14b343ee4f908cb8079495c07f5e8981"
+    }
+  },
+  "lib/uniswap-hooks": {
+    "tag": {
+      "name": "v1.2.1",
+      "rev": "acbd604c409a827f7f98c9517236da860c4fca1a"
+    }
+  }
+}

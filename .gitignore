@@ -1,0 +1,44 @@
+# Foundry
+out/
+cache/
+broadcast/
+*.gas-snapshot
+
+# Node / Next
+node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/tsconfig.tsbuildinfo
+apps/web/next-env.d.ts
+
+# Generated art previews (regenerate with the GenerateExamples script)
+output/examples/*.svg
+
+# Playwright
+apps/web/playwright-report/
+apps/web/test-results/
+test-results/
+
+# Local env files and operator secrets. Only the *.example templates are tracked.
+.env
+.env.*
+!.env.example
+apps/web/.env.local
+apps/web/.env*.local
+
+# Wallet / key material must NEVER be committed.
+*.wallet
+*.wallet.json
+*.mnemonic
+*.private-key
+*.secret
+*.pem
+*.keystore
+keystore/
+keystores/
+wallets/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
