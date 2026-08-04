@@ -19,8 +19,9 @@ inventory with per-file hashes and verdicts is `PUBLIC_EXPORT_MANIFEST.json`.
    integration tests, plus local mocks.
 4. **Original web app** (`apps/web/**`) — a neutral Next.js starter. No production addresses; no
    required third-party project id or API key for core flows.
-5. **Original documentation** (`docs/**`, `README.md`, and the root policy docs) — teaching prose
-   with no private incident details, timelines, or identifiers.
+5. **Original documentation** (`docs/**`, `README.md`, the root policy docs, and the agent guides
+   `AGENTS.md` + `CLAUDE.md`) — teaching prose original to this starter, with no private incident
+   details, timelines, or identifiers.
 6. **Configuration** (`foundry.toml`, `remappings.txt`, `package.json`, `apps/web/*` config,
    `.github/**`, `.gitignore`, `.gitleaks.toml`, `*.example`) — standard tooling config with no
    secrets.
