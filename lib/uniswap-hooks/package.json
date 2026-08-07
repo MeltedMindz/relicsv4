@@ -1,0 +1,56 @@
+{
+  "name": "@openzeppelin/uniswap-hooks",
+  "version": "1.2.2",
+  "description": "Solidity library for secure and modular Uniswap hooks.",
+  "files": [
+    "/src/**/*.sol",
+    "!/src/mocks/**/*"
+  ],
+  "scripts": {
+    "docs": "npm run prepare-docs && oz-docs",
+    "docs:watch": "oz-docs watch contracts docs/templates docs/config.js",
+    "prepare-docs": "scripts/prepare-docs.sh",
+    "lint": "forge fmt --check && npm run lint:solhint",
+    "lint:fix": "forge fmt",
+    "lint:solhint": "npm run lint:solhint:src && npm run lint:solhint:test",
+    "lint:solhint:src": "solhint --noPoster 'src/**/*.sol' --config solhint/solhint.src.config.js",
+    "lint:solhint:test": "solhint --noPoster 'test/**/*.sol' --config solhint/solhint.test.config.js",
+    "prepare": "husky"
+  },
+  "repository": "https://github.com/OpenZeppelin/uniswap-hooks.git",
+  "bugs": {
+    "url": "https://github.com/OpenZeppelin/uniswap-hooks/issues"
+  },
+  "author": "OpenZeppelin",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.5.0",
+    "@uniswap/v4-core": "^1.0.2",
+    "@uniswap/v4-periphery": "^1.0.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "^1.2.0",
+    "@openzeppelin/docs-utils": "^0.1.6",
+    "hardhat": "^2.26.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "solhint": "^6.0.1",
+    "solhint-plugin-openzeppelin": "file:scripts/solhint-custom",
+    "solidity-docgen": "^0.6.0-beta.36"
+  },
+  "lint-staged": {
+    "**/*.sol": [
+      "forge fmt --check"
+    ],
+    "src/**/*.sol": [
+      "solhint --noPoster --config solhint/solhint.src.config.js"
+    ],
+    "test/**/*.sol": [
+      "solhint --noPoster --config solhint/solhint.test.config.js"
+    ]
+  },
+  "overrides": {
+    "tmp": ">=0.2.4",
+    "cookie": ">=0.7.0"
+  }
+}

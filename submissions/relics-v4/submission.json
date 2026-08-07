@@ -1,0 +1,1413 @@
+{
+  "$schema": "urn:programmable:v4-hook-submission:1.3.0",
+  "schemaVersion": 1,
+  "standardVersion": "1.3.0",
+  "stage": "proposal",
+  "model": {
+    "id": "relics-v4",
+    "name": "RELICS v4 Hook",
+    "summary": "The live RELICS market-history hook: an immutable, ownerless Uniswap v4 observer on Ethereum mainnet that turns real trading on one canonical $RELICS/WETH pool into permanent on-chain state consumed by a fully on-chain generative art collection. Submitted as an explicitly authorized public flagship reference of an already-deployed project, not as a new launch request.",
+    "userOutcome": "Collectors acquire $RELICS on the canonical pool and awaken Relic NFTs whose visual condition is permanently forged by the real market history this hook records; traders experience a completely standard 0.30% v4 pool that the hook can observe but never alter, tax or refuse.",
+    "category": "onchain-generative-art",
+    "whyV4": "Only v4 hooks let the pool's own afterInitialize/afterAddLiquidity/afterSwap callbacks write permanent market state in the same transaction as the trade, with zero influence on execution. The pool itself becomes the artistic instrument: tokenURI reads the hook's GlobalMarketState live, so the art is computed from Ethereum market history with no image files, no IPFS and no API."
+  },
+  "builder": {
+    "github": "MeltedMindz",
+    "contact": "MeltedMindz",
+    "beneficiary": null,
+    "licenseDeclaration": "MIT. All 30 published source files (4 RELICS files plus vendored Uniswap v4-core 1.0.2, OpenZeppelin uniswap-hooks 1.2.2 and OpenZeppelin contracts 5.6.1 files) carry SPDX-License-Identifier: MIT; copyright remains with their respective authors."
+  },
+  "publicMetadata": {
+    "project": {
+      "name": "RELICS",
+      "description": "Up to 10,000 fully on-chain generative Relics backed by a fixed 10,000-unit ERC-20, with a Uniswap v4 hook that records real market history as permanent visual condition. Live on Ethereum mainnet since 2026-08-03.",
+      "projectUri": "https://relics.wtf",
+      "logoUri": null,
+      "logoContentHash": null,
+      "metadataMutable": false,
+      "metadataOwner": null
+    },
+    "token": {
+      "name": "Relics",
+      "symbol": "RELICS",
+      "metadataUri": null,
+      "metadataContentHash": null,
+      "logoUri": null,
+      "logoContentHash": null,
+      "metadataMutable": false,
+      "metadataOwner": null
+    },
+    "claimedAffiliations": [],
+    "providerPresentations": []
+  },
+  "target": {
+    "chainId": 1,
+    "network": "ethereum",
+    "solidityVersion": "0.8.26",
+    "evmVersion": "cancun",
+    "dependencyBaseline": "model-specific-pinned",
+    "officialLaunchProfileId": null
+  },
+  "assets": [
+    {
+      "id": "weth",
+      "role": "quote",
+      "origin": "existing-erc20",
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "decimals": 18,
+      "decimalsSource": "token-contract-observation",
+      "supplyPolicy": "externally-managed",
+      "initialSupply": null,
+      "behaviors": [
+        "standard"
+      ],
+      "controls": []
+    },
+    {
+      "id": "relics-token",
+      "role": "launched",
+      "origin": "new-fixed-supply",
+      "address": "0x8F294a99a0609822C233b24867F331c292cE2DA9",
+      "decimals": 18,
+      "decimalsSource": "implementation-constant",
+      "supplyPolicy": "fixed-at-creation",
+      "initialSupply": "10000000000000000000000",
+      "behaviors": [
+        "transfer-coupled-nft-dormancy-sync"
+      ],
+      "controls": []
+    }
+  ],
+  "launchLifecycle": {
+    "tokenCreation": {
+      "applicable": true,
+      "actor": "RELICS deployer (one-time launch wallet; holds zero $RELICS today; token ownership renounced to address(0))",
+      "valueFlow": "The fixed 10,000 * 1e18 $RELICS supply was minted once at construction and used entirely for genesis liquidity. There was no mint price, presale, allowlist or team allocation. The ERC-20 has no mint or burn path, so supply never changes.",
+      "custody": "Deployer custody only during launch assembly on 2026-08-03; zero deployer balance since genesis liquidity placement.",
+      "failure": "Construction reverts atomically; already executed on mainnet.",
+      "event": "ERC-20 Transfer from address(0) at deployment.",
+      "notApplicableReason": null
+    },
+    "poolInitialization": {
+      "applicable": true,
+      "actor": "RELICS deployer (pre-renounce), via the one-shot owner-only bindCanonicalPool followed by PoolManager.initialize",
+      "valueFlow": "No value moves at initialization. The hook's afterInitialize validates the exact PoolKey and the exact expected initial price (tick -82980) and seeds the market-state record; any other key or price reverts, so no second pool can ever initialize against this hook.",
+      "custody": "No custody exists at this phase: no value moves at initialization and the hook never holds funds.",
+      "failure": "Reverts UnauthorizedPool / UnexpectedInitialPrice; the binding is one-shot and is already spent on mainnet.",
+      "event": "CanonicalPoolBound, then MarketStateUpdated.",
+      "notApplicableReason": null
+    },
+    "liquidityFormation": {
+      "applicable": true,
+      "actor": "RELICS deployer (single genesis add), then any public LP",
+      "valueFlow": "Genesis liquidity was single-sided: all 10,000 $RELICS entered one full-range-above-launch position with zero WETH seeded, so the launch tick is the price minimum. afterAddLiquidity recorded the event; later public liquidity changes are recorded the same way.",
+      "custody": "Pool liquidity is held by the Uniswap v4 PoolManager under standard v4 accounting. The genesis LP position NFT is held in a third-party UNCX liquidity lock (lock id 103); that custody is outside the hook's boundary and the hook holds nothing.",
+      "failure": "Standard v4 atomic revert.",
+      "event": "LiquidityObserved and MarketStateUpdated.",
+      "notApplicableReason": null
+    },
+    "initialTransaction": {
+      "applicable": false,
+      "actor": null,
+      "valueFlow": null,
+      "custody": null,
+      "failure": null,
+      "event": null,
+      "notApplicableReason": "There was deliberately no project-funded initial transaction: the deployer made no bootstrap buy and holds no $RELICS. The first swap was an ordinary public trade. The project's release gates prove projectFundedBootstrapBuy = false."
+    },
+    "trading": {
+      "applicable": true,
+      "actor": "Public traders through any v4 router; app.uniswap.org quotes and routes the pool with no custom hookData required",
+      "valueFlow": "Standard v4 concentrated-liquidity execution. The static 0.30% LP fee accrues to in-range liquidity providers. The hook observes the swap in afterSwap and writes market state; it has no before-hooks and no return-delta permissions, so it structurally cannot alter amounts, tax, or refuse a trade.",
+      "custody": "PoolManager flash accounting; the hook never holds or touches funds.",
+      "failure": "The whole swap reverts atomically if any step reverts. On the canonical pool the hook's only revert paths are uint128 cumulative-volume overflow guards that are unreachable in practice for a 10,000-unit fixed-supply asset. Seller-side note: a $RELICS transfer that would retire more than 16 awakened Relics reverts PreparationRequired at the token layer until the holder self-serves prepareSell; this is a token behavior, not a hook behavior, and never affects buys.",
+      "event": "SwapObserved, MarketStateUpdated, and EpochAdvanced on epoch transitions.",
+      "notApplicableReason": null
+    },
+    "feesAndClaims": {
+      "applicable": true,
+      "actor": "Liquidity providers under standard Uniswap v4 fee accounting",
+      "valueFlow": "The 0.30% LP fee accrues to pool liquidity through core v4 fee-growth accounting. The hook implements no fee mechanism of any kind: it collects nothing, stores no claims, and has no recipient. There are no project fees, no transfer taxes and no hook-owned charges anywhere in the system.",
+      "custody": "PoolManager standard accounting only.",
+      "failure": "Standard v4 behavior; nothing model-specific can fail.",
+      "event": "Core v4 events only.",
+      "notApplicableReason": null
+    },
+    "dependencyFailure": {
+      "applicable": true,
+      "actor": "None (the hook's only dependency is the PoolManager singleton it is permanently bound to)",
+      "valueFlow": "If the PoolManager were unavailable, no swaps would execute and market state would simply stop advancing. The hook holds no funds, so no user value can be trapped in it under any dependency failure.",
+      "custody": "No custody exists under any dependency failure: the hook holds no tokens, ETH, claims or positions at any time.",
+      "failure": "No model-specific failure surface exists beyond core v4 availability.",
+      "event": "No dedicated event exists; observers see market-state events simply stop advancing while the dependency is unavailable.",
+      "notApplicableReason": null
+    },
+    "retirement": {
+      "applicable": false,
+      "actor": null,
+      "valueFlow": null,
+      "custody": null,
+      "failure": null,
+      "event": null,
+      "notApplicableReason": "No retirement path exists by design. The hook is immutable, ownerless (owner() == address(0) on mainnet), unbindable, and bound one-shot to a single canonical pool; market state accrues monotonically for the life of the chain."
+    }
+  },
+  "pool": {
+    "currency0": "relics-token",
+    "currency1": "weth",
+    "orderingRule": "$RELICS (0x8F29...) sorts numerically below WETH (0xC02a...), so the launched token is currency0. This is a permanent deployed fact and is what made the single-sided genesis position immediately routable.",
+    "tickSpacing": 60,
+    "lpFee": {
+      "classification": "lp-fee",
+      "mode": "static",
+      "hundredthsOfBip": 3000,
+      "initialHundredthsOfBip": null,
+      "initializationPath": null,
+      "applicationMode": null,
+      "overrideFlagPolicy": null,
+      "persistentUpdateActor": null,
+      "persistentUpdateCallSites": [],
+      "rateLimit": null,
+      "updatePath": null,
+      "minimum": null,
+      "maximum": null,
+      "inputMetric": null,
+      "referenceAsset": null,
+      "measurementUnit": null,
+      "observationMode": null,
+      "observationWindow": null,
+      "curve": null,
+      "updateCadence": null,
+      "liquidityDecreaseBehavior": null,
+      "manipulationResistance": null,
+      "failureRule": null,
+      "recipient": "pool-liquidity-providers"
+    },
+    "canonical": true,
+    "alternativePools": "No alternative pool can use this hook: every callback revalidates the full PoolKey against the bound canonical pool and reverts UnauthorizedPool otherwise, so a second pool cannot even initialize against it. Pools without the hook may exist but write no RELICS market state."
+  },
+  "programmableFee": {
+    "policyId": "programmable-volume-fee-v1",
+    "policyVersion": "1.0.0",
+    "poolScope": "canonical-launch-pool-key",
+    "rates": {
+      "unit": "hundredths-of-bip",
+      "selectedHundredthsOfBip": null,
+      "minimumEffectiveHundredthsOfBip": 1000,
+      "effectiveHundredthsOfBip": null,
+      "platformHundredthsOfBip": 1000,
+      "projectHundredthsOfBip": null,
+      "formula": "effective=max(selected,1000);platform=1000;project=effective-1000",
+      "lpFeeExcluded": true
+    },
+    "basis": {
+      "volume": "gross-quote-side-swap-volume",
+      "quoteAsset": "canonical-pool-quote-asset"
+    },
+    "ownership": {
+      "owner": "0x4957f49620AFf3Adbbe8195a4f633E49cc93376c",
+      "immutable": true,
+      "claimAuthority": "owner-only",
+      "claimAvailability": "anytime",
+      "claimDestinationPolicy": "owner-or-owner-selected-per-claim",
+      "storedMutableRecipient": false,
+      "builderCanMutate": false,
+      "projectCanMutate": false,
+      "administratorCanMutate": false
+    },
+    "collection": {
+      "status": "pending-hook-integration",
+      "integration": "canonical-pool-hook",
+      "enforcement": "non-bypassable",
+      "hookFeeMechanismBinding": "hook.feeMechanism",
+      "supportedSwapModes": [],
+      "swapModePaths": {
+        "zeroForOneExactInput": null,
+        "zeroForOneExactOutput": null,
+        "oneForZeroExactInput": null,
+        "oneForZeroExactOutput": null
+      },
+      "selfCallPolicy": "same-pool-swap-forbidden"
+    },
+    "accounting": {
+      "accrualMode": "claimable-liability",
+      "liabilityKeyDimensions": [
+        "poolId",
+        "currency",
+        "owner"
+      ],
+      "crossPoolNetting": false,
+      "valueFlowId": null,
+      "collectionEvent": null,
+      "claimEvent": null
+    },
+    "evidence": {
+      "sourcePaths": [],
+      "testPaths": []
+    }
+  },
+  "hook": {
+    "used": true,
+    "base": "@openzeppelin/uniswap-hooks 1.2.2 BaseHook (exact vendored source in flagship/lib/uniswap-hooks)",
+    "upgradeable": false,
+    "sharedAcrossPools": false,
+    "poolNamespace": "Exactly one canonical pool, bound via a one-shot owner-only call that is already spent; ownership has since been renounced to address(0).",
+    "poolAdmission": {
+      "enforcement": "Hook-side PoolKey validation in every enabled callback",
+      "factoryOrRegistry": "No factory or registry exists; admission is enforced entirely by hook-side validation of the full PoolKey in every enabled callback.",
+      "alternativePoolBehavior": "afterInitialize reverts UnauthorizedPool for any non-canonical key, so no second pool can ever be initialized with this hook attached.",
+      "rejectionRule": "Every callback revalidates pool id, both currencies, fee, tickSpacing and the hook address itself against the bound canonical values and reverts UnauthorizedPool or HookAddressMismatch on any difference."
+    },
+    "permissions": {
+      "beforeInitialize": false,
+      "afterInitialize": true,
+      "beforeAddLiquidity": false,
+      "afterAddLiquidity": true,
+      "beforeRemoveLiquidity": false,
+      "afterRemoveLiquidity": false,
+      "beforeSwap": false,
+      "afterSwap": true,
+      "beforeDonate": false,
+      "afterDonate": false,
+      "beforeSwapReturnDelta": false,
+      "afterSwapReturnDelta": false,
+      "afterAddLiquidityReturnDelta": false,
+      "afterRemoveLiquidityReturnDelta": false
+    },
+    "callbackPolicies": [
+      {
+        "callback": "afterInitialize",
+        "necessity": "Validates the exact canonical PoolKey and the exact expected initial price (tick -82980), and seeds the market-state record exactly once at pool birth.",
+        "allowedReverts": "UnauthorizedPool, HookAddressMismatch and UnexpectedInitialPrice, only at initialization time; this is what makes a second pool impossible and no user funds are at stake.",
+        "userExitImpact": "None; initialization was a one-time launch action already executed on mainnet.",
+        "noSelfCallImpact": "The hook never initiates pool actions of any kind, so no self-call or nested-action path exists."
+      },
+      {
+        "callback": "afterAddLiquidity",
+        "necessity": "Records liquidity magnitude and current tick into GlobalMarketState so recorded market history is complete; always returns ZERO_DELTA.",
+        "allowedReverts": "UnauthorizedPool for a non-canonical key (unreachable in practice because such a pool cannot even initialize) and Uint128Overflow/Int128Overflow guards that are unreachable for a 10,000-unit fixed-supply asset.",
+        "userExitImpact": "None for canonical-pool users; liquidity removal is not hooked at all (afterRemoveLiquidity is disabled), so exits never pass through this hook.",
+        "noSelfCallImpact": "The hook never initiates pool actions of any kind, so no self-call or nested-action path exists."
+      },
+      {
+        "callback": "afterSwap",
+        "necessity": "Records swap amounts, tick and an optional caller-supplied entropy salt into GlobalMarketState; this is the observation that forges the art. Always returns a zero delta.",
+        "allowedReverts": "UnauthorizedPool for a non-canonical key (unreachable on the canonical pool) and uint128 cumulative-volume overflow guards that are astronomically unreachable for a 10,000-unit fixed supply.",
+        "userExitImpact": "None: the hook has no before-hooks and no return-delta permissions, so it structurally cannot alter, tax or refuse any trade.",
+        "noSelfCallImpact": "The hook never initiates pool actions of any kind, so no self-call or nested-action path exists."
+      }
+    ],
+    "hookData": {
+      "used": true,
+      "schema": "Optional bytes32 entropy salt: when hookData.length >= 32 the first word is abi.decoded as bytes32; otherwise bytes32(sqrtPriceLimitX96) is used. The salt only perturbs the art's marketSeed hash chain.",
+      "identitySource": "none",
+      "trustedRouterDeploymentRecordId": null,
+      "callbackSenderRule": "pool-manager-callback-only",
+      "validation": "Length check then fixed-width abi.decode of the first 32 bytes only. Any router-supplied value is safe by construction because the salt is entropy for the deterministic art seed, never a financial input."
+    },
+    "feeMechanism": {
+      "used": false,
+      "classification": "none",
+      "chargedCurrency": null,
+      "swapQuadrants": {
+        "zeroForOneExactInput": null,
+        "zeroForOneExactOutput": null,
+        "oneForZeroExactInput": null,
+        "oneForZeroExactOutput": null
+      },
+      "maximumHundredthsOfBip": null,
+      "collectionPath": null,
+      "collectionValueFlowId": null,
+      "liabilityKeyDimensions": [],
+      "collectionEvent": null,
+      "recipients": [],
+      "ownership": null,
+      "claimPolicy": null
+    },
+    "customAccounting": {
+      "used": false,
+      "backingSource": null,
+      "conservationEquation": null,
+      "settlement": null,
+      "partialFillBehavior": null,
+      "liabilityNamespace": null,
+      "liabilityKeyDimensions": [],
+      "crossPoolNetting": null,
+      "duplicateCurrencyPolicy": null,
+      "failureIsolation": null,
+      "withdrawalOrdering": null
+    },
+    "returnDeltaAccounting": {
+      "used": false,
+      "quadrants": {
+        "zeroForOneExactInput": {
+          "supported": false,
+          "specifiedCurrency": null,
+          "unspecifiedCurrency": null,
+          "amountSign": null,
+          "specifiedComponent": null,
+          "unspecifiedComponent": null,
+          "residualAmmEquation": null,
+          "finalCallerDeltaEquation": null,
+          "specifiedDeltaCanConsumeEntireAmount": null,
+          "rounding": null,
+          "zeroAmmLeg": null,
+          "partialFillRule": null,
+          "slippageInvariant": null,
+          "failureRule": null
+        },
+        "zeroForOneExactOutput": {
+          "supported": false,
+          "specifiedCurrency": null,
+          "unspecifiedCurrency": null,
+          "amountSign": null,
+          "specifiedComponent": null,
+          "unspecifiedComponent": null,
+          "residualAmmEquation": null,
+          "finalCallerDeltaEquation": null,
+          "specifiedDeltaCanConsumeEntireAmount": null,
+          "rounding": null,
+          "zeroAmmLeg": null,
+          "partialFillRule": null,
+          "slippageInvariant": null,
+          "failureRule": null
+        },
+        "oneForZeroExactInput": {
+          "supported": false,
+          "specifiedCurrency": null,
+          "unspecifiedCurrency": null,
+          "amountSign": null,
+          "specifiedComponent": null,
+          "unspecifiedComponent": null,
+          "residualAmmEquation": null,
+          "finalCallerDeltaEquation": null,
+          "specifiedDeltaCanConsumeEntireAmount": null,
+          "rounding": null,
+          "zeroAmmLeg": null,
+          "partialFillRule": null,
+          "slippageInvariant": null,
+          "failureRule": null
+        },
+        "oneForZeroExactOutput": {
+          "supported": false,
+          "specifiedCurrency": null,
+          "unspecifiedCurrency": null,
+          "amountSign": null,
+          "specifiedComponent": null,
+          "unspecifiedComponent": null,
+          "residualAmmEquation": null,
+          "finalCallerDeltaEquation": null,
+          "specifiedDeltaCanConsumeEntireAmount": null,
+          "rounding": null,
+          "zeroAmmLeg": null,
+          "partialFillRule": null,
+          "slippageInvariant": null,
+          "failureRule": null
+        }
+      },
+      "executionEvent": null
+    },
+    "postReturnDeltaAccounting": {
+      "afterSwap": {
+        "used": false,
+        "returnedDeltaShape": null,
+        "positiveMeaning": null,
+        "negativeMeaning": null,
+        "backingSource": null,
+        "callerDeltaEquation": null,
+        "componentPolicies": {
+          "unspecified": null,
+          "currency0": null,
+          "currency1": null
+        },
+        "bounds": null,
+        "rounding": null,
+        "slippageOrMinimums": null,
+        "failureRule": null,
+        "executionEvent": null
+      },
+      "afterAddLiquidity": {
+        "used": false,
+        "returnedDeltaShape": null,
+        "positiveMeaning": null,
+        "negativeMeaning": null,
+        "backingSource": null,
+        "callerDeltaEquation": null,
+        "componentPolicies": {
+          "unspecified": null,
+          "currency0": null,
+          "currency1": null
+        },
+        "bounds": null,
+        "rounding": null,
+        "slippageOrMinimums": null,
+        "failureRule": null,
+        "executionEvent": null
+      },
+      "afterRemoveLiquidity": {
+        "used": false,
+        "returnedDeltaShape": null,
+        "positiveMeaning": null,
+        "negativeMeaning": null,
+        "backingSource": null,
+        "callerDeltaEquation": null,
+        "componentPolicies": {
+          "unspecified": null,
+          "currency0": null,
+          "currency1": null
+        },
+        "bounds": null,
+        "rounding": null,
+        "slippageOrMinimums": null,
+        "failureRule": null,
+        "executionEvent": null
+      }
+    },
+    "erc6909Claims": {
+      "used": false,
+      "currencyIdDerivation": null,
+      "claimBalanceScope": null,
+      "poolIdIncludedInClaimId": null,
+      "owner": null,
+      "operatorPolicy": null,
+      "mintFlow": null,
+      "burnFlow": null,
+      "takeSettleFlow": null,
+      "liabilityKeys": null,
+      "liabilityKeyDimensions": [],
+      "crossPoolNetting": null,
+      "transferPolicy": null,
+      "redemption": null,
+      "roundingDust": null,
+      "aggregateSolvencyEquation": null
+    },
+    "nestedActions": {
+      "used": false,
+      "directPoolManagerCalls": false,
+      "routerCalls": false,
+      "allowedActions": [],
+      "samePoolPolicy": null,
+      "crossPoolPolicy": null,
+      "callbackSuppression": null,
+      "directCallbackBehavior": null,
+      "routerCallbackBehavior": null,
+      "maximumDepth": null,
+      "stateCommitOrder": null,
+      "transientDeltaOwner": null,
+      "syncInterleaving": null,
+      "slippageAggregation": null,
+      "failureAtomicity": null
+    }
+  },
+  "noHookArchitecture": null,
+  "valueFlows": [
+    {
+      "id": "swap",
+      "action": "swap",
+      "asset": "relics-token and weth",
+      "from": "trader",
+      "to": "trader (net of 0.30% LP fee to pool liquidity)",
+      "amountRule": "Standard Uniswap v4 concentrated-liquidity execution at pool price. The hook alters nothing: no before-hooks, no return deltas, no fee, no custody.",
+      "settlement": "PoolManager flash accounting settled by the caller's router within the same transaction.",
+      "failure": "The whole transaction reverts atomically. Seller-side token constraint: an outflow that would retire more than 16 awakened Relics reverts PreparationRequired until the holder calls prepareSell themselves; buys are never affected."
+    },
+    {
+      "id": "lp-fee-accrual",
+      "action": "fee-accrual",
+      "asset": "relics-token and weth",
+      "from": "traders",
+      "to": "pool liquidity providers",
+      "amountRule": "Static 0.30% LP fee via core v4 fee-growth accounting; computed from PoolKey.fee, never hardcoded anywhere else.",
+      "settlement": "Core v4 accounting inside the PoolManager.",
+      "failure": "Standard v4 behavior; no model-specific path."
+    }
+  ],
+  "authorities": [
+    {
+      "role": "Hook owner (historical, extinguished)",
+      "controller": "address(0) since 2026-08-03; before renouncing, the deployer's only power was the one-shot bindCanonicalPool, which was already spent at launch",
+      "capabilities": [
+        "bindCanonicalPool(poolId, currencies, fee, tickSpacing, expectedPrice) - one-shot, already spent, unrepeatable"
+      ],
+      "mutable": false,
+      "delay": "none \u2014 the authority is extinguished, so nothing can be scheduled, delayed or exercised",
+      "userExitImpact": "None. No live authority of any kind remains anywhere in the system: token owner() and hook owner() are address(0) on mainnet, the NFT and renderer never had owners, and there is no proxy, pause, allowlist, tax switch or upgrade path."
+    }
+  ],
+  "dependencies": {
+    "onchain": [
+      {
+        "id": "uniswap-v4-poolmanager",
+        "name": "Uniswap v4 PoolManager",
+        "kind": "protocol-singleton",
+        "repository": "https://github.com/Uniswap/v4-core",
+        "revision": null,
+        "packageVersion": "1.0.2",
+        "license": "MIT (interfaces, libraries and types vendored under flagship/lib/v4-core)",
+        "sourceProvenance": "pinned-source",
+        "deploymentRecordId": "v4-poolmanager-ethereum",
+        "chainAddress": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+        "runtimeHash": null,
+        "deploymentEvidencePath": "flagship/PROVENANCE.json",
+        "trust": "Canonical Uniswap v4 singleton on Ethereum mainnet; the hook is constructor-bound to this exact address and authenticates every callback against it.",
+        "failure": "If the PoolManager is unavailable no swaps execute and market state stops advancing. The hook holds no funds, so no value can be trapped in it.",
+        "fallback": "None required; there is no fallback surface."
+      },
+      {
+        "id": "weth9",
+        "name": "Wrapped Ether (WETH9)",
+        "kind": "erc20",
+        "repository": null,
+        "revision": null,
+        "packageVersion": null,
+        "license": "GPL-3.0 (canonical WETH9)",
+        "sourceProvenance": "verified-explorer-source",
+        "deploymentRecordId": null,
+        "chainAddress": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "runtimeHash": null,
+        "deploymentEvidencePath": null,
+        "trust": "Canonical mainnet wrapped ether, the pool's quote asset (currency1).",
+        "failure": "Standard WETH behavior; no model-specific dependency beyond being the paired currency.",
+        "fallback": "None required: WETH is the pool's immutable quote currency; no substitute or fallback asset exists or is needed."
+      }
+    ],
+    "offchain": []
+  },
+  "operations": {
+    "keeper": {
+      "required": false,
+      "actor": null,
+      "action": null,
+      "cadence": null,
+      "authentication": null,
+      "funding": null,
+      "failure": null,
+      "fallback": null
+    },
+    "oracle": {
+      "required": false,
+      "actor": null,
+      "action": null,
+      "cadence": null,
+      "authentication": null,
+      "funding": null,
+      "failure": null,
+      "fallback": null
+    },
+    "monitoring": "The relics.wtf site reads live mainnet state through a server-side RPC proxy; degraded RPC states render honestly as awaiting-record, never as fake counters. No keeper, oracle, cron or autonomous actor exists on-chain.",
+    "incidentResponse": "No pausable or administrable surface exists on-chain; incident response is limited to interface-level messaging."
+  },
+  "integration": {
+    "routerGeneration": null,
+    "routerDependencyId": null,
+    "permit2DependencyId": null,
+    "stateViewDependencyId": null,
+    "quoterDependencyId": null,
+    "sdkDependencies": [],
+    "routerActionProfile": {
+      "routerVersionExplicit": null,
+      "universalRouterCommand": null,
+      "v4Actions": [],
+      "settlementMode": null,
+      "permit2Mode": null,
+      "finalSwapDeltaValidated": null
+    },
+    "appSourcePaths": [],
+    "integrationTestPaths": [],
+    "quoteExecutionParity": null,
+    "swapModes": [
+      "zeroForOne-exactInput",
+      "zeroForOne-exactOutput",
+      "oneForZero-exactInput",
+      "oneForZero-exactOutput"
+    ],
+    "partialFills": "Standard Uniswap v4 exact-input/exact-output semantics through the trader's chosen router; the hook adds no partial-fill behavior of its own.",
+    "slippage": "Chosen entirely by the trader's client (for example app.uniswap.org defaults); the hook imposes no slippage rule and cannot move the price.",
+    "deadline": "Chosen entirely by the trader's client; the hook imposes no deadline semantics.",
+    "permit2": "Standard Permit2 approvals through whichever router the trader uses; neither the hook nor the token adds any permit or signature logic.",
+    "stateReads": "Integrators read the hook's public getters (getGlobalState, canonicalPoolId, currency0/1, poolFee, poolTickSpacing) plus standard v4 slot0/StateView; the relics.wtf site performs these reads through a server-side RPC proxy.",
+    "events": [
+      "CanonicalPoolBound(poolId, currency0, currency1, fee, tickSpacing, expectedSqrtPriceX96, expectedInitialTick)",
+      "SwapObserved(poolId, amount0, amount1, tick, swapCount, marketSeed)",
+      "LiquidityObserved(poolId, liquidityDelta, amount0, amount1, liquidityEventCount)",
+      "MarketStateUpdated(epoch, stress, volatility, drawdownBand, marketSeed)",
+      "EpochAdvanced(previousEpoch, epoch)"
+    ],
+    "routingAndDiscoverability": {
+      "routingMode": "uniswap-interface-api",
+      "allowlistTriggers": {
+        "usesDeltaFlag": false,
+        "addressStartsWith91": false,
+        "targetsMajorPair": true,
+        "permissionedPool": false
+      },
+      "uniswapRoutingStatus": "required-not-submitted",
+      "hookRegistryStatus": "not-submitted",
+      "customHookDataRequired": false,
+      "standardRouterCompatible": true,
+      "permissionedRouting": {
+        "required": false,
+        "minimumRouterGeneration": null,
+        "adapterCurrencyUsed": null,
+        "allowedWrapperBindings": null,
+        "positionManagerBinding": null,
+        "routingAllowlistRequiredPerChain": null
+      },
+      "sourcePaths": [],
+      "testPaths": []
+    },
+    "dataReconstruction": {
+      "mode": "not-applicable",
+      "eventCoverage": null,
+      "cursor": null,
+      "startBlockPolicy": null,
+      "finalityDepth": null,
+      "reorgPolicy": null,
+      "backfillPolicy": null,
+      "checkpointPolicy": null,
+      "freshnessTargetSeconds": null,
+      "staleAfterSeconds": null,
+      "freshnessMeasurement": null,
+      "reconciliation": null,
+      "reserveReconstruction": {
+        "used": false,
+        "balanceSources": [],
+        "liabilitySources": [],
+        "attributionKeys": [],
+        "solvencyEquation": null,
+        "poolLiquidityTreatment": null,
+        "donationAndDustPolicy": null,
+        "reconciliation": null
+      },
+      "sourcePaths": [],
+      "testPaths": []
+    },
+    "platformHandoff": {
+      "intended": false,
+      "websiteRegistryPath": null,
+      "uiSourcePaths": [],
+      "apiSourcePaths": [],
+      "indexerSourcePaths": [],
+      "testPaths": [],
+      "reviewStatus": "not-requested",
+      "maintainerReviewRequired": true,
+      "selfApproval": false,
+      "availabilityClaimed": false,
+      "handoffNotes": "RELICS is a live independent deployment submitted as an authorized public flagship reference; no Programmable platform launch, routing, indexing or product integration is requested."
+    }
+  },
+  "projectSurfaces": [
+    {
+      "id": "relics-v4-hook",
+      "kind": "onchain-contract",
+      "name": "RELICS v4 hook (deployed flagship)",
+      "summary": "The immutable market-history observer live at 0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440 on Ethereum mainnet. The flagship/ directory in this repository contains its exact 30-file Etherscan-verified source closure, byte for byte, plus an offline CREATE2 proof that the tree reproduces the deployed init code.",
+      "executionBoundary": "onchain",
+      "capabilityIds": [
+        "canonical-pool-state"
+      ],
+      "authorityRefs": [],
+      "valueFlowRefs": [
+        "swap",
+        "lp-fee-accrual"
+      ],
+      "assetRefs": [
+        "relics-token",
+        "weth"
+      ],
+      "sourcePaths": [
+        "flagship/src/RelicsV4Hook.sol",
+        "flagship/src/interfaces/IRelicsHook.sol",
+        "flagship/src/libraries/DNA.sol",
+        "flagship/src/libraries/EvolutionMath.sol"
+      ],
+      "testPaths": [
+        "flagship/test/DeploymentProof.t.sol"
+      ],
+      "schemaPaths": [],
+      "evidencePaths": [
+        "flagship/PROVENANCE.json"
+      ],
+      "exposure": {
+        "movesValue": false,
+        "usesSignatures": false,
+        "makesExternalCalls": false,
+        "holdsCustody": false,
+        "handlesPii": false,
+        "usesGeolocation": false,
+        "usesSecrets": false
+      },
+      "profiles": {
+        "authority": {
+          "status": "applicable",
+          "summary": "Every callback is authenticated to the exact PoolManager by BaseHook, and every callback revalidates the full canonical PoolKey. No live administrative authority exists: ownership was renounced after the one-shot pool binding was spent.",
+          "controls": [
+            "Authenticate every hook callback through the exact PoolManager and reject every non-canonical PoolKey with UnauthorizedPool."
+          ],
+          "evidenceRefs": [
+            "flagship/PROVENANCE.json"
+          ]
+        },
+        "valueFlow": {
+          "status": "not-applicable",
+          "summary": "The hook moves no value: no before-hooks, no return deltas, no fee mechanism, no custody, zero-delta returns in every callback.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "sourceOfTruth": {
+          "status": "applicable",
+          "summary": "The PoolManager's slot0 for the exact canonical PoolId, read via StateLibrary in the same transaction as the callback, is the only external state the hook consumes.",
+          "controls": [
+            "Key every state read and emitted event by the exact canonical PoolId on chain id 1."
+          ],
+          "evidenceRefs": []
+        },
+        "signaturesReplay": {
+          "status": "not-applicable",
+          "summary": "No signed messages, permits or offchain payloads are consumed.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "externalCalls": {
+          "status": "not-applicable",
+          "summary": "No external calls beyond authenticated PoolManager protocol execution and its extsload state reads.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "custody": {
+          "status": "not-applicable",
+          "summary": "The hook holds no tokens, ETH, claims, positions or dust at any time.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "piiGeolocation": {
+          "status": "not-applicable",
+          "summary": "No private identity data or geolocation exists on this surface.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "secretBoundary": {
+          "status": "not-applicable",
+          "summary": "Nothing secret exists; the marketSeed is public entropy for deterministic art, never a financial gate.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "sourceTestSchema": {
+          "status": "applicable",
+          "summary": "The flagship directory binds the exact 30-file verified compile closure and an offline deployment proof; implementation.sourcePaths lists every imported executable byte.",
+          "controls": [
+            "Bind the exact verified source closure and include every imported executable byte in the review target."
+          ],
+          "evidenceRefs": [
+            "flagship/PROVENANCE.json"
+          ]
+        },
+        "failureRecovery": {
+          "status": "applicable",
+          "summary": "Any callback revert reverts the whole pool action atomically. On the canonical pool the only hook revert paths are unreachable-in-practice uint128 cumulative-volume overflow guards; no user exit path depends on the hook.",
+          "controls": [
+            "Keep user exits (swaps, liquidity removal, ERC-20/721 transfers) structurally independent of hook liveness beyond core v4 semantics."
+          ],
+          "evidenceRefs": []
+        }
+      },
+      "signedDataSource": {
+        "used": false,
+        "signerAuthorityRefs": [],
+        "signatureScheme": null,
+        "payloadSchemaPath": null,
+        "freshnessRule": null,
+        "replayProtection": null,
+        "onchainVerifierSurfaceId": null
+      },
+      "onchainOracleVerifier": {
+        "used": false,
+        "verifiedSourceSurfaceIds": [],
+        "verificationRule": null,
+        "freshnessRule": null,
+        "replayProtection": null,
+        "failureRule": null
+      }
+    },
+    {
+      "id": "relics-token-contract",
+      "kind": "onchain-contract",
+      "name": "RELICS ERC-20 + NFT dormancy layer (deployed, reference-only in this submission)",
+      "summary": "The live fixed-supply ERC-20 at 0x8F294a99a0609822C233b24867F331c292cE2DA9 whose transfers are coupled to an ERC-721 dormancy layer (RelicsNFT). Its verified source is public on Etherscan; this repository's root is a clean-room teaching rewrite, and the token source is not part of the declared flagship closure. Declared here so the transfer-coupling behavior is reviewed honestly rather than hidden.",
+      "executionBoundary": "onchain",
+      "capabilityIds": [
+        "relics-token-nft-sync"
+      ],
+      "authorityRefs": [],
+      "valueFlowRefs": [
+        "swap"
+      ],
+      "assetRefs": [
+        "relics-token"
+      ],
+      "sourcePaths": [],
+      "testPaths": [],
+      "schemaPaths": [],
+      "evidencePaths": [
+        "flagship/PROVENANCE.json"
+      ],
+      "exposure": {
+        "movesValue": true,
+        "usesSignatures": false,
+        "makesExternalCalls": false,
+        "holdsCustody": false,
+        "handlesPii": false,
+        "usesGeolocation": false,
+        "usesSecrets": false
+      },
+      "profiles": {
+        "authority": {
+          "status": "applicable",
+          "summary": "Token owner() is address(0) on mainnet; awakening and sell-preparation are msg.sender-only, so no operator can act on a holder's behalf.",
+          "controls": [
+            "No live authority: owner renounced, no proxy, no pause, no allowlist, no tax switch."
+          ],
+          "evidenceRefs": []
+        },
+        "valueFlow": {
+          "status": "applicable",
+          "summary": "Standard ERC-20 amounts always move unmodified; outflows additionally retire whole-unit Relic NFTs (LIFO, real burn events) to keep active NFTs <= whole-unit balance.",
+          "controls": [
+            "Transfer amounts are never taxed or altered; only the sender's own NFT count is affected."
+          ],
+          "evidenceRefs": []
+        },
+        "sourceOfTruth": {
+          "status": "applicable",
+          "summary": "Etherscan-verified source at the live address is the reference; chain state outranks every description.",
+          "controls": [
+            "Verify behavior against the live contract, not this summary."
+          ],
+          "evidenceRefs": []
+        },
+        "signaturesReplay": {
+          "status": "not-applicable",
+          "summary": "No model-specific signatures.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "externalCalls": {
+          "status": "not-applicable",
+          "summary": "Transfers invoke only the project's own NFT contract; no third-party calls.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "custody": {
+          "status": "not-applicable",
+          "summary": "The token contract holds no balances for users.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "piiGeolocation": {
+          "status": "not-applicable",
+          "summary": "No private identity data or user geolocation exists anywhere on this onchain surface.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "secretBoundary": {
+          "status": "not-applicable",
+          "summary": "No secret exists on this surface; every byte of contract state and calldata is public.",
+          "controls": [],
+          "evidenceRefs": []
+        },
+        "sourceTestSchema": {
+          "status": "applicable",
+          "summary": "Token source is verified on Etherscan but intentionally outside this submission's declared closure; the submission's binding scope is the hook flagship.",
+          "controls": [
+            "Any deeper token review reads the Etherscan-verified source at the live address."
+          ],
+          "evidenceRefs": []
+        },
+        "failureRecovery": {
+          "status": "applicable",
+          "summary": "A transfer needing more than 16 NFT retirements reverts atomically with PreparationRequired; the holder self-serves prepareSell (<= 16 ids, msg.sender-only) and retries. Buys and receipt are never blocked.",
+          "controls": [
+            "Holder-resolvable, deterministic, bounded-work revert; no operator involvement possible."
+          ],
+          "evidenceRefs": []
+        }
+      },
+      "signedDataSource": {
+        "used": false,
+        "signerAuthorityRefs": [],
+        "signatureScheme": null,
+        "payloadSchemaPath": null,
+        "freshnessRule": null,
+        "replayProtection": null,
+        "onchainVerifierSurfaceId": null
+      },
+      "onchainOracleVerifier": {
+        "used": false,
+        "verifiedSourceSurfaceIds": [],
+        "verificationRule": null,
+        "freshnessRule": null,
+        "replayProtection": null,
+        "failureRule": null
+      }
+    }
+  ],
+  "projectCapabilities": [
+    {
+      "id": "canonical-pool-state",
+      "kind": "state-observation",
+      "summary": "Read slot0 of the exact canonical PoolId and write only the hook's own GlobalMarketState. No value custody, no external trust, no influence on execution.",
+      "surfaceIds": [
+        "relics-v4-hook"
+      ],
+      "securityTriggers": {
+        "authority": true,
+        "valueFlow": false,
+        "sourceOfTruth": true,
+        "signaturesReplay": false,
+        "externalCalls": false,
+        "custody": false,
+        "piiGeolocation": false,
+        "secretBoundary": false,
+        "sourceTestSchema": true,
+        "failureRecovery": true
+      },
+      "requiredProfiles": [
+        "authority",
+        "failure-recovery",
+        "source-of-truth",
+        "source-test-schema"
+      ]
+    },
+    {
+      "id": "relics-token-nft-sync",
+      "kind": "state-observation",
+      "summary": "ERC-20 transfers keep the sender's awakened Relic NFT count bounded by whole-unit balance via LIFO retirement with real burn events, bounded at 16 retirements per transfer with a holder-resolvable PreparationRequired revert above that.",
+      "surfaceIds": [
+        "relics-token-contract"
+      ],
+      "securityTriggers": {
+        "authority": true,
+        "valueFlow": true,
+        "sourceOfTruth": true,
+        "signaturesReplay": false,
+        "externalCalls": false,
+        "custody": false,
+        "piiGeolocation": false,
+        "secretBoundary": false,
+        "sourceTestSchema": true,
+        "failureRecovery": true
+      },
+      "requiredProfiles": [
+        "authority",
+        "failure-recovery",
+        "source-of-truth",
+        "source-test-schema",
+        "value-flow"
+      ]
+    }
+  ],
+  "capabilities": {
+    "externalCalls": {
+      "used": false,
+      "targets": [],
+      "callSites": [],
+      "reentrancyPolicy": null,
+      "stateDriftPolicy": null,
+      "returnValuePolicy": null,
+      "failureAtomicity": null
+    },
+    "permissionedAsset": {
+      "used": false,
+      "officialUniswapPermissionedPool": null,
+      "issuer": null,
+      "jurisdiction": null,
+      "legalDocuments": [],
+      "underlyingClaim": null,
+      "custodian": null,
+      "adapter": null,
+      "hooks": null,
+      "positionManager": null,
+      "swapEligibility": null,
+      "liquidityEligibility": null,
+      "positionTransferability": null,
+      "pauseFreezeUnwind": null,
+      "redemption": null,
+      "routingLimitations": null
+    },
+    "oracle": {
+      "used": false,
+      "source": null,
+      "value": null,
+      "deployment": null,
+      "runtimeHash": null,
+      "decimals": null,
+      "heartbeatSeconds": null,
+      "maxAgeSeconds": null,
+      "observationType": null,
+      "windowSeconds": null,
+      "minimumAnswer": null,
+      "maximumAnswer": null,
+      "maximumDeviation": null,
+      "roundChecks": null,
+      "manipulationResistance": null,
+      "governance": null,
+      "fallback": null,
+      "maxFallbackAgeSeconds": null,
+      "failureRule": null
+    },
+    "keeper": {
+      "used": false,
+      "executionMode": null,
+      "minIntervalSeconds": null,
+      "maxDelaySeconds": null,
+      "permissionlessFallbackAfterSeconds": null,
+      "idempotencyKey": null,
+      "duplicateBehavior": null,
+      "lastProcessedState": null,
+      "boundedWork": null,
+      "maxItems": null,
+      "retryPolicy": null,
+      "zeroWorkBehavior": null,
+      "fundingSource": null,
+      "minimumGasRunway": null,
+      "alertThreshold": null,
+      "maximumGas": null,
+      "failureImpact": null,
+      "userExitIndependent": null,
+      "poolBinding": null,
+      "slippage": null,
+      "deadline": null,
+      "mevPolicy": null
+    },
+    "proof": {
+      "used": false,
+      "proofSystem": null,
+      "circuitRevision": null,
+      "verifyingKeyHash": null,
+      "verifierAddress": null,
+      "runtimeHash": null,
+      "setupType": null,
+      "setupProvenance": null,
+      "publicInputs": [],
+      "domainBindings": {
+        "chainId": null,
+        "verifyingContract": null,
+        "modelVersion": null,
+        "pool": null,
+        "action": null,
+        "actorOrRecipient": null,
+        "amountBounds": null,
+        "epochOrDeadline": null
+      },
+      "replayMode": null,
+      "nullifierScope": null,
+      "nullifierDerivation": null,
+      "nullifierStorage": null,
+      "atomicSpentCheck": null,
+      "resetPolicy": null,
+      "maximumProofBytes": null,
+      "maximumVerificationGas": null,
+      "verifierAuthority": null,
+      "failureRule": null,
+      "privacyClaim": null,
+      "metadataLeakage": null
+    },
+    "crossChain": {
+      "used": false,
+      "bridgeDependencyId": null,
+      "source": {
+        "network": {
+          "namespace": null,
+          "reference": null
+        },
+        "domain": null,
+        "authenticatedSender": {
+          "encoding": null,
+          "value": null,
+          "canonicalizationRule": null
+        }
+      },
+      "destination": {
+        "chainId": null,
+        "domain": null,
+        "receiver": null,
+        "receiverDependencyId": null,
+        "authenticatedBridgeCaller": null
+      },
+      "message": {
+        "identifierDerivation": null,
+        "nonceDerivation": null,
+        "nonceScope": null,
+        "customNonceRule": null,
+        "payloadHashRule": null,
+        "idempotencyKeyRule": null,
+        "idempotencyStorage": null,
+        "atomicConsumption": null,
+        "duplicateBehavior": null,
+        "domainBindings": {
+          "bridgeDependencyId": null,
+          "sourceNetwork": null,
+          "sourceDomain": null,
+          "sourceSender": null,
+          "destinationChainId": null,
+          "destinationDomain": null,
+          "receiver": null,
+          "receiverDependencyId": null,
+          "modelId": null,
+          "poolId": null,
+          "action": null,
+          "payloadHash": null,
+          "timestampOrExpiry": null,
+          "messageId": null,
+          "nonce": null
+        }
+      },
+      "finality": {
+        "mode": null,
+        "minimumSourceConfirmations": null,
+        "challengePeriodSeconds": null,
+        "attestationRule": null,
+        "reorgBehavior": null,
+        "customFinalityRule": null
+      },
+      "ordering": {
+        "mode": null,
+        "sequenceKey": null,
+        "outOfOrderBehavior": null,
+        "maximumPendingMessages": null,
+        "queueOverflowBehavior": null,
+        "pendingMessageExpirySeconds": null,
+        "cleanupRule": null,
+        "releaseRule": null
+      },
+      "staleness": {
+        "timestampSource": null,
+        "customTimestampRule": null,
+        "maximumMessageAgeSeconds": null,
+        "maximumFutureSkewSeconds": null,
+        "staleMessageBehavior": null
+      },
+      "failureBehavior": null,
+      "failureRule": null,
+      "fallback": {
+        "mode": null,
+        "authority": null,
+        "rule": null
+      },
+      "quarantine": {
+        "used": null,
+        "storageRule": null,
+        "maximumEntries": null,
+        "entryExpirySeconds": null,
+        "overflowBehavior": null,
+        "cleanupRule": null,
+        "releaseMode": null,
+        "releaseRule": null,
+        "releaseAuthority": null,
+        "atomicRelease": null
+      }
+    },
+    "externalLiquidity": {
+      "used": false,
+      "custody": null,
+      "ownership": null,
+      "shareAccounting": null,
+      "solvencyEquation": null,
+      "lossAllocation": null,
+      "donationPolicy": null,
+      "exitPath": null,
+      "dependencyFailure": null
+    },
+    "asyncSwap": {
+      "used": false,
+      "supportedExactness": null,
+      "custody": null,
+      "fillRule": null,
+      "partialFillRule": null,
+      "cancellation": null,
+      "expiry": null,
+      "refund": null,
+      "queueBound": null,
+      "liveness": null,
+      "failureRule": null
+    },
+    "customCurve": {
+      "used": false,
+      "invariant": null,
+      "domain": null,
+      "rounding": null,
+      "monotonicity": null,
+      "discontinuities": null,
+      "inverse": null,
+      "differentialReference": null,
+      "failureRule": null
+    }
+  },
+  "capabilityExtensions": [],
+  "tokenBehaviorExtensions": [
+    {
+      "id": "relics-transfer-nft-sync",
+      "assetId": "relics-token",
+      "behavior": "transfer-coupled-nft-dormancy-sync",
+      "summary": "Every $RELICS outflow retires exactly enough of the sender's awakened Relic NFTs (LIFO, real burn events) to keep activeRelicCount <= floor(balance / 1e18). Retirement work is bounded at 16 Relics per transfer; a transfer that would retire more reverts PreparationRequired until the holder calls prepareSell themselves. Amounts are never modified, inflows never mint NFTs, and buys are unaffected.",
+      "projectCapabilityId": "relics-token-nft-sync",
+      "authorityRefs": [],
+      "valueFlowIds": [
+        "swap"
+      ],
+      "mutable": false,
+      "visibility": "fully-disclosed",
+      "supplyImpact": "none",
+      "transferImpact": "can-restrict",
+      "failureRule": "A transfer that would retire more than 16 awakened Relics reverts atomically with PreparationRequired. The holder always self-serves: prepareSell(uint256[]) (max 16 ids per call, msg.sender-only, no operator path) chooses which Relics go dormant, then the transfer succeeds. No allowlist, cooldown, cap, tax or operator control exists; the restriction is deterministic bounded-work protection, disclosed here with the strongest available label.",
+      "providerImpact": {
+        "routing": "A sell can revert for a holder with more than 16 unprepared awakened Relics; routers observe an ordinary revert and nothing pool-side changes.",
+        "quoting": "Quotes are unaffected: pool math is fully standard, and the constraint depends only on the seller's own NFT state.",
+        "indexing": "Standard ERC-20 and ERC-721 events throughout; retirements emit real burn Transfers.",
+        "status": "confirmed-external",
+        "evidence": [
+          "https://etherscan.io/address/0x8F294a99a0609822C233b24867F331c292cE2DA9#code"
+        ],
+        "limitations": [
+          "Providers that simulate transfers must model the sender-state-dependent PreparationRequired revert; ERC-20 amount semantics are otherwise completely standard."
+        ],
+        "fallback": "prepareSell then transfer, or transfer in batches retiring at most 16 Relics each."
+      },
+      "securityTriggers": {
+        "authority": true,
+        "valueFlow": true,
+        "sourceOfTruth": true,
+        "signaturesReplay": false,
+        "externalCalls": false,
+        "custody": false,
+        "piiGeolocation": false,
+        "secretBoundary": false,
+        "sourceTestSchema": true,
+        "failureRecovery": true
+      },
+      "requiredProfiles": [
+        "authority",
+        "failure-recovery",
+        "source-of-truth",
+        "source-test-schema",
+        "value-flow"
+      ],
+      "sourcePaths": [],
+      "testPaths": [],
+      "evidencePaths": [],
+      "testScenarios": [
+        "A transfer retiring at most 16 awakened Relics succeeds with unchanged ERC-20 amounts and real LIFO ERC-721 burn events; observed live on Ethereum mainnet since 2026-08-03.",
+        "A transfer that would retire more than 16 awakened Relics reverts atomically with PreparationRequired; after the holder calls prepareSell for chosen ids, the same transfer succeeds.",
+        "A buy (inflow) performs no ERC-721 work of any kind: no mint, no state write on the NFT layer, and raises only derived latent capacity."
+      ]
+    }
+  ],
+  "security": {
+    "usesTxOrigin": false,
+    "userControlledDelegatecall": false,
+    "arbitraryExecution": false,
+    "unboundedCriticalLoop": false,
+    "ignoredCallResults": false,
+    "hiddenControls": false,
+    "assumesOnchainSecrecy": false,
+    "bypassesHookAddressValidation": false,
+    "signatureScheme": {
+      "used": false,
+      "standard": null,
+      "nonce": null,
+      "deadline": null,
+      "chain": null,
+      "verifyingContract": null,
+      "action": null,
+      "parameters": null,
+      "erc1271": null
+    }
+  },
+  "implementation": {
+    "sourcePaths": [
+      "flagship/src/RelicsV4Hook.sol",
+      "flagship/src/interfaces/IRelicsHook.sol",
+      "flagship/src/libraries/DNA.sol",
+      "flagship/src/libraries/EvolutionMath.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/Context.sol",
+      "flagship/lib/uniswap-hooks/src/base/BaseHook.sol",
+      "flagship/lib/v4-core/src/interfaces/IExtsload.sol",
+      "flagship/lib/v4-core/src/interfaces/IExttload.sol",
+      "flagship/lib/v4-core/src/interfaces/IHooks.sol",
+      "flagship/lib/v4-core/src/interfaces/IPoolManager.sol",
+      "flagship/lib/v4-core/src/interfaces/IProtocolFees.sol",
+      "flagship/lib/v4-core/src/interfaces/external/IERC20Minimal.sol",
+      "flagship/lib/v4-core/src/interfaces/external/IERC6909Claims.sol",
+      "flagship/lib/v4-core/src/libraries/CustomRevert.sol",
+      "flagship/lib/v4-core/src/libraries/FixedPoint128.sol",
+      "flagship/lib/v4-core/src/libraries/FullMath.sol",
+      "flagship/lib/v4-core/src/libraries/Hooks.sol",
+      "flagship/lib/v4-core/src/libraries/LPFeeLibrary.sol",
+      "flagship/lib/v4-core/src/libraries/LiquidityMath.sol",
+      "flagship/lib/v4-core/src/libraries/ParseBytes.sol",
+      "flagship/lib/v4-core/src/libraries/Position.sol",
+      "flagship/lib/v4-core/src/libraries/SafeCast.sol",
+      "flagship/lib/v4-core/src/libraries/StateLibrary.sol",
+      "flagship/lib/v4-core/src/types/BalanceDelta.sol",
+      "flagship/lib/v4-core/src/types/BeforeSwapDelta.sol",
+      "flagship/lib/v4-core/src/types/Currency.sol",
+      "flagship/lib/v4-core/src/types/PoolId.sol",
+      "flagship/lib/v4-core/src/types/PoolKey.sol",
+      "flagship/lib/v4-core/src/types/PoolOperation.sol"
+    ],
+    "testPaths": [
+      "flagship/test/DeploymentProof.t.sol"
+    ],
+    "compilerBuildInfoPaths": [],
+    "specificationPath": "flagship/README.md",
+    "testEvidencePath": null,
+    "dependencyLockPath": null,
+    "gateStatusPath": null,
+    "reviewTargetPath": null,
+    "runtimeAssetManifestPath": null
+  },
+  "risk": {
+    "dimensions": {
+      "complexity": 2,
+      "customMath": 1,
+      "externalDependencies": 1,
+      "externalLiquidity": 0,
+      "valueAtRisk": 1,
+      "teamMaturity": 2,
+      "upgradeability": 0,
+      "autonomy": 0,
+      "priceImpact": 0
+    },
+    "rationales": {
+      "complexity": "Raised to the capability-implied floor: simple custom integer math plus a fully disclosed novel token-transfer coupling reviewed in the same system. The hook contract itself remains one small observer (8,644 runtime bytes).",
+      "customMath": "EvolutionMath is simple bounded integer arithmetic (band, EMA, epoch counters) that feeds art parameters only; no pricing, no fixed-point value math, and explicit overflow guards.",
+      "externalDependencies": "Exactly one onchain dependency: the canonical v4 PoolManager the hook is constructor-bound to. No oracles, keepers, or external protocols.",
+      "externalLiquidity": "None. The hook holds no liquidity and manages no positions.",
+      "valueAtRisk": "Raised to the capability-implied floor for the declared project value flow: the pool and its LP fees carry real value even though the hook custodies nothing at any time.",
+      "teamMaturity": "Solo operator with a public shipped record: the deployment dates to 2026-08-03 with Etherscan-verified source and renounced ownership; judge maturity from that public record, not from team size.",
+      "upgradeability": "None. No proxy, no upgrade path, no admin; token and hook owners are address(0).",
+      "autonomy": "None. No keeper, cron, or autonomous parameter exists.",
+      "priceImpact": "The hook cannot affect price, amounts, or execution: no before-hooks and no return-delta permissions at the address level."
+    },
+    "declaredTotal": 7,
+    "declaredTier": "high",
+    "featureTriggers": [
+      "custom-math",
+      "novel-token-behavior",
+      "project-value-flow"
+    ]
+  },
+  "disclosures": [
+    "RELICS is already live on Ethereum mainnet (since 2026-08-03). The hook at 0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440 is immutable, ownerless (owner() == address(0)), and bound one-shot to canonical pool 0x33d9b4089069272e5aeaeccf24bc710a7ee8cf65f4ecde682187a2fc355531ed. Nothing in this application can or will change the deployed contracts.",
+    "The mandatory Programmable volume fee is NOT implemented by the deployed hook and cannot be retrofitted into it. Any Programmable-launch-ready variant would be a new deployment with its own source, tests and review. This application is a flagship reference of the existing deployment, not a launch request.",
+    "The $RELICS ERC-20 couples outflows to an NFT dormancy layer: transfers can retire the sender's awakened Relics (LIFO, real burns), and a transfer needing more than 16 retirements reverts PreparationRequired until the holder self-serves prepareSell. Amounts are never modified and buys are never affected. Declared structurally in tokenBehaviorExtensions.",
+    "Genesis liquidity was single-sided: all 10,000 $RELICS with zero seeded WETH. The deployer holds no $RELICS and made no project-funded bootstrap buy. The genesis LP position NFT is held in a third-party UNCX liquidity lock (lock id 103); holders' token balances and awakened Relics are independent of that position.",
+    "The builder repository root is a clean-room starter template; only the flagship/ directory is production source (byte-identical to the Etherscan-verified standard-JSON, with an offline CREATE2 init-code proof). The template and the flagship share no code.",
+    "The pool quotes and routes on app.uniswap.org today with no custom hookData and no allowlist submission; targetsMajorPair is declared true because the quote asset is WETH."
+  ],
+  "unresolved": [
+    "Review-framing decision for maintainers: should an already-deployed, immutable, ownerless hook enter the beta as a flagship reference record (architecture review of a live artifact) rather than as a launch application, and which central result label do maintainers prefer for that state?",
+    "programmableFee scope decision for maintainers: the deployed instance cannot integrate the volume-fee policy, so is a future Programmable-launch variant (a new deployment integrating the fee into its single custom hook) in scope for this application id, or would that be a separate application?"
+  ]
+}

@@ -106,15 +106,14 @@ No prior v4 knowledge is assumed. Every term is defined in [Glossary](#glossary)
 
 - [Foundry](https://book.getfoundry.sh/getting-started/installation) (`forge` ≥ 1.0)
 - Node.js ≥ 20 and npm
-- git (for submodule dependencies)
+- git
 
 ## 7. Quick start (~15 minutes)
 
 ```bash
-git clone --recursive <your-fork-url> relics-v4-starter
+git clone <your-fork-url> relics-v4-starter
 cd relics-v4-starter
-# if you forgot --recursive:
-git submodule update --init --recursive
+# no submodules: all Solidity dependencies are vendored under lib/
 
 # contracts
 forge build
@@ -291,7 +290,9 @@ apps/web/       config-driven Next.js app (wagmi/viem, EIP-6963)
 docs/           make-it-your-own guide + 18 numbered guides
 scripts/        secret scan, manifest generator, link checker (Node)
 .github/        CI workflows + issue/PR templates
-lib/            git submodules (forge-std, uniswap-hooks → v4-core/v4-periphery/OZ)
+lib/            vendored, production-pinned deps (forge-std, uniswap-hooks, v4-core, v4-periphery, OZ, solmate, permit2)
+flagship/       the exact deployed RELICS production hook (byte-identical to Etherscan) + offline CREATE2 proof
+submissions/    Programmable Builder Beta application package (relics-v4)
 ```
 
 ## 23. Docs index

@@ -11,9 +11,11 @@ collection. Original to this repo — not the memory of any private project.
 
 Non-negotiable rules (full detail in `AGENTS.md`):
 
-- **No private data, ever** — no production addresses, salts, ids, tx hashes, keys, `.env`
-  values, or private docs. Run `npm run secrets:scan` before committing.
-- **Reference deps as submodules; never vendor them.**
+- **No private data, ever** — no keys, mnemonics, `.env` values, RPC credentials, or private
+  docs. Run `npm run secrets:scan` before committing. Scoped exception: `flagship/` +
+  `submissions/` hold the operator-authorized production reference (verified source + public
+  on-chain facts only).
+- **Deps are vendored, pinned, byte-exact under `lib/`; never float or partially update them.**
 - **Keep every public word true**; never call locked LP "burned".
 - **Self-update rule:** code and its `docs/` change in the same set.
 - **Do not self-publish;** commit locally, scan, and stop.

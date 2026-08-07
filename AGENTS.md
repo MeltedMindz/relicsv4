@@ -18,12 +18,18 @@ Every contract here is an original, genericized `Example*` implementation.
 
 ## Ground rules — do not break these
 
-1. **Clean-room / no private data, ever.** Never add production addresses, CREATE2 salts,
-   position ids, pool ids, tx hashes, deploy keys, mnemonics, `.env` values, audit proofs, or
-   any private document. See `NO_PRIVATE_DATA_ATTESTATION.md` and `PUBLIC_EXPORT_ALLOWLIST.md`.
-   Run `npm run secrets:scan` before every commit.
-2. **Reference dependencies; do not vendor them.** Solidity deps are git submodules (`lib/`);
-   the web app uses public npm. Do not copy third-party source into the tree.
+1. **No private data, ever.** Never add deploy keys, mnemonics, wallet/keystore files, `.env`
+   values, RPC credentials, internal audit proofs, or any private document. See
+   `NO_PRIVATE_DATA_ATTESTATION.md` and `PUBLIC_EXPORT_ALLOWLIST.md`. Run
+   `npm run secrets:scan` before every commit. One scoped exception exists: `flagship/` and
+   `submissions/` carry the RELICS operator's explicitly authorized production reference —
+   Etherscan-verified source plus public on-chain identifiers only (addresses, pool id, CREATE2
+   salt/init-code hash). Public chain facts in that scope are allowed; private material never is.
+2. **Dependencies are vendored, pinned and byte-exact.** Solidity deps live as real files under
+   `lib/` (production-pinned trees: v4-core 1.0.2, uniswap-hooks 1.2.2, OpenZeppelin 5.6.1,
+   v4-periphery 1.0.3, solmate, permit2, forge-std); the web app uses public npm. Never float,
+   swap or partially update a vendored tree — the flagship deployment proof depends on exact
+   bytes. See `THIRD_PARTY_NOTICES.md` for licenses.
 3. **Keep every public word true.** This is a teaching repo. No "audited", no "guaranteed",
    no affiliation claims, no financial promises. Never call locked LP "burned".
 4. **Self-update rule.** Any change to contracts, tokenomics, deploy behavior, the renderer's

@@ -10,19 +10,25 @@ contain. It is provided so an independent reviewer can verify the repository is 
    explicit allowlist (`PUBLIC_EXPORT_ALLOWLIST.md`), not by copying a private repository and
    removing sensitive files.
 
-2. **No production material.** This repository contains **no** production contract source,
-   renderer/art logic, addresses, CREATE2 salts, Uniswap position ids, pool ids, transaction
-   hashes, deployment proofs, incident reports, private runbooks, or any private `CLAUDE.md`
-   content. It contains **no** private keys, mnemonics, wallet/keystore files, `.env` values, API
-   keys, or RPC credentials.
+2. **No private material.** This repository contains **no** private keys, mnemonics,
+   wallet/keystore files, `.env` values, API keys, RPC credentials, incident reports, private
+   runbooks, or any private `CLAUDE.md` content. **Amended 2026-08-07:** with the RELICS
+   operator's explicit authorization, `flagship/` now carries the exact production **hook**
+   source (byte-identical to its Etherscan-verified standard-JSON) together with public
+   on-chain identifiers (contract addresses, pool id, CREATE2 salt and init-code hash), and
+   `submissions/` carries a public Programmable Builder Beta application. Everything in that
+   scope is already public on Ethereum or Etherscan; the private renderer/token/NFT sources,
+   internal audits and proofs remain excluded. The template layers (`src/`, `apps/`, `script/`,
+   `test/`) remain clean-room.
 
 3. **Inspired, not copied.** The design is *inspired by lessons* from building fully on-chain
    generative art on Uniswap v4. The lessons in `docs/10-twenty-lessons.md` are stated **generically**,
    with no private incident details, timelines, or identifiers.
 
-4. **Dependencies are references, not copies.** Third-party libraries are fetched as git
-   submodules / from the public npm registry. Their source is not vendored into this repository.
-   See `THIRD_PARTY_NOTICES.md` (note the Uniswap v4-core BUSL-1.1 dependency).
+4. **Dependencies are vendored, pinned copies (amended 2026-08-07).** Third-party Solidity
+   libraries are redistributed as byte-exact, production-pinned trees under `lib/`, each with
+   its upstream license file; the web app still uses the public npm registry. See
+   `THIRD_PARTY_NOTICES.md` (note Uniswap v4-core BUSL-1.1 and solmate AGPL-3.0).
 
 5. **No secrets by construction.** The default `forge test` suite and the web app's core flows
    require **no** secrets. All deployment scripts and opt-in fork tests read secrets from the

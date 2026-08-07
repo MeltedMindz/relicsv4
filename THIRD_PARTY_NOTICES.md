@@ -3,22 +3,23 @@
 This project's own source code (everything under `src/`, `script/`, `test/`, `apps/web/`,
 `docs/`, and the root config) is licensed **MIT** (see `LICENSE`).
 
-It **depends on** third-party open-source software. Those dependencies are fetched as **git
-submodules** (Solidity) or from the **public npm registry** (web app) — their source is **not
-copied into this repository**, so this repo does not redistribute their code. Each dependency
-remains under its own license, reproduced/summarized below. When you `git clone --recursive` and
-`npm install`, you are obtaining those components directly from their upstream sources.
+It **redistributes** third-party open-source software: Solidity dependencies are **vendored as
+byte-exact, production-pinned trees** under `lib/` (and mirrored where needed inside
+`flagship/lib/`), each accompanied by its upstream license file. Web-app dependencies still come
+from the **public npm registry** at install time. Each component remains under its own license,
+summarized below with the vendored license-file location.
 
-## Solidity dependencies (git submodules)
+## Solidity dependencies (vendored under `lib/`)
 
-| Component | Upstream | License | Notes |
-| --- | --- | --- | --- |
-| forge-std | foundry-rs/forge-std | MIT OR Apache-2.0 | Test/utility library. |
-| OpenZeppelin Contracts | OpenZeppelin/openzeppelin-contracts | MIT | ERC-20/721, access, utils, Base64. Transitive via uniswap-hooks. |
-| OpenZeppelin uniswap-hooks | OpenZeppelin/uniswap-hooks | MIT | `BaseHook` base class. |
-| Uniswap v4-periphery | Uniswap/v4-periphery | MIT | PositionManager interfaces, Actions, HookMiner. Transitive. |
-| Uniswap v4-core | Uniswap/v4-core | **BUSL-1.1** | Core pool/hook types and libraries. Transitive. **See the important note below.** |
-| Permit2 | Uniswap/permit2 | MIT | Transitive; used only by the AddLiquidity template. |
+| Component | Upstream | Version | License | License file |
+| --- | --- | --- | --- | --- |
+| forge-std | foundry-rs/forge-std | 1.16.1 | MIT OR Apache-2.0 | `lib/forge-std/LICENSE-MIT`, `LICENSE-APACHE` |
+| OpenZeppelin Contracts | OpenZeppelin/openzeppelin-contracts | 5.6.1 | MIT | `lib/openzeppelin-contracts/LICENSE` |
+| OpenZeppelin uniswap-hooks | OpenZeppelin/uniswap-hooks | 1.2.2 | MIT | `lib/uniswap-hooks/LICENSE` |
+| Uniswap v4-periphery | Uniswap/v4-periphery | 1.0.3 | MIT | `lib/v4-periphery/LICENSE` |
+| Uniswap v4-core | Uniswap/v4-core | 1.0.2 | **Mixed: MIT + BUSL-1.1** | `lib/v4-core/licenses/MIT_LICENSE`, `BUSL_LICENSE` — **see note below** |
+| solmate | transmissions11/solmate (v4-core pin) | vendored with v4-core | **AGPL-3.0** | `lib/v4-core/lib/solmate/LICENSE` |
+| Permit2 | Uniswap/permit2 | vendored with v4-periphery | MIT | `lib/v4-periphery/lib/permit2/LICENSE` |
 
 ### Important: Uniswap v4-core is BUSL-1.1
 
@@ -26,10 +27,11 @@ remains under its own license, reproduced/summarized below. When you `git clone 
 license with usage restrictions and a "Change Date" after which it converts to a more permissive
 license. It is **not** an MIT/OSI-approved open-source license.
 
-- This repository is **compatible** with using v4-core as a **build-time dependency**: v4-core
-  source is never copied here (it is a submodule reference), and this project's own MIT code merely
-  imports its interfaces and libraries at compile time — the same pattern every Uniswap v4 hook
-  project uses.
+- This repository **redistributes** v4-core source under the terms of its licenses, with both
+  license texts vendored at `lib/v4-core/licenses/`. The files this project's own code imports
+  (interfaces, types, most libraries) carry MIT headers; core implementation files such as
+  `PoolManager.sol` carry BUSL-1.1 headers and are included so local test routers compile —
+  the deployed system uses only the canonical, Uniswap-deployed PoolManager singleton.
 - **If you deploy anything built on v4-core to production**, you are responsible for reviewing the
   BUSL-1.1 terms — including its Additional Use Grant and Change Date — and confirming your use is
   permitted. This starter does not, and cannot, grant you any rights to v4-core; only Uniswap can.

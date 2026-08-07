@@ -7,6 +7,12 @@ inventory with per-file hashes and verdicts is `PUBLIC_EXPORT_MANIFEST.json`.
 
 ## Allowlisted categories (what MAY be in this repo)
 
+0. **Authorized production flagship reference (added 2026-08-07)** — `flagship/**` (the exact
+   Etherscan-verified RELICS production hook closure + offline deployment proof + provenance),
+   `submissions/**` (the public Programmable Builder Beta application package), and vendored
+   pinned dependency trees under `lib/**` with their upstream licenses. Public on-chain facts
+   only; explicitly authorized by the RELICS operator. No private material.
+
 1. **Original Solidity source** (`src/**`) — genericized example contracts (token, hook, NFT,
    `RendererBase` + three sample art systems, locker) written for this starter. No production
    contract source, no production addresses, salts, position ids, pool ids, or tx hashes.

@@ -1,0 +1,208 @@
+{
+  "reportVersion": 2,
+  "standardVersion": "1.3.0",
+  "submissionHash": "sha256:5a7f585f94844d4a2fc7146147bdf015b2f9d3b8356c960dc97848442196e021",
+  "toolchain": {
+    "validatorSha256": "sha256:d3b4db147fbb955d0ecdff0d5d3a55d25a55a38bb72b33efe535d9c80c286318",
+    "schemaSha256": "sha256:b3a67753b286a35a49d88a85e1bdaec50f19d86b241145901e2dd24327fd515a",
+    "deploymentSnapshotSha256": "sha256:35e36a2837a70688104cd6a4aae3da4e1401429226c8ca15d036db4cf2195d2c",
+    "officialDeploymentReferenceSha256": "sha256:ef7e12bf1312edf374749bfeb18ac41cb83623856fbfd39892606579b7119fd6",
+    "policyBundleSha256": "sha256:1c623966ae90b671ff423329c14f1dbfb0061a80f6cd33b25e6671ed98c61c3d"
+  },
+  "decision": "REDESIGN_REQUIRED",
+  "hookPermissionMask": "0x1440",
+  "risk": {
+    "score": 7,
+    "baseTier": "medium",
+    "effectiveTier": "high",
+    "featureTriggers": [
+      "custom-math",
+      "novel-token-behavior",
+      "project-value-flow"
+    ]
+  },
+  "findings": [
+    {
+      "severity": "blocker",
+      "code": "PROGRAMMABLE_FEE_INTEGRATION_PENDING",
+      "path": "$.programmableFee.collection.status",
+      "message": "The mandatory platform fee is still a proposal architecture discussion and is not prototype-ready.",
+      "remediation": "Integrate the non-bypassable canonical-pool hook path, bind its evidence, and then set status to implemented."
+    },
+    {
+      "severity": "blocker",
+      "code": "UNRESOLVED_DECISION",
+      "path": "$.unresolved[0]",
+      "message": "Review-framing decision for maintainers: should an already-deployed, immutable, ownerless hook enter the beta as a flagship reference record (architecture review of a live artifact) rather than as a launch application, and which central result label do maintainers prefer for that state?",
+      "remediation": "Resolve the decision, update the locked design and rerun preflight."
+    },
+    {
+      "severity": "blocker",
+      "code": "UNRESOLVED_DECISION",
+      "path": "$.unresolved[1]",
+      "message": "programmableFee scope decision for maintainers: the deployed instance cannot integrate the volume-fee policy, so is a future Programmable-launch variant (a new deployment integrating the fee into its single custom hook) in scope for this application id, or would that be a separate application?",
+      "remediation": "Resolve the decision, update the locked design and rerun preflight."
+    },
+    {
+      "severity": "warning",
+      "code": "NOVEL_PROJECT_CATEGORY_REQUIRES_ARCHITECTURE_REVIEW",
+      "path": "$.model.category",
+      "message": "Project category onchain-generative-art is not a closed launch-type decision and requires architecture review of its declared behavior.",
+      "remediation": "Keep the category and describe the actors, value flows, authorities, failures and integration surfaces; do not force the project into an unrelated known profile."
+    },
+    {
+      "severity": "warning",
+      "code": "TOKEN_BEHAVIOR_REQUIRES_ARCHITECTURE_REVIEW",
+      "path": "$.tokenBehaviorExtensions[0]",
+      "message": "Novel token behavior transfer-coupled-nft-dormancy-sync remains reviewable outside the acceleration catalog.",
+      "remediation": "Review its exact authority, value, supply, transfer, provider, failure and test boundaries without forcing it into a known behavior."
+    }
+  ],
+  "requiredGates": [
+    {
+      "id": "human-economic-and-security-review",
+      "stage": "candidate",
+      "reason": "Automation cannot accept its own output."
+    },
+    {
+      "id": "independent-project-value-flow-review",
+      "stage": "candidate",
+      "reason": "A value-moving project surface needs independent accounting, authorization and economic review."
+    },
+    {
+      "id": "independent-security-review-one",
+      "stage": "candidate",
+      "reason": "Every model needs an independent review scaled to its capability and value risk before selection."
+    },
+    {
+      "id": "independent-specialist-review",
+      "stage": "candidate",
+      "reason": "Feature trigger: custom-math."
+    },
+    {
+      "id": "model-specific-architecture-review",
+      "stage": "candidate",
+      "reason": "A model-specific baseline changes the architecture and trust assumptions outside the Programmable-tested acceleration path."
+    },
+    {
+      "id": "model-specific-dependency-review",
+      "stage": "candidate",
+      "reason": "A builder-pinned compiler and dependency closure remains unreviewed until maintainers verify the exact lock and source graph."
+    },
+    {
+      "id": "novel-project-architecture-review",
+      "stage": "candidate",
+      "reason": "The project uses a novel category that must be reviewed by behavior rather than rejected by label."
+    },
+    {
+      "id": "novel-token-behavior-architecture-review",
+      "stage": "candidate",
+      "reason": "At least one token behavior is outside the current acceleration catalog."
+    },
+    {
+      "id": "pinned-fork-and-current-head-smoke",
+      "stage": "candidate",
+      "reason": "Every candidate must prove compatibility with exact deployments and current chain state."
+    },
+    {
+      "id": "programmable-fee-architecture-review",
+      "stage": "candidate",
+      "reason": "A proposal may discuss a pending hook integration, but it cannot become a Programmable prototype without the mandatory volume fee."
+    },
+    {
+      "id": "independent-routing-provider-approval",
+      "stage": "external",
+      "reason": "Routing or listing is controlled by each external provider."
+    },
+    {
+      "id": "novel-token-behavior-provider-review",
+      "stage": "external",
+      "reason": "External routers, quoters, indexers, scanners and listings control their own support decisions."
+    },
+    {
+      "id": "uniswap-hook-routing-review",
+      "stage": "external",
+      "reason": "Published Uniswap routing-review criteria apply; only the provider can approve the hook or pool."
+    },
+    {
+      "id": "callback-authentication-and-permission-mask",
+      "stage": "prototype",
+      "reason": "Every hook must authenticate PoolManager and match its mined address permissions."
+    },
+    {
+      "id": "callback-selector-return-length-and-self-call-tests",
+      "stage": "prototype",
+      "reason": "Every enabled callback must return the exact selector and ABI length and account for noSelfCall suppression."
+    },
+    {
+      "id": "dependency-failure-tests",
+      "stage": "prototype",
+      "reason": "The model has external dependencies."
+    },
+    {
+      "id": "fees-accrued-jit-liquidity-manipulation-tests",
+      "stage": "prototype",
+      "reason": "Liquidity callbacks expose feesAccrued and may be sensitive to just-in-time liquidity ordering."
+    },
+    {
+      "id": "format-build-size-warnings",
+      "stage": "prototype",
+      "reason": "Every prototype must pass its declared language build and size checks without unexplained warnings."
+    },
+    {
+      "id": "novel-token-behavior-adversarial-tests",
+      "stage": "prototype",
+      "reason": "Novel token behavior needs bound authority, accounting, liveness and failure tests."
+    },
+    {
+      "id": "project-value-flow-conservation-and-claim-tests",
+      "stage": "prototype",
+      "reason": "A project surface can move, award, claim, fee or settle value."
+    },
+    {
+      "id": "static-analysis",
+      "stage": "prototype",
+      "reason": "Declared Solidity source needs static findings with dispositions."
+    },
+    {
+      "id": "unit-integration-fuzz-invariant-tests",
+      "stage": "prototype",
+      "reason": "Declared Solidity behavior needs lifecycle and property evidence."
+    },
+    {
+      "id": "independent-security-review-two",
+      "stage": "release",
+      "reason": "High-risk models need a second independent review before a production release decision."
+    },
+    {
+      "id": "monitoring-and-lifecycle-evidence",
+      "stage": "release",
+      "reason": "Availability requires operational evidence after deployment."
+    },
+    {
+      "id": "production-anomaly-monitoring",
+      "stage": "release",
+      "reason": "High-risk models need live accounting, callback and authority anomaly monitoring."
+    },
+    {
+      "id": "project-value-flow-production-monitoring",
+      "stage": "release",
+      "reason": "A released value-moving surface needs live conservation, payout and failed-settlement monitoring."
+    },
+    {
+      "id": "public-bug-bounty",
+      "stage": "release",
+      "reason": "High-risk models need a funded public vulnerability disclosure path before availability."
+    },
+    {
+      "id": "runtime-source-config-verification",
+      "stage": "release",
+      "reason": "Deployment claims require runtime, source and configuration evidence."
+    }
+  ],
+  "disclaimer": "This is a structural and rule-based compatibility preflight. Free-text claims still require independent semantic review. PROTOTYPE_READY means only that an isolated prototype may begin; it is not acceptance, an audit, a safety guarantee, deployment evidence, routing approval or proof of availability.",
+  "closure": {
+    "status": "complete",
+    "diagnostics": []
+  }
+}
