@@ -8,7 +8,7 @@ acceptance, deployment authorization, provider support, or availability.
 
 | Check | Command | Tool | Result |
 | --- | --- | --- | --- |
-| Flagship byte-exactness proof | `cd flagship && forge test` | forge 1.5.1-stable, solc 0.8.26 | 4/4 PASS (constructor args, init-code hash `0x8a34afea…0535`, CREATE2 → `0xA6f7…9440`, flags `0x1440`) |
+| Flagship byte-exactness + behavior suite | `cd flagship && forge test` | forge 1.5.1-stable, solc 0.8.26 | 17/17 PASS: hook proof (4), token CREATE2 proof (2), and the seller-exit behavioral suite (11: 0/1/16/>16 retirements, holder-only prepareSell, full exit, allowance path, atomic failure) over the exact production token/NFT/renderer/hook sources |
 | Template build + tests | `forge build && forge test` (repo root) | forge 1.5.1-stable | 62/62 PASS across 10 suites |
 | Deterministic beta preflight | `cli.mjs check submissions/relics-v4/submission.json --repository-root .` | Programmable Builder v0.2.1 | Committed `compatibility-report.json`; Solidity closure `complete`; decision `REDESIGN_REQUIRED` preserved intentionally (fee-integration-pending + two named maintainer decisions) |
 
@@ -23,9 +23,10 @@ acceptance, deployment authorization, provider support, or availability.
 | Token `totalSupply()` | 10,000 × 1e18, fixed (no mint/burn path) |
 | Etherscan verification | Hook, token, NFT and renderer all verified with source published at the live addresses |
 
-The 30 files under `flagship/` are byte-identical to the hook's Etherscan-verified
-standard-JSON input (verified file-by-file during preparation of this application; any party
-can re-run the comparison against the Etherscan API). Machine-readable provenance:
+The 58 files under `flagship/` are byte-identical to the Etherscan-verified standard-JSON
+inputs of all four deployed contracts — hook, token, NFT and renderer (verified file-by-file
+during preparation; any party can re-run the comparison against the Etherscan API).
+Machine-readable provenance including all four runtime code hashes:
 `flagship/PROVENANCE.json`.
 
 ## Dependency evidence (stable ids from `submission.json`)

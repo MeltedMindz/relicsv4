@@ -8,6 +8,15 @@ repository's tooling.
 
 ## A. Executed in this repository (reproducible by anyone)
 
+- **Seller-exit behavioral suite** — `flagship/test/TokenNftSyncExit.t.sol` runs the exact
+  production token + NFT (+ real hook constructed at a flag-valid address, real renderer)
+  through the full transfer-coupling surface: ordinary transfers, inflow-never-mints,
+  0 / 1 / 16 / >16 retirements, LIFO order, `PreparationRequired(17,16,1)` with atomic
+  unwind, holder-chosen `prepareSell` then complete exit with no third party, holder-only
+  preparation against a full operator+allowance, sender-only capacity-bound `awaken`,
+  spender-driven `transferFrom`, and batch bounds. Eleven tests, all passing. A twelfth and
+  thirteenth test prove the token's CREATE2 record (salt 0, init-code hash `0x95cfac7b…6330`)
+  reproduces the live token address from this exact source.
 - **Offline deployment proof** — `cd flagship && forge test` (forge 1.5.1, solc 0.8.26 pinned
   by `flagship/foundry.toml`). Four tests, all passing:
   1. `test_ConstructorArgsMatchVerifiedRecord` — abi-encoded constructor args equal the
@@ -30,9 +39,9 @@ repository's tooling.
 
 ## B. Existing external evidence (verifiable, not produced here)
 
-- **Etherscan source verification** of the hook (and the token, NFT, renderer) at the live
-  addresses with the exact compiler profile; the 30-file standard-JSON is byte-identical to
-  `flagship/`.
+- **Etherscan source verification** of the hook, token, NFT and renderer at the live
+  addresses with the exact compiler profile; the 58-file union of their standard-JSON inputs
+  is byte-identical to `flagship/`.
 - **Live chain reads** anyone can reproduce (see `flagship/README.md`): runtime code hash
   `0xd45977dd…7fc6` (8,644 bytes), `owner() == address(0)`, `canonicalPoolId() == 0x33d9…31ed`.
 - **Production pipeline** (private repository): the deployed revision shipped with unit,
@@ -57,8 +66,8 @@ applies to the immutable deployed instance, which cannot change.
 
 - The flagship suite proves byte-exact identity with the deployed artifact; it intentionally
   does not re-test the deployed contract's behavior (that evidence lives in B).
-- The token/NFT layer's behavior tests exist in the private pipeline and as clean-room
-  equivalents in the template's suites; the token source itself is outside this repository's
-  declared closure and is reviewable on Etherscan.
+- The token/NFT behavioral suite here runs against a locally wired instance of the exact
+  production sources (with a stand-in pool address); it demonstrates the contract semantics,
+  while the deployed instances' own history remains the on-chain record.
 - No fork tests run in this repository's CI (no RPC secrets in a public template); the
   template's fork smoke test skips cleanly when `MAINNET_RPC_URL` is unset.

@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not audited; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains no production addresses, keys, proofs, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 147,
+  "fileCount": 848,
   "files": [
     {
       "path": ".env.example",
@@ -469,7 +469,7 @@
     },
     {
       "path": "flagship/PROVENANCE.json",
-      "sha256": "8f7c1c696d987dfcc298930e9edd53836f72f00a869b524b07c60cf66a175c74",
+      "sha256": "032f3ced877861882299b50adb5c1d57fd74e064599b3f657f1e9592627c091b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -727,6 +727,4871 @@
       "publicSafe": true
     },
     {
+      "path": "lib/forge-std/LICENSE-APACHE",
+      "sha256": "50b6bf8bdb63265ce14953b480b7aaa0271e78f56843b99c184abd3ae5048cd7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/LICENSE-MIT",
+      "sha256": "6d185dfe089d4de346d391fc5997fbd4739bad1d6556010413c10f420d704ecc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/README.md",
+      "sha256": "257d2c692f847b166ba32bec7a15d3c426fa8ae7a5244b2d752b96443af83e42",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/package.json",
+      "sha256": "c9fb14384f993b05f8d8d0235b674983bba5fe6076f0eb4c8fb2e7b3269cd35e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/Base.sol",
+      "sha256": "76b05dda37981797d3d403f29fc6cad79b46e2fc11da47d649ff13acb69158b2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/Config.sol",
+      "sha256": "850649e2ede6e0e1384ba00eba1335a7af7e97643c731a4587335c0f51f67041",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/LibVariable.sol",
+      "sha256": "0b789ace36e54d1746d08b9b161f5ab4c2fa55c8d30808421349ae33f703c797",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/Script.sol",
+      "sha256": "cfb5be01f4ddbc037a3502dac3d487d629a4c8b58aa9e2ec48c9fa1b334d96ec",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdAssertions.sol",
+      "sha256": "969d187807ab6efd54b3b5f255ff7b6f1b130797ddc54fefadc4e4dea9ee8d7b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdChains.sol",
+      "sha256": "527455709ac3e7eaf762a86d472ab5081407c46846383e3a261df96b47ca0a4b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdCheats.sol",
+      "sha256": "ff084bfd87e63ea8a7e16875744d17b0fbbe14ad0cb2d52d787841c6b5c2f7df",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdConfig.sol",
+      "sha256": "58d26d22e83360befc5144b7ad0d2fbe21d3adbd5fbb6cd255582fa0b8b7fafb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdConstants.sol",
+      "sha256": "17dfd996881264de1e6af6697a3dc7a56ae8ff0717e4cb4f1685bd7fb3a45147",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdError.sol",
+      "sha256": "c1f7271f11a44628810ef6beb2da0c43add131ff9cfcac4d7acd633c269ccf7d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdInvariant.sol",
+      "sha256": "7d3a62087c7d06766e99f8e4f4e50997b0ff8730fb304986f2c4cd895a67fbbd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdJson.sol",
+      "sha256": "f122981e9f5db14d06adf90017f00da30673cacef0a2ad8127cc91e792e1e5d0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdMath.sol",
+      "sha256": "0fa4e264a66aa539aa11950aee295555bce491c4ee3dd18ba8a702828368c46d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdStorage.sol",
+      "sha256": "c3bdc55f5079ece5f4aaa5f6e2f4dc1c744eb17bbfdce18614e5787ee6ceff09",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdStyle.sol",
+      "sha256": "3803f5f2ef9a9a7f07342ee3a0522a615834d13130aeeeb9c1ef0444520fbc17",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdToml.sol",
+      "sha256": "d3fc05f5edc6abc22084e84eda605f8de2e2a1bd4908df992b431e73f0690cdd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/StdUtils.sol",
+      "sha256": "24d9f733d7c21fd2b3e47fe9c9910ca575fb776d6a35f17c52b2b00582e6df89",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/Test.sol",
+      "sha256": "2e69383110d088b4c413edf79bb71f9d05e4791625fb7fa53429d34440ea50dd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/Vm.sol",
+      "sha256": "d898c65c852bd546abf5447a21b64b3567260f1b71f0c31615f3625d9afeb6a9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/console.sol",
+      "sha256": "894dc6e40fe62d887df6243112d8c775df2db60babc3024ee04a5564b90af64d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/console2.sol",
+      "sha256": "62d8ccbd118fec4f99c5e847322d6ca0d7fbe6a0a16e5a26b0590869fcd69357",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC1155.sol",
+      "sha256": "d10916158da2bbecc56364cda787da303b57313d478c150b1c79ac05d3b2936c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC165.sol",
+      "sha256": "d9bea769cd3aa52c5dfbfe7b447a63b00ab22baaa4f9d2af789f44553078a27b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC20.sol",
+      "sha256": "cb4bf7f4c0bc513e2c82f251a84e67d2e950cef12e570f40a0d4880b2e25fc9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC4626.sol",
+      "sha256": "5b9da91e1215dc84a606c06f636b34582aec6cdf35ae828dce3852f727d9278e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC6909.sol",
+      "sha256": "44ef6ba5ab803241ed5992f35606820322e2df5947da488870c78f2181d97840",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC721.sol",
+      "sha256": "2e6e000940bf5278cf64f170ac839682667368a5aee7222b312e255ec8eda275",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC7540.sol",
+      "sha256": "5b9e0d90816f47628b2023351c84e9b8d8667f685c98234742be99dc8eaf2fb6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IERC7575.sol",
+      "sha256": "15163bc29d96c6b905b53da06e243fbd2ae6b7c8984b8306ff4c9b0716ec055b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/interfaces/IMulticall3.sol",
+      "sha256": "890a5b361034daa6006b3ba2275e743cd6197c4d81e3df5732cdce731d3c0868",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/forge-std/src/safeconsole.sol",
+      "sha256": "fd74d8ed377e1470217cd6dce7699dcbc4e79b3893f17ae2a298c0e7e4418181",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/LICENSE",
+      "sha256": "20aebc68b11c063133aa2af0ef4bb29875477c6d16d715718f0daec563938b84",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/README.md",
+      "sha256": "069c8863d5cbfd9c833c0851eeb270e6322ce0c172c83da9e6be64e584748c48",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/AccessControl.sol",
+      "sha256": "97abba9ae4ee97f16f17b7b688d90f6f1195b79edfba344eacc58406e088b51e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/IAccessControl.sol",
+      "sha256": "140304b7e99d517c57a13f391dfd3b550ca633a507f7b2af130f391b6cd89cc5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+      "sha256": "38578bd71c0a909840e67202db527cc6b4e6b437e0f39f0c909da32c1e30cb81",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/Ownable2Step.sol",
+      "sha256": "c75345d7b9feef17ae29f2a800ca2f65f8021cf80436a41d6ec00f57f5180f36",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/README.adoc",
+      "sha256": "f538804943bd3a629cac625ecf05155c523b86998206a594ad514e6ffaa89d24",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/extensions/AccessControlDefaultAdminRules.sol",
+      "sha256": "cc0b38f69eeab2f55a7f65d6ea8a513c879cdc9d8b8dea82f5d378036712029c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/extensions/AccessControlEnumerable.sol",
+      "sha256": "d7a894aae10cd580aa37969cf9df5837e1acbc1f0e58caef96dc2995102b3bc2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/extensions/IAccessControlDefaultAdminRules.sol",
+      "sha256": "cfcb24ffcd5901a1f4293356f35ea01388f8b82f994a7a0f2a7187d651095c99",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/extensions/IAccessControlEnumerable.sol",
+      "sha256": "e0f69ae5acc588f27b8eba7f5a625f01409be5bb4a08e825774ccee32efc0ff9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/manager/AccessManaged.sol",
+      "sha256": "e5c9b2d8c676a69a12e054a0f5bdea62bd577bfc0831bd89ecc72e11ed157c91",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/manager/AccessManager.sol",
+      "sha256": "3e160eabc2475bf29463e7c3d6bb8ef45444c0782d0107b537eaeaf00af01318",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/manager/AuthorityUtils.sol",
+      "sha256": "d6d1da9c9278375b89aa4bae804f0ac36778badb8451b5fe77029a2d861135f6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/manager/IAccessManaged.sol",
+      "sha256": "2ef4db4c7c678372fe79af348ce3d60d4cf7136d195daf7a9bc2e434ffcbaacd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/manager/IAccessManager.sol",
+      "sha256": "54a44497af7dfdbdccb34d321e63110de2b454f30e02b86e97bfe83fc7f109f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/manager/IAuthority.sol",
+      "sha256": "68428ead009a99c5270e2a0a93e4d2756b6f332ee14027963cc7bb06cd67a29a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/Account.sol",
+      "sha256": "0c9f690efb4f556e3464f0f513b83c4dd9c5c7789cb511a600a2cf9acdf9b9cd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/README.adoc",
+      "sha256": "1d887aad04d724b984a29421758320bf682d4a211e9b8ead7c9b4d70f74a00d5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/extensions/draft-AccountERC7579.sol",
+      "sha256": "85e3cf337feee14be728eb0e69d8b6060c70d31082aefa58bb01d11c535d8b67",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/extensions/draft-AccountERC7579Hooked.sol",
+      "sha256": "b268c0bfe6fb558374b1b1d9f9653695db031cf05467a193fff87246d7cadac6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/extensions/draft-ERC7821.sol",
+      "sha256": "968f7584d0b018047a078582f0e96ce2956b430e8a0763aa0b3cfb62923e56fc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/utils/EIP7702Utils.sol",
+      "sha256": "8a02fac3a7b98cbf0d5bbd4025b1c543b80ba1b952e6ddf0c7b4731069b6d1c5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/utils/draft-ERC4337Utils.sol",
+      "sha256": "aece100f9118d4969b470f596890b6d0ee96c357270fcb7cceff0c2d6c7708e6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/account/utils/draft-ERC7579Utils.sol",
+      "sha256": "f595aa6842abee05be73a3c32b3851ab5268b88a5b26f7f9f18777a84d79ca73",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/CrosschainLinked.sol",
+      "sha256": "b69f1652a23b02c9a9d463219e53c0b9e14f35c2de5d398de6a950cf3832ee13",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/CrosschainRemoteExecutor.sol",
+      "sha256": "91ec0d609e979911f45997e67b95251175354d81e59c4538db153d71eae6b8ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/ERC7786Recipient.sol",
+      "sha256": "c258cb7808fe2b44b8fd4168b2ba4ed1c43f8c5947ef10021e2aa2dc37624db4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/README.adoc",
+      "sha256": "1511857bb76a291aa1ae6bc5188986b1edb49987c2e672a10b200da14e349736",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/bridges/BridgeERC1155.sol",
+      "sha256": "849e8b7de1468e834f3688f6b4abe10d074e0e1d27d50803bbd4b7d2d260c6c8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/bridges/BridgeERC20.sol",
+      "sha256": "238a68629f454f3bef1f988bb364e94850dbbae536410499422fd7427ee7beff",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/bridges/BridgeERC721.sol",
+      "sha256": "530a2d912be4dd18ad0e97320b77ad90bc57d332204e825e892be2742a8cd7c8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/bridges/BridgeERC7802.sol",
+      "sha256": "4988680aa64fb8025d8cd9c0870d477e71abf82f0cd9be00b99a0c5476a371a4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/bridges/abstract/BridgeFungible.sol",
+      "sha256": "767eae8a29f2a1abc0b6b27fadcc3306c4b2805432b9afdb77c75a038196c777",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/bridges/abstract/BridgeMultiToken.sol",
+      "sha256": "a164cb689223aa79ab7acc543d9908953d54d219b4cf39f28703def607a2cd47",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/crosschain/bridges/abstract/BridgeNonFungible.sol",
+      "sha256": "085cca1e224b44b0dc5117b6b1bacdf81e2bf85055811f444beeadd0274bd200",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/finance/README.adoc",
+      "sha256": "6eda655e635a745337fedb389ea92808012a04cf934103da2b2fdd060cbf800e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/finance/VestingWallet.sol",
+      "sha256": "c795793ef77d7f0e4a42b8e20c6ddd2be510171b831b4959a36f02c479124001",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/finance/VestingWalletCliff.sol",
+      "sha256": "14981dea962b6c81e253295b702f2a461d7db60ae93715b293e95028d51b81f9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/Governor.sol",
+      "sha256": "658db74558ecc9e57dfde43216ce019867f45db775f016a15ebd8975ffa33e8d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/IGovernor.sol",
+      "sha256": "beabb5e3e6eefb86a4586db8b495e3921eb46f06e10b98a1dd785613b8507d5b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/README.adoc",
+      "sha256": "dc349601729ed7d4aa2190aa965c388ee54a820cd9e011ebc6a4cc9cf9150b5a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/TimelockController.sol",
+      "sha256": "50265193f9ded275033a7b87cd4f6d883f77154b000bf1c5ca7b805052b855c4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCountingFractional.sol",
+      "sha256": "b4f872b9559fd97d98f868b1ea77ed18d9f27efb70e70686e8af581992d716fc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCountingOverridable.sol",
+      "sha256": "abe4d4e13e4e846084d99e90d7cb132e4fc4cf085e1225074f6c2ee907339218",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCountingSimple.sol",
+      "sha256": "7b57caea0515e9121f2f2d64229b588609caab302eac01909c9d8361ae212554",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCrosschain.sol",
+      "sha256": "96bff4861e303ac1a25e54722fecf5feb893955931df78f96c2ce09aadbaf9f3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorNoncesKeyed.sol",
+      "sha256": "8a550740cad348a89ea76c81f8d3563ffdb0db21cb9b94ed9cb43edfc84ed21f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorPreventLateQuorum.sol",
+      "sha256": "d50cf5e957c3ea9ff12992261eedd7231add05fb446277c39e72cda3288e3a9d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorProposalGuardian.sol",
+      "sha256": "c0c7cb61e6e18cbea5603174073223f472cf85c4357ce24fc7481cc978193cdf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorSequentialProposalId.sol",
+      "sha256": "8397bb8b90c99aa36fd1e5b1e993245db9d77fa24056a38cf642357ea160f36b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorSettings.sol",
+      "sha256": "bff3837e8deb8411352a71e43a0706d266b3dce29ef6fb5ce810af87eae3dbf7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorStorage.sol",
+      "sha256": "c009ee20fc762dcf6b05403a4c7b938544936dfbbb551ea06e521bc9d832115d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorSuperQuorum.sol",
+      "sha256": "ebdadba6f3d385914f8e572452e46347addd4be748587446cacd466eb58b1c68",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockAccess.sol",
+      "sha256": "a06730f1dc404e5c2b74ce2c60f7a37388e343f1a5ca29b817cdacfd2d340584",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockCompound.sol",
+      "sha256": "0121e0adedfeb5b25f7db1e47fbe1b1808e049bef4c741aa495ad8fcdb4ca56c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockControl.sol",
+      "sha256": "8acda7f5ee65953c090702eb64ad1c98b22ec62d26c2e10f84ad42b04203dc00",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotes.sol",
+      "sha256": "e0028c767d3e2c6d7b49f6ce736776edd3a8a55db0269ea2b05e02073bb2fa89",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+      "sha256": "d81807c0d95701ea5b27c9c5800e8b716106d477a996004f6394fee207cf9337",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotesSuperQuorumFraction.sol",
+      "sha256": "06e78dadf94da3829f6fe56ddceb5d1dd44c0f38c8b0d1a14ec8a06ed13ac35a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/utils/IVotes.sol",
+      "sha256": "059fcf54ee8e21e9dac976491d7d7441049ce12e351a8c66b894846243b60a0b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/utils/Votes.sol",
+      "sha256": "1d7861d8ab7ff009a6d1d19150c82a3807029e452f07c0735c128a3f4883d06f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/utils/VotesExtended.sol",
+      "sha256": "4544701a31274525919859afba5b9be505b59d9db2bb4c8b61030c54fa52c1f2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1155.sol",
+      "sha256": "4a472558a19793bd1ec0f09fd47c84774dfefbd15f9ba79f627de73629ab4df1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1155MetadataURI.sol",
+      "sha256": "bf8de067ebb7ec329c05c593f006ba6fbee9dbe9ed00dcd1e15852653c3ca5ec",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1155Receiver.sol",
+      "sha256": "825aed7cb9f35079f4b12ada24b5cfee5e6a0bdceab0ae6fc3794d69e3d322e5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1271.sol",
+      "sha256": "2d17bba201aa2f9c55e317315b872272a60361848dfceb6b1e77081265c79a27",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1363.sol",
+      "sha256": "9c3a75a925a6dac9e88b03cddc58d42fe3131b0aaaad84408521f3f7af2f991b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1363Receiver.sol",
+      "sha256": "39ebf8824bcd8d671abcc1afdd971cf63204b81318b83e0e4bbddebe256c6ff2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1363Spender.sol",
+      "sha256": "594582216b8d5e0a5ff75d215f03ff8d1ad4fae69b069f04bec51ea6b605a9d1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC165.sol",
+      "sha256": "dfb3f56fa928a7c6cae41a7ce2c86b9210fa18d33fa26389099d66a0fa790368",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1820Implementer.sol",
+      "sha256": "99459de7cc9e3387a01835c34a6b5122163f20dbf19d4b1c4eb34489fe25c0c4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1820Registry.sol",
+      "sha256": "d5c38c7fc97a0fc4c62cbe1987146e5a5ddfe84288dc84626f8affa41ef3d847",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1967.sol",
+      "sha256": "c4e901318ab6d4963582c62c62ce988a34c68dbae71846b67decacde79e9a317",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol",
+      "sha256": "0158e2d3e0e28bedd99eec13dcf1a8aa3a70a5b7e4bb2ad709609c95fcc740d1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC20Metadata.sol",
+      "sha256": "0ef8d844d8e066abd5c0d8cc1c550c89f2628a4ea9c9bb16c7593d4207800ca8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC2309.sol",
+      "sha256": "a497c9e32f721912861542cc2a1c9b7b1bf566c8dafe430af5c06167a8222eb7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC2612.sol",
+      "sha256": "7ebb71cd1a464a22ce7a4cdce29115d6569546fff8d5299ca3f2f7ba72b8e540",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC2981.sol",
+      "sha256": "ea5f52ef580b9cb7c97091fd8164ec3ff211f5bdec359d18191eac4fcf7fcf76",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC3156.sol",
+      "sha256": "9fbd10c6970c328f348c9a86604bdad336743caeda2547f94b6a86d8a906c961",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC3156FlashBorrower.sol",
+      "sha256": "e4c78842b24628897539e92fbfbb9e82cda8e39c6e63edc0f43e5e1a58e9f952",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC3156FlashLender.sol",
+      "sha256": "61927aea23d3ceb7f366f4436b38c26706058729434af3df339fa165c6187d72",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC4626.sol",
+      "sha256": "a43d346b74ce2cfa871ce3386aaaf6aec719e205e7c8148efc1c95612fc7b8eb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC4906.sol",
+      "sha256": "2b14563481c355e6a84127f0ee528d3e3b80fcdd76ff840660784c2445fcc0ae",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC5267.sol",
+      "sha256": "f89772d2d4fafcbef8b73bb10ee9a3373edec2eedb2f1b302320915b351dc3d1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC5313.sol",
+      "sha256": "9c99e3d0f9a47337d59b7e245819b07860e329789aafb5d1275ffd27491686f0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC5805.sol",
+      "sha256": "2b1e317a9ad0303948d00cfee78c42f99f7558c8d2002a7c63f04d2b70324cac",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC6372.sol",
+      "sha256": "b82e19cde1eaa6c179ac49ba38db89d8cf291522e3c7b90cc2dd327df2e6cc4d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC6909.sol",
+      "sha256": "92e08355231442117efbbe59d0e6021fa20cf01696b80bf64a9811869fd0271d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC721.sol",
+      "sha256": "4e4412e3eb28d5d2055e7b0e8153a2ab4d143f94e125a03a1b3d655ea7ed0002",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC721Enumerable.sol",
+      "sha256": "3c85a8e58edeeb5efcec3d274a25324c025d276fbc8d3d27d5ef4641fc1ca3c0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC721Metadata.sol",
+      "sha256": "a8c823f1cee29f7169ded5e4a9204805343fd73d2fdbacf62d2d227f66abd960",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC721Receiver.sol",
+      "sha256": "875a2b4aaba1fe08770657ed44fcc4754a8f1ffed954eb06462dfe3b44338614",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC7751.sol",
+      "sha256": "7eb72765cde6f7232fe1149cfaa51b6404520280902f6940693c42674941ac83",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC777.sol",
+      "sha256": "9ed85c11bc308eeb33977efc9068fa948f952252982628c3729dae36c33684ab",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC777Recipient.sol",
+      "sha256": "48473616ccf361df33723be1aab911bb41ab481dd9f2c3b4d2323bbba2523299",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC777Sender.sol",
+      "sha256": "4ddc762186f658ea0a53496300c830c98f4a915c0a52afe5ddbc793ac3697ef1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC7913.sol",
+      "sha256": "f66aad4249885b0f11369bfa825dded60aa4baa0d76d9becdac9daa48c350350",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/README.adoc",
+      "sha256": "12af0514947df2aa0359409ae6f175d73e226f138238e36d6f1042500bab43da",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC1822.sol",
+      "sha256": "73653312bc2eda0ec231553a5295242eaef2d4f46a023532d45fe76cbd0f565f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC4337.sol",
+      "sha256": "b0061e69e8761cc3fdca7066066f792c054db34660be05d9712d94871fd4795b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+      "sha256": "fa7068f56bc180571a6095be6eaef06d51dbe81e30cb128397d993c9599ecc30",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC7579.sol",
+      "sha256": "b507137c764032dc447815526d91a6ec2d47c83472745ea6613843b5f4ed2996",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC7674.sol",
+      "sha256": "5e4dab6f3e075df9a22ca7d99c407e813b3444e69b23be10fcf92be1de0fee05",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC7786.sol",
+      "sha256": "90b2bdf1062ce58479d22e8c6c32db6aa59deeccf3c41b133c6651f09815b450",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC7802.sol",
+      "sha256": "f710e268850d13695d0cbb01a3ec8490e704d4a9a98bf889ac7b4427e87eb687",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC7821.sol",
+      "sha256": "809a971f062b7961518c410357d2cfa234ee3e07b08eca863c6aff5c54b85de1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/metatx/ERC2771Context.sol",
+      "sha256": "6f0bf2dfc6aead1ea285c982b1f526e5837b47295950f430c9373508ccfd0698",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/metatx/ERC2771Forwarder.sol",
+      "sha256": "fc0c7eebf62c572e5b0830cb13af73b6f97f3a538321d7ee5f85ffc354a0eb43",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/metatx/README.adoc",
+      "sha256": "da696b2ed37e40942dff187df81a644c0bc41e407164f73e6ef25aa04df7c40d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/AccessManagedTarget.sol",
+      "sha256": "0d53af2ad074bfa1d7dd63df419da792d99cd135e26a4e1e51643ce6f7162b08",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/AccessManagerMock.sol",
+      "sha256": "3da07be539a695eaf28646b48a1ed8d1928c5a89a9c63729e6d70113abccf712",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ArraysMock.sol",
+      "sha256": "b058f439884c483f83c947aac8b5efb5afceb0df6c53e18a9c26bfafb06d014d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/AuthorityMock.sol",
+      "sha256": "26d0495cb85792e69ff5257066568a1135298b39dee65291f8bd2be97df9119e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/Base64Dirty.sol",
+      "sha256": "7327e18b158ed38951e5d9214dcea7302178fb3a99cf6f3249947ad953e0fac6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/BatchCaller.sol",
+      "sha256": "8b84caf564705e2e69562e47b768121c1f8db2eb9a61853591bb2c0e265a215a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/CallReceiverMock.sol",
+      "sha256": "2236ff248ceea6c9bd6bbefc46fbf7a20492a347c53b19c00991ecd9314f1423",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ConstructorMock.sol",
+      "sha256": "74ebec9bdfdc48f62820ecf68f8d5afcbeb95e65fb20bc039393b9065e68e6f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ContextMock.sol",
+      "sha256": "57506c9de3c72e7caac22fdf638684bf808b27a919264565fac2cc70c7c540ab",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/DummyImplementation.sol",
+      "sha256": "c2180d4071c9773319b9af21029526d0df4b3ba3993b34747b0f92f3ac0a14c0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/EIP712Verifier.sol",
+      "sha256": "aad680bae019c98fb0709be8bef8d640c40cd88d745ddd6962b3906b3488ff80",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ERC1271WalletMock.sol",
+      "sha256": "e5ba6044a8e724501576ad9eefb2b3a810512e943e097c1ab1e2aae607bf540e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ERC165Mock.sol",
+      "sha256": "608cfd35e8b9d2c81aaa0f3b0e94c3530f0004c9b134f1c92d8216a9c5be7a11",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ERC2771ContextMock.sol",
+      "sha256": "663f3efa768497dbc7f473a6e3ede2dd3d26a1b2270522f7f1b4139223157f89",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ERC3156FlashBorrowerMock.sol",
+      "sha256": "eabad73c5baaed691c687c685e9eacd84d98512724b6708e8c2cc6c74ef73dc4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/EtherReceiverMock.sol",
+      "sha256": "53a433c761a684c4c497c46744b6f547c88e52b6b20d945934c060b615524fe0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/InitializableMock.sol",
+      "sha256": "4986de7adbb19cc6c7c23708f549615995c630938dcf38f68ee224df97183f6c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/MerkleProofCustomHashMock.sol",
+      "sha256": "c3ce912881aa5fde215ddc6407f53c6663e9d115095d06f5e6c0e30e4ddd47f9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/MerkleTreeMock.sol",
+      "sha256": "fc66b235e6e1d2900b7e71a216dc2dbc03f9008a0475c6f15e6f2c231e76a637",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/MulticallHelper.sol",
+      "sha256": "7988ea6738d565238c3d590bd40d2fb8440932f6ea541fc94d3baf0aab0f213b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/MultipleInheritanceInitializableMocks.sol",
+      "sha256": "fe234184f9475fe0fa13a80bca8c853e6763db452eebb9b6f21d2686f3da8889",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/PausableMock.sol",
+      "sha256": "52bbb9188ed64756f18fc15541ce61417041a0fef0421a226e1ca7d4e1e082bc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ReentrancyAttack.sol",
+      "sha256": "1463f9a02e3370cfe2c1b4a6a1316899d1c35dc19f86bd598ab9cbc8521a0b06",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ReentrancyMock.sol",
+      "sha256": "dc41d30180dabeffd4bf998fe9d1300a1df3e9f447369834e89a91d7b43cd97f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/ReentrancyTransientMock.sol",
+      "sha256": "e07bd70d5fc0c31a2c6c0778b268853cb7b0fef507b293291ce411bd35b7a2e6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/RegressionImplementation.sol",
+      "sha256": "07a42883048dad2cfc4bc28ec1273e6e3e200793e769dd6c9bb0ba7d5f9c2fc3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/SingleInheritanceInitializableMocks.sol",
+      "sha256": "1f1ecd6de6e8f733dc2f9a5099937d06792cf1553c43030ce4571a0313d27732",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/Stateless.sol",
+      "sha256": "93c0ef7d8c964b69a96e9010ef3b54032d26622de26abc892daa9f399c7c58ff",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/StorageSlotMock.sol",
+      "sha256": "b8755ca2d8ff35877777d9e88d2074132c59f5a70642d600231c5aa47aae101f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/TimelockReentrant.sol",
+      "sha256": "22990b51d631c64fc1f0377a222e26127897b13463c87e1fe9fd1c5389e6166a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/TransientSlotMock.sol",
+      "sha256": "03587cecc565d549b34317a8fce9abaed370d8f9c8c031077e64925c1e244ce0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/UpgradeableBeaconMock.sol",
+      "sha256": "af6a9e366669679e29f76e3fdd7001ca89072f7cded1f023bfc0b0b406bd5497",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/VotesExtendedMock.sol",
+      "sha256": "a7ea650381510e3856e253aff543a38b1b5dcb6cc7c463c92190976a30a8cca5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/VotesMock.sol",
+      "sha256": "a8efa4dbef0e66cea1ae3c908938d3ba6a8670bee293a701f0cae5d095a03c48",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/account/AccountMock.sol",
+      "sha256": "00385f1fd2255a646bde6d6209c56304fd78dd99379a4fde826da6ac76629260",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/account/modules/ERC7579Mock.sol",
+      "sha256": "7deb6edea99f5ff0808971726196a83c45ed97030c1d48d3dde1a06f12ba04a6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/account/utils/ERC7579UtilsMock.sol",
+      "sha256": "9727a2d57d4d9923b6d72eb15f1cd433a70a48ad9940d7ab7babb1339a3daa4c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/compound/CompTimelock.sol",
+      "sha256": "225c359facb4105f89a587a6c2512af5a7fff23df850400e84378c21a52bc1e4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/crosschain/ERC7786GatewayMock.sol",
+      "sha256": "9b484a380ab1f59b99d8151457e81b6a7621b88c2c05c7bf338b864cf0a51146",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/crosschain/ERC7786RecipientMock.sol",
+      "sha256": "0975bd37fa359b660ee466379148403253a6801fa09383f07dcd64f4dee93075",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/AccessManagerEnumerable.sol",
+      "sha256": "fab7553d24e7797c4c19d678877aaac3aae33798a6ee139099ac8221f869fcba",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/ERC20WithAutoMinerReward.sol",
+      "sha256": "d3e5bdba9ecac0c89afc69a58ba154daa66751efef0623292de8d3e72c8f2954",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/ERC4626Fees.sol",
+      "sha256": "41976b2e22e35acafbdff22a160d76885065cb61718caf4ed6b9b4b1e8d4564d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/MyNFT.sol",
+      "sha256": "9260c5bf47525051180171c2c23050a965c307e4e585661e015e68752903c058",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/access-control/AccessControlERC20MintBase.sol",
+      "sha256": "7e8046f0f4de490266612a02961d556a3b7379fec3ed8f867d9de40b69d9510e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/access-control/AccessControlERC20MintMissing.sol",
+      "sha256": "23e8b239a5b2b5726bcab68bca73180506a7c5165a7866ff4caac75250d6fd55",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/access-control/AccessControlERC20MintOnlyRole.sol",
+      "sha256": "a9847b207bc96f0bd3a53777aa1fdf5746a542ff55454ed17ff4a79834c8478b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/access-control/AccessControlModified.sol",
+      "sha256": "899d55ffa88da0b4a750eb125bf68eb7b56abb7c31cafe60a09c78e4f01cad62",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/access-control/AccessManagedERC20MintBase.sol",
+      "sha256": "e2e5623c64b3172f050a1483167ca16ac017b8d9ef87c2932c90f6388050c248",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/access-control/MyContractOwnable.sol",
+      "sha256": "899d5adf7305f32376dc24929220d6f692cb8d4b2ad74228fbbdbd608e1fc0dd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/account/MyAccountEIP7702.sol",
+      "sha256": "ce4f952b2324f1d2206bb4a0004be9dfa090c3c11fb432e6869a9226e20a5e04",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/account/MyFactoryAccount.sol",
+      "sha256": "29f937615d923f1d701a61d2c120eb8d6897949f1cdca2ab2c374c2823a76d81",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/governance/MyGovernor.sol",
+      "sha256": "20c19b572d531947dd2864d353b1081c21c6acf050e7a25539bc7f3fe04fdf3e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/governance/MyToken.sol",
+      "sha256": "a1860fc796b70189a8ddbb70714022440037479f37cf17d8bef5775626c41649",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/governance/MyTokenTimestampBased.sol",
+      "sha256": "4f9b46dcb1f6a3ea2e55644159923901bf9726325b28ebba08f9dcad84e53698",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/governance/MyTokenWrapped.sol",
+      "sha256": "41e2bd83e2e99875ff9f1a54bab4469ceb8eed3c928020ebbf31da21b3a2f9d6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/token/ERC1155/GameItems.sol",
+      "sha256": "be7b6ee6a73cbc46a7dcbc7d2277490d636cff969038631ffc4aea288b9c27f9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/token/ERC1155/MyERC115HolderContract.sol",
+      "sha256": "22ca8c8531b9d07512a6a8ee426e3e21d6c4a67a6890cf15ccdd804ceba28d84",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/token/ERC20/GLDToken.sol",
+      "sha256": "e859536b2941d9c5d21513dfd3e6174932fa23e620d51d56f338b1a38f388a06",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/token/ERC6909/ERC6909GameItems.sol",
+      "sha256": "3190d9197287223568f26f5a4178004386fa17ea437021ebf509352043d09d71",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/token/ERC721/GameItem.sol",
+      "sha256": "49b2114993f59d6d8f74ddc5ca0130df183601c02791d34bdc226d9d015d9b91",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/utilities/Base64NFT.sol",
+      "sha256": "ecb034dd102e692601d40551360cc05d8e73021d08f9ede313464d1c18a92ffa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/docs/utilities/Multicall.sol",
+      "sha256": "c5add86cf7f464e47449a56aba370e6d13af3f8a53756c1401babd58497cd53b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorCountingOverridableMock.sol",
+      "sha256": "91c3023a054ea70834f08ed86e4c9565f1f16580f4a8d3b912865d3582674b2f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorCrosschain.sol",
+      "sha256": "13c66f36950aa0a14d20fa81f7a17839b71cb1584fd6894fd77423f6650a1703",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorFractionalMock.sol",
+      "sha256": "0506e260693ffd4ca3fec12d484b6280a5ef2d42c5cb29ce26f311b70704f743",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorMock.sol",
+      "sha256": "371a67c23e6a4735ec927a044fe20b2bbd2ee5d857f8e6bc6d98a8c965db4b80",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorNoncesKeyedMock.sol",
+      "sha256": "d5b9526b961eb70c9cd83509143b1903e16c1c98709a0925a2d5bbb77d2cbcc9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorPreventLateQuorumMock.sol",
+      "sha256": "9f3c7c0132549a32661c2f24d403cc5342274d6ac88035161a9efcdf08d7af31",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorProposalGuardianMock.sol",
+      "sha256": "1bb2db8f630d00378a40f951bdfdd30564f099b1b3a7ae748d061ff1894506b9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorSequentialProposalIdMock.sol",
+      "sha256": "7961e1c941ab47109119c1b1a8c321a99913980f136873abba0f15419362f579",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorStorageMock.sol",
+      "sha256": "c865b519a6e30fb5489c5d7762212b8a56920874bd5fc9dac798b8c398e6410d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorSuperQuorumMock.sol",
+      "sha256": "d203ec7ccabfde3b8f3fa976057e6fb79b6640445c4e93931a6c071ca75f7ddb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorTimelockAccessMock.sol",
+      "sha256": "b9105bfc786dd0358f75c2858b288ab763d08fd84cda1d5c366dd667d489f91e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorTimelockCompoundMock.sol",
+      "sha256": "74216c1d736b8f1ad1f64633bff9b9c65cf4c1d008a81dc2abc87f9aea37d1c0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorTimelockControlMock.sol",
+      "sha256": "eaef7b29749a9e23eaa056f526017b170e0cee113f39e1ea7bd4d827560f631e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorVoteMock.sol",
+      "sha256": "5ef871672e03f016511814cc0aeb8e0e1fc2ae44eedf45f867d4d6c5602207e0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorVotesSuperQuorumFractionMock.sol",
+      "sha256": "71d83ba0f444ab6928c932a0159cbfd680ee37543278d651b87c1eb16e9683cf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/governance/GovernorWithParamsMock.sol",
+      "sha256": "16d9704b19d6233ab9471353481fd7362981267d8341ebf156bb8f8ccb9af30c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/proxy/BadBeacon.sol",
+      "sha256": "ffe363f96af3e7acd3437f4f830d925928965bf6a372f1b31ce072da259ce69f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/proxy/ClashingImplementation.sol",
+      "sha256": "307da449abd0ff7eac996b2b4b69cd47a94befb031afe23eafca05b84dcef549",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/proxy/ERC1967ProxyUnsafe.sol",
+      "sha256": "ea69342a9fb9d8d8615ebeac26a1f65dd95059e8e96a9cfd428d7284c06838f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/proxy/UUPSUpgradeableMock.sol",
+      "sha256": "406ef570acf0352f7da6513eb07f4740e4980ec9f5edfb3ae711d7fa88412a01",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC1155ReceiverMock.sol",
+      "sha256": "02fbc285ea2ff6ade6221d5f983ee8492d4835945efdc20749973cbcf6e48a20",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC1363ForceApproveMock.sol",
+      "sha256": "88df5da5ffaa95287413d95f775c6ad10e075118a20eb00b0222e434981cdd7e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC1363NoReturnMock.sol",
+      "sha256": "f342f7a38aebe19a51308d1cfb728096928b7914b0310a3818da858668c7b925",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC1363ReceiverMock.sol",
+      "sha256": "6544ae62131ed094dc031d8b8404af47d20d2c6a0a533257b7b480c16f13f4e7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC1363ReturnFalseMock.sol",
+      "sha256": "cbb3ce37a6f80580902d286d040614ca0f2ffbdab0228aa8d340da18bd7f6b0e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC1363SpenderMock.sol",
+      "sha256": "813dc538ff5c6533b72488ed1f7b84f82eca98b8c49a1d99e9cce67f7f637985",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20ApprovalMock.sol",
+      "sha256": "fab161c474d3903aa9adcfaced6349bb542a1a7d4c313cb878feebc38d444b9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20BridgeableMock.sol",
+      "sha256": "b94fc77d338791ea772a5b529f89b50ba2cbf29b8b973fa8a808bbb2deafd602",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20DecimalsMock.sol",
+      "sha256": "bf45ba44b3b4ce31eaafe5a21ada11e4658f076be46baa51da73ade60c89ee65",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20ExcessDecimalsMock.sol",
+      "sha256": "0f7bebb8cf57203514ba8335b738180866410e337bdd29fdb0245f8974708616",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20FlashMintMock.sol",
+      "sha256": "f3a1b3c12ac807afa796d92bf30ee23c4c7638f2d82f4e2ca52777b036aadbbb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20ForceApproveMock.sol",
+      "sha256": "d4c50de8a3b2f5385538510f5f75835bd9f08fa80cbf8af1410733e4f9b350ad",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20GetterHelper.sol",
+      "sha256": "610077af11bb79713f58a456cf003339b607718f55e1eef74efcc05585f333ba",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol",
+      "sha256": "fb8983f5a9605b1f870158696d1cbf386be6e5f399fd9323d812399eec2d61e1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20MulticallMock.sol",
+      "sha256": "462371aa537948eb3e2ec01c8196b29b7fbe1e018a08babc2453569f0a7d6415",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20NoReturnMock.sol",
+      "sha256": "0b181bbe38e832ca1c5a4257e093deb68c94e2df8444d4198ec20c1697cf2a7f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20Reentrant.sol",
+      "sha256": "eefe86a3e9a43f113dea149a3be1d1d8e2601543da2cb589b711325c26fac021",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20ReturnFalseMock.sol",
+      "sha256": "bd94a8d9b5990a2bf353d9341a9f53ace4413671feb2a62261699744d524d25d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20VotesAdditionalCheckpointsMock.sol",
+      "sha256": "9545eaa38abd90fe8bcb775943058422ca3b5c2a3c6fe0d13c89909ab2aaf4af",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20VotesLegacyMock.sol",
+      "sha256": "7be545a0c5176f9809dbe540ff4f715da7e462177db1244251f34c8292eda14b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC20VotesTimestampMock.sol",
+      "sha256": "4a1fbfb7d4f0dcbe71f56d5b8056070685c3dc04894cacc7bc75a83caf3c1656",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC4626LimitsMock.sol",
+      "sha256": "ebbb1f4c5f418b734a391d117b70a5b0b50ac4a4dbc5123a91630c2808000d8f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC4626Mock.sol",
+      "sha256": "b294e59d252b0eeaca3ff845a940d867d79de8ef8ce21297a77139c95cf800f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC4626OffsetMock.sol",
+      "sha256": "d89d3e6815dde34878968cbc59d8fe5923d4c1bfff8721d7add9cfdb24a22790",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC4646FeesMock.sol",
+      "sha256": "663083d7675130fde1dc847a22053e062b762dfe85351178e122545fca324d47",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC721ConsecutiveEnumerableMock.sol",
+      "sha256": "5f0e9cca296479ef61e4f76baedb3e8acbd0b487db070a162e2253d1d4957e81",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC721ConsecutiveMock.sol",
+      "sha256": "ebda2062f40803cb38df49d4ec53887be8d44f75840cbf859e461d781d04a8e7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC721ReceiverMock.sol",
+      "sha256": "d65c0b5b4554e708052043ca4b1e35c668e81927f8d085e816e47c123912e0d6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/token/ERC721URIStorageMock.sol",
+      "sha256": "72c9bdcec6b4f2131b32aae57adc4eeb8823eb02234c9139fdb055874aa7efe9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/mocks/utils/cryptography/ERC7739Mock.sol",
+      "sha256": "e844996c4b66fa57e50e2111181b2958c532117827872e95b5c2a163f1c856ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/package.json",
+      "sha256": "3c1a597cb911ffc2988c038d83ee93e1f8bf0ad17769d6bb0368d08bc350d773",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/Clones.sol",
+      "sha256": "06c768a2b794ea59dd6d6c1bfe33cf5098a4a8921aec14cf066576a2bffafce6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol",
+      "sha256": "41a3040398d53999dea3251ff8906e11ec1a699362a1d8f4a55bfc7709cc00f3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Utils.sol",
+      "sha256": "a89ba2032ab25959c6fde1e508ebf8f966ff632703d3ef79684f578a8fa8033f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/Proxy.sol",
+      "sha256": "fa8aae37b2939371fcbce48b814c0d5c7e57e3e267f348459f29941937746c98",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/README.adoc",
+      "sha256": "720df17cc23c05956a3df2ced0fcdcc7f2d43345b3d4615159d3a0bfadd79e26",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/beacon/BeaconProxy.sol",
+      "sha256": "220626a31d80fb0d7a625f0c9ac741d40cd9f3c98ef74eb5b3dd43d224701282",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/beacon/IBeacon.sol",
+      "sha256": "c1c9726bbb0ec4c540c7c98059dcded69a8586b46c168036672381033ee76239",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/beacon/UpgradeableBeacon.sol",
+      "sha256": "26dda9d5bb961b3df26602d49f9f5a0647cfdb78b63cc253aed8527030a64f25",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/transparent/ProxyAdmin.sol",
+      "sha256": "4da9a90b1c8b45fdab7d73d8cf81f51cf7d990657ee4e3f943492c3bf0e4c2f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/transparent/TransparentUpgradeableProxy.sol",
+      "sha256": "58c759fe76057e1cefa8909b446357aae5cac8a8ba7e6401650208d1b0481508",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol",
+      "sha256": "f527a063813c2bf60c153fb08e38539578935402894fcc36fac42324ca325d3b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/proxy/utils/UUPSUpgradeable.sol",
+      "sha256": "b5af3bfd79a32c6da2d09b0be38d9b63dcd0d159a1a4a0198431fd00acc1fd52",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/ERC1155.sol",
+      "sha256": "35ad182b74ce08152cde00fd41226850c635e1b9445f3a9d7b4888f2ba55717e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol",
+      "sha256": "62760e5ca354484140a29dddfa03b576c2e9e3adea6eb021eb28b394c085f3e4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+      "sha256": "3df310870e0187a59020ea48e910ed2693778b1f758b57b97a47365d74b92af5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/README.adoc",
+      "sha256": "695c2fef056a19aded4b61d94aa4822467dc648904c7e2c4ba639403123af747",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/ERC1155Burnable.sol",
+      "sha256": "118858f048b9ac73c7597d871e673887c24e29dcb1c4ced0de4c637fc7cf2c50",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/ERC1155Crosschain.sol",
+      "sha256": "638990342c5b13c357a844f965b0b93c0c30990a3cb3e02ac1c8fdbf0e39ef90",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/ERC1155Pausable.sol",
+      "sha256": "eb3c9c1fb492ab948d0c147c2affd12d5b6c606a86d95142f7f7efaefc5373e4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/ERC1155Supply.sol",
+      "sha256": "506b378ec77d928b398f393591c076db3e92478a2b6846fae87cb50ee3cc7a34",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol",
+      "sha256": "33bd6fdf59a907e9311b436426b0baa894dd4a0165f0a2c9d6b1fc0447263347",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol",
+      "sha256": "d5a148ccf8ac24f69f734cb2bcfba55ecc1d24209bf7aaa022cf3bde4bbe274f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol",
+      "sha256": "ee184c9620ae770a9ccf9d21d1e6fd1177eed668f4e92707b51e9ef36d7c9469",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Utils.sol",
+      "sha256": "8d75a5dd3db8f1c85362ef688d6f3cf5b2892dc62424bfe35678a49ce0d87956",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+      "sha256": "50f34ae16a067a41c2c1091445d11d63788e54c717677cb6d6b0e4cdea2ad21d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+      "sha256": "01b6f5c4fa45fd38822b286ecef6daf983d27306dd6362496fa71b3e4600b72c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/README.adoc",
+      "sha256": "6463b06b6e3bde9e716979177b278b03709ae08a646bc65e701b3d364b93facc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC1363.sol",
+      "sha256": "4ab0473a77a4bbcc4bbb8a22e2f2c56a451e85aa7014b7f4fb61e98373ca31a9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+      "sha256": "2e6108a11184dd0caab3f3ef31bd15fed1bc7e4c781a55bc867ccedd8474565c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Capped.sol",
+      "sha256": "2403fec28c40f964320bfb4a025b12392ce240c732f648f9080e3521418ffea1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Crosschain.sol",
+      "sha256": "ec2237b1f8feec1205a035bb8a43e4c876bac678a6fe894e51e2530e39613a6a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20FlashMint.sol",
+      "sha256": "acff73eeb3147a569a2eaa1f5c5a8c2fd1bd51c5528a3ce01561312e708b500d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Pausable.sol",
+      "sha256": "12919f23b3b408e67b3b9c9543e37b7474e314d8f1c596472fd9201d9990a278",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Permit.sol",
+      "sha256": "53584e84cd4851447b3149219f8c1b41397f7c753f85da07eda7f17ac6846e47",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Votes.sol",
+      "sha256": "9e9b494831630db53ffd1d0bce7fe22d606ce9263fc8d4d1983d235261e918e9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Wrapper.sol",
+      "sha256": "4e7fc6edf407237f21d45cc6974dcede0349c7d8b68a4e3d8588263ba8281e4f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC4626.sol",
+      "sha256": "e4753424e90eaba391e8ba78bc86c32cf2a38497a2211061f017ae5e93abc08a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "sha256": "0b7132f17d14d1d84b41b0bb429be62dafdff00fd3470f68724d8018eb07f57a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol",
+      "sha256": "c302edfbf7f396e1130be81278c5c994543868f0f5bf0c0fb3f557e166d8d3f2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/draft-ERC20Bridgeable.sol",
+      "sha256": "6cc20d017e037dfbe92542dd0136c15ed1c19809591d3f34c1f73f9f8fe434e6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/draft-ERC20TemporaryApproval.sol",
+      "sha256": "3f14e8e359e07a1407659201abc760461fe7d2335bec5c3733e7e7d7672b5536",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/utils/ERC1363Utils.sol",
+      "sha256": "17ed0dad7ec114eab7f188a8e5a410b37a43f556eb3893191f63da826052f860",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
+      "sha256": "2a29d6f5e9789cd48c1630fa7fa9b870316bf88e53f0a5af7882fe09610ca1eb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC6909/ERC6909.sol",
+      "sha256": "4fcbf3da03f0b84c7a99df1308ce93745e92ab6dd11c0dfddcd1a1f5a7b5b63c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC6909/README.adoc",
+      "sha256": "219f4481ca701bc22bf6afd900c1bfe4eeba7f407b725315defaeddd70a37dd1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC6909/extensions/ERC6909ContentURI.sol",
+      "sha256": "c207cd9a7ae5edc9ef5e20b59a7519e39c0319c8eb957806a5b40bfd1e76b692",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC6909/extensions/ERC6909Metadata.sol",
+      "sha256": "a708c5eabb119ad8e8636adfeecb7a4b68f4dec3ac49a524998b3d23f98a7322",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC6909/extensions/ERC6909TokenSupply.sol",
+      "sha256": "2400c7750524a40d9e3ff84d86b40707bc8af5dd42bbe6ad7e8ff88f617ea3d1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/ERC721.sol",
+      "sha256": "ef8e2398c78851bd2ec12bc48d923058c557889d5a3d5ee4919c17ff0fb3517e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol",
+      "sha256": "ff0eb9902bf0ac099205615fac90eacf34fae637571b05aab3ea35dea53d5f17",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+      "sha256": "eafee3ffdc7cb2fba4bf6bd16fb28f8e5b4679742e81c2ad42a1b1df5c179feb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/README.adoc",
+      "sha256": "537224765201d321b2be6a7c0565103be8a6822c9ba75f712254f48f9ee06c71",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Burnable.sol",
+      "sha256": "2d19ad1769de94d561d31b0713a073bcbd3eac4fef568c0e71f5b1a860619aa0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Consecutive.sol",
+      "sha256": "9d5f256e8513886359ee7569c98a3eacabe12a41b944f7e505034289540e8f74",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Crosschain.sol",
+      "sha256": "31ce5c980879d8a514d8a4afc5d4191babc6acb2683f06414bcc7981ec62d7d0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
+      "sha256": "c157a005de76d220cc1108441ff6cbc62e4fc6ffadb7e8002992b57f3b4fd552",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Pausable.sol",
+      "sha256": "dcd393061afac5cc964c93aca6612e262d9cd5a792b237cca33a2834b4e1e8dd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Royalty.sol",
+      "sha256": "de8bed7f9d3c9fa450f61df1c83a0ecc3433d5505ea7c4df2d13e959c8365343",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+      "sha256": "665ae4728cfc066d61fc73f1e9b87279f70e4333d926b3ca750240d13fa7f9f0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Votes.sol",
+      "sha256": "82ecd33cf7dd63cf8018e4af53791b967a813978c8979ddff449ff6cbc7aebf5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Wrapper.sol",
+      "sha256": "d1795982c65a93e2c87565397951426c7a44eb1ec7dff3184341b428ea896bdc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
+      "sha256": "03c8c0b9ebbe6fe0a682332d9f980723996a1856ff0a767378eae95288069649",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Metadata.sol",
+      "sha256": "33223782ea652dca413702ce92f9f59d91d758a035065b24bbedb7dc60c63a78",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol",
+      "sha256": "2d50f70b857cae57572c0139e3d9d84cbe3edcc18492581af36befa15c36cb3f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Utils.sol",
+      "sha256": "b48e95db8c85866c1d88af8e82f346e0d22d24b5aac5b936079d958c72e13b9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/common/ERC2981.sol",
+      "sha256": "bac8f7ccae3c561a105a18cd1600ade43bb8856f9b7c9e0acc98d950af9ffa81",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/common/README.adoc",
+      "sha256": "7a0ae207c4a51977091b81feda5974e89f71fadfd8058cb98309f54d69054aee",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+      "sha256": "73e54e15285455f0e01e136c3663732641537614723ae5dbd820eb3cb036b1fd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Arrays.sol",
+      "sha256": "d0a51abdcac27c02821939ed07419b88950bac4117ee75e105010674ef6593c0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Base58.sol",
+      "sha256": "41bacd6166c1980671d8bdef3c7560a255aa84c2465308f407c321801df8865c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Base64.sol",
+      "sha256": "1c143572893f50f04fe8e507d89f9997cd3242102ba4200c8de0803ecbaf8cec",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Blockhash.sol",
+      "sha256": "558cae851261e33e7272037d547b40b891bb8c55dd99caa5acdb6566b79b6712",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Bytes.sol",
+      "sha256": "12333e27166b8e48d2ff740edad32da64255de82db37305a17936486f6ac5a4f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/CAIP10.sol",
+      "sha256": "5a1b57f39ae27e7da01e3c647964a38e516581b0505cf358c99aebe6eeb4d437",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/CAIP2.sol",
+      "sha256": "cbf5e18e186a00400705880a4125d7e4534cdcefc484f96a33bd4b355bded8f6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Calldata.sol",
+      "sha256": "f400ffb13072d2cbe1de51c78e4fc38d1c29e2b1d7cb0b53c2641bed0effa4d6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Comparators.sol",
+      "sha256": "52fb1c8f57967d42a3214bde4a8a414ab25c2e3a844d00e171ca56487024e009",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+      "sha256": "847fda5460fee70f56f4200f59b82ae622bb03c79c77e67af010e31b7e2cc5b6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Create2.sol",
+      "sha256": "9623aa59745a23a72f313adc5adbf583968bf366a7cbf3fc43c1148d7d2c3c86",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/ERC6372Utils.sol",
+      "sha256": "fb7c238c9860fa935b08bea318d5dad52bde53e103ff91c7d87fca757af5bb86",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Errors.sol",
+      "sha256": "0704b9d6c032cca8512a3bc3f30f49f86f1f03102d2896a3d23e794b82efea66",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/LowLevelCall.sol",
+      "sha256": "e128cbe9c6c406d5a42c26e4079c0a95b369ce552f2d0c3dfd2fcb836c5708f2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Memory.sol",
+      "sha256": "7163c8f867f59e7af3702695b3a4e54eb7564850ff4c80ac90065e406fe7fe83",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Multicall.sol",
+      "sha256": "bb203e6a32bb3f377e6b0c8269642ca2816f815deb4a533f35ef42eef0beda5c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Nonces.sol",
+      "sha256": "9b4cbb85d1f5053c744e83302538eb643a713ffd14bc37665b224f1c66529339",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/NoncesKeyed.sol",
+      "sha256": "ec835ccacbd09964b5ec4f46da1069e4bd6b943e5c7966ba6a4baad642ff62b1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Packing.sol",
+      "sha256": "766829f6d9758a1318dd009143912d7aa6bbafa4f4b2a137c94d7f81a73b38ac",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Panic.sol",
+      "sha256": "270fc8401c1a13fae6a7a4a2dd6e381b95d658896701e51f0d3e2688acab3dec",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Pausable.sol",
+      "sha256": "2c26130748f06552c65ca74d89eaf78c9324a3cbac3ba6fdbadaa8beba0cb0b4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/README.adoc",
+      "sha256": "a0b3a614114912d1175a7060fc1e06b3655085a4c44a2d01928d78feeb925786",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/RLP.sol",
+      "sha256": "9812ff4e2b646e42fdbe6016f57f351403aa396ffb222aaefd3b584252cd45e7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol",
+      "sha256": "94e409e8f6e3184236651a6cc2b1a6a3ea0f0a25eb85b71e524ad5791bb2fbc8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/ReentrancyGuardTransient.sol",
+      "sha256": "cff7c20aed945d939b764d876adbd42e1b7725d62d5b1f2bd303db237567b575",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/RelayedCall.sol",
+      "sha256": "a5c34407e2c3f50457664b512e693e6f477c611139b79ef0cc17000de8cc2796",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/ShortStrings.sol",
+      "sha256": "1cfa08d3c551e9ec0b9cd249b09987f04e7e90f352e1a5e3b0d6a3bc426b3de7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/SimulateCall.sol",
+      "sha256": "a66d0fb37891aadc27781ac6887d7fe81c181e17f5e92d13585670fc67dcb1e8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/SlotDerivation.sol",
+      "sha256": "f8e5f2c672918a21720ce3b5e2637c6366aa0652d085c0478fc0d0d6edb76386",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol",
+      "sha256": "75704538dcb223239280c6726d9a31cf769a7816718517c997fc7d63bdb70778",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+      "sha256": "e318709bbe73a7831d64c1351e8bdc43780b245f25191234e361e6ab9b98c67b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/TransientSlot.sol",
+      "sha256": "ea92f361d697ba8b1fbd322b4d84b989998862c21fbebfa4b45289dc94a9eea2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol",
+      "sha256": "ba7c2d314fcd61c9783e0b3f0c664d004b76b408fda6a84edc8267d17c5012d6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol",
+      "sha256": "2845caaaf70757b6cce612ae4ffbec2c382cb3d1cb9765c98fa649c0f5f1c794",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/Hashes.sol",
+      "sha256": "ecdbce11c5ecdf32b306e26b8ab1b878327c08154b4ccd04518b6b64b298cf31",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol",
+      "sha256": "fd5635e85da7518bf1a153eaa99d3fad8bb6700f9d5d9cb70ddde75935cb122c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol",
+      "sha256": "538a0d7c4f0ec5a8562f58561890f7b49d14580674ecf58bc5f505b45c73df65",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/P256.sol",
+      "sha256": "0d7bb2f2b5e0ceb0e1a28523ee179c1aee5980cb793df739dd9ccf87170dffe2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/README.adoc",
+      "sha256": "b2a1a3c18158943c8b3f07eb2ac4a87d4f4c065323ae8d8b3ea7707dfed18585",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/RSA.sol",
+      "sha256": "036c1fab2a132d7acb7fa0873812f2ad22c873d2efc91032b8ac7a1fda5ff476",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/SignatureChecker.sol",
+      "sha256": "acc520422fac0a9edb85d7268085a63219a0db9e4406cd155d5c74c94e35f590",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/TrieProof.sol",
+      "sha256": "dc0c4401afa00602231711898679532cb16c7dd33c9582eab6bca7bad65bd16d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/WebAuthn.sol",
+      "sha256": "b0291b551fcc38e468ae0bab750fe9f1aba33dfd563dc75eb3d17f17532c0e78",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/draft-ERC7739Utils.sol",
+      "sha256": "e3a2a7ae79126e1f64605753901751b6d5ebe6c6336e567e5ba7e9fe30121f72",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/AbstractSigner.sol",
+      "sha256": "1119a95e6a2b709a6961fc9d5aa0a3d43249857d2edd05a174e191c573329111",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/MultiSignerERC7913.sol",
+      "sha256": "ce6e9bb2732ef0769350e48dba6f982fd98a27d98cc7ca50f51fd7732dde2a9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/MultiSignerERC7913Weighted.sol",
+      "sha256": "3ff83c3c739a4f42172e133783b3a0f3206b6183791af9123920e34b1d35f82f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/SignerECDSA.sol",
+      "sha256": "f7d1dfe2512a72f21d53a818963aebbd9017b41cdde7dcb6dc566adfec273044",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/SignerEIP7702.sol",
+      "sha256": "ba7615fd7eae8191759bfd34af99c573ca468ba88dd1dc8657fd74fb9235fa76",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/SignerERC7913.sol",
+      "sha256": "de875f910e523a88cbb3f0851f6b1b958de52b52ae262cd74efc9d9923448b94",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/SignerP256.sol",
+      "sha256": "680777935eacce18916de879ce37d8c7592b35ada18ff701d94a0945589a3a74",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/SignerRSA.sol",
+      "sha256": "35d55e0adc031d49ac802949cf933f6cbef8e9a43ebb6770a49a3d96656ae4b5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/SignerWebAuthn.sol",
+      "sha256": "f00f8cb5fa111fdeb3c42c6eb90ad7deabef312df3e9ca23c06483803ab2aba8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/signers/draft-ERC7739.sol",
+      "sha256": "fb3e370a0eb733cf6a63df53ef0c438538d7684178bdbb17f43f44b4e19178ab",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/verifiers/ERC7913P256Verifier.sol",
+      "sha256": "5f9d91e2faed416e04d1e90f6441fa0c46ea46a036010b298fa3fb4b97de6321",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/verifiers/ERC7913RSAVerifier.sol",
+      "sha256": "483db930bf09137ea172b886e294f32adf6e50927bafc4905ac9a1c06225549d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/verifiers/ERC7913WebAuthnVerifier.sol",
+      "sha256": "49ea2f4f767d6f9b4a48caaabae5ef93c374021b78017538447b62ffae8f8fb9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/draft-InteroperableAddress.sol",
+      "sha256": "8c1fa73e7e1c31a10bff4c97bb789e598437d7a93eb7c3a16b5567aa3cfa5961",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+      "sha256": "61a2b12c96857aaa35f48aeda67a4281637a42494c0b3795be0ae976aa7b3793",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165Checker.sol",
+      "sha256": "b42cd10397f404b8383363f646c21d59ff4decc7bca3de8c5b84773806605e14",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+      "sha256": "9055c2994b37dea1a41b7b7926dcb510f05dbe2540b0aafc5fbee9558fffd0ca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+      "sha256": "bdfdbe133991c0c78042957ff5cd97167926fcaf6d15664f3835a076cb066457",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol",
+      "sha256": "5779bc848bde39f1ad7bc02b4f708a0040888e0083b1a33f119cd94639350134",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol",
+      "sha256": "1ed50b1056af886752f0fb48a0165d381e69bb4a4b18b893b066dc144a7e08d7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/Accumulators.sol",
+      "sha256": "ab7f58adc5094589406064b930a3bbc582a97c66f64b0e9d82400e94f995396f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/BitMaps.sol",
+      "sha256": "12d7dd76e44e30d2d076df04f970a272969f30c2a2d240a89b6e2cac3f3e7c55",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol",
+      "sha256": "e8efef277044b66b660e7888e0f7093022e4a437e2d95a82ffc590e6699abd94",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/CircularBuffer.sol",
+      "sha256": "a249655074bfac879dd3d907955467e35d6b16f4ba6551878e92e104a79ccf1b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/DoubleEndedQueue.sol",
+      "sha256": "74cf731736c7d2258a9b05944350c1ceae0f15ba79c271695dea6829e00795fe",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/EnumerableMap.sol",
+      "sha256": "c9f5ada92b8bdf4a4441a1358a6d51a3c6a98eedfe9ff06bbdc02b778d104b26",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol",
+      "sha256": "76c7af99039281b3075780b21b4e2f6be0166d09f89c24171b4bed3b1961c810",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/Heap.sol",
+      "sha256": "6199f2afb6d500419686f0db53f02dd7ad5263b89767cf80dbcf0700a449fc21",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/MerkleTree.sol",
+      "sha256": "e2350ba1cba5998b64877e60a2fd089e61d598c93f6897e735b28bcd1e7700b6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/types/Time.sol",
+      "sha256": "8085f943150cce1a10aa843f83519960c3010efe5792a9ee58f87c1993d33472",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/vendor/compound/ICompoundTimelock.sol",
+      "sha256": "b1062b283d59aea38dbecafabe94dedb7152b89ae001f85b35f86b3817929c4c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/vendor/compound/LICENSE",
+      "sha256": "a5313ddb37e6343a90656fd17d8bc1421a7291ece9f67f4d10bfd89350f0c4dc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/package.json",
+      "sha256": "b8577dfe5019993890bf766196ba984b0f55198779caa9519fbcf96ab91eaeed",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/LICENSE",
+      "sha256": "30c4ef57d60073e258c0f027d6b6dc25a50f101981af3deab109ee6cb15c2024",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/README.md",
+      "sha256": "5051eb2348de3c17446374a34be5322dd71692920ae2efc2059268c92fe101a9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/package.json",
+      "sha256": "bd69a124f8beb71623cb2078ef01d56c17dca5bb27b8b670d68ba6bef3413ca2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/base/BaseAsyncSwap.sol",
+      "sha256": "d9562fa1639630b7344bfb5a076fd0948ccea74df82c98a6de5fd503fad0dc87",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/base/BaseCustomAccounting.sol",
+      "sha256": "8e553d124afa5c8296eef4e3c572427d0ba29543d71d246234d7979c606411c7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/base/BaseCustomCurve.sol",
+      "sha256": "5430c08f416fc2ac1f96c77629994fde8cdcbaa283cc9285e9fc6f34b25787b5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/base/BaseHook.sol",
+      "sha256": "fd2d7369ccff06504da5d819f1a1bbfe55c9674e85c7167cbadaf4549aac1c10",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/base/README.adoc",
+      "sha256": "db92c796d01bbb2e43469cc688bf750f5fdc8397589d2dd53cf3561330e1f3ee",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/fee/BaseDynamicAfterFee.sol",
+      "sha256": "fadef71e51131aa7af2bf04288ad04924df4a2b82e1239591d6350718a68c4f0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/fee/BaseDynamicFee.sol",
+      "sha256": "a3009fc8fb84c2160ac72d4d7716a0578b23453fc649cc0131c0600f3cef91a0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/fee/BaseHookFee.sol",
+      "sha256": "135e2efea16624f9ecf56c90175de81df0316e769d29dcc6af967858eb95d229",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/fee/BaseOverrideFee.sol",
+      "sha256": "efb0c7557cd40cbe59a3204a9dce13ee01d1060fc96daa1d98cb8a9b110eb7c6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/fee/README.adoc",
+      "sha256": "eeb8cd7895e2ef1ca16205099a8114fd0214d75a2a711d58407ba21f6d83c219",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/general/AntiSandwichHook.sol",
+      "sha256": "d74f16d2db88994dcd480e4de7cc742e8e424495c4b01f569be1fd02dad909d2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/general/LimitOrderHook.sol",
+      "sha256": "1f19a630c5c151d3e86f5fa6aceeb8a9551679c7f057867595e0ac8bc9b7cd7d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/general/LiquidityPenaltyHook.sol",
+      "sha256": "eea41668309c6ddbb81bf8b641a0d92f5f2f8ef1676509957755eff4ad614a6f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/general/README.adoc",
+      "sha256": "4ffb0cdf9151899a179a62a7329b4709a7cbc9339850ab621dc6830b2c31dfec",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/general/ReHypothecationHook.sol",
+      "sha256": "c9a6abde25a130c5c1778ae9ad4a786a16229d74fffd1a4d0979d9af7c932137",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/interfaces/IHookEvents.sol",
+      "sha256": "42145740a084bf004c28f932be0b7c42ed40ad71dae743f0744dee84c4cce4a5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/interfaces/README.adoc",
+      "sha256": "340aee79da5a73797a7dbf3472966ddce0b13f35cd496f9f2200712c1aa1b649",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/base/BaseAsyncSwapMock.sol",
+      "sha256": "d0e0574474581b5dc88587717b0a65b18463c0564c02bdf79911cd523cbf59d9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/base/BaseCustomAccountingFeeMock.sol",
+      "sha256": "b5c513d83f3415fe77074373eaa58a97857912d59bcfe137623dc0dc45d0537d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/base/BaseCustomAccountingMock.sol",
+      "sha256": "cf8b529f2b0a0ac90e6fc55c1d2a62323985a22dc5f4f8c13a0abfb497fd6af4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/base/BaseCustomCurveMock.sol",
+      "sha256": "e78c2f0b9031759bc8d87df5de13e11628f0e05d6990fb107299fcbccd99c092",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/base/BaseHookMock.sol",
+      "sha256": "6c1a07bb404fad857f7ebab6f54daefd8f641c2eacc666fbf27f7462950f0838",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/fee/BaseDynamicAfterFeeMock.sol",
+      "sha256": "6cc9fd8f8ad6d48ec5615456ad52b0d67dffc2283b1a9efd14d4f835c57ca7b3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/fee/BaseDynamicFeeMock.sol",
+      "sha256": "46eb8b115102d6f9ce25e355348bf763895d9f07582cbe2492f3857b364de111",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/fee/BaseHookFeeMock.sol",
+      "sha256": "8ab503b619db08fa035a08e249f47fb0efe1bfce9c4e880997427a60d6603f0f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/fee/BaseOverrideFeeMock.sol",
+      "sha256": "73f2c8a9d32971c878d32e5437186e7db4825e0ca0adc677bde5aaec6ec5ef6d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/general/AntiSandwichMock.sol",
+      "sha256": "b84b3a67797f246bb9caef3132ecb7a3041401baabbf8d9039b34f8580842c8d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/general/LimitOrderHookMock.sol",
+      "sha256": "f3d356f195698a5e7ef0b120bad8464d3ec6b3d742360ef4090c67fd3859f830",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/general/LiquidityPenaltyHookMock.sol",
+      "sha256": "f0ad38b48c3635378f3fe7437dbd1aa49b4cdf76caca96dbecbdf118b4bff637",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/general/ReHypothecationERC4626Mock.sol",
+      "sha256": "2566033c906c5b5f0b926832243995d6882edddd47053a6f42c5731186997ee7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/general/ReHypothecationNativeMock.sol",
+      "sha256": "95f95a93d4a94a6aeb126c01f339ffa511046fb811418ce8435080aa40bfc297",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/oracles/panoptic/BaseOracleHookMock.sol",
+      "sha256": "31c55a9d37fb73d1cd37a034d5b7810ab614e967f3db78f94c114d6b4c977c65",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/mocks/oracles/panoptic/OracleHookWithV3AdaptersMock.sol",
+      "sha256": "c80acafc5a6e04033aacf9060f8202efab40e3afa43014f199a04a79224e8168",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/oracles/README.adoc",
+      "sha256": "df7de54857a61d46c991452be5fc907c1c18b58d13e8cd6deef1d48e99990198",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/oracles/panoptic/BaseOracleHook.sol",
+      "sha256": "dbf95ec87db6d0dbd8f23f30f6252958baef6ddfc77684843cd7817e94811239",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/oracles/panoptic/OracleHookWithV3Adapters.sol",
+      "sha256": "697df8188eff2497c46e149561593772907a262b810c84edecf7d7a562da0da6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/oracles/panoptic/adapters/V3OracleAdapter.sol",
+      "sha256": "19fe6ba6104c8a263f26907a28ab36bb16f0fc8c1ede94c394ee05dc65fff145",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/oracles/panoptic/adapters/V3TruncatedOracleAdapter.sol",
+      "sha256": "42d2ac13c3c87efd4f0212fc2c612a2e0ff188f99aef0417e1da9ffc0994e493",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/oracles/panoptic/libraries/Oracle.sol",
+      "sha256": "5e4ae9a95f75ca55f4c593958bc52b250d6cb62e56fa269325ffb178b00caab8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/utils/CurrencySettler.sol",
+      "sha256": "034486af217540be36d011572dd2e30c4a6a19a9586a6d059f26ba1d5d8ed4f0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/uniswap-hooks/src/utils/README.adoc",
+      "sha256": "fe24f657ecb7992a453acd4a7d0325dc79a6edb6e1e7b138777a562bb949cf80",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/README.md",
+      "sha256": "bf33586615b9ffa1077144cf17159c6d0bdf55b0b2e73ad85f03f77b26281a8a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/LICENSE",
+      "sha256": "20b067f86de375aae6db0f283ab2e65de24d537733b89bd58432c101259d84cf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/README.md",
+      "sha256": "eacc6348b7b475370f4d56c81be8731db24da03fb494ab1bd3b37b403b43efe1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/package.json",
+      "sha256": "6036c21e67a74502cbb47ec24d91141fa256caf2de46f67cf1d210dcc5165fdc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/auth/Auth.sol",
+      "sha256": "8689fc68a85e5942f8b814efc14cee691fff188594bd7dcefc969ccc65bd115a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/auth/Owned.sol",
+      "sha256": "8ac2f2dc41ab8012e93adb3791326ffa1e4059a20c306a777109dd81816b9125",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/auth/authorities/MultiRolesAuthority.sol",
+      "sha256": "5ab0b9540f4bafa542ecf11251ba988e07896b4e572d2c82f5f56edd82e743ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/auth/authorities/RolesAuthority.sol",
+      "sha256": "51040c1f37851e8fdf1bc900f50231783bd485b00a9658420c55e75b0f0cfd9b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/mixins/ERC4626.sol",
+      "sha256": "06df4ff9dec862306d8ec8abceffa944c3f09544c87462b7dab65f60b4f6ed63",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/Auth.t.sol",
+      "sha256": "8a6cb86d6ed5f0a6162ad68186eaf9a39fa62dc1fa6cd00c801592adc335a1e8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/Bytes32AddressLib.t.sol",
+      "sha256": "99ba68b10e2d48ea71953c4cc6ba9c1dd5357a4fad012882e0320593fd5a8653",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/CREATE3.t.sol",
+      "sha256": "4fbd7892e6d0918841a929089f6d35ee58cbd455d0a3a5b5eb9257daaa8e5a79",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/DSTestPlus.t.sol",
+      "sha256": "d954e3a9d66ddb353ac823e14c80250c026d061837cd395007a31356a58dbf74",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/ERC1155.t.sol",
+      "sha256": "9d990b7a9215ebb8455d43045c37879b51ece5e6407a4282bf8f6c1491ef76ed",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/ERC20.t.sol",
+      "sha256": "e1e334dd267ecca607a7a31c942f848af30b6687964a1f705000d4249e70445d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/ERC4626.t.sol",
+      "sha256": "e2e2940d3ed80a8a887a4d81e3a3300d0983840da5642e84855ef52c9a375ae9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/ERC6909.t.sol",
+      "sha256": "164784296d2dc06685d21463fe8529620fc45372bc87d8df78ca5a8933edd253",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/ERC721.t.sol",
+      "sha256": "9cabaf8d62688ed3256329945941507f3bbc05bc9291d395a703c751e718a78a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/FixedPointMathLib.t.sol",
+      "sha256": "7cb6a29db79bc8e3641098ac447dab0779b21272e9c23e371a92c6d7bed450cc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/LibString.t.sol",
+      "sha256": "98e17fb084cddf16d5efb705f3d9ddbab3d9de423d04277544a5f125a396cf3a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/MerkleProofLib.t.sol",
+      "sha256": "d83d1c9175a077d8903b6854f0525965ad8ddf86e8abbb18b8289c05a6f7bbb3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/MultiRolesAuthority.t.sol",
+      "sha256": "0626cc25cdd51a365f70647dc704007f8244a8c40d76487aa9dd8d2aeb967558",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/Owned.t.sol",
+      "sha256": "88af51e2a46fe8bb0d94d5e409bf062aacbf799065a1fb62192ffa8e7348efe4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/ReentrancyGuard.t.sol",
+      "sha256": "ad674aab2fa146d842739c8f6eb1dedb9b609ac70c118aa2b600a6acc4b4d133",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/RolesAuthority.t.sol",
+      "sha256": "ccbb51d0225f9ccf7259712bb0b3550c0cf67482f559af511a29ba75bf479d21",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/SSTORE2.t.sol",
+      "sha256": "fa23d9f8863292ced8583d9077e1e3543f10e345687872d88d56c192123bda59",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/SafeCastLib.t.sol",
+      "sha256": "b54dd90c829c9e9d7cf2ccc316a552a2698ce20faa9040658af41f7a6d993ebd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/SafeTransferLib.t.sol",
+      "sha256": "da3ae7fe27c7cf59bc43a673aea2e1d00f29004530d97e9bcbfc17a7edeea608",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/SignedWadMath.t.sol",
+      "sha256": "edb25e1643fe75f88f8494543713b2c212fce3a241735805543fe26ceeb30ebc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/WETH.t.sol",
+      "sha256": "110f1b889bb18d9cb7e7d15645c1a1fbbd528ed1d9acb880a176271bae2284f5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/DSInvariantTest.sol",
+      "sha256": "7b9a1b1482143b1f5a4516946a83f2067f8abcec20c56397947708834c231401",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/DSTestPlus.sol",
+      "sha256": "7da8f26070bfdad701f87e58a6da018f2da2a1ec91101c8bc352bc4792c3626c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/Hevm.sol",
+      "sha256": "718d506242acaeb4d53596746843a73e2a80b77b9e815344f5d3d4b77bd2fdd2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockAuthChild.sol",
+      "sha256": "8de6490b0ccdf0b7dc5331e2f5c9b614239fc017718b95cda16d1a5244afc150",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockAuthority.sol",
+      "sha256": "bc44e2a9791bc72c29ffc755acaa0485407ee6ce4fd90981ade7a9e030a3f4a3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockERC1155.sol",
+      "sha256": "9f225c341b0a5d2892ced7eb8828ad9fa0db55fcdfde2786c7eceafbb1b14d1a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockERC20.sol",
+      "sha256": "9af27b7d7230e4eb62406011643a8844405493f2f6d2c10daff87a9276f65eab",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockERC4626.sol",
+      "sha256": "e75aac17a0fe8210ef790fa32b266273332a230a53dc1502775d3ccb784d38c8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockERC6909.sol",
+      "sha256": "03ae95e4109daf572f3c2b7d51a0be01acf2645145961e93df326010f5d7d530",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockERC721.sol",
+      "sha256": "48cae0bd8ce96adb2b3eb15412ed9376834ee46d3e24ccdda595d1ad725da9f0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/mocks/MockOwned.sol",
+      "sha256": "4b614480bb62b935db478ff3518586f3ab75e9dcf25d0e44fd51ee2ba580f1f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/weird-tokens/MissingReturnToken.sol",
+      "sha256": "a8f1514576e71662ff62c7fb2f1cf9e5659b2fe13a7b4e67741541d3b80bf54a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/weird-tokens/ReturnsFalseToken.sol",
+      "sha256": "c90a163998d1f13c20c4b6a5d3c380139591feddf9cd9eafc28164431126c04b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/weird-tokens/ReturnsGarbageToken.sol",
+      "sha256": "42db7fbf77287f6e817178c2dc23585864ffd3a1fe9bdf1561e7baba5c9b7599",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/weird-tokens/ReturnsTooLittleToken.sol",
+      "sha256": "a51fc4a916cc528467884adfbaf32aca0963b0c17b07a0f5d0500103cb0c4546",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/weird-tokens/ReturnsTooMuchToken.sol",
+      "sha256": "7e527a1eb8c1b83d7169b4e3de7d6880556052d5061bca06131c8835d505044d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/weird-tokens/ReturnsTwoToken.sol",
+      "sha256": "6ec22dad83dc829b0eb4bc789e4ea77689a5982098f1988572e3128836881624",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/test/utils/weird-tokens/RevertingToken.sol",
+      "sha256": "7d188c8444fde6d0ecfed8d3b208495da084a42c62d8d2369e913d7c2b6523cf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/tokens/ERC1155.sol",
+      "sha256": "3dbbc6faef59c3ee32b1c202510fab2ac6084faf19c164e0d85a392be1fd52ae",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/tokens/ERC20.sol",
+      "sha256": "a3a7e839f42762ef24623581542a916e838f3c7c0bef647963d1fdad0f9d208a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/tokens/ERC6909.sol",
+      "sha256": "efe0bdc5ef262bb17ed8b72d455bd46449cb5bdeb05b1e681c4da93cf7f48d58",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/tokens/ERC721.sol",
+      "sha256": "2da0cca384448208e25d43eeb5953a237de0e6712942a07d0f2674e895b0d3d3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/tokens/WETH.sol",
+      "sha256": "22277963408ee27ddbc769fa27b5a09031b0f699e6b24d36f55435c6a2039ac1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/Bytes32AddressLib.sol",
+      "sha256": "a98260423087aa794384b5afa952c0b4beed4be080e355ac8995224d852e2851",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/CREATE3.sol",
+      "sha256": "0eff8e4b9ef607a8d82422fe9796517782e2b1b98ff9ad4386e899e0af363685",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/FixedPointMathLib.sol",
+      "sha256": "edfd7fa8ec4087d252f637df16669599d5c0ac803ab465730f8cc3a5e8a8d55a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/LibString.sol",
+      "sha256": "8fabed55720de277dfd74fd6f11a78cb97f59bf571d53b0ae987734a0e5e5209",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/MerkleProofLib.sol",
+      "sha256": "59581539c278fd2a3e8e69e9a3994bc5f487ee35d6ebf2f09b9a0040cdd103b5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/ReentrancyGuard.sol",
+      "sha256": "e69ce8729cd5ff2caac16efa4498e967fc6bf85bbad4003be87c8a0757fd8a0c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/SSTORE2.sol",
+      "sha256": "2819718fe1f9557c54562f9012b958de6851c37d1f0f66a97888d851a4bef74f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/SafeCastLib.sol",
+      "sha256": "818c6ab372ca3b5881054c8cc9a3aae3dbf6cabd8b565bdbea3ff0cc4c21eb98",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/SafeTransferLib.sol",
+      "sha256": "ed12cae0865a8a92adb9dadd125b2cf23920870845ef128431d811963b474103",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/lib/solmate/src/utils/SignedWadMath.sol",
+      "sha256": "f606afc7c279737a02ebbaaec3025f16b971db0afef6bef4e21bb1ae5dfc74f6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/licenses/BUSL_LICENSE",
+      "sha256": "cd5241d8e1afe7098fa0f21059f7153348fdd25dbae5a8383a5f1dd2eb590321",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/licenses/MIT_LICENSE",
+      "sha256": "b7b0c4379346af0701f5e4df9c861295d4a3af91dc3b15eb4356ebc571303df9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/package.json",
+      "sha256": "448557c0ad8a9c7721427625c4e57bca5750311081678cfaf62ea604853fe487",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/ERC6909.sol",
+      "sha256": "0f1bf94844851b561ae53d57263366d18f4c4431eb47096871e8715837c6ec9d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/ERC6909Claims.sol",
+      "sha256": "6fa9989899398646fd7c33f837254a69e7c75b77af120970ede397c3d0fbdc37",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/Extsload.sol",
+      "sha256": "ac157c05d62562eed212cdf290046a85d192e7b1f8aba69c3ce358b0ebac4279",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/Exttload.sol",
+      "sha256": "386b5618307a20144a44308b81188c7755a6c279db6c5824cf63a910864324d4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/NoDelegateCall.sol",
+      "sha256": "525bf4df92c4ac0fd582e1b6ac18fdfb5d147d410f38f19231e4c9a469187415",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/PoolManager.sol",
+      "sha256": "3b6ab111dadf613e3cfd617e4b1c6ab75b5445cd15cbe52d7c6207fc02449717",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/ProtocolFees.sol",
+      "sha256": "bdabfbdfa0d8692ee187ffab948c295c2c6ebcc2dcf86e552fba3491309843c6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/IExtsload.sol",
+      "sha256": "9421ef4ba198d94058cd9a4c9fd2d663c61fc682f7dafa449a873456853f0025",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/IExttload.sol",
+      "sha256": "c21643d2c7f48d2d2407438a64a3ff0f376324cf6a0c62608977713652308c9e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/IHooks.sol",
+      "sha256": "6eb35c9c598eb932e963219f1ff180748bc4c30ac6a02d924893b3c29abb1d73",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/IPoolManager.sol",
+      "sha256": "a98405333567e4ab344489728014795721cf0071c151536377d2fcc986e0600c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/IProtocolFees.sol",
+      "sha256": "807d68adea106ec2aa51a8009155de09ebfe09e1ee7053d5a5ae448d7e840654",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/callback/IUnlockCallback.sol",
+      "sha256": "2e4a514730654da2e08a82eff5b3eabae12dc1c6198951396e1d466d4c0e223e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/external/IERC20Minimal.sol",
+      "sha256": "5e966a2d22b3b234a56af4b17e36bf7be90f9b29b1ddb6a15bfefc0b6dab4282",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/interfaces/external/IERC6909Claims.sol",
+      "sha256": "1cd65496c829036bc6aee67bc71363ab5fb6989c65e793087d0e1e2379f7d7d8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/BitMath.sol",
+      "sha256": "e8a45eb3d57f9427fc47bbb2543c1a6a5f394113b378123ac7ca9f113a7502b4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/CurrencyDelta.sol",
+      "sha256": "dfbb3d232c2d52bb09c8dcbb38b4a8fd16c616b8e6bf49e6f4ee948760530f7b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/CurrencyReserves.sol",
+      "sha256": "b38f1d3807d90bbccb865c0d96caf1ef92d6df9b69adbbe43b1d12e1241523c9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/CustomRevert.sol",
+      "sha256": "9d3dbe6b742cb1ac30f57df89d879ade9649389de1165fc637114bd062d39fca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/FixedPoint128.sol",
+      "sha256": "1ca2f55160697b73bd66fd27c8724d79a57108121ce1e8a0ab8b79f38bb58fbb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/FixedPoint96.sol",
+      "sha256": "66ee26d4fb3ac639124bdfa27d3256d196970997fa127c09e9bf7154e30d4590",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/FullMath.sol",
+      "sha256": "a9607255a6fd604d9c92f6b7416811c38b9d86e5dfdb0c345a494ebd35f7a4a3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/Hooks.sol",
+      "sha256": "297d577998cdede64d48b47b12f15e4f442eea032fbb9676bb3c2f89da89b83c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/LPFeeLibrary.sol",
+      "sha256": "e96c3fa7deac991dc09b6c5e560a340d01d6c68ccba483d4b29f8a66e5aa44e0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/LiquidityMath.sol",
+      "sha256": "67a39e58732340af4870342ba9230691f35501d89ed8725ca1b338deaa0eb26a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/Lock.sol",
+      "sha256": "29cd41a53de22514164e638e7bc965ccf4d9f34b455b43a1a15e06a8cb86e7f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/NonzeroDeltaCount.sol",
+      "sha256": "0ae35ca64da2527b4e1f7afa4ca10c4b65af952dc473c33b6663101e8d199f40",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/ParseBytes.sol",
+      "sha256": "6a6f3d1cec0143fd70ea68c34e6dce3bde72f368b213f1a225ada23dbfd99bb8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/Pool.sol",
+      "sha256": "59c493035ad25d56f24a457e8b40d9d1e3784504b8ff13d171db1eb25c6f128e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/Position.sol",
+      "sha256": "3dc4e2ad1564fa94eddf3ff06ce9ac592c9d578ea64ca194050382da454c8fcb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/ProtocolFeeLibrary.sol",
+      "sha256": "f8d96d9c8b5d12ab927b34551699bd7086750475f70254c9505e636f2cafe56a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/SafeCast.sol",
+      "sha256": "c1a815a41607be5b4c86ca588a951f368156da8ee21bdfc18b5d51b58a0f27be",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/SqrtPriceMath.sol",
+      "sha256": "42440c21bbab86c7eed4716b281ed5ca281cf14af8b5e06dc6dc3bc6864bcfdf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/StateLibrary.sol",
+      "sha256": "eebdbc1b6e431072ce5521b9e1b603d43831e3b6e062743e6665e070d5cf8a1a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/SwapMath.sol",
+      "sha256": "eb3971ea0ba84ff0a01f2fbe43f62f9c393121ef1724774ed3f3ab7760780e4a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/TickBitmap.sol",
+      "sha256": "19b25dccfac8bd90f9d615fb182547eb7b5908a5cbf21a1c5920b92c47383cb6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/TickMath.sol",
+      "sha256": "272d4f6d3ff9ae33596ebcdb84a71a3c2d4542ae8fb5c88ddf1aca8043f5d06b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/TransientStateLibrary.sol",
+      "sha256": "9835fca9df8b3f649def66835c5d7ee68de6a6cbe92bf255eb5d8b92a6a8d60e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/libraries/UnsafeMath.sol",
+      "sha256": "2de236e7ca0b9572a6b0184557565b6fd54e177224e202c727fe248785ede427",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/ActionsRouter.sol",
+      "sha256": "b3a0e95010e4d7051b7579c81821addc1d81279a05ca5b6bcf136a93e8acc478",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/BaseTestHooks.sol",
+      "sha256": "ac535ee6301586f36b6240e2f496fb299915c1c54dfcc3eb90fb57f76432abf4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/CurrencyTest.sol",
+      "sha256": "ba662cda5b0f018dc7a7348aa343920b0a922bc860e9ad6f6c4ec66489a07bc0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/CustomCurveHook.sol",
+      "sha256": "145216cb0c4f263125efba66df91f02dd96f7d4b733e8ade1fc3a3cc56009ffb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/DeltaReturningHook.sol",
+      "sha256": "5360edad1d60b16fa290a3dbe16f4f3008b0102ded70ea3f52d258ab57933b9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/DynamicFeesTestHook.sol",
+      "sha256": "d26f59050cca55c4af697285c1259988ccc245bc357e8ee2f330fd723613bdbf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/DynamicReturnFeeTestHook.sol",
+      "sha256": "1c0971ff01541ce9b5084b269847e760e9da2e40e0414376adeb38d24b21ce85",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/EmptyRevertContract.sol",
+      "sha256": "95b7fc4af49b832668fb380a5b221a3b1ec481f881ababac627a039cd0896ab0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/EmptyTestHooks.sol",
+      "sha256": "13adf0d1447ef0b35f94acdd410dd9e3ca6c899f8c6fa53b2ead61917fbc8b78",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/FeeTakingHook.sol",
+      "sha256": "2f7e9222cdb5bbe185af69de513edb3f307134ce9f75d52699929592a9e3a20f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/Fuzzers.sol",
+      "sha256": "0a5d87497ebdf5a5b492abe82e426622bf82cff42e54f4924f6a2bc435fed1e1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/HooksTest.sol",
+      "sha256": "dd05136bb7ae48a6533486a4f5d11d90c9d8551d187d673b6752444176a3aa93",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/LPFeeTakingHook.sol",
+      "sha256": "151103331bf4d3a85abca2a6de3749b61d9d4022d23bd6d4e4177047c88d77b8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/LiquidityMathTest.sol",
+      "sha256": "0f210baea1699e8f9b897434c6e2882fa87e41d5d971983d7c65bc3a1c0c64b5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/MockContract.sol",
+      "sha256": "a0b2843481f9932a1bdf14404ebe3564a352281352db19e2d2dd0a73b88dac3a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/MockERC6909Claims.sol",
+      "sha256": "fa96e4f5e5a8af72065269ecc34bc37f293c2850653a1aef9d3fb0997f25b491",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/MockHooks.sol",
+      "sha256": "c3f930c9e5a28f289881885bf6bea42ea2d9833d2a7f21cf3c8f9e4279f8f972",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/NativeERC20.sol",
+      "sha256": "21b6490d0657608436a9272d383c3f41361ee9ee47318a0704f46bcfc1e55a18",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/NoDelegateCallTest.sol",
+      "sha256": "9041d3a11fb22cc790a104dd550d9098a9491f4d55086be24b8407e5c232cc31",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolClaimsTest.sol",
+      "sha256": "73e4488e5db8eedff5001d83b46a8aa620d337b4b26bf38b27bf9b56eedcf07a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolDonateTest.sol",
+      "sha256": "d78aeca9df8d49c621d5f0dfba8637174a1dd36e9d7daed97fc65ecf2083369a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolEmptyUnlockTest.sol",
+      "sha256": "43f0d3e60ba9f48d48a43723100f1c4b40802b1fa5366517e77bba7bfb7ec3eb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolModifyLiquidityTest.sol",
+      "sha256": "43be2141b83cae264fa9d5278c8a061d4074698458822358a7c09a9748741e9a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolModifyLiquidityTestNoChecks.sol",
+      "sha256": "9c5638d19c731cf53e6fcab8e18825ab856709c09ee8da8f370c7da80d759212",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolNestedActionsTest.sol",
+      "sha256": "9a1f545764e6b1e68a02504d9c54ccf23e78662f549dedfd696a6c77b6377695",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolSwapTest.sol",
+      "sha256": "1bfd112087ec3abc30ea92cef6e39c9fd502502c9f28dac3d4df9fee7155e6d2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolTakeTest.sol",
+      "sha256": "7caed276fff2011a310a5ea4f56f491a1617b714c05c0846ba15cff079efca35",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/PoolTestBase.sol",
+      "sha256": "e3ab1cd908af2302b1abfdfa327ea344c297fb879312164392d7020321943833",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/ProtocolFeesImplementation.sol",
+      "sha256": "9d1077571b00ea0748a374c9b1bfb4a08edac504646960a812dd0d2796057c18",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/ProxyPoolManager.sol",
+      "sha256": "6b4bd984b629569c0e368a05f5364da0c6f52ec7b06d4cfd8023fe2d5d9eac56",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/SkipCallsTestHook.sol",
+      "sha256": "4221cb288e46484d50b68840ef5f1f2af643ebb43f4f10eb851eef9dd5701f80",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/SqrtPriceMathEchidnaTest.sol",
+      "sha256": "f1f5fed730f6f363cd8cabf0bb8f0955d11476175f9eeeed643beb752f54cb3e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/SwapRouterNoChecks.sol",
+      "sha256": "5cc3cc02942091ba5313df221203e453ba85fe6b7246584ecb8e8ef3adc945d5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/TestERC20.sol",
+      "sha256": "13fb407f26cac7913fefdb1804809ff2cd84d69c39d68ff02810016e9dd94699",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/TestInvalidERC20.sol",
+      "sha256": "d0dad399a898ec1df9f580c1e698e7574f5d0e8bc2050b73efe9be109d765636",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/TickMathEchidnaTest.sol",
+      "sha256": "5c9c5ab1b27361f074eab7b3c3338610133155cce58377124021ec6a1f1bba21",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/TickMathTest.sol",
+      "sha256": "38742c63d785edef51521092047098a58bf0894eb58544ef9555072e3e770156",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/test/TickOverflowSafetyEchidnaTest.sol",
+      "sha256": "550f91de65fd3a36cefea9866cef19ee1ea62e3f3c5dc7fe34a63a72e09fbbe1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/types/BalanceDelta.sol",
+      "sha256": "320d9c13dec135c3903729e66d3a1040fe86d537a7ee53728915012ca183af32",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/types/BeforeSwapDelta.sol",
+      "sha256": "6aee06f1553e879f5909e8f4c0eac26ec23dd4821a7e56e4d5077db39a227e12",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/types/Currency.sol",
+      "sha256": "ba6726fd24fbc66848208dfbb2899116c10729c505e6e5552316ac2444f1dfc3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/types/PoolId.sol",
+      "sha256": "548424ac50ad58212545da70207283fb8990731578c115c85d5acbcb0e1d3c9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/types/PoolKey.sol",
+      "sha256": "99e1afe285b5c614ebc9586ab5196db9d24a63fd924a449f5d99f490a6a6d6a9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/types/PoolOperation.sol",
+      "sha256": "cf72ad0c3e5e91662029e862acd841fabce8753040b0d4e802dee64ef1157232",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/src/types/Slot0.sol",
+      "sha256": "378b45486644dc7e49726358e83d0e2fffdaee088d18cac1a3df00d02c3635b4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/AmountHelpers.sol",
+      "sha256": "8ab4c6fbab930c2829c7213dfd1b0325075b673098278ab95c5abce9ee2fc0a7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/Constants.sol",
+      "sha256": "186e9451bb481f818792cdb785eafcc26b1f13f1bac1445d1ba54832a25505cb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/CurrencySettler.sol",
+      "sha256": "afe4d7de04f55f35f25bae046a96baa4137709b9df13d90b76c643a1317df6b8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/Deployers.sol",
+      "sha256": "db55e34f57e319baaca1379d667339999b787cc6308b822f1b2ff15e16af89e1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/JavascriptFfi.sol",
+      "sha256": "71e8a3cf3dd1f00134d2e86e772ccda2074165b30f2b835715599bd9f65b09b4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/LiquidityAmounts.sol",
+      "sha256": "2c766733b2696500b84f8dc129aed21dcc92d4af0929ae14684e0bf3cda15a95",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/Logger.sol",
+      "sha256": "6c9ea54ed196f090a459a12dd216c3980abf0ade8d80d8dd4c6af8d52fc62009",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/NestedActions.t.sol",
+      "sha256": "e120addc0761d5e0e0ed3cef3c9c08a86b0819af674443962a147abcbc8239c4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/SortTokens.sol",
+      "sha256": "ea9cd93ccb12d8c618f32db04a746a19158db7ae1c2a7069dd5ffba314345474",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/SwapHelper.t.sol",
+      "sha256": "192fbdc440fe71e71f807f5e8f395fe5fc9ad2c35b740ba0b7d142fdaa74b7fe",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-core/test/utils/V3Helper.sol",
+      "sha256": "c0f1a3a4c2e10522f7961be7fe899c947124c14b3e7ec2416e7a625fcc6bc5c9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/LICENSE",
+      "sha256": "66eb4bd7506d0a33cc953ed77c1fee2fe6a34d8c0ac40d4e852e6bfbf754f80e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/README.md",
+      "sha256": "8f65249426c1ee45db0843167ee8d97d0ebd6f79732fee5b5ca7c09f994eb95d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/LICENSE",
+      "sha256": "e0e163f93b3c53b5af417ba2395506ecc7c043b50481a15017f3a6b0875a5e78",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/README.md",
+      "sha256": "5bd3e1fff5f6681d244c8116ec9b4b248ed0316c82576d75e23c232842e717b6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/package.json",
+      "sha256": "557f3aa2a5c6393c6ed241bd2d92dd236192e980a5939fe4837acff6c5afb44a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/AllowanceTransfer.sol",
+      "sha256": "7be95b655a59352a3007147a1b79f211fc819b9a615a92017acf7257ecb88276",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/EIP712.sol",
+      "sha256": "cbb7df63c5839a3fbec78142222886da1614a4c7fcddcd8ba5ea176f9549d859",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/Permit2.sol",
+      "sha256": "a19dd81d4edafe3bba0178abfc9063886c2981b4711a4cbbf3fac19370defc9a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/PermitErrors.sol",
+      "sha256": "0919679c5bb58466d3a06d9d3297ec4946ba5d135330f10f4fb080067586afad",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/SignatureTransfer.sol",
+      "sha256": "234effebbe1e7ad7a3c791ea2b411f8e90993b758479817eb32c8767ea62ee8d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/interfaces/IAllowanceTransfer.sol",
+      "sha256": "a31c712c5cc8d171818a4225c09011f9ba86b2d5edf6045ac812bab93b6bbb87",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/interfaces/IDAIPermit.sol",
+      "sha256": "7aa52de652b3abe64da64a71b7c05ebf7f608f15840c79857e19930bc414ea8a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/interfaces/IEIP712.sol",
+      "sha256": "e386407da496dbe874c10a81801c55744fb2922a51389a51c79001422e81e0cd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/interfaces/IERC1271.sol",
+      "sha256": "ec69c9c80939d613cda408fd05424e0dfa7b1fd76168a1fb6593f4b26b3b3d7b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/interfaces/IPermit2.sol",
+      "sha256": "51a2a4da1246abda880b17c72f7c45ab3a8dc4bcaac5ff7ba78221b6603cd7ce",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/interfaces/ISignatureTransfer.sol",
+      "sha256": "8e7f355d7751cf96e81069c17fb97a3ec973c9391fbbb58ad3fb6e75be5cb19b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/libraries/Allowance.sol",
+      "sha256": "6c7d1edc74a9dca9940fa835db09302ed1a35019d69f4188351466e9a3fff458",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/libraries/Permit2Lib.sol",
+      "sha256": "8a54dec23cdf503ff8ceecc7480d7551d7d150481e9ba1c52e29b7187fa2c138",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/libraries/PermitHash.sol",
+      "sha256": "23f89633dbd02d8b52a33de3a915af5af73ff25e31f88b6cf994358f802efa60",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/libraries/SafeCast160.sol",
+      "sha256": "b106146964044fd9c89df48721011c43785982bf0dcb74a241f7a6f270fa8b2b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/lib/permit2/src/libraries/SignatureVerification.sol",
+      "sha256": "1804b3d7b1183225419ec8ee45daf89174ff3668315d71d28111d5fcc179f8e4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/package.json",
+      "sha256": "239b7a32f983a376bb36be763f86f94d8d2a3c4ba830a9c848b02c4da76e4caa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/PositionDescriptor.sol",
+      "sha256": "91004973a439b5ce80bdb7f68a284bebd41a48355c62493fa14745ec0624aa48",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/PositionManager.sol",
+      "sha256": "49214f7463f709c378e5bdd010697eea02c1cabb2339fbe09f2ee5395748c6e3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/UniswapV4DeployerCompetition.sol",
+      "sha256": "3a5b2a1d9aa3f6875746bbd151b25709bf7672a795afa9b2438bf206aecf0b7b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/V4Router.sol",
+      "sha256": "914cab05390f7e0ecb13452691a27a3e6e66dd7a064faf21a574c69226801185",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/BaseActionsRouter.sol",
+      "sha256": "e3ceda8c5bb24d3e439aef94d004fdce7956439bc74c5c5bcd86e2cb9455e813",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/BaseV4Quoter.sol",
+      "sha256": "78c4d90510c21e90dfd20242bf42bf79ed911d172a6f5fa67912cee936a2632a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/DeltaResolver.sol",
+      "sha256": "cb2df93554fb4541355c6e42e346a39cd59138d919456dd5f1d500e2a5d70864",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/EIP712_v4.sol",
+      "sha256": "5468276540ebe52a5e84dd9b0f45e7af833a0ec17c83a87b8a80c9dde1ea70cb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/ERC721Permit_v4.sol",
+      "sha256": "b85c2da69c27748d1215b72d1d3083983e420af44403ffd831e5795326687d2e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/ImmutableState.sol",
+      "sha256": "d3ef34f9c00fae08ec1eb24aa341d5d916c4d6d62e6c2118ef4afe9c7470fde5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/Multicall_v4.sol",
+      "sha256": "4abf8420610db70687e200ff315db4d9093a79fe640a3a7c457ce427100ea4e4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/NativeWrapper.sol",
+      "sha256": "8ca41a32e3c8e42866e6486fccd2e805b702cb583bf222c2d2da4bd429a23aa2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/Notifier.sol",
+      "sha256": "b4e380f1fb38506aa02b8325266c7de9f2298f5d0fd878622977a184776a871e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/Permit2Forwarder.sol",
+      "sha256": "be0db7277904908724b64b31e9a1ed266f96d8e98914b1c5ae43930121708935",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/PoolInitializer_v4.sol",
+      "sha256": "142555120536369dcdd8e9ea363945f0babb256048054c9318091c7cb2d80461",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/ReentrancyLock.sol",
+      "sha256": "a30c768301d6a3fb9befefd9efeecca7ba22b8bfac5e5e2c891410e14775fb10",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/SafeCallback.sol",
+      "sha256": "0c25eef89a860e579d6e26f53e32240da787bd75827d7833b6f29e63af87b571",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/UnorderedNonce.sol",
+      "sha256": "c64fa82d222e7ab25b37c21660b888a1843a5ed57996f5f010f28ad3a7960bf3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/base/hooks/BaseTokenWrapperHook.sol",
+      "sha256": "091b199d8b4ff195e8e739655c333f71612990bbc48fd74da10b3a4aef82dd73",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/hooks/WETHHook.sol",
+      "sha256": "d3e7deea1f8e3ca064572e4ddec68130780aa183aae91009856ee4abf4b10b8b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/hooks/WstETHHook.sol",
+      "sha256": "06a7f580d25939bffa62e9f7428caab6b0a73f8b893421eb2124b5a61c199f37",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/hooks/WstETHRoutingHook.sol",
+      "sha256": "1a263bc03820b5df0d9f47742c6f8d3bd1c696117cb4681b38c7d1b53118df93",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IEIP712_v4.sol",
+      "sha256": "ee4cc46349cc7f1f894197f368ddea0f71f2564c2962822eead755714f3ba57d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IERC721Permit_v4.sol",
+      "sha256": "80680771bccd7bf47641417d5a656f950746072766e24703f354e58c2ee0875c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IImmutableState.sol",
+      "sha256": "86f06a1f388f91ee0185495cb5d2912d564f73fabb163b3767e9c292c5069276",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IMsgSender.sol",
+      "sha256": "cb96ee72c46755a67f9ca304df192365ae7c3923eaab9539f0ce74a88de10cf7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IMulticall_v4.sol",
+      "sha256": "0c0f4f1cccb7cf63c1ee3dc53e8d48cf867cbff08f5a8f85dd820873277e9481",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/INotifier.sol",
+      "sha256": "7fadc8550f73d9ae57925bb27f5ab3a134d4c020972a13683e1121fc11691249",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IPermit2Forwarder.sol",
+      "sha256": "3b28167d65673e7de2bbed1e6f3508350cf889f8439e8680da23ad7586f4cc57",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IPoolInitializer_v4.sol",
+      "sha256": "ca6ecf95cfbc647d49b774801d84c49c8213010771b44555b056118102d644fc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IPositionDescriptor.sol",
+      "sha256": "ea68397628ff5d386fdfbea48af0556acb537f8d63edccb22d2fa61ac4175cdd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IPositionManager.sol",
+      "sha256": "b7aa2a13c92f5f2e5612948359120d1b92263e575ce8d134b4576227f8629569",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IStateView.sol",
+      "sha256": "28bb7523693dd487f3fe0c4ea44f1aeb4c1bed6371c6bc74d76bd625003e62f2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/ISubscriber.sol",
+      "sha256": "9672e03c964da7cd484df290ad3395b6beacd90adcdd8ea2236f835407fb8e2e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IUniswapV4DeployerCompetition.sol",
+      "sha256": "24ae6df904f363ffbcebc0e8bd6bf41ee86d251496b6b42a6199cf67851e6570",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IUnorderedNonce.sol",
+      "sha256": "12e02d4e7e03a668fc1d493840315b4f2aaee2f366ca677574d37d3811d45701",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IV4Quoter.sol",
+      "sha256": "10854fab70de923e073da348368a2e0ef25d674a6bc2a968392ffe43a268cc14",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/IV4Router.sol",
+      "sha256": "0fe009c839a978c489459fa5b41dbdfff459aa447b299bbf4b39c956170b3aab",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/external/IWETH9.sol",
+      "sha256": "d6b24fe796517f53292d6679adf173e1f3c1fc0dc5efedfc69fa4955c1a9c058",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/interfaces/external/IWstETH.sol",
+      "sha256": "5fb270579ed18e1413a8d330d1c79779ce887764c185447d5dae845e360eb268",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/lens/StateView.sol",
+      "sha256": "cee9aff0c7d832d93a59f813c62613ac288a66898f49b9ad1de17e6007d7dab5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/lens/V4Quoter.sol",
+      "sha256": "0466f1e83d6362836c0b5256996d13e222a33a2b2810d7992d32a84753a8c0ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/ActionConstants.sol",
+      "sha256": "8e88393dd8b50b25b818e2f6c246aae5cfe63106b56b6e0609869e599c81ec79",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/Actions.sol",
+      "sha256": "404b842f30a05783b20eb37b20cc86e7a0df2730f6a7399229b46ae77f63e63a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/AddressStringUtil.sol",
+      "sha256": "f57613ab19a41ea7eb95f645b5ec424dd0c1097c9ef66539959bf61544f53d2e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/BipsLibrary.sol",
+      "sha256": "7410a60efd885a9e9b7bbcc994c8323cd0624200d8594296754504b4ea62504f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/CalldataDecoder.sol",
+      "sha256": "d995bf0c5f50c2b6c5d46010f770587464532d6e34e64bf2aec864d79e710d6d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/CurrencyRatioSortOrder.sol",
+      "sha256": "6773a2564c1eeb9b9165a818d245d56aed1428021ccc9b23b0341026b878b588",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/Descriptor.sol",
+      "sha256": "d106a5a4008de4eac20c1805b456d02c42a368504c1198c2ed0a953b1116a19f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/ERC721PermitHash.sol",
+      "sha256": "0d692bf7c7806644db1dbea2b2b4dd11151a16090a4bcc2ffcd904e61bcd7c2f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/HexStrings.sol",
+      "sha256": "bf3dc237ff833f4ca53be1f4117ebd900c5a144fe6b4df3a68deab60601edd3f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/LiquidityAmounts.sol",
+      "sha256": "dbfbef7aed94a6a56885124f0802b42adf7ee7bdd658f11fed40ffbb93fe6ba5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/Locker.sol",
+      "sha256": "aa0481cc66c87ab579438728dbeaee5bf351eac37e4876f0ab899d8c7f7bdbeb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/PathKey.sol",
+      "sha256": "0c00bae5a64829334a0b5d5541807faf7d18dff5a667cd74cadf9effaf5f0885",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/PositionConfig.sol",
+      "sha256": "7db6e14c9383b1f6f426646009c059ad48be97a23d65724893948ff504022e02",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/PositionConfigId.sol",
+      "sha256": "ba11a9aea4feeadb13a1a884a22c860948db8b3688f9959ff5c019bab92f19b5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/PositionInfoLibrary.sol",
+      "sha256": "5c889e1d5f259291045413e28069101eba1e7b8b72df6586bf54e4de5e525099",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/QuoterRevert.sol",
+      "sha256": "954b9e18c2b4d9b48f3d1d761c9d68dd94b995ff871ab561884a803bc09e6c75",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/SVG.sol",
+      "sha256": "d5b8aad06db9e17a2f82d1c81a182f8218883cef9ce8d6baea226e6235e3984c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/SafeCurrencyMetadata.sol",
+      "sha256": "d9f7e2512c847c7711bec7dc7b6f079badd33c4d2a35d84ca77ef1d54aaabda2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/SlippageCheck.sol",
+      "sha256": "2f106f2f4773b8d7ef8c2364a95074ceb07ec2c80d38a7751e80fdfc9996ec02",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/libraries/VanityAddressLib.sol",
+      "sha256": "8db5802d6307d1bbf974d8f97d348cfe55858c97a6155db6b5cff9f5c700d234",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/utils/BaseHook.sol",
+      "sha256": "11b5cf3845e6f34974ce0a51eae87ba5f2aa9aa6ddbe8e7b42a86f578038dda5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "lib/v4-periphery/src/utils/HookMiner.sol",
+      "sha256": "c902533546f0aae4efb6a0b80049d011fa6fd7b9d10146636aa3359a7ce8bfc1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "output/examples/.gitkeep",
       "sha256": "5c7ca2c8ef062796d81305dd1805cfcb37f3116d2f18b22c3df21bb48ef06cf4",
       "provenance": "original-clean-room",
@@ -932,6 +5797,48 @@
     {
       "path": "src/libraries/Trig.sol",
       "sha256": "df751631c84061976c7e938f437a532b4208514c86aeac4260e815356242445a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "submissions/relics-v4/EVIDENCE.md",
+      "sha256": "ac904f13854b440c66f2beba885e91cea2655f324ed6e5d971312fa2b5cc3f45",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "submissions/relics-v4/PROPOSAL.md",
+      "sha256": "635a7bafc6c15de987910f09f70209f0fe5c401319ebcddfe0ca42b793bac504",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "submissions/relics-v4/TEST_PLAN.md",
+      "sha256": "407c9b6d36632ccf1a32f43e18a4c73c1e41c3614147b4cad07051e20c119989",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "submissions/relics-v4/THREAT_MODEL.md",
+      "sha256": "f603ee08e3442b7648db392fe018b41aaf3678d74c273d81d2421038d800a5be",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "submissions/relics-v4/compatibility-report.json",
+      "sha256": "8e1ba302cfdaa6962ff70c35fa635190a166fa85b2ebf13befa498f527ef45b5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "submissions/relics-v4/submission.json",
+      "sha256": "9f5e65fce48809a897ab9c2ab0d9ef48f4d412b0ab0ee6936d338754d8843d4b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

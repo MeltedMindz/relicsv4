@@ -833,7 +833,7 @@
       "id": "relics-token-contract",
       "kind": "onchain-contract",
       "name": "RELICS ERC-20 + NFT dormancy layer (deployed, reference-only in this submission)",
-      "summary": "The live fixed-supply ERC-20 at 0x8F294a99a0609822C233b24867F331c292cE2DA9 whose transfers are coupled to an ERC-721 dormancy layer (RelicsNFT). Its verified source is public on Etherscan; this repository's root is a clean-room teaching rewrite, and the token source is not part of the declared flagship closure. Declared here so the transfer-coupling behavior is reviewed honestly rather than hidden.",
+      "summary": "The live fixed-supply ERC-20 at 0x8F294a99a0609822C233b24867F331c292cE2DA9 whose transfers are coupled to an ERC-721 dormancy layer (RelicsNFT at 0xb2E643345013E4944E45777E12fC0EC67A9c07e2). Both sources are now bound byte-exactly in flagship/ (identical to their Etherscan-verified standard-JSON inputs), and flagship/test/TokenNftSyncExit.t.sol exercises the seller-exit path against them.",
       "executionBoundary": "onchain",
       "capabilityIds": [
         "relics-token-nft-sync"
@@ -845,8 +845,15 @@
       "assetRefs": [
         "relics-token"
       ],
-      "sourcePaths": [],
-      "testPaths": [],
+      "sourcePaths": [
+        "flagship/src/RelicsNFT.sol",
+        "flagship/src/RelicsToken.sol",
+        "flagship/src/interfaces/IRelicsNFT.sol",
+        "flagship/src/interfaces/IRelicsToken.sol"
+      ],
+      "testPaths": [
+        "flagship/test/TokenNftSyncExit.t.sol"
+      ],
       "schemaPaths": [],
       "evidencePaths": [
         "flagship/PROVENANCE.json"
@@ -917,9 +924,9 @@
         },
         "sourceTestSchema": {
           "status": "applicable",
-          "summary": "Token source is verified on Etherscan but intentionally outside this submission's declared closure; the submission's binding scope is the hook flagship.",
+          "summary": "Token and NFT sources are bound byte-exactly in the declared flagship closure (Etherscan-verified bytes), with a dedicated behavioral suite for the transfer-coupling and exit path.",
           "controls": [
-            "Any deeper token review reads the Etherscan-verified source at the live address."
+            "Any deeper review compares flagship/src bytes against the Etherscan-verified sources at the live addresses; they are identical."
           ],
           "evidenceRefs": []
         },
@@ -1292,13 +1299,30 @@
         "source-test-schema",
         "value-flow"
       ],
-      "sourcePaths": [],
-      "testPaths": [],
-      "evidencePaths": [],
+      "sourcePaths": [
+        "flagship/src/RelicsNFT.sol",
+        "flagship/src/RelicsToken.sol",
+        "flagship/src/interfaces/IRelicsNFT.sol",
+        "flagship/src/interfaces/IRelicsToken.sol"
+      ],
+      "testPaths": [
+        "flagship/test/TokenNftSyncExit.t.sol"
+      ],
+      "evidencePaths": [
+        "flagship/PROVENANCE.json"
+      ],
       "testScenarios": [
-        "A transfer retiring at most 16 awakened Relics succeeds with unchanged ERC-20 amounts and real LIFO ERC-721 burn events; observed live on Ethereum mainnet since 2026-08-03.",
-        "A transfer that would retire more than 16 awakened Relics reverts atomically with PreparationRequired; after the holder calls prepareSell for chosen ids, the same transfer succeeds.",
-        "A buy (inflow) performs no ERC-721 work of any kind: no mint, no state write on the NFT layer, and raises only derived latent capacity."
+        "Ordinary transfer with no awakened Relics performs no ERC-721 work and moves exact amounts (test_OrdinaryTransferDoesNoNftWork; passing).",
+        "An inflow never mints and only raises derived latent capacity (test_InflowNeverMints; passing).",
+        "A transfer whose post-state keeps entitlement >= active retires nothing (test_TransferWithZeroRetirements; passing).",
+        "A one-unit deficit retires exactly one Relic, LIFO, with the identity preserved dormant (test_TransferRetiresExactlyOneLifo; passing).",
+        "A full-balance exit at exactly 16 retirements clears in one transfer with real burn events (test_FullExitAtSendBudgetSixteen; passing).",
+        "A 17-retirement transfer reverts PreparationRequired(17,16,1) and unwinds atomically: ERC-20 and ERC-721 state fully unchanged (test_TransferRevertsAboveSendBudgetAtomically; passing).",
+        "After one holder-chosen prepareSell, the same full-balance exit succeeds with no third-party involvement (test_PrepareSellThenFullExitNoThirdParty; passing).",
+        "A full ERC-721 operator with a full ERC-20 allowance still cannot prepareSell for the holder (test_PrepareSellIsHolderOnly; passing).",
+        "awaken is msg.sender-only and capacity-bound (test_AwakenIsSenderOnlyCapacity; passing).",
+        "A spender-driven transferFrom settles the sender's deficit exactly like a direct transfer (test_AllowanceTransferFromSyncsTheSender; passing).",
+        "Empty and oversized preparation batches revert with their exact errors (test_PrepareSellBatchBounds; passing)."
       ]
     }
   ],
@@ -1325,12 +1349,26 @@
   },
   "implementation": {
     "sourcePaths": [
-      "flagship/src/RelicsV4Hook.sol",
-      "flagship/src/interfaces/IRelicsHook.sol",
-      "flagship/src/libraries/DNA.sol",
-      "flagship/src/libraries/EvolutionMath.sol",
       "flagship/lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/ERC721.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Metadata.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Utils.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/Base64.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/Bytes.sol",
       "flagship/lib/openzeppelin-contracts/contracts/utils/Context.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/Panic.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol",
+      "flagship/lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol",
       "flagship/lib/uniswap-hooks/src/base/BaseHook.sol",
       "flagship/lib/v4-core/src/interfaces/IExtsload.sol",
       "flagship/lib/v4-core/src/interfaces/IExttload.sol",
@@ -1354,10 +1392,25 @@
       "flagship/lib/v4-core/src/types/Currency.sol",
       "flagship/lib/v4-core/src/types/PoolId.sol",
       "flagship/lib/v4-core/src/types/PoolKey.sol",
-      "flagship/lib/v4-core/src/types/PoolOperation.sol"
+      "flagship/lib/v4-core/src/types/PoolOperation.sol",
+      "flagship/src/RelicsNFT.sol",
+      "flagship/src/RelicsRenderer.sol",
+      "flagship/src/RelicsToken.sol",
+      "flagship/src/RelicsV4Hook.sol",
+      "flagship/src/interfaces/IRelicsHook.sol",
+      "flagship/src/interfaces/IRelicsNFT.sol",
+      "flagship/src/interfaces/IRelicsRenderer.sol",
+      "flagship/src/interfaces/IRelicsToken.sol",
+      "flagship/src/libraries/Base64.sol",
+      "flagship/src/libraries/DNA.sol",
+      "flagship/src/libraries/EvolutionMath.sol",
+      "flagship/src/libraries/PaletteLib.sol",
+      "flagship/src/libraries/SVG.sol",
+      "flagship/src/libraries/VisualIdentity.sol"
     ],
     "testPaths": [
-      "flagship/test/DeploymentProof.t.sol"
+      "flagship/test/DeploymentProof.t.sol",
+      "flagship/test/TokenNftSyncExit.t.sol"
     ],
     "compilerBuildInfoPaths": [],
     "specificationPath": "flagship/README.md",

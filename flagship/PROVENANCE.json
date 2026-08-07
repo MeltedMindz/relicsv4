@@ -3,7 +3,10 @@
   "version": 1,
   "publishedBy": "MeltedMindz (GitHub user id 95740781), operator of the RELICS deployment",
   "authorization": "The RELICS operator explicitly authorizes publication of this exact production hook source as a public flagship reference.",
-  "chain": { "id": 1, "name": "Ethereum Mainnet" },
+  "chain": {
+    "id": 1,
+    "name": "Ethereum Mainnet"
+  },
   "contracts": {
     "hook": {
       "name": "RelicsV4Hook",
@@ -13,7 +16,11 @@
       "runtimeCodeKeccak256": "0xd45977dd7bd1d3cc8209989cdce8e27495ef03d56820078db54dc8425a337fc6",
       "owner": "0x0000000000000000000000000000000000000000",
       "permissionFlags": "0x1440",
-      "permissions": ["afterInitialize", "afterAddLiquidity", "afterSwap"],
+      "permissions": [
+        "afterInitialize",
+        "afterAddLiquidity",
+        "afterSwap"
+      ],
       "create2": {
         "deployer": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
         "salt": "0x0000000000000000000000000000000000000000000000000000000000001302",
@@ -26,8 +33,50 @@
         "abiEncoded": "0x000000000000000000000000000000000004444c5dc75cb358380d2e3de08a900000000000000000000000008f294a99a0609822c233b24867f331c292ce2da90000000000000000000000000bda97b911575b158c9364865389833c75619893"
       }
     },
-    "relicsToken": { "address": "0x8F294a99a0609822C233b24867F331c292cE2DA9", "owner": "0x0000000000000000000000000000000000000000" },
-    "poolManager": { "address": "0x000000000004444c5dc75cB358380D2e3dE08A90" }
+    "relicsToken": {
+      "name": "RelicsToken",
+      "address": "0x8F294a99a0609822C233b24867F331c292cE2DA9",
+      "sourcePath": "src/RelicsToken.sol",
+      "owner": "0x0000000000000000000000000000000000000000",
+      "runtimeCodeSizeBytes": 4318,
+      "runtimeCodeKeccak256": "0xdb91e724c093c06fd949e62c5c033d907a08954d5773747b5e924360be738096",
+      "create2": {
+        "deployer": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
+        "salt": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "initCodeHash": "0x95cfac7b69dfa4cf7dba9347bad5345a2f0be69e1b3ee4728514d477bc096330"
+      },
+      "constructorArgs": {
+        "initialRecipient": "0x0Bda97b911575B158c9364865389833c75619893",
+        "holderThreshold": "1000000000000000000",
+        "abiEncoded": "0x0000000000000000000000000bda97b911575b158c9364865389833c756198930000000000000000000000000000000000000000000000000de0b6b3a7640000"
+      }
+    },
+    "poolManager": {
+      "address": "0x000000000004444c5dc75cB358380D2e3dE08A90"
+    },
+    "relicsNFT": {
+      "name": "RelicsNFT",
+      "address": "0xb2E643345013E4944E45777E12fC0EC67A9c07e2",
+      "sourcePath": "src/RelicsNFT.sol",
+      "runtimeCodeSizeBytes": 15392,
+      "runtimeCodeKeccak256": "0xdad0f59a57e9313da0e62a51ec54b28233923202da15187939e302f7d55b942f",
+      "constructorArgs": {
+        "renderer": "0x70ecD6Cab03c3fef7F7CCE4ff669c0D0e6e17b8D",
+        "marketHook": "0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440",
+        "relicsToken": "0x8F294a99a0609822C233b24867F331c292cE2DA9"
+      }
+    },
+    "relicsRenderer": {
+      "name": "RelicsRenderer",
+      "address": "0x70ecD6Cab03c3fef7F7CCE4ff669c0D0e6e17b8D",
+      "sourcePath": "src/RelicsRenderer.sol",
+      "runtimeCodeSizeBytes": 24543,
+      "runtimeCodeKeccak256": "0x07a6d15d0aa4fefb88fe1882a0866890b62d4b98781616e4649fcb0b9948f198",
+      "constructorArgs": {
+        "relicsToken": "0x8F294a99a0609822C233b24867F331c292cE2DA9",
+        "marketHook": "0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440"
+      }
+    }
   },
   "canonicalPool": {
     "poolId": "0x33d9b4089069272e5aeaeccf24bc710a7ee8cf65f4ecde682187a2fc355531ed",
@@ -40,15 +89,21 @@
   "compiler": {
     "solc": "v0.8.26+commit.8a97fa7a",
     "evmVersion": "cancun",
-    "optimizer": { "enabled": true, "runs": 1 },
+    "optimizer": {
+      "enabled": true,
+      "runs": 1
+    },
     "viaIR": true,
-    "metadata": { "bytecodeHash": "none", "appendCBOR": false }
+    "metadata": {
+      "bytecodeHash": "none",
+      "appendCBOR": false
+    }
   },
   "sourceVerification": {
     "verifier": "etherscan",
     "status": "verified",
-    "standardJsonFileCount": 30,
-    "note": "Every one of the 30 files in this directory is byte-identical to the Etherscan-verified standard-JSON input for the hook address above."
+    "standardJsonFileCount": 58,
+    "note": "Every .sol file under src/ and lib/ in this directory is byte-identical to the corresponding Etherscan-verified standard-JSON input of the four deployed contracts (hook, token, NFT, renderer); the union closure is 58 files."
   },
   "upstreamSourceRevision": {
     "repository": "private RELICS production repository",
@@ -64,6 +119,6 @@
     "@openzeppelin/uniswap-hooks": "1.2.2",
     "@openzeppelin/contracts": "5.6.1"
   },
-  "offlineProof": "test/DeploymentProof.t.sol reproduces the mined init-code hash and CREATE2-derives the live hook address from this source tree alone.",
+  "offlineProof": "test/DeploymentProof.t.sol and test/TokenNftSyncExit.t.sol reproduce the hook and token init-code hashes and CREATE2 addresses offline, and exercise the seller-exit sync behavior (0/1/16/>16 retirements, holder-only preparation, full exit, allowance paths, atomic failure) against these exact sources.",
   "liveReadsRecordedAt": "2026-08-07"
 }
