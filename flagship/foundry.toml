@@ -1,0 +1,13 @@
+# Exact compiler profile of the deployed RELICS production contracts (Ethereum mainnet).
+# Any change to these settings breaks the byte-exact init-code proof in test/DeploymentProof.t.sol.
+[profile.default]
+src = "src"
+test = "test"
+libs = ["lib"]
+solc_version = "0.8.26"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 1
+via_ir = true
+bytecode_hash = "none"
+cbor_metadata = false

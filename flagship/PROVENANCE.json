@@ -1,0 +1,69 @@
+{
+  "record": "relics-production-flagship-provenance",
+  "version": 1,
+  "publishedBy": "MeltedMindz (GitHub user id 95740781), operator of the RELICS deployment",
+  "authorization": "The RELICS operator explicitly authorizes publication of this exact production hook source as a public flagship reference.",
+  "chain": { "id": 1, "name": "Ethereum Mainnet" },
+  "contracts": {
+    "hook": {
+      "name": "RelicsV4Hook",
+      "address": "0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440",
+      "sourcePath": "src/RelicsV4Hook.sol",
+      "runtimeCodeSizeBytes": 8644,
+      "runtimeCodeKeccak256": "0xd45977dd7bd1d3cc8209989cdce8e27495ef03d56820078db54dc8425a337fc6",
+      "owner": "0x0000000000000000000000000000000000000000",
+      "permissionFlags": "0x1440",
+      "permissions": ["afterInitialize", "afterAddLiquidity", "afterSwap"],
+      "create2": {
+        "deployer": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
+        "salt": "0x0000000000000000000000000000000000000000000000000000000000001302",
+        "initCodeHash": "0x8a34afeab7eb2fc0646a49fa6917a159c1ef5f2e959445ecfb53b42fde808535"
+      },
+      "constructorArgs": {
+        "poolManager": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+        "relicsToken": "0x8F294a99a0609822C233b24867F331c292cE2DA9",
+        "initialOwner": "0x0Bda97b911575B158c9364865389833c75619893",
+        "abiEncoded": "0x000000000000000000000000000000000004444c5dc75cb358380d2e3de08a900000000000000000000000008f294a99a0609822c233b24867f331c292ce2da90000000000000000000000000bda97b911575b158c9364865389833c75619893"
+      }
+    },
+    "relicsToken": { "address": "0x8F294a99a0609822C233b24867F331c292cE2DA9", "owner": "0x0000000000000000000000000000000000000000" },
+    "poolManager": { "address": "0x000000000004444c5dc75cB358380D2e3dE08A90" }
+  },
+  "canonicalPool": {
+    "poolId": "0x33d9b4089069272e5aeaeccf24bc710a7ee8cf65f4ecde682187a2fc355531ed",
+    "currency0": "0x8F294a99a0609822C233b24867F331c292cE2DA9",
+    "currency1": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "fee": 3000,
+    "tickSpacing": 60,
+    "bindingIsOneShotAndSpent": true
+  },
+  "compiler": {
+    "solc": "v0.8.26+commit.8a97fa7a",
+    "evmVersion": "cancun",
+    "optimizer": { "enabled": true, "runs": 1 },
+    "viaIR": true,
+    "metadata": { "bytecodeHash": "none", "appendCBOR": false }
+  },
+  "sourceVerification": {
+    "verifier": "etherscan",
+    "status": "verified",
+    "standardJsonFileCount": 30,
+    "note": "Every one of the 30 files in this directory is byte-identical to the Etherscan-verified standard-JSON input for the hook address above."
+  },
+  "upstreamSourceRevision": {
+    "repository": "private RELICS production repository",
+    "commit": "f59dfa1f95ab20d1d4b981fa04a1138e4459cd24",
+    "commitDate": "2026-08-03T12:11:57-07:00",
+    "srcTree": "be8329187086ee3a8362ac7f1b4be8122ffb36df",
+    "libTree": "f4a4d707ac296cef67af8fab377e3b735f8bd4d2",
+    "hookSourceBlob": "bb9d999f2ba10a91716c216b052bce6fdcac0b56",
+    "hookSourceSha256": "0846a1ba4a8ede68bbeca3721c2a875f680815de664ae5d43cd4f51f4334ebda"
+  },
+  "dependencies": {
+    "@uniswap/v4-core": "1.0.2",
+    "@openzeppelin/uniswap-hooks": "1.2.2",
+    "@openzeppelin/contracts": "5.6.1"
+  },
+  "offlineProof": "test/DeploymentProof.t.sol reproduces the mined init-code hash and CREATE2-derives the live hook address from this source tree alone.",
+  "liveReadsRecordedAt": "2026-08-07"
+}

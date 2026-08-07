@@ -7,9 +7,16 @@ live artistic evolution.** Contracts. Renderer. Hook logic. Deployment tooling.
 **The market becomes the art.**
 
 > ⚠️ **Educational fork-and-launch template. NOT audited. NOT affiliated with or endorsed by
-> Uniswap, OpenZeppelin, OpenSea, or any auditor or production collection.** It contains no private
-> or production material. Get your own security, legal, and economic review before deploying or
-> trading anything. See the [Disclaimer](#26-disclaimer).
+> Uniswap, OpenZeppelin, OpenSea, or any auditor.** The template layers contain no private
+> material and are a clean-room teaching rewrite. Get your own security, legal, and economic
+> review before deploying or trading anything. See the [Disclaimer](#26-disclaimer).
+
+> 🏛️ **Flagship reference:** [`flagship/`](flagship/) contains the **exact production source of
+> the live RELICS Uniswap v4 hook** on Ethereum mainnet
+> (`0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440`), published here by the RELICS operator as an
+> explicitly authorized public reference. Every file there is byte-identical to the
+> Etherscan-verified source, and `flagship/test/DeploymentProof.t.sol` proves offline that the
+> tree reproduces the deployed init code. The template and the flagship share no code.
 
 ---
 
