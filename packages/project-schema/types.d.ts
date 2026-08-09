@@ -1,0 +1,350 @@
+// SPDX-License-Identifier: MIT
+// Type surface for @relics/project-schema. The runtime lives in plain ESM JavaScript so the same
+// files run unbuilt in Node, in a browser worker and inside a bundler; these declarations give a
+// TypeScript consumer (the launchpad web importer) full typing without a compile step.
+
+export type Severity = "error" | "warning";
+export interface Issue {
+  severity: Severity;
+  code: string;
+  where: string;
+  message: string;
+}
+
+export type SupportedChainId = 1 | 8453 | 4663;
+export type ArtRuntime = "SOLIDITY_SVG" | "JAVASCRIPT";
+export type StartingPreset = "LOW" | "MID" | "HIGH";
+export type BackingModel = "FULL_PARITY" | "PARTIAL";
+export type LaunchMode = "INSTANT_V4" | "FIXED_PRICE_SALE_TO_V4" | "BONDING_CURVE_SALE_TO_V4";
+export type EarningsMode = "SOLO" | "SPLIT";
+export type MarketSensor =
+  | "buying_pressure"
+  | "selling_pressure"
+  | "volume"
+  | "tick"
+  | "volatility"
+  | "drawdown"
+  | "recovery"
+  | "liquidity"
+  | "holder_growth"
+  | "epoch"
+  | "market_seed";
+export type TransformKind = "threshold" | "range" | "clamp" | "smoothing" | "tier" | "accumulation" | "decay" | "inverse" | "weighted_mix";
+export type ArtDestination = "palette" | "brightness" | "density" | "scale" | "symmetry" | "fracture" | "line_weight" | "distortion" | "geometry" | "scar" | "animation";
+
+export interface MarketMapping {
+  id: string;
+  sensor: MarketSensor;
+  transform: TransformKind;
+  transformParams: Record<string, number>;
+  destination: ArtDestination;
+}
+export interface MarketMappingDocument {
+  version: 1;
+  mappings: MarketMapping[];
+}
+
+export interface TraitValue {
+  name: string;
+  weight?: number;
+}
+export interface TraitDimension {
+  name: string;
+  distribution: "weighted" | "uniform";
+  values: TraitValue[];
+}
+export interface TraitSchema {
+  version: 1;
+  dimensions: TraitDimension[];
+}
+
+export interface CollectionMetadata {
+  version: 1;
+  name: string;
+  symbol: string;
+  description: string;
+  image?: string;
+  bannerImage?: string;
+  featuredImage?: string;
+  externalLink?: string;
+  tokenNamePattern?: string;
+  collaborators?: { address: string; role: string }[];
+  socials?: Partial<Record<"x" | "telegram" | "discord" | "github" | "farcaster", string>>;
+}
+
+export interface ProjectManifest {
+  schemaVersion: string;
+  creatorKitVersion: string;
+  runtimeVersion: string;
+  protocolReleaseCompatibility: string;
+  generatedBy?: string;
+  project: {
+    name: string;
+    symbol: string;
+    description: string;
+    license: string;
+    website?: string;
+    twitterHandle?: string;
+  };
+  supply: {
+    totalSupplyWhole: string;
+    artworkSupply: string;
+    backingModel: BackingModel;
+    tokensPerArtwork?: string;
+  };
+  art: {
+    runtime: ArtRuntime;
+    templateId: string | null;
+    entry: "generator/generate.js";
+    seed: string;
+    scriptBytes: number;
+    traitDimensions?: string[];
+  };
+  market: {
+    startingPreset: StartingPreset;
+    launchMode: LaunchMode;
+    mappingCount: number;
+    sale?: {
+      allocationBps: number;
+      durationDays: number;
+      minRaiseEth: string;
+      curvePresetId?: string;
+    };
+  };
+  earnings: {
+    mode: EarningsMode;
+    creatorRecipient: string;
+    collaborators: { recipient: string; bps: number }[];
+    creatorAllocationBps?: number;
+  };
+  chains: { requested: SupportedChainId[] };
+  media?: {
+    cover?: { path: string; sha256: string; cid?: string };
+    files?: Record<string, string>;
+  };
+  hashes: {
+    algorithm: "sha256";
+    script: string;
+    dependencies?: Record<string, string>;
+    generator: string;
+    traitSchema: string;
+    marketMapping: string;
+    metadata: string;
+    media?: Record<string, string>;
+  };
+  integrity: {
+    contentHash: string;
+    projectConfigHash: string;
+    bundleHash: string;
+  };
+}
+
+export interface RenderContext {
+  seed: string;
+  random: {
+    next(): number;
+    float(min: number, max: number): number;
+    int(min: number, max: number): number;
+    chance(p: number): boolean;
+    pick<T>(items: T[]): T;
+    weighted<T>(items: T[], weights: number[]): T;
+  };
+  market: Readonly<Partial<Record<ArtDestination, number>>>;
+  sensors: Readonly<Record<MarketSensor, number>>;
+  size: number;
+  project: Readonly<{ name: string; symbol: string; artworkSupply: string }>;
+}
+
+export interface GeneratorModule {
+  render(context: RenderContext): string;
+  manifest?: unknown;
+}
+
+export type CheckStatus = "pass" | "warn" | "fail" | "skipped";
+export interface CheckResult {
+  id: string;
+  title: string;
+  status: CheckStatus;
+  detail: string;
+}
+
+export interface ValidationResult {
+  ok: boolean;
+  schemaVersion: string;
+  issues: Issue[];
+  summary: { ok: boolean; errorCount: number; warningCount: number; errors: Issue[]; warnings: Issue[] };
+  checks: CheckResult[];
+  manifest: ProjectManifest | null;
+  traitSchema: TraitSchema | null;
+  marketMappings: MarketMappingDocument | null;
+  collectionMetadata: CollectionMetadata | null;
+  hashes: { bundleHash: string; projectConfigHash: string; contentHash: string; files: Record<string, string> } | null;
+  execution: {
+    ran: boolean;
+    reason: string;
+    seeds: number;
+    deterministic: boolean | null;
+    duplicateRate: number | null;
+    distinctOutputs?: number;
+    outputs: { seed: string; length: number }[];
+  };
+}
+
+export interface ValidateOptions {
+  /** Host-supplied sandbox. Given the generator sources and the entry path, return its exports. */
+  evaluate?: (files: Map<string, string>, entry: string) => GeneratorModule;
+  seeds?: number;
+  skipExecution?: boolean;
+}
+
+export interface StudioDraftProjection {
+  draft: Record<string, unknown>;
+  provenance: {
+    source: "relics-bundle";
+    schemaVersion: string;
+    creatorKitVersion: string;
+    runtimeVersion: string;
+    protocolReleaseCompatibility: string;
+    bundleHash: string | null;
+    projectConfigHash: string | null;
+    contentHash: string | null;
+    generatorHash: string;
+    scriptHash: string;
+    traitSchemaHash: string;
+    marketMappingHash: string;
+    metadataHash: string;
+    mediaHashes: Record<string, string>;
+    requestedChains: SupportedChainId[];
+    earningsMode: EarningsMode;
+    earningsBps: {
+      creatorShareOfCollectedFeesBps: number;
+      collaborators: { recipient: string; bps: number }[];
+      totalCollaboratorBps: number;
+    };
+    templateParams: unknown;
+  };
+}
+
+// ---- versions --------------------------------------------------------------------------------
+export const SCHEMA_VERSION: string;
+export const CREATOR_KIT_VERSION: string;
+export const RUNTIME_VERSION: string;
+export const PROTOCOL_RELEASE_COMPATIBILITY: string;
+export const BUNDLE_MAGIC: string;
+export const BUNDLE_EXTENSION: string;
+export function isSchemaCompatible(bundleSchemaVersion: string, importerSchemaVersion?: string): boolean;
+export function parseSemver(value: string): { major: number; minor: number; patch: number } | null;
+
+// ---- limits and vocabulary -------------------------------------------------------------------
+export const LIMITS: Readonly<Record<string, number | bigint>>;
+export const ALLOWED_EXTENSIONS: Readonly<Record<string, readonly string[]>>;
+export const FORBIDDEN_EXTENSIONS: Readonly<Record<string, string>>;
+export const BUNDLE_LAYOUT: readonly { path: string; kind: "file" | "dir"; role: string; required: boolean }[];
+export const REQUIRED_ENTRIES: readonly string[];
+export const SUPPORTED_CHAIN_IDS: readonly SupportedChainId[];
+export const CHAIN_LABELS: Readonly<Record<number, string>>;
+export const ART_RUNTIMES: readonly ArtRuntime[];
+export const APPROVED_ART_RUNTIMES: readonly ArtRuntime[];
+export const UNAPPROVED_ART_RUNTIMES: readonly string[];
+export const ART_RUNTIME_TO_MODE: Readonly<Record<ArtRuntime, 0 | 1>>;
+export const STARTING_PRESETS: readonly StartingPreset[];
+export const STARTING_PRESET_TO_INDEX: Readonly<Record<StartingPreset, 0 | 1 | 2>>;
+export const BACKING_MODELS: readonly BackingModel[];
+export const LAUNCH_MODES: readonly LaunchMode[];
+export const CURVE_PRESETS: readonly string[];
+export const MARKET_SENSORS: readonly { id: MarketSensor; label: string; description: string }[];
+export const MARKET_TRANSFORMS: readonly { id: TransformKind; label: string; description: string; params: { key: string; label: string; min: number; max: number; step?: number }[] }[];
+export const ART_DESTINATIONS: readonly { id: ArtDestination; label: string; description: string }[];
+export const MARKET_SENSOR_IDS: readonly MarketSensor[];
+export const MARKET_TRANSFORM_IDS: readonly TransformKind[];
+export const ART_DESTINATION_IDS: readonly ArtDestination[];
+export const EARNINGS_MODES: readonly EarningsMode[];
+export const FEE_SPLIT_BPS: Readonly<{ creator: number; platformTreasury: number; relicsBuybackReserve: number }>;
+export const BUYBACK_DISCLOSURE: string;
+export const TRAIT_DISTRIBUTIONS: readonly ("weighted" | "uniform")[];
+export function transformSpec(id: string): { id: TransformKind; params: { key: string; min: number; max: number }[] } | null;
+
+// ---- hashing and serialization ---------------------------------------------------------------
+export function canonicalJson(value: unknown): string;
+export function safeJsonParse(text: string, limits?: { maxDepth?: number; maxNodes?: number }): unknown;
+export function toPlain<T>(value: T): T;
+export class CanonicalJsonError extends Error {}
+export class JsonParseError extends Error {}
+export function sha256Bytes(bytes: Uint8Array): Uint8Array;
+export function sha256Hex(bytes: Uint8Array): string;
+export function sha256Utf8(text: string): string;
+export function toHex(bytes: Uint8Array): string;
+export function utf8(text: string): Uint8Array;
+export function fromUtf8(bytes: Uint8Array): string;
+export const HASH_ALGORITHM: "sha256";
+export function fileHash(bytes: Uint8Array): string;
+export function jsonHash(document: unknown): string;
+export function parseAndHashJson(bytes: Uint8Array): { value: unknown; hash: string };
+export function hashesUnder(byPath: Map<string, Uint8Array>, prefix: string): Record<string, string>;
+export function computeContentHash(byPath: Map<string, Uint8Array>): { contentHash: string; files: Record<string, string> };
+export function computeProjectConfigHash(manifest: Record<string, unknown>): string;
+export function computeBundleHash(projectConfigHash: string, contentHash: string): string;
+export function computeIntegrity(manifest: Record<string, unknown>, byPath: Map<string, Uint8Array>): { contentHash: string; projectConfigHash: string; bundleHash: string; files: Record<string, string> };
+export function isSha256Hex(value: unknown): boolean;
+
+// ---- container -------------------------------------------------------------------------------
+export function normalizeEntryPath(raw: string): string;
+export function collisionKey(path: string): string;
+export function extensionOf(path: string): string;
+export function roleOf(path: string): string | null;
+export function checkEntryPolicy(path: string): { ok: true; role: string } | { ok: false; reason: string };
+export class EntryPathError extends Error {}
+export function writeContainer(entries: { path: string; bytes: Uint8Array }[]): Uint8Array;
+export function readContainer(bytes: Uint8Array, options?: { requireMagic?: boolean }): { entries: { path: string; bytes: Uint8Array }[]; byPath: Map<string, Uint8Array>; comment: string };
+export function crc32(bytes: Uint8Array): number;
+export class ContainerError extends Error {}
+
+// ---- documents -------------------------------------------------------------------------------
+export function validateManifest(manifest: unknown): Issue[];
+export const MANIFEST_KEYS: readonly string[];
+export const REFUSED_MANIFEST_KEYS: Readonly<Record<string, string>>;
+export function validateTraitSchema(schema: unknown): Issue[];
+export function deriveTraits(schema: TraitSchema, seed: string): { name: string; value: string }[];
+export function traitFingerprint(traits: { name: string; value: string }[]): string;
+export function combinationSpace(schema: TraitSchema): bigint;
+export function validateMarketMappings(document: unknown): Issue[];
+export function applyTransform(mapping: MarketMapping, reading: number, state?: { previous?: number; current?: number }): number;
+export function evaluateMappings(document: MarketMappingDocument, sensors: Record<string, number>): Record<string, number>;
+export function validateCollectionMetadata(document: unknown): Issue[];
+
+// ---- analysis --------------------------------------------------------------------------------
+export function analyzeGeneratorSource(path: string, source: string, options?: { entry?: boolean; knownPaths?: Set<string> }): Issue[];
+export function stripComments(source: string): string;
+export const FORBIDDEN_IDENTIFIERS: Readonly<Record<string, string>>;
+export function scanTextForSecrets(path: string, text: string): Issue[];
+export function isTextPath(path: string): boolean;
+export const SECRET_PATTERNS: readonly { id: string; label: string; re: RegExp }[];
+export function inspectRenderOutput(where: string, output: unknown): Issue[];
+export function outputFingerprint(output: unknown): string;
+
+// ---- validation, build, projection -----------------------------------------------------------
+export function validateBundle(byPath: Map<string, Uint8Array>, options?: ValidateOptions): ValidationResult;
+export function validateBundleBytes(bytes: Uint8Array, options?: ValidateOptions): ValidationResult;
+export function buildRenderContext(input: { manifest: ProjectManifest | null; marketDocument: MarketMappingDocument | null; seed: string; sensors?: Record<string, number> }): RenderContext;
+export function neutralSensors(seed: string): Record<MarketSensor, number>;
+export const CHECKS: readonly { id: string; title: string }[];
+export function assembleBundle(input: { files: Map<string, Uint8Array>; config: Record<string, unknown> }): {
+  bytes: Uint8Array;
+  manifest: ProjectManifest;
+  checksums: { algorithm: "sha256"; files: Record<string, string>; contentHash: string; projectConfigHash: string; bundleHash: string };
+  entries: Map<string, Uint8Array>;
+};
+export function stableJsonText(value: unknown): string;
+export const GENERATED_ENTRIES: readonly string[];
+export class BuildError extends Error {}
+export function toStudioDraft(validated: ValidationResult, byPath: Map<string, Uint8Array>, options?: { draftId?: string; chainId?: number; updatedAt?: number }): StudioDraftProjection;
+
+// ---- prng and issues -------------------------------------------------------------------------
+export function mulberry32(seed: number): () => number;
+export function seedStringToNumber(seed: string): number;
+export function makeRandom(seed: string): RenderContext["random"];
+export function error(code: string, where: string, message: string): Issue;
+export function warn(code: string, where: string, message: string): Issue;
+export function hasErrors(issues: Issue[]): boolean;
+export function summarize(issues: Issue[]): ValidationResult["summary"];
+export function sortIssues(issues: Issue[]): Issue[];

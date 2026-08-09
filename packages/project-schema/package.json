@@ -1,0 +1,26 @@
+{
+  "name": "@relics/project-schema",
+  "version": "1.0.0",
+  "description": "Canonical .relics project-bundle schema, deterministic container, and hostile-input validator. Zero dependencies; identical source runs in Node, in a browser worker, and in the RELICS Launchpad web importer.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./types.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types.d.ts",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "types.d.ts",
+    "src",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false
+}
