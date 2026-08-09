@@ -38,7 +38,7 @@ LP_RECIPIENT=0x... LAUNCH_TICK=-23040 LIQUIDITY=... \
   --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $DEPLOYER_PRIVATE_KEY
 #    -> READ the new position id from the tx receipt (see docs/11)
 
-# 4) Lock the position: principal permanent, fees route immutably
+# 4) Lock the position: no principal-withdrawal path; fees route to construction-fixed recipients
 POSITION_MANAGER=0x... ART_TOKEN=0x... WETH=0x... TREASURY=0x... \
 ENTOMBMENT=0x000000000000000000000000000000000000dEaD POSITION_ID=<from receipt> \
   forge script script/LockPosition.s.sol --tc LockPosition \

@@ -1,12 +1,26 @@
-# relics-v4-starter
+# relics-v4
 
-**Fork it and launch your own fully on-chain, fully customizable art collection — linked to an
-ERC-20, with Uniswap v4 hooks transforming swaps, liquidity, volatility, and market history into
-live artistic evolution.** Contracts. Renderer. Hook logic. Deployment tooling.
+**On-chain generative art that owns its own market** — an ERC-721 collection linked to an ERC-20,
+with a Uniswap v4 hook turning swaps, liquidity, volatility and market history into live artistic
+evolution.
 
 **The market becomes the art.**
 
-> ⚠️ **Educational fork-and-launch template. NOT audited. NOT affiliated with or endorsed by
+This repository holds two ways in, plus the production reference.
+
+| | What it is | Start here |
+| --- | --- | --- |
+| 🚀 **Build on the RELICS Launchpad** | A protocol where you supply art and parameters and **one transaction** deploys and wires the whole project — token, collection, hook, pool, liquidity, registry. | **[docs/launchpad/](docs/launchpad/)** |
+| 🔧 **Fork the starter template** | A clean-room, MIT-licensed codebase you customize and deploy **yourself**, with no launchpad, no factory, and no fee split. | **[docs/00 — Make it your own](docs/00-make-it-your-own.md)** |
+| 🏛️ **Flagship reference** | The exact production source of the live RELICS Uniswap v4 hook. | **[flagship/](flagship/)** |
+
+> ⚠️ **The RELICS Launchpad is NOT deployed.** It is marked `PREPARED_NOT_DEPLOYED` on Ethereum
+> (1), Base (8453) and Robinhood Chain (4663) — there is no factory, locker or registry address on
+> any chain, and no launch can succeed today. All review to date is **internal only**; there has
+> been **no external audit**. See
+> [docs/launchpad/08 — Status and limitations](docs/launchpad/08-status.md).
+
+> ⚠️ **The starter template is educational. NOT audited. NOT affiliated with or endorsed by
 > Uniswap, OpenZeppelin, OpenSea, or any auditor.** The template layers contain no private
 > material and are a clean-room teaching rewrite. Get your own security, legal, and economic
 > review before deploying or trading anything. See the [Disclaimer](#26-disclaimer).
@@ -19,6 +33,39 @@ live artistic evolution.** Contracts. Renderer. Hook logic. Deployment tooling.
 > tree reproduces the deployed init code. The template and the flagship share no code.
 
 ---
+
+## Building on the RELICS Launchpad
+
+If you want the plumbing solved — a hook mined to a valid address, a pool opened at a computed
+price, genesis liquidity minted, marketplace and explorer metadata wired, all in one atomic call —
+that is the launchpad. You bring art and a handful of parameters.
+
+**[→ Read the creator guide](docs/launchpad/)**
+
+| # | Page | What you get |
+| --- | --- | --- |
+| 01 | [What the launchpad is](docs/launchpad/01-what-it-is.md) | The one-paragraph version, and who it is for |
+| 02 | [What a launch produces](docs/launchpad/02-what-a-launch-produces.md) | The exact artifacts one `launch()` creates |
+| 03 | [Art runtimes](docs/launchpad/03-art-runtimes.md) | Solidity-SVG template vs. deterministic JavaScript |
+| 04 | [Constraints that actually bite](docs/launchpad/04-constraints.md) | Byte budgets, EIP-170, determinism, legibility |
+| 05 | [The creator flow](docs/launchpad/05-creator-flow.md) | Draft → studio → preview/cover → launch |
+| 06 | [Fees and revenue](docs/launchpad/06-fees-and-revenue.md) | The 75/25 split, stated precisely |
+| 07 | [Integrating](docs/launchpad/07-integrating.md) | The SDK and ABI surface for builders |
+| 08 | [Status and limitations](docs/launchpad/08-status.md) | What is proven, what is not, what is missing |
+| 09 | [FAQ](docs/launchpad/09-faq.md) | Short answers to the questions people actually ask |
+
+Headline economics, stated the way they should always be stated: your project pool has a static
+**1% LP fee**; LP fees **actually collected** are split **75% creator / 25% platform**; within the
+platform share, **6.25% of collected fees** buys $RELICS and sends it permanently to
+`0x…dEaD` — circulating supply falls, while `totalSupply` stays fixed at 10,000 because $RELICS has
+no burn function — and **18.75%** is retained by the protocol Safe.
+
+---
+
+## The starter template
+
+Everything from here down describes the fork-it-yourself template, which is independent of the
+launchpad and shares no code with it.
 
 ## 1. The promise
 
@@ -54,8 +101,8 @@ Deployed and wired together, driven by your config:
 - **`ExampleArtNFT`** — an ERC-721 with fully on-chain metadata and a swappable acquisition model.
 - **A renderer** — one of three shipped art systems (**Sigil**, **Strata**, **Orbital**) or your
   own, behind a single `_renderArt(dna, marketState)` seam.
-- **`ImmutablePositionLocker`** — an ownerless custodian that locks LP principal forever while
-  keeping fee collection permissionless.
+- **`ImmutablePositionLocker`** — an ownerless custodian whose bytecode contains no path to
+  withdraw LP principal, while keeping fee collection permissionless.
 - A **config-driven Next.js web app** (Home / Acquire / Mint / Explore / Technical).
 
 ## 3. Who this is for
@@ -80,7 +127,7 @@ No prior v4 knowledge is assumed. Every term is defined in [Glossary](#glossary)
    ┌──────────────┐      ┌──────────────────┐      ┌─────────────────────────┐
    │ Uniswap v4   │◀────▶│  ExampleV4Hook   │      │ ImmutablePositionLocker │
    │ PoolManager  │      │ observes swaps + │      │ principal locked;       │
-   └──────┬───────┘      │ liquidity → state│      │ fees route immutably    │
+   └──────┬───────┘      │ liquidity → state│      │ fees to fixed recipients│
           │ mints LP NFT └────────┬─────────┘      └─────────────────────────┘
           ▼                       │ read (view)
    ┌──────────────┐               ▼
@@ -288,6 +335,7 @@ script/         Foundry tooling (config/DeployConfig.s.sol + mine/deploy/bind/li
 test/           unit/ fuzz/ invariant/ fork/ deployment/ + mocks/ + utils/
 apps/web/       config-driven Next.js app (wagmi/viem, EIP-6963)
 docs/           make-it-your-own guide + 18 numbered guides
+docs/launchpad/ RELICS Launchpad creator guide (the launchpad is a separate system)
 scripts/        secret scan, manifest generator, link checker (Node)
 .github/        CI workflows + issue/PR templates
 lib/            vendored, production-pinned deps (forge-std, uniswap-hooks, v4-core, v4-periphery, OZ, solmate, permit2)
@@ -319,6 +367,9 @@ submissions/    Programmable Builder Beta application package (relics-v4)
 | 17 | [Frontend integration](docs/17-frontend-integration.md) |
 | 18 | [FAQ](docs/18-faq.md) |
 | + | [Exporting on-chain SVG as PNG](docs/exporting-onchain-svg-as-png.md) |
+
+Building on the RELICS Launchpad instead of forking this template? That is a separate guide:
+[`docs/launchpad/`](docs/launchpad/).
 
 ## 24. Contributing
 

@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not audited; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains no production addresses, keys, proofs, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 848,
+  "fileCount": 887,
   "files": [
     {
       "path": ".env.example",
@@ -77,14 +77,14 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "6ef83f6e8097902f65da3a3ae8be3d79b9e908e48b513623802aa2dc77c63549",
+      "sha256": "ad45460528570782e73a314095b8e8ac22b229818c6134ae00937913af5044e6",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "CLAUDE.md",
-      "sha256": "57c420cc71598b6a52e4339aedc7fabe315d336591915daa56bc4fcd04430a95",
+      "sha256": "4f0ad79907022ee9a5766b690059cf15de47f8b0700ec6fa61d01a82e415652f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -126,7 +126,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "db3e1ba90fe72920d142885a171566a6473142dc19b6462f4b55a32acf23c056",
+      "sha256": "673d6ee25df92907fc138b027464a85bdd105b19e6a14db3298c4ac0a13d0751",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -392,7 +392,7 @@
     },
     {
       "path": "docs/09-locker-and-lp-finality.md",
-      "sha256": "265d309d51632d343510bbf8e09daed27606b7c9043d8ea1f68f019ce57595b6",
+      "sha256": "fa349163685ca0faeca5cbb2b0feb6929c11e5f4cec57c0d8153a6b6321d3aaf",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -427,14 +427,14 @@
     },
     {
       "path": "docs/14-deploy-and-pool.md",
-      "sha256": "3a8d1febd51347224c61a2fb761e68a15edf8d387079b09bd9ac5271d205a9cb",
+      "sha256": "aa27dc3aeccbf1acc20425a2d79f7e6914f8ce013c767310c7e48c05a44b2638",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/15-launch-economics.md",
-      "sha256": "b1063fd7d23c70bb985ab00ba52f8811f73e830e1d9caa49e0f2d2a9a4afa841",
+      "sha256": "be90e3c5234bccdcb874ca8206faba6c0d0f7701db0f7a32c7b8195e8dedf417",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -455,7 +455,7 @@
     },
     {
       "path": "docs/18-faq.md",
-      "sha256": "aff5ba07fb4b54b642a982b8302a16ed2b278e30b139f1785553355ced015129",
+      "sha256": "70feea47b3a0242bf6b9cb3bffe65fe5b50dbd337ab404f077e14b61d3191f1e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -463,6 +463,76 @@
     {
       "path": "docs/exporting-onchain-svg-as-png.md",
       "sha256": "22d0a4fa523ff9ec82c002478e3c2a5192665df8ebd6a1af30460bc7b3443d71",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/01-what-it-is.md",
+      "sha256": "6b051a41f01a61d2a4721a89c13db64676866699ba002e331d689193b204e2d1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/02-what-a-launch-produces.md",
+      "sha256": "e6f3993978268c562b54931329ebf8eeda4e09c65128821bfef26614552fc686",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/03-art-runtimes.md",
+      "sha256": "9928f30085cbbeff9c650ecfc63a313ffaef2913c76b3bcb2021dcb298160401",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/04-constraints.md",
+      "sha256": "d5133a1a8bf943b39ab5fd7e9e13579ee298252be103677e380bca42f576c6f3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/05-creator-flow.md",
+      "sha256": "b3c0c0a77266aa4b51c51ed48f7cc741a0dc57418928f3eb59f6afd6f66ebf68",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/06-fees-and-revenue.md",
+      "sha256": "6e423f8a78e3dfb84bc2fea89e3c628172d4979d1a0787ab004725ea5910f0ed",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/07-integrating.md",
+      "sha256": "f4b1a137458540fde3f492d2cdea42c9bfd1d0bfb30f6411c69a3aa0fab21923",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/08-status.md",
+      "sha256": "cfdc658c1912428acd6a7eb5b31f9a73702ee9a0d3f643f061b5dec3f7caeb36",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/09-faq.md",
+      "sha256": "96aee22feeb51e58b0de7bb43d293ed26285f84653b6c13274c1d3c3f73a17ea",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/launchpad/README.md",
+      "sha256": "63901976d877c11492abde453c1e0deca2ee605ac082768522ddd615115437a2",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -496,8 +566,134 @@
       "publicSafe": true
     },
     {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+      "sha256": "fa7068f56bc180571a6095be6eaef06d51dbe81e30cb128397d993c9599ecc30",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+      "sha256": "50f34ae16a067a41c2c1091445d11d63788e54c717677cb6d6b0e4cdea2ad21d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+      "sha256": "01b6f5c4fa45fd38822b286ecef6daf983d27306dd6362496fa71b3e4600b72c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "sha256": "0b7132f17d14d1d84b41b0bb429be62dafdff00fd3470f68724d8018eb07f57a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/ERC721.sol",
+      "sha256": "ef8e2398c78851bd2ec12bc48d923058c557889d5a3d5ee4919c17ff0fb3517e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol",
+      "sha256": "ff0eb9902bf0ac099205615fac90eacf34fae637571b05aab3ea35dea53d5f17",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+      "sha256": "eafee3ffdc7cb2fba4bf6bd16fb28f8e5b4679742e81c2ad42a1b1df5c179feb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Metadata.sol",
+      "sha256": "33223782ea652dca413702ce92f9f59d91d758a035065b24bbedb7dc60c63a78",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Utils.sol",
+      "sha256": "b48e95db8c85866c1d88af8e82f346e0d22d24b5aac5b936079d958c72e13b9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/Base64.sol",
+      "sha256": "1c143572893f50f04fe8e507d89f9997cd3242102ba4200c8de0803ecbaf8cec",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/Bytes.sol",
+      "sha256": "12333e27166b8e48d2ff740edad32da64255de82db37305a17936486f6ac5a4f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "flagship/lib/openzeppelin-contracts/contracts/utils/Context.sol",
       "sha256": "847fda5460fee70f56f4200f59b82ae622bb03c79c77e67af010e31b7e2cc5b6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/Panic.sol",
+      "sha256": "270fc8401c1a13fae6a7a4a2dd6e381b95d658896701e51f0d3e2688acab3dec",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+      "sha256": "e318709bbe73a7831d64c1351e8bdc43780b245f25191234e361e6ab9b98c67b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+      "sha256": "61a2b12c96857aaa35f48aeda67a4281637a42494c0b3795be0ae976aa7b3793",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+      "sha256": "9055c2994b37dea1a41b7b7926dcb510f05dbe2540b0aafc5fbee9558fffd0ca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+      "sha256": "bdfdbe133991c0c78042957ff5cd97167926fcaf6d15664f3835a076cb066457",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol",
+      "sha256": "5779bc848bde39f1ad7bc02b4f708a0040888e0083b1a33f119cd94639350134",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol",
+      "sha256": "1ed50b1056af886752f0fb48a0165d381e69bb4a4b18b893b066dc144a7e08d7",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -678,6 +874,27 @@
       "publicSafe": true
     },
     {
+      "path": "flagship/src/RelicsNFT.sol",
+      "sha256": "c1976d79ba2b64a97fb16bc10884c73cc912a2f9ee70f36ef0c27b878358bf82",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/RelicsRenderer.sol",
+      "sha256": "d8925a9700e5f5511a7c42feb16f24d20b282832fd0c190a2e939f5efbb42d4b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/RelicsToken.sol",
+      "sha256": "570d2bc4cf914c2c2a7a6e545fa8f3f8963273f93a493ecd8d49d783d4d467ae",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "flagship/src/RelicsV4Hook.sol",
       "sha256": "0846a1ba4a8ede68bbeca3721c2a875f680815de664ae5d43cd4f51f4334ebda",
       "provenance": "original-clean-room",
@@ -687,6 +904,34 @@
     {
       "path": "flagship/src/interfaces/IRelicsHook.sol",
       "sha256": "f80bbefae6dbcaebc5628a89786f2847fb463a78f07b4a14639a2667af811b42",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/interfaces/IRelicsNFT.sol",
+      "sha256": "867ec0de27023c78ef93fe06ad50b74a1d25d8b81d30f996b5c34050989196a6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/interfaces/IRelicsRenderer.sol",
+      "sha256": "508335fc7088f15d5900671ab5c921c8724a32e852c6499ed449254eda034ba8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/interfaces/IRelicsToken.sol",
+      "sha256": "63adad9e19cd38c98bc77bf1f169637573b6a76bfed0ddcf2a17b3d19644b13d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/libraries/Base64.sol",
+      "sha256": "2109897937b67ad38388f98dc958a0117aa8139237cafda7c58b2144c5cff7aa",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -706,8 +951,36 @@
       "publicSafe": true
     },
     {
+      "path": "flagship/src/libraries/PaletteLib.sol",
+      "sha256": "2b824cc4b96b0673e91ba31cad7964dcae0b798b00be34d95a6580bbc6336704",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/libraries/SVG.sol",
+      "sha256": "2b4aad2bfbd624bfdf320ef92f9621bf3eb438472439547e6a094b56c3e6c32f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/src/libraries/VisualIdentity.sol",
+      "sha256": "c9f9c1f67862a58bbcc7bc5ffe23590b066ea17157e74119ab0d780f96ceb02e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "flagship/test/DeploymentProof.t.sol",
       "sha256": "50947218789f90a7ac784e627c8a3e305c6f5e0442263c1a0a0657ffb582a68a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "flagship/test/TokenNftSyncExit.t.sol",
+      "sha256": "177722042f371e8c54786036522406310afc43d67a15d8ea333b280291a7eceb",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -5656,7 +5929,7 @@
     },
     {
       "path": "script/LockPosition.s.sol",
-      "sha256": "1c14d65df5c1f4c8cecdabb6e166cb5237f3746e6239599a4c8741e4b2b5ed5b",
+      "sha256": "74c50a080a2b98993fb90060779f763546693a1dd0b24560aee152fc96bfdebc",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -5684,7 +5957,7 @@
     },
     {
       "path": "scripts/check-links.mjs",
-      "sha256": "a3ddcc0a6674a37f3d125d37592accdbc7a664f367e32f0e4515dabcf5b687f9",
+      "sha256": "88309afed603f72483d8a0ac5ee6dedf97f0024360bc93449e68b74fcff27b97",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -5817,7 +6090,7 @@
     },
     {
       "path": "submissions/relics-v4/TEST_PLAN.md",
-      "sha256": "407c9b6d36632ccf1a32f43e18a4c73c1e41c3614147b4cad07051e20c119989",
+      "sha256": "46eff2354b55b95dbc21b89a8836a9551dbe286acfaaf82a86a1377f41326b5a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

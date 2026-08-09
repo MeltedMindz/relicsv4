@@ -17,7 +17,9 @@ The locker does better:
 - It exposes one permissionless function, `collectFees()`, that realizes accrued fees.
 
 Result: principal is locked as hard as a burn, but fees keep flowing. This starter says
-"principal permanently locked; fees route immutably" — it never says "LP burned."
+"principal held by an ownerless custodian with no withdrawal path; fees route to recipients
+fixed at construction" — it never says "LP burned," and it never claims more permanence than the
+bytecode actually provides.
 
 ## Zero-liquidity DECREASE realizes fees without touching principal
 

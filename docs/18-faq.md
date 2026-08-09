@@ -34,7 +34,8 @@ No. A single-sided pool has a valid initialized price and zero quote reserves â€
 facts. See [08](08-genesis-liquidity.md) and [15](15-launch-economics.md).
 
 **Can I say the LP is "burned"?**
-Not if you used the locker. Say "principal permanently locked; fees route immutably." Burning the
+Not if you used the locker. Say "principal held by an ownerless custodian with no withdrawal
+path; fees route to recipients fixed at construction." Burning the
 position NFT would also kill fee collection forever. See [09](09-locker-and-lp-finality.md).
 
 **Can market state or `block.prevrandao` decide a payout or mint order?**

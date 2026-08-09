@@ -1,13 +1,20 @@
 #!/usr/bin/env node
 // Offline internal link checker: verifies that every relative Markdown link in README.md,
 // CONTRIBUTING.md, and docs/*.md points at a file that exists. No network access, no secrets.
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, resolve, join } from "node:path";
 
-const roots = ["README.md", "CONTRIBUTING.md", "SECURITY.md"];
-for (const f of readdirSync("docs")) {
-  if (f.endsWith(".md")) roots.push(join("docs", f));
+const roots = ["README.md", "CONTRIBUTING.md", "SECURITY.md", "AGENTS.md", "CLAUDE.md"];
+
+// Walk docs/ recursively so nested guides (docs/launchpad/**) are checked too.
+function collectMarkdown(dir) {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) collectMarkdown(full);
+    else if (entry.endsWith(".md")) roots.push(full);
+  }
 }
+collectMarkdown("docs");
 
 const linkRe = /\]\(([^)]+)\)/g;
 let broken = 0;

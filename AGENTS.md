@@ -6,15 +6,45 @@ fork and launch their own collection, read this first, then `docs/00-make-it-you
 
 ## What this repo is
 
-A **fork-and-launch template** for a fully on-chain generative art collection linked to an
-ERC-20, with a **Uniswap v4 hook** that turns swaps, liquidity, volatility, and market
-history into live on-chain artistic evolution. The market becomes the art. A forker changes
-a small, clearly marked set of things and ships their own collection without reading the
-whole codebase.
+Three things under one roof:
 
-It is **educational, unaudited, and MIT-licensed**, and **not affiliated** with Uniswap,
-OpenZeppelin, OpenSea, or any production collection. It contains no production deployment.
-Every contract here is an original, genericized `Example*` implementation.
+1. **`docs/launchpad/` — the RELICS Launchpad creator guide.** Documentation only: how an
+   artist or developer builds and launches a project on the launchpad, what one `launch()`
+   produces, the art runtimes, the constraints, the creator flow, the fee split, and the
+   SDK/ABI surface. **The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453)
+   and Robinhood Chain (4663)** — no factory, locker or registry exists on any chain. Review
+   to date is **internal only**; there is **no external audit**. No launchpad contract source
+   lives in this repo.
+2. **The fork-and-launch template** (`src/`, `script/`, `test/`, `apps/web/`, `docs/00`–`18`)
+   for a fully on-chain generative art collection linked to an ERC-20, with a **Uniswap v4
+   hook** that turns swaps, liquidity, volatility, and market history into live on-chain
+   artistic evolution. A forker changes a small, clearly marked set of things and ships their
+   own collection without reading the whole codebase. It is **educational, unaudited, and
+   MIT-licensed**, and **not affiliated** with Uniswap, OpenZeppelin, OpenSea, or any
+   production collection. Every contract here is an original, genericized `Example*`
+   implementation.
+3. **`flagship/`** — the operator-authorized production source of the live RELICS v4 hook.
+
+The template and the launchpad are **separate systems that share no code**. Do not describe
+template behavior as launchpad behavior or vice versa, and do not let one guide's numbers
+(fee tiers, splits, byte budgets) leak into the other.
+
+### Launchpad-doc accuracy rules — never relax these
+
+- Never write that the launchpad is live, deployed, launched, or shipping. Never publish a
+  launchpad contract address; none is deployed.
+- Never call any review "audited", "externally audited", or "security reviewed".
+- The fee split is of **collected LP fees**, never of volume: 75% creator / 25% platform;
+  within the platform share, 6.25% of collected fees to a $RELICS buyback and 18.75%
+  retained.
+- On the buyback: $RELICS is **bought and sent permanently to `0x…dEaD`**, so circulating
+  supply falls — but $RELICS has **no burn function** and `totalSupply` stays fixed at
+  10,000. Always state both halves. Never imply the ledger supply shrinks.
+- Never claim the RELICS genesis LP is "burned", "locked forever", or "permanent", and never
+  write "fees route immutably". Describe custody by what the bytecode contains.
+- No attack, brick, or fee-collection exploit mechanics, thresholds, or costs — anywhere.
+- The RELICS art collection lives at `https://www.relics.wtf`. The creator app is not
+  publicly hosted; do not invent URLs or link to routes you have not confirmed exist.
 
 ## Ground rules — do not break these
 
@@ -49,7 +79,7 @@ src/
   ExampleOnchainRenderer.sol  sample renderer "Sigil"   (rings + rotating core)
   StrataRenderer.sol          sample renderer "Strata"  (market history as sediment)
   OrbitalRenderer.sol         sample renderer "Orbital" (nucleus + orbiters)
-  ImmutablePositionLocker.sol ownerless LP custodian: principal locked, fees route immutably
+  ImmutablePositionLocker.sol ownerless LP custodian: no withdrawal path; fees to fixed recipients
   interfaces/  libraries/
 config/collection.config.ts  ONE config surface for the web app + human identity
 script/
@@ -59,6 +89,7 @@ script/
 apps/web/                    Next.js App Router, wagmi + viem, EIP-6963, no WalletConnect id
 test/                        unit / fuzz / invariant / fork (self-skipping) / deployment
 docs/                        00 (make it your own) … 18 (FAQ) + PNG-export guide
+docs/launchpad/              RELICS Launchpad creator guide (docs only; separate system)
 ```
 
 Deps: Foundry (`forge`), Node ≥ 20 (npm workspaces; web lives in `apps/web`).

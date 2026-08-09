@@ -26,8 +26,12 @@ what is true.
 - "The initialized FDV is already market-validated." (It is not; no trade happened.)
 - "Pre-funded floor" / "the pool has sell depth before buyer quote exists." (There is no bid depth
   at genesis in a single-sided launch.)
-- "LP burned." (If you locked it in a custodian that still forwards fees, say "principal
-  permanently locked; fees route immutably.")
+- "LP burned." (If you locked it in a custodian that still forwards fees, describe it by what the
+  bytecode does: "held by an ownerless custodian with no withdrawal path; fees route to recipients
+  fixed at construction.")
+- "Locked forever." State the mechanism and let the reader verify it. Adjectives are not evidence,
+  and a third-party lock service is not the same claim as ownerless bytecode — say which one you
+  actually used.
 
 ## No project-funded bootstrap buy
 
