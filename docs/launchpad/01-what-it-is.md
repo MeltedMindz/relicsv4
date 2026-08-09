@@ -83,8 +83,8 @@ and script budgets must be measured independently rather than assumed from Ether
 
 ## Its relationship to the RELICS collection
 
-RELICS itself — the collection at `relics.wtf` — is the flagship that the launchpad generalizes.
-It is live on Ethereum mainnet; the launchpad is not. They are separate systems: launching on the
+RELICS itself — the collection at `https://www.relics.wtf` — is the flagship that the launchpad
+generalizes. It is live on Ethereum mainnet; the launchpad is not. They are separate systems: launching on the
 launchpad does not mint, wrap, or entitle you to $RELICS, and holding $RELICS does not grant
 launchpad privileges. The only link is economic, and it runs one way: a slice of platform fee
 revenue buys $RELICS on the open market and sends it to an entombment address

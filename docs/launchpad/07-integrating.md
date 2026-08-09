@@ -51,15 +51,16 @@ populated per chain — those are pre-existing third-party contracts, not launch
 The order is: mine two salts → build params → validate → predict → simulate → estimate → sign.
 
 ```ts
-// 1. Mine the salts. Both addresses have constraints:
-//    the token must sort correctly against WETH; the hook must land on the 0x1440 mask.
-const hookMine  = await mineArtHookSalt(chainId, { publicClient });
-const tokenMine = await mineSaleTokenSalt(chainId, { publicClient, direction: "belowWeth" });
+// 1. Mine both salts. Each address has a constraint: the token must sort correctly
+//    against WETH, and the hook must land on the 0x1440 mask. Both miners must also
+//    check for live code at the candidate address, not just the mask.
+const hookMine = await mineArtHookSalt(chainId, { publicClient });
+const tokenSalt = /* token-salt miner, direction "belowWeth" for single-sided routing */;
 
 // 2. Build the canonical params from creator input.
 const params = buildLaunchParams(chainId, creatorInput, {
-  tokenSalt: tokenMine.tokenSalt,
-  hookSalt:  hookMine.salt,
+  tokenSalt,
+  hookSalt: hookMine.salt,
 });
 
 // 3. Validate off chain before spending anything.

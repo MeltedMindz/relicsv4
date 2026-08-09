@@ -469,14 +469,14 @@
     },
     {
       "path": "docs/launchpad/01-what-it-is.md",
-      "sha256": "6b051a41f01a61d2a4721a89c13db64676866699ba002e331d689193b204e2d1",
+      "sha256": "41e11382b28c2e6801876ef8b96a5fd54a7bc4390dd0bd7b96565ffed8ae5b18",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/02-what-a-launch-produces.md",
-      "sha256": "e6f3993978268c562b54931329ebf8eeda4e09c65128821bfef26614552fc686",
+      "sha256": "369826011ce4476106a111d2d69c298ac8293fceb82bcf375a5b6c9adbec362e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -511,7 +511,7 @@
     },
     {
       "path": "docs/launchpad/07-integrating.md",
-      "sha256": "f4b1a137458540fde3f492d2cdea42c9bfd1d0bfb30f6411c69a3aa0fab21923",
+      "sha256": "d20ec9dd9e35d19fe498daa125d6fa3000e80f9d6ef4a0a1942b28ec95027486",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

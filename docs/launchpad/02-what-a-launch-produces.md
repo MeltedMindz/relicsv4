@@ -23,21 +23,24 @@ struct LaunchResult {
 }
 ```
 
-Inside that one transaction, the factory:
+Inside that one transaction, the factory does all of the following (read the source for the exact
+ordering):
 
-1. Stores your art script or template configuration on chain.
-2. Deploys your **project token** (ERC-20) at a CREATE2 address whose sort order against WETH is
-   what you mined for.
-3. Deploys your **project collection** (ERC-721).
-4. Deploys your **art hook** at an address whose low bits encode the `0x1440` permission mask.
-5. Mints or assigns your **ProjectRights** position to `creatorRecipient`.
-6. Initializes the canonical **project-token / WETH pool** at a price derived from your starting
-   preset.
-7. Registers the immutable **fee-routing policy** (the 75/25 split plus any collaborator
-   sub-splits).
-8. Mints the **genesis liquidity** directly against the PoolManager, held by the shared fee locker.
-9. Publishes the **ProjectRegistry** record.
-10. Leaves the pool tradeable.
+- Stores your art script or template configuration on chain.
+- Deploys your **project token** (ERC-20) at a CREATE2 address whose sort order against WETH is
+  what you mined for, minting the whole supply to the fee locker.
+- Deploys your **art hook** at an address whose low bits encode the `0x1440` permission mask, and
+  **binds** it to your pool key and market-state config — one-shot, factory-only.
+- Deploys your **project collection** (ERC-721).
+- Mints your **ProjectRights** position to `creatorRecipient`, deploying a collaborator splitter
+  first if you named any.
+- Initializes the canonical **project-token / WETH pool** at a price derived from your starting
+  preset. The binding must happen before initialization; an unbound hook rejects it.
+- Registers the immutable **fee-routing policy** (the 75/25 split plus any collaborator
+  sub-splits).
+- Mints the **genesis liquidity** directly against the PoolManager, single-sided, with **zero
+  seeded WETH**, held by the shared fee locker. There is no PositionManager NFT.
+- Publishes the **ProjectRegistry** record and leaves the pool tradeable.
 
 ## What you supply
 
