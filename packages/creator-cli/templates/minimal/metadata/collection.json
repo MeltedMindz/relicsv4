@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Minimal",
+  "symbol": "MIN",
+  "description": "A minimal generative collection: concentric rings around a single core, with the palette chosen by the token's seed.",
+  "tokenNamePattern": "Minimal #{id}"
+}

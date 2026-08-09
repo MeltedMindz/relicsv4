@@ -300,6 +300,14 @@ export function validateManifest(manifest) {
       issues.push(error("EARNINGS_RECIPIENT", `${at}#earnings.creatorRecipient`, "creatorRecipient must be a 0x-prefixed 20-byte address"));
     } else if (earnings.creatorRecipient.toLowerCase() === ZERO_ADDRESS) {
       issues.push(error("EARNINGS_RECIPIENT_ZERO", `${at}#earnings.creatorRecipient`, "creatorRecipient cannot be the zero address"));
+    } else if (isPlaceholderAddress(earnings.creatorRecipient)) {
+      issues.push(
+        error(
+          "EARNINGS_RECIPIENT_PLACEHOLDER",
+          `${at}#earnings.creatorRecipient`,
+          `${earnings.creatorRecipient} is a placeholder or burn address, not a wallet anyone controls. Set earnings.creatorRecipient to the address that should receive the creator share.`,
+        ),
+      );
     }
     const collaborators = earnings.collaborators;
     if (!Array.isArray(collaborators)) {
@@ -430,6 +438,21 @@ export function validateManifest(manifest) {
 
 function isObject(value) {
   return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+/**
+ * Addresses that are obviously not a wallet: the well-known burn address, and any address whose
+ * twenty bytes are all the same nibble (`0x1111…`, `0xdead…` style scaffolding). Shipping a
+ * template with a placeholder recipient would send a creator's share nowhere, so the format
+ * refuses one rather than warning about it.
+ * @param {string} address
+ */
+export function isPlaceholderAddress(address) {
+  const body = address.slice(2).toLowerCase();
+  if (body === "000000000000000000000000000000000000dead") return true;
+  if (/^(.)\1{39}$/.test(body)) return true;
+  if (/^dead(dead)+$/.test(body) || /^(beef)+$/.test(body)) return true;
+  return false;
 }
 
 function onlyKeys(issues, object, where, allowed) {

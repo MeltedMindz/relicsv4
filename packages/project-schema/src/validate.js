@@ -419,16 +419,27 @@ function runExecutionChecks({ options, sources, manifest, traitSchema, marketDoc
     const artworkSupply = manifest?.supply?.artworkSupply ? BigInt(manifest.supply.artworkSupply) : null;
     if (artworkSupply !== null && space < artworkSupply) {
       collect("DUPLICATE_RATE", [
-        error(
+        warn(
           "TRAITS_SPACE_TOO_SMALL",
           "traits/schema.json",
-          `the trait schema can express ${space} distinct combinations but the collection mints ${artworkSupply} artworks — duplicates are unavoidable`,
+          `the trait schema can express ${space} distinct combinations but the collection mints ${artworkSupply} artworks, so trait LABELS will repeat. The artwork itself can still be unique — this is only a problem if you meant the labels to be unique.`,
         ),
       ]);
     }
     if (duplicateRate > 0.5) {
       collect("DUPLICATE_RATE", [warn("TRAITS_DUPLICATE_RATE", "traits/schema.json", `${(duplicateRate * 100).toFixed(1)}% of the sampled seeds share a trait set`)]);
     }
+  }
+
+  // Repeated trait labels are a taste question; repeated ARTWORK is a broken generator.
+  if (seeds.length >= 8 && fingerprints.size * 2 < seeds.length) {
+    collect("DUPLICATE_RATE", [
+      error(
+        "GEN_SEED_IGNORED",
+        "generator/generate.js",
+        `only ${fingerprints.size} distinct artworks came out of ${seeds.length} seeds — the generator is largely ignoring context.seed`,
+      ),
+    ]);
   }
 
   return { ran: true, reason: "", seeds: seeds.length, deterministic, duplicateRate, distinctOutputs: fingerprints.size, outputs };

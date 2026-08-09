@@ -17,9 +17,20 @@ const DANGEROUS = Object.freeze([
   { re: /\son[a-z]+\s*=/i, code: "SVG_EVENT_HANDLER", message: "the output carries an inline event handler attribute" },
   { re: /javascript\s*:/i, code: "SVG_JAVASCRIPT_URL", message: "the output contains a javascript: URL" },
   { re: /(https?|ftp|ws|wss|ipfs|ipns|ar):\/\//i, code: "SVG_EXTERNAL_REFERENCE", message: "the output references an external URL; a render must be self-contained" },
-  { re: /<\s*(use|image)\b[^>]*\bhref\s*=\s*["'](?!#)/i, code: "SVG_EXTERNAL_REFERENCE", message: "the output references a resource outside the document" },
-  { re: /<\s*set\b|<\s*animate(Transform|Motion)?\b[^>]*\bxlink:href/i, code: "SVG_EXTERNAL_REFERENCE", message: "the output animates a resource outside the document" },
+  { re: /<\s*(use|image)\b[^>]*\b(xlink:)?href\s*=\s*["'](?!#)/i, code: "SVG_EXTERNAL_REFERENCE", message: "the output references a resource outside the document" },
 ]);
+
+/**
+ * The two W3C namespace declarations every SVG carries. They are XML identifiers, not fetches —
+ * no renderer ever requests them — so they are removed before the URL scan runs. Nothing else
+ * gets an exemption.
+ */
+const NAMESPACE_DECLARATIONS = /\sxmlns(:xlink)?\s*=\s*["']http:\/\/www\.w3\.org\/(2000\/svg|1999\/xlink)["']/g;
+
+/** @param {string} output */
+export function stripNamespaceDeclarations(output) {
+  return output.replace(NAMESPACE_DECLARATIONS, " ");
+}
 
 /**
  * @param {string} where
@@ -48,8 +59,9 @@ export function inspectRenderOutput(where, output) {
     issues.push(error("RENDER_NOT_SVG", where, "render output must end with a closing </svg> tag"));
   }
 
+  const scannable = stripNamespaceDeclarations(output);
   for (const rule of DANGEROUS) {
-    if (rule.re.test(output)) issues.push(error(rule.code, where, rule.message));
+    if (rule.re.test(scannable)) issues.push(error(rule.code, where, rule.message));
   }
 
   // A render that draws nothing visible is technically valid SVG and useless as art.

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Palette",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Ash", "weight": 40 },
+        { "name": "Rust", "weight": 30 },
+        { "name": "Verdigris", "weight": 20 },
+        { "name": "Bone", "weight": 10 }
+      ]
+    },
+    {
+      "name": "Rings",
+      "distribution": "uniform",
+      "values": [{ "name": "Three" }, { "name": "Four" }, { "name": "Five" }, { "name": "Six" }, { "name": "Seven" }]
+    },
+    {
+      "name": "Core",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Dim", "weight": 50 },
+        { "name": "Steady", "weight": 35 },
+        { "name": "Bright", "weight": 15 }
+      ]
+    }
+  ]
+}

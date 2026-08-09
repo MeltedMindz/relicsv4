@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: MIT
+// `relics export` — assemble, validate, and only then write the `.relics` file.
+//
+// The order matters and is not configurable: a bundle is written only after the SAME bytes have
+// passed the SAME validator the importer will run. There is no `--force`, because a bundle that
+// fails validation is a bundle the launchpad will refuse anyway, and writing one would only move
+// the failure somewhere less useful.
+
+import { writeFileSync, mkdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { BUNDLE_EXTENSION } from "../schema.js";
+import { validateProject, printValidation } from "./validate.js";
+import { bold, cyan, dim, green, red, heading } from "../report.js";
+
+/**
+ * @param {string} root
+ * @param {{ output?: string, seeds?: number, inProcess?: boolean }} options
+ */
+export function exportProject(root, options = {}) {
+  const { assembled, ...result } = validateProject(root, options);
+  const code = printValidation(result, "export");
+  if (code !== 0) {
+    console.log("");
+    console.log(red("  no bundle was written — export refuses to package a project that fails validation"));
+    return 1;
+  }
+
+  const target = resolve(options.output ?? `${assembled.manifest.project.symbol.toLowerCase()}${BUNDLE_EXTENSION}`);
+  if (!target.endsWith(BUNDLE_EXTENSION)) {
+    console.log(red(`  --output must end in ${BUNDLE_EXTENSION}`));
+    return 1;
+  }
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, Buffer.from(assembled.bytes));
+
+  heading("bundle");
+  console.log(`  ${bold(target)}`);
+  console.log(`  ${dim("size")}         ${assembled.bytes.length.toLocaleString()} bytes`);
+  console.log(`  ${dim("entries")}      ${assembled.entries.size}`);
+  console.log(`  ${dim("bundle hash")}  ${cyan(assembled.manifest.integrity.bundleHash)}`);
+  console.log("");
+  console.log(green("  import this file in the launchpad creator app; it derives the same hashes."));
+  return 0;
+}

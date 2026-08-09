@@ -132,7 +132,9 @@ export function stripComments(source) {
 export function analyzeGeneratorSource(path, source, options = {}) {
   /** @type {import("./issues.js").Issue[]} */
   const issues = [];
-  const code = stripComments(source);
+  // The W3C SVG/xlink namespace declarations are XML identifiers, not fetches; every SVG carries
+  // one, so they are removed before the external-URL scan. Nothing else is exempt.
+  const code = stripComments(source).replace(/http:\/\/www\.w3\.org\/(2000\/svg|1999\/xlink)/g, "w3-namespace");
 
   for (const [identifier, reason] of Object.entries(FORBIDDEN_IDENTIFIERS)) {
     const re = new RegExp(`(^|[^A-Za-z0-9_$.])${escapeRe(identifier)}\\b`, "g");
