@@ -75,8 +75,14 @@ collaborator ledger.
 
 ## What "buyback and burn" actually means here
 
-The buyback executor spends tracked platform WETH to buy $RELICS on the one canonical RELICS/WETH
-Uniswap v4 pool and sends **100% of the acquired $RELICS to the entombment address**
+The economic kernel routes the 6.25% slice to a buyback reserve recipient fixed at deployment. The
+buy-and-entomb executor that spends it is a **separately deployable part of the operational layer**
+— it is not wired by any committed deploy script, and like everything else on this page it is not
+deployed on any chain. What follows is what that component does by design, not a description of
+activity that has happened.
+
+The executor spends tracked platform WETH to buy $RELICS on the one canonical RELICS/WETH Uniswap
+v4 pool and sends **100% of the acquired $RELICS to the entombment address**
 `0x000000000000000000000000000000000000dEaD`, in the same transaction. The tokens never sit with
 the executor, a treasury, or the caller.
 
