@@ -1,0 +1,131 @@
+# 04 — Constraints that actually bite
+
+> Not deployed on any chain yet. Internal review only — no external audit.
+> See [08 — Status and limitations](08-status.md).
+
+Every platform has limits. These are the ones that will change what you make, ranked by how often
+they stop people.
+
+## 1. The script byte budget — 36,000 bytes
+
+This is the constraint you will hit first and think about most.
+
+| Limit | Bytes | What it is |
+| --- | --- | --- |
+| `MAX_PROJECT_SCRIPT_BYTES` | **36,000** | The conservative public product limit, with over 1M gas of headroom |
+| `SCRIPT_BYTE_CEILING` | 40,000 | The hard cap whose full launch still fits under the engineering gas ceiling |
+| Enforced value | the factory's `scriptByteLimit` immutable | Reverts `ScriptTooLarge(length, limit)` |
+
+The reason is not storage cost — it is that **a launch is one transaction**. Storing your script,
+deploying four contracts, opening the pool, and minting liquidity all happen in a single call that
+must fit under the chain's per-transaction gas cap, with the project's engineering ceiling set at
+14,000,000 gas. Measured on an Ethereum fork, an otherwise identical launch costs roughly 4.0M gas
+with no script, 7.5M at 16,000 bytes, 11.9M at 36,000 bytes, and 12.8M at 40,000 bytes.
+
+**Only Ethereum's ceiling has been measured.** Base and Robinhood Chain carry an explicit
+"not yet measured" marker rather than borrowing Ethereum's number, and the tooling returns an error
+instead of guessing. Do not assume an L2 is more generous.
+
+Practical consequences for how you write:
+
+- Minify before you count. The limit applies to the exact bytes you submit.
+- Prefer procedural geometry over embedded data. A base64 blob inside your script is the fastest
+  way to burn the budget.
+- No external libraries. There is no import mechanism and no CDN; anything you use must be in your
+  bytes.
+- Ship the still image first. Elaborate animation logic competes for the same 36,000 bytes as the
+  composition a collector actually looks at.
+
+## 2. EIP-170 — 24,576 bytes of contract code
+
+Two places this shows up:
+
+- **Chunking.** Your script is stored across SSTORE2 data contracts at 24,575 bytes each. It is
+  transparent to you, but it is why the reconstruction path is "concatenate ordered chunks and
+  verify the hash" rather than "read one blob".
+- **If you write Solidity.** Any renderer contract is subject to the same 24,576-byte runtime
+  limit that constrains every contract on the EVM. The starter template in this repo has a whole
+  page on living inside it: [`docs/16 — Renderer size budget`](../16-renderer-size-budget.md).
+
+## 3. Determinism — enforced by physics, not by tooling
+
+Covered in [03 — Art runtimes](03-art-runtimes.md), and repeated here because it belongs on this
+list: **nothing validates your script's determinism.** No linter, no static analysis, no banned-API
+list. A script that samples wall-clock time will launch successfully and then be wrong forever.
+
+The seed you must use is `keccak256(abi.encode(dna, organicSwapCount, organicNetFlow, scriptHash))`
+and nothing else may enter your randomness.
+
+## 4. Silhouette legibility — the constraint nobody enforces and everybody feels
+
+Your work will be seen, more often than not, as a small square in a grid: a marketplace tile, a
+wallet thumbnail, a social unfurl, a phone. The studio previews four of those sizes for a reason.
+
+- **Read at 64×64 first.** If the piece is unrecognizable at thumbnail size, it does not exist for
+  most viewers. Silhouette beats detail.
+- **Compose one dominant form.** Fine texture and hairline strokes disappear at small sizes and in
+  compression.
+- **Contrast survives; hue does not.** Two colors of similar luminance become one gray square.
+- **Market-driven variation must stay legible at its extremes.** Preview your mapping at zero swaps
+  and at heavy volume, not just in the middle. If your piece is beautiful at 200 swaps and mud at
+  5,000, you have shipped a bug you cannot patch.
+- **Design for the quiet state.** Most collections spend most of their life at low volume. A piece
+  that only looks good after a bull run mostly looks unfinished.
+
+Your cover, banner and featured assets are generated deterministically from your project config at
+a labeled neutral genesis state, so a project can never launch blank — but a cover is a cover, not
+a substitute for a piece that reads small.
+
+## 5. Immutability — everything below is permanent at launch
+
+| Fixed forever | Notes |
+| --- | --- |
+| Chain | Chosen before the studio opens; not migratable |
+| Art bytes and `artScriptHash` | Committed in the launch transaction |
+| Art mode | `SOLIDITY_SVG` or `JAVASCRIPT` |
+| `marketStateConfig` hash | The mapping graph you configured |
+| Total supply, decimals (18), backing units | No mint or burn path afterwards |
+| Pool fee (1%), tick spacing (60) | Structurally static |
+| Collaborator splits | Frozen in the splitter at construction |
+| Fee split (75/25) and its subdivision | Compile-time constants, no setters |
+
+There is no proxy, no admin key, and no migration path for a launched project. Everything you can
+still change afterwards is metadata: your payout recipient, and your profile links through the
+metadata registry.
+
+## 6. Media rules for collection assets
+
+These apply to your cover, banner and featured images, not to token art.
+
+- **Accepted uploads:** PNG, JPEG, WebP, SVG. **GIF is rejected.** Animated PNG and animated WebP
+  are rejected.
+- **Output is always PNG.** Whatever you upload is normalized and re-encoded; JPEG, WebP and raw
+  SVG are never the pinned asset.
+- **Size limits:** 15 MB per raster input server-side (the studio is stricter at 8 MB), 2 MB for
+  SVG, 40 megapixels, 20,000 px per side, 12 MB per output.
+- **SVG is rejected on suspicion, not cleaned.** Scripts, event handlers, external references,
+  embedded HTML, entity tricks and remote `url()` references all cause a rejection rather than a
+  silent sanitize. A clean SVG is still only rasterized — the raw file is never pinned.
+- **Type is sniffed, never trusted.** Declared MIME types and file extensions are ignored in favor
+  of parsing the real header, and files carrying a second embedded format are rejected outright.
+- **Fit is honest.** The square asset is cropped to fill; banner and featured are padded to fit.
+  Nothing is stretched out of proportion.
+- **Verification is round-trip.** After pinning, the asset is fetched back by its CID, re-hashed
+  and re-measured. A mismatch blocks the launch. A CID is never displayed before it exists.
+
+## 7. Numeric limits worth having on one page
+
+| Limit | Value |
+| --- | --- |
+| Script bytes | 36,000 (public) / 40,000 (hard ceiling) |
+| SSTORE2 chunk | 24,575 bytes |
+| `marketStateConfig` | 2,048 bytes |
+| Market mappings in the studio vocabulary | 8 |
+| Collaborators | 16 on chain |
+| Collaborator bps | Sum ≤ 10,000, of the creator's 75% only |
+| `awaken` / `redeemMany` batch | 32 |
+| Pool fee | 10,000 pips (1.00%) |
+| Tick spacing | 60 |
+| Token decimals | 18, fixed |
+| Engineering gas ceiling | 14,000,000 |
+| Creator token allocation cap | 0 |
