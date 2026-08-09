@@ -24,10 +24,29 @@ Three things under one roof:
    production collection. Every contract here is an original, genericized `Example*`
    implementation.
 3. **`flagship/`** — the operator-authorized production source of the live RELICS v4 hook.
+4. **The creator kit** (`packages/project-schema/`, `packages/creator-cli/`, `docs/creator-kit/`)
+   — the local half of the launchpad creator flow. `@relics/project-schema` is the ONE
+   definition of the `.relics` project bundle: container, schema, validator, hashes and the
+   studio-draft projection, in zero-dependency ESM with no build step. The `relics` CLI
+   (`npm run kit -- …`) scaffolds, previews, validates and exports a bundle; the launchpad web
+   importer consumes the same package so both sides derive identical hashes.
+
+   **Never fork the schema.** If a field, a limit or a vocabulary entry changes, change it in
+   `packages/project-schema/` and nowhere else — a schema that is closed on one side and open on
+   the other is not closed. A bundle configures art, traits, metadata, declarative sensor
+   mappings, earnings, supply and artwork backing; it may **never** carry hook Solidity,
+   bytecode, an address to call, or anything that could replace ArtHook, the economic or
+   liquidity kernels, ProjectToken, ProjectCollection, the sale escrow, the router or the
+   buyback. Custom hooks go through a separate reviewed process.
+
+   Gates: `npm run kit:test`, `npm run kit:templates`, `npm run kit:fixtures` (regenerating the
+   fixtures must produce no diff). Hostile and parity fixtures live in
+   `packages/project-schema/fixtures/`.
 
 The template and the launchpad are **separate systems that share no code**. Do not describe
 template behavior as launchpad behavior or vice versa, and do not let one guide's numbers
-(fee tiers, splits, byte budgets) leak into the other.
+(fee tiers, splits, byte budgets) leak into the other. The creator kit belongs to the launchpad
+side: it produces launchpad project bundles, never template deployments.
 
 ### Launchpad-doc accuracy rules — never relax these
 
@@ -90,6 +109,9 @@ apps/web/                    Next.js App Router, wagmi + viem, EIP-6963, no Wall
 test/                        unit / fuzz / invariant / fork (self-skipping) / deployment
 docs/                        00 (make it your own) … 18 (FAQ) + PNG-export guide
 docs/launchpad/              RELICS Launchpad creator guide (docs only; separate system)
+docs/creator-kit/            bundle format, CLI, security model, importer contract
+packages/project-schema/     @relics/project-schema — the ONE .relics definition + fixtures
+packages/creator-cli/        the `relics` CLI and its starter templates
 ```
 
 Deps: Foundry (`forge`), Node ≥ 20 (npm workspaces; web lives in `apps/web`).

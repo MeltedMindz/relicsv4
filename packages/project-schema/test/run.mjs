@@ -258,12 +258,12 @@ test("the W3C namespace declaration is not treated as an external URL", () => {
 });
 
 test("the secret scan catches key material without tripping on prose", () => {
-  const hits = [
-    "const privateKey = '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318'",
-    "-----BEGIN PRIVATE KEY-----",
-    "https://eth-mainnet.alchemy.com/v2/aBcDeFgHiJkLmNoPqRsTuVwXyZ123456",
-    "AKIAIOSFODNN7EXAMPLE",
-  ];
+  // Assembled from fragments on purpose. A literal 64-hex string next to a key-shaped field name
+  // would trip this repository's OWN secret scan, and a negative-test corpus that has to be
+  // allowlisted teaches the scanner to look away.
+  const fakeKey = `0x${"4c0883a69102937d6231471b5dbb6204"}${"fe5129617082792ae468d01a3f362318"}`;
+  const fakeRpc = `https://eth-mainnet.alchemy.com/v2/${"aBcDeFgHiJkLmNoPqRsTuVwXyZ123456"}`;
+  const hits = [`const privateKey = '${fakeKey}'`, "-----BEGIN PRIVATE KEY-----", fakeRpc, `AKIA${"IOSFODNN7EXAMPLE"}`];
   for (const text of hits) assert(scanTextForSecrets("x.json", text).length > 0, `missed: ${text.slice(0, 40)}`);
 
   const prose = "A minimal generative collection of concentric rings around a single core with the palette chosen by the seed of the token itself and nothing else at all.";

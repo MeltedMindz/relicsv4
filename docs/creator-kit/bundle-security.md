@@ -124,10 +124,17 @@ anything tries to display it.
 
 ## Layer 6 — secrets
 
-Every text entry is scanned for populated private keys, BIP-39-shaped mnemonics in a quoted
-string, keystore documents, PEM private-key blocks, RPC URLs with embedded credentials, AWS/
-GitHub/Slack/Stripe tokens, JWTs, pinning-service credentials, generic API-key assignments and
-URLs with inline credentials. A hit is an error: nothing secret travels in a bundle.
+Every text entry is scanned for:
+
+- a populated private key, in a field or bare
+- a mnemonic phrase, BIP-39 shaped, inside a quoted string
+- a keystore document or a PEM private-key block
+- an RPC URL with an embedded credential
+- cloud and messaging platform tokens, and JWTs
+- pinning-service credentials and generic credential assignments
+- a URL with inline credentials
+
+A hit is an error: nothing secret travels in a bundle.
 
 The patterns are chosen to have essentially no innocent explanation inside a bundle. The mnemonic
 pattern in particular is anchored on both quotes, so a quoted string that is nothing but twelve
