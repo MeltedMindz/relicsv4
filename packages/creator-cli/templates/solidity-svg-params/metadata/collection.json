@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Solidity SVG Params",
+  "symbol": "SSVG",
+  "description": "A parameter-driven collection rendered by a registered on-chain Solidity template. The bundle carries the parameter values, never contract code.",
+  "tokenNamePattern": "Form #{id}"
+}

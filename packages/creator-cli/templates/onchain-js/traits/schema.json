@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Band",
+      "distribution": "uniform",
+      "values": [
+        {
+          "name": "I"
+        },
+        {
+          "name": "II"
+        },
+        {
+          "name": "III"
+        },
+        {
+          "name": "IV"
+        },
+        {
+          "name": "V"
+        },
+        {
+          "name": "VI"
+        }
+      ]
+    },
+    {
+      "name": "Field",
+      "distribution": "weighted",
+      "values": [
+        {
+          "name": "Quiet",
+          "weight": 45
+        },
+        {
+          "name": "Charged",
+          "weight": 35
+        },
+        {
+          "name": "Broken",
+          "weight": 20
+        }
+      ]
+    }
+  ]
+}

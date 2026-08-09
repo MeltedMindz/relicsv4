@@ -225,6 +225,24 @@ export function validateBundle(byPath, options = {}) {
     collect("SCRIPT_BYTE_LIMIT", [error("ART_SCRIPT_BYTES_MISMATCH", "relics.project.json#art.scriptBytes", `manifest declares ${manifest.art.scriptBytes} bytes; generator/generate.js is ${scriptBytes} bytes`)]);
   }
 
+  // ---- 3b. shipped SVGs --------------------------------------------------------------------
+  // An SVG in assets/ or previews/ is displayed by the importer and by marketplaces, so it gets
+  // the same document-level inspection a render output does. An image file is still a document.
+  for (const path of byPath.keys()) {
+    if (!path.endsWith(".svg")) continue;
+    let text;
+    try {
+      text = fromUtf8(byPath.get(path));
+    } catch {
+      collect("BLANK_OUTPUTS", [error("SVG_NOT_UTF8", path, "an SVG entry is not valid UTF-8")]);
+      continue;
+    }
+    collect(
+      "BLANK_OUTPUTS",
+      inspectRenderOutput(path, text).filter((issue) => issue.code !== "RENDER_SPARSE"),
+    );
+  }
+
   // ---- 4. secret scan ------------------------------------------------------------------------
   for (const [path, bytes] of byPath) {
     if (!isTextPath(path)) continue;

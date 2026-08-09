@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "name": "Static Art",
+  "symbol": "STAT",
+  "description": "A fixed generative composition. Each token is decided entirely by its seed and never changes: no market sensors, no evolution, no later state.",
+  "tokenNamePattern": "Static #{id}",
+  "image": "assets/cover.svg"
+}

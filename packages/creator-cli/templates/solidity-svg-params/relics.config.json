@@ -1,0 +1,32 @@
+{
+  "project": {
+    "name": "Solidity SVG Params",
+    "symbol": "SSVG",
+    "description": "A parameter-driven collection rendered by a registered on-chain Solidity template. The bundle carries the parameter values, never contract code.",
+    "license": "CC0-1.0"
+  },
+  "supply": {
+    "totalSupplyWhole": "10000",
+    "artworkSupply": "1000",
+    "backingModel": "FULL_PARITY"
+  },
+  "art": {
+    "runtime": "SOLIDITY_SVG",
+    "templateId": "1",
+    "seed": "1"
+  },
+  "market": {
+    "startingPreset": "MID",
+    "launchMode": "INSTANT_V4"
+  },
+  "earnings": {
+    "mode": "SOLO",
+    "creatorRecipient": "0x1111111111111111111111111111111111111111",
+    "collaborators": []
+  },
+  "chains": {
+    "requested": [
+      8453
+    ]
+  }
+}

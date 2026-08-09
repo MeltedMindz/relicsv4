@@ -1,0 +1,45 @@
+{
+  "project": {
+    "name": "Market Responsive",
+    "symbol": "MKTR",
+    "description": "A generative lattice whose condition is set by its own market: drawdown fractures the grid, volume thickens it, price sets the light, and recovery leaves permanent scars.",
+    "license": "CC0-1.0"
+  },
+  "supply": {
+    "totalSupplyWhole": "100000",
+    "artworkSupply": "2000",
+    "backingModel": "PARTIAL",
+    "tokensPerArtwork": "50"
+  },
+  "art": {
+    "runtime": "JAVASCRIPT",
+    "templateId": null,
+    "seed": "1"
+  },
+  "market": {
+    "startingPreset": "MID",
+    "launchMode": "INSTANT_V4"
+  },
+  "earnings": {
+    "mode": "SPLIT",
+    "creatorRecipient": "0x1111111111111111111111111111111111111111",
+    "collaborators": [
+      {
+        "recipient": "0x2222222222222222222222222222222222222222",
+        "bps": 1500
+      }
+    ]
+  },
+  "chains": {
+    "requested": [
+      8453,
+      1
+    ]
+  },
+  "media": {
+    "cover": {
+      "path": "assets/cover.svg",
+      "sha256": "d93c7b0ca903633608710fe41510e117ad1f8099efa5cda31dbce504b871bf22"
+    }
+  }
+}

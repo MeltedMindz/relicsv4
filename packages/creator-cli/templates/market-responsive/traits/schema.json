@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Palette",
+      "distribution": "weighted",
+      "values": [
+        {
+          "name": "Ash",
+          "weight": 30
+        },
+        {
+          "name": "Rust",
+          "weight": 25
+        },
+        {
+          "name": "Verdigris",
+          "weight": 20
+        },
+        {
+          "name": "Ultramarine",
+          "weight": 15
+        },
+        {
+          "name": "Bone",
+          "weight": 10
+        }
+      ]
+    },
+    {
+      "name": "Lattice",
+      "distribution": "uniform",
+      "values": [
+        {
+          "name": "Tight"
+        },
+        {
+          "name": "Open"
+        },
+        {
+          "name": "Sparse"
+        },
+        {
+          "name": "Dense"
+        }
+      ]
+    },
+    {
+      "name": "Temperament",
+      "distribution": "weighted",
+      "values": [
+        {
+          "name": "Placid",
+          "weight": 45
+        },
+        {
+          "name": "Restless",
+          "weight": 35
+        },
+        {
+          "name": "Violent",
+          "weight": 20
+        }
+      ]
+    },
+    {
+      "name": "Core",
+      "distribution": "uniform",
+      "values": [
+        {
+          "name": "Point"
+        },
+        {
+          "name": "Halo"
+        },
+        {
+          "name": "Void"
+        }
+      ]
+    }
+  ]
+}

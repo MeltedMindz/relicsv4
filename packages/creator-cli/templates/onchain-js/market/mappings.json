@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "mappings": [
+    {
+      "id": "volatility-distortion",
+      "sensor": "volatility",
+      "transform": "tier",
+      "transformParams": {
+        "steps": 5
+      },
+      "destination": "distortion"
+    },
+    {
+      "id": "holders-palette",
+      "sensor": "holder_growth",
+      "transform": "tier",
+      "transformParams": {
+        "steps": 6
+      },
+      "destination": "palette"
+    }
+  ]
+}

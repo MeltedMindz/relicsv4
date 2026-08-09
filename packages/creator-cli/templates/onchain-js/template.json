@@ -1,0 +1,5 @@
+{
+  "title": "On-chain JavaScript",
+  "summary": "A compact generator written to live on-chain, with the script-byte budget in view the whole time.",
+  "runtime": "JAVASCRIPT"
+}

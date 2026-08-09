@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "On Chain JS",
+  "symbol": "OCJS",
+  "description": "A compact on-chain generator. The whole script is stored with the project and re-run on every read, so every byte of it is part of the artwork's permanence.",
+  "tokenNamePattern": "OCJS #{id}"
+}

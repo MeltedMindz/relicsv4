@@ -1,0 +1,5 @@
+{
+  "title": "Solidity-SVG parameters",
+  "summary": "Configure a registered on-chain Solidity renderer by parameters; ships a local preview of the same shapes.",
+  "runtime": "SOLIDITY_SVG"
+}

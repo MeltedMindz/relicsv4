@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "name": "Market Responsive",
+  "symbol": "MKTR",
+  "description": "A generative lattice whose condition is set by its own market: drawdown fractures the grid, volume thickens it, price sets the light, and recovery leaves permanent scars.",
+  "tokenNamePattern": "Lattice #{id}",
+  "image": "assets/cover.svg"
+}

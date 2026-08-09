@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "templateId": "1",
+  "parameters": {
+    "strokeWeight": 2,
+    "ringCount": 5,
+    "silhouette": "monolith",
+    "paletteIndex": 0,
+    "symmetry": 4,
+    "margin": 0.12
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "mappings": [
+    {
+      "id": "drawdown-fracture",
+      "sensor": "drawdown",
+      "transform": "clamp",
+      "transformParams": { "min": 0, "max": 0.85 },
+      "destination": "fracture"
+    },
+    {
+      "id": "volume-density",
+      "sensor": "volume",
+      "transform": "range",
+      "transformParams": { "inMin": -0.2, "inMax": 0.9 },
+      "destination": "density"
+    },
+    {
+      "id": "price-brightness",
+      "sensor": "tick",
+      "transform": "smoothing",
+      "transformParams": { "window": 12 },
+      "destination": "brightness"
+    },
+    {
+      "id": "recovery-scar",
+      "sensor": "recovery",
+      "transform": "accumulation",
+      "transformParams": { "cap": 0.8 },
+      "destination": "scar"
+    }
+  ]
+}

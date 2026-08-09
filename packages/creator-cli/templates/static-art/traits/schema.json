@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Ground",
+      "distribution": "weighted",
+      "values": [
+        {
+          "name": "Slate",
+          "weight": 35
+        },
+        {
+          "name": "Umber",
+          "weight": 30
+        },
+        {
+          "name": "Pitch",
+          "weight": 25
+        },
+        {
+          "name": "Chalk",
+          "weight": 10
+        }
+      ]
+    },
+    {
+      "name": "Structure",
+      "distribution": "uniform",
+      "values": [
+        {
+          "name": "Column"
+        },
+        {
+          "name": "Arch"
+        },
+        {
+          "name": "Terrace"
+        },
+        {
+          "name": "Shard"
+        },
+        {
+          "name": "Basin"
+        },
+        {
+          "name": "Spire"
+        }
+      ]
+    },
+    {
+      "name": "Weather",
+      "distribution": "weighted",
+      "values": [
+        {
+          "name": "Clear",
+          "weight": 50
+        },
+        {
+          "name": "Haze",
+          "weight": 30
+        },
+        {
+          "name": "Storm",
+          "weight": 20
+        }
+      ]
+    },
+    {
+      "name": "Age",
+      "distribution": "weighted",
+      "values": [
+        {
+          "name": "New",
+          "weight": 40
+        },
+        {
+          "name": "Worn",
+          "weight": 35
+        },
+        {
+          "name": "Ancient",
+          "weight": 25
+        }
+      ]
+    }
+  ]
+}
