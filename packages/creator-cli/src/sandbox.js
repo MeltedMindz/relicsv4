@@ -83,14 +83,19 @@ export const STRIPPED_GLOBALS = Object.freeze([
 ]);
 
 const PRELUDE = `
+  // Capture the global object FIRST. "globalThis" is itself on the strip list, and deleting it
+  // mid-loop would make every later \`globalThis[...]\` throw — silently leaving the rest of the
+  // ambient capabilities in place. That failure mode is invisible without a probe, so the local
+  // reference is load-bearing, not a style choice.
+  const __g = globalThis;
   for (const __name of ${JSON.stringify(STRIPPED_GLOBALS)}) {
-    try { delete globalThis[__name]; } catch (__ignored) { /* non-configurable globals stay, shadowed by the strip below */ }
+    try { delete __g[__name]; } catch (__ignored) { /* non-configurable globals stay */ }
   }
-  Math.random = function random() {
+  __g.Math.random = function random() {
     throw new Error("Math.random() is not available inside a generator; use context.random, which is seeded");
   };
-  Object.freeze(Math);
-  Object.freeze(JSON);
+  Object.freeze(__g.Math);
+  Object.freeze(__g.JSON);
 
   ${PRNG_SOURCE}
 
@@ -125,7 +130,12 @@ ${stripped}
     const value = __out.render(__buildContext(json));
     return typeof value === "string" ? value : "[[relics:nonstring:" + typeof value + "]]";
   };
-  return __out;
+  // Published on the realm's global rather than returned to the host. Every render is then
+  // started BY a vm Script, which is the only way the timeout applies: a realm function called
+  // directly from the host runs on the host's stack, where vm cannot interrupt it.
+  __relicsModule = __out;
+  __relicsHasRender = typeof __out.render === "function";
+  __relicsManifestJson = __out.manifestJson;
 })();`;
 }
 
@@ -152,35 +162,39 @@ export function createVmModule(sources, entry = "generator/generate.js", options
   if (typeof source !== "string") throw new Error(`${entry} is not in the bundle`);
   const timeout = options.timeoutMs ?? LIMITS.renderTimeoutMs;
 
-  const context = createContext(Object.create(null), { codeGeneration: { strings: false, wasm: false } });
-  let exported;
+  const sandbox = Object.create(null);
+  const context = createContext(sandbox, { codeGeneration: { strings: false, wasm: false } });
   try {
-    exported = new Script(toRunnableScript(source), { filename: entry }).runInContext(context, { timeout });
+    new Script(toRunnableScript(source), { filename: entry }).runInContext(context, { timeout });
   } catch (err) {
     throw new Error(`${entry} failed to load: ${err instanceof Error ? err.message : String(err)}`);
   }
-  if (!exported || typeof exported.render !== "function") {
-    throw new Error(`${entry} does not export a callable render(context)`);
-  }
+
+  const hasRender = new Script("__relicsHasRender === true", { filename: "<probe>" }).runInContext(context, { timeout });
+  if (hasRender !== true) throw new Error(`${entry} does not export a callable render(context)`);
 
   let parsedManifest = null;
   try {
-    parsedManifest = JSON.parse(exported.manifestJson);
+    parsedManifest = JSON.parse(new Script("String(__relicsManifestJson)", { filename: "<probe>" }).runInContext(context, { timeout }));
   } catch {
     parsedManifest = null;
   }
 
+  // One compiled call site, re-run per render. The payload is a primitive string assigned onto
+  // the realm's global, so nothing structured crosses the boundary in either direction.
+  const invoke = new Script("__relicsModule.invoke(__relicsPayload)", { filename: "<render>" });
+
   return {
     manifest: parsedManifest,
     render(renderContext) {
-      const payload = JSON.stringify({
+      sandbox.__relicsPayload = JSON.stringify({
         seed: String(renderContext.seed),
         market: renderContext.market ?? {},
         sensors: renderContext.sensors ?? {},
         size: renderContext.size ?? 1000,
         project: renderContext.project ?? {},
       });
-      return decodeOutput(exported.invoke(payload));
+      return decodeOutput(invoke.runInContext(context, { timeout }));
     },
   };
 }

@@ -1,0 +1,412 @@
+{
+  "fixtures": [
+    {
+      "attack": "path traversal",
+      "expect": {
+        "errorContains": "traversal segment"
+      },
+      "file": "path-traversal.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12637
+    },
+    {
+      "attack": "absolute entry path",
+      "expect": {
+        "errorContains": "absolute entry path"
+      },
+      "file": "absolute-path.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12621
+    },
+    {
+      "attack": "windows separator smuggling a traversal",
+      "expect": {
+        "errorContains": "backslash"
+      },
+      "file": "backslash-path.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12636
+    },
+    {
+      "attack": "symbolic link entry",
+      "expect": {
+        "errorContains": "symbolic link"
+      },
+      "file": "symlink-entry.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12630
+    },
+    {
+      "attack": "two entries that collide on a case-insensitive filesystem",
+      "expect": {
+        "errorContains": "duplicate entry path"
+      },
+      "file": "duplicate-normalized-path.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12615
+    },
+    {
+      "attack": "zero-width character hiding a second generator",
+      "expect": {
+        "errorContains": "control, zero-width or bidirectional"
+      },
+      "file": "unicode-confusable-path.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12673
+    },
+    {
+      "attack": "zip bomb: a deflate entry claiming a 4 GB expansion",
+      "expect": {
+        "errorContains": "STORE-only"
+      },
+      "file": "compressed-entry.relics",
+      "note": "The container is uncompressed by construction, so an expansion ratio above 1:1 cannot be expressed at all. The reader refuses the entry before allocating anything.",
+      "refusedBy": "container",
+      "sizeBytes": 12683
+    },
+    {
+      "attack": "central directory declaring far more data than the file holds",
+      "expect": {
+        "errorContains": "overlaps the central directory"
+      },
+      "file": "lying-size-header.relics",
+      "refusedBy": "container",
+      "sizeBytes": 161
+    },
+    {
+      "attack": "encrypted entry",
+      "expect": {
+        "errorContains": "encrypted"
+      },
+      "file": "encrypted-entry.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12632
+    },
+    {
+      "attack": "streaming data descriptor (sizes not known up front)",
+      "expect": {
+        "errorContains": "data descriptor"
+      },
+      "file": "data-descriptor.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12631
+    },
+    {
+      "attack": "ZIP64 layout",
+      "expect": {
+        "errorContains": "ZIP64"
+      },
+      "file": "zip64.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12533
+    },
+    {
+      "attack": "payload appended after the end-of-central-directory record",
+      "expect": {
+        "errorContains": "trailing bytes"
+      },
+      "file": "trailing-bytes.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12529
+    },
+    {
+      "attack": "two central-directory records pointing at the same local data",
+      "expect": {
+        "errorContainsAny": [
+          "disagrees with its central-directory record",
+          "overlaps another entry",
+          "bad local header"
+        ]
+      },
+      "file": "overlapping-entries.relics",
+      "refusedBy": "container",
+      "sizeBytes": 12513
+    },
+    {
+      "attack": "entry-count exhaustion",
+      "expect": {
+        "errorContains": "entries"
+      },
+      "file": "too-many-entries.relics",
+      "refusedBy": "container",
+      "sizeBytes": 66535
+    },
+    {
+      "attack": "an ordinary ZIP renamed to .relics",
+      "expect": {
+        "errorContains": "is not a relics-project-bundle"
+      },
+      "file": "not-a-bundle.relics",
+      "refusedBy": "container",
+      "sizeBytes": 128
+    },
+    {
+      "attack": "a bundle carrying hook Solidity and a manifest field pointing at it",
+      "expect": {
+        "checkFails": "NO_ARBITRARY_HOOK",
+        "codes": [
+          "BUNDLE_CONTRACT_CODE",
+          "MANIFEST_REFUSED_KEY"
+        ]
+      },
+      "file": "arbitrary-hook-solidity.relics",
+      "note": "Two independent refusals: .sol is on the forbidden-extension list, and `hook` is on the refused-manifest-key list. The manifest schema is closed, so there is no field in which a hook could be named even without the file.",
+      "refusedBy": "validator",
+      "sizeBytes": 12833
+    },
+    {
+      "attack": "a manifest trying to replace ProjectToken, the liquidity kernel and the buyback",
+      "expect": {
+        "checkFails": "NO_ARBITRARY_HOOK",
+        "codes": [
+          "MANIFEST_REFUSED_KEY"
+        ]
+      },
+      "file": "protocol-override.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12709
+    },
+    {
+      "attack": "__proto__ and constructor keys in bundle JSON",
+      "expect": {
+        "checkFails": "HASH_INTEGRITY",
+        "pollutionKeysDropped": true
+      },
+      "file": "prototype-pollution.relics",
+      "note": "safeJsonParse drops __proto__/constructor/prototype and returns null-prototype objects, so the keys never reach Object.prototype. The bundle then fails on its checksums because the document no longer matches its declared digest.",
+      "refusedBy": "parser",
+      "sizeBytes": 11959
+    },
+    {
+      "attack": "truncated manifest JSON",
+      "expect": {
+        "checkFails": "MANIFEST_SCHEMA",
+        "codes": [
+          "JSON_MALFORMED"
+        ]
+      },
+      "file": "malformed-json.relics",
+      "refusedBy": "parser",
+      "sizeBytes": 10704
+    },
+    {
+      "attack": "an unapproved art runtime",
+      "expect": {
+        "checkFails": "ALLOWED_RUNTIME",
+        "codes": [
+          "ART_RUNTIME_UNAPPROVED"
+        ]
+      },
+      "file": "unapproved-runtime.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12505
+    },
+    {
+      "attack": "a generator that fetches a remote palette",
+      "expect": {
+        "checkFails": "NO_EXTERNAL_NETWORK",
+        "codes": [
+          "GEN_FORBIDDEN_IDENTIFIER",
+          "GEN_EXTERNAL_URL"
+        ]
+      },
+      "file": "external-network.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 10333
+    },
+    {
+      "attack": "a generator importing an npm package",
+      "expect": {
+        "checkFails": "ALLOWED_DEPENDENCIES",
+        "codes": [
+          "GEN_DEPENDENCY_REFUSED"
+        ]
+      },
+      "file": "dependency-import.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 10281
+    },
+    {
+      "attack": "prototype-chain escape from the render context",
+      "expect": {
+        "checkFails": "RUNTIME_ERRORS",
+        "codes": [
+          "GEN_PROTOTYPE_ACCESS"
+        ]
+      },
+      "file": "sandbox-escape.relics",
+      "note": "Refused statically. It would also fail at runtime: the render context is built INSIDE the sandbox realm from a JSON string, so its constructor chain leads to the realm's own Function, and code generation from strings is disabled in that realm.",
+      "refusedBy": "validator",
+      "sizeBytes": 10292
+    },
+    {
+      "attack": "a private key smuggled inside metadata",
+      "expect": {
+        "checkFails": "SECRET_SCAN",
+        "codes": [
+          "SECRET_DETECTED"
+        ]
+      },
+      "file": "secret-exfiltration.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12640
+    },
+    {
+      "attack": "a scripted SVG asset",
+      "expect": {
+        "checkFails": "BLANK_OUTPUTS",
+        "codes": [
+          "SVG_SCRIPT"
+        ]
+      },
+      "file": "malicious-svg-asset.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12855
+    },
+    {
+      "attack": "a generator that draws nothing",
+      "expect": {
+        "checkFails": "BLANK_OUTPUTS",
+        "codes": [
+          "RENDER_BLANK"
+        ]
+      },
+      "file": "blank-output.relics",
+      "refusedBy": "validator",
+      "requiresExecution": true,
+      "sizeBytes": 10093
+    },
+    {
+      "attack": "hidden module state, so the same seed renders differently each time",
+      "expect": {
+        "checkFails": "DETERMINISTIC_OUTPUT",
+        "codes": [
+          "GEN_NONDETERMINISTIC"
+        ]
+      },
+      "file": "nondeterministic.relics",
+      "note": "Math.random is unavailable in the sandbox, so a determinism attack has to use module state instead. Rendering each seed twice catches it.",
+      "refusedBy": "validator",
+      "requiresExecution": true,
+      "sizeBytes": 10304
+    },
+    {
+      "attack": "an unbounded loop written to dodge the `while (true)` pattern",
+      "expect": {
+        "checkFails": "RUNTIME_ERRORS",
+        "codes": [
+          "SANDBOX_FAILED",
+          "GEN_RENDER_THREW"
+        ]
+      },
+      "file": "infinite-loop.relics",
+      "note": "The static scan only catches the literal `while (true)` / `for (;;)` shapes. This one is caught by the sandbox timeout, which is why the timeout exists.",
+      "refusedBy": "sandbox",
+      "requiresExecution": true,
+      "sizeBytes": 10283
+    },
+    {
+      "attack": "unbounded allocation",
+      "expect": {
+        "checkFails": "RUNTIME_ERRORS",
+        "codes": [
+          "SANDBOX_FAILED",
+          "GEN_RENDER_THREW"
+        ]
+      },
+      "file": "memory-bomb.relics",
+      "note": "The isolated backend runs with a hard heap cap, so the child process dies and the host reports a refusal instead of being taken down with it.",
+      "refusedBy": "sandbox",
+      "requiresExecution": true,
+      "sizeBytes": 10337
+    },
+    {
+      "attack": "an output large enough to freeze a browser tab",
+      "expect": {
+        "checkFails": "BLANK_OUTPUTS",
+        "codes": [
+          "RENDER_TOO_LARGE"
+        ]
+      },
+      "file": "oversized-output.relics",
+      "refusedBy": "validator",
+      "requiresExecution": true,
+      "sizeBytes": 10320
+    },
+    {
+      "attack": "generator source edited after the bundle was signed off",
+      "expect": {
+        "checkFails": "HASH_INTEGRITY",
+        "codes": [
+          "CHECKSUMS_MISMATCH",
+          "HASH_MISMATCH",
+          "INTEGRITY_MISMATCH"
+        ]
+      },
+      "file": "hash-tamper.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12513
+    },
+    {
+      "attack": "a mapping with unbounded transform parameters",
+      "expect": {
+        "checkFails": "MARKET_MAPPING_BOUNDS",
+        "codes": [
+          "MARKET_PARAM_BOUNDS"
+        ]
+      },
+      "file": "market-mapping-out-of-bounds.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12717
+    },
+    {
+      "attack": "a chain the launchpad does not target",
+      "expect": {
+        "checkFails": "CHAIN_FEATURES",
+        "codes": [
+          "CHAIN_UNSUPPORTED"
+        ]
+      },
+      "file": "unsupported-chain.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12524
+    },
+    {
+      "attack": "more artworks than there are whole tokens to back them",
+      "expect": {
+        "checkFails": "SUPPLY_AND_BACKING",
+        "codes": [
+          "SUPPLY_BACKING_EXCEEDS_TOTAL"
+        ]
+      },
+      "file": "overbacked-supply.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12514
+    },
+    {
+      "attack": "collaborator shares summing past 100% of the creator portion",
+      "expect": {
+        "checkFails": "EARNINGS_CONFIG",
+        "codes": [
+          "EARNINGS_BPS_SUM"
+        ]
+      },
+      "file": "earnings-over-allocated.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12726
+    },
+    {
+      "attack": "a shell script riding along in assets/",
+      "expect": {
+        "checkFails": "LAYOUT_AND_PATHS",
+        "codes": [
+          "BUNDLE_PATH_POLICY"
+        ]
+      },
+      "file": "executable-payload.relics",
+      "refusedBy": "validator",
+      "sizeBytes": 12673
+    }
+  ],
+  "note": "Generated by packages/project-schema/fixtures/build.mjs. Every bundle here MUST be refused. `refusedBy` says which layer is expected to refuse it: container = readContainer throws; parser = safeJsonParse; validator = validateBundle reports errors; sandbox = the isolated execution backend. Fixtures marked requiresExecution only fail when the host supplies an evaluate capability."
+}

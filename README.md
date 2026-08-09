@@ -6,10 +6,11 @@ evolution.
 
 **The market becomes the art.**
 
-This repository holds two ways in, plus the production reference.
+This repository holds three ways in, plus the production reference.
 
 | | What it is | Start here |
 | --- | --- | --- |
+| 🎨 **The creator kit** | Build your project locally: customize the art, preview it deterministically, configure traits and market mappings, validate, and export one `.relics` bundle you import in the creator app. | **[docs/creator-kit/](docs/creator-kit/)** |
 | 🚀 **Build on the RELICS Launchpad** | A protocol where you supply art and parameters and **one transaction** deploys and wires the whole project — token, collection, hook, pool, liquidity, registry. | **[docs/launchpad/](docs/launchpad/)** |
 | 🔧 **Fork the starter template** | A clean-room, MIT-licensed codebase you customize and deploy **yourself**, with no launchpad, no factory, and no fee split. | **[docs/00 — Make it your own](docs/00-make-it-your-own.md)** |
 | 🏛️ **Flagship reference** | The exact production source of the live RELICS Uniswap v4 hook. | **[flagship/](flagship/)** |

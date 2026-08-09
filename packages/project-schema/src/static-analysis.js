@@ -66,6 +66,12 @@ export const FORBIDDEN_IDENTIFIERS = Object.freeze({
 const FORBIDDEN_PATTERNS = Object.freeze([
   { re: /\bMath\s*\.\s*random\b/g, code: "GEN_NONDETERMINISM", message: "Math.random() is not reproducible — use the `random` helper the runtime provides, which is seeded" },
   { re: /\bnew\s+Function\b/g, code: "GEN_DYNAMIC_CODE", message: "new Function(...) is dynamic code execution" },
+  {
+    re: /\.\s*constructor\b/g,
+    code: "GEN_PROTOTYPE_ACCESS",
+    message: "`.constructor` walks the prototype chain, which is how sandbox escapes start. A generator has no reason to touch it.",
+  },
+  { re: /\[\s*["'](constructor|__proto__|prototype)["']\s*\]/g, code: "GEN_PROTOTYPE_ACCESS", message: "computed access to constructor/__proto__/prototype is refused" },
   { re: /\bimport\s*\(/g, code: "GEN_DYNAMIC_IMPORT", message: "dynamic import() is dependency loading" },
   { re: /\bawait\b/g, code: "GEN_ASYNC", message: "a render is synchronous; `await` cannot appear in a generator" },
   { re: /\basync\s+function\b/g, code: "GEN_ASYNC", message: "a render is synchronous; `async function` cannot appear in a generator" },

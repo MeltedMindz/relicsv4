@@ -1,0 +1,33 @@
+name: creator-kit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# No secrets, no network: the kit has zero dependencies and never contacts a chain.
+permissions:
+  contents: read
+
+jobs:
+  kit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: schema + container + validator + sandbox + fixtures
+        run: npm run kit:test
+
+      - name: every starter template validates and exports
+        run: npm run kit:templates
+
+      - name: fixtures are byte-reproducible
+        # Regenerating must be a no-op. A diff here means a fixture drifted from the code that
+        # produced it, which is exactly the drift the web importer would trip over.
+        run: |
+          npm run kit:fixtures
+          git diff --exit-code -- packages/project-schema/fixtures

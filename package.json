@@ -17,6 +17,10 @@
     "web:typecheck": "npm run typecheck --workspace @relics-v4-starter/web",
     "web:test": "npm run test --workspace @relics-v4-starter/web",
     "web:test:unit": "npm run test:unit --workspace @relics-v4-starter/web",
-    "secrets:scan": "bash scripts/secret-scan.sh"
+    "secrets:scan": "bash scripts/secret-scan.sh",
+    "kit": "node packages/creator-cli/bin/relics.js",
+    "kit:test": "node packages/project-schema/test/run.mjs",
+    "kit:templates": "node scripts/check-templates.mjs",
+    "kit:fixtures": "node packages/project-schema/fixtures/build.mjs"
   }
 }
