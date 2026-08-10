@@ -51,8 +51,23 @@ export const APPROVED_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"
  * THIS LIST IS THE ONE PLACE THAT DECIDES. `relics templates` marks it, `validate` warns on it,
  * and the monorepo's runtime-parity check reads the protocol's own enum and gate and fails if this
  * list claims more than the protocol accepts. Gating a runtime off is a one-line edit here.
+ *
+ * JAVASCRIPT IS GATED OFF IN THIS RELEASE, and the kit says so rather than implying otherwise.
+ * The protocol refuses it in three independent places — `ProjectCollection.bindArt` reverts
+ * `ArtModeNotAvailable` for any mode that is not `SOLIDITY_SVG_V1`, `LaunchpadFactory.wireArt`
+ * reverts unless the mode is `SOLIDITY_SVG_V1`, and `ArtRuntimeRegistry.modeAvailable` is `pure`
+ * and answers true for `SOLIDITY_SVG_V1` alone, so a JavaScript runtime cannot even be REGISTERED.
+ * The reason is stated in that registry: an on-chain JavaScript runtime needs a content-addressed
+ * generator plus its dependencies, an `animation_url` that reconstructs the real project, the SAME
+ * runtime executing in the studio sandbox, and an `image` that is a deterministic representative
+ * render from that same code, config, seed and state. This release proves none of that leg, so the
+ * mode is refused rather than shipped half-built.
+ *
+ * The JavaScript templates STAY. They are valid bundles, they validate, they preview, and they
+ * export — they simply cannot be launched yet, and every surface that shows them marks that. A
+ * template on a gated runtime is MARKED, never deleted and never presented as launchable.
  */
-export const LAUNCHABLE_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"]);
+export const LAUNCHABLE_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG"]);
 
 /** Approved but not currently launchable — preview and authoring work, launching does not. */
 export const PREVIEW_ONLY_ART_RUNTIMES = Object.freeze(APPROVED_ART_RUNTIMES.filter((r) => !LAUNCHABLE_ART_RUNTIMES.includes(r)));
