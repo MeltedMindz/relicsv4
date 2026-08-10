@@ -7091,7 +7091,7 @@
     },
     {
       "path": "packages/project-schema/types.d.ts",
-      "sha256": "9fdc95a0b9ed8dad497f4a976db9d36da1c7a82895b5255822020c47a51c3e58",
+      "sha256": "5bc6698053cd7aef374e48cc22468033ddeac3057c74f6b452c647e9d52362ed",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

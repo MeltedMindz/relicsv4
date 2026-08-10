@@ -399,9 +399,12 @@ export interface RetiredAllocationClaim {
 }
 export const RETIRED_ALLOCATION_CLAIMS: readonly Readonly<RetiredAllocationClaim>[];
 export const SUPERSESSION_MARKERS: readonly string[];
-export const CREATOR_FEE_ASSET_MODES: readonly CreatorFeeAssetMode[];
-export const PLATFORM_SETTLEMENT_STATUSES: readonly PlatformSettlementStatus[];
-export const SETTLED_PLATFORM_STATUSES: readonly PlatformSettlementStatus[];
+export const CREATOR_FEE_ASSET_MODES: readonly [CreatorFeeAssetMode, ...CreatorFeeAssetMode[]];
+/** Declared as a NON-EMPTY TUPLE so a consumer that needs `readonly [string, ...string[]]` — the
+ *  indexer's `onchainEnum`, for one — can pass it straight through without a cast or a second copy
+ *  of the list. The union above is the authority on membership; this only says "at least one". */
+export const PLATFORM_SETTLEMENT_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
+export const SETTLED_PLATFORM_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
 export function isPlatformSettlementStatus(status: string): boolean;
 export function hasSettledPlatformWeth(status: string): boolean;
 export function allocateSettledPlatformWeth(netSettledWeth: bigint): Readonly<{ buybackReserve: bigint; treasuryRetained: bigint }>;
