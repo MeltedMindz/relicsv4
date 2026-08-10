@@ -2,10 +2,13 @@
 // Terminal reporting. Colour is opt-in: it is used only when stdout is a TTY and NO_COLOR is
 // unset, so piping a run into a file or a CI log gives plain text.
 
+import { isRuntimeLaunchable } from "./schema.js";
+
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 
 const ESC = String.fromCharCode(27);
 const paint = (code, text) => (useColor ? ESC + "[" + code + "m" + text + ESC + "[0m" : text);
+
 export const bold = (t) => paint("1", t);
 export const dim = (t) => paint("2", t);
 export const red = (t) => paint("31", t);
@@ -62,7 +65,7 @@ export function printHashes(result) {
 /**
  * The art binding, printed as the values that end up on chain.
  *
- * These are keccak256, `0x`-prefixed, and they are the point of the whole block: `artConfigHash`
+ * These are keccak256 and they are the point of the whole block: `artConfigHash`
  * is what the factory checks `keccak256(artConfig)` against, and the rest is what the collection
  * binds so `tokenURI` renders THIS project's art rather than a built-in placeholder. A creator can
  * copy any line here and compare it against the launch transaction.
@@ -77,7 +80,7 @@ export function printBinding(result) {
   // it takes there. The manifest keeps the bare form so it never trips the secret scanner.
   const at = (digest) => (digest ? `0x${digest}` : null);
   const rows = [
-    ["runtime", `${binding.runtimeId}${binding.runtimeLaunchable ? "" : "  (preview only — not launchable yet)"}`],
+    ["runtime", `${binding.runtimeId}${isRuntimeLaunchable(binding.runtime) ? "" : "  (preview only — not launchable yet)"}`],
     ["runtime id hash", at(binding.runtimeIdHash)],
     ["art config", at(binding.artConfigHash) ?? `null  (${binding.artConfigSource}: the registered template encodes its own config)`],
     ["template params", at(binding.templateParamsHash) ?? "null"],

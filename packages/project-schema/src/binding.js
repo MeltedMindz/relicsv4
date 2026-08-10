@@ -63,7 +63,6 @@ export const ART_BINDING_KEYS = Object.freeze([
   "runtime",
   "runtimeId",
   "runtimeIdHash",
-  "runtimeLaunchable",
   "artMode",
   "templateId",
   "artConfigSource",
@@ -77,6 +76,21 @@ export const ART_BINDING_KEYS = Object.freeze([
   "representativeOutputsHash",
   ...CHAIN_RESOLVED_BINDING_FIELDS,
 ]);
+
+/**
+ * Whether the launchpad currently binds and renders a runtime.
+ *
+ * DELIBERATELY NOT A MANIFEST FIELD. Launchability is a property of the protocol on the day you
+ * ask, not of the bundle — writing it into the manifest would fold a release decision into the
+ * bundle hash, so enabling a runtime would invalidate every bundle exported while it was gated and
+ * a creator's valid file would start failing validation for a reason that has nothing to do with
+ * their project. It is computed wherever it is displayed instead, and a bundle exported today is
+ * byte-identical to the same bundle exported after the gate flips.
+ * @param {string} runtime
+ */
+export function isRuntimeLaunchable(runtime) {
+  return LAUNCHABLE_ART_RUNTIMES.includes(runtime);
+}
 
 /** keccak256 of a JSON document's canonical serialization. @param {unknown} document */
 export function keccakJson(document) {
@@ -144,7 +158,6 @@ export function computeArtBinding(input) {
     runtime,
     runtimeId: ART_RUNTIME_IDS[runtime] ?? null,
     runtimeIdHash: ART_RUNTIME_IDS[runtime] ? keccak256Utf8(ART_RUNTIME_IDS[runtime]) : null,
-    runtimeLaunchable: LAUNCHABLE_ART_RUNTIMES.includes(runtime),
     artMode: ART_RUNTIME_TO_MODE[runtime] ?? null,
     templateId: isJavaScript ? "0" : String(input.templateId ?? "0"),
     artConfigSource,

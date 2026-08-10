@@ -9,16 +9,35 @@ import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { bold, cyan, dim, green, red, yellow, heading } from "../report.js";
+import { ART_RUNTIME_IDS, LAUNCHABLE_ART_RUNTIMES } from "../schema.js";
 
 const TEMPLATES_DIR = fileURLToPath(new URL("../../templates/", import.meta.url));
 
-/** @returns {{ id: string, title: string, summary: string, runtime: string }[]} */
+/**
+ * Every shipped template, with the runtime it targets and whether that runtime can currently be
+ * LAUNCHED.
+ *
+ * Launchability is read from the schema's own list, never from `template.json`. A template file
+ * cannot be allowed to declare itself launchable: that would let a template outlive the protocol
+ * decision it depends on, which is exactly how a creator ends up spending a day on art that cannot
+ * be bound. When a runtime is gated off, its templates stay — they are still authoring work, still
+ * previewable, still correct — and the kit says plainly that launching is not available yet.
+ *
+ * @returns {{ id: string, title: string, summary: string, runtime: string, runtimeId: string, launchable: boolean }[]}
+ */
 export function listTemplates() {
   return readdirSync(TEMPLATES_DIR, { withFileTypes: true })
     .filter((e) => e.isDirectory())
     .map((e) => {
       const meta = JSON.parse(readFileSync(join(TEMPLATES_DIR, e.name, "template.json"), "utf8"));
-      return { id: e.name, title: meta.title, summary: meta.summary, runtime: meta.runtime };
+      return {
+        id: e.name,
+        title: meta.title,
+        summary: meta.summary,
+        runtime: meta.runtime,
+        runtimeId: ART_RUNTIME_IDS[meta.runtime] ?? meta.runtime,
+        launchable: LAUNCHABLE_ART_RUNTIMES.includes(meta.runtime),
+      };
     })
     .sort((a, b) => (a.id < b.id ? -1 : 1));
 }
@@ -27,7 +46,8 @@ export function printTemplates() {
   heading("templates");
   for (const template of listTemplates()) {
     console.log(`  ${bold(template.id.padEnd(22))} ${template.summary}`);
-    console.log(`  ${" ".repeat(22)} ${dim(`runtime ${template.runtime}`)}`);
+    const runtime = `runtime ${template.runtimeId}`;
+    console.log(`  ${" ".repeat(22)} ${template.launchable ? dim(runtime) : `${dim(runtime)} ${yellow("— preview only, not launchable yet")}`}`);
   }
   console.log("");
   console.log(dim("  relics init <directory> --template <id>"));
@@ -79,7 +99,7 @@ export function initProject(target, options = {}) {
 
   heading(`created ${bold(name)} (${symbol})`);
   console.log(`  ${dim("template")}  ${template.title} — ${template.summary}`);
-  console.log(`  ${dim("runtime")}   ${template.runtime}`);
+  console.log(`  ${dim("runtime")}   ${template.runtimeId}${template.launchable ? "" : yellow("  (preview only — the launchpad does not bind this runtime yet)")}`);
   console.log(`  ${dim("path")}      ${cyan(root)}`);
   console.log("");
   console.log("  next:");
@@ -89,6 +109,11 @@ export function initProject(target, options = {}) {
   console.log(`    ${dim("$")} relics export ${target} --output ${symbol.toLowerCase()}.relics`);
   console.log("");
   console.log(yellow("  set earnings.creatorRecipient in relics.config.json before exporting — the placeholder address is not yours."));
+  if (!template.launchable) {
+    console.log("");
+    console.log(yellow(`  ${template.runtime} is an approved runtime that the launchpad does not bind and render yet.`));
+    console.log(dim("  Everything here works — authoring, preview, validate, export. Launching does not, until it is enabled."));
+  }
   return 0;
 }
 

@@ -8,7 +8,7 @@
 
 import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { BUNDLE_EXTENSION } from "../schema.js";
+import { BUNDLE_EXTENSION, isRuntimeLaunchable } from "../schema.js";
 import { validateProject, printValidation } from "./validate.js";
 import { bold, cyan, dim, green, red, yellow, heading } from "../report.js";
 
@@ -41,7 +41,7 @@ export function exportProject(root, options = {}) {
   console.log(`  ${dim("commitment")}   ${cyan(assembled.manifest.integrity.bundleCommitment)}`);
   console.log(`  ${dim("art binding")}  ${cyan(assembled.manifest.artBinding.runtimeId)}`);
   console.log("");
-  if (!assembled.manifest.artBinding.runtimeLaunchable) {
+  if (!isRuntimeLaunchable(assembled.manifest.artBinding.runtime)) {
     console.log(yellow(`  ${assembled.manifest.artBinding.runtime} is not a launchable runtime yet — this bundle is valid and previewable, but the launchpad will not bind it.`));
     console.log("");
   }

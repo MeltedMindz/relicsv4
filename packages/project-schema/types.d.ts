@@ -174,8 +174,6 @@ export interface ArtBinding {
   /** Stable, versioned runtime identifier, e.g. `ONCHAIN_JAVASCRIPT_V1`. */
   runtimeId: string;
   runtimeIdHash: string;
-  /** Whether the launchpad currently binds and renders this runtime. Approved != launchable. */
-  runtimeLaunchable: boolean;
   artMode: 0 | 1;
   templateId: string;
   artConfigSource: ArtConfigSource;
@@ -472,3 +470,9 @@ export function computeArtBinding(input: {
   representativeOutputs?: Record<string, string> | null;
 }): ArtBinding;
 export function diffArtBinding(declared: unknown, derived: unknown): string[];
+/**
+ * Whether the launchpad currently binds and renders a runtime. Never stored in a manifest: it is a
+ * property of the protocol today, and folding it into the bundle hash would invalidate a creator's
+ * file the moment a runtime is enabled.
+ */
+export function isRuntimeLaunchable(runtime: string): boolean;

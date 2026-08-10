@@ -584,9 +584,6 @@ function validateArtBindingBlock(manifest, at) {
   if (!isKeccak256Hex(binding.runtimeIdHash)) {
     issues.push(error("ART_BINDING_RUNTIME_ID_HASH", `${where}.runtimeIdHash`, "artBinding.runtimeIdHash must be the 64-character lowercase keccak256 of runtimeId"));
   }
-  if (typeof binding.runtimeLaunchable !== "boolean") {
-    issues.push(error("ART_BINDING_LAUNCHABLE", `${where}.runtimeLaunchable`, "artBinding.runtimeLaunchable must be a boolean"));
-  }
   if (binding.artMode !== 0 && binding.artMode !== 1) {
     issues.push(error("ART_BINDING_ART_MODE", `${where}.artMode`, "artBinding.artMode must be 0 (SOLIDITY_SVG) or 1 (JAVASCRIPT)"));
   }

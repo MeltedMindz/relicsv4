@@ -63,6 +63,7 @@ export {
   ART_CONFIG_SOURCES,
   CHAIN_RESOLVED_BINDING_FIELDS,
   computeArtBinding,
+  isRuntimeLaunchable,
   computeBundleCommitment,
   representativeOutputsCommitment,
   diffArtBinding,

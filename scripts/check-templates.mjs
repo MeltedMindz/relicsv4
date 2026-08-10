@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
+import { APPROVED_ART_RUNTIMES, LAUNCHABLE_ART_RUNTIMES, ART_RUNTIME_IDS } from "../packages/project-schema/index.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CLI = join(ROOT, "packages/creator-cli/bin/relics.js");
@@ -24,6 +25,18 @@ const ids = readdirSync(TEMPLATES, { withFileTypes: true })
   .sort();
 
 let failed = 0;
+
+// A template on an UNAPPROVED runtime is a hard failure: the format would refuse the bundle, so
+// shipping one means shipping a starter that cannot be exported. A template on an approved but
+// not-yet-launchable runtime is fine and is reported as such — never silently presented as
+// launchable, and never deleted for a release-schedule reason.
+for (const id of ids) {
+  const meta = JSON.parse(readFileSync(join(TEMPLATES, id, "template.json"), "utf8"));
+  if (!APPROVED_ART_RUNTIMES.includes(meta.runtime)) {
+    failed++;
+    console.log(`  FAIL  ${id.padEnd(22)} targets "${meta.runtime}", which is not an approved art runtime`);
+  }
+}
 
 for (const id of ids) {
   const dir = mkdtempSync(join(tmpdir(), `relics-${id}-`));
@@ -48,8 +61,14 @@ for (const id of ids) {
     const report = JSON.parse(inspected);
     if (!report.ok) throw new Error(`the exported bundle does not inspect cleanly: ${report.issues.map((i) => i.code).join(", ")}`);
 
+    const binding = report.manifest?.artBinding ?? null;
+    if (!binding) throw new Error("the exported bundle carries no art binding");
+    if (binding.runtimeCodeHash !== null || binding.scriptPointer !== null) throw new Error("a template exported a bundle asserting a chain fact");
+
     const hash = output.match(/bundle hash\s+([0-9a-f]{64})/)?.[1] ?? "?";
-    console.log(`  PASS  ${id.padEnd(22)} ${report.entries.length} entries · ${hash.slice(0, 16)}…`);
+    const launchable = LAUNCHABLE_ART_RUNTIMES.includes(binding.runtime);
+    const note = launchable ? "" : "  · PREVIEW ONLY (runtime not launchable)";
+    console.log(`  PASS  ${id.padEnd(22)} ${report.entries.length} entries · ${binding.runtimeId} · ${hash.slice(0, 16)}…${note}`);
   } catch (err) {
     failed++;
     console.log(`  FAIL  ${id}`);
@@ -68,5 +87,10 @@ for (const id of ids) {
 }
 
 console.log("");
+const gated = ids.filter((id) => !LAUNCHABLE_ART_RUNTIMES.includes(JSON.parse(readFileSync(join(TEMPLATES, id, "template.json"), "utf8")).runtime));
 console.log(failed === 0 ? `  ${ids.length} templates export cleanly` : `  ${failed} of ${ids.length} templates failed`);
+if (gated.length > 0) {
+  console.log(`  ${gated.length} on a runtime the launchpad does not bind yet: ${gated.join(", ")} — marked, not launchable`);
+}
+console.log(`  runtime ids: ${Object.entries(ART_RUNTIME_IDS).map(([k, v]) => `${k}=${v}`).join(", ")}`);
 process.exitCode = failed === 0 ? 0 : 1;

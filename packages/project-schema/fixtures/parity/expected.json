@@ -21,7 +21,6 @@
         "runtimeCodeHash": null,
         "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
         "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-        "runtimeLaunchable": true,
         "schemaVersion": "2.0.0",
         "scriptPointer": null,
         "templateId": "0",
@@ -90,7 +89,7 @@
           "sha256": "42dfe9fdea8b016bf53d267de0f3b83c13076e81651a50d84f54dea3ca238f99"
         },
         {
-          "bytes": 2922,
+          "bytes": 2891,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -113,10 +112,10 @@
         "traitSchema": "add2ef67cd47a2f438eae5d04339455ba734a3ec4755a37de1d4d0846bd1ef45"
       },
       "integrity": {
-        "bundleCommitment": "4895a8a72e1146ef0ffb4574e84a407577ac2526bc9316a13cd4794d4a11096b",
-        "bundleHash": "b4f45d946be0d0802fed82e5bd7384a87a261a4ed53526e2112bfc677885aee3",
+        "bundleCommitment": "7ab8dcc920c792a368c85e7dbc0c9efb015f86b5baf616e8b11c0aa5282a471a",
+        "bundleHash": "a7b2a5873065d06e49bab4fea0eb78558c6807269dada776bc48ad13beb0cafc",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "projectConfigHash": "c8ad89bc56b6a441d211d78e978207220c56d6052b61ae0428db49246f421732"
+        "projectConfigHash": "88af7c1e882fb077f0ada69840527a1da1229ac8f444aa03fb884ca180f8f082"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -144,15 +143,14 @@
           "runtimeCodeHash": null,
           "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
           "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-          "runtimeLaunchable": true,
           "schemaVersion": "2.0.0",
           "scriptPointer": null,
           "templateId": "0",
           "templateParamsHash": null,
           "traitSchemaHash": "155c864c2a7e7eaf4bd256b8409c09f293c90a4ea9f86cc0395ef4179838a93b"
         },
-        "bundleCommitment": "4895a8a72e1146ef0ffb4574e84a407577ac2526bc9316a13cd4794d4a11096b",
-        "bundleHash": "b4f45d946be0d0802fed82e5bd7384a87a261a4ed53526e2112bfc677885aee3",
+        "bundleCommitment": "7ab8dcc920c792a368c85e7dbc0c9efb015f86b5baf616e8b11c0aa5282a471a",
+        "bundleHash": "a7b2a5873065d06e49bab4fea0eb78558c6807269dada776bc48ad13beb0cafc",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
         "creatorKitVersion": "2.0.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
@@ -167,7 +165,7 @@
         "marketMappingHash": "9c02cbc1e8445352c3939efcc2da84d00f531ba153d81029d10bb287a52a1bcf",
         "mediaHashes": {},
         "metadataHash": "c1a712bbeceec116ecdfba3935c073824427bcfe40c55f578b3ad68febdcbf15",
-        "projectConfigHash": "c8ad89bc56b6a441d211d78e978207220c56d6052b61ae0428db49246f421732",
+        "projectConfigHash": "88af7c1e882fb077f0ada69840527a1da1229ac8f444aa03fb884ca180f8f082",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -219,7 +217,7 @@
           "sha256": "2d9ddc03941a5b9af45c74b6903a6f591fc2bb553533b4bf78d53b4f0ed52ca5"
         }
       },
-      "sizeBytes": 13689,
+      "sizeBytes": 13658,
       "studioDraft": {
         "art": {
           "artTemplateId": "",
@@ -299,7 +297,6 @@
         "runtimeCodeHash": null,
         "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
         "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-        "runtimeLaunchable": true,
         "schemaVersion": "2.0.0",
         "scriptPointer": null,
         "templateId": "0",
@@ -379,7 +376,7 @@
           "sha256": "4f190e468d3fef7cf70571567e9323522dc3086a632d31805e3207541ac1d002"
         },
         {
-          "bytes": 3403,
+          "bytes": 3372,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -405,10 +402,10 @@
         "traitSchema": "fe862ce63970cc0abfb237bf50fc313fe7d9fb13156e26095783c06469912fca"
       },
       "integrity": {
-        "bundleCommitment": "39385569aedb452ef8a9281c7b0ae9d147ff94a878e530d919591fc34e130298",
-        "bundleHash": "bb204c3c13daa1df421234a951639f79a5aaad7efca40d8a565300570aa9f514",
+        "bundleCommitment": "93c87e06e297146e08e405e0364a46cd014fb83c637a6c4d2919ccb33dbdf70e",
+        "bundleHash": "dd83c9f00afe7a29b02e5e9a3a3a9a0e11f79d8b5a74965e896f0f2b25703496",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "projectConfigHash": "21ef6719468ab2fdb2e4d304b0d5b0615870ec94f29adc25cc31826bbdb6ac44"
+        "projectConfigHash": "14fa791f437dd41905da28d9549ff9bdbbf80e2055ae3e6b0774768db931556d"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -441,15 +438,14 @@
           "runtimeCodeHash": null,
           "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
           "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-          "runtimeLaunchable": true,
           "schemaVersion": "2.0.0",
           "scriptPointer": null,
           "templateId": "0",
           "templateParamsHash": null,
           "traitSchemaHash": "169797cc244f36f5b6303fd1f21c238145545cf86fa5b29b4b96b14a11ce3ba0"
         },
-        "bundleCommitment": "39385569aedb452ef8a9281c7b0ae9d147ff94a878e530d919591fc34e130298",
-        "bundleHash": "bb204c3c13daa1df421234a951639f79a5aaad7efca40d8a565300570aa9f514",
+        "bundleCommitment": "93c87e06e297146e08e405e0364a46cd014fb83c637a6c4d2919ccb33dbdf70e",
+        "bundleHash": "dd83c9f00afe7a29b02e5e9a3a3a9a0e11f79d8b5a74965e896f0f2b25703496",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
         "creatorKitVersion": "2.0.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
@@ -471,7 +467,7 @@
           "assets/cover.svg": "d93c7b0ca903633608710fe41510e117ad1f8099efa5cda31dbce504b871bf22"
         },
         "metadataHash": "93b3f6a3be7976d5ef203af2c94facde53d3068d13bd94354e67c0b4785d46e6",
-        "projectConfigHash": "21ef6719468ab2fdb2e4d304b0d5b0615870ec94f29adc25cc31826bbdb6ac44",
+        "projectConfigHash": "14fa791f437dd41905da28d9549ff9bdbbf80e2055ae3e6b0774768db931556d",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -524,7 +520,7 @@
           "sha256": "7f05ffe9c0ebbe2d3bff89df02b0493156c7f313362b8e9e939acbf81cd6e394"
         }
       },
-      "sizeBytes": 53660,
+      "sizeBytes": 53629,
       "studioDraft": {
         "art": {
           "artTemplateId": "",
@@ -650,7 +646,6 @@
         "runtimeCodeHash": null,
         "runtimeId": "SOLIDITY_SVG_V1",
         "runtimeIdHash": "59cb42c7866bcc760f80ea62070bd424669ce5f87aee62137516feccbaf485f4",
-        "runtimeLaunchable": true,
         "schemaVersion": "2.0.0",
         "scriptPointer": null,
         "templateId": "1",
@@ -724,7 +719,7 @@
           "sha256": "1579163cbcd6e354eb4ea3e6f4aa94a552ff98f08fa8633fd17e6fee34773cf3"
         },
         {
-          "bytes": 3055,
+          "bytes": 3024,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -748,10 +743,10 @@
         "traitSchema": "affff1ec04accd1c83579ad7a6f42e597916b118845d18af06ade7037aaa9d61"
       },
       "integrity": {
-        "bundleCommitment": "800dcebd419f41bc8f9e29cf521a4bac3ab8112c989fcbb458bfa1e3c6f079aa",
-        "bundleHash": "9d784940c4cbe92326306ec06e225de4425872d7577e996d6d71149e5600d761",
+        "bundleCommitment": "b70e7ea4d2cca775187d7669b090f9424905b8c198ef5a4c65497caa91095526",
+        "bundleHash": "ae986c32a7dcdd6dfe9d259eee184bc3d8a588db784f5e25998d95fdfb02291a",
         "contentHash": "f39ed956786d1451c57797a1b7972e7c795f2b4d25fd88e03000bfea687e70e6",
-        "projectConfigHash": "78d8bfa69bc34469fc35a5d5e9c66c55e58117a9a2c8b5193f5d948aabad6aa6"
+        "projectConfigHash": "527ead7b0e950412b41fef9a0b3c54a50e911bfdb1a45afa8be5eb979c6c295f"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -779,15 +774,14 @@
           "runtimeCodeHash": null,
           "runtimeId": "SOLIDITY_SVG_V1",
           "runtimeIdHash": "59cb42c7866bcc760f80ea62070bd424669ce5f87aee62137516feccbaf485f4",
-          "runtimeLaunchable": true,
           "schemaVersion": "2.0.0",
           "scriptPointer": null,
           "templateId": "1",
           "templateParamsHash": "98184730683d0ea2e429abd7fe307de0ce86f0677c72c066ee009848c6c5a084",
           "traitSchemaHash": "fb3b5b4f594afeb91227189f8f6456eb9a7acc82ea85185b6aafd0b6dde5b2ab"
         },
-        "bundleCommitment": "800dcebd419f41bc8f9e29cf521a4bac3ab8112c989fcbb458bfa1e3c6f079aa",
-        "bundleHash": "9d784940c4cbe92326306ec06e225de4425872d7577e996d6d71149e5600d761",
+        "bundleCommitment": "b70e7ea4d2cca775187d7669b090f9424905b8c198ef5a4c65497caa91095526",
+        "bundleHash": "ae986c32a7dcdd6dfe9d259eee184bc3d8a588db784f5e25998d95fdfb02291a",
         "contentHash": "f39ed956786d1451c57797a1b7972e7c795f2b4d25fd88e03000bfea687e70e6",
         "creatorKitVersion": "2.0.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
@@ -802,7 +796,7 @@
         "marketMappingHash": "618b5d0b385b02455000ace3fac407d478483bd8563d113ea6a9a552054ed645",
         "mediaHashes": {},
         "metadataHash": "a54cbeef868d0c80eacefcf25af0d600705da907adaaf63490e2a3593c547a14",
-        "projectConfigHash": "78d8bfa69bc34469fc35a5d5e9c66c55e58117a9a2c8b5193f5d948aabad6aa6",
+        "projectConfigHash": "527ead7b0e950412b41fef9a0b3c54a50e911bfdb1a45afa8be5eb979c6c295f",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -865,7 +859,7 @@
           "sha256": "c62a35b00ca2029535a8c2fc9dcd9b95ed530e7c7a53e28d95face2987c6f359"
         }
       },
-      "sizeBytes": 19835,
+      "sizeBytes": 19804,
       "studioDraft": {
         "art": {
           "artTemplateId": "1",
