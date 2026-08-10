@@ -93,6 +93,7 @@ entirely.
 | requested chains | 1, 8453 or 4663; no duplicates |
 | secret scan | key material, credentialed RPC URLs, tokens, keystores, mnemonics |
 | hash integrity | every declared hash recomputed from the bytes |
+| art binding matches the bundle | the runtime, art config, generator, trait, mapping and metadata hashes recomputed from the container; the output commitment checked against a real render; no chain fact asserted |
 | generator runs without errors | the generator loads and renders |
 | no blank or unsafe outputs | drawable content, size bounds, and SVG document safety |
 | deterministic output | each seed rendered twice must produce identical bytes |
