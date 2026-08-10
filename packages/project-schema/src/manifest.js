@@ -31,7 +31,8 @@ import {
 } from "./vocabulary.js";
 import { isSchemaCompatible, SCHEMA_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, parseSemver, explainIncompatibility } from "./version.js";
 import { isSha256Hex } from "./hashes.js";
-import { ART_BINDING_KEYS, ART_CONFIG_SOURCES, CHAIN_RESOLVED_BINDING_FIELDS } from "./binding.js";
+import { ART_BINDING_KEYS, ART_CONFIG_SOURCES, ART_CONFIG_FORMATS, ART_RUNTIME_TO_CONFIG_FORMAT, CHAIN_RESOLVED_BINDING_FIELDS } from "./binding.js";
+import { isArtConfigV1, validateArtConfigV1, hashArtConfigV1 } from "./art-config-v1.js";
 import { isKeccak256Hex } from "./keccak256.js";
 
 /** Top-level manifest keys. Anything else is refused. */
@@ -597,29 +598,91 @@ function validateArtBindingBlock(manifest, at) {
     issues.push(error("ART_BINDING_CONFIG_BYTES", `${where}.artConfigBytes`, "artBinding.artConfigBytes must be a non-negative integer"));
   }
 
+  // THE ART CONFIGURATION ITSELF. Required for BOTH runtimes: `artConfigHash` is keccak256 over
+  // the exact bytes the runtime is handed, and it is the value `LaunchpadFactory._storeArt` checks
+  // `keccak256(artConfig)` against. Schema 2 allowed it to be null for a Solidity project because
+  // no published parameter layout existed; ACV1 is that layout, so a null here now means a bundle
+  // that cannot say what its own launch would render.
+  if (!isKeccak256Hex(binding.artConfigHash)) {
+    issues.push(
+      error(
+        "ART_BINDING_CONFIG_HASH",
+        `${where}.artConfigHash`,
+        "artBinding.artConfigHash must be keccak256 of the exact art configuration bytes — the value the launch checks keccak256(artConfig) against",
+      ),
+    );
+  }
+  if (!ART_CONFIG_FORMATS.includes(binding.artConfigFormat)) {
+    issues.push(error("ART_BINDING_CONFIG_FORMAT", `${where}.artConfigFormat`, `artBinding.artConfigFormat must be one of ${ART_CONFIG_FORMATS.join(", ")}`));
+  }
+  if (binding.artConfigFormat !== ART_RUNTIME_TO_CONFIG_FORMAT[binding.runtime]) {
+    issues.push(
+      error(
+        "ART_BINDING_CONFIG_FORMAT",
+        `${where}.artConfigFormat`,
+        `the ${binding.runtime} runtime is handed ${ART_RUNTIME_TO_CONFIG_FORMAT[binding.runtime]} bytes; a binding cannot pair a runtime with another runtime's config format`,
+      ),
+    );
+  }
+  if (!Number.isInteger(binding.artConfigBytes) || binding.artConfigBytes <= 0) {
+    issues.push(error("ART_BINDING_CONFIG_BYTES", `${where}.artConfigBytes`, "artBinding.artConfigBytes must be a positive integer — a launch with no configuration bytes is the defect this field exists to make visible"));
+  }
+  if (typeof binding.artRuntimeVersion !== "number" || !Number.isInteger(binding.artRuntimeVersion) || binding.artRuntimeVersion < 1) {
+    issues.push(error("ART_BINDING_RUNTIME_VERSION", `${where}.artRuntimeVersion`, "artBinding.artRuntimeVersion must be the positive integer version the runtime reports about itself"));
+  }
+
   if (binding.artConfigSource === "GENERATOR_SCRIPT") {
-    // The generator IS the config: these bytes are what the launch hashes and stores.
-    if (!isKeccak256Hex(binding.artConfigHash)) {
-      issues.push(error("ART_BINDING_CONFIG_HASH", `${where}.artConfigHash`, "a GENERATOR_SCRIPT binding must carry keccak256 of the generator entry file"));
+    // The generator IS the config: those bytes are what the launch hashes and stores, and they are
+    // already an entry, so the manifest does not restate them.
+    if (binding.artConfig !== null) {
+      issues.push(error("ART_BINDING_CONFIG", `${where}.artConfig`, "artConfig must be null for a GENERATOR_SCRIPT binding: the bytes are generator/generate.js and restating them would let a manifest disagree with its own entry"));
     }
     if (binding.templateParamsHash !== null) {
       issues.push(error("ART_BINDING_TEMPLATE_PARAMS", `${where}.templateParamsHash`, "templateParamsHash must be null when the config source is the generator script"));
     }
-  } else if (binding.artConfigSource === "TEMPLATE_PARAMS") {
-    // The encoding belongs to the registered template's published parameter layout, which no
-    // bundle can invent — so the bundle commits to the PARAMETERS and states no config hash at
-    // all rather than guessing one the importer would then have to contradict.
-    if (binding.artConfigHash !== null) {
-      issues.push(
-        error(
-          "ART_BINDING_CONFIG_HASH",
-          `${where}.artConfigHash`,
-          "artConfigHash must be null for a TEMPLATE_PARAMS binding: only the registered template's published parameter layout can encode its config bytes, and a bundle does not own that encoding",
-        ),
-      );
+    for (const key of ["artConfigVisualHash", "artConfigTraitSchemaHash"]) {
+      if (binding[key] !== null) {
+        issues.push(error("ART_BINDING_ACV1_COMMITMENT", `${where}.${key}`, `${key} is derived from a decoded ACV1 configuration; a JavaScript generator declares no such program and must leave it null`));
+      }
+    }
+  } else if (binding.artConfigSource === "ART_CONFIG_V1") {
+    // The bundle CARRIES the configuration, not merely a digest of it, so an importer can decode
+    // and show a creator exactly what will be launched without re-deriving it from anything.
+    const config = binding.artConfig;
+    if (typeof config !== "string" || !/^[0-9a-f]+$/.test(config) || config.length % 2 !== 0) {
+      issues.push(error("ART_BINDING_CONFIG", `${where}.artConfig`, "an ART_CONFIG_V1 binding must carry the configuration as bare lowercase hex"));
+    } else {
+      const bytes = Uint8Array.from(config.match(/../g).map((b) => parseInt(b, 16)));
+      if (bytes.length !== binding.artConfigBytes) {
+        issues.push(error("ART_BINDING_CONFIG_BYTES", `${where}.artConfigBytes`, "artConfigBytes must be the length of artConfig"));
+      }
+      if (!isArtConfigV1(bytes)) {
+        issues.push(error("ART_BINDING_CONFIG_FORMAT", `${where}.artConfig`, "artConfig does not carry the ACV1 magic and version"));
+      } else {
+        const verdict = validateArtConfigV1(bytes);
+        if (!verdict.ok) {
+          issues.push(
+            error(
+              "ART_BINDING_CONFIG_INVALID",
+              `${where}.artConfig`,
+              `the art configuration would be refused on chain: ${verdict.name} (${verdict.code}) — ${verdict.reason}. The launch validates it inside the atomic transaction, so this bundle could not launch.`,
+            ),
+          );
+        }
+      }
+      // THE HASH MUST COVER THE BYTES AS TRANSMITTED, appendix included. Recomputed here rather
+      // than trusted, because this is the single value the chain checks.
+      if (isKeccak256Hex(binding.artConfigHash) && hashArtConfigV1(bytes) !== binding.artConfigHash) {
+        issues.push(error("ART_BINDING_CONFIG_HASH", `${where}.artConfigHash`, "artConfigHash is not keccak256 of artConfig — the launch would revert BadArtHash"));
+      }
     }
     if (!isKeccak256Hex(binding.templateParamsHash)) {
-      issues.push(error("ART_BINDING_TEMPLATE_PARAMS", `${where}.templateParamsHash`, "a TEMPLATE_PARAMS binding must carry keccak256 of the canonical template parameters"));
+      issues.push(error("ART_BINDING_TEMPLATE_PARAMS", `${where}.templateParamsHash`, "an ART_CONFIG_V1 binding must carry keccak256 of the creator's authoring document"));
+    }
+    for (const key of ["artConfigVisualHash", "artConfigTraitSchemaHash"]) {
+      if (!isKeccak256Hex(binding[key])) {
+        issues.push(error("ART_BINDING_ACV1_COMMITMENT", `${where}.${key}`, `artBinding.${key} must be the keccak256 the runtime derives from the decoded configuration`));
+      }
     }
   }
 

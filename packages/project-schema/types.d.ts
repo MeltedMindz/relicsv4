@@ -3,6 +3,11 @@
 // files run unbuilt in Node, in a browser worker and inside a bundler; these declarations give a
 // TypeScript consumer (the launchpad web importer) full typing without a compile step.
 
+// The ACV1 creator art configuration. Declared in its own file because ACV1 is a PROTOCOL byte
+// format with its own version axis (ArtConfigV1.sol), not a bundle-format concern — re-exported
+// here so a consumer importing the package root sees one complete type surface.
+export * from "./art-config.js";
+
 export type Severity = "error" | "warning";
 export interface Issue {
   severity: Severity;

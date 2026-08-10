@@ -9,10 +9,15 @@
         "templateId": null
       },
       "artBinding": {
+        "artConfig": null,
         "artConfigBytes": 2501,
+        "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "3fd279d0d0647ac5ec0cddaed5c0a387571351139a857c45a44a22210b188d56",
         "artConfigSource": "GENERATOR_SCRIPT",
+        "artConfigTraitSchemaHash": null,
+        "artConfigVisualHash": null,
         "artMode": 1,
+        "artRuntimeVersion": 1,
         "generatorHash": "a103d58f96d6cff97066c3f9ba115be081790aa9900edfd9b870a603487c0468",
         "marketMappingHash": "9fd4fee95b6161d57655705f44a9ed8c6a8d8e20a2b1dab5cc02ea8af0c81ee5",
         "metadataHash": "e3894cec970085e1d9cb34230f6fd6c6ff3c2a223e994767ae79d4999bd6e1be",
@@ -21,7 +26,7 @@
         "runtimeCodeHash": null,
         "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
         "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-        "schemaVersion": "2.0.0",
+        "schemaVersion": "3.0.0",
         "scriptPointer": null,
         "templateId": "0",
         "templateParamsHash": null,
@@ -89,7 +94,7 @@
           "sha256": "42dfe9fdea8b016bf53d267de0f3b83c13076e81651a50d84f54dea3ca238f99"
         },
         {
-          "bytes": 2891,
+          "bytes": 3052,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -112,10 +117,10 @@
         "traitSchema": "add2ef67cd47a2f438eae5d04339455ba734a3ec4755a37de1d4d0846bd1ef45"
       },
       "integrity": {
-        "bundleCommitment": "7ab8dcc920c792a368c85e7dbc0c9efb015f86b5baf616e8b11c0aa5282a471a",
-        "bundleHash": "a7b2a5873065d06e49bab4fea0eb78558c6807269dada776bc48ad13beb0cafc",
+        "bundleCommitment": "c8dd54c662b7ec1ed00b4d3390ccfd7ca4c2ae218a81742a606bba3276ddecf8",
+        "bundleHash": "21cbdc4a550dfb80ac43ab3af6244ca1dbf47819c331453db8dc1fe035273629",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "projectConfigHash": "88af7c1e882fb077f0ada69840527a1da1229ac8f444aa03fb884ca180f8f082"
+        "projectConfigHash": "51175549ae32cdd2160bba58e0912b96dc5722912b70b91f2bd7498a618e198c"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -131,10 +136,15 @@
       },
       "provenance": {
         "artBinding": {
+          "artConfig": null,
           "artConfigBytes": 2501,
+          "artConfigFormat": "JS_SOURCE_V1",
           "artConfigHash": "3fd279d0d0647ac5ec0cddaed5c0a387571351139a857c45a44a22210b188d56",
           "artConfigSource": "GENERATOR_SCRIPT",
+          "artConfigTraitSchemaHash": null,
+          "artConfigVisualHash": null,
           "artMode": 1,
+          "artRuntimeVersion": 1,
           "generatorHash": "a103d58f96d6cff97066c3f9ba115be081790aa9900edfd9b870a603487c0468",
           "marketMappingHash": "9fd4fee95b6161d57655705f44a9ed8c6a8d8e20a2b1dab5cc02ea8af0c81ee5",
           "metadataHash": "e3894cec970085e1d9cb34230f6fd6c6ff3c2a223e994767ae79d4999bd6e1be",
@@ -143,16 +153,16 @@
           "runtimeCodeHash": null,
           "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
           "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-          "schemaVersion": "2.0.0",
+          "schemaVersion": "3.0.0",
           "scriptPointer": null,
           "templateId": "0",
           "templateParamsHash": null,
           "traitSchemaHash": "155c864c2a7e7eaf4bd256b8409c09f293c90a4ea9f86cc0395ef4179838a93b"
         },
-        "bundleCommitment": "7ab8dcc920c792a368c85e7dbc0c9efb015f86b5baf616e8b11c0aa5282a471a",
-        "bundleHash": "a7b2a5873065d06e49bab4fea0eb78558c6807269dada776bc48ad13beb0cafc",
+        "bundleCommitment": "c8dd54c662b7ec1ed00b4d3390ccfd7ca4c2ae218a81742a606bba3276ddecf8",
+        "bundleHash": "21cbdc4a550dfb80ac43ab3af6244ca1dbf47819c331453db8dc1fe035273629",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "creatorKitVersion": "2.0.0",
+        "creatorKitVersion": "3.0.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -165,7 +175,7 @@
         "marketMappingHash": "9c02cbc1e8445352c3939efcc2da84d00f531ba153d81029d10bb287a52a1bcf",
         "mediaHashes": {},
         "metadataHash": "c1a712bbeceec116ecdfba3935c073824427bcfe40c55f578b3ad68febdcbf15",
-        "projectConfigHash": "88af7c1e882fb077f0ada69840527a1da1229ac8f444aa03fb884ca180f8f082",
+        "projectConfigHash": "51175549ae32cdd2160bba58e0912b96dc5722912b70b91f2bd7498a618e198c",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -177,7 +187,7 @@
           8453
         ],
         "runtimeVersion": "relics-art-runtime/1",
-        "schemaVersion": "2.0.0",
+        "schemaVersion": "3.0.0",
         "scriptHash": "030b4efc69051c6bd2bc9576dce3e51d4fbd2689f73d8880c101bfac31c65c3a",
         "source": "relics-bundle",
         "templateParams": null,
@@ -217,7 +227,7 @@
           "sha256": "2d9ddc03941a5b9af45c74b6903a6f591fc2bb553533b4bf78d53b4f0ed52ca5"
         }
       },
-      "sizeBytes": 13658,
+      "sizeBytes": 13819,
       "studioDraft": {
         "art": {
           "artTemplateId": "",
@@ -285,10 +295,15 @@
         "templateId": null
       },
       "artBinding": {
+        "artConfig": null,
         "artConfigBytes": 4412,
+        "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "ff8491d996770cbe1fc291c15e09f372874a81ee862bd93906daec74abbf5da5",
         "artConfigSource": "GENERATOR_SCRIPT",
+        "artConfigTraitSchemaHash": null,
+        "artConfigVisualHash": null,
         "artMode": 1,
+        "artRuntimeVersion": 1,
         "generatorHash": "261b1a17ec5abd3563271813186323bac7fac300a498214f36da4b8b32ff4677",
         "marketMappingHash": "a338fc41a53c397d07dc075ccf43541a15bcf909d028b0aeeb1a1c3b24616c6b",
         "metadataHash": "5e498f1c9ee9760726d174ddce5feb7dc4792d8a1517cb32edbaf603ed54a08d",
@@ -297,7 +312,7 @@
         "runtimeCodeHash": null,
         "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
         "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-        "schemaVersion": "2.0.0",
+        "schemaVersion": "3.0.0",
         "scriptPointer": null,
         "templateId": "0",
         "templateParamsHash": null,
@@ -376,7 +391,7 @@
           "sha256": "4f190e468d3fef7cf70571567e9323522dc3086a632d31805e3207541ac1d002"
         },
         {
-          "bytes": 3372,
+          "bytes": 3533,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -402,10 +417,10 @@
         "traitSchema": "fe862ce63970cc0abfb237bf50fc313fe7d9fb13156e26095783c06469912fca"
       },
       "integrity": {
-        "bundleCommitment": "93c87e06e297146e08e405e0364a46cd014fb83c637a6c4d2919ccb33dbdf70e",
-        "bundleHash": "dd83c9f00afe7a29b02e5e9a3a3a9a0e11f79d8b5a74965e896f0f2b25703496",
+        "bundleCommitment": "57e729e303948c1c53be14099c054e94649ec12dcad3e7b76f7f86490e226654",
+        "bundleHash": "0c45a84f0f50808b40143e258fb6aa1ca4eff52478ce2bf78ab569d8051e3e91",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "projectConfigHash": "14fa791f437dd41905da28d9549ff9bdbbf80e2055ae3e6b0774768db931556d"
+        "projectConfigHash": "4a58e50346e18c3d0848c73ec815210b46654b4dfa469e98bb6394087985ee83"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -426,10 +441,15 @@
       },
       "provenance": {
         "artBinding": {
+          "artConfig": null,
           "artConfigBytes": 4412,
+          "artConfigFormat": "JS_SOURCE_V1",
           "artConfigHash": "ff8491d996770cbe1fc291c15e09f372874a81ee862bd93906daec74abbf5da5",
           "artConfigSource": "GENERATOR_SCRIPT",
+          "artConfigTraitSchemaHash": null,
+          "artConfigVisualHash": null,
           "artMode": 1,
+          "artRuntimeVersion": 1,
           "generatorHash": "261b1a17ec5abd3563271813186323bac7fac300a498214f36da4b8b32ff4677",
           "marketMappingHash": "a338fc41a53c397d07dc075ccf43541a15bcf909d028b0aeeb1a1c3b24616c6b",
           "metadataHash": "5e498f1c9ee9760726d174ddce5feb7dc4792d8a1517cb32edbaf603ed54a08d",
@@ -438,16 +458,16 @@
           "runtimeCodeHash": null,
           "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
           "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-          "schemaVersion": "2.0.0",
+          "schemaVersion": "3.0.0",
           "scriptPointer": null,
           "templateId": "0",
           "templateParamsHash": null,
           "traitSchemaHash": "169797cc244f36f5b6303fd1f21c238145545cf86fa5b29b4b96b14a11ce3ba0"
         },
-        "bundleCommitment": "93c87e06e297146e08e405e0364a46cd014fb83c637a6c4d2919ccb33dbdf70e",
-        "bundleHash": "dd83c9f00afe7a29b02e5e9a3a3a9a0e11f79d8b5a74965e896f0f2b25703496",
+        "bundleCommitment": "57e729e303948c1c53be14099c054e94649ec12dcad3e7b76f7f86490e226654",
+        "bundleHash": "0c45a84f0f50808b40143e258fb6aa1ca4eff52478ce2bf78ab569d8051e3e91",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "creatorKitVersion": "2.0.0",
+        "creatorKitVersion": "3.0.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [
@@ -467,7 +487,7 @@
           "assets/cover.svg": "d93c7b0ca903633608710fe41510e117ad1f8099efa5cda31dbce504b871bf22"
         },
         "metadataHash": "93b3f6a3be7976d5ef203af2c94facde53d3068d13bd94354e67c0b4785d46e6",
-        "projectConfigHash": "14fa791f437dd41905da28d9549ff9bdbbf80e2055ae3e6b0774768db931556d",
+        "projectConfigHash": "4a58e50346e18c3d0848c73ec815210b46654b4dfa469e98bb6394087985ee83",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -480,7 +500,7 @@
           1
         ],
         "runtimeVersion": "relics-art-runtime/1",
-        "schemaVersion": "2.0.0",
+        "schemaVersion": "3.0.0",
         "scriptHash": "db28f60aaea2c07c25d1c9169f44b670dbe7b1fc6e51df5a62588d368709ba93",
         "source": "relics-bundle",
         "templateParams": null,
@@ -520,7 +540,7 @@
           "sha256": "7f05ffe9c0ebbe2d3bff89df02b0493156c7f313362b8e9e939acbf81cd6e394"
         }
       },
-      "sizeBytes": 53629,
+      "sizeBytes": 53790,
       "studioDraft": {
         "art": {
           "artTemplateId": "",
@@ -629,27 +649,32 @@
       "art": {
         "entry": "generator/generate.js",
         "runtime": "SOLIDITY_SVG",
-        "scriptBytes": 5129,
+        "scriptBytes": 5166,
         "seed": "1",
         "templateId": "1"
       },
       "artBinding": {
-        "artConfigBytes": 0,
-        "artConfigHash": null,
-        "artConfigSource": "TEMPLATE_PARAMS",
+        "artConfig": "41435631010100040a0a0bded9d2c9a227b4532a0301080102031200020201000e0505000301010406566f6c756d6500010844726177646f776e02000553776170730900045665696e0a020f506172616d65746572205374756479ff",
+        "artConfigBytes": 92,
+        "artConfigFormat": "ACV1",
+        "artConfigHash": "c6c38611369c4862f58f9c8a4994091c798643c32d77387a3f1d4ce41d098cff",
+        "artConfigSource": "ART_CONFIG_V1",
+        "artConfigTraitSchemaHash": "f2b3552c71b2efe0b2d1d3848540f427b341d1fc6aaefdeaa4d7a9cda71da5b6",
+        "artConfigVisualHash": "30382374cb37c1b67a6a9fdf87146a4b7546ec3c4dbf03073e6fd06a1bc32a2a",
         "artMode": 0,
-        "generatorHash": "e99273ba90b53a7c8f0556ca0b92b2bee8bfff8255932ca9f35a011c3eb102eb",
+        "artRuntimeVersion": 1,
+        "generatorHash": "8f5fffe13ea1f7b863cf777c4113177734632dad8184e0aed96945c31ff57862",
         "marketMappingHash": "9ea08abdfa59b9bf0e93327d79e3557c4eea1ebb688acaea6512e434d71500a3",
         "metadataHash": "038cb86d2055da7f4a421088ed757dc6aaa1e5eccc1d65afb416058ae2a71b3f",
-        "representativeOutputsHash": "078ebf0ee4ab173736b8838a6b05407c16e04d4dac3183d3a68d8abd53c410e7",
+        "representativeOutputsHash": "9e28e6021fb584f51be4b737e565fceb38c1dccad6351bb221a064453472bc4a",
         "runtime": "SOLIDITY_SVG",
         "runtimeCodeHash": null,
         "runtimeId": "SOLIDITY_SVG_V1",
         "runtimeIdHash": "59cb42c7866bcc760f80ea62070bd424669ce5f87aee62137516feccbaf485f4",
-        "schemaVersion": "2.0.0",
+        "schemaVersion": "3.0.0",
         "scriptPointer": null,
         "templateId": "1",
-        "templateParamsHash": "98184730683d0ea2e429abd7fe307de0ce86f0677c72c066ee009848c6c5a084",
+        "templateParamsHash": "371f09ac854383b96e5418a5f5bd8ea477c7fe55400d50a333c45ac54f4fa6c6",
         "traitSchemaHash": "fb3b5b4f594afeb91227189f8f6456eb9a7acc82ea85185b6aafd0b6dde5b2ab"
       },
       "chains": {
@@ -679,14 +704,14 @@
           "sha256": null
         },
         {
-          "bytes": 5129,
+          "bytes": 5166,
           "path": "generator/generate.js",
-          "sha256": "6e08d736616b7c1a8dea8b7eedde48d03a5cd78f76281f48ee6ef0365b117f60"
+          "sha256": "40754cf332429310ef69988c9ca1856c98c83d057e18c53674f38e18ee2954db"
         },
         {
-          "bytes": 197,
+          "bytes": 810,
           "path": "generator/params.json",
-          "sha256": "3816696a8471d59b0b722b3a443d3a4eaebdb0997751dd29a038ebb03fc535f6"
+          "sha256": "daa6cd6e41aeaffaab4786439864442f7bd33f6dfa19e4dc501e67d5edf33b54"
         },
         {
           "bytes": 426,
@@ -719,7 +744,7 @@
           "sha256": "1579163cbcd6e354eb4ea3e6f4aa94a552ff98f08fa8633fd17e6fee34773cf3"
         },
         {
-          "bytes": 3024,
+          "bytes": 3544,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -733,20 +758,20 @@
       "hashes": {
         "algorithm": "sha256",
         "dependencies": {
-          "generator/generate.js": "6e08d736616b7c1a8dea8b7eedde48d03a5cd78f76281f48ee6ef0365b117f60",
-          "generator/params.json": "3816696a8471d59b0b722b3a443d3a4eaebdb0997751dd29a038ebb03fc535f6"
+          "generator/generate.js": "40754cf332429310ef69988c9ca1856c98c83d057e18c53674f38e18ee2954db",
+          "generator/params.json": "daa6cd6e41aeaffaab4786439864442f7bd33f6dfa19e4dc501e67d5edf33b54"
         },
-        "generator": "ba7dcb960c03a3c7effeec0dc795b6e70a61cc4af9a8174203904d62ee51effa",
+        "generator": "47b5f5074fc16e8db49ef0f1aef93cd7c4e61c3f2ebcc6290b5566c8a0fe2b97",
         "marketMapping": "618b5d0b385b02455000ace3fac407d478483bd8563d113ea6a9a552054ed645",
         "metadata": "a54cbeef868d0c80eacefcf25af0d600705da907adaaf63490e2a3593c547a14",
-        "script": "6e08d736616b7c1a8dea8b7eedde48d03a5cd78f76281f48ee6ef0365b117f60",
+        "script": "40754cf332429310ef69988c9ca1856c98c83d057e18c53674f38e18ee2954db",
         "traitSchema": "affff1ec04accd1c83579ad7a6f42e597916b118845d18af06ade7037aaa9d61"
       },
       "integrity": {
-        "bundleCommitment": "b70e7ea4d2cca775187d7669b090f9424905b8c198ef5a4c65497caa91095526",
-        "bundleHash": "ae986c32a7dcdd6dfe9d259eee184bc3d8a588db784f5e25998d95fdfb02291a",
-        "contentHash": "f39ed956786d1451c57797a1b7972e7c795f2b4d25fd88e03000bfea687e70e6",
-        "projectConfigHash": "527ead7b0e950412b41fef9a0b3c54a50e911bfdb1a45afa8be5eb979c6c295f"
+        "bundleCommitment": "777b01b62bc08fb1cec62d103c1a8410f3ed60ae33affe348321907ba7b37548",
+        "bundleHash": "27e50960d8d4d2905b54658cc056c515ec9be0686b8b3f68cc21a5266c905464",
+        "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
+        "projectConfigHash": "ac214672559b299ac75a3722327dfe8f07a2c8c5f881bd00761b945b03e8ea84"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -762,28 +787,33 @@
       },
       "provenance": {
         "artBinding": {
-          "artConfigBytes": 0,
-          "artConfigHash": null,
-          "artConfigSource": "TEMPLATE_PARAMS",
+          "artConfig": "41435631010100040a0a0bded9d2c9a227b4532a0301080102031200020201000e0505000301010406566f6c756d6500010844726177646f776e02000553776170730900045665696e0a020f506172616d65746572205374756479ff",
+          "artConfigBytes": 92,
+          "artConfigFormat": "ACV1",
+          "artConfigHash": "c6c38611369c4862f58f9c8a4994091c798643c32d77387a3f1d4ce41d098cff",
+          "artConfigSource": "ART_CONFIG_V1",
+          "artConfigTraitSchemaHash": "f2b3552c71b2efe0b2d1d3848540f427b341d1fc6aaefdeaa4d7a9cda71da5b6",
+          "artConfigVisualHash": "30382374cb37c1b67a6a9fdf87146a4b7546ec3c4dbf03073e6fd06a1bc32a2a",
           "artMode": 0,
-          "generatorHash": "e99273ba90b53a7c8f0556ca0b92b2bee8bfff8255932ca9f35a011c3eb102eb",
+          "artRuntimeVersion": 1,
+          "generatorHash": "8f5fffe13ea1f7b863cf777c4113177734632dad8184e0aed96945c31ff57862",
           "marketMappingHash": "9ea08abdfa59b9bf0e93327d79e3557c4eea1ebb688acaea6512e434d71500a3",
           "metadataHash": "038cb86d2055da7f4a421088ed757dc6aaa1e5eccc1d65afb416058ae2a71b3f",
-          "representativeOutputsHash": "078ebf0ee4ab173736b8838a6b05407c16e04d4dac3183d3a68d8abd53c410e7",
+          "representativeOutputsHash": "9e28e6021fb584f51be4b737e565fceb38c1dccad6351bb221a064453472bc4a",
           "runtime": "SOLIDITY_SVG",
           "runtimeCodeHash": null,
           "runtimeId": "SOLIDITY_SVG_V1",
           "runtimeIdHash": "59cb42c7866bcc760f80ea62070bd424669ce5f87aee62137516feccbaf485f4",
-          "schemaVersion": "2.0.0",
+          "schemaVersion": "3.0.0",
           "scriptPointer": null,
           "templateId": "1",
-          "templateParamsHash": "98184730683d0ea2e429abd7fe307de0ce86f0677c72c066ee009848c6c5a084",
+          "templateParamsHash": "371f09ac854383b96e5418a5f5bd8ea477c7fe55400d50a333c45ac54f4fa6c6",
           "traitSchemaHash": "fb3b5b4f594afeb91227189f8f6456eb9a7acc82ea85185b6aafd0b6dde5b2ab"
         },
-        "bundleCommitment": "b70e7ea4d2cca775187d7669b090f9424905b8c198ef5a4c65497caa91095526",
-        "bundleHash": "ae986c32a7dcdd6dfe9d259eee184bc3d8a588db784f5e25998d95fdfb02291a",
-        "contentHash": "f39ed956786d1451c57797a1b7972e7c795f2b4d25fd88e03000bfea687e70e6",
-        "creatorKitVersion": "2.0.0",
+        "bundleCommitment": "777b01b62bc08fb1cec62d103c1a8410f3ed60ae33affe348321907ba7b37548",
+        "bundleHash": "27e50960d8d4d2905b54658cc056c515ec9be0686b8b3f68cc21a5266c905464",
+        "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
+        "creatorKitVersion": "3.0.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -791,12 +821,12 @@
           "totalCollaboratorBps": 0
         },
         "earningsMode": "SOLO",
-        "generatorHash": "ba7dcb960c03a3c7effeec0dc795b6e70a61cc4af9a8174203904d62ee51effa",
+        "generatorHash": "47b5f5074fc16e8db49ef0f1aef93cd7c4e61c3f2ebcc6290b5566c8a0fe2b97",
         "marketChainId": null,
         "marketMappingHash": "618b5d0b385b02455000ace3fac407d478483bd8563d113ea6a9a552054ed645",
         "mediaHashes": {},
         "metadataHash": "a54cbeef868d0c80eacefcf25af0d600705da907adaaf63490e2a3593c547a14",
-        "projectConfigHash": "527ead7b0e950412b41fef9a0b3c54a50e911bfdb1a45afa8be5eb979c6c295f",
+        "projectConfigHash": "ac214672559b299ac75a3722327dfe8f07a2c8c5f881bd00761b945b03e8ea84",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -808,58 +838,107 @@
           8453
         ],
         "runtimeVersion": "relics-art-runtime/1",
-        "schemaVersion": "2.0.0",
-        "scriptHash": "6e08d736616b7c1a8dea8b7eedde48d03a5cd78f76281f48ee6ef0365b117f60",
+        "schemaVersion": "3.0.0",
+        "scriptHash": "40754cf332429310ef69988c9ca1856c98c83d057e18c53674f38e18ee2954db",
         "source": "relics-bundle",
         "templateParams": {
-          "parameters": {
-            "margin": 0.12,
-            "paletteIndex": 0,
-            "ringCount": 5,
-            "silhouette": "monolith",
-            "strokeWeight": 2,
-            "symmetry": 4
-          },
-          "templateId": "1",
+          "animate": true,
+          "background": 0,
+          "format": "ACV1",
+          "layers": [
+            {
+              "amountMax": 18,
+              "amountMin": 3,
+              "curve": "LOG2",
+              "kind": "RINGS",
+              "palette": 2,
+              "sensor": "QUOTE_VOLUME"
+            },
+            {
+              "amountMax": 14,
+              "amountMin": 0,
+              "curve": "EASE",
+              "kind": "STRATA",
+              "palette": 1,
+              "sensor": "DRAWDOWN"
+            },
+            {
+              "amountMax": 1,
+              "amountMin": 1,
+              "curve": "LINEAR",
+              "kind": "VEIL",
+              "palette": 3,
+              "sensor": "STRESS"
+            }
+          ],
+          "palette": [
+            "#0a0a0b",
+            "#ded9d2",
+            "#c9a227",
+            "#b4532a"
+          ],
+          "title": "Parameter Study",
+          "traits": [
+            {
+              "name": "Volume",
+              "source": "VOLUME_TIER",
+              "style": "WORD"
+            },
+            {
+              "name": "Drawdown",
+              "source": "DRAWDOWN",
+              "style": "NUMBER"
+            },
+            {
+              "name": "Swaps",
+              "source": "FRAGMENTATION",
+              "style": "NUMBER"
+            },
+            {
+              "name": "Vein",
+              "source": "DNA_SLOT_0",
+              "style": "HEX"
+            }
+          ],
           "version": 1
         },
         "traitSchemaHash": "affff1ec04accd1c83579ad7a6f42e597916b118845d18af06ade7037aaa9d61"
       },
       "representativeOutputs": {
         "1": {
-          "length": 1408,
-          "sha256": "c43d99dcf43db29d6608bdcab05177ce9d8618104b01364c0fad0480e3721dde"
+          "length": 2144,
+          "sha256": "e11fdc911c8239e361031981e243a9504c9eb01e93d31102dcb0328378747f36"
         },
         "2": {
-          "length": 786,
-          "sha256": "f1e9571ec1ebe090b4b14c6ecf99fa04bedcf64a22010dc9e1178bc8d553babd"
+          "length": 2534,
+          "sha256": "2b85f3e92ac576bd4521b55a219b0d65f449e817274570d65dce279d95e5a689"
         },
         "3": {
-          "length": 895,
-          "sha256": "fc8582f7cb8209de935ccf11f02ad88e83c102664a55a675b7ae99ea06ba8123"
+          "length": 1907,
+          "sha256": "eb6ba2e4e6f9c2e183a57c216cf7d08623dd0c04be5c25c1e126ea1cca3ec17f"
         },
         "5": {
-          "length": 1225,
-          "sha256": "dc9746adc9e224faf7dddb0e6832ad4c9cb2688b4729e3a79fbd7746cc20a3c5"
+          "length": 1576,
+          "sha256": "5bf2158ec6089cef604232906b4b1afa61c2936edee9090eec4fd816fccc64b2"
         },
         "8": {
-          "length": 1273,
-          "sha256": "20a41c0c5fcde39d1daa64331e8db0508cf3eef37d3e98538b6ad4b8ff60552c"
+          "length": 1903,
+          "sha256": "d16dd6cae5f2f5a6e0eba7a3d0f1881cb55e9958551accd47d203f30aebe8e08"
         },
         "13": {
-          "length": 1520,
-          "sha256": "f776871b410d27a652dd47a54f20a856853dab0f8ba2e748e3c408db9cd83e9c"
+          "length": 1472,
+          "sha256": "5ad6013ef5f82d494b9963d706572eff29a17eae9e3e57b8562e254f51fde042"
         },
         "21": {
-          "length": 918,
-          "sha256": "fb51b0a50d189509c31e9de6d5bcdd4791e85313973c49da35be207496885a28"
+          "length": 2539,
+          "sha256": "7794d754208783c4506390202752f1089fd5b7a79a4aba64a4ea036959f9a75a"
         },
         "34": {
-          "length": 1019,
-          "sha256": "c62a35b00ca2029535a8c2fc9dcd9b95ed530e7c7a53e28d95face2987c6f359"
+          "length": 2456,
+          "sha256": "561dd5a2550045fcecc402f3f21e47b0e4e1bfcbb32df3c4e788b589f814a642"
         }
       },
-      "sizeBytes": 19804,
+      "sizeBytes": 20974,
       "studioDraft": {
         "art": {
           "artTemplateId": "1",

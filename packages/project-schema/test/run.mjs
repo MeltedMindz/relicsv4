@@ -43,6 +43,7 @@ import {
   diffArtBinding,
   isRuntimeLaunchable,
   explainIncompatibility,
+  deriveArtConfig,
   encodeArtConfigV1,
   encodeArtConfigV1Checked,
   withArtConfigV1Appendix,
@@ -220,21 +221,68 @@ test("artConfigHash is exactly what the factory checks for a JavaScript launch",
   assert(binding.artConfigBytes === script.length, "artConfigBytes does not match the script length");
 });
 
-test("a Solidity-SVG binding refuses to invent a config hash it does not own", () => {
+test("a Solidity-SVG binding states the config hash the launch will check", () => {
+  // Schema 2 left this null and said so honestly: no published parameter layout existed, so the
+  // kit refused to state a value it could not derive. ACV1 IS that layout, so the refusal expired
+  // — and a binding that still carried null would now be a bundle that cannot say what its own
+  // launch renders.
+  const config = {
+    version: 1,
+    format: "ACV1",
+    title: "Rings",
+    animate: false,
+    background: 0,
+    palette: ["#000000", "#ffffff"],
+    layers: [{ kind: "RINGS", sensor: "QUOTE_VOLUME", curve: "LOG2", palette: 1, amountMin: 1, amountMax: 4 }],
+    traits: [],
+  };
+  const bytes = encodeArtConfigV1(config);
   const binding = computeArtBinding({
     runtime: "SOLIDITY_SVG",
     templateId: "7",
     scriptBytes: utf8("preview only"),
+    artConfigBytes: bytes,
+    artConfigVisualHash: visualHashArtConfigV1(config),
+    artConfigTraitSchemaHash: traitSchemaHashArtConfigV1(config),
     generatorFileHashes: {},
     traitSchema: null,
     marketMappings: null,
     collectionMetadata: null,
-    templateParams: { rings: 4 },
+    templateParams: config,
   });
-  assert(binding.artConfigSource === "TEMPLATE_PARAMS", "a Solidity renderer's config does not come from the generator script");
-  assert(binding.artConfigHash === null, "the kit invented a config hash for an encoding it does not own");
-  assert(binding.templateParamsHash !== null, "the creator's parameters must still be committed to");
+  assert(binding.artConfigSource === "ART_CONFIG_V1", "a Solidity renderer's config does not come from the generator script");
+  assert(binding.artConfigFormat === "ACV1", "the config format must be named");
+  assert(binding.artConfigHash === hashArtConfigV1(bytes), "artConfigHash must be keccak256 of the exact configuration bytes");
+  assert(binding.artConfig === Buffer.from(bytes).toString("hex"), "the bundle must carry the configuration itself, not only a digest of it");
+  assert(binding.artConfigBytes === bytes.length, "the byte count must match the configuration");
+  assert(binding.templateParamsHash !== null, "the creator's authoring document must still be committed to");
   assert(binding.templateId === "7", "the registered template id was lost");
+  assert(binding.artRuntimeVersion === 1, "the runtime version the binding pins was lost");
+});
+
+test("a project that cannot state its art configuration is refused, not defaulted", () => {
+  // THE WHOLE POINT OF SCHEMA 3. There is no fallback configuration, no generic template to borrow
+  // from, and no way to assemble a Solidity-SVG bundle without the creator having supplied one.
+  assertThrows(
+    () =>
+      computeArtBinding({
+        runtime: "SOLIDITY_SVG",
+        templateId: "7",
+        scriptBytes: utf8("preview only"),
+        generatorFileHashes: {},
+        traitSchema: null,
+        marketMappings: null,
+        collectionMetadata: null,
+        templateParams: null,
+      }),
+    "exact art configuration bytes",
+    "a binding with no configuration must be refused",
+  );
+  assertThrows(
+    () => deriveArtConfig({ runtime: "SOLIDITY_SVG", templateParams: { rings: 4 }, scriptBytes: utf8("x") }),
+    "not an art configuration",
+    "a pre-3.0.0 parameter document must be refused rather than reinterpreted",
+  );
 });
 
 test("the output commitment covers the fixed seeds and nothing else", () => {

@@ -32,6 +32,15 @@ export const ART_RUNTIME_IDS = Object.freeze({
 });
 
 /**
+ * The `uint16` version each runtime reports about ITSELF, mirroring `IArtRuntimeV1.runtimeVersion()`
+ * and the `runtimeVersion` field of the on-chain `ArtBindingInputV1`. Distinct from
+ * `RUNTIME_VERSION` at the top of the schema, which names the JavaScript render CONTRACT a
+ * generator was written against: this one identifies the deployed renderer's own revision, and it
+ * is what a project's binding pins.
+ */
+export const ART_RUNTIME_VERSIONS = Object.freeze({ SOLIDITY_SVG: 1, JAVASCRIPT: 1 });
+
+/**
  * Runtimes a bundle may declare TODAY. A p5-style runtime is deliberately absent: it is not an
  * approved launchpad runtime, so no template ships on it and the validator refuses a bundle that
  * names it. Adding one is a protocol decision, not a kit decision.

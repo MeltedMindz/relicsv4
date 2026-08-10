@@ -10,7 +10,7 @@ import { utf8, fromUtf8 } from "./sha256.js";
 import { safeJsonParse } from "./canonical-json.js";
 import { LIMITS } from "./limits.js";
 import { SCHEMA_VERSION, CREATOR_KIT_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY } from "./version.js";
-import { computeArtBinding, computeBundleCommitment } from "./binding.js";
+import { computeArtBinding, computeBundleCommitment, deriveArtConfig, ArtConfigDerivationError } from "./binding.js";
 
 export class BuildError extends Error {}
 
@@ -80,6 +80,13 @@ export function assembleBundle({ files, config, representativeOutputs = null }) 
 
   const templateParams = files.has("generator/params.json") ? parseJsonEntry(files, "generator/params.json") : null;
 
+  // THE ART CONFIGURATION, derived from the creator's authoring document rather than accepted from
+  // it. `generator/params.json` is what the creator edits and diffs; the bytes below are what the
+  // runtime is handed. Encoding them here — inside assembly, from the same files the hashes are
+  // taken over — is what makes it impossible for a bundle to carry a configuration its own
+  // parameters do not produce.
+  const art = deriveArtConfig({ runtime: config.art?.runtime, templateParams, scriptBytes });
+
   const manifestWithoutIntegrity = {
     schemaVersion: SCHEMA_VERSION,
     creatorKitVersion: CREATOR_KIT_VERSION,
@@ -112,6 +119,9 @@ export function assembleBundle({ files, config, representativeOutputs = null }) 
       runtime: config.art?.runtime,
       templateId: config.art?.templateId,
       scriptBytes,
+      artConfigBytes: art.bytes,
+      artConfigVisualHash: art.visualHash,
+      artConfigTraitSchemaHash: art.traitSchemaHash,
       generatorFileHashes: dependencies,
       traitSchema,
       marketMappings,
@@ -156,6 +166,7 @@ export function assembleBundle({ files, config, representativeOutputs = null }) 
   const bytes = writeContainer([...entries].map(([path, content]) => ({ path, bytes: content })));
   return { bytes, manifest, checksums, entries };
 }
+
 
 function parseJsonEntry(files, path) {
   try {

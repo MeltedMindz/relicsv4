@@ -34,9 +34,11 @@
 // bytes, two algorithms, stated separately so neither is ever mistaken for the other.
 
 import { canonicalJson } from "./canonical-json.js";
+import { encodeArtConfigV1, validateArtConfigV1, decodeArtConfigV1, withArtConfigV1Appendix, ACV1_FORMAT } from "./art-config-v1.js";
+import { visualHashArtConfigV1, traitSchemaHashArtConfigV1 } from "./art-config-v1-hashes.js";
 import { keccak256Hex, keccak256Utf8, isKeccak256Hex } from "./keccak256.js";
-import { utf8 } from "./sha256.js";
-import { ART_RUNTIME_IDS, ART_RUNTIME_TO_MODE, LAUNCHABLE_ART_RUNTIMES } from "./vocabulary.js";
+import { utf8, toHex } from "./sha256.js";
+import { ART_RUNTIME_IDS, ART_RUNTIME_TO_MODE, ART_RUNTIME_VERSIONS, LAUNCHABLE_ART_RUNTIMES } from "./vocabulary.js";
 import { BUNDLE_MAGIC, SCHEMA_VERSION } from "./version.js";
 
 /**
@@ -46,10 +48,28 @@ import { BUNDLE_MAGIC, SCHEMA_VERSION } from "./version.js";
  * re-renders exactly these in its own sandbox; a mismatch means the art the creator validated is
  * not the art the launchpad would run, which is a refusal, not a warning.
  */
+/** Raised when a project cannot state the art configuration its own launch would carry. */
+export class ArtConfigDerivationError extends Error {}
+
 export const BINDING_SEEDS = Object.freeze(["1", "2", "3", "5", "8", "13", "21", "34"]);
 
 /** Where the bytes hashed into `artConfigHash` come from. */
-export const ART_CONFIG_SOURCES = Object.freeze(["GENERATOR_SCRIPT", "TEMPLATE_PARAMS"]);
+export const ART_CONFIG_SOURCES = Object.freeze(["GENERATOR_SCRIPT", "ART_CONFIG_V1"]);
+
+/**
+ * The FORMAT of the bytes a runtime is handed. Not a synonym for the runtime: it names how the
+ * configuration is laid out, which is what an importer needs in order to decode and show it.
+ *
+ *   ACV1          the creator art configuration defined by `ArtConfigV1.sol` — a palette, a layer
+ *                 graph binding market sensors to drawing primitives, a trait schema and a title.
+ *                 The Solidity runtime's config format.
+ *   JS_SOURCE_V1  the generator entry file, byte for byte. The JavaScript runtime's `artConfig`
+ *                 IS the script, so there is no separate configuration document.
+ */
+export const ART_CONFIG_FORMATS = Object.freeze(["ACV1", "JS_SOURCE_V1"]);
+
+/** Which format each runtime's `artConfig` is written in. */
+export const ART_RUNTIME_TO_CONFIG_FORMAT = Object.freeze({ SOLIDITY_SVG: "ACV1", JAVASCRIPT: "JS_SOURCE_V1" });
 
 /**
  * Binding fields that are resolved or produced ON CHAIN. A bundle carries them as `null`, always.
@@ -63,11 +83,16 @@ export const ART_BINDING_KEYS = Object.freeze([
   "runtime",
   "runtimeId",
   "runtimeIdHash",
+  "artRuntimeVersion",
   "artMode",
   "templateId",
   "artConfigSource",
+  "artConfigFormat",
+  "artConfig",
   "artConfigBytes",
   "artConfigHash",
+  "artConfigVisualHash",
+  "artConfigTraitSchemaHash",
   "templateParamsHash",
   "generatorHash",
   "traitSchemaHash",
@@ -142,27 +167,49 @@ export function computeArtBinding(input) {
   const runtime = input.runtime;
   const isJavaScript = runtime === "JAVASCRIPT";
 
-  // JAVASCRIPT: `artConfig` IS the generator entry file, byte for byte — the factory hashes those
-  // exact bytes (`artScriptHash = keccak256(artConfig)`) and stores them with SSTORE2, so the kit
-  // can state the value the launch will carry.
+  // THE BYTES A RUNTIME IS ACTUALLY HANDED, for both runtimes, with no null left standing.
   //
-  // SOLIDITY_SVG: `artConfig` is per-launch config for a REGISTERED template, and only that
-  // template's published parameter layout can encode it. The kit does not invent that encoding and
-  // therefore does not pretend to know the hash: `artConfigHash` is null and the creator's
-  // declarative parameters travel as `templateParamsHash`, which the importer's encoder must
-  // reproduce. Refusing to state a value we cannot derive is the whole point of the block.
-  const artConfigSource = isJavaScript ? "GENERATOR_SCRIPT" : "TEMPLATE_PARAMS";
+  // JAVASCRIPT: `artConfig` IS the generator entry file, byte for byte.
+  //
+  // SOLIDITY_SVG: `artConfig` is the creator's ACV1 configuration. Schema 2 left this null and said
+  // so honestly — no published parameter layout existed, and refusing to state a value the kit
+  // could not derive was the right call. ACV1 is that layout, so the refusal has expired: the kit
+  // encodes the creator's configuration itself and states the hash the launch will check.
+  //
+  // In BOTH cases `artConfigHash` is keccak256 over the EXACT bytes handed to the factory —
+  // appendix included for ACV1 — which is `LaunchParams.artScriptHash`.
+  const artConfigSource = isJavaScript ? "GENERATOR_SCRIPT" : "ART_CONFIG_V1";
+  const artConfigBytes = isJavaScript ? input.scriptBytes : (input.artConfigBytes ?? null);
+
+  if (!(artConfigBytes instanceof Uint8Array) || artConfigBytes.length === 0) {
+    throw new Error(
+      "computeArtBinding needs the exact art configuration bytes: a bundle that cannot state the configuration its own launch would carry is the gap schema 3 exists to close",
+    );
+  }
 
   return {
     schemaVersion: SCHEMA_VERSION,
     runtime,
     runtimeId: ART_RUNTIME_IDS[runtime] ?? null,
     runtimeIdHash: ART_RUNTIME_IDS[runtime] ? keccak256Utf8(ART_RUNTIME_IDS[runtime]) : null,
+    // The `uint16` the runtime reports about itself, mirroring `ArtBindingInputV1.runtimeVersion`.
+    artRuntimeVersion: ART_RUNTIME_VERSIONS[runtime] ?? null,
     artMode: ART_RUNTIME_TO_MODE[runtime] ?? null,
     templateId: isJavaScript ? "0" : String(input.templateId ?? "0"),
     artConfigSource,
-    artConfigBytes: isJavaScript ? input.scriptBytes.length : 0,
-    artConfigHash: isJavaScript ? keccak256Hex(input.scriptBytes) : null,
+    artConfigFormat: ART_RUNTIME_TO_CONFIG_FORMAT[runtime] ?? null,
+    // The configuration ITSELF, so a bundle carries its art and not merely a digest of it. Null for
+    // JavaScript, where the bytes are already an entry (`generator/generate.js`) and restating up
+    // to 36 KB of them as hex would bloat every manifest to say nothing new.
+    artConfig: isJavaScript ? null : toHex(artConfigBytes),
+    artConfigBytes: artConfigBytes.length,
+    artConfigHash: keccak256Hex(artConfigBytes),
+    // The two commitments the runtime derives from the DECODED configuration. ACV1 only: they are
+    // properties of the declared program, and a JavaScript generator declares no such program.
+    artConfigVisualHash: isJavaScript ? null : (input.artConfigVisualHash ?? null),
+    artConfigTraitSchemaHash: isJavaScript ? null : (input.artConfigTraitSchemaHash ?? null),
+    // Retained: the creator's AUTHORING document, which is what they edit and diff. The
+    // configuration bytes are derived from it, so the two are checked against each other.
     templateParamsHash: isJavaScript ? null : keccakJson(input.templateParams ?? null),
     generatorHash: keccakJson(input.generatorFileHashes),
     traitSchemaHash: keccakJson(input.traitSchema),
@@ -195,3 +242,60 @@ export function diffArtBinding(declared, derived) {
 export { isKeccak256Hex };
 export { keccak256Hex, keccak256Utf8 };
 export { utf8 };
+
+/**
+ * THE ONE DERIVATION of the exact bytes this project's runtime will be handed, and the two commitments the runtime
+ * derives from them.
+ *
+ * JAVASCRIPT: the generator entry file, byte for byte.
+ *
+ * SOLIDITY_SVG: the creator's ACV1 configuration, encoded from `generator/params.json`. It is
+ * ENCODED HERE rather than accepted as bytes from the project directory, which matters: a creator
+ * cannot hand over a configuration that disagrees with the parameters they authored, because there
+ * is only one document and the bytes are a function of it.
+ *
+ * The refusal below is the point of schema 3. A Solidity-SVG project with no art configuration is
+ * exactly the bundle that used to launch happily and render somebody else's shapes.
+ *
+ * IT LIVES HERE, NOT IN THE BUILDER, because the builder writes the binding and the validator
+ * recomputes it from the finished container to prove it was not hand-edited. Two derivations would
+ * make that proof meaningless the moment they disagreed; one derivation makes the recomputation a
+ * real check.
+ */
+export function deriveArtConfig({ runtime, templateParams, scriptBytes }) {
+  if (runtime === "JAVASCRIPT") return { bytes: scriptBytes, visualHash: null, traitSchemaHash: null };
+
+  if (!templateParams || typeof templateParams !== "object") {
+    throw new ArtConfigDerivationError(
+      "generator/params.json is required for the SOLIDITY_SVG runtime: it is the project's ACV1 art configuration, and a bundle that does not state one cannot state what its launch would render",
+    );
+  }
+  if (templateParams.format !== ACV1_FORMAT) {
+    throw new ArtConfigDerivationError(
+      `generator/params.json must declare "format": "${ACV1_FORMAT}". A pre-3.0.0 parameter document is not an art configuration — it names no market sensor, no response curve and no literal palette, and those cannot be guessed. Run \`relics migrate\` to carry over what is recoverable and supply the rest.`,
+    );
+  }
+
+  const verdict = validateArtConfigV1(templateParams);
+  if (!verdict.ok) {
+    throw new ArtConfigDerivationError(`generator/params.json is not a valid ACV1 configuration: ${verdict.name} (${verdict.code}) — ${verdict.reason}`);
+  }
+
+  const document = encodeArtConfigV1(templateParams);
+  // An appendix is opaque, uninterpreted and COMMITTED — it changes `artConfigHash` and nothing
+  // else. Carried through verbatim so a creator can attach provenance without it touching the art.
+  const appendix = typeof templateParams.appendixHex === "string" && templateParams.appendixHex.length > 0 ? hexBytes(templateParams.appendixHex) : null;
+  const bytes = appendix ? withArtConfigV1Appendix(document, appendix) : document;
+
+  const decoded = decodeArtConfigV1(bytes);
+  return { bytes, visualHash: visualHashArtConfigV1(decoded.config), traitSchemaHash: traitSchemaHashArtConfigV1(decoded.config) };
+}
+
+function hexBytes(value) {
+  if (!/^[0-9a-f]*$/.test(value) || value.length % 2 !== 0) {
+    throw new ArtConfigDerivationError("generator/params.json appendixHex must be bare lowercase hex with an even length");
+  }
+  const out = new Uint8Array(value.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(value.slice(i * 2, i * 2 + 2), 16);
+  return out;
+}

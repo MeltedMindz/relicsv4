@@ -8,10 +8,10 @@
  * added; bump the MINOR when a purely additive optional field appears. An importer accepts a
  * bundle whose MAJOR it knows and whose MINOR is <= its own.
  */
-export const SCHEMA_VERSION = "2.0.0";
+export const SCHEMA_VERSION = "3.0.0";
 
 /** Version of the creator kit (this repo's CLI + templates) that produced the bundle. */
-export const CREATOR_KIT_VERSION = "2.0.0";
+export const CREATOR_KIT_VERSION = "3.0.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
@@ -27,27 +27,42 @@ export const RUNTIME_VERSION = "relics-art-runtime/1";
 export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/g-1.2";
 
 /**
- * Why 2.0.0 is a MAJOR and not a MINOR — recorded here because the temptation to add "just one
+ * Why 3.0.0 is a MAJOR and not a MINOR — recorded here because the temptation to add "just one
  * more optional field" and call it additive is exactly how a format drifts away from the thing it
  * describes.
  *
- * Two of this schema's own MAJOR triggers fire at once:
+ * Both of this schema's MAJOR triggers fire, again:
  *
- *   A FIELD CHANGED MEANING. `art.runtime` used to be descriptive. Nothing on chain read it, and
- *   every launched collection rendered the same built-in shapes no matter what a creator drew. It
- *   is now a binding commitment a collection's `tokenURI` reads. The same string means something
- *   it did not mean before.
+ *   A REQUIRED FIELD APPEARED. A bundle must now carry the EXACT ART CONFIGURATION its launch
+ *   would use — `artConfigFormat`, the configuration bytes, and their keccak256. 2.0.0 recorded
+ *   which runtime renders a project but, for the Solidity runtime, deliberately left
+ *   `artConfigHash` null: no published parameter layout existed, so the kit refused to state a
+ *   value it could not derive. ACV1 is that layout. The reason for the null is gone, and a bundle
+ *   that cannot state its own art configuration cannot state what its launch would carry.
  *
- *   A REQUIRED FIELD APPEARED. `artBinding` is not optional. A 1.x bundle carries no binding at
- *   all, so importing one into a world where `tokenURI` renders FROM the binding would produce a
- *   collection whose art nobody ever validated. Accepting such a bundle silently is the precise
- *   failure this release exists to remove, so it is refused with a message that says what to do.
+ *   A FIELD CHANGED MEANING. `artBinding.artConfigHash` was "null, because unknowable" for
+ *   SOLIDITY_SVG. It is now the value `LaunchpadFactory._storeArt` checks `keccak256(artConfig)`
+ *   against and `ProjectCollection.bindArt` re-checks against the bytes it reads back out of
+ *   storage. Same field, different force.
  *
- * No 1.x bundle has ever been launched — the launchpad is PREPARED_NOT_DEPLOYED on every supported
+ * WHY 2.0.0 CANNOT SIMPLY BE MIGRATED — the question this version was chosen to answer.
+ *
+ * A 2.0.0 Solidity-SVG bundle carries `generator/params.json`, and it is tempting to read that as
+ * "the values are already there, just re-shape them." They are not. ACV1 requires, per layer, a
+ * market SENSOR and a response CURVE, plus a literal RGB palette and a background index. A 2.0.0
+ * params document carries none of them: its palette is an INDEX into a table that exists only
+ * inside the template's local preview sketch — a sketch that overrides the index at render time
+ * from market state — and it has no sensor, no curve and no background field at all. Deriving a
+ * palette from that table would be picking a generic template's colours and calling them the
+ * artist's. That is the exact failure this release exists to eliminate, so the migration refuses
+ * instead: a 2.x bundle imports as a DRAFT with every recoverable field carried over, the creator
+ * supplies the art configuration, and a new export is required.
+ *
+ * No 2.x bundle has ever been launched — the launchpad is PREPARED_NOT_DEPLOYED on every supported
  * chain — so there is no deployed corpus this break strands.
  */
 export const SCHEMA_MAJOR_RATIONALE =
-  "2.0.0 adds the required art binding and changes art.runtime from a description into an on-chain commitment; a 1.x bundle carries no binding and must be re-exported.";
+  "3.0.0 requires a bundle to carry the exact art configuration its launch would use (artConfigFormat, the configuration bytes and their keccak256); a 2.x bundle states no configuration a Solidity runtime could render and must be re-exported after the creator supplies one.";
 
 /**
  * The message an importer should show for a bundle it cannot read. A bare "incompatible" tells a
@@ -59,6 +74,9 @@ export function explainIncompatibility(bundleSchemaVersion) {
   const i = parseSemver(SCHEMA_VERSION);
   if (!b) return `"${bundleSchemaVersion}" is not a MAJOR.MINOR.PATCH schema version.`;
   if (b.major < i.major) {
+    if (b.major === 2) {
+      return `This bundle was exported by creator kit schema ${bundleSchemaVersion}. It records which runtime renders the project, but not the art configuration that runtime is given — for a Solidity-SVG project schema 2 left \`artConfigHash\` null because no published parameter layout existed yet. ACV1 is that layout, and it needs values a schema 2 bundle does not contain: a market sensor and a response curve for every layer, a literal palette, and a background. They cannot be guessed from \`generator/params.json\` without inventing an artist's choices. Import it to recover everything that IS recoverable, supply the art configuration, then \`relics export\` with creator kit ${CREATOR_KIT_VERSION} and import the new file.`;
+    }
     return `This bundle was exported by creator kit schema ${bundleSchemaVersion}, which predates the art binding: it does not record which runtime renders the project or which bytes that runtime is given, so the collection it launched could not render the creator's own art. Re-export it with creator kit ${CREATOR_KIT_VERSION} (\`relics export\` on the same project directory) and import the new file.`;
   }
   if (b.major > i.major) {

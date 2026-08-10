@@ -22,7 +22,7 @@ import { error, warn, sortIssues, summarize } from "./issues.js";
 import { fromUtf8 } from "./sha256.js";
 import { SCHEMA_VERSION } from "./version.js";
 import { makeRandom } from "./prng.js";
-import { computeArtBinding, computeBundleCommitment, diffArtBinding, representativeOutputsCommitment, BINDING_SEEDS } from "./binding.js";
+import { computeArtBinding, computeBundleCommitment, diffArtBinding, representativeOutputsCommitment, deriveArtConfig, BINDING_SEEDS } from "./binding.js";
 import { PREVIEW_ONLY_ART_RUNTIMES } from "./vocabulary.js";
 import { sha256Utf8 } from "./sha256.js";
 
@@ -391,10 +391,25 @@ function checkArtBinding({ manifest, byPath, documents, computed, execution, col
     }
   }
 
+  // The SAME derivation the builder used, from the same files. If a project cannot produce art
+  // configuration bytes at all, the binding cannot be recomputed and the bundle is refused here
+  // with the reason rather than crashing.
+  let art;
+  try {
+    art = deriveArtConfig({ runtime: manifest.art?.runtime, templateParams, scriptBytes });
+  } catch (err) {
+    const reason = err instanceof Error ? err.message : String(err);
+    collect("ART_BINDING", [error("ART_BINDING_CONFIG_MISSING", "relics.project.json#artBinding", reason)]);
+    return null;
+  }
+
   const derived = computeArtBinding({
     runtime: manifest.art?.runtime,
     templateId: manifest.art?.templateId,
     scriptBytes,
+    artConfigBytes: art.bytes,
+    artConfigVisualHash: art.visualHash,
+    artConfigTraitSchemaHash: art.traitSchemaHash,
     generatorFileHashes: hashesUnder(byPath, "generator/"),
     traitSchema: documents["traits/schema.json"]?.value ?? null,
     marketMappings: documents["market/mappings.json"]?.value ?? null,

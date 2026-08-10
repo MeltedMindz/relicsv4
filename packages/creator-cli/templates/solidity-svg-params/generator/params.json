@@ -1,12 +1,19 @@
 {
   "version": 1,
-  "templateId": "1",
-  "parameters": {
-    "strokeWeight": 2,
-    "ringCount": 5,
-    "silhouette": "monolith",
-    "paletteIndex": 0,
-    "symmetry": 4,
-    "margin": 0.12
-  }
+  "format": "ACV1",
+  "title": "Parameter Study",
+  "animate": true,
+  "background": 0,
+  "palette": ["#0a0a0b", "#ded9d2", "#c9a227", "#b4532a"],
+  "layers": [
+    { "kind": "RINGS", "sensor": "QUOTE_VOLUME", "curve": "LOG2", "palette": 2, "amountMin": 3, "amountMax": 18 },
+    { "kind": "STRATA", "sensor": "DRAWDOWN", "curve": "EASE", "palette": 1, "amountMin": 0, "amountMax": 14 },
+    { "kind": "VEIL", "sensor": "STRESS", "curve": "LINEAR", "palette": 3, "amountMin": 1, "amountMax": 1 }
+  ],
+  "traits": [
+    { "name": "Volume", "source": "VOLUME_TIER", "style": "WORD" },
+    { "name": "Drawdown", "source": "DRAWDOWN", "style": "NUMBER" },
+    { "name": "Swaps", "source": "FRAGMENTATION", "style": "NUMBER" },
+    { "name": "Vein", "source": "DNA_SLOT_0", "style": "HEX" }
+  ]
 }
