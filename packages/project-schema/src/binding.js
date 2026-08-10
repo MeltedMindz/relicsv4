@@ -41,6 +41,9 @@ import { utf8, toHex } from "./sha256.js";
 import { ART_RUNTIME_IDS, ART_RUNTIME_TO_MODE, ART_RUNTIME_VERSIONS, LAUNCHABLE_ART_RUNTIMES } from "./vocabulary.js";
 import { BUNDLE_MAGIC, SCHEMA_VERSION } from "./version.js";
 
+/** Raised when a project cannot state the art configuration its own launch would carry. */
+export class ArtConfigDerivationError extends Error {}
+
 /**
  * The fixed seeds a bundle commits its representative output digests for. Eight seeds, small
  * enough to keep the manifest readable and spread widely enough that a generator which collapses
@@ -48,9 +51,6 @@ import { BUNDLE_MAGIC, SCHEMA_VERSION } from "./version.js";
  * re-renders exactly these in its own sandbox; a mismatch means the art the creator validated is
  * not the art the launchpad would run, which is a refusal, not a warning.
  */
-/** Raised when a project cannot state the art configuration its own launch would carry. */
-export class ArtConfigDerivationError extends Error {}
-
 export const BINDING_SEEDS = Object.freeze(["1", "2", "3", "5", "8", "13", "21", "34"]);
 
 /** Where the bytes hashed into `artConfigHash` come from. */
@@ -94,8 +94,8 @@ export const ART_BINDING_KEYS = Object.freeze([
   "artConfigVisualHash",
   "artConfigTraitSchemaHash",
   "templateParamsHash",
-  "generatorHash",
-  "traitSchemaHash",
+  "generatorSourceHash",
+  "traitSchemaDocumentHash",
   "marketMappingHash",
   "metadataHash",
   "representativeOutputsHash",
@@ -211,8 +211,28 @@ export function computeArtBinding(input) {
     // Retained: the creator's AUTHORING document, which is what they edit and diff. The
     // configuration bytes are derived from it, so the two are checked against each other.
     templateParamsHash: isJavaScript ? null : keccakJson(input.templateParams ?? null),
-    generatorHash: keccakJson(input.generatorFileHashes),
-    traitSchemaHash: keccakJson(input.traitSchema),
+    // NAMED APART FROM THE CHAIN'S FIELDS ON PURPOSE. `ProjectCollection` derives values it also
+    // calls `generatorHash` and `traitSchemaHash`, and they are DIFFERENT QUANTITIES that can never
+    // equal these:
+    //
+    //   the collection's generatorHash    = keccak256(abi.encode(mode, runtimeVersion,
+    //                                       runtimeCodeHash, artConfigHash, traitSchemaHash,
+    //                                       marketMappingHash))
+    //   the collection's traitSchemaHash  = keccak256(abi.encode(uint8(1), ArtTraitV1[])) over the
+    //                                       traits decoded from the ACV1 bytes
+    //
+    // The first necessarily includes `runtimeCodeHash`, a CHAIN FACT this schema forbids a bundle
+    // from asserting at all — so no care on either side could ever make them agree. The second is
+    // over the ACV1 trait declarations, not over `traits/schema.json`. Both pairs are honest
+    // commitments to the same subject matter and neither is computable from the other.
+    //
+    // Sharing the names was the hazard: it invites someone to assert an equality that can only be
+    // satisfied by making one side wrong. The ACV1 half IS carried, as
+    // `artConfigTraitSchemaHash`, and it does equal the collection's `traitSchemaHash`.
+    /** keccak over the canonical JSON of the generator SOURCE FILE digests in this bundle. */
+    generatorSourceHash: keccakJson(input.generatorFileHashes),
+    /** keccak over `traits/schema.json`, the marketplace trait-schema DOCUMENT. */
+    traitSchemaDocumentHash: keccakJson(input.traitSchema),
     marketMappingHash: keccakJson(input.marketMappings),
     metadataHash: keccakJson(input.collectionMetadata),
     representativeOutputsHash: input.representativeOutputs ? representativeOutputsCommitment(input.representativeOutputs) : null,

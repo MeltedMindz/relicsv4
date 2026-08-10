@@ -128,8 +128,9 @@ artConfigVisualHash  = keccak256(abi.encode(1, flags, background, palette, layer
 artConfigTraitSchemaHash
                      = keccak256(abi.encode(1, traits))                               ACV1 only
 templateParamsHash   = keccakJson(generator/params.json)
-generatorHash        = keccakJson({ "generator/…": sha256, … })
-traitSchemaHash      = keccakJson(traits/schema.json)
+generatorSourceHash  = keccakJson({ "generator/…": sha256, … })
+traitSchemaDocumentHash
+                     = keccakJson(traits/schema.json)
 marketMappingHash    = keccakJson(market/mappings.json)
 metadataHash         = keccakJson(metadata/collection.json)
 bundleCommitment     = keccak256(utf8("relics-project-bundle/1\n"
@@ -179,7 +180,7 @@ an error, not a passthrough.
                   "artRuntimeVersion", "artMode", "templateId", "artConfigSource",
                   "artConfigFormat", "artConfig", "artConfigBytes", "artConfigHash",
                   "artConfigVisualHash", "artConfigTraitSchemaHash",
-                  "templateParamsHash", "generatorHash", "traitSchemaHash",
+                  "templateParamsHash", "generatorSourceHash", "traitSchemaDocumentHash",
                   "marketMappingHash", "metadataHash", "representativeOutputsHash",
                   "runtimeCodeHash": null, "scriptPointer": null },
   "integrity":  { "contentHash", "projectConfigHash", "bundleHash", "bundleCommitment" }
@@ -208,6 +209,7 @@ on trust, which is exactly why an importer can build launch parameters straight 
 | `artConfigHash` | keccak256 of the exact bytes the launch stores — the value the factory checks `keccak256(artConfig)` against, and that `ProjectCollection.bindArt` re-checks against the bytes it reads back out of storage. Taken over the **whole transmitted byte string, appendix included**: two ACV1 documents that decode identically can hash differently, so hashing a re-encode of a decoded document is silently wrong. |
 | `artConfigVisualHash` / `artConfigTraitSchemaHash` | the two commitments the runtime derives from the decoded ACV1 document, using `abi.encode` (padded), not `encodePacked`. `traitSchemaHash` is what `validateConfigV1` returns and the collection stores, so the kit prints a value the chain will hold before any launch exists. `null` for a JavaScript generator, which declares no such program. |
 | `templateParamsHash` | keccak256 of `generator/params.json`, the creator's **authoring document**. The configuration bytes are derived from it inside assembly, so a bundle cannot carry art its own parameters do not produce. |
+| `generatorSourceHash` / `traitSchemaDocumentHash` | keccak over this bundle's generator **source-file digests**, and over `traits/schema.json`. **Named apart from the chain's fields deliberately.** `ProjectCollection` derives values it also calls `generatorHash` and `traitSchemaHash`, and they are different quantities: the collection's `generatorHash` is `keccak256(abi.encode(mode, runtimeVersion, runtimeCodeHash, artConfigHash, traitSchemaHash, marketMappingHash))` — which necessarily includes `runtimeCodeHash`, a chain fact a bundle is forbidden from asserting, so the two can never agree by construction — and its `traitSchemaHash` is over the traits decoded from the ACV1 bytes, which this bundle carries separately as `artConfigTraitSchemaHash`. Both pairs are honest commitments to the same subject matter; neither is computable from the other. Sharing the names invited an equality assertion that could only be satisfied by making one side wrong. |
 | `representativeOutputsHash` | a commitment to what the generator actually draws for eight fixed seeds. An importer re-renders them in its own sandbox; a mismatch means the art in the file is not the art that was validated. |
 
 ### A bundle can never state a chain fact

@@ -686,7 +686,7 @@ function validateArtBindingBlock(manifest, at) {
     }
   }
 
-  for (const key of ["generatorHash", "traitSchemaHash", "marketMappingHash", "metadataHash"]) {
+  for (const key of ["generatorSourceHash", "traitSchemaDocumentHash", "marketMappingHash", "metadataHash"]) {
     if (!isKeccak256Hex(binding[key])) {
       issues.push(error("ART_BINDING_HASH", `${where}.${key}`, `artBinding.${key} must be a 64-character lowercase keccak256 digest`));
     }
