@@ -25,6 +25,12 @@ jobs:
       - name: every starter template validates and exports
         run: npm run kit:templates
 
+      - name: the public export manifest lists every tracked file
+        # It had a --check mode and nothing ran it, so it drifted 173 files behind — including the
+        # whole creator kit, which falsified the allowlist's "every tracked file" claim. A gate
+        # nobody runs is a gate that is already stale.
+        run: npm run export:manifest:check
+
       - name: the ACV1 conformance corpus is byte-reproducible
         # This corpus is the shared expectation the Solidity decoder is ALSO checked against
         # (launchpad/test/art/ArtConfigV1Parity.t.sol). A diff here means the JavaScript codec

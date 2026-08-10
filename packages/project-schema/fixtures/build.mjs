@@ -14,13 +14,20 @@
 //             not mocks.
 
 import { mkdirSync, writeFileSync, rmSync, readFileSync, cpSync, readdirSync } from "node:fs";
+import { createHash as createHashNode } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assembleBundle, validateBundleBytes, readContainer, toStudioDraft, utf8, sha256Utf8, stableJsonText, buildRenderContext, safeJsonParse, fromUtf8, keccak256Hex, encodeArtConfigV1 } from "../index.js";
 import { createVmModule } from "../../creator-cli/src/sandbox.js";
 import { forgeZip } from "./forge-zip.mjs";
+import { SCHEMA_VERSION, CREATOR_KIT_VERSION } from "../index.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+
+/** sha256 of raw bytes, for the upstream-authored corpus checksums. */
+function sha256Bytes_(bytes) {
+  return createHashNode("sha256").update(bytes).digest("hex");
+}
 const TEMPLATES = join(HERE, "../../creator-cli/templates");
 const PARITY = join(HERE, "parity");
 const HOSTILE = join(HERE, "hostile");
@@ -789,5 +796,41 @@ writeFileSync(
   }),
 );
 
+// ---------------------------------------------------------------------------------------------
+// CHECKSUMS.json — the corpus's digests, AUTHORED HERE.
+//
+// The monorepo mirrors this corpus and has to verify it. Until now it verified against digests its
+// own sync step computed from the same files it was checking, which is a checksum of a checksum:
+// tamper with a mirrored bundle, re-run the sync, and every gate goes green because the numbers
+// were regenerated from the tampered bytes. Independent verification proved exactly that.
+//
+// This file breaks the loop by moving the authority upstream. These digests are written HERE, in
+// the public repository, and this repository's CI runs `npm run kit:fixtures` and then
+// `git diff --exit-code` over this directory — so a committed CHECKSUMS.json provably matches what
+// the generator produces from the committed sources. The monorepo TRANSPORTS this file rather than
+// recomputing it, and checks its mirrored bundles against these numbers. A tampered mirror can no
+// longer be re-signed downstream: the digests it must match live in a different repository, under
+// a different CI, pinned by commit.
+const checksums = {
+  note: "AUTHORED by packages/project-schema/fixtures/build.mjs in the relicsv4 repository, and guarded by its CI (`kit:fixtures` then `git diff --exit-code`). Consumers that mirror this corpus MUST verify against these digests and MUST NOT recompute their own — a corpus checked against numbers derived from itself proves nothing. Digests are sha256 of the raw .relics bytes.",
+  schemaVersion: SCHEMA_VERSION,
+  creatorKitVersion: CREATOR_KIT_VERSION,
+  corpora: {},
+};
+for (const [dir, files] of [
+  ["parity", readdirSync(PARITY).filter((f) => f.endsWith(".relics")).sort()],
+  ["hostile", readdirSync(HOSTILE).filter((f) => f.endsWith(".relics")).sort()],
+]) {
+  const bundles = {};
+  for (const file of files) {
+    const raw = readFileSync(join(dir === "parity" ? PARITY : HOSTILE, file));
+    bundles[file] = { bytes: raw.length, sha256: sha256Bytes_(raw) };
+  }
+  checksums.corpora[dir] = { bundleCount: files.length, bundles };
+}
+checksums.bundleCount = Object.values(checksums.corpora).reduce((n, c) => n + c.bundleCount, 0);
+writeFileSync(join(HERE, "CHECKSUMS.json"), stableJsonText(checksums));
+
 console.log(`parity: ${parity.length} bundles`);
 console.log(`hostile: ${hostile.length} bundles`);
+console.log(`checksums: ${checksums.bundleCount} bundles signed upstream`);

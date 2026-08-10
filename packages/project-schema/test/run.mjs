@@ -13,6 +13,7 @@ import {
   canonicalJson,
   safeJsonParse,
   sha256Utf8,
+  sha256Hex,
   utf8,
   fromUtf8,
   normalizeEntryPath,
@@ -786,6 +787,41 @@ test("acv1: the authoring skeleton defaults nothing", () => {
   const empty = emptyArtConfigV1();
   for (const field of ["animate", "background", "palette", "layers", "traits", "title"]) {
     assert(empty[field] === null, `${field} must be explicitly absent, never a plausible default`);
+  }
+});
+
+// ---------------------------------------------------------------- upstream-authored checksums
+
+// CHECKSUMS.json is the corpus's authority for every downstream consumer. The monorepo mirrors
+// these bundles and verifies them against THIS file rather than against numbers it computes
+// itself — a corpus checked against digests derived from the corpus proves nothing, which
+// independent verification demonstrated by tampering with a bundle and re-signing it. So this
+// file has to be right here, where it is authored, and CI regenerates it and diffs.
+const CHECKSUMS = JSON.parse(readFileSync(join(HERE, "../fixtures/CHECKSUMS.json"), "utf8"));
+
+test("the upstream-authored corpus checksums match the corpus", () => {
+  let checked = 0;
+  for (const [dir, corpus] of Object.entries(CHECKSUMS.corpora)) {
+    const names = Object.keys(corpus.bundles);
+    assert(names.length === corpus.bundleCount, `${dir}: bundleCount does not match the listing`);
+    for (const [file, record] of names.map((n) => [n, corpus.bundles[n]])) {
+      const bytes = readFileSync(join(HERE, "../fixtures", dir, file));
+      assert(bytes.length === record.bytes, `${dir}/${file} is not its recorded size`);
+      assert(sha256Hex(new Uint8Array(bytes)) === record.sha256, `${dir}/${file} does not match its recorded digest`);
+      checked++;
+    }
+  }
+  assert(checked === CHECKSUMS.bundleCount, "bundleCount does not match the number of bundles checked");
+  assert(checked > 40, "the corpus is suspiciously small");
+});
+
+test("every corpus file on disk is listed in the checksums", () => {
+  // The direction that catches an ADDED fixture. Without it, a bundle could be dropped into the
+  // corpus, mirrored downstream, and never appear in the authority everyone verifies against.
+  for (const dir of ["parity", "hostile"]) {
+    const onDisk = readdirSync(join(HERE, "../fixtures", dir)).filter((f) => f.endsWith(".relics")).sort();
+    const listed = Object.keys(CHECKSUMS.corpora[dir].bundles).sort();
+    assert(onDisk.join(",") === listed.join(","), `${dir}: the corpus on disk and the checksums disagree about which bundles exist`);
   }
 });
 
