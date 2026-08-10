@@ -24,10 +24,10 @@ export function toStudioDraft(validated, byPath, options = {}) {
   const isJavaScript = runtime === "JAVASCRIPT";
   const scriptBytes = byPath.get("generator/generate.js");
 
-  const chainId = options.chainId ?? (Array.isArray(manifest.chains?.requested) ? manifest.chains.requested[0] : null) ?? null;
+  const chainId = options.chainId ?? manifest.market?.chainId ?? (Array.isArray(manifest.chains?.requested) ? manifest.chains.requested[0] : null) ?? null;
 
   const draft = {
-    version: 3,
+    version: 5,
     id: options.draftId ?? "imported",
     name: manifest.project.name,
     chainId,
@@ -79,6 +79,17 @@ export function toStudioDraft(validated, byPath, options = {}) {
       minRaiseEth: manifest.market.sale?.minRaiseEth ?? "0",
       salePriceEthOverride: "",
       raiseTargetEthOverride: "",
+      // QUOTE ASSET: the draft carries NULL, always.
+      //
+      // This is deliberate and load-bearing. The bundle's quoteAsset block is a REQUEST, and this
+      // projection is a pure function with no access to a registry — it cannot know whether the
+      // requested asset is currently approved on the importing chain, and writing the requested
+      // address straight into the draft would make an unresolved request look like a settled
+      // choice. The request travels in `provenance.quoteAssetRequest` instead; the importer
+      // resolves it against the live registry and only then writes `market.quoteAsset`.
+      quoteAsset: null,
+      creatorLpFeeAssetMode: manifest.market?.creatorLpFeeAssetMode ?? "DUAL_ASSET",
+      quoteAssetAtLastCompute: null,
     },
   };
 
@@ -102,6 +113,22 @@ export function toStudioDraft(validated, byPath, options = {}) {
       metadataHash: manifest.hashes.metadata,
       mediaHashes: manifest.hashes.media ?? {},
       requestedChains: [...(manifest.chains?.requested ?? [])],
+      /**
+       * The bundle's quote-asset REQUEST, carried verbatim for the importer to resolve. Never a
+       * decision: `mode`, the optional `address`, the optional `expectedKind` cross-check and the
+       * registry version the bundle was built against. An importer MUST re-resolve `address`
+       * against its own current registry; a bundle can never approve a quote token.
+       */
+      quoteAssetRequest: manifest.market?.quoteAsset
+        ? {
+            mode: manifest.market.quoteAsset.mode,
+            address: manifest.market.quoteAsset.address ?? null,
+            expectedKind: manifest.market.quoteAsset.expectedKind ?? null,
+            registryVersion: manifest.market.quoteAsset.registryVersion ?? null,
+          }
+        : { mode: "DEFAULT", address: null, expectedKind: null, registryVersion: null },
+      creatorLpFeeAssetMode: manifest.market?.creatorLpFeeAssetMode ?? "DUAL_ASSET",
+      marketChainId: manifest.market?.chainId ?? null,
       earningsMode: manifest.earnings.mode,
       earningsBps: {
         creatorShareOfCollectedFeesBps: 7500,

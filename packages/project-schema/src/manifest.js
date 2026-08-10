@@ -25,6 +25,9 @@ import {
   LAUNCH_MODES,
   CURVE_PRESETS,
   EARNINGS_MODES,
+  QUOTE_ASSET_REQUEST_MODES,
+  QUOTE_ASSET_KINDS,
+  CREATOR_LP_FEE_ASSET_MODES,
 } from "./vocabulary.js";
 import { isSchemaCompatible, SCHEMA_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, parseSemver } from "./version.js";
 import { isSha256Hex } from "./hashes.js";
@@ -76,6 +79,9 @@ export const REFUSED_MANIFEST_KEYS = Object.freeze({
   delegatecall: "a bundle cannot describe calls to make",
   scripts: "a bundle carries no lifecycle scripts; nothing in it is executed on import",
   postinstall: "a bundle carries no lifecycle scripts; nothing in it is executed on import",
+  quoteAssetRegistry: "a bundle cannot supply a quote-asset registry — the importer resolves quote assets against the launchpad's own current registry, and a bundle can never widen the set of approved assets",
+  approvedQuoteAssets: "a bundle cannot approve a quote asset; market.quoteAsset REQUESTS one and the importer resolves it",
+  quoteAssetOverride: "a bundle cannot override quote-asset approval",
   rpcUrl: "a bundle never carries an endpoint",
   rpc: "a bundle never carries an endpoint",
   apiKey: "a bundle never carries credentials",
@@ -254,7 +260,7 @@ export function validateManifest(manifest) {
   if (!isObject(market)) {
     issues.push(error("MARKET_SHAPE", `${at}#market`, "market must be an object"));
   } else {
-    onlyKeys(issues, market, `${at}#market`, ["startingPreset", "launchMode", "mappingCount", "sale"]);
+    onlyKeys(issues, market, `${at}#market`, ["startingPreset", "launchMode", "mappingCount", "sale", "chainId", "quoteAsset", "creatorLpFeeAssetMode"]);
     if (!STARTING_PRESETS.includes(market.startingPreset)) {
       issues.push(error("MARKET_PRESET", `${at}#market.startingPreset`, `startingPreset must be one of ${STARTING_PRESETS.join(", ")}`));
     }
@@ -264,6 +270,64 @@ export function validateManifest(manifest) {
     if (!Number.isInteger(market.mappingCount) || market.mappingCount < 0 || market.mappingCount > LIMITS.maxMarketMappings) {
       issues.push(error("MARKET_MAPPING_COUNT", `${at}#market.mappingCount`, `mappingCount must be an integer between 0 and ${LIMITS.maxMarketMappings}`));
     }
+    // ---- quote asset: a REQUEST, never an approval -----------------------------------------
+    // Every field below is OPTIONAL. A bundle written before this schema existed, or one that
+    // simply does not care, omits them and imports exactly as it always did — DEFAULT is the
+    // absence, and the importer supplies the chain's own default.
+    if (market.chainId !== undefined && !SUPPORTED_CHAIN_IDS.includes(market.chainId)) {
+      issues.push(
+        error("MARKET_CHAIN_ID", `${at}#market.chainId`, `market.chainId ${JSON.stringify(market.chainId)} is not supported (supported: ${SUPPORTED_CHAIN_IDS.join(", ")})`),
+      );
+    }
+    if (market.chainId !== undefined && Array.isArray(manifest.chains?.requested) && !manifest.chains.requested.includes(market.chainId)) {
+      issues.push(
+        error(
+          "MARKET_CHAIN_NOT_REQUESTED",
+          `${at}#market.chainId`,
+          `market.chainId ${market.chainId} is not in chains.requested (${manifest.chains.requested.join(", ")}) — a market cannot be described for a chain the bundle does not target`,
+        ),
+      );
+    }
+    if (market.creatorLpFeeAssetMode !== undefined && !CREATOR_LP_FEE_ASSET_MODES.includes(market.creatorLpFeeAssetMode)) {
+      issues.push(
+        error(
+          "MARKET_FEE_ASSET_MODE",
+          `${at}#market.creatorLpFeeAssetMode`,
+          `creatorLpFeeAssetMode must be one of ${CREATOR_LP_FEE_ASSET_MODES.join(", ")} — and it is a REQUEST: QUOTE_ONLY needs a conversion route the launchpad has proven at import time`,
+        ),
+      );
+    }
+    if (market.quoteAsset !== undefined) {
+      if (!isObject(market.quoteAsset)) {
+        issues.push(error("MARKET_QUOTE_SHAPE", `${at}#market.quoteAsset`, "market.quoteAsset must be an object"));
+      } else {
+        onlyKeys(issues, market.quoteAsset, `${at}#market.quoteAsset`, ["mode", "address", "expectedKind", "registryVersion"]);
+        const mode = market.quoteAsset.mode;
+        if (!QUOTE_ASSET_REQUEST_MODES.includes(mode)) {
+          issues.push(error("MARKET_QUOTE_MODE", `${at}#market.quoteAsset.mode`, `quoteAsset.mode must be one of ${QUOTE_ASSET_REQUEST_MODES.join(", ")}`));
+        }
+        if (mode === "ADDRESS") {
+          if (typeof market.quoteAsset.address !== "string" || !ADDRESS_RE.test(market.quoteAsset.address)) {
+            issues.push(error("MARKET_QUOTE_ADDRESS", `${at}#market.quoteAsset.address`, "quoteAsset.address must be a 0x-prefixed 20-byte address when mode is ADDRESS"));
+          } else if (market.quoteAsset.address.toLowerCase() === ZERO_ADDRESS) {
+            issues.push(error("MARKET_QUOTE_ADDRESS_ZERO", `${at}#market.quoteAsset.address`, "quoteAsset.address cannot be the zero address"));
+          }
+        } else if (market.quoteAsset.address !== undefined) {
+          issues.push(
+            error("MARKET_QUOTE_ADDRESS_UNEXPECTED", `${at}#market.quoteAsset.address`, 'quoteAsset.address is only meaningful when mode is "ADDRESS" — DEFAULT means "the importing chain\'s own default"'),
+          );
+        }
+        if (market.quoteAsset.expectedKind !== undefined && !QUOTE_ASSET_KINDS.includes(market.quoteAsset.expectedKind)) {
+          issues.push(
+            error("MARKET_QUOTE_KIND", `${at}#market.quoteAsset.expectedKind`, `quoteAsset.expectedKind must be one of ${QUOTE_ASSET_KINDS.join(", ")} — it is a cross-check the registry can only ever REFUSE, never a claim the importer trusts`),
+          );
+        }
+        if (market.quoteAsset.registryVersion !== undefined) {
+          requireString(issues, market.quoteAsset.registryVersion, `${at}#market.quoteAsset.registryVersion`, "MARKET_QUOTE_REGISTRY_VERSION", 64);
+        }
+      }
+    }
+
     const isSale = market.launchMode === "FIXED_PRICE_SALE_TO_V4" || market.launchMode === "BONDING_CURVE_SALE_TO_V4";
     if (!isSale && market.sale !== undefined) {
       issues.push(error("MARKET_SALE_UNEXPECTED", `${at}#market.sale`, "market.sale is only allowed for a sale launch mode"));

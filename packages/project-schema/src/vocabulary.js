@@ -36,8 +36,54 @@ export const STARTING_PRESET_TO_INDEX = Object.freeze({ LOW: 0, MID: 1, HIGH: 2 
 /** How many whole project tokens back one active artwork. */
 export const BACKING_MODELS = Object.freeze(["FULL_PARITY", "PARTIAL"]);
 
-/** Launch method. All three end in one canonical Uniswap v4 project-token/WETH pool. */
+/** Launch method. All three end in one canonical Uniswap v4 pool pairing the project token with
+ *  the market's QUOTE ASSET (see QUOTE_ASSET_REQUEST_MODES below). */
 export const LAUNCH_MODES = Object.freeze(["INSTANT_V4", "FIXED_PRICE_SALE_TO_V4", "BONDING_CURVE_SALE_TO_V4"]);
+
+// ---------------------------------------------------------------------------------------------
+// QUOTE ASSET — the asset a project is priced and traded in.
+//
+// A BUNDLE REQUESTS A QUOTE ASSET. IT NEVER APPROVES ONE. This is the whole design constraint:
+// the manifest carries a REQUEST that an importer must resolve against the launchpad's CURRENT
+// registry, at import time, on the importing chain. There is no field here — and there must never
+// be one — in which a bundle can assert that a token is approved, vetted, low-risk, or convertible.
+// A bundle that names an asset the registry does not currently enable imports as a DRAFT with
+// launch readiness BLOCKED, and the creator picks another approved asset. That is the only
+// outcome; a bundle cannot widen the set of assets the platform accepts.
+//
+// Multi-quote is a Robinhood Chain (4663) capability. On Ethereum and Base the registry contains
+// one asset — that chain's WETH — so a bundle requesting anything else there resolves to BLOCKED
+// for exactly the same reason and by exactly the same code path.
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * How a bundle NAMES the quote asset it would like.
+ *
+ *   DEFAULT  "whatever the importing chain's default is." The portable choice: a bundle that says
+ *            DEFAULT imports cleanly on every chain, because every chain has a default.
+ *   ADDRESS  an exact address the importer MUST re-resolve against the current registry. The
+ *            address is a request for a specific asset, not a claim about it.
+ */
+export const QUOTE_ASSET_REQUEST_MODES = Object.freeze(["DEFAULT", "ADDRESS"]);
+
+/**
+ * The KIND a bundle expects its requested address to be. Purely a cross-check: if the importer
+ * resolves the address and the registry says it is a different kind than the bundle expected, the
+ * bundle was built against a different world and the mismatch is surfaced rather than ignored.
+ * The registry's answer always wins — this field can only ever cause a REFUSAL, never an approval.
+ */
+export const QUOTE_ASSET_KINDS = Object.freeze(["NATIVE_WETH", "STABLE", "STOCK_TOKEN", "ECOSYSTEM_TOKEN"]);
+
+/**
+ * Which asset(s) the creator's share of collected LP fees is denominated in.
+ *
+ *   DUAL_ASSET  both sides of the pool: the project token AND the quote asset.
+ *   QUOTE_ONLY  the quote asset only; the project-token side is converted before it is claimable.
+ *
+ * Also a REQUEST: QUOTE_ONLY requires a conversion route the platform has actually proven, which
+ * is a property of the registry at import time, not of the bundle.
+ */
+export const CREATOR_LP_FEE_ASSET_MODES = Object.freeze(["DUAL_ASSET", "QUOTE_ONLY"]);
 
 /** Bonding-curve presets that actually ship. There is no runtime curve-registration path and a
  *  bundle can never carry curve Solidity. */

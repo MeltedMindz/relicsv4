@@ -110,6 +110,24 @@ export interface ProjectManifest {
       minRaiseEth: string;
       curvePresetId?: string;
     };
+    /** Which of `chains.requested` this market block describes. Optional. */
+    chainId?: SupportedChainId;
+    /**
+     * A REQUEST for the asset the project should be priced and traded in. NEVER an approval: the
+     * importer re-resolves it against the launchpad's own current registry, and a bundle can never
+     * widen the set of assets the platform accepts. Omit it entirely to mean DEFAULT.
+     */
+    quoteAsset?: {
+      mode: QuoteAssetRequestMode;
+      /** Required when `mode` is "ADDRESS"; refused otherwise. */
+      address?: string;
+      /** Cross-check only. The registry's answer wins; a mismatch REFUSES, never approves. */
+      expectedKind?: QuoteAssetKind;
+      /** The registry release the bundle was authored against, for drift reporting. */
+      registryVersion?: string;
+    };
+    /** A REQUEST. QUOTE_ONLY needs a conversion route the platform has proven at import time. */
+    creatorLpFeeAssetMode?: CreatorLpFeeAssetMode;
   };
   earnings: {
     mode: EarningsMode;
@@ -215,6 +233,15 @@ export interface StudioDraftProjection {
     metadataHash: string;
     mediaHashes: Record<string, string>;
     requestedChains: SupportedChainId[];
+    /** The bundle's quote-asset REQUEST, carried verbatim for the importer to resolve. */
+    quoteAssetRequest: {
+      mode: QuoteAssetRequestMode;
+      address: string | null;
+      expectedKind: QuoteAssetKind | null;
+      registryVersion: string | null;
+    };
+    creatorLpFeeAssetMode: CreatorLpFeeAssetMode;
+    marketChainId: SupportedChainId | null;
     earningsMode: EarningsMode;
     earningsBps: {
       creatorShareOfCollectedFeesBps: number;
@@ -224,6 +251,14 @@ export interface StudioDraftProjection {
     templateParams: unknown;
   };
 }
+
+export type QuoteAssetRequestMode = "DEFAULT" | "ADDRESS";
+export type QuoteAssetKind = "NATIVE_WETH" | "STABLE" | "STOCK_TOKEN" | "ECOSYSTEM_TOKEN";
+export type CreatorLpFeeAssetMode = "DUAL_ASSET" | "QUOTE_ONLY";
+
+export const QUOTE_ASSET_REQUEST_MODES: readonly QuoteAssetRequestMode[];
+export const QUOTE_ASSET_KINDS: readonly QuoteAssetKind[];
+export const CREATOR_LP_FEE_ASSET_MODES: readonly CreatorLpFeeAssetMode[];
 
 // ---- versions --------------------------------------------------------------------------------
 export const SCHEMA_VERSION: string;

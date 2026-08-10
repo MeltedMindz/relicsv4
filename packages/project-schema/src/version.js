@@ -8,10 +8,10 @@
  * added; bump the MINOR when a purely additive optional field appears. An importer accepts a
  * bundle whose MAJOR it knows and whose MINOR is <= its own.
  */
-export const SCHEMA_VERSION = "1.0.0";
+export const SCHEMA_VERSION = "1.1.0";
 
 /** Version of the creator kit (this repo's CLI + templates) that produced the bundle. */
-export const CREATOR_KIT_VERSION = "1.0.0";
+export const CREATOR_KIT_VERSION = "1.1.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
