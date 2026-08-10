@@ -35,6 +35,23 @@ import {
   buildRenderContext,
   LIMITS,
   REFUSED_MANIFEST_KEYS,
+  keccak256Utf8,
+  keccak256Hex,
+  computeArtBinding,
+  computeBundleCommitment,
+  representativeOutputsCommitment,
+  diffArtBinding,
+  isRuntimeLaunchable,
+  explainIncompatibility,
+  assembleBundle,
+  BINDING_SEEDS,
+  ART_BINDING_KEYS,
+  ART_RUNTIME_IDS,
+  APPROVED_ART_RUNTIMES,
+  LAUNCHABLE_ART_RUNTIMES,
+  CHAIN_RESOLVED_BINDING_FIELDS,
+  SCHEMA_VERSION,
+  CREATOR_KIT_VERSION,
 } from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
@@ -108,6 +125,131 @@ test("bundleHash is a pure function of its two inputs", () => {
   const c = computeBundleHash("a".repeat(64), "c".repeat(64));
   assert(a === b, "the same inputs gave different hashes");
   assert(a !== c, "different content gave the same hash");
+});
+
+// ---------------------------------------------------------------- keccak256 + art binding
+
+test("keccak256 matches the EVM, not SHA3", () => {
+  // The empty-input vector is the one that separates original Keccak (0x01 padding) from NIST
+  // SHA3-256 (0x06). Getting this wrong would mean printing hashes no chain ever agrees with.
+  assert(keccak256Utf8("") === "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470", "empty-string keccak is wrong");
+  assert(keccak256Utf8("abc") === "4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45", "abc keccak is wrong");
+  assert(
+    keccak256Utf8("The quick brown fox jumps over the lazy dog") === "4d741b6f1eb29cb2a9b9911c82f56fa8d73b04959d3d9d222895df6c0b28aa15",
+    "keccak of the pangram is wrong",
+  );
+});
+
+test("keccak256 is correct across the rate-block boundary", () => {
+  // 136 bytes is exactly one rate block, so 135/136/137 exercise the three padding paths. Values
+  // cross-checked against `cast keccak`.
+  const of = (n) => keccak256Hex(new Uint8Array(n).fill(0x61));
+  assert(of(135) === "34367dc248bbd832f4e3e69dfaac2f92638bd0bbd18f2912ba4ef454919cf446", "135-byte keccak is wrong");
+  assert(of(136) === "a6c4d403279fe3e0af03729caada8374b5ca54d8065329a3ebcaeb4b60aa386e", "136-byte keccak is wrong");
+  assert(of(137) === "d869f639c7046b4929fc92a4d988a8b22c55fbadb802c0c66ebcd484f1915f39", "137-byte keccak is wrong");
+});
+
+test("no digest the format writes can be mistaken for a private key", () => {
+  // `0x` + 64 hex is the raw secp256k1 key shape the secret scanner refuses. Every digest the
+  // manifest carries is stored bare, so the scanner never has to be told to look away.
+  const digests = [keccak256Utf8("anything"), computeBundleCommitment("a".repeat(64), "b".repeat(64))];
+  for (const digest of digests) {
+    assert(/^[0-9a-f]{64}$/.test(digest), `a manifest digest is not bare lowercase hex: ${digest}`);
+    assert(scanTextForSecrets("relics.project.json", `"hash": "${digest}"`).length === 0, "a digest tripped the secret scanner");
+  }
+});
+
+test("a bundle can never state a chain fact", () => {
+  const binding = computeArtBinding({
+    runtime: "JAVASCRIPT",
+    scriptBytes: utf8("export function render(){return '<svg></svg>';}"),
+    generatorFileHashes: {},
+    traitSchema: null,
+    marketMappings: null,
+    collectionMetadata: null,
+  });
+  for (const field of CHAIN_RESOLVED_BINDING_FIELDS) {
+    assert(field in binding, `${field} must be present so its absence is never mistaken for permission`);
+    assert(binding[field] === null, `${field} must be null in a derived binding`);
+  }
+});
+
+test("the art binding is a pure function of the bundle's bytes", () => {
+  const input = {
+    runtime: "JAVASCRIPT",
+    scriptBytes: utf8("export function render(){return '<svg><rect/></svg>';}"),
+    generatorFileHashes: { "generator/generate.js": "a".repeat(64) },
+    traitSchema: { version: 1, dimensions: [] },
+    marketMappings: { version: 1, mappings: [] },
+    collectionMetadata: { version: 1, name: "X" },
+  };
+  const a = computeArtBinding(input);
+  const b = computeArtBinding(input);
+  assert(diffArtBinding(a, b).length === 0, "the same bytes produced two different bindings");
+
+  const changed = computeArtBinding({ ...input, scriptBytes: utf8("export function render(){return '<svg><circle/></svg>';}") });
+  assert(diffArtBinding(a, changed).includes("artConfigHash"), "changing the generator did not move the art config hash");
+});
+
+test("artConfigHash is exactly what the factory checks for a JavaScript launch", () => {
+  // LaunchpadFactory._storeArt: `if (keccak256(p.artConfig) != p.artScriptHash) revert BadArtHash()`
+  // and for the JAVASCRIPT runtime artConfig IS the generator entry file, byte for byte.
+  const script = utf8("export function render(){return '<svg><rect width=\"1\" height=\"1\"/></svg>';}");
+  const binding = computeArtBinding({
+    runtime: "JAVASCRIPT",
+    scriptBytes: script,
+    generatorFileHashes: {},
+    traitSchema: null,
+    marketMappings: null,
+    collectionMetadata: null,
+  });
+  assert(binding.artConfigHash === keccak256Hex(script), "artConfigHash is not keccak256 of the script bytes");
+  assert(binding.artConfigBytes === script.length, "artConfigBytes does not match the script length");
+});
+
+test("a Solidity-SVG binding refuses to invent a config hash it does not own", () => {
+  const binding = computeArtBinding({
+    runtime: "SOLIDITY_SVG",
+    templateId: "7",
+    scriptBytes: utf8("preview only"),
+    generatorFileHashes: {},
+    traitSchema: null,
+    marketMappings: null,
+    collectionMetadata: null,
+    templateParams: { rings: 4 },
+  });
+  assert(binding.artConfigSource === "TEMPLATE_PARAMS", "a Solidity renderer's config does not come from the generator script");
+  assert(binding.artConfigHash === null, "the kit invented a config hash for an encoding it does not own");
+  assert(binding.templateParamsHash !== null, "the creator's parameters must still be committed to");
+  assert(binding.templateId === "7", "the registered template id was lost");
+});
+
+test("the output commitment covers the fixed seeds and nothing else", () => {
+  const outputs = Object.fromEntries(BINDING_SEEDS.map((seed) => [seed, sha256Utf8(`art-${seed}`)]));
+  const commitment = representativeOutputsCommitment(outputs);
+  assert(commitment !== null, "a complete seed set produced no commitment");
+  assert(representativeOutputsCommitment({ ...outputs, "99": sha256Utf8("extra") }) === commitment, "an unrelated seed changed the commitment");
+
+  const missing = { ...outputs };
+  delete missing[BINDING_SEEDS[0]];
+  assert(representativeOutputsCommitment(missing) === null, "a missing binding seed still produced a commitment");
+
+  const different = { ...outputs, [BINDING_SEEDS[0]]: sha256Utf8("different art") };
+  assert(representativeOutputsCommitment(different) !== commitment, "changing what the generator draws did not move the commitment");
+});
+
+test("launchability is never written into a bundle", () => {
+  assert(!ART_BINDING_KEYS.includes("runtimeLaunchable"), "launchability is a property of the protocol today, not of the bundle");
+  for (const runtime of LAUNCHABLE_ART_RUNTIMES) assert(isRuntimeLaunchable(runtime), `${runtime} is listed as launchable but does not report as such`);
+  for (const runtime of LAUNCHABLE_ART_RUNTIMES) assert(APPROVED_ART_RUNTIMES.includes(runtime), `${runtime} is launchable but not approved, which cannot be true`);
+  for (const runtime of APPROVED_ART_RUNTIMES) assert(typeof ART_RUNTIME_IDS[runtime] === "string", `${runtime} has no stable runtime id`);
+});
+
+test("a pre-binding bundle is refused with the reason and the fix", () => {
+  const message = explainIncompatibility("1.1.0");
+  assert(/art binding/i.test(message), "the refusal does not say what is missing");
+  assert(message.includes(CREATOR_KIT_VERSION), "the refusal does not say which kit version to re-export with");
+  assert(!isSchemaCompatible("1.1.0", SCHEMA_VERSION), "a pre-binding bundle was accepted");
 });
 
 test("schema compatibility follows major/minor", () => {

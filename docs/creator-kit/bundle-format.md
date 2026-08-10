@@ -114,6 +114,35 @@ bundleHash          = sha256(utf8("relics-project-bundle/1\n"
 determines its own config hash, the entries determine the content hash, and the bundle hash is a
 pure function of the two. An importer recomputes all three and compares.
 
+### The second hash family: keccak256
+
+Everything above is sha256, and sha256 addresses **files** — reproducible with `shasum`, readable
+in a diff. But the EVM computes keccak256, and a launch stores keccak256. So the binding block
+restates the same documents under keccak:
+
+```
+keccakJson(document) = keccak256(utf8(canonicalJson(parsed document)))
+
+artConfigHash        = keccak256(the exact bytes the launch stores)
+templateParamsHash   = keccakJson(generator/params.json)
+generatorHash        = keccakJson({ "generator/…": sha256, … })
+traitSchemaHash      = keccakJson(traits/schema.json)
+marketMappingHash    = keccakJson(market/mappings.json)
+metadataHash         = keccakJson(metadata/collection.json)
+bundleCommitment     = keccak256(utf8("relics-project-bundle/1\n"
+                            + projectConfigHash + "\n" + contentHash))
+```
+
+`bundleCommitment` hashes the identical preimage as `bundleHash`, so one `bytes32` names the
+bundle in a launch without inventing a second notion of what "this bundle" means. It lives in
+`integrity`, which `projectConfigHash` excludes — otherwise the binding would be hashing itself.
+
+**Every digest is stored bare — no `0x`.** `0x` followed by 64 hex characters is exactly the shape
+of a raw private key, which the bundle's own secret scanner refuses everywhere. Prefixing these
+would have meant either a manifest that trips the scanner or a scanner taught to ignore the one
+shape it exists to catch. The CLI prints them with the prefix, because on screen you are about to
+compare the value against a transaction.
+
 **Canonical JSON** sorts keys at every level, emits no insignificant whitespace, and refuses
 anything with no single canonical form (non-finite numbers, bigints, functions, undefined). JSON
 documents are stored pretty-printed for human reading; the hashes that matter are computed on the
@@ -128,10 +157,10 @@ an error, not a passthrough.
 
 ```jsonc
 {
-  "schemaVersion": "1.0.0",
-  "creatorKitVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
+  "creatorKitVersion": "2.0.0",
   "runtimeVersion": "relics-art-runtime/1",
-  "protocolReleaseCompatibility": "v4-art-launchpad/g-1.1",
+  "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
 
   "project":  { "name", "symbol", "description", "license", "website?", "twitterHandle?" },
   "supply":   { "totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork?" },
@@ -141,11 +170,62 @@ an error, not a passthrough.
   "chains":   { "requested": [1 | 8453 | 4663, …] },
   "media":    { "cover?": { "path", "sha256", "cid?" }, "files?": {} },
 
-  "hashes":    { "algorithm", "script", "dependencies", "generator",
-                 "traitSchema", "marketMapping", "metadata", "media?" },
-  "integrity": { "contentHash", "projectConfigHash", "bundleHash" }
+  "hashes":     { "algorithm", "script", "dependencies", "generator",
+                  "traitSchema", "marketMapping", "metadata", "media?" },
+  "artBinding": { "schemaVersion", "runtime", "runtimeId", "runtimeIdHash", "artMode",
+                  "templateId", "artConfigSource", "artConfigBytes", "artConfigHash",
+                  "templateParamsHash", "generatorHash", "traitSchemaHash",
+                  "marketMappingHash", "metadataHash", "representativeOutputsHash",
+                  "runtimeCodeHash": null, "scriptPointer": null },
+  "integrity":  { "contentHash", "projectConfigHash", "bundleHash", "bundleCommitment" }
 }
 ```
+
+## The art binding
+
+This is the block a collection renders from. Before it existed, a bundle described its art to a
+human and to a validator and to nobody else: the launch stored the script bytes on chain, but
+`ProjectCollection.tokenURI` never referenced them, so every project rendered the same built-in
+shapes regardless of what its creator drew. The binding is the record that closes that — an
+immutable statement of which runtime renders a project and which exact bytes it renders from.
+
+**It is derived, never authored.** The builder computes it from the entries; the validator
+recomputes it from the finished container and refuses any difference. Edit the generator and
+`artConfigHash` moves. Edit the mappings and `marketMappingHash` moves. Edit the block itself and
+it stops matching the files it claims to describe. There is nothing in it an importer has to take
+on trust, which is exactly why an importer can build launch parameters straight from it.
+
+| field | what it is |
+|---|---|
+| `runtimeId` | the stable, versioned renderer identity — `ONCHAIN_JAVASCRIPT_V1`, `SOLIDITY_SVG_V1`. The version is in the name so a future runtime gets a new id and an existing collection stays bound to the one it launched with. |
+| `artConfigHash` | keccak256 of the exact bytes the launch stores — the value the factory checks `keccak256(artConfig)` against. For the JavaScript runtime `artConfig` **is** `generator/generate.js`, byte for byte. |
+| `templateParamsHash` | for a Solidity renderer, the creator's declarative parameters. `artConfigHash` is `null` there: only the registered template's published parameter layout can encode its config bytes, and a bundle does not own that encoding. Refusing to state a value the kit cannot derive is the point of the block. |
+| `representativeOutputsHash` | a commitment to what the generator actually draws for eight fixed seeds. An importer re-renders them in its own sandbox; a mismatch means the art in the file is not the art that was validated. |
+
+### A bundle can never state a chain fact
+
+`runtimeCodeHash` and `scriptPointer` are always `null`, and a bundle that fills either one in is
+refused by name:
+
+- `runtimeCodeHash` is the deployed renderer's `EXTCODEHASH`. The importer reads it from the chain
+  the creator is launching on. A bundle that could assert one could pin a renderer of its choosing.
+- `scriptPointer` is the SSTORE2 address the launch writes. It does not exist until the launch
+  transaction executes.
+
+They are present as explicit `null` rather than absent, so the bundle's shape and the on-chain
+record's shape line up field for field, and so a forgery is caught by name rather than by a generic
+unknown-key check. This is the same REQUEST-never-APPROVAL rule the quote asset follows.
+
+### Approved is not launchable
+
+`APPROVED_ART_RUNTIMES` is what the format accepts. `LAUNCHABLE_ART_RUNTIMES` is what the
+launchpad currently binds and renders. A runtime can be approved and not yet launchable; when it
+is, its templates still ship, still preview, still export — the kit marks them rather than
+deleting the work or implying they can be launched.
+
+Launchability is deliberately **not** a manifest field. It is a property of the protocol on the day
+you ask, and folding it into the bundle hash would mean enabling a runtime invalidated every bundle
+exported while it was gated.
 
 ### There is no field for contract code
 
@@ -220,6 +300,17 @@ Four version strings travel in every bundle:
 - `runtimeVersion` — the `render(context)` contract the generator was written against.
 - `protocolReleaseCompatibility` — the launchpad parameter surface it was built for. This
   identifies a parameter surface, never a deployment.
+
+### Why 2.0.0 is a MAJOR
+
+Both of this schema's MAJOR triggers fire at once. `art.runtime` **changed meaning**: it used to
+be descriptive and is now a commitment `tokenURI` reads. And `artBinding` is a **required field**:
+a 1.x bundle carries no binding at all, so importing one into a world where the collection renders
+from the binding would produce art nobody validated.
+
+A 1.x bundle is refused with the reason and the fix — re-export the same project directory with the
+current kit — not with a bare "incompatible". No 1.x bundle has ever been launched; the launchpad
+is `PREPARED_NOT_DEPLOYED` on every supported chain, so the break strands nothing.
 
 ---
 

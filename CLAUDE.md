@@ -69,12 +69,16 @@ These are accuracy rules, not style. Getting one wrong publishes a false claim.
   export a bundle today; they cannot launch.
 - **There has been no external audit.** Review has been internal only. Never write "audited",
   "security reviewed" or anything a reader would take as third-party assurance.
-- **Creator art is not yet bound to `tokenURI`.** In the frozen release the collection contract
-  renders a small built-in placeholder — rings derived from DNA and the pool's swap counter,
-  the same for every collection. The bundle carries the creator's generator and the import
-  round-trip is exact, but on-chain artwork binding is unfinished work. Say so if they ask what
-  their token will look like on chain. See `docs/creator-kit/cli.md` and
-  `docs/launchpad/05-creator-flow.md`.
+- **Creator art reaches `tokenURI` through the art binding.** Every bundle carries an
+  `artBinding` block: the runtime id, and the keccak256 of the exact bytes that runtime is given
+  (`artConfigHash` — for the JavaScript runtime, `generator/generate.js` byte for byte, the same
+  value the factory checks `keccak256(artConfig)` against). A launch writes that record into the
+  collection and `tokenURI` renders from it. Still say plainly that **nobody can launch yet**:
+  the launchpad is not deployed on any chain. And a bundle never names a deployed renderer —
+  `runtimeCodeHash` and `scriptPointer` are chain facts, always `null`, refused by name if a
+  bundle fills them in. See `docs/creator-kit/bundle-format.md`.
+- **Approved is not launchable.** `LAUNCHABLE_ART_RUNTIMES` in the schema decides. A template on
+  an approved but gated runtime is marked, not deleted and not sold as launchable.
 - **Fees are a share of collected LP fees, never of volume.** Creator 75%; platform 25%, of
   which 6.25% of collected fees buys $RELICS and 18.75% is retained.
 - **On $RELICS removal, always state both halves:** circulating supply falls, and `totalSupply`

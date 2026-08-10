@@ -46,7 +46,9 @@ The message names the file and the rule. In practice it is almost always one of 
 
 | Symptom | Cause |
 |---|---|
-| `EARNINGS_RECIPIENT_PLACEHOLDER` | the scaffold's placeholder wallet. Edit `relics.config.json` — note the message cites `relics.project.json`, which is the *generated bundle manifest*, not a file in the project directory |
+| `EARNINGS_RECIPIENT_PLACEHOLDER` | the scaffold's placeholder wallet. Edit `relics.config.json`; the message says so |
+| `ART_BINDING_MISMATCH` | the manifest's binding does not follow from the bundle's own bytes. Something was hand-edited — re-export instead of patching |
+| `ART_BINDING_CHAIN_CLAIM` | a bundle tried to state `runtimeCodeHash` or `scriptPointer`. Those are chain facts; they are always `null` |
 | `METADATA_NO_IMAGE` (warn) | no collection image; marketplaces show a blank tile |
 | `TRAITS_SPACE_TOO_SMALL` (warn) | the trait schema expresses fewer combinations than the mint size |
 | non-determinism | `Math.random()`, `Date.now()`, or state carried between renders. Use the seeded PRNG. |
@@ -55,18 +57,26 @@ The message names the file and the rule. In practice it is almost always one of 
 | blank / duplicate output | `test-seeds --count 100` catches collapse-to-one-image and dead seeds |
 | market mapping rejected | sensors, transforms and destinations are a closed set — check against the schema |
 
-### Four things you must not tell a creator
+### Five things you must not tell a creator
 
 Accuracy rules, not style. Each one is a false claim if you get it wrong.
 
 1. **The launchpad is not deployed** (`PREPARED_NOT_DEPLOYED` on 1 / 8453 / 4663) and there is
    no launchpad address. A creator can build and export today; they cannot launch.
 2. **No external audit has happened.** Review is internal only.
-3. **Creator art is not yet bound to `tokenURI`.** The frozen release renders a built-in
-   placeholder — rings from DNA and the swap counter, identical for every collection. The
-   bundle carries their generator and the import round-trip is exact, but on-chain artwork
-   binding is unfinished. Say so plainly if they ask what their token will look like on chain.
-4. **A bundle can never carry protocol code.** `.sol`/`.vy`/`.yul`/`.wasm` are refused by
+3. **Creator art reaches `tokenURI` through the art binding — and only through it.** A bundle
+   carries an `artBinding` block naming the runtime (`ONCHAIN_JAVASCRIPT_V1`, `SOLIDITY_SVG_V1`)
+   and the keccak256 of the exact bytes that runtime is given; a launch writes that record into
+   the collection, and `tokenURI` renders from it. Two things stay true and must be said if
+   asked: the launchpad is **not deployed anywhere**, so nobody can launch yet (rule 1); and the
+   binding a bundle carries is the launchpad release named in
+   `protocolReleaseCompatibility` — a bundle never states which renderer is deployed at which
+   address. `runtimeCodeHash` and `scriptPointer` are chain facts, always `null` in a bundle,
+   and refused by name if filled in.
+4. **Approved is not launchable.** `APPROVED_ART_RUNTIMES` is what the format accepts;
+   `LAUNCHABLE_ART_RUNTIMES` is what the launchpad binds and renders. A template on an approved
+   but gated runtime ships and is MARKED — never deleted, never presented as launchable.
+5. **A bundle can never carry protocol code.** `.sol`/`.vy`/`.yul`/`.wasm` are refused by
    extension and the manifest key space is closed, so no bundle can replace the hook, token,
    collection, escrow, router or buyback. A custom hook needs a separate reviewed process.
 

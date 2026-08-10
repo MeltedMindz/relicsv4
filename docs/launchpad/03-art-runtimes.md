@@ -22,17 +22,26 @@ should pick a runtime knowing what actually ships:
 | Your art bytes (`artConfig`) | On chain, as contract code via SSTORE2, hash-committed at launch | Stored by the factory during `launch()` |
 | The render of your JavaScript | Off chain, by a viewer | A client, under an on-chain-derived seed |
 
-**In the current build, `ProjectCollection.tokenURI` does not call your art.** It returns a fully
-on-chain data URI whose image is a small deterministic SVG built from the token's DNA and the
-hook's live `organicSwapCount` / `organicNetFlow` — a dark field with a hue derived from DNA and a
-ring count that moves with swap history. The `SoliditySvgTemplate` and `JsPassthroughTemplate`
-libraries exist in the source and define the render and seed contracts, but they are not wired into
-`tokenURI` in this build.
+**How your art gets from the bundle into `tokenURI`: the art binding.** Your bundle carries an
+`artBinding` block — the runtime id, and the keccak256 of the exact bytes that runtime is handed.
+A launch writes that record into your collection, permanently, and `tokenURI` renders from it. It
+is the record that makes "the contract draws *my* art" a checkable statement rather than a hope:
+every value in it is derived from your bundle's own bytes, so you can recompute all of it from the
+file on your disk and compare it against the launch transaction.
 
-That is worth knowing before you plan a collection around it. It does not make the storage
-meaningless — your bytes are on chain and hash-committed, so any renderer can reproduce your work
-from chain data alone — but "the contract draws my art in `tokenURI`" is not something you can say
-about this build today.
+There is an earlier design worth knowing about, because you will find it in older notes: the
+launch used to store your bytes and stop there, with `tokenURI` returning a small built-in SVG —
+DNA-derived hue, ring count moving with swap history — identical for every collection. Your bytes
+were on chain and hash-committed, so a renderer *could* reproduce your work, but the collection
+itself did not. That is what the binding replaced.
+
+Two limits still apply, and neither is about the binding:
+
+- **Nobody can launch yet.** The launchpad is `PREPARED_NOT_DEPLOYED` on 1 / 8453 / 4663.
+- **A bundle never names a deployed renderer.** `runtimeCodeHash` and `scriptPointer` are chain
+  facts — the importer reads the first from the chain you are launching on, and the launch itself
+  produces the second. A bundle carries them as `null` and is refused if it fills them in, because
+  a bundle that could pin a renderer could pin a renderer of its choosing.
 
 ## A. `SOLIDITY_SVG` — a registered on-chain template plus your configuration
 
