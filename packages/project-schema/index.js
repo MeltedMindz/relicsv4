@@ -48,11 +48,41 @@ export {
   QUOTE_ASSET_REQUEST_MODES,
   QUOTE_ASSET_KINDS,
   CREATOR_LP_FEE_ASSET_MODES,
-  FEE_SPLIT_BPS,
-  BUYBACK_DISCLOSURE,
   TRAIT_DISTRIBUTIONS,
   transformSpec,
 } from "./src/vocabulary.js";
+
+// THE ONE PLACE the launchpad's fee allocation is stated. Everything downstream — CLI, SDK,
+// indexer, studio, docs — derives from here rather than typing a bps or a percentage of its own.
+export {
+  BPS_DENOMINATOR,
+  CREATOR_SHARE_BPS,
+  PLATFORM_SHARE_BPS,
+  RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE,
+  PLATFORM_RETAINED_BPS_OF_PLATFORM_SHARE,
+  NOMINAL_ALLOCATION_BPS,
+  NOMINAL_ALLOCATION_PERCENT,
+  PLATFORM_SUBDIVISION_PERCENT,
+  PLATFORM_SUBDIVISION_PROSE,
+  FEE_SPLIT_BPS,
+  bpsToPercentString,
+  bpsToProsePercentString,
+  BUYBACK_MECHANISM,
+  ENTOMBMENT_ADDRESS,
+  BUYBACK_DISCLOSURE,
+  BUYBACK_DISCLOSURE_SHORT,
+  BUYBACK_TECHNICAL_NOTE,
+  PLATFORM_SETTLEMENT_INVARIANT,
+  FORBIDDEN_ALLOCATION_PHRASINGS,
+  RETIRED_ALLOCATION_CLAIMS,
+  SUPERSESSION_MARKERS,
+  CREATOR_FEE_ASSET_MODES,
+  PLATFORM_SETTLEMENT_STATUSES,
+  SETTLED_PLATFORM_STATUSES,
+  isPlatformSettlementStatus,
+  hasSettledPlatformWeth,
+  allocateSettledPlatformWeth,
+} from "./src/economics.js";
 
 export { canonicalJson, safeJsonParse, toPlain, CanonicalJsonError, JsonParseError } from "./src/canonical-json.js";
 export { sha256Bytes, sha256Hex, sha256Utf8, toHex, utf8, fromUtf8 } from "./src/sha256.js";

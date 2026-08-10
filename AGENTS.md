@@ -132,11 +132,18 @@ side: it produces launchpad project bundles, never template deployments.
   launchpad contract address; none is deployed.
 - Never call any review "audited", "externally audited", or "security reviewed".
 - The fee split is of **collected LP fees**, never of volume: 75% creator / 25% platform;
-  within the platform share, 6.25% of collected fees to a $RELICS buyback and 18.75%
-  retained.
-- On the buyback: $RELICS is **bought and sent permanently to `0x…dEaD`**, so circulating
-  supply falls — but $RELICS has **no burn function** and `totalSupply` stays fixed at
-  10,000. Always state both halves. Never imply the ledger supply shrinks.
+  the platform's own share splits in half, so nominally 75.00 / 12.50 / 12.50. The technical
+  sentence is "50% of the launchpad's net platform-fee revenue is allocated to RELICS
+  buy-and-entomb" — never "50% of all trading fees", "of creator fees", "of the pool fee", or
+  anything involving Uniswap's protocol fee. The exact invariant is on net SETTLED platform
+  WETH, after conversion fees, slippage and rounding; those costs fall on the platform share
+  only, never on the creator's.
+- Say **buy-and-entomb**, never "burn". $RELICS is bought and sent permanently to `0x…dEaD`, so
+  spendable and circulating supply fall — but `totalSupply` does NOT fall and no ERC-20 burn
+  event occurs, because the token has no burn function. State all three together.
+- **Never restate the numbers.** `packages/project-schema/src/economics.js` declares them once;
+  everything else imports. `npm run kit:economics` fails on a second declaration or a retired
+  figure outside a supersession header.
 - Never claim the RELICS genesis LP is "burned", "locked forever", or "permanent", and never
   write "fees route immutably". Describe custody by what the bytecode contains.
 - No attack, brick, or fee-collection exploit mechanics, thresholds, or costs — anywhere.

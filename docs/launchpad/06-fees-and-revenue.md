@@ -56,26 +56,49 @@ fee policy the locker registers.
 
 ## Inside the platform's 25%
 
-The platform share subdivides at a rate fixed in `ImmutableEconomicKernel` as a compile-time
-constant with no setter:
+The platform share subdivides at a rate fixed in `ImmutableEconomicKernel` (and, for multi-quote
+markets, in `MultiQuoteEconomicKernel`) as a compile-time constant with no setter,
+`RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE`. Read its value from the contract, or from
+`@relics/project-schema`, which mirrors it as the single off-chain declaration:
 
+```js
+import { RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE, NOMINAL_ALLOCATION_PERCENT } from "@relics/project-schema";
 ```
-RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE = 2500   // 25% of the platform share
-```
 
-Which resolves to:
+It currently resolves to:
 
-| Slice | Share of the platform 25% | Share of all collected LP fees |
+| Slice | Share of the platform 25% | Nominal share of all collected LP fees |
 | --- | --- | --- |
-| $RELICS buyback | 25% | **6.25%** |
-| Retained by the protocol Safe | 75% | **18.75%** |
+| $RELICS buy-and-entomb reserve | 50% | **12.50%** |
+| Retained by the protocol Safe | 50% | **12.50%** |
+
+The technical statement is: **50% of the launchpad's net platform-fee revenue is allocated to
+$RELICS buy-and-entomb.** Read that phrase literally. It is *not* 50% of all trading fees, not 50%
+of creator fees, not 50% of the pool fee, and not a Uniswap protocol fee.
 
 The buyback slice is carved only from platform revenue. It never reads or touches a creator or
-collaborator ledger.
+collaborator ledger, and the creator's 75% is untouched by this subdivision — it was 75% when the
+platform split its own share 25/75, and it is 75% now.
 
-## What "buyback and burn" actually means here
+### Nominal is not settled
 
-The economic kernel routes the 6.25% slice to a buyback reserve recipient fixed at deployment. The
+The 12.50% above is a **nominal** figure: a ratio applied to collected LP fees. The exact invariant
+the system upholds is stated on **net settled platform WETH**:
+
+> Of net settled platform WETH, 50% is allocated to the $RELICS buy-and-entomb reserve and 50% to
+> retained treasury, after conversion fees, slippage and deterministic rounding.
+
+Nobody should promise that exactly 12.50% of gross trading volume reaches either destination.
+Volume is not fee revenue, and settlement is not free — platform fees may arrive in a project token
+or in a non-WETH quote asset and have to be converted before the split applies.
+
+**Conversion costs fall only on the platform share, never on the creator's.** The route from a
+project token or a quote asset to WETH is the platform's own problem, paid out of the platform's
+own slice.
+
+## What "buy-and-entomb" actually means here
+
+The economic kernel routes the buyback slice to a reserve recipient fixed at deployment. The
 buy-and-entomb executor that spends it is a **separately deployable part of the operational layer**
 — it is not wired by any committed deploy script, and like everything else on this page it is not
 deployed on any chain. What follows is what that component does by design, not a description of
@@ -88,13 +111,16 @@ the executor, a treasury, or the caller.
 
 Be exact about what that does:
 
-- **Circulating supply falls.** The entombed $RELICS are at an address nobody controls and are
-  unrecoverable.
+- **Spendable and circulating supply fall.** The entombed $RELICS are at an address nobody controls
+  and are unrecoverable.
 - **`totalSupply` does not change.** $RELICS has **no burn function**; its `totalSupply()` is a
   constant `10_000e18` and always will be. A buyback moves tokens; it does not shrink the ledger.
+- **No ERC-20 burn event occurs.** There is no `Transfer`-to-zero, no `Burn` log, nothing an indexer
+  could read as a supply decrease — because the deployed token has no supply-decreasing path at all.
 
-Both halves of that have to be said together. "We burn $RELICS" on its own implies the supply
-number goes down, and it does not.
+All three of those have to be said together. "We burn $RELICS" on its own implies the supply number
+goes down, and it does not. Say *buy-and-entomb*, *buyback and permanent removal*, or *permanently
+removes purchased $RELICS from circulation*.
 
 Buys are guarded — the executor anchors to its own TWAP oracle rather than spot price, bounds
 deviation, caps each buy against live pool reserves, and reverts rather than accepting a partial
@@ -119,8 +145,28 @@ Read-only companions let a UI show pending amounts before anyone spends gas:
 `creatorTokenAccrued`, `platformWethAccrued`, `platformTokenPendingConversion`,
 `platformWethFromConversion`, `genesisLiquidity`, `poolIdOf`.
 
-Your fees accrue in **both** currencies — WETH and your own project token — because a v4 position
-earns fees on both sides.
+## Which assets you are paid in
+
+A v4 position earns fees on **both** sides of the pair, so a project's collected fees arrive as the
+project token *and* the market's quote asset. What happens to the creator's half of that is fixed
+at launch and **immutable for the life of the project**:
+
+| Mode | What the creator accrues | What the creator claims |
+| --- | --- | --- |
+| `DUAL_ASSET` | project token **and** the selected quote asset | both, unconverted |
+| `QUOTE_ONLY` | the same two | the project-token entitlement is converted through the canonical pool into the **selected quote asset** |
+
+`QUOTE_ONLY` is **not** "WETH-only". The asset it settles in is whatever the market is quoted in: a
+`PROJECT/USDG` market settles the creator in USDG, a `PROJECT/NVDA` market in NVDA, a `PROJECT/WETH`
+market in WETH. Any interface that prints "WETH" for a quote-only market it has not read the quote
+asset of is lying to the creator.
+
+Two boundaries that hold in both modes:
+
+- **Creator assets never enter the platform settlement pipeline.** The platform's route to WETH
+  moves the platform's own buckets and nothing else.
+- **Creator conversion costs apply only to the creator's own entitlement**, and platform conversion
+  costs apply only to the platform's.
 
 ## What the protocol does not promise
 

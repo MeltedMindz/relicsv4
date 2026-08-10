@@ -25,6 +25,14 @@ jobs:
       - name: every starter template validates and exports
         run: npm run kit:templates
 
+      - name: the fee allocation is declared once, and no retired figure is active
+        # The RC3 platform-allocation amendment moved the RELICS buyback from 25% to 50% of the
+        # platform share. This gate reports ACTIVE_STALE_BUYBACK_25_PERCENT_OF_PLATFORM_CLAIMS,
+        # ACTIVE_STALE_EFFECTIVE_6_25_PERCENT_CLAIMS and ACTIVE_STALE_RETAINED_18_75_PERCENT_CLAIMS
+        # and fails on any of them, so a retired number cannot come back silently — and it fails on
+        # a SECOND declaration of the live numbers, which is how the retired ones survived before.
+        run: npm run kit:economics
+
       - name: the public export manifest lists every tracked file
         # It had a --check mode and nothing ran it, so it drifted 173 files behind — including the
         # whole creator kit, which falsified the allowlist's "every tracked file" claim. A gate

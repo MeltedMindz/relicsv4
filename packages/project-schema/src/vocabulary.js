@@ -221,20 +221,12 @@ export const EARNINGS_MODES = Object.freeze(["SOLO", "SPLIT"]);
 /**
  * Protocol constants, not creator inputs. The split is of LP fees ACTUALLY COLLECTED by the
  * project's genesis position — never of trading volume.
+ *
+ * RE-EXPORTED, NOT RESTATED. `src/economics.js` is the one place these numbers are declared; this
+ * line exists only so importers that already reach for the vocabulary keep resolving. Adding a
+ * literal here would recreate exactly the two-places-one-number defect the economics module closes.
  */
-export const FEE_SPLIT_BPS = Object.freeze({
-  creator: 7500,
-  platformTreasury: 1875,
-  relicsBuybackReserve: 625,
-});
-
-/**
- * The buyback buys $RELICS and sends it permanently to `0x…dEaD`, so circulating supply falls.
- * $RELICS has no burn function and its `totalSupply` stays fixed at 10,000 — both halves of that
- * sentence are mandatory wherever the buyback is described.
- */
-export const BUYBACK_DISCLOSURE =
-  "25% of the platform's fee revenue is permanently earmarked for TWAP purchases of RELICS and permanent removal of the acquired tokens from circulation. RELICS uses entombment rather than a supply-decreasing burn: circulating supply falls, RELICS has no burn function, and totalSupply stays fixed at 10,000.";
+export { FEE_SPLIT_BPS, BUYBACK_DISCLOSURE } from "./economics.js";
 
 /** Trait value distribution kinds a trait dimension may declare. */
 export const TRAIT_DISTRIBUTIONS = Object.freeze(["weighted", "uniform"]);

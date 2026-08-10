@@ -23,6 +23,7 @@
     "kit:templates": "node scripts/check-templates.mjs",
     "kit:fixtures": "node packages/project-schema/fixtures/build.mjs",
     "kit:acv1": "node packages/project-schema/fixtures/acv1/build.mjs",
+    "kit:economics": "node scripts/check-economics.mjs",
     "export:manifest": "node scripts/gen-manifest.mjs",
     "export:manifest:check": "node scripts/gen-manifest.mjs --check"
   }

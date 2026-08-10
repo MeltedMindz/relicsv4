@@ -67,6 +67,27 @@ import {
   CHAIN_RESOLVED_BINDING_FIELDS,
   SCHEMA_VERSION,
   CREATOR_KIT_VERSION,
+  BPS_DENOMINATOR,
+  CREATOR_SHARE_BPS,
+  PLATFORM_SHARE_BPS,
+  RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE,
+  PLATFORM_RETAINED_BPS_OF_PLATFORM_SHARE,
+  NOMINAL_ALLOCATION_BPS,
+  NOMINAL_ALLOCATION_PERCENT,
+  PLATFORM_SUBDIVISION_PERCENT,
+  FEE_SPLIT_BPS,
+  BUYBACK_MECHANISM,
+  ENTOMBMENT_ADDRESS,
+  BUYBACK_DISCLOSURE,
+  BUYBACK_DISCLOSURE_SHORT,
+  BUYBACK_TECHNICAL_NOTE,
+  PLATFORM_SETTLEMENT_INVARIANT,
+  CREATOR_FEE_ASSET_MODES,
+  PLATFORM_SETTLEMENT_STATUSES,
+  isPlatformSettlementStatus,
+  hasSettledPlatformWeth,
+  allocateSettledPlatformWeth,
+  bpsToPercentString,
 } from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
@@ -823,6 +844,97 @@ test("every corpus file on disk is listed in the checksums", () => {
     const listed = Object.keys(CHECKSUMS.corpora[dir].bundles).sort();
     assert(onDisk.join(",") === listed.join(","), `${dir}: the corpus on disk and the checksums disagree about which bundles exist`);
   }
+});
+
+// ---------------------------------------------------------------- economics
+
+test("the allocation is derived from four constants, never restated", () => {
+  assert(CREATOR_SHARE_BPS + PLATFORM_SHARE_BPS === BPS_DENOMINATOR, "creator + platform must be the whole");
+  assert(
+    RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE + PLATFORM_RETAINED_BPS_OF_PLATFORM_SHARE === BPS_DENOMINATOR,
+    "buyback + retained must be the whole platform share",
+  );
+  assert(RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE === 5000, "RC3: the buyback takes 50% of the platform share");
+  assert(PLATFORM_RETAINED_BPS_OF_PLATFORM_SHARE === 5000, "RC3: retained treasury takes the other 50%");
+});
+
+test("the nominal allocation of collected LP fees is 75.00 / 12.50 / 12.50", () => {
+  assert(NOMINAL_ALLOCATION_BPS.creator === 7500, "creator moved, and this amendment does not move it");
+  assert(NOMINAL_ALLOCATION_BPS.relicsBuybackReserve === 1250, "buyback nominal is not 12.50%");
+  assert(NOMINAL_ALLOCATION_BPS.platformTreasury === 1250, "retained nominal is not 12.50%");
+  const total = NOMINAL_ALLOCATION_BPS.creator + NOMINAL_ALLOCATION_BPS.relicsBuybackReserve + NOMINAL_ALLOCATION_BPS.platformTreasury;
+  assert(total === BPS_DENOMINATOR, "the three nominal shares do not sum to the whole");
+  assert(NOMINAL_ALLOCATION_PERCENT.relicsBuybackReserve === "12.50%", "the rendered percentage drifted from the bps");
+  assert(PLATFORM_SUBDIVISION_PERCENT.relicsBuybackReserve === "50.00%", "the platform-slice framing drifted from the bps");
+  assert(FEE_SPLIT_BPS === NOMINAL_ALLOCATION_BPS, "FEE_SPLIT_BPS must BE the derived object, not a copy of it");
+});
+
+test("every published percentage is derived from bps, so it cannot survive a constant change", () => {
+  assert(bpsToPercentString(CREATOR_SHARE_BPS) === NOMINAL_ALLOCATION_PERCENT.creator, "creator percent is not derived");
+  assert(bpsToPercentString(625) === "6.25%", "the renderer itself is wrong");
+  for (const text of [BUYBACK_DISCLOSURE, BUYBACK_DISCLOSURE_SHORT, PLATFORM_SETTLEMENT_INVARIANT]) {
+    assert(!/6\.25|18\.75|\b25% of the platform/.test(text), `a retired figure survives in: ${text.slice(0, 60)}…`);
+  }
+});
+
+test("the mechanism is buy-and-entomb, and no published sentence calls it a burn", () => {
+  assert(BUYBACK_MECHANISM === "BUY_AND_ENTOMB", "the mechanism identifier is not BUY_AND_ENTOMB");
+  assert(ENTOMBMENT_ADDRESS.toLowerCase() === "0x000000000000000000000000000000000000dead", "entombment address moved");
+  for (const text of [BUYBACK_DISCLOSURE, BUYBACK_DISCLOSURE_SHORT]) {
+    assert(!/\bburns\b|\bburned\b|\bburning\b/i.test(text), "a disclosure sentence describes the mechanism as burning");
+    assert(!/total supply (falls|decreases|shrinks)/i.test(text), "a disclosure sentence claims totalSupply falls");
+  }
+  assert(/totalSupply/.test(BUYBACK_DISCLOSURE), "the long disclosure must say what does NOT change");
+  assert(/no ERC-20 burn event/i.test(BUYBACK_TECHNICAL_NOTE), "the technical note must deny the burn event");
+});
+
+test("the platform invariant is stated on NET SETTLED WETH, not on volume", () => {
+  assert(/NET SETTLED platform WETH/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not name its base");
+  assert(/conversion/i.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not mention conversion cost");
+  assert(/only on the platform share/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not protect the creator's share");
+  assert(!/volume/i.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant must never promise a share of volume");
+});
+
+test("creator modes stay two, and quote-only is not WETH-only", () => {
+  assert(CREATOR_FEE_ASSET_MODES.length === 2, "a third creator mode appeared");
+  assert(CREATOR_FEE_ASSET_MODES.includes("DUAL_ASSET") && CREATOR_FEE_ASSET_MODES.includes("QUOTE_ONLY"), "the two modes are not the two modes");
+});
+
+test("the settlement status list is closed, and UNKNOWN is in it", () => {
+  const expected = [
+    "NOT_ACCRUED",
+    "SOURCE_ASSETS_PENDING",
+    "PROJECT_TOKEN_TO_QUOTE_PENDING",
+    "QUOTE_TO_WETH_PENDING",
+    "WETH_SETTLED",
+    "SPLIT_ALLOCATED",
+    "DEGRADED_ROUTE",
+    "RETRYABLE_FAILURE",
+    "UNKNOWN",
+  ];
+  assert(PLATFORM_SETTLEMENT_STATUSES.join(",") === expected.join(","), "the settlement status vocabulary drifted");
+  assert(isPlatformSettlementStatus("UNKNOWN"), "UNKNOWN is not a member of its own list");
+  assert(!isPlatformSettlementStatus("SETTLED"), "an unknown status was accepted");
+  assert(hasSettledPlatformWeth("WETH_SETTLED") && hasSettledPlatformWeth("SPLIT_ALLOCATED"), "a settled status does not report settled");
+  for (const s of ["NOT_ACCRUED", "SOURCE_ASSETS_PENDING", "DEGRADED_ROUTE", "RETRYABLE_FAILURE", "UNKNOWN"]) {
+    assert(!hasSettledPlatformWeth(s), `${s} must not claim a settled WETH figure exists`);
+  }
+});
+
+test("splitting settled WETH conserves every wei and floors toward the treasury", () => {
+  for (const wei of [0n, 1n, 2n, 3n, 999n, 1000n, 10n ** 18n, 123456789987654321n]) {
+    const { buybackReserve, treasuryRetained } = allocateSettledPlatformWeth(wei);
+    assert(buybackReserve + treasuryRetained === wei, `the split of ${wei} does not conserve the input`);
+    assert(buybackReserve * BigInt(BPS_DENOMINATOR) <= wei * BigInt(RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE), `the buyback slice of ${wei} exceeds its ceiling`);
+  }
+  assert(allocateSettledPlatformWeth(1n).buybackReserve === 0n, "one wei must floor to zero buyback, not round up");
+  let threw = false;
+  try {
+    allocateSettledPlatformWeth(100);
+  } catch {
+    threw = true;
+  }
+  assert(threw, "a JS number was accepted for economic math");
 });
 
 // ---------------------------------------------------------------- summary

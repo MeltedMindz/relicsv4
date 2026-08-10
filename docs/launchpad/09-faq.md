@@ -22,9 +22,15 @@ per unit of volume fall — while your 75% share of what *is* collected stays ex
 [06](06-fees-and-revenue.md).
 
 **Where does the platform's 25% go?**
-Within the platform share, 25% of it (6.25% of collected fees) is earmarked to buy $RELICS and send
-it permanently to `0x…dEaD`; the remaining 18.75% of collected fees is retained by the protocol
-Safe. Both figures are compile-time constants with no setter.
+It is split in half. **50% of the launchpad's net platform-fee revenue is allocated to $RELICS
+buy-and-entomb** — the reserve buys $RELICS and sends it permanently to `0x…dEaD` — and the other
+50% is retained by the protocol Safe. Nominally that is 12.50% and 12.50% of collected LP fees.
+Both are compile-time constants with no setter, and neither touches the creator's 75%.
+
+Read "50% of net platform-fee revenue" literally: not 50% of all trading fees, not 50% of creator
+fees, not 50% of the pool fee, and nothing to do with Uniswap's protocol fee. The exact invariant
+is on net *settled* platform WETH, after conversion fees, slippage and rounding — costs that fall
+on the platform's share alone.
 
 **So $RELICS gets burned?**
 Say it precisely: bought-back $RELICS is sent to an address nobody controls, so **circulating

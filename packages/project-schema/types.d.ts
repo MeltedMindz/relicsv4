@@ -352,10 +352,59 @@ export const MARKET_SENSOR_IDS: readonly MarketSensor[];
 export const MARKET_TRANSFORM_IDS: readonly TransformKind[];
 export const ART_DESTINATION_IDS: readonly ArtDestination[];
 export const EARNINGS_MODES: readonly EarningsMode[];
-export const FEE_SPLIT_BPS: Readonly<{ creator: number; platformTreasury: number; relicsBuybackReserve: number }>;
-export const BUYBACK_DISCLOSURE: string;
 export const TRAIT_DISTRIBUTIONS: readonly ("weighted" | "uniform")[];
 export function transformSpec(id: string): { id: TransformKind; params: { key: string; min: number; max: number }[] } | null;
+
+// ---- economics: the ONE place the launchpad's fee allocation is stated ------------------------
+export type CreatorFeeAssetMode = "DUAL_ASSET" | "QUOTE_ONLY";
+export type PlatformSettlementStatus =
+  | "NOT_ACCRUED"
+  | "SOURCE_ASSETS_PENDING"
+  | "PROJECT_TOKEN_TO_QUOTE_PENDING"
+  | "QUOTE_TO_WETH_PENDING"
+  | "WETH_SETTLED"
+  | "SPLIT_ALLOCATED"
+  | "DEGRADED_ROUTE"
+  | "RETRYABLE_FAILURE"
+  | "UNKNOWN";
+export interface AllocationBps {
+  creator: number;
+  platformTreasury: number;
+  relicsBuybackReserve: number;
+}
+export const BPS_DENOMINATOR: number;
+export const CREATOR_SHARE_BPS: number;
+export const PLATFORM_SHARE_BPS: number;
+export const RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE: number;
+export const PLATFORM_RETAINED_BPS_OF_PLATFORM_SHARE: number;
+export const NOMINAL_ALLOCATION_BPS: Readonly<AllocationBps>;
+export const NOMINAL_ALLOCATION_PERCENT: Readonly<{ creator: string; platformTreasury: string; relicsBuybackReserve: string }>;
+export const PLATFORM_SUBDIVISION_PERCENT: Readonly<{ platformTreasury: string; relicsBuybackReserve: string }>;
+export const PLATFORM_SUBDIVISION_PROSE: Readonly<{ platformTreasury: string; relicsBuybackReserve: string }>;
+export const FEE_SPLIT_BPS: Readonly<AllocationBps>;
+export function bpsToPercentString(bps: number): string;
+export function bpsToProsePercentString(bps: number): string;
+export const BUYBACK_MECHANISM: "BUY_AND_ENTOMB";
+export const ENTOMBMENT_ADDRESS: string;
+export const BUYBACK_DISCLOSURE: string;
+export const BUYBACK_DISCLOSURE_SHORT: string;
+export const BUYBACK_TECHNICAL_NOTE: string;
+export const PLATFORM_SETTLEMENT_INVARIANT: string;
+export const FORBIDDEN_ALLOCATION_PHRASINGS: readonly string[];
+export interface RetiredAllocationClaim {
+  id: string;
+  counter: string;
+  pattern: string;
+  description: string;
+}
+export const RETIRED_ALLOCATION_CLAIMS: readonly Readonly<RetiredAllocationClaim>[];
+export const SUPERSESSION_MARKERS: readonly string[];
+export const CREATOR_FEE_ASSET_MODES: readonly CreatorFeeAssetMode[];
+export const PLATFORM_SETTLEMENT_STATUSES: readonly PlatformSettlementStatus[];
+export const SETTLED_PLATFORM_STATUSES: readonly PlatformSettlementStatus[];
+export function isPlatformSettlementStatus(status: string): boolean;
+export function hasSettledPlatformWeth(status: string): boolean;
+export function allocateSettledPlatformWeth(netSettledWeth: bigint): Readonly<{ buybackReserve: bigint; treasuryRetained: bigint }>;
 
 // ---- hashing and serialization ---------------------------------------------------------------
 export function canonicalJson(value: unknown): string;

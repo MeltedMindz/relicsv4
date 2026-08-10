@@ -79,11 +79,15 @@ These are accuracy rules, not style. Getting one wrong publishes a false claim.
   bundle fills them in. See `docs/creator-kit/bundle-format.md`.
 - **Approved is not launchable.** `LAUNCHABLE_ART_RUNTIMES` in the schema decides. A template on
   an approved but gated runtime is marked, not deleted and not sold as launchable.
-- **Fees are a share of collected LP fees, never of volume.** Creator 75%; platform 25%, of
-  which 6.25% of collected fees buys $RELICS and 18.75% is retained.
-- **On $RELICS removal, always state both halves:** circulating supply falls, and `totalSupply`
-  stays fixed at 10,000 forever because the token has no burn function. Never imply the ledger
-  supply shrinks.
+- **Fees are a share of collected LP fees, never of volume.** Creator 75%; platform 25%, split
+  in half — 50% of the launchpad's net platform-fee revenue is allocated to $RELICS
+  buy-and-entomb, 50% retained. Nominally 75.00 / 12.50 / 12.50. The exact invariant is on net
+  SETTLED platform WETH; conversion costs fall on the platform share only.
+- **The numbers are declared once**, in `packages/project-schema/src/economics.js`. Import them;
+  never type a bps or a percentage. `npm run kit:economics` enforces it.
+- **Say buy-and-entomb, never burn, and state all three halves:** spendable and circulating
+  supply fall; `totalSupply` does NOT fall; no ERC-20 burn event occurs, because the token has
+  no burn function.
 - **Never call locked LP "burned"**, and never write "locked forever", "permanent" or "fees
   route immutably" about any custody arrangement.
 - **A bundle can never carry protocol code.** The manifest key space is closed and `.sol`,

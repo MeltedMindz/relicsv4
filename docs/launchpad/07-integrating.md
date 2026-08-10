@@ -102,8 +102,8 @@ from the confirmed receipt — never from a simulation.
 | --- | --- | --- |
 | Project record | `readProject(chainId, projectId, { publicClient })` | Published flag, launch result, canonical `eip155:<chainId>:<token>` identity |
 | Fee state | `readProjectFeeState(chainId, {...})` | LP fee pips, live protocol fee both directions, compounded effective fees, the 7500/2500 split bps, and the disclosure string |
-| Creator revenue | `readCreatorRevenue(chainId, projectId, {...})` | Accrued and claimable WETH and token, plus nested rights info |
-| Platform revenue | `readPlatformRevenue(chainId, projectId, {...})` | Accrued WETH, pending token conversion bucket, claimable WETH |
+| Creator revenue | `readCreatorRevenue(chainId, projectId, {...})` | `creatorProjectTokenClaimable`, `creatorQuoteTokenClaimable`, `creatorQuoteOnlyPendingConversion`, `creatorFeeAssetMode`, plus nested rights info |
+| Platform revenue | `readPlatformRevenue(chainId, projectId, {...})` | `platformProjectTokenPendingSettlement`, `platformQuotePendingSettlement`, `platformWethSettled`, `platformWethBuybackReserve`, `platformWethTreasuryRetained`, `platformSettlementStatus` |
 | Rights | `readProjectRights(chainId, projectId, {...})` | Owner, payout recipient, and the on-chain transfer warning |
 | Art state | `readArtState(chainId, projectId, {...})` | Backing token, max active artworks, active count, available capacity, dormant count, fully-backed flag |
 | Market state | `readMarketState(chainId, projectId, {...})` | Organic swap count, buy/sell volume, net flow, oracle readiness, sqrt price, tick, fees, liquidity |
@@ -184,8 +184,19 @@ Errors you will want to decode and render: `BadArtHash`, `BadTemplate`, `ScriptT
   into a project's art history is wrong.
 - **Do not aggregate across chains.** A project is `eip155:<chainId>:<token>`; identical addresses
   on different chains are distinct instances.
-- **Entombment is not a burn.** If you index the $RELICS buyback, render it as "entombed" or
-  "permanently removed". `totalSupply` does not decrease. See
+- **Entombment is not a burn.** If you index the $RELICS buy-and-entomb, render it as "entombed" or
+  "permanently removed". `totalSupply` does not decrease and no ERC-20 burn event is emitted. See
   [06 — Fees and revenue](06-fees-and-revenue.md).
 - **Fees are not volume.** Display "75% of collected LP fees", and compute the trader's effective
   fee from live pool state rather than printing a hardcoded 1%.
+- **Never present an unsettled source asset as WETH.** The platform's project-token and quote-asset
+  buckets are separate fields from `platformWethSettled` for a reason: until a conversion clears,
+  there is no WETH figure. `platformWethBuybackReserve` and `platformWethTreasuryRetained` are
+  populated only when `platformSettlementStatus` says a settled WETH figure exists.
+- **`UNKNOWN` is a value, not a zero.** `platformSettlementStatus` is one of `NOT_ACCRUED`,
+  `SOURCE_ASSETS_PENDING`, `PROJECT_TOKEN_TO_QUOTE_PENDING`, `QUOTE_TO_WETH_PENDING`,
+  `WETH_SETTLED`, `SPLIT_ALLOCATED`, `DEGRADED_ROUTE`, `RETRYABLE_FAILURE`, `UNKNOWN`. Render the
+  gap; substituting `0` turns an absent measurement into a false one.
+- **Quote-only is not WETH-only.** For a `QUOTE_ONLY` project, read the market's quote asset and
+  label the creator's settlement in it — USDG for a USDG-quoted market, NVDA for an NVDA-quoted
+  one. Only a WETH-quoted market settles the creator in WETH.
