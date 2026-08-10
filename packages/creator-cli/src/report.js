@@ -80,9 +80,12 @@ export function printBinding(result) {
   // it takes there. The manifest keeps the bare form so it never trips the secret scanner.
   const at = (digest) => (digest ? `0x${digest}` : null);
   const rows = [
-    ["runtime", `${binding.runtimeId}${isRuntimeLaunchable(binding.runtime) ? "" : "  (preview only — not launchable yet)"}`],
+    ["runtime", `${binding.runtimeId} v${binding.artRuntimeVersion}${isRuntimeLaunchable(binding.runtime) ? "" : "  (preview only — not launchable yet)"}`],
     ["runtime id hash", at(binding.runtimeIdHash)],
-    ["art config", at(binding.artConfigHash) ?? `null  (${binding.artConfigSource}: the registered template encodes its own config)`],
+    ["art config format", `${binding.artConfigFormat}  ${dim(`${binding.artConfigBytes.toLocaleString()} bytes`)}`],
+    ["art config", at(binding.artConfigHash)],
+    ["  visual", at(binding.artConfigVisualHash) ?? dim("null  (a JavaScript generator declares no layer graph)")],
+    ["  trait schema", at(binding.artConfigTraitSchemaHash) ?? dim("null")],
     ["template params", at(binding.templateParamsHash) ?? "null"],
     ["generator", at(binding.generatorHash)],
     ["trait schema", at(binding.traitSchemaHash)],

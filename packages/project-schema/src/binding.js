@@ -270,6 +270,18 @@ export function deriveArtConfig({ runtime, templateParams, scriptBytes }) {
       "generator/params.json is required for the SOLIDITY_SVG runtime: it is the project's ACV1 art configuration, and a bundle that does not state one cannot state what its launch would render",
     );
   }
+  // AN UNFINISHED MIGRATION DRAFT, named as such. Falling through to the encoder would report
+  // whichever null it happened to reach first ("animate must be a boolean"), which tells a creator
+  // to fix one field and try again, seven times. List every decision still outstanding at once.
+  const unfilled = ["animate", "background", "palette", "layers", "traits", "title"].filter((field) => templateParams[field] === null);
+  if (unfilled.length > 0) {
+    throw new ArtConfigDerivationError(
+      `generator/params.json is an unfinished art configuration: ${unfilled.join(", ")} ${unfilled.length === 1 ? "is" : "are"} still null. ` +
+        "Every one of them is an artistic decision this kit will not make for you — there is no default configuration and no template to borrow from, because art derived from a generic template is the failure this format exists to prevent. " +
+        "The vocabularies and bounds for each field are in the `_migration` block of that file.",
+    );
+  }
+
   if (templateParams.format !== ACV1_FORMAT) {
     throw new ArtConfigDerivationError(
       `generator/params.json must declare "format": "${ACV1_FORMAT}". A pre-3.0.0 parameter document is not an art configuration — it names no market sensor, no response curve and no literal palette, and those cannot be guessed. Run \`relics migrate\` to carry over what is recoverable and supply the rest.`,

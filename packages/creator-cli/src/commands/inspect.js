@@ -3,7 +3,7 @@
 // anything from it. Useful before importing a bundle someone else sent you.
 
 import { readFileSync } from "node:fs";
-import { readContainer, validateBundleBytes, toStudioDraft } from "../schema.js";
+import { readContainer, validateBundleBytes, toStudioDraft, decodeArtConfigV1, describeArtConfigV1, isArtConfigV1, isRuntimeLaunchable, ACV1_LIMITS } from "../schema.js";
 import { bold, cyan, dim, green, red, yellow, heading, truncate } from "../report.js";
 import { printChecks, printIssues } from "../report.js";
 
@@ -34,6 +34,7 @@ export function inspectBundle(path, options = {}) {
       issues: result.issues,
       manifest: result.manifest,
       hashes: result.hashes,
+      artConfig: describeBundleArtConfig(result.manifest),
     };
     console.log(JSON.stringify(payload, null, 2));
     return result.ok ? 0 : 1;
@@ -76,6 +77,8 @@ export function inspectBundle(path, options = {}) {
     row("  metadata", m.hashes.metadata);
   }
 
+  if (m?.artBinding) printArtConfig(m);
+
   console.log("");
   console.log(bold("  entries"));
   for (const entry of container.entries) console.log(`    ${entry.path.padEnd(34)} ${dim(`${entry.bytes.length.toLocaleString()} B`)}`);
@@ -87,6 +90,78 @@ export function inspectBundle(path, options = {}) {
   console.log(result.ok ? green("  the bundle is structurally sound") : red("  the bundle is not importable as-is"));
   if (result.ok) console.log(yellow("  run `relics validate --bundle <file>` to also execute the generator in a sandbox"));
   return result.ok ? 0 : 1;
+}
+
+/**
+ * The ART CONFIGURATION, decoded and shown.
+ *
+ * A digest tells a reviewer nothing about what will be drawn. This decodes the bytes the bundle
+ * carries and prints the actual palette, the layer graph with its sensors and curves, and the
+ * declared traits — so "is this the art I meant?" is answerable by reading the screen rather than
+ * by trusting a 64-character string. Nothing is executed to produce it.
+ */
+function printArtConfig(m) {
+  const b = m.artBinding;
+  console.log("");
+  console.log(bold("  art configuration"));
+  row("  format", `${b.artConfigFormat} · ${b.artConfigBytes.toLocaleString()} bytes · runtime ${b.runtimeId} v${b.artRuntimeVersion}`);
+  row("  config hash", cyan(`0x${b.artConfigHash}`));
+  row(
+    "  launchable",
+    isRuntimeLaunchable(b.runtime)
+      ? green("yes — the launchpad binds and renders this runtime")
+      : yellow(`not yet — ${b.runtime} is approved and previewable, but no launch will bind it`),
+  );
+
+  if (b.artConfigFormat !== "ACV1" || typeof b.artConfig !== "string") {
+    console.log(dim("    the configuration is the generator entry file itself; see generator/generate.js"));
+    return;
+  }
+
+  const decoded = decodeArtConfigV1(hexBytes(b.artConfig));
+  if (!decoded.ok) {
+    console.log(red(`    the configuration does not decode: ${decoded.name} (${decoded.code}) — ${decoded.reason}`));
+    return;
+  }
+  const d = describeArtConfigV1(decoded.config, hexBytes(b.artConfig));
+  row("  title", d.title ? `"${d.title}"` : dim("(none)"));
+  row("  animate", d.animate ? "yes" : "no");
+  row("  palette", `${d.palette.join(" ")}   ${dim(`background ${d.background}`)}`);
+  console.log(`  ${dim("  layers".padEnd(16))} ${d.layers.length} of ${ACV1_LIMITS.maxLayers}`);
+  for (const layer of d.layers) console.log(`      ${layer}`);
+  console.log(`  ${dim("  traits".padEnd(16))} ${d.traits.length} of ${ACV1_LIMITS.maxTraits}`);
+  for (const trait of d.traits) console.log(`      ${trait}`);
+  row("  elements", `${d.worstCaseElements} of ${d.elementBudget} worst case`);
+  if (d.appendixBytes > 0) {
+    row("  appendix", `${d.appendixBytes} bytes ${dim("— committed by the config hash, never interpreted")}`);
+  }
+}
+
+/** The same projection, for `--json`. */
+function describeBundleArtConfig(manifest) {
+  const b = manifest?.artBinding;
+  if (!b) return null;
+  const base = {
+    format: b.artConfigFormat,
+    bytes: b.artConfigBytes,
+    hash: b.artConfigHash,
+    runtimeId: b.runtimeId,
+    runtimeVersion: b.artRuntimeVersion,
+    launchable: isRuntimeLaunchable(b.runtime),
+  };
+  if (b.artConfigFormat !== "ACV1" || typeof b.artConfig !== "string") return { ...base, decoded: null };
+  const bytes = hexBytes(b.artConfig);
+  if (!isArtConfigV1(bytes)) return { ...base, decoded: null, error: "the configuration does not carry the ACV1 magic and version" };
+  const decoded = decodeArtConfigV1(bytes);
+  return decoded.ok
+    ? { ...base, decoded: decoded.config, describe: describeArtConfigV1(decoded.config, bytes) }
+    : { ...base, decoded: null, error: `${decoded.name} (${decoded.code}): ${decoded.reason}` };
+}
+
+function hexBytes(hex) {
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  return out;
 }
 
 function row(label, value) {

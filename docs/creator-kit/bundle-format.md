@@ -123,7 +123,10 @@ restates the same documents under keccak:
 ```
 keccakJson(document) = keccak256(utf8(canonicalJson(parsed document)))
 
-artConfigHash        = keccak256(the exact bytes the launch stores)
+artConfigHash        = keccak256(the exact bytes the launch stores, appendix included)
+artConfigVisualHash  = keccak256(abi.encode(1, flags, background, palette, layers))   ACV1 only
+artConfigTraitSchemaHash
+                     = keccak256(abi.encode(1, traits))                               ACV1 only
 templateParamsHash   = keccakJson(generator/params.json)
 generatorHash        = keccakJson({ "generator/…": sha256, … })
 traitSchemaHash      = keccakJson(traits/schema.json)
@@ -157,8 +160,8 @@ an error, not a passthrough.
 
 ```jsonc
 {
-  "schemaVersion": "2.0.0",
-  "creatorKitVersion": "2.0.0",
+  "schemaVersion": "3.0.0",
+  "creatorKitVersion": "3.0.0",
   "runtimeVersion": "relics-art-runtime/1",
   "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
 
@@ -172,8 +175,10 @@ an error, not a passthrough.
 
   "hashes":     { "algorithm", "script", "dependencies", "generator",
                   "traitSchema", "marketMapping", "metadata", "media?" },
-  "artBinding": { "schemaVersion", "runtime", "runtimeId", "runtimeIdHash", "artMode",
-                  "templateId", "artConfigSource", "artConfigBytes", "artConfigHash",
+  "artBinding": { "schemaVersion", "runtime", "runtimeId", "runtimeIdHash",
+                  "artRuntimeVersion", "artMode", "templateId", "artConfigSource",
+                  "artConfigFormat", "artConfig", "artConfigBytes", "artConfigHash",
+                  "artConfigVisualHash", "artConfigTraitSchemaHash",
                   "templateParamsHash", "generatorHash", "traitSchemaHash",
                   "marketMappingHash", "metadataHash", "representativeOutputsHash",
                   "runtimeCodeHash": null, "scriptPointer": null },
@@ -198,8 +203,11 @@ on trust, which is exactly why an importer can build launch parameters straight 
 | field | what it is |
 |---|---|
 | `runtimeId` | the stable, versioned renderer identity — `ONCHAIN_JAVASCRIPT_V1`, `SOLIDITY_SVG_V1`. The version is in the name so a future runtime gets a new id and an existing collection stays bound to the one it launched with. |
-| `artConfigHash` | keccak256 of the exact bytes the launch stores — the value the factory checks `keccak256(artConfig)` against. For the JavaScript runtime `artConfig` **is** `generator/generate.js`, byte for byte. |
-| `templateParamsHash` | for a Solidity renderer, the creator's declarative parameters. `artConfigHash` is `null` there: only the registered template's published parameter layout can encode its config bytes, and a bundle does not own that encoding. Refusing to state a value the kit cannot derive is the point of the block. |
+| `artConfigFormat` | how the configuration is laid out: `ACV1` for the Solidity runtime, `JS_SOURCE_V1` for the JavaScript one. Named separately from the runtime because an importer needs it to decode and display the art. |
+| `artConfig` | **the configuration itself**, as bare hex, for `ACV1`. A bundle carries its art, not merely a digest of it, so a reviewer can decode and read the palette and layer graph without re-deriving anything. `null` for `JS_SOURCE_V1`, where the bytes are already an entry and restating them would let a manifest disagree with its own file. |
+| `artConfigHash` | keccak256 of the exact bytes the launch stores — the value the factory checks `keccak256(artConfig)` against, and that `ProjectCollection.bindArt` re-checks against the bytes it reads back out of storage. Taken over the **whole transmitted byte string, appendix included**: two ACV1 documents that decode identically can hash differently, so hashing a re-encode of a decoded document is silently wrong. |
+| `artConfigVisualHash` / `artConfigTraitSchemaHash` | the two commitments the runtime derives from the decoded ACV1 document, using `abi.encode` (padded), not `encodePacked`. `traitSchemaHash` is what `validateConfigV1` returns and the collection stores, so the kit prints a value the chain will hold before any launch exists. `null` for a JavaScript generator, which declares no such program. |
+| `templateParamsHash` | keccak256 of `generator/params.json`, the creator's **authoring document**. The configuration bytes are derived from it inside assembly, so a bundle cannot carry art its own parameters do not produce. |
 | `representativeOutputsHash` | a commitment to what the generator actually draws for eight fixed seeds. An importer re-renders them in its own sandbox; a mismatch means the art in the file is not the art that was validated. |
 
 ### A bundle can never state a chain fact
@@ -301,16 +309,41 @@ Four version strings travel in every bundle:
 - `protocolReleaseCompatibility` — the launchpad parameter surface it was built for. This
   identifies a parameter surface, never a deployment.
 
-### Why 2.0.0 is a MAJOR
+### Why 3.0.0 is a MAJOR
 
-Both of this schema's MAJOR triggers fire at once. `art.runtime` **changed meaning**: it used to
-be descriptive and is now a commitment `tokenURI` reads. And `artBinding` is a **required field**:
-a 1.x bundle carries no binding at all, so importing one into a world where the collection renders
-from the binding would produce art nobody validated.
+Both of this schema's MAJOR triggers fire, again.
 
-A 1.x bundle is refused with the reason and the fix — re-export the same project directory with the
-current kit — not with a bare "incompatible". No 1.x bundle has ever been launched; the launchpad
-is `PREPARED_NOT_DEPLOYED` on every supported chain, so the break strands nothing.
+A **required field appeared**. A bundle must now carry the exact art configuration its launch would
+use: `artConfigFormat`, the configuration bytes, and their keccak256. Schema 2 recorded which
+runtime renders a project but, for the Solidity runtime, deliberately left `artConfigHash` null —
+no published parameter layout existed, so the kit refused to state a value it could not derive.
+ACV1 is that layout. The reason for the null is gone.
+
+A **field changed meaning**. `artConfigHash` was "null, because unknowable" for `SOLIDITY_SVG`. It
+is now the value the factory checks `keccak256(artConfig)` against.
+
+#### Why a 2.x bundle cannot simply be migrated
+
+A 2.x Solidity bundle has a `generator/params.json`, so it looks like the values are already there
+and only need re-shaping. They are not.
+
+ACV1 requires, for every layer, a market **sensor** and a response **curve**, plus a literal RGB
+palette and a background index. A 2.x parameter document carries none of them. Its palette is an
+**index** into a colour table that exists only inside that template's local preview sketch — and
+that sketch overrides the index at render time from market state. Deriving a palette from it would
+mean choosing a generic template's colours and publishing them as the artist's, which is the exact
+failure this release exists to eliminate.
+
+So the migration refuses rather than guesses. `relics migrate` opens a 2.x bundle as a **draft**,
+carries over everything that is recoverable, and writes an art configuration whose artist-supplied
+fields are explicitly `null` — with the vocabularies and bounds needed to fill them. `relics export`
+refuses those nulls **by name and all at once**, so a creator is told every decision that is theirs
+rather than one per attempt. The source bundle hash is kept as provenance; the re-export mints a new
+one, because a different artwork is a different bundle.
+
+A 1.x or 2.x bundle is refused with the reason and the fix, not with a bare "incompatible". No 1.x
+or 2.x bundle has ever been launched; the launchpad is `PREPARED_NOT_DEPLOYED` on every supported
+chain, so the break strands nothing.
 
 ---
 

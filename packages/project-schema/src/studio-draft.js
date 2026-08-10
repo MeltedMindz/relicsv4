@@ -39,11 +39,14 @@ export function toStudioDraft(validated, byPath, options = {}) {
       seedHistory: [],
       mode: ART_RUNTIME_TO_MODE[runtime],
       artTemplateId: isJavaScript ? "" : String(manifest.art.templateId),
-      // JAVASCRIPT carries the script itself. SOLIDITY_SVG carries template CONFIG bytes, which
-      // only the template's published parameter layout can encode — the kit deliberately does not
-      // invent that encoding, so the draft arrives with an empty config and the declarative
-      // parameters travel in `provenance.templateParams` for the prepare step to encode.
-      scriptHex: isJavaScript && scriptBytes ? `0x${toHex(scriptBytes)}` : "0x",
+      // THE BYTES THE RUNTIME IS HANDED, for both runtimes.
+      //
+      // This used to be `"0x"` for SOLIDITY_SVG, with the declarative parameters travelling in
+      // `provenance.templateParams` for some later step to encode. Nothing ever encoded them, so a
+      // studio importing a Solidity bundle arrived holding an EMPTY art configuration — which is
+      // how a project could be launched with no art at all and render the runtime's built-in
+      // shapes. The bundle now carries its own ACV1 configuration and the draft carries it through.
+      scriptHex: isJavaScript ? (scriptBytes ? `0x${toHex(scriptBytes)}` : "0x") : `0x${manifest.artBinding?.artConfig ?? ""}`,
       traitDimensions: (validated.traitSchema?.dimensions ?? []).map((d) => d.name),
       marketMappings: (validated.marketMappings?.mappings ?? []).map((m) => ({
         id: m.id,
@@ -148,7 +151,12 @@ export function toStudioDraft(validated, byPath, options = {}) {
         collaborators: (manifest.earnings.collaborators ?? []).map((c) => ({ recipient: c.recipient, bps: c.bps })),
         totalCollaboratorBps: (manifest.earnings.collaborators ?? []).reduce((sum, c) => sum + c.bps, 0),
       },
+      // The creator's AUTHORING document, carried for display and diffing. It is no longer the
+      // thing an importer must encode — `draft.art.scriptHex` already holds the encoded bytes —
+      // so nothing downstream has to own the ACV1 layout a second time.
       templateParams: templateParamsBytes ? JSON.parse(new TextDecoder().decode(templateParamsBytes)) : null,
+      artConfigFormat: manifest.artBinding?.artConfigFormat ?? null,
+      artConfigHash: manifest.artBinding?.artConfigHash ?? null,
     },
   };
 }

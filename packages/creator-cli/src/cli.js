@@ -9,6 +9,7 @@ import { previewProject, testSeeds } from "./commands/preview.js";
 import { validateProject, validateBundleFile, printValidation } from "./commands/validate.js";
 import { exportProject } from "./commands/export.js";
 import { inspectBundle } from "./commands/inspect.js";
+import { migrateBundle } from "./commands/migrate.js";
 import { bold, dim, red } from "./report.js";
 
 const FLAGS = {
@@ -81,6 +82,11 @@ export async function main(argv) {
 
     case "export":
       return exportProject(root, { output: flags.output, seeds: flags.count, inProcess: flags["in-process"] });
+
+    case "migrate": {
+      if (!positional[0]) return fail("migrate needs a .relics file");
+      return migrateBundle(positional[0], { out: flags.out ?? flags.output });
+    }
 
     case "inspect": {
       const file = positional[0];
@@ -172,7 +178,19 @@ const HELP = {
   export: `relics export [directory] --output my-project${BUNDLE_EXTENSION}
   Validate, then write the bundle. A project that fails validation is never packaged.`,
   inspect: `relics inspect <file${BUNDLE_EXTENSION}> [--json] [--draft]
-  Read a bundle and print what it declares. The generator is never executed.`,
+  Read a bundle and print what it declares, including its decoded art configuration. The
+  generator is never executed.`,
+  migrate: `relics migrate <file${BUNDLE_EXTENSION}> [--out directory]
+  Open a bundle from an older schema into a project directory you can finish.
+
+  A pre-3.0.0 Solidity bundle cannot be converted automatically and this command does not
+  pretend otherwise. It carries over everything that IS recoverable and writes an art
+  configuration whose artist-supplied fields are explicitly null, with the vocabularies and
+  bounds you need to fill them. \`relics export\` refuses those nulls by name.
+
+  Nothing is defaulted and nothing is borrowed from a template: art derived from a generic
+  template is the failure this format exists to prevent. The source bundle hash is kept as
+  provenance; re-exporting mints a new one.`,
 };
 
 function usage(topic) {
@@ -193,6 +211,7 @@ ${bold("relics")} — the local creator kit for RELICS Launchpad projects
   ${bold("relics validate")} [dir]                 run every check, write nothing
   ${bold("relics export")} [dir] --output x${BUNDLE_EXTENSION}   validate, then write the bundle
   ${bold("relics inspect")} <file${BUNDLE_EXTENSION}>          read a bundle without running it
+  ${bold("relics migrate")} <file${BUNDLE_EXTENSION}>          open an older bundle as a draft to finish
 
   ${dim(`schema ${SCHEMA_VERSION} · kit ${CREATOR_KIT_VERSION} · runtime ${RUNTIME_VERSION}`)}
   ${dim(`built against ${PROTOCOL_RELEASE_COMPATIBILITY}`)}

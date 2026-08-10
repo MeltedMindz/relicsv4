@@ -121,3 +121,26 @@ market, earnings, chains, and every hash — followed by the structural checks.
 
 `0` when the command succeeded and validation passed, `1` otherwise. Warnings do not fail a run;
 errors do.
+
+## `relics migrate`
+
+```
+relics migrate <file.relics> [--out directory]
+```
+
+Opens a bundle exported by an older creator kit into a project directory you can finish.
+
+A pre-3.0.0 Solidity bundle **cannot** be converted automatically, and this command does not
+pretend otherwise. ACV1 needs a market sensor and a response curve for every layer, a literal RGB
+palette and a background index; a 2.x bundle records none of them. Its palette is an index into a
+colour table that lives in a template's preview sketch, not in the bundle.
+
+So `migrate` carries over everything that is recoverable — project identity, supply, earnings, trait
+schema, market mappings, metadata, assets, generator — and writes `generator/params.json` with every
+artist-supplied field explicitly `null`, alongside the vocabularies and bounds for each one and your
+previous parameters kept for reference. Nothing is defaulted and nothing is borrowed from a
+template.
+
+`relics export` refuses those nulls by name, listing every outstanding decision at once rather than
+one per attempt. The source bundle hash is recorded as provenance; re-exporting mints a new one,
+because a different artwork is a different bundle.

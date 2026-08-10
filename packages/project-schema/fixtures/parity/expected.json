@@ -159,6 +159,8 @@
           "templateParamsHash": null,
           "traitSchemaHash": "155c864c2a7e7eaf4bd256b8409c09f293c90a4ea9f86cc0395ef4179838a93b"
         },
+        "artConfigFormat": "JS_SOURCE_V1",
+        "artConfigHash": "3fd279d0d0647ac5ec0cddaed5c0a387571351139a857c45a44a22210b188d56",
         "bundleCommitment": "c8dd54c662b7ec1ed00b4d3390ccfd7ca4c2ae218a81742a606bba3276ddecf8",
         "bundleHash": "21cbdc4a550dfb80ac43ab3af6244ca1dbf47819c331453db8dc1fe035273629",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
@@ -464,6 +466,8 @@
           "templateParamsHash": null,
           "traitSchemaHash": "169797cc244f36f5b6303fd1f21c238145545cf86fa5b29b4b96b14a11ce3ba0"
         },
+        "artConfigFormat": "JS_SOURCE_V1",
+        "artConfigHash": "ff8491d996770cbe1fc291c15e09f372874a81ee862bd93906daec74abbf5da5",
         "bundleCommitment": "57e729e303948c1c53be14099c054e94649ec12dcad3e7b76f7f86490e226654",
         "bundleHash": "0c45a84f0f50808b40143e258fb6aa1ca4eff52478ce2bf78ab569d8051e3e91",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
@@ -810,6 +814,8 @@
           "templateParamsHash": "371f09ac854383b96e5418a5f5bd8ea477c7fe55400d50a333c45ac54f4fa6c6",
           "traitSchemaHash": "fb3b5b4f594afeb91227189f8f6456eb9a7acc82ea85185b6aafd0b6dde5b2ab"
         },
+        "artConfigFormat": "ACV1",
+        "artConfigHash": "c6c38611369c4862f58f9c8a4994091c798643c32d77387a3f1d4ce41d098cff",
         "bundleCommitment": "777b01b62bc08fb1cec62d103c1a8410f3ed60ae33affe348321907ba7b37548",
         "bundleHash": "27e50960d8d4d2905b54658cc056c515ec9be0686b8b3f68cc21a5266c905464",
         "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
@@ -964,7 +970,7 @@
             }
           ],
           "mode": 0,
-          "scriptHex": "0x",
+          "scriptHex": "0x41435631010100040a0a0bded9d2c9a227b4532a0301080102031200020201000e0505000301010406566f6c756d6500010844726177646f776e02000553776170730900045665696e0a020f506172616d65746572205374756479ff",
           "seed": "1",
           "seedHistory": [],
           "traitDimensions": [
