@@ -4,6 +4,74 @@ Guidance for any AI coding agent (Claude, Cursor, Copilot, Codex, Aider, …) wo
 repository. This is the canonical agent guide; `CLAUDE.md` points here. If you help someone
 fork and launch their own collection, read this first, then `docs/00-make-it-your-own.md`.
 
+---
+
+## START HERE: "how do I create a project?"
+
+This is the request the repository exists to answer. The user wants a `.relics` bundle — one
+file describing a generative art project, which they import into the RELICS Launchpad creator
+app. It is entirely local: nothing in this CLI signs, broadcasts, or contacts a network.
+
+```bash
+npm install                                  # once
+npm run kit -- templates                     # what they can start from
+npm run kit -- init my-project --template minimal
+# REQUIRED before export: set earnings.creatorRecipient in my-project/relics.config.json
+# to your own wallet. The scaffold ships a placeholder and validation fails until you change it.
+npm run kit -- dev my-project                # local studio on 127.0.0.1
+npm run kit -- test-seeds my-project --count 100
+npm run kit -- validate my-project           # every check, writes nothing
+npm run kit -- export my-project --output my-project.relics
+```
+
+The `--` in `npm run kit -- <command>` is required; without it npm swallows the flags.
+
+**Templates:** `minimal`, `solidity-svg-params`, `onchain-js`, `market-responsive`,
+`static-art`. Start a beginner on `minimal`. Reach for `market-responsive` when they want the
+pool's own trading history to drive the image — that is the platform's whole idea, and the
+template demonstrates the sensor→transform→destination vocabulary so they don't invent one.
+
+**What a creator edits:** `generator/` (the art), `traits/schema.json`,
+`market/mappings.json`, `metadata/collection.json`. Read `docs/creator-kit/` before
+improvising: the manifest key space is closed, and the validator — not your intuition — is the
+authority on what a bundle may contain.
+
+**`export` refuses to write a bundle that fails validation, and there is no `--force`.** When
+it fails, fix the project. Never hand-assemble a `.relics` file, never edit one after export,
+and never route around the validator: every file is digest-pinned and the importer re-checks.
+
+### When `validate` fails
+
+The message names the file and the rule. In practice it is almost always one of these:
+
+| Symptom | Cause |
+|---|---|
+| `EARNINGS_RECIPIENT_PLACEHOLDER` | the scaffold's placeholder wallet. Edit `relics.config.json` — note the message cites `relics.project.json`, which is the *generated bundle manifest*, not a file in the project directory |
+| `METADATA_NO_IMAGE` (warn) | no collection image; marketplaces show a blank tile |
+| `TRAITS_SPACE_TOO_SMALL` (warn) | the trait schema expresses fewer combinations than the mint size |
+| non-determinism | `Math.random()`, `Date.now()`, or state carried between renders. Use the seeded PRNG. |
+| byte budget | the script is stored on chain and has a hard ceiling |
+| network access | a generator that fetches anything is refused; assets travel in the bundle |
+| blank / duplicate output | `test-seeds --count 100` catches collapse-to-one-image and dead seeds |
+| market mapping rejected | sensors, transforms and destinations are a closed set — check against the schema |
+
+### Four things you must not tell a creator
+
+Accuracy rules, not style. Each one is a false claim if you get it wrong.
+
+1. **The launchpad is not deployed** (`PREPARED_NOT_DEPLOYED` on 1 / 8453 / 4663) and there is
+   no launchpad address. A creator can build and export today; they cannot launch.
+2. **No external audit has happened.** Review is internal only.
+3. **Creator art is not yet bound to `tokenURI`.** The frozen release renders a built-in
+   placeholder — rings from DNA and the swap counter, identical for every collection. The
+   bundle carries their generator and the import round-trip is exact, but on-chain artwork
+   binding is unfinished. Say so plainly if they ask what their token will look like on chain.
+4. **A bundle can never carry protocol code.** `.sol`/`.vy`/`.yul`/`.wasm` are refused by
+   extension and the manifest key space is closed, so no bundle can replace the hook, token,
+   collection, escrow, router or buyback. A custom hook needs a separate reviewed process.
+
+---
+
 ## What this repo is
 
 Three things under one roof:
