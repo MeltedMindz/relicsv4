@@ -43,6 +43,19 @@ import {
   diffArtBinding,
   isRuntimeLaunchable,
   explainIncompatibility,
+  encodeArtConfigV1,
+  encodeArtConfigV1Checked,
+  withArtConfigV1Appendix,
+  decodeArtConfigV1,
+  validateArtConfigV1,
+  isArtConfigV1,
+  hashArtConfigV1,
+  emptyArtConfigV1,
+  visualHashArtConfigV1,
+  traitSchemaHashArtConfigV1,
+  ACV1_LIMITS,
+  ACV1_LAYER_SENSORS,
+  ACV1_TRAIT_SOURCES,
   assembleBundle,
   BINDING_SEEDS,
   ART_BINDING_KEYS,
@@ -598,6 +611,135 @@ function validateWithSandbox(bytes) {
   }
   return validateBundle(container.byPath, { evaluate: makeReplayEvaluator(recorded), seeds: seeds.length });
 }
+
+// ---------------------------------------------------------------- ACV1 art configuration
+
+// THE CONFORMANCE CORPUS IS SHARED WITH SOLIDITY. `launchpad/test/art/ArtConfigV1Parity.t.sol`
+// reads this exact file (mirrored, digest-guarded) and computes every value independently with
+// `ArtConfigV1.sol`. Here we prove the JavaScript side reproduces it from the same preimages, so
+// neither implementation is ever checked against the other's output.
+const ACV1 = JSON.parse(readFileSync(join(HERE, "../fixtures/acv1/vectors.json"), "utf8"));
+
+test("acv1: the corpus is populated and carries both valid and refused vectors", () => {
+  assert(ACV1.vectors.length === ACV1.vectorCount, "vectorCount must match the array");
+  assert(ACV1.vectors.length > 30, "the corpus is suspiciously small");
+  assert(ACV1.vectors.some((v) => v.code === 0), "no valid vector");
+  assert(ACV1.vectors.some((v) => v.code !== 0), "no refused vector");
+});
+
+test("acv1: every preimage re-encodes to exactly the recorded bytes", () => {
+  for (const vector of ACV1.vectors.filter((v) => v.kind === "preimage")) {
+    const document = encodeArtConfigV1(vector.preimage);
+    const appendix = Buffer.from(vector.appendixHex ?? "", "hex");
+    const bytes = appendix.length > 0 ? withArtConfigV1Appendix(document, Uint8Array.from(appendix)) : document;
+    assert(Buffer.from(bytes).toString("hex") === vector.encodedHex, `encoded bytes differ for ${vector.name}`);
+  }
+});
+
+test("acv1: every vector validates to exactly the recorded code", () => {
+  for (const vector of ACV1.vectors) {
+    const bytes = Uint8Array.from(Buffer.from(vector.encodedHex, "hex"));
+    const verdict = validateArtConfigV1(bytes);
+    assert(verdict.code === vector.code, `${vector.name}: expected ${vector.codeName}, got ${verdict.name}`);
+  }
+});
+
+test("acv1: artConfigHash is keccak256 of the exact transmitted bytes", () => {
+  for (const vector of ACV1.vectors) {
+    const bytes = Uint8Array.from(Buffer.from(vector.encodedHex, "hex"));
+    assert(hashArtConfigV1(bytes) === vector.artConfigHash, `artConfigHash differs for ${vector.name}`);
+  }
+});
+
+test("acv1: the visual and trait-schema commitments match for every decodable vector", () => {
+  let compared = 0;
+  for (const vector of ACV1.vectors) {
+    const bytes = Uint8Array.from(Buffer.from(vector.encodedHex, "hex"));
+    const decoded = decodeArtConfigV1(bytes);
+    if (!decoded.ok) continue;
+    assert(visualHashArtConfigV1(decoded.config) === vector.visualHash, `visualHash differs for ${vector.name}`);
+    assert(traitSchemaHashArtConfigV1(decoded.config) === vector.traitSchemaHash, `traitSchemaHash differs for ${vector.name}`);
+    compared++;
+  }
+  assert(compared > 0, "nothing was compared");
+});
+
+test("acv1: decode round-trips a document back to its preimage", () => {
+  for (const vector of ACV1.vectors.filter((v) => v.kind === "preimage" && v.code === 0)) {
+    const decoded = decodeArtConfigV1(Uint8Array.from(Buffer.from(vector.encodedHex, "hex")));
+    assert(decoded.ok, `${vector.name} must decode`);
+    assert(decoded.config.title === vector.preimage.title, `title differs for ${vector.name}`);
+    assert(decoded.config.layers.length === vector.preimage.layers.length, `layer count differs for ${vector.name}`);
+    assert(decoded.config.palette.length === vector.preimage.palette.length, `palette size differs for ${vector.name}`);
+    // Re-encoding the DECODED document must reproduce the interpreted half exactly.
+    const reencoded = Buffer.from(encodeArtConfigV1(decoded.config)).toString("hex");
+    assert(vector.encodedHex.startsWith(reencoded), `${vector.name} does not round-trip`);
+  }
+});
+
+test("acv1: THE APPENDIX IS COMMITTED BUT NEVER INTERPRETED", () => {
+  const plain = ACV1.vectors.find((v) => v.name === "strata");
+  const carried = ACV1.vectors.find((v) => v.name === "strata-with-appendix");
+  assert(plain.artConfigHash !== carried.artConfigHash, "an appendix must change artConfigHash");
+  assert(plain.visualHash === carried.visualHash, "an appendix must not change the image");
+  assert(plain.traitSchemaHash === carried.traitSchemaHash, "an appendix must not change the traits");
+  // The trap this guards: hashing a re-encode drops the appendix and yields a digest the chain
+  // rejects. hashArtConfigV1 takes bytes for exactly this reason and refuses a config object.
+  const bytes = Uint8Array.from(Buffer.from(carried.encodedHex, "hex"));
+  const decoded = decodeArtConfigV1(bytes);
+  assert(hashArtConfigV1(encodeArtConfigV1(decoded.config)) !== carried.artConfigHash, "re-encoding must NOT reproduce the hash — that is the whole hazard");
+  assert(hashArtConfigV1(bytes) === carried.artConfigHash, "hashing the transmitted bytes must reproduce it");
+  assertThrows(() => hashArtConfigV1(decoded.config), "exact transmitted bytes", "hashArtConfigV1 must refuse a config object");
+});
+
+test("acv1: 19 bytes is the header early-out, 21 is the minimum", () => {
+  assert(ACV1_LIMITS.headerGateBytes === 19, "the early-out is 19");
+  assert(ACV1_LIMITS.minBytes === 21, "the minimum valid document is 21 bytes");
+  const at = (n) => ACV1.vectors.find((v) => v.name === n);
+  assert(at("raw-19-bytes").code === 1 && at("raw-20-bytes").code === 1, "19 and 20 bytes must both be refused");
+  assert(at("raw-21-bytes-valid").code === 0 && at("raw-21-bytes-valid").totalBytes === 21, "21 bytes must be accepted");
+  assert(at("maximal").totalBytes === 332, "the interpreted maximum is 332 bytes");
+});
+
+test("acv1: FRAGMENTATION is refused in a layer and allowed in a trait", () => {
+  const at = (n) => ACV1.vectors.find((v) => v.name === n);
+  assert(at("err-layer-sensor-fragmentation").codeName === "ERR_LAYER_SENSOR", "a layer may not name FRAGMENTATION");
+  assert(at("fragmentation-trait").code === 0, "a trait may name FRAGMENTATION");
+  assert(!ACV1_LAYER_SENSORS.includes("FRAGMENTATION"), "the layer vocabulary must not offer it");
+  assert(ACV1_TRAIT_SOURCES.includes("FRAGMENTATION"), "the trait vocabulary must offer it");
+});
+
+test("acv1: one defect can report two codes depending on an unrelated field", () => {
+  const at = (n) => ACV1.vectors.find((v) => v.name === n);
+  const small = at("err-too-short-zero-layers-small-palette");
+  const large = at("err-layer-count-zero-layers-large-palette");
+  assert(small.codeName === "ERR_TOO_SHORT" && large.codeName === "ERR_LAYER_COUNT", "the two-code table must hold");
+  assert(small.preimage.layers.length === 0 && large.preimage.layers.length === 0, "both must carry the SAME defect");
+});
+
+test("acv1: isArtConfigV1 recognises the format without judging validity", () => {
+  const strata = Uint8Array.from(Buffer.from(ACV1.vectors.find((v) => v.name === "strata").encodedHex, "hex"));
+  assert(isArtConfigV1(strata), "a valid document is ACV1");
+  const refused = Uint8Array.from(Buffer.from(ACV1.vectors.find((v) => v.name === "err-title-quote").encodedHex, "hex"));
+  assert(isArtConfigV1(refused), "an INVALID ACV1 document is still ACV1 — format and validity are different questions");
+  assert(!isArtConfigV1(Uint8Array.from([1, 2, 3])), "a stray byte string is not ACV1");
+  assert(!isArtConfigV1(Uint8Array.from(Buffer.from(ACV1.vectors.find((v) => v.name === "raw-magic").encodedHex, "hex"))), "wrong magic is not ACV1");
+});
+
+test("acv1: the checked encoder refuses bytes the chain would reject", () => {
+  const good = ACV1.vectors.find((v) => v.name === "strata").preimage;
+  assert(encodeArtConfigV1Checked(good).length > 0, "a valid configuration encodes");
+  const bad = ACV1.vectors.find((v) => v.name === "err-layer-sensor-fragmentation").preimage;
+  assert(encodeArtConfigV1(bad).length > 0, "the plain encoder does NOT validate — negative fixtures depend on that");
+  assertThrows(() => encodeArtConfigV1Checked(bad), "ERR_LAYER_SENSOR", "the checked encoder must refuse it");
+});
+
+test("acv1: the authoring skeleton defaults nothing", () => {
+  const empty = emptyArtConfigV1();
+  for (const field of ["animate", "background", "palette", "layers", "traits", "title"]) {
+    assert(empty[field] === null, `${field} must be explicitly absent, never a plausible default`);
+  }
+});
 
 // ---------------------------------------------------------------- summary
 

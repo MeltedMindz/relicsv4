@@ -21,6 +21,7 @@
     "kit": "node packages/creator-cli/bin/relics.js",
     "kit:test": "node packages/project-schema/test/run.mjs",
     "kit:templates": "node scripts/check-templates.mjs",
-    "kit:fixtures": "node packages/project-schema/fixtures/build.mjs"
+    "kit:fixtures": "node packages/project-schema/fixtures/build.mjs",
+    "kit:acv1": "node packages/project-schema/fixtures/acv1/build.mjs"
   }
 }

@@ -70,6 +70,36 @@ export {
   keccakJson,
 } from "./src/binding.js";
 
+export {
+  ACV1_FORMAT,
+  ACV1_VERSION,
+  ACV1_MAGIC,
+  ACV1_TERMINATOR,
+  ACV1_FLAGS,
+  ACV1_LIMITS,
+  ACV1_LAYER_KINDS,
+  ACV1_SENSORS,
+  ACV1_LAYER_SENSORS,
+  ACV1_DNA_SLOTS,
+  ACV1_TRAIT_SOURCES,
+  ACV1_CURVES,
+  ACV1_TRAIT_STYLES,
+  ACV1_ERROR_CODES,
+  acv1Reason,
+  encodeArtConfigV1,
+  encodeArtConfigV1Checked,
+  withArtConfigV1Appendix,
+  decodeArtConfigV1,
+  validateArtConfigV1,
+  isArtConfigV1,
+  hashArtConfigV1,
+  describeArtConfigV1,
+  emptyArtConfigV1,
+  worstCaseElementsV1,
+  ArtConfigV1Error,
+} from "./src/art-config-v1.js";
+export { visualHashArtConfigV1, traitSchemaHashArtConfigV1, runtimeCommitmentArtConfigV1 } from "./src/art-config-v1-hashes.js";
+
 export { normalizeEntryPath, collisionKey, extensionOf, roleOf, checkEntryPolicy, EntryPathError } from "./src/paths.js";
 export { writeContainer, readContainer, crc32, ContainerError } from "./src/container.js";
 

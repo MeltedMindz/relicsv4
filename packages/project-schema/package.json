@@ -11,6 +11,10 @@
       "types": "./types.d.ts",
       "default": "./index.js"
     },
+    "./art-config": {
+      "types": "./art-config.d.ts",
+      "default": "./art-config.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [

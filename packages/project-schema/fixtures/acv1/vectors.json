@@ -1,0 +1,3642 @@
+{
+  "acv1Version": 1,
+  "authority": "launchpad/src/art/ArtConfigV1.sol (decoder) + ArtConfigV1Encoder.sol (encoder)",
+  "errorCodes": {
+    "0": "ERR_NONE",
+    "1": "ERR_TOO_SHORT",
+    "2": "ERR_MAGIC",
+    "3": "ERR_VERSION",
+    "4": "ERR_FLAGS",
+    "5": "ERR_PALETTE_COUNT",
+    "6": "ERR_BACKGROUND",
+    "7": "ERR_LAYER_COUNT",
+    "8": "ERR_LAYER_KIND",
+    "9": "ERR_LAYER_SENSOR",
+    "10": "ERR_LAYER_CURVE",
+    "11": "ERR_LAYER_PALETTE",
+    "12": "ERR_LAYER_AMOUNT",
+    "13": "ERR_ELEMENT_BUDGET",
+    "14": "ERR_TRAIT_COUNT",
+    "15": "ERR_TRAIT_NAME",
+    "16": "ERR_TRAIT_SOURCE",
+    "17": "ERR_TRAIT_STYLE",
+    "18": "ERR_TITLE",
+    "19": "ERR_TERMINATOR",
+    "20": "ERR_TRAILING"
+  },
+  "note": "ACV1 conformance corpus. Every vector carries its preimage so the JavaScript and Solidity implementations each compute the result independently; neither reads the other's answer. Regenerate with fixtures/acv1/build.mjs.",
+  "vectorCount": 42,
+  "vectors": [
+    {
+      "appendixHex": "",
+      "artConfigHash": "c1be7d2c3e2437579dffb1ac53366192e91d2500402dd954ca71311d5c4979da",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "Sediment",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e7400010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "strata",
+      "note": "the reference animated project",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "Sediment",
+            "source": "VOLUME_TIER",
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 77,
+      "traitSchemaHash": "027a86dea1d0233359609f8d375d4c6963e6566a78ce97f9935d1bb503c5e611",
+      "visualHash": "2c4ac84d85780962fba28ebc443eacc45cfc6e7ed3e6304536821fd30b3e2142"
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "5830eeef4b3b148dea6eb6ec51e725cfb98429a8d9a55ec305327162f1fcb06d",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          24,
+          16
+        ],
+        "layerAmountMin": [
+          2,
+          1
+        ],
+        "layerCurve": [
+          1,
+          3
+        ],
+        "layerKind": [
+          1,
+          3
+        ],
+        "layerPalette": [
+          1,
+          2
+        ],
+        "layerSensor": [
+          8,
+          7
+        ],
+        "palette": [
+          15921126,
+          1788261,
+          14701155
+        ],
+        "title": "Orbit",
+        "traitName": [
+          "Orbit",
+          "Bias"
+        ],
+        "traitSource": [
+          8,
+          7
+        ],
+        "traitStyle": [
+          0,
+          1
+        ]
+      },
+      "encodedHex": "4143563101000003f2efe61b4965e052630201080101021803070302011002054f72626974080004426961730701054f72626974ff",
+      "kind": "preimage",
+      "name": "orbit",
+      "note": "a second, genuinely different project",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 24,
+            "amountMin": 2,
+            "curve": "LOG2",
+            "kind": "RINGS",
+            "palette": 1,
+            "sensor": "QUOTE_VOLUME"
+          },
+          {
+            "amountMax": 16,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "GRID",
+            "palette": 2,
+            "sensor": "FLOW_BIAS"
+          }
+        ],
+        "palette": [
+          "#f2efe6",
+          "#1b4965",
+          "#e05263"
+        ],
+        "title": "Orbit",
+        "traits": [
+          {
+            "name": "Orbit",
+            "source": "QUOTE_VOLUME",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Bias",
+            "source": "FLOW_BIAS",
+            "style": "WORD"
+          }
+        ]
+      },
+      "totalBytes": 53,
+      "traitSchemaHash": "b18c1d6e038b468ed0690c7077439994c62bb6b3c7c9ab884743bbd393fe7212",
+      "visualHash": "e60a31d2df2cd81dae31b68a17b54057872b3042b7aa8d5e4e3ceff5bbc1c872"
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "005ea215c0b499c933c02fe711b30ef82a2920cfc569ef4d114ae0247fd8db12",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "columns": {
+        "background": 7,
+        "flags": 1,
+        "layerAmountMax": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "layerAmountMin": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "layerCurve": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ],
+        "layerKind": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1
+        ],
+        "layerPalette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "layerSensor": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "palette": [
+          1052688,
+          2105376,
+          3158064,
+          4210752,
+          5263440,
+          6316128,
+          7368816,
+          8421504
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traitName": [
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX"
+        ],
+        "traitSource": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "traitStyle": [
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          1
+        ]
+      },
+      "encodedHex": "41435631010107081010102020203030304040405050506060607070708080800800000000010c01010101010c02020202010c03030303010c04040004010c05050105010c00060206010c01070307010c08184142434445464748494a4b4c4d4e4f5051525354555657580000184142434445464748494a4b4c4d4e4f5051525354555657580101184142434445464748494a4b4c4d4e4f5051525354555657580202184142434445464748494a4b4c4d4e4f5051525354555657580300184142434445464748494a4b4c4d4e4f5051525354555657580401184142434445464748494a4b4c4d4e4f5051525354555657580502184142434445464748494a4b4c4d4e4f5051525354555657580600184142434445464748494a4b4c4d4e4f5051525354555657580701204142434445464748494a4b4c4d4e4f505152535455565758595a303132333435ff",
+      "kind": "preimage",
+      "name": "maximal",
+      "note": "every count and length at its ceiling; 332 bytes, the interpreted maximum",
+      "preimage": {
+        "animate": true,
+        "background": 7,
+        "layers": [
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "RINGS",
+            "palette": 1,
+            "sensor": "EPOCH"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "BARS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "GRID",
+            "palette": 3,
+            "sensor": "RECOVERY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "SHARDS",
+            "palette": 4,
+            "sensor": "VOLATILITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "VEIL",
+            "palette": 5,
+            "sensor": "STRESS"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "STRATA",
+            "palette": 6,
+            "sensor": "LIQUIDITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "RINGS",
+            "palette": 7,
+            "sensor": "FLOW_BIAS"
+          }
+        ],
+        "palette": [
+          "#101010",
+          "#202020",
+          "#303030",
+          "#404040",
+          "#505050",
+          "#606060",
+          "#707070",
+          "#808080"
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traits": [
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLUME_TIER",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "EPOCH",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "DRAWDOWN",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "RECOVERY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLATILITY",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "STRESS",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "LIQUIDITY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "FLOW_BIAS",
+            "style": "WORD"
+          }
+        ]
+      },
+      "totalBytes": 332,
+      "traitSchemaHash": "d15812bc5257616da36ffe625a28e2de5f302d7c2217bd4666fc1932330289fa",
+      "visualHash": "70ed17ca12ca4719b77506de1b932f248ea3f615db482253e3f2a40a15bb00ab"
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "65280b0bae0227d8f604659b992b17932de0eb1ef549212cab8fc7213b38124a",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010000000000010000ff",
+      "kind": "preimage",
+      "name": "minimal",
+      "note": "the smallest VALID document: 21 bytes, not the 19 of the header early-out",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": "d0d56fb725de6864c5219d41e7cdd2557301a353abf350f06d887582614feb61",
+      "visualHash": "08e31d518c8369caef29a350b2132b0bb1f452085c706fbf9d0a73a75bb1c373"
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "15e721a509a4060584c1d7db21420caeec8c1ffbdba85ff4df16b69b300071ea",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "Frag",
+        "traitName": [
+          "Swaps"
+        ],
+        "traitSource": [
+          9
+        ],
+        "traitStyle": [
+          0
+        ]
+      },
+      "encodedHex": "4143563101000001000000010000000000010105537761707309000446726167ff",
+      "kind": "preimage",
+      "name": "fragmentation-trait",
+      "note": "FRAGMENTATION as a trait source is legal",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "Frag",
+        "traits": [
+          {
+            "name": "Swaps",
+            "source": "FRAGMENTATION",
+            "style": "NUMBER"
+          }
+        ]
+      },
+      "totalBytes": 33,
+      "traitSchemaHash": "7ccabe080e7472ad51ba9a50ef56ba90f302abd9f683525743438d063d0b2a7d",
+      "visualHash": "08e31d518c8369caef29a350b2132b0bb1f452085c706fbf9d0a73a75bb1c373"
+    },
+    {
+      "appendixHex": "63726561746f723a20612e656c646572",
+      "artConfigHash": "4b2b3e7b082d260ba8e1cf0ec3781dcdbc7de5a953bd61f081103d3b115348a3",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "Sediment",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e7400010846726163747572650200045665696e0a0206537472617461ff63726561746f723a20612e656c646572",
+      "kind": "preimage",
+      "name": "strata-with-appendix",
+      "note": "identical interpreted document to `strata`, different artConfigHash — the appendix is committed but never read",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "Sediment",
+            "source": "VOLUME_TIER",
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 93,
+      "traitSchemaHash": "027a86dea1d0233359609f8d375d4c6963e6566a78ce97f9935d1bb503c5e611",
+      "visualHash": "2c4ac84d85780962fba28ebc443eacc45cfc6e7ed3e6304536821fd30b3e2142"
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "5830eeef4b3b148dea6eb6ec51e725cfb98429a8d9a55ec305327162f1fcb06d",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          24,
+          16
+        ],
+        "layerAmountMin": [
+          2,
+          1
+        ],
+        "layerCurve": [
+          1,
+          3
+        ],
+        "layerKind": [
+          1,
+          3
+        ],
+        "layerPalette": [
+          1,
+          2
+        ],
+        "layerSensor": [
+          8,
+          7
+        ],
+        "palette": [
+          15921126,
+          1788261,
+          14701155
+        ],
+        "title": "Orbit",
+        "traitName": [
+          "Orbit",
+          "Bias"
+        ],
+        "traitSource": [
+          8,
+          7
+        ],
+        "traitStyle": [
+          0,
+          1
+        ]
+      },
+      "encodedHex": "4143563101000003f2efe61b4965e052630201080101021803070302011002054f72626974080004426961730701054f72626974ff",
+      "kind": "preimage",
+      "name": "empty-appendix-is-not-an-appendix",
+      "note": "a zero-length appendix must hash exactly like no appendix",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 24,
+            "amountMin": 2,
+            "curve": "LOG2",
+            "kind": "RINGS",
+            "palette": 1,
+            "sensor": "QUOTE_VOLUME"
+          },
+          {
+            "amountMax": 16,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "GRID",
+            "palette": 2,
+            "sensor": "FLOW_BIAS"
+          }
+        ],
+        "palette": [
+          "#f2efe6",
+          "#1b4965",
+          "#e05263"
+        ],
+        "title": "Orbit",
+        "traits": [
+          {
+            "name": "Orbit",
+            "source": "QUOTE_VOLUME",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Bias",
+            "source": "FLOW_BIAS",
+            "style": "WORD"
+          }
+        ]
+      },
+      "totalBytes": 53,
+      "traitSchemaHash": "b18c1d6e038b468ed0690c7077439994c62bb6b3c7c9ab884743bbd393fe7212",
+      "visualHash": "e60a31d2df2cd81dae31b68a17b54057872b3042b7aa8d5e4e3ceff5bbc1c872"
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "393f5c2752ada126be8c335a517d706105bcd495f9a09f2f17efd6e731875f03",
+      "code": 4,
+      "codeName": "ERR_FLAGS",
+      "columns": {
+        "background": 0,
+        "flags": 2,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101020001000000010000000000010000ff",
+      "kind": "preimage",
+      "name": "err-flags",
+      "note": "a bit outside ANIMATE is set",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "flags": 2,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "045010192b050d2b3d476bfb3558d1d97e594f69b8c4c31bf191566954c53612",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000000010000000000010000ff",
+      "kind": "preimage",
+      "name": "err-palette-count-zero",
+      "note": "empty palette",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 18,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "5befc30ef6298fc1b971e083c436f6e04d1864863f74d3c8f3bbd46c1781b3e3",
+      "code": 5,
+      "codeName": "ERR_PALETTE_COUNT",
+      "columns": {
+        "background": 7,
+        "flags": 1,
+        "layerAmountMax": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "layerAmountMin": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "layerCurve": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ],
+        "layerKind": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1
+        ],
+        "layerPalette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "layerSensor": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "palette": [
+          1052688,
+          2105376,
+          3158064,
+          4210752,
+          5263440,
+          6316128,
+          7368816,
+          8421504,
+          16777215
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traitName": [
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX"
+        ],
+        "traitSource": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "traitStyle": [
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          1
+        ]
+      },
+      "encodedHex": "4143563101010709101010202020303030404040505050606060707070808080ffffff0800000000010c01010101010c02020202010c03030303010c04040004010c05050105010c00060206010c01070307010c08184142434445464748494a4b4c4d4e4f5051525354555657580000184142434445464748494a4b4c4d4e4f5051525354555657580101184142434445464748494a4b4c4d4e4f5051525354555657580202184142434445464748494a4b4c4d4e4f5051525354555657580300184142434445464748494a4b4c4d4e4f5051525354555657580401184142434445464748494a4b4c4d4e4f5051525354555657580502184142434445464748494a4b4c4d4e4f5051525354555657580600184142434445464748494a4b4c4d4e4f5051525354555657580701204142434445464748494a4b4c4d4e4f505152535455565758595a303132333435ff",
+      "kind": "preimage",
+      "name": "err-palette-count-nine",
+      "note": "nine colours",
+      "preimage": {
+        "animate": true,
+        "background": 7,
+        "layers": [
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "RINGS",
+            "palette": 1,
+            "sensor": "EPOCH"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "BARS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "GRID",
+            "palette": 3,
+            "sensor": "RECOVERY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "SHARDS",
+            "palette": 4,
+            "sensor": "VOLATILITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "VEIL",
+            "palette": 5,
+            "sensor": "STRESS"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "STRATA",
+            "palette": 6,
+            "sensor": "LIQUIDITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "RINGS",
+            "palette": 7,
+            "sensor": "FLOW_BIAS"
+          }
+        ],
+        "palette": [
+          "#101010",
+          "#202020",
+          "#303030",
+          "#404040",
+          "#505050",
+          "#606060",
+          "#707070",
+          "#808080",
+          "#ffffff"
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traits": [
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLUME_TIER",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "EPOCH",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "DRAWDOWN",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "RECOVERY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLATILITY",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "STRESS",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "LIQUIDITY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "FLOW_BIAS",
+            "style": "WORD"
+          }
+        ]
+      },
+      "totalBytes": 335,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "4e643ab00502d9a4ac33f11afb6b7e00df50db4db9616189b8d6bd3174fce838",
+      "code": 6,
+      "codeName": "ERR_BACKGROUND",
+      "columns": {
+        "background": 1,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000101000000010000000000010000ff",
+      "kind": "preimage",
+      "name": "err-background",
+      "note": "background index outside the palette",
+      "preimage": {
+        "animate": false,
+        "background": 1,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "a972f35f86a0fe03ff9fea0d3b6c8c145aa0c4405140cf1bc757ce4cc803d61f",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [],
+        "layerAmountMin": [],
+        "layerCurve": [],
+        "layerKind": [],
+        "layerPalette": [],
+        "layerSensor": [],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000000000ff",
+      "kind": "preimage",
+      "name": "err-too-short-zero-layers-small-palette",
+      "note": "ZERO LAYERS with a 1-colour palette: 15 bytes, refused by the length gate before the layer rule is ever reached",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 15,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "2303669ab547a9bcaa68a3f1b9a946319e68e2077f30ea53a58dd462d9d05186",
+      "code": 7,
+      "codeName": "ERR_LAYER_COUNT",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [],
+        "layerAmountMin": [],
+        "layerCurve": [],
+        "layerKind": [],
+        "layerPalette": [],
+        "layerSensor": [],
+        "palette": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000008000000000000000000000000000000000000000000000000000000ff",
+      "kind": "preimage",
+      "name": "err-layer-count-zero-layers-large-palette",
+      "note": "THE SAME DEFECT with an 8-colour palette: 36 bytes, so it reaches the layer rule and reports it. One defect, two codes, decided by an unrelated field.",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [],
+        "palette": [
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 36,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "a171c344eba6d7fa36ec9627c36759af2967021d6294bcaa2c4d05e2dd75dfbc",
+      "code": 7,
+      "codeName": "ERR_LAYER_COUNT",
+      "columns": {
+        "background": 7,
+        "flags": 1,
+        "layerAmountMax": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "layerAmountMin": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "layerCurve": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3,
+          0
+        ],
+        "layerKind": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1,
+          0
+        ],
+        "layerPalette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0
+        ],
+        "layerSensor": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0
+        ],
+        "palette": [
+          1052688,
+          2105376,
+          3158064,
+          4210752,
+          5263440,
+          6316128,
+          7368816,
+          8421504
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traitName": [
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX"
+        ],
+        "traitSource": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "traitStyle": [
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          1
+        ]
+      },
+      "encodedHex": "41435631010107081010102020203030304040405050506060607070708080800900000000010c01010101010c02020202010c03030303010c04040004010c05050105010c00060206010c01070307010c00000000010c08184142434445464748494a4b4c4d4e4f5051525354555657580000184142434445464748494a4b4c4d4e4f5051525354555657580101184142434445464748494a4b4c4d4e4f5051525354555657580202184142434445464748494a4b4c4d4e4f5051525354555657580300184142434445464748494a4b4c4d4e4f5051525354555657580401184142434445464748494a4b4c4d4e4f5051525354555657580502184142434445464748494a4b4c4d4e4f5051525354555657580600184142434445464748494a4b4c4d4e4f5051525354555657580701204142434445464748494a4b4c4d4e4f505152535455565758595a303132333435ff",
+      "kind": "preimage",
+      "name": "err-layer-count-nine",
+      "note": "nine layers",
+      "preimage": {
+        "animate": true,
+        "background": 7,
+        "layers": [
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "RINGS",
+            "palette": 1,
+            "sensor": "EPOCH"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "BARS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "GRID",
+            "palette": 3,
+            "sensor": "RECOVERY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "SHARDS",
+            "palette": 4,
+            "sensor": "VOLATILITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "VEIL",
+            "palette": 5,
+            "sensor": "STRESS"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "STRATA",
+            "palette": 6,
+            "sensor": "LIQUIDITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "RINGS",
+            "palette": 7,
+            "sensor": "FLOW_BIAS"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#101010",
+          "#202020",
+          "#303030",
+          "#404040",
+          "#505050",
+          "#606060",
+          "#707070",
+          "#808080"
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traits": [
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLUME_TIER",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "EPOCH",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "DRAWDOWN",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "RECOVERY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLATILITY",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "STRESS",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "LIQUIDITY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "FLOW_BIAS",
+            "style": "WORD"
+          }
+        ]
+      },
+      "totalBytes": 338,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "50e39bdf6bd5e83e8b86b64487d59d02e00382862d5134279269a11eb04066e8",
+      "code": 8,
+      "codeName": "ERR_LAYER_KIND",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          6
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010600000000010000ff",
+      "kind": "preimage",
+      "name": "err-layer-kind",
+      "note": "a primitive beyond VEIL",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": 6,
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "c4c993bc855f8678690e2f220c1c8ba024ddbca2e7e114dc96a4ba541e0babfb",
+      "code": 9,
+      "codeName": "ERR_LAYER_SENSOR",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          9
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010009000000010000ff",
+      "kind": "preimage",
+      "name": "err-layer-sensor-fragmentation",
+      "note": "THE FRAGMENTATION REFUSAL: a dust swarm may not walk the artwork",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "FRAGMENTATION"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "4e2ff600b72c9ddc32ef5e8c71af498266e820adbf9c80b8751a1dfc0a65bcb4",
+      "code": 10,
+      "codeName": "ERR_LAYER_CURVE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          4
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010000040000010000ff",
+      "kind": "preimage",
+      "name": "err-layer-curve",
+      "note": "a curve beyond STEP",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": 4,
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "a6127409e5f9c44c3aeddebca258b9018da3e39d5252bbe2e9915f86673cdcd6",
+      "code": 11,
+      "codeName": "ERR_LAYER_PALETTE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          1
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010000000100010000ff",
+      "kind": "preimage",
+      "name": "err-layer-palette",
+      "note": "a layer's palette index outside the palette",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "bb1019203711540c89bcd3636bcb7277715547580a75fd980d621cc308817897",
+      "code": 12,
+      "codeName": "ERR_LAYER_AMOUNT",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          0
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010000000000000000ff",
+      "kind": "preimage",
+      "name": "err-layer-amount-zero-max",
+      "note": "amountMax of 0",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 0,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "da31dc3b935e74aaa16fc6f2c5176ce562e64fb1a0010bb54c9e99e288e3452f",
+      "code": 12,
+      "codeName": "ERR_LAYER_AMOUNT",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          33
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010000000000210000ff",
+      "kind": "preimage",
+      "name": "err-layer-amount-over-32",
+      "note": "amountMax of 33",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 33,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "05e16e7cc4d528cee86cda98e1f51cfb494b710716293096fb7c7f443b096c73",
+      "code": 12,
+      "codeName": "ERR_LAYER_AMOUNT",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          4
+        ],
+        "layerAmountMin": [
+          5
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010000000005040000ff",
+      "kind": "preimage",
+      "name": "err-layer-amount-inverted",
+      "note": "amountMin above amountMax",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 4,
+            "amountMin": 5,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "",
+        "traits": []
+      },
+      "totalBytes": 21,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "940d071afd4558aeeb9e2420b5b87a1d981d3e33568451623c58ab84c95cabaa",
+      "code": 13,
+      "codeName": "ERR_ELEMENT_BUDGET",
+      "columns": {
+        "background": 7,
+        "flags": 1,
+        "layerAmountMax": [
+          13,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "layerAmountMin": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "layerCurve": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ],
+        "layerKind": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1
+        ],
+        "layerPalette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "layerSensor": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "palette": [
+          1052688,
+          2105376,
+          3158064,
+          4210752,
+          5263440,
+          6316128,
+          7368816,
+          8421504
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traitName": [
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX"
+        ],
+        "traitSource": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "traitStyle": [
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          1
+        ]
+      },
+      "encodedHex": "41435631010107081010102020203030304040405050506060607070708080800800000000010d01010101010c02020202010c03030303010c04040004010c05050105010c00060206010c01070307010c08184142434445464748494a4b4c4d4e4f5051525354555657580000184142434445464748494a4b4c4d4e4f5051525354555657580101184142434445464748494a4b4c4d4e4f5051525354555657580202184142434445464748494a4b4c4d4e4f5051525354555657580300184142434445464748494a4b4c4d4e4f5051525354555657580401184142434445464748494a4b4c4d4e4f5051525354555657580502184142434445464748494a4b4c4d4e4f5051525354555657580600184142434445464748494a4b4c4d4e4f5051525354555657580701204142434445464748494a4b4c4d4e4f505152535455565758595a303132333435ff",
+      "kind": "preimage",
+      "name": "err-element-budget",
+      "note": "97 worst-case elements, one over the whole-artwork budget",
+      "preimage": {
+        "animate": true,
+        "background": 7,
+        "layers": [
+          {
+            "amountMax": 13,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "RINGS",
+            "palette": 1,
+            "sensor": "EPOCH"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "BARS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "GRID",
+            "palette": 3,
+            "sensor": "RECOVERY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "SHARDS",
+            "palette": 4,
+            "sensor": "VOLATILITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "VEIL",
+            "palette": 5,
+            "sensor": "STRESS"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "STRATA",
+            "palette": 6,
+            "sensor": "LIQUIDITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "RINGS",
+            "palette": 7,
+            "sensor": "FLOW_BIAS"
+          }
+        ],
+        "palette": [
+          "#101010",
+          "#202020",
+          "#303030",
+          "#404040",
+          "#505050",
+          "#606060",
+          "#707070",
+          "#808080"
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traits": [
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLUME_TIER",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "EPOCH",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "DRAWDOWN",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "RECOVERY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLATILITY",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "STRESS",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "LIQUIDITY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "FLOW_BIAS",
+            "style": "WORD"
+          }
+        ]
+      },
+      "totalBytes": 332,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "615225f6ff1ac1e32987af6004db734d19678a143d07770fa486805c55eab868",
+      "code": 14,
+      "codeName": "ERR_TRAIT_COUNT",
+      "columns": {
+        "background": 7,
+        "flags": 1,
+        "layerAmountMax": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "layerAmountMin": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "layerCurve": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ],
+        "layerKind": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1
+        ],
+        "layerPalette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "layerSensor": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "palette": [
+          1052688,
+          2105376,
+          3158064,
+          4210752,
+          5263440,
+          6316128,
+          7368816,
+          8421504
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traitName": [
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX",
+          "ABCDEFGHIJKLMNOPQRSTUVWX"
+        ],
+        "traitSource": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0
+        ],
+        "traitStyle": [
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          1,
+          0
+        ]
+      },
+      "encodedHex": "41435631010107081010102020203030304040405050506060607070708080800800000000010c01010101010c02020202010c03030303010c04040004010c05050105010c00060206010c01070307010c09184142434445464748494a4b4c4d4e4f5051525354555657580000184142434445464748494a4b4c4d4e4f5051525354555657580101184142434445464748494a4b4c4d4e4f5051525354555657580202184142434445464748494a4b4c4d4e4f5051525354555657580300184142434445464748494a4b4c4d4e4f5051525354555657580401184142434445464748494a4b4c4d4e4f5051525354555657580502184142434445464748494a4b4c4d4e4f5051525354555657580600184142434445464748494a4b4c4d4e4f5051525354555657580701184142434445464748494a4b4c4d4e4f5051525354555657580000204142434445464748494a4b4c4d4e4f505152535455565758595a303132333435ff",
+      "kind": "preimage",
+      "name": "err-trait-count-nine",
+      "note": "nine traits",
+      "preimage": {
+        "animate": true,
+        "background": 7,
+        "layers": [
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "RINGS",
+            "palette": 1,
+            "sensor": "EPOCH"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "BARS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "GRID",
+            "palette": 3,
+            "sensor": "RECOVERY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "SHARDS",
+            "palette": 4,
+            "sensor": "VOLATILITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "LOG2",
+            "kind": "VEIL",
+            "palette": 5,
+            "sensor": "STRESS"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "EASE",
+            "kind": "STRATA",
+            "palette": 6,
+            "sensor": "LIQUIDITY"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 1,
+            "curve": "STEP",
+            "kind": "RINGS",
+            "palette": 7,
+            "sensor": "FLOW_BIAS"
+          }
+        ],
+        "palette": [
+          "#101010",
+          "#202020",
+          "#303030",
+          "#404040",
+          "#505050",
+          "#606060",
+          "#707070",
+          "#808080"
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+        "traits": [
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLUME_TIER",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "EPOCH",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "DRAWDOWN",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "RECOVERY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLATILITY",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "STRESS",
+            "style": "HEX"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "LIQUIDITY",
+            "style": "NUMBER"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "FLOW_BIAS",
+            "style": "WORD"
+          },
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWX",
+            "source": "VOLUME_TIER",
+            "style": "NUMBER"
+          }
+        ]
+      },
+      "totalBytes": 359,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "c0e9d7de4ba8c25ab18867f5fffe9a9c463d979994aa2c9148c3f72e456c70c6",
+      "code": 15,
+      "codeName": "ERR_TRAIT_NAME",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c050500030101030000010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "err-trait-name-empty",
+      "note": "a zero-length trait name",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "",
+            "source": "VOLUME_TIER",
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 69,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "e5137ea1d5b16fd1b7327d8a7eec0bc1d7e2cc9f2b26d89deef6069b5ab988ac",
+      "code": 15,
+      "codeName": "ERR_TRAIT_NAME",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "ABCDEFGHIJKLMNOPQRSTUVWXY",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c05050003010103194142434445464748494a4b4c4d4e4f5051525354555657585900010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "err-trait-name-long",
+      "note": "a 25-character trait name",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "ABCDEFGHIJKLMNOPQRSTUVWXY",
+            "source": "VOLUME_TIER",
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 94,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "8099def5081695eb2ec61abc9b61dca544d6ee19a9673aba9702b1cb1189f355",
+      "code": 15,
+      "codeName": "ERR_TRAIT_NAME",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "Sed\"ment",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564226d656e7400010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "err-trait-name-quote",
+      "note": "a trait name carrying a quote — the character that could forge a metadata field",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "Sed\"ment",
+            "source": "VOLUME_TIER",
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "28c7ce34455c49c4226d8d5ef7266289e2fa89a454d03eaba10eef66a4c58de5",
+      "code": 15,
+      "codeName": "ERR_TRAIT_NAME",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "Sed\\ment",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c05050003010103085365645c6d656e7400010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "err-trait-name-backslash",
+      "note": "a trait name carrying a backslash",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "Sed\\ment",
+            "source": "VOLUME_TIER",
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "cf002ed49ddef5bc4b25c954e779a4be0722c1d12fa8cbd2bfe9c97057a53f87",
+      "code": 15,
+      "codeName": "ERR_TRAIT_NAME",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "Sed\u0001ment",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564016d656e7400010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "err-trait-name-control",
+      "note": "a trait name carrying a control character",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "Sed\u0001ment",
+            "source": "VOLUME_TIER",
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "4f5014732858618f517c2b681e77d0be227b25470a37042cef52f2756fe907bf",
+      "code": 16,
+      "codeName": "ERR_TRAIT_SOURCE",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "Sediment",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          14,
+          2,
+          10
+        ],
+        "traitStyle": [
+          1,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e740e010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "err-trait-source",
+      "note": "a value source beyond DNA_SLOT_3",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "Sediment",
+            "source": 14,
+            "style": "WORD"
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "9591bbc8094e0be71669412aa7688474f59f53c7ca39ac7251ccfb335faf6c1c",
+      "code": 17,
+      "codeName": "ERR_TRAIT_STYLE",
+      "columns": {
+        "background": 0,
+        "flags": 1,
+        "layerAmountMax": [
+          18,
+          12,
+          1
+        ],
+        "layerAmountMin": [
+          3,
+          0,
+          1
+        ],
+        "layerCurve": [
+          0,
+          2,
+          0
+        ],
+        "layerKind": [
+          0,
+          4,
+          5
+        ],
+        "layerPalette": [
+          1,
+          2,
+          3
+        ],
+        "layerSensor": [
+          0,
+          2,
+          5
+        ],
+        "palette": [
+          723726,
+          8014634,
+          13208127,
+          3029830
+        ],
+        "title": "Strata",
+        "traitName": [
+          "Sediment",
+          "Fracture",
+          "Vein"
+        ],
+        "traitSource": [
+          0,
+          2,
+          10
+        ],
+        "traitStyle": [
+          3,
+          0,
+          2
+        ]
+      },
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e7400030846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "preimage",
+      "name": "err-trait-style",
+      "note": "a style beyond HEX",
+      "preimage": {
+        "animate": true,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 18,
+            "amountMin": 3,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 1,
+            "sensor": "VOLUME_TIER"
+          },
+          {
+            "amountMax": 12,
+            "amountMin": 0,
+            "curve": "EASE",
+            "kind": "SHARDS",
+            "palette": 2,
+            "sensor": "DRAWDOWN"
+          },
+          {
+            "amountMax": 1,
+            "amountMin": 1,
+            "curve": "LINEAR",
+            "kind": "VEIL",
+            "palette": 3,
+            "sensor": "STRESS"
+          }
+        ],
+        "palette": [
+          "#0b0b0e",
+          "#7a4b2a",
+          "#c98a3f",
+          "#2e3b46"
+        ],
+        "title": "Strata",
+        "traits": [
+          {
+            "name": "Sediment",
+            "source": "VOLUME_TIER",
+            "style": 3
+          },
+          {
+            "name": "Fracture",
+            "source": "DRAWDOWN",
+            "style": "NUMBER"
+          },
+          {
+            "name": "Vein",
+            "source": "DNA_SLOT_0",
+            "style": "HEX"
+          }
+        ]
+      },
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "1a5b2fe441cb5500191c45db078c28c495fba830cabd6b68841b564aedca80f7",
+      "code": 18,
+      "codeName": "ERR_TITLE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "41435631010000010000000100000000000100214142434445464748494a4b4c4d4e4f505152535455565758595a30313233343536ff",
+      "kind": "preimage",
+      "name": "err-title-long",
+      "note": "a 33-character title",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456",
+        "traits": []
+      },
+      "totalBytes": 54,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "appendixHex": "",
+      "artConfigHash": "04cdb16e06193c531ed752eab9fd3f67c02b7147b0a46af0fc0cba56787d6fea",
+      "code": 18,
+      "codeName": "ERR_TITLE",
+      "columns": {
+        "background": 0,
+        "flags": 0,
+        "layerAmountMax": [
+          1
+        ],
+        "layerAmountMin": [
+          0
+        ],
+        "layerCurve": [
+          0
+        ],
+        "layerKind": [
+          0
+        ],
+        "layerPalette": [
+          0
+        ],
+        "layerSensor": [
+          0
+        ],
+        "palette": [
+          0
+        ],
+        "title": "Str\"ta",
+        "traitName": [],
+        "traitSource": [],
+        "traitStyle": []
+      },
+      "encodedHex": "4143563101000001000000010000000000010006537472227461ff",
+      "kind": "preimage",
+      "name": "err-title-quote",
+      "note": "a title carrying a quote",
+      "preimage": {
+        "animate": false,
+        "background": 0,
+        "layers": [
+          {
+            "amountMax": 1,
+            "amountMin": 0,
+            "curve": "LINEAR",
+            "kind": "STRATA",
+            "palette": 0,
+            "sensor": "VOLUME_TIER"
+          }
+        ],
+        "palette": [
+          "#000000"
+        ],
+        "title": "Str\"ta",
+        "traits": []
+      },
+      "totalBytes": 27,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "encodedHex": "",
+      "kind": "raw",
+      "name": "raw-empty",
+      "note": "no bytes at all",
+      "totalBytes": 0,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "a56f5a4cd1597dfa5853c882cc9f21c4d57cc262ff73438b4bd3bacf59aecde8",
+      "code": 2,
+      "codeName": "ERR_MAGIC",
+      "encodedHex": "42435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e7400010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "raw",
+      "name": "raw-magic",
+      "note": "the right length, the wrong magic",
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "4a7582ee9bc3994c1e336ada45f456a412370d573d746bb6177420eb63dcc57b",
+      "code": 3,
+      "codeName": "ERR_VERSION",
+      "encodedHex": "41435631020100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e7400010846726163747572650200045665696e0a0206537472617461ff",
+      "kind": "raw",
+      "name": "raw-version",
+      "note": "version 2",
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "4c457a2e87294541e1019700caf4e6a56857063a8a185143d063857a19cd0cf6",
+      "code": 19,
+      "codeName": "ERR_TERMINATOR",
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e7400010846726163747572650200045665696e0a0206537472617461fe",
+      "kind": "raw",
+      "name": "raw-terminator",
+      "note": "the closing byte is not 0xFF",
+      "totalBytes": 77,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "2c32cd8cffdac21a71418435623bfc0f091d406350a420e7aa6da2828c48d86d",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "encodedHex": "41435631010100040b0b",
+      "kind": "raw",
+      "name": "raw-truncated-header",
+      "note": "cut inside the palette",
+      "totalBytes": 10,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "9d109baac4f0b53aed33bf589595db709b2eb6640be040ce11f01b3e91fdca63",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b4603000000",
+      "kind": "raw",
+      "name": "raw-truncated-layers",
+      "note": "cut inside the layer table",
+      "totalBytes": 24,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "c9ae3b2d634635870f1db0e26a4b1d24db4f86a35add3f57775ad693266d0394",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "encodedHex": "41435631010100040b0b0e7a4b2ac98a3f2e3b460300000001031204020202000c0505000301010308536564696d656e7400010846726163747572650200045665696e0a0206537472617461",
+      "kind": "raw",
+      "name": "raw-truncated-tail",
+      "note": "cut before the terminator",
+      "totalBytes": 76,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "d7fad8eeaa066c93babdbbb23c7b9b57c80ff1b3cf1abb39afd1640c234c9900",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "encodedHex": "41435631010000010000000100000000000100",
+      "kind": "raw",
+      "name": "raw-19-bytes",
+      "note": "EXACTLY the header early-out threshold. It clears `n < 19` and is still refused — proof that 19 is not the minimum valid length.",
+      "totalBytes": 19,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "e335442a81983e9f29b7e1f9a7f82cd15a7709ab2b3fe4a9c83f4ee9cc58323e",
+      "code": 1,
+      "codeName": "ERR_TOO_SHORT",
+      "encodedHex": "4143563101000001000000010000000000010000",
+      "kind": "raw",
+      "name": "raw-20-bytes",
+      "note": "one byte more, still refused. The minimum is 21.",
+      "totalBytes": 20,
+      "traitSchemaHash": null,
+      "visualHash": null
+    },
+    {
+      "artConfigHash": "65280b0bae0227d8f604659b992b17932de0eb1ef549212cab8fc7213b38124a",
+      "code": 0,
+      "codeName": "ERR_NONE",
+      "encodedHex": "4143563101000001000000010000000000010000ff",
+      "kind": "raw",
+      "name": "raw-21-bytes-valid",
+      "note": "the smallest document that is actually valid",
+      "totalBytes": 21,
+      "traitSchemaHash": "d0d56fb725de6864c5219d41e7cdd2557301a353abf350f06d887582614feb61",
+      "visualHash": "08e31d518c8369caef29a350b2132b0bb1f452085c706fbf9d0a73a75bb1c373"
+    }
+  ]
+}

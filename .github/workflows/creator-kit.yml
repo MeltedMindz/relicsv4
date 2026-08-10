@@ -25,6 +25,14 @@ jobs:
       - name: every starter template validates and exports
         run: npm run kit:templates
 
+      - name: the ACV1 conformance corpus is byte-reproducible
+        # This corpus is the shared expectation the Solidity decoder is ALSO checked against
+        # (launchpad/test/art/ArtConfigV1Parity.t.sol). A diff here means the JavaScript codec
+        # moved, and the on-chain side would find out at launch time instead of now.
+        run: |
+          npm run kit:acv1
+          git diff --exit-code -- packages/project-schema/fixtures/acv1
+
       - name: fixtures are byte-reproducible
         # Regenerating must be a no-op. A diff here means a fixture drifted from the code that
         # produced it, which is exactly the drift the web importer would trip over.
