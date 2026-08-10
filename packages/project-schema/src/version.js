@@ -10,8 +10,16 @@
  */
 export const SCHEMA_VERSION = "3.0.0";
 
-/** Version of the creator kit (this repo's CLI + templates) that produced the bundle. */
-export const CREATOR_KIT_VERSION = "3.0.0";
+/**
+ * Version of the creator kit (this repo's CLI + templates) that produced the bundle.
+ *
+ * 3.1.0 and NOT a schema bump: the RC3 platform-allocation amendment changed what the kit SAYS
+ * about the launchpad's fee allocation (`src/economics.js`), not what a `.relics` bundle contains.
+ * The bundle format is byte-identical, so `SCHEMA_VERSION` stays 3.0.0 and every 3.0.0 bundle
+ * remains readable. Bumping the schema for a documentation change would strand a corpus for
+ * nothing.
+ */
+export const CREATOR_KIT_VERSION = "3.1.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
