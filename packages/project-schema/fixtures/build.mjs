@@ -65,11 +65,35 @@ function templateConfig(id) {
   return config;
 }
 
+/**
+ * Renders the fixed binding seeds for a bundle. Returns both the rich record the expectations file
+ * publishes (digest + length per seed) and the plain digest map the manifest commits to.
+ */
+function renderBindingSeeds(byPath, manifest) {
+  const source = fromUtf8(byPath.get("generator/generate.js"));
+  const marketDocument = safeJsonParse(fromUtf8(byPath.get("market/mappings.json")));
+  const module = createVmModule(new Map([["generator/generate.js", source]]));
+  const outputs = {};
+  const digests = {};
+  for (const seed of SEEDS) {
+    const svg = module.render(buildRenderContext({ manifest, marketDocument, seed }));
+    digests[seed] = sha256Utf8(svg);
+    outputs[seed] = { sha256: digests[seed], length: svg.length };
+  }
+  return { outputs, digests };
+}
+
 const parity = [];
 for (const id of ["minimal", "market-responsive", "solidity-svg-params"]) {
   const files = templateFiles(id);
   const config = templateConfig(id);
-  const { bytes, manifest } = assembleBundle({ files, config });
+
+  // TWO PASSES, the same shape the CLI uses: a probe bundle exists only to give the generator a
+  // render context, and the real bundle is assembled with the resulting digests committed into its
+  // binding. The probe is never written and never validated.
+  const probe = assembleBundle({ files, config });
+  const probeRender = renderBindingSeeds(probe.entries, probe.manifest);
+  const { bytes, manifest } = assembleBundle({ files, config, representativeOutputs: probeRender.digests });
   writeFileSync(join(PARITY, `${id}.relics`), Buffer.from(bytes));
 
   const container = readContainer(bytes);
@@ -80,15 +104,10 @@ for (const id of ["minimal", "market-responsive", "solidity-svg-params"]) {
   const projection = toStudioDraft(validated, container.byPath, { draftId: `parity-${id}`, updatedAt: 0 });
 
   // Representative output digests: what the generator draws for a fixed seed set. An importer that
-  // runs the generator in its own sandbox must reproduce these exactly.
-  const source = fromUtf8(container.byPath.get("generator/generate.js"));
-  const marketDocument = safeJsonParse(fromUtf8(container.byPath.get("market/mappings.json")));
-  const module = createVmModule(new Map([["generator/generate.js", source]]));
-  const outputs = {};
-  for (const seed of SEEDS) {
-    const svg = module.render(buildRenderContext({ manifest, marketDocument, seed }));
-    outputs[seed] = { sha256: sha256Utf8(svg), length: svg.length };
-  }
+  // runs the generator in its own sandbox must reproduce these exactly — and, since schema 2.0.0,
+  // the bundle itself commits to them through `artBinding.representativeOutputsHash`, so a bundle
+  // whose art has been swapped fails validation rather than merely failing this comparison.
+  const { outputs } = renderBindingSeeds(container.byPath, manifest);
 
   parity.push({
     file: `${id}.relics`,
@@ -96,6 +115,7 @@ for (const id of ["minimal", "market-responsive", "solidity-svg-params"]) {
     entries: container.entries.map((e) => ({ path: e.path, bytes: e.bytes.length, sha256: validated.hashes.files[e.path] ?? null })),
     integrity: manifest.integrity,
     hashes: manifest.hashes,
+    artBinding: manifest.artBinding,
     project: manifest.project,
     supply: manifest.supply,
     art: manifest.art,
@@ -122,7 +142,8 @@ writeFileSync(
 
 const goodFiles = templateFiles("minimal");
 const goodConfig = templateConfig("minimal");
-const goodBundle = assembleBundle({ files: goodFiles, config: goodConfig });
+const goodProbe = assembleBundle({ files: goodFiles, config: goodConfig });
+const goodBundle = assembleBundle({ files: goodFiles, config: goodConfig, representativeOutputs: renderBindingSeeds(goodProbe.entries, goodProbe.manifest).digests });
 /** @type {Map<string, Uint8Array>} */
 const goodEntries = goodBundle.entries;
 
@@ -444,6 +465,89 @@ emit(
     attack: "generator source edited after the bundle was signed off",
     refusedBy: "validator",
     expect: { checkFails: "HASH_INTEGRITY", codes: ["CHECKSUMS_MISMATCH", "HASH_MISMATCH", "INTEGRITY_MISMATCH"] },
+  },
+);
+
+// --- art-binding attacks: the block that decides what a collection renders
+//
+// These are the forgeries worth caring about now that `tokenURI` reads the binding. Each one is a
+// different way of trying to make a launch bind something other than what the bundle contains.
+
+emit(
+  "binding-pins-runtime-codehash.relics",
+  withEntries({
+    "relics.project.json": manifestWith((m) => {
+      m.artBinding.runtimeCodeHash = "1122334455667788990011223344556677889900112233445566778899001122";
+    }),
+  }),
+  {
+    attack: "a bundle asserting which renderer contract is deployed, so the launch binds a renderer of the forger's choosing",
+    refusedBy: "validator",
+    expect: { checkFails: "MANIFEST_SCHEMA", codes: ["ART_BINDING_CHAIN_CLAIM"] },
+    note: "runtimeCodeHash is a chain fact. The importer reads it from the chain being launched on; a bundle carries null and nothing else.",
+  },
+);
+
+emit(
+  "binding-pins-script-pointer.relics",
+  withEntries({
+    "relics.project.json": manifestWith((m) => {
+      m.artBinding.scriptPointer = "0x000000000000000000000000000000000000dEaD";
+    }),
+  }),
+  {
+    attack: "a bundle naming the storage address its art should be read from, pointing the collection at bytes it does not contain",
+    refusedBy: "validator",
+    expect: { checkFails: "MANIFEST_SCHEMA", codes: ["ART_BINDING_CHAIN_CLAIM"] },
+  },
+);
+
+emit(
+  "binding-art-config-hash-swap.relics",
+  withEntries({
+    "relics.project.json": manifestWith((m) => {
+      // A digest of real bytes, just not THESE bytes.
+      m.artBinding.artConfigHash = "0000000000000000000000000000000000000000000000000000000000000001";
+    }),
+  }),
+  {
+    attack: "the binding claims a different art config than the generator in the bundle hashes to",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_MISMATCH"] },
+    note: "The binding is recomputed from the container, so a value that does not follow from the bundle's own bytes cannot survive.",
+  },
+);
+
+emit(
+  "binding-runtime-swap.relics",
+  withEntries({
+    "relics.project.json": manifestWith((m) => {
+      m.artBinding.runtimeId = "ONCHAIN_JAVASCRIPT_V2";
+      m.artBinding.runtimeIdHash = "0000000000000000000000000000000000000000000000000000000000000002";
+    }),
+  }),
+  {
+    attack: "re-pointing a project at a different art runtime by editing the binding",
+    refusedBy: "validator",
+    expect: { checkFails: "ART_BINDING", codes: ["ART_BINDING_MISMATCH"] },
+  },
+);
+
+emit(
+  "binding-output-commitment-lie.relics",
+  (() => {
+    // The generator is swapped for one that draws something else while the manifest keeps the
+    // original output commitment — "the art in this file is not the art that was validated".
+    const map = new Map(goodEntries);
+    const source = fromUtf8(map.get("generator/generate.js")).replace("const rings = random.int(3, 7);", "const rings = 1;");
+    map.set("generator/generate.js", utf8(source));
+    return forgeZip([...map].map(([path, bytes]) => ({ path, bytes })));
+  })(),
+  {
+    attack: "the art swapped out from under a manifest that still commits to the original renders",
+    refusedBy: "validator",
+    expect: { checkFails: "HASH_INTEGRITY", codes: ["CHECKSUMS_MISMATCH", "HASH_MISMATCH", "INTEGRITY_MISMATCH", "ART_BINDING_MISMATCH"] },
+    note: "Caught twice over: the file digests move, and so does the binding's art-config hash. The output commitment is the third net, and it is the only one that still catches a swap where every digest was recomputed but the art no longer draws what the creator approved.",
   },
 );
 

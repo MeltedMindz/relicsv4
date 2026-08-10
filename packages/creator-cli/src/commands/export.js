@@ -10,7 +10,7 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { BUNDLE_EXTENSION } from "../schema.js";
 import { validateProject, printValidation } from "./validate.js";
-import { bold, cyan, dim, green, red, heading } from "../report.js";
+import { bold, cyan, dim, green, red, yellow, heading } from "../report.js";
 
 /**
  * @param {string} root
@@ -38,7 +38,13 @@ export function exportProject(root, options = {}) {
   console.log(`  ${dim("size")}         ${assembled.bytes.length.toLocaleString()} bytes`);
   console.log(`  ${dim("entries")}      ${assembled.entries.size}`);
   console.log(`  ${dim("bundle hash")}  ${cyan(assembled.manifest.integrity.bundleHash)}`);
+  console.log(`  ${dim("commitment")}   ${cyan(assembled.manifest.integrity.bundleCommitment)}`);
+  console.log(`  ${dim("art binding")}  ${cyan(assembled.manifest.artBinding.runtimeId)}`);
   console.log("");
+  if (!assembled.manifest.artBinding.runtimeLaunchable) {
+    console.log(yellow(`  ${assembled.manifest.artBinding.runtime} is not a launchable runtime yet — this bundle is valid and previewable, but the launchpad will not bind it.`));
+    console.log("");
+  }
   console.log(green("  import this file in the launchpad creator app; it derives the same hashes."));
   return 0;
 }

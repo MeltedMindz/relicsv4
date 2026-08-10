@@ -150,11 +150,52 @@ export interface ProjectManifest {
     metadata: string;
     media?: Record<string, string>;
   };
+  /**
+   * The art binding — what a collection actually renders from. Derived by the builder from the
+   * bundle's own bytes and recomputed by the validator, so nothing here can be authored by hand.
+   * Every digest is keccak256 as a BARE 64-character lowercase hex string (no `0x`; see
+   * `keccak256Hex`), because keccak is what the EVM computes and the on-chain record holds.
+   */
+  artBinding: ArtBinding;
   integrity: {
     contentHash: string;
     projectConfigHash: string;
     bundleHash: string;
+    /** keccak256 over the same preimage as `bundleHash` — one `bytes32` naming this bundle. */
+    bundleCommitment: string;
   };
+}
+
+export type ArtConfigSource = "GENERATOR_SCRIPT" | "TEMPLATE_PARAMS";
+
+export interface ArtBinding {
+  schemaVersion: string;
+  runtime: ArtRuntime;
+  /** Stable, versioned runtime identifier, e.g. `ONCHAIN_JAVASCRIPT_V1`. */
+  runtimeId: string;
+  runtimeIdHash: string;
+  /** Whether the launchpad currently binds and renders this runtime. Approved != launchable. */
+  runtimeLaunchable: boolean;
+  artMode: 0 | 1;
+  templateId: string;
+  artConfigSource: ArtConfigSource;
+  artConfigBytes: number;
+  /**
+   * keccak256 of the exact bytes the launch stores — the value `LaunchParams.artScriptHash`
+   * carries. Null for a TEMPLATE_PARAMS binding, whose config only the registered template's
+   * published parameter layout can encode.
+   */
+  artConfigHash: string | null;
+  templateParamsHash: string | null;
+  generatorHash: string;
+  traitSchemaHash: string;
+  marketMappingHash: string;
+  metadataHash: string;
+  /** Commitment to what the generator draws for `BINDING_SEEDS`. Null for a Solidity renderer. */
+  representativeOutputsHash: string | null;
+  /** CHAIN FACTS. Always null in a bundle; the importer and the launch supply them. */
+  runtimeCodeHash: null;
+  scriptPointer: null;
 }
 
 export interface RenderContext {
@@ -196,7 +237,9 @@ export interface ValidationResult {
   traitSchema: TraitSchema | null;
   marketMappings: MarketMappingDocument | null;
   collectionMetadata: CollectionMetadata | null;
-  hashes: { bundleHash: string; projectConfigHash: string; contentHash: string; files: Record<string, string> } | null;
+  hashes: { bundleHash: string; projectConfigHash: string; contentHash: string; bundleCommitment: string; files: Record<string, string> } | null;
+  /** The binding as RECOMPUTED from the container, not as declared. Null when it cannot be derived. */
+  artBinding: ArtBinding | null;
   execution: {
     ran: boolean;
     reason: string;
@@ -205,6 +248,8 @@ export interface ValidationResult {
     duplicateRate: number | null;
     distinctOutputs?: number;
     outputs: { seed: string; length: number }[];
+    /** sha256 of the render for each of `BINDING_SEEDS`; null when any of them failed to render. */
+    bindingOutputs?: Record<string, string> | null;
   };
 }
 
@@ -232,6 +277,9 @@ export interface StudioDraftProjection {
     marketMappingHash: string;
     metadataHash: string;
     mediaHashes: Record<string, string>;
+    /** The art binding, carried verbatim so the importer builds launch parameters from it. */
+    artBinding: ArtBinding | null;
+    bundleCommitment: string | null;
     requestedChains: SupportedChainId[];
     /** The bundle's quote-asset REQUEST, carried verbatim for the importer to resolve. */
     quoteAssetRequest: {
@@ -267,7 +315,10 @@ export const RUNTIME_VERSION: string;
 export const PROTOCOL_RELEASE_COMPATIBILITY: string;
 export const BUNDLE_MAGIC: string;
 export const BUNDLE_EXTENSION: string;
+export const SCHEMA_MAJOR_RATIONALE: string;
 export function isSchemaCompatible(bundleSchemaVersion: string, importerSchemaVersion?: string): boolean;
+/** A refusal message that names the reason and the fix, for a bundle this importer cannot read. */
+export function explainIncompatibility(bundleSchemaVersion: string): string;
 export function parseSemver(value: string): { major: number; minor: number; patch: number } | null;
 
 // ---- limits and vocabulary -------------------------------------------------------------------
@@ -281,6 +332,10 @@ export const CHAIN_LABELS: Readonly<Record<number, string>>;
 export const ART_RUNTIMES: readonly ArtRuntime[];
 export const APPROVED_ART_RUNTIMES: readonly ArtRuntime[];
 export const UNAPPROVED_ART_RUNTIMES: readonly string[];
+/** Runtimes the launchpad currently binds and renders — the set a template may be sold as launchable on. */
+export const LAUNCHABLE_ART_RUNTIMES: readonly ArtRuntime[];
+export const PREVIEW_ONLY_ART_RUNTIMES: readonly ArtRuntime[];
+export const ART_RUNTIME_IDS: Readonly<Record<ArtRuntime, string>>;
 export const ART_RUNTIME_TO_MODE: Readonly<Record<ArtRuntime, 0 | 1>>;
 export const STARTING_PRESETS: readonly StartingPreset[];
 export const STARTING_PRESET_TO_INDEX: Readonly<Record<StartingPreset, 0 | 1 | 2>>;
@@ -363,7 +418,12 @@ export function validateBundleBytes(bytes: Uint8Array, options?: ValidateOptions
 export function buildRenderContext(input: { manifest: ProjectManifest | null; marketDocument: MarketMappingDocument | null; seed: string; sensors?: Record<string, number> }): RenderContext;
 export function neutralSensors(seed: string): Record<MarketSensor, number>;
 export const CHECKS: readonly { id: string; title: string }[];
-export function assembleBundle(input: { files: Map<string, Uint8Array>; config: Record<string, unknown> }): {
+export function assembleBundle(input: {
+  files: Map<string, Uint8Array>;
+  config: Record<string, unknown>;
+  /** seed -> sha256 of the render, for each of `BINDING_SEEDS`. Supplied by whoever has a sandbox. */
+  representativeOutputs?: Record<string, string> | null;
+}): {
   bytes: Uint8Array;
   manifest: ProjectManifest;
   checksums: { algorithm: "sha256"; files: Record<string, string>; contentHash: string; projectConfigHash: string; bundleHash: string };
@@ -383,3 +443,32 @@ export function warn(code: string, where: string, message: string): Issue;
 export function hasErrors(issues: Issue[]): boolean;
 export function summarize(issues: Issue[]): ValidationResult["summary"];
 export function sortIssues(issues: Issue[]): Issue[];
+
+// ---- keccak256 and the art binding -------------------------------------------------------------
+export function keccak256Bytes(bytes: Uint8Array): Uint8Array;
+/** BARE lowercase 64-character hex — no `0x`, so a digest never matches the raw-private-key shape. */
+export function keccak256Hex(bytes: Uint8Array): string;
+export function keccak256Utf8(text: string): string;
+export function prefixed(digest: string): string;
+export function isKeccak256Hex(value: unknown): boolean;
+export const ZERO_DIGEST: string;
+
+export const BINDING_SEEDS: readonly string[];
+export const ART_BINDING_KEYS: readonly string[];
+export const ART_CONFIG_SOURCES: readonly ArtConfigSource[];
+export const CHAIN_RESOLVED_BINDING_FIELDS: readonly string[];
+export function keccakJson(document: unknown): string;
+export function computeBundleCommitment(projectConfigHash: string, contentHash: string): string;
+export function representativeOutputsCommitment(outputs: Record<string, string>): string | null;
+export function computeArtBinding(input: {
+  runtime: ArtRuntime;
+  templateId?: string | null;
+  scriptBytes: Uint8Array;
+  generatorFileHashes: Record<string, string>;
+  traitSchema: unknown;
+  marketMappings: unknown;
+  collectionMetadata: unknown;
+  templateParams?: unknown;
+  representativeOutputs?: Record<string, string> | null;
+}): ArtBinding;
+export function diffArtBinding(declared: unknown, derived: unknown): string[];

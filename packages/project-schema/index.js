@@ -7,7 +7,18 @@
 // the only way a bundle exported by the CLI and a bundle read by the web app can be guaranteed to
 // produce identical hashes.
 
-export { SCHEMA_VERSION, CREATOR_KIT_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, BUNDLE_MAGIC, BUNDLE_EXTENSION, isSchemaCompatible, parseSemver } from "./src/version.js";
+export {
+  SCHEMA_VERSION,
+  CREATOR_KIT_VERSION,
+  RUNTIME_VERSION,
+  PROTOCOL_RELEASE_COMPATIBILITY,
+  SCHEMA_MAJOR_RATIONALE,
+  BUNDLE_MAGIC,
+  BUNDLE_EXTENSION,
+  isSchemaCompatible,
+  explainIncompatibility,
+  parseSemver,
+} from "./src/version.js";
 
 export { LIMITS, ALLOWED_EXTENSIONS, FORBIDDEN_EXTENSIONS, BUNDLE_LAYOUT, REQUIRED_ENTRIES } from "./src/limits.js";
 
@@ -17,6 +28,9 @@ export {
   ART_RUNTIMES,
   APPROVED_ART_RUNTIMES,
   UNAPPROVED_ART_RUNTIMES,
+  LAUNCHABLE_ART_RUNTIMES,
+  PREVIEW_ONLY_ART_RUNTIMES,
+  ART_RUNTIME_IDS,
   ART_RUNTIME_TO_MODE,
   STARTING_PRESETS,
   STARTING_PRESET_TO_INDEX,
@@ -42,6 +56,18 @@ export {
 export { canonicalJson, safeJsonParse, toPlain, CanonicalJsonError, JsonParseError } from "./src/canonical-json.js";
 export { sha256Bytes, sha256Hex, sha256Utf8, toHex, utf8, fromUtf8 } from "./src/sha256.js";
 export { HASH_ALGORITHM, fileHash, jsonHash, parseAndHashJson, hashesUnder, computeContentHash, computeProjectConfigHash, computeBundleHash, computeIntegrity, isSha256Hex } from "./src/hashes.js";
+export { keccak256Bytes, keccak256Hex, keccak256Utf8, prefixed, isKeccak256Hex, ZERO_DIGEST } from "./src/keccak256.js";
+export {
+  BINDING_SEEDS,
+  ART_BINDING_KEYS,
+  ART_CONFIG_SOURCES,
+  CHAIN_RESOLVED_BINDING_FIELDS,
+  computeArtBinding,
+  computeBundleCommitment,
+  representativeOutputsCommitment,
+  diffArtBinding,
+  keccakJson,
+} from "./src/binding.js";
 
 export { normalizeEntryPath, collisionKey, extensionOf, roleOf, checkEntryPolicy, EntryPathError } from "./src/paths.js";
 export { writeContainer, readContainer, crc32, ContainerError } from "./src/container.js";

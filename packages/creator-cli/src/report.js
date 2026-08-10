@@ -59,6 +59,40 @@ export function printHashes(result) {
   for (const [label, value] of rows) console.log(`    ${label.padEnd(width)}  ${cyan(value)}`);
 }
 
+/**
+ * The art binding, printed as the values that end up on chain.
+ *
+ * These are keccak256, `0x`-prefixed, and they are the point of the whole block: `artConfigHash`
+ * is what the factory checks `keccak256(artConfig)` against, and the rest is what the collection
+ * binds so `tokenURI` renders THIS project's art rather than a built-in placeholder. A creator can
+ * copy any line here and compare it against the launch transaction.
+ */
+export function printBinding(result) {
+  const binding = result.manifest?.artBinding;
+  if (!binding) return;
+  console.log("");
+  console.log(bold("  art binding (the values a launch writes on chain)"));
+  // Printed WITH the `0x` prefix even though the manifest stores these bare: on screen the value is
+  // about to be compared against a `bytes32` in a transaction or an explorer, and that is the form
+  // it takes there. The manifest keeps the bare form so it never trips the secret scanner.
+  const at = (digest) => (digest ? `0x${digest}` : null);
+  const rows = [
+    ["runtime", `${binding.runtimeId}${binding.runtimeLaunchable ? "" : "  (preview only — not launchable yet)"}`],
+    ["runtime id hash", at(binding.runtimeIdHash)],
+    ["art config", at(binding.artConfigHash) ?? `null  (${binding.artConfigSource}: the registered template encodes its own config)`],
+    ["template params", at(binding.templateParamsHash) ?? "null"],
+    ["generator", at(binding.generatorHash)],
+    ["trait schema", at(binding.traitSchemaHash)],
+    ["market mapping", at(binding.marketMappingHash)],
+    ["metadata", at(binding.metadataHash)],
+    ["outputs", at(binding.representativeOutputsHash) ?? "null"],
+    ["bundle", at(result.manifest?.integrity?.bundleCommitment) ?? "-"],
+  ];
+  const width = Math.max(...rows.map(([label]) => label.length));
+  for (const [label, value] of rows) console.log(`    ${label.padEnd(width)}  ${cyan(value)}`);
+  console.log(dim("    runtime code hash and script pointer are resolved on chain; a bundle never states them."));
+}
+
 export function heading(text) {
   console.log("");
   console.log(bold(text));

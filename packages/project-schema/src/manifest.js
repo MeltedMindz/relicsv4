@@ -29,8 +29,10 @@ import {
   QUOTE_ASSET_KINDS,
   CREATOR_LP_FEE_ASSET_MODES,
 } from "./vocabulary.js";
-import { isSchemaCompatible, SCHEMA_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, parseSemver } from "./version.js";
+import { isSchemaCompatible, SCHEMA_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, parseSemver, explainIncompatibility } from "./version.js";
 import { isSha256Hex } from "./hashes.js";
+import { ART_BINDING_KEYS, ART_CONFIG_SOURCES, CHAIN_RESOLVED_BINDING_FIELDS } from "./binding.js";
+import { isKeccak256Hex } from "./keccak256.js";
 
 /** Top-level manifest keys. Anything else is refused. */
 export const MANIFEST_KEYS = Object.freeze([
@@ -47,6 +49,7 @@ export const MANIFEST_KEYS = Object.freeze([
   "chains",
   "media",
   "hashes",
+  "artBinding",
   "integrity",
 ]);
 
@@ -82,6 +85,11 @@ export const REFUSED_MANIFEST_KEYS = Object.freeze({
   quoteAssetRegistry: "a bundle cannot supply a quote-asset registry — the importer resolves quote assets against the launchpad's own current registry, and a bundle can never widen the set of approved assets",
   approvedQuoteAssets: "a bundle cannot approve a quote asset; market.quoteAsset REQUESTS one and the importer resolves it",
   quoteAssetOverride: "a bundle cannot override quote-asset approval",
+  runtimeCodeHash:
+    "a bundle cannot pin a renderer's code hash — the importer reads it from the chain being launched on, and a bundle that could pin a renderer could pin one of its choosing",
+  scriptPointer: "a bundle cannot name a script pointer; the storage address does not exist until the launch transaction writes it",
+  artRuntimeAddress: "a bundle cannot name a runtime address",
+  renderer: "the renderer is protocol code selected by runtime id, not an address a bundle supplies",
   rpcUrl: "a bundle never carries an endpoint",
   rpc: "a bundle never carries an endpoint",
   apiKey: "a bundle never carries credentials",
@@ -122,7 +130,7 @@ export function validateManifest(manifest) {
   if (!parseSemver(manifest.schemaVersion)) {
     issues.push(error("SCHEMA_VERSION", `${at}#schemaVersion`, "schemaVersion must be a MAJOR.MINOR.PATCH string"));
   } else if (!isSchemaCompatible(manifest.schemaVersion)) {
-    issues.push(error("SCHEMA_INCOMPATIBLE", `${at}#schemaVersion`, `bundle schemaVersion ${manifest.schemaVersion} is not readable by schema ${SCHEMA_VERSION}`));
+    issues.push(error("SCHEMA_INCOMPATIBLE", `${at}#schemaVersion`, explainIncompatibility(manifest.schemaVersion)));
   }
   requireString(issues, manifest.creatorKitVersion, `${at}#creatorKitVersion`, "CREATOR_KIT_VERSION", 64);
   if (manifest.runtimeVersion !== RUNTIME_VERSION) {
@@ -365,11 +373,16 @@ export function validateManifest(manifest) {
     } else if (earnings.creatorRecipient.toLowerCase() === ZERO_ADDRESS) {
       issues.push(error("EARNINGS_RECIPIENT_ZERO", `${at}#earnings.creatorRecipient`, "creatorRecipient cannot be the zero address"));
     } else if (isPlaceholderAddress(earnings.creatorRecipient)) {
+      // The message names `relics.config.json`, NOT the `at` path. Every other issue in this file
+      // points at the manifest because that is the document being validated, but the manifest is
+      // GENERATED — a creator who opens `relics.project.json` to fix this finds a file the builder
+      // overwrites on every export. The one file they can actually edit is the project config, so
+      // that is the file the message sends them to.
       issues.push(
         error(
           "EARNINGS_RECIPIENT_PLACEHOLDER",
           `${at}#earnings.creatorRecipient`,
-          `${earnings.creatorRecipient} is a placeholder or burn address, not a wallet anyone controls. Set earnings.creatorRecipient to the address that should receive the creator share.`,
+          `${earnings.creatorRecipient} is a placeholder or burn address, not a wallet anyone controls. Open relics.config.json in your project directory and set earnings.creatorRecipient to the address that should receive the creator share. (relics.project.json is the generated bundle manifest — editing it there does nothing.)`,
         ),
       );
     }
@@ -485,14 +498,154 @@ export function validateManifest(manifest) {
     }
   }
 
+  // ---- art binding ------------------------------------------------------------------------
+  issues.push(...validateArtBindingBlock(manifest, at));
+
   const integrity = manifest.integrity;
   if (!isObject(integrity)) {
     issues.push(error("INTEGRITY_SHAPE", `${at}#integrity`, "integrity must be an object"));
   } else {
-    onlyKeys(issues, integrity, `${at}#integrity`, ["contentHash", "projectConfigHash", "bundleHash"]);
+    onlyKeys(issues, integrity, `${at}#integrity`, ["contentHash", "projectConfigHash", "bundleHash", "bundleCommitment"]);
     for (const key of ["contentHash", "projectConfigHash", "bundleHash"]) {
       if (!isSha256Hex(integrity[key])) issues.push(error("INTEGRITY_VALUE", `${at}#integrity.${key}`, `integrity.${key} must be a 64-character lowercase hex digest`));
     }
+    // The chain-shaped restatement of the same bundle identity — keccak over the identical
+    // preimage, so one `bytes32` names the bundle in a launch without defining a second notion of
+    // what "this bundle" is.
+    if (!isKeccak256Hex(integrity.bundleCommitment)) {
+      issues.push(error("INTEGRITY_VALUE", `${at}#integrity.bundleCommitment`, "integrity.bundleCommitment must be a 64-character lowercase keccak256 digest"));
+    }
+  }
+
+  return issues;
+}
+
+/**
+ * The binding block: what runtime renders this project and which exact bytes it renders from.
+ *
+ * Shape only. The block is DERIVED from the container, so the validator recomputes every field
+ * from the bundle's own entries and refuses a mismatch — that check lives in `validateBundle`,
+ * where the entries are in hand. Here we prove the block is well-formed and, crucially, that it
+ * makes no claim about a chain.
+ *
+ * @param {any} manifest
+ * @param {string} at
+ */
+function validateArtBindingBlock(manifest, at) {
+  /** @type {import("./issues.js").Issue[]} */
+  const issues = [];
+  const where = `${at}#artBinding`;
+  const binding = manifest.artBinding;
+
+  if (!isObject(binding)) {
+    issues.push(
+      error(
+        "ART_BINDING_SHAPE",
+        where,
+        "artBinding is required: it records which runtime renders this project and which bytes that runtime is given. Re-export the project with the current creator kit rather than adding the block by hand.",
+      ),
+    );
+    return issues;
+  }
+
+  // Plain key check, deliberately NOT `onlyKeys`. The refusal list it consults exists to stop a
+  // key like `runtimeCodeHash` appearing where it would be believed — and inside the binding those
+  // exact names are legitimate, present, and required to be null. Refusing them here by name would
+  // refuse the block's own shape. The chain-claim check immediately below is what enforces the
+  // rule that actually matters: the field may exist, it may not carry a value.
+  for (const key of Object.keys(binding)) {
+    if (!ART_BINDING_KEYS.includes(key)) {
+      issues.push(error("MANIFEST_UNKNOWN_KEY", `${where}.${key}`, `unknown key "${key}" (allowed: ${ART_BINDING_KEYS.join(", ")})`));
+    }
+  }
+
+  // A bundle states facts about its own bytes and never about a chain.
+  for (const field of CHAIN_RESOLVED_BINDING_FIELDS) {
+    if (binding[field] !== null && binding[field] !== undefined) {
+      issues.push(
+        error(
+          "ART_BINDING_CHAIN_CLAIM",
+          `${where}.${field}`,
+          `artBinding.${field} must be null in a bundle. ${REFUSED_MANIFEST_KEYS[field] ?? "it is resolved on chain, not declared by a creator"}.`,
+        ),
+      );
+    }
+  }
+
+  if (binding.schemaVersion !== SCHEMA_VERSION) {
+    issues.push(error("ART_BINDING_SCHEMA_VERSION", `${where}.schemaVersion`, `artBinding.schemaVersion must be "${SCHEMA_VERSION}"`));
+  }
+  if (binding.runtime !== manifest.art?.runtime) {
+    issues.push(error("ART_BINDING_RUNTIME", `${where}.runtime`, "artBinding.runtime must equal art.runtime — one project cannot declare two runtimes"));
+  }
+  if (typeof binding.runtimeId !== "string" || binding.runtimeId.length === 0 || binding.runtimeId.length > 64) {
+    issues.push(error("ART_BINDING_RUNTIME_ID", `${where}.runtimeId`, "artBinding.runtimeId must be the runtime's stable identifier string"));
+  }
+  if (!isKeccak256Hex(binding.runtimeIdHash)) {
+    issues.push(error("ART_BINDING_RUNTIME_ID_HASH", `${where}.runtimeIdHash`, "artBinding.runtimeIdHash must be the 64-character lowercase keccak256 of runtimeId"));
+  }
+  if (typeof binding.runtimeLaunchable !== "boolean") {
+    issues.push(error("ART_BINDING_LAUNCHABLE", `${where}.runtimeLaunchable`, "artBinding.runtimeLaunchable must be a boolean"));
+  }
+  if (binding.artMode !== 0 && binding.artMode !== 1) {
+    issues.push(error("ART_BINDING_ART_MODE", `${where}.artMode`, "artBinding.artMode must be 0 (SOLIDITY_SVG) or 1 (JAVASCRIPT)"));
+  }
+  if (typeof binding.templateId !== "string" || !DECIMAL_RE.test(binding.templateId)) {
+    issues.push(error("ART_BINDING_TEMPLATE_ID", `${where}.templateId`, "artBinding.templateId must be a decimal string (\"0\" when no template is used)"));
+  }
+  if (!ART_CONFIG_SOURCES.includes(binding.artConfigSource)) {
+    issues.push(error("ART_BINDING_CONFIG_SOURCE", `${where}.artConfigSource`, `artBinding.artConfigSource must be one of ${ART_CONFIG_SOURCES.join(", ")}`));
+  }
+  if (!Number.isInteger(binding.artConfigBytes) || binding.artConfigBytes < 0) {
+    issues.push(error("ART_BINDING_CONFIG_BYTES", `${where}.artConfigBytes`, "artBinding.artConfigBytes must be a non-negative integer"));
+  }
+
+  if (binding.artConfigSource === "GENERATOR_SCRIPT") {
+    // The generator IS the config: these bytes are what the launch hashes and stores.
+    if (!isKeccak256Hex(binding.artConfigHash)) {
+      issues.push(error("ART_BINDING_CONFIG_HASH", `${where}.artConfigHash`, "a GENERATOR_SCRIPT binding must carry keccak256 of the generator entry file"));
+    }
+    if (binding.templateParamsHash !== null) {
+      issues.push(error("ART_BINDING_TEMPLATE_PARAMS", `${where}.templateParamsHash`, "templateParamsHash must be null when the config source is the generator script"));
+    }
+  } else if (binding.artConfigSource === "TEMPLATE_PARAMS") {
+    // The encoding belongs to the registered template's published parameter layout, which no
+    // bundle can invent — so the bundle commits to the PARAMETERS and states no config hash at
+    // all rather than guessing one the importer would then have to contradict.
+    if (binding.artConfigHash !== null) {
+      issues.push(
+        error(
+          "ART_BINDING_CONFIG_HASH",
+          `${where}.artConfigHash`,
+          "artConfigHash must be null for a TEMPLATE_PARAMS binding: only the registered template's published parameter layout can encode its config bytes, and a bundle does not own that encoding",
+        ),
+      );
+    }
+    if (!isKeccak256Hex(binding.templateParamsHash)) {
+      issues.push(error("ART_BINDING_TEMPLATE_PARAMS", `${where}.templateParamsHash`, "a TEMPLATE_PARAMS binding must carry keccak256 of the canonical template parameters"));
+    }
+  }
+
+  for (const key of ["generatorHash", "traitSchemaHash", "marketMappingHash", "metadataHash"]) {
+    if (!isKeccak256Hex(binding[key])) {
+      issues.push(error("ART_BINDING_HASH", `${where}.${key}`, `artBinding.${key} must be a 64-character lowercase keccak256 digest`));
+    }
+  }
+
+  if (binding.representativeOutputsHash !== null && !isKeccak256Hex(binding.representativeOutputsHash)) {
+    issues.push(error("ART_BINDING_OUTPUTS_HASH", `${where}.representativeOutputsHash`, "artBinding.representativeOutputsHash must be a keccak256 digest or null"));
+  }
+  // A JavaScript project renders in a sandbox, so it can — and must — commit to what it draws.
+  // A Solidity-SVG project's renderer is a deployed contract the kit does not execute, so there
+  // is nothing honest for it to commit to and the field stays null.
+  if (binding.artConfigSource === "GENERATOR_SCRIPT" && binding.representativeOutputsHash === null) {
+    issues.push(
+      error(
+        "ART_BINDING_OUTPUTS_MISSING",
+        `${where}.representativeOutputsHash`,
+        "a JavaScript project must commit to what its generator draws for the fixed binding seeds; export through `relics export`, which records them",
+      ),
+    );
   }
 
   return issues;

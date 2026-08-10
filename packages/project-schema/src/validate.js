@@ -22,6 +22,9 @@ import { error, warn, sortIssues, summarize } from "./issues.js";
 import { fromUtf8 } from "./sha256.js";
 import { SCHEMA_VERSION } from "./version.js";
 import { makeRandom } from "./prng.js";
+import { computeArtBinding, computeBundleCommitment, diffArtBinding, representativeOutputsCommitment, BINDING_SEEDS } from "./binding.js";
+import { PREVIEW_ONLY_ART_RUNTIMES } from "./vocabulary.js";
+import { sha256Utf8 } from "./sha256.js";
 
 /** The checks this validator runs, in report order. */
 export const CHECKS = Object.freeze([
@@ -41,6 +44,7 @@ export const CHECKS = Object.freeze([
   { id: "CHAIN_FEATURES", title: "requested chains" },
   { id: "SECRET_SCAN", title: "secret scan" },
   { id: "HASH_INTEGRITY", title: "hash integrity" },
+  { id: "ART_BINDING", title: "art binding matches the bundle" },
   { id: "RUNTIME_ERRORS", title: "generator runs without errors" },
   { id: "BLANK_OUTPUTS", title: "no blank or unsafe outputs" },
   { id: "DETERMINISTIC_OUTPUT", title: "deterministic output" },
@@ -326,6 +330,11 @@ export function validateBundle(byPath, options = {}) {
   // ---- 6. execution --------------------------------------------------------------------------
   const execution = runExecutionChecks({ options, sources, manifest, traitSchema, marketDocument, entrySource, collect, mark });
 
+  // ---- 7. art binding -------------------------------------------------------------------------
+  // Runs AFTER execution because half the binding is a claim about what the generator draws, and
+  // the only way to check that claim is to have drawn it.
+  const binding = checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark });
+
   const summary = summarize(issues);
   return {
     ok: summary.ok,
@@ -338,10 +347,117 @@ export function validateBundle(byPath, options = {}) {
     marketMappings: marketDocument,
     collectionMetadata,
     hashes: computed
-      ? { bundleHash: computed.bundleHash, projectConfigHash: computed.projectConfigHash, contentHash: computed.contentHash, files: computed.files }
+      ? {
+          bundleHash: computed.bundleHash,
+          projectConfigHash: computed.projectConfigHash,
+          contentHash: computed.contentHash,
+          bundleCommitment: computeBundleCommitment(computed.projectConfigHash, computed.contentHash),
+          files: computed.files,
+        }
       : null,
     execution,
+    artBinding: binding,
   };
+}
+
+/**
+ * Recomputes the whole art binding from the container and refuses any difference.
+ *
+ * This is the check that makes the binding trustworthy. Every field is derived from bytes that are
+ * already in the bundle, so a hand-edited or forged block cannot survive: change the generator and
+ * the config hash moves; change the mappings and the mapping hash moves; change the block itself
+ * and it stops matching the files it claims to describe. There is nothing here an importer has to
+ * take on trust, which is exactly why an importer can build launch parameters straight from it.
+ */
+function checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark }) {
+  if (!manifest || !manifest.artBinding || typeof manifest.artBinding !== "object") {
+    mark("ART_BINDING", "fail", "the bundle declares no art binding");
+    return null;
+  }
+  const declared = manifest.artBinding;
+  const scriptBytes = byPath.get("generator/generate.js");
+  if (!scriptBytes) {
+    mark("ART_BINDING", "fail", "generator/generate.js is missing, so no binding can be derived");
+    return null;
+  }
+
+  let templateParams = null;
+  const paramsBytes = byPath.get("generator/params.json");
+  if (paramsBytes) {
+    try {
+      templateParams = parseAndHashJson(paramsBytes).value;
+    } catch {
+      templateParams = null;
+    }
+  }
+
+  const derived = computeArtBinding({
+    runtime: manifest.art?.runtime,
+    templateId: manifest.art?.templateId,
+    scriptBytes,
+    generatorFileHashes: hashesUnder(byPath, "generator/"),
+    traitSchema: documents["traits/schema.json"]?.value ?? null,
+    marketMappings: documents["market/mappings.json"]?.value ?? null,
+    collectionMetadata: documents["metadata/collection.json"]?.value ?? null,
+    templateParams,
+    representativeOutputs: null,
+  });
+  // The output commitment is the one field that is not a pure function of the bytes — it is a
+  // claim about behaviour — so it is carried across and then checked separately below, against a
+  // real render rather than against a recomputation of the same claim.
+  derived.representativeOutputsHash = declared.representativeOutputsHash ?? null;
+
+  const differences = diffArtBinding(declared, derived);
+  for (const field of differences) {
+    collect("ART_BINDING", [
+      error("ART_BINDING_MISMATCH", `relics.project.json#artBinding.${field}`, `declared ${JSON.stringify(declared[field] ?? null)}, recomputed ${JSON.stringify(derived[field] ?? null)} from the bundle's own bytes`),
+    ]);
+  }
+
+  // The chain-shaped bundle identity, recomputed the same way.
+  if (computed && manifest.integrity?.bundleCommitment) {
+    const expected = computeBundleCommitment(computed.projectConfigHash, computed.contentHash);
+    if (manifest.integrity.bundleCommitment !== expected) {
+      collect("ART_BINDING", [error("BUNDLE_COMMITMENT_MISMATCH", "relics.project.json#integrity.bundleCommitment", `declared ${manifest.integrity.bundleCommitment}, recomputed ${expected}`)]);
+    }
+  }
+
+  // What the generator actually draws, against what the bundle says it draws.
+  if (declared.representativeOutputsHash !== null) {
+    if (!execution?.ran) {
+      mark("ART_BINDING", "warn", "the output commitment could not be verified because the generator was not executed");
+    } else if (!execution.bindingOutputs) {
+      collect("ART_BINDING", [
+        error("ART_BINDING_OUTPUTS_UNRENDERABLE", "generator/generate.js", `the generator did not produce output for every binding seed (${BINDING_SEEDS.join(", ")}), so its output commitment cannot hold`),
+      ]);
+    } else {
+      const actual = representativeOutputsCommitment(execution.bindingOutputs);
+      if (actual !== declared.representativeOutputsHash) {
+        collect("ART_BINDING", [
+          error(
+            "ART_BINDING_OUTPUTS_MISMATCH",
+            "relics.project.json#artBinding.representativeOutputsHash",
+            `the bundle commits to ${declared.representativeOutputsHash} but this generator draws ${actual} for the binding seeds — the art in this file is not the art that was validated`,
+          ),
+        ]);
+      }
+    }
+  }
+
+  // Approved is not the same as launchable, and a bundle on a gated runtime is still a perfectly
+  // good bundle. It gets a warning, never a refusal: refusing would delete a creator's work over a
+  // release-schedule decision they had no part in.
+  if (PREVIEW_ONLY_ART_RUNTIMES.includes(declared.runtime)) {
+    collect("ART_BINDING", [
+      warn(
+        "ART_RUNTIME_PREVIEW_ONLY",
+        "relics.project.json#art.runtime",
+        `${declared.runtime} is an approved runtime that the launchpad does not currently bind and render, so this project can be authored, previewed and exported but not launched yet. Nothing about the bundle needs to change when it is enabled.`,
+      ),
+    ]);
+  }
+
+  return derived;
 }
 
 function runExecutionChecks({ options, sources, manifest, traitSchema, marketDocument, entrySource, collect, mark }) {
@@ -429,6 +545,26 @@ function runExecutionChecks({ options, sources, manifest, traitSchema, marketDoc
     ]);
   }
 
+  // The binding's output commitment. A dedicated pass over the FIXED seed set, independent of how
+  // many seeds this particular run happened to sample, so the digest a bundle carries never
+  // depends on a `--seeds` flag. Failures here are reported by the binding check, not by this one:
+  // an output that cannot be produced is a generator problem, and this loop only records.
+  /** @type {Record<string, string> | null} */
+  let bindingOutputs = {};
+  for (const seed of BINDING_SEEDS) {
+    try {
+      const rendered = module.render(buildRenderContext({ manifest, marketDocument, seed }));
+      if (typeof rendered !== "string") {
+        bindingOutputs = null;
+        break;
+      }
+      bindingOutputs[seed] = sha256Utf8(rendered);
+    } catch {
+      bindingOutputs = null;
+      break;
+    }
+  }
+
   let duplicateRate = null;
   if (traitSchema && Array.isArray(traitSchema.dimensions) && traitSchema.dimensions.length > 0) {
     const distinct = traitCounts.size;
@@ -460,7 +596,7 @@ function runExecutionChecks({ options, sources, manifest, traitSchema, marketDoc
     ]);
   }
 
-  return { ran: true, reason: "", seeds: seeds.length, deterministic, duplicateRate, distinctOutputs: fingerprints.size, outputs };
+  return { ran: true, reason: "", seeds: seeds.length, deterministic, duplicateRate, distinctOutputs: fingerprints.size, outputs, bindingOutputs };
 }
 
 /**

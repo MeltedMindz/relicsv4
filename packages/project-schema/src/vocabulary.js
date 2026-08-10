@@ -20,11 +20,42 @@ export const ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"]);
 export const ART_RUNTIME_TO_MODE = Object.freeze({ SOLIDITY_SVG: 0, JAVASCRIPT: 1 });
 
 /**
+ * The stable identifier each runtime is bound under in a project's on-chain art binding. The name
+ * carries a version because a runtime's RENDERING CONTRACT can change without the enum changing:
+ * a second on-chain JavaScript runtime would be `ONCHAIN_JAVASCRIPT_V2` with its own id, and an
+ * existing collection would stay bound to V1 forever. That is the property the binding exists to
+ * guarantee — a project's art cannot be re-pointed at a different renderer after the fact.
+ */
+export const ART_RUNTIME_IDS = Object.freeze({
+  SOLIDITY_SVG: "SOLIDITY_SVG_V1",
+  JAVASCRIPT: "ONCHAIN_JAVASCRIPT_V1",
+});
+
+/**
  * Runtimes a bundle may declare TODAY. A p5-style runtime is deliberately absent: it is not an
  * approved launchpad runtime, so no template ships on it and the validator refuses a bundle that
  * names it. Adding one is a protocol decision, not a kit decision.
  */
 export const APPROVED_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"]);
+
+/**
+ * Runtimes the protocol will actually BIND AND RENDER — the set a template may be presented as
+ * launchable on.
+ *
+ * "Approved" and "launchable" are not the same question and must not be collapsed. Approved means
+ * the format accepts the name. Launchable means a deployed collection will read a project's own
+ * art through that runtime. A runtime can be approved and not yet launchable, and during a release
+ * where one is gated off, a template on it is still valid, still previewable, still worth shipping
+ * — it simply cannot be launched yet, and the kit says so rather than quietly implying otherwise.
+ *
+ * THIS LIST IS THE ONE PLACE THAT DECIDES. `relics templates` marks it, `validate` warns on it,
+ * and the monorepo's runtime-parity check reads the protocol's own enum and gate and fails if this
+ * list claims more than the protocol accepts. Gating a runtime off is a one-line edit here.
+ */
+export const LAUNCHABLE_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"]);
+
+/** Approved but not currently launchable — preview and authoring work, launching does not. */
+export const PREVIEW_ONLY_ART_RUNTIMES = Object.freeze(APPROVED_ART_RUNTIMES.filter((r) => !LAUNCHABLE_ART_RUNTIMES.includes(r)));
 
 /** Known-but-unapproved runtime names, refused with a specific message rather than "unknown". */
 export const UNAPPROVED_ART_RUNTIMES = Object.freeze(["P5", "P5JS", "PROCESSING", "THREEJS", "WEBGL", "WASM", "SHADER"]);

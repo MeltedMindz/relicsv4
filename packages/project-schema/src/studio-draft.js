@@ -106,6 +106,19 @@ export function toStudioDraft(validated, byPath, options = {}) {
       bundleHash: validated.hashes?.bundleHash ?? null,
       projectConfigHash: validated.hashes?.projectConfigHash ?? null,
       contentHash: validated.hashes?.contentHash ?? null,
+      /**
+       * THE ART BINDING, carried verbatim into the importer.
+       *
+       * This is what the importer turns into launch parameters, and it is why creator art now
+       * reaches `tokenURI`: `runtimeId` selects the renderer, `artConfigHash` is the value the
+       * factory checks against `keccak256(artConfig)`, and the trait/mapping/generator hashes are
+       * bound into the collection so the project's own art is the art it renders forever.
+       *
+       * `runtimeCodeHash` and `scriptPointer` are null here and MUST stay null: the importer fills
+       * the first from the chain it is launching on, and the launch itself produces the second.
+       */
+      artBinding: manifest.artBinding ? { ...manifest.artBinding } : null,
+      bundleCommitment: manifest.integrity?.bundleCommitment ?? null,
       generatorHash: manifest.hashes.generator,
       scriptHash: manifest.hashes.script,
       traitSchemaHash: manifest.hashes.traitSchema,
