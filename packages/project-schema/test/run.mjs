@@ -1044,6 +1044,16 @@ test("a mention that negates, narrates or cites is not an assertion", () => {
   }
 });
 
+test("every registered claim carries a non-empty raw pattern", () => {
+  // A downstream gate does `new RegExp(claim.pattern)`. On an empty string that is a regex matching
+  // EVERY line, which turns a consumer into a firehose reporting the whole repository.
+  for (const c of RETIRED_ALLOCATION_CLAIMS) {
+    assert(typeof c.pattern === "string" && c.pattern.length > 0, `${c.id} has no raw pattern`);
+    assert(!new RegExp(c.pattern, "i").test(""), `${c.id}'s pattern matches the empty string`);
+    assert(typeof c.counter === "string" && c.counter.startsWith("ACTIVE_STALE_"), `${c.id} has no conventional counter`);
+  }
+});
+
 test("bare negation is NOT a suppression cue", () => {
   // "the treasury never receives a non-WETH asset" IS the retired claim. A rule that treated any
   // negation as narration would have hidden exactly the sentence it exists to catch.

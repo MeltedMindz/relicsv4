@@ -358,7 +358,10 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
   Object.freeze({
     id: "SPLIT_APPLIED_TO_SETTLED_WETH",
     counter: "ACTIVE_STALE_SPLIT_BASE_SETTLED_WETH_CLAIMS",
-    pattern: "",
+    // A REAL raw pattern, never an empty string: a consumer doing `new RegExp(claim.pattern)` on
+    // "" gets a regex that matches every line, and the register would turn a downstream gate into
+    // a firehose. Every claim carries a pattern that means something.
+    pattern: "applied\\s+to\\s+(?:the\\s+)?NET\\s+settled(?:\\s+platform)?\\s+WETH|divides?\\s+(?:the\\s+)?NET\\s+settled(?:\\s+platform)?\\s+WETH",
     normalizedPattern:
       "(?:division|split|subdivision|50 50|allocation)[^\\n]{0,40}(?:applied to|of|on)[^\\n]{0,20}net settled(?: platform)? weth" +
       "|applied to net settled(?: platform)? weth" +
@@ -459,7 +462,9 @@ export const CLAIM_SUPPRESSION_CUES = Object.freeze({
     "\\bstale\\b",
     "\\d+(?:\\.\\d+)?\\s*%\\s*(?:→|->|to)\\s*\\d+(?:\\.\\d+)?\\s*%",
   ],
-  cited: ["[\\w/.-]+\\.(?:sol|ts|tsx|js|mjs|cjs|json|md|yml|yaml):\\d+", "`[^`]*(?://|[\\w/.-]+\\.(?:sol|ts|tsx|js|mjs|json|md))[^`]*`"],
+  // A backticked span containing a file extension is a path citation, however the path is written
+  // — `deployments/{1,8453,4663}.json` has braces in the middle and a stricter path regex missed it.
+  cited: ["[\\w/.-]+\\.(?:sol|ts|tsx|js|mjs|cjs|json|md|yml|yaml):\\d+", "`[^`]*(?://|\\.(?:sol|ts|tsx|js|mjs|cjs|json|md|yml|yaml)\\b)[^`]*`"],
 });
 
 const SUPPRESSION_REGEXES = Object.values(CLAIM_SUPPRESSION_CUES)
