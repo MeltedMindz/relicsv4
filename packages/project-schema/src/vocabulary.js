@@ -36,16 +36,67 @@ export const CHAIN_LABELS = Object.freeze({
  * `BUYBACK_ALLOCATED_AWAITING_ROUTE` state. Claiming IDENTITY_WETH for BNB would assert a
  * conversion that does not exist. It does not touch creator fees, and it must never gate
  * admission (see QUOTE_ADMISSION_REQUIRES_PROVEN_WETH_ROUTE in economics.js).
+ *
+ * `creatorEarningsModes` is the NFT SECONDARY-EARNINGS models a collection may actually be
+ * launched with on that chain — a different number entirely from the project market's LP fee
+ * split, and never to be shown beside it. It is stated per chain because ENFORCED is the one mode
+ * whose availability is not ours to decide:
+ *
+ *   NONE / OPTIONAL  always available, on every chain, unconditionally. OPTIONAL is ERC-2981, a
+ *                    declaration a marketplace MAY honour. It depends on no marketplace
+ *                    integration, so no chain fact can take it away.
+ *   ENFORCED         requires BOTH a vetted, codehash-pinned transfer validator on that chain AND
+ *                    a marketplace that will honour a restricted order there. Listed only where
+ *                    both are true.
+ *
+ * BNB Smart Chain (56) omits ENFORCED because OpenSea carries no NFT listings or offers on that
+ * chain at all — it removed them in 2023, BNB is absent from OpenSea's current compatible-chains
+ * article, and the OpenSea API `chain` enum has no BSC value. Robinhood Chain (4663) omits it for
+ * a different reason: OpenSea DOES carry NFT orders there, but no per-chain validator codehash has
+ * been vetted and pinned, and adding one is a deliberate owner decision, not an inference.
+ *
+ * Live validator BYTECODE exists at the canonical addresses on both 56 and 4663 and means nothing
+ * here: Limit Break's v5 deployment model is permissionless CREATE2 to identical addresses on any
+ * EVM chain, so its presence is a property of CREATE2 rather than a statement about support.
  */
 export const CHAIN_PROFILES = Object.freeze({
-  1: Object.freeze({ label: "Ethereum", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH" }),
-  8453: Object.freeze({ label: "Base", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH" }),
-  4663: Object.freeze({ label: "Robinhood Chain", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH" }),
+  1: Object.freeze({ label: "Ethereum", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
+  8453: Object.freeze({ label: "Base", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
+  4663: Object.freeze({ label: "Robinhood Chain", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL"]) }),
   // RC3: WBNB is the ONLY admitted quote on BNB. No BSC USDT, no BSC USDC, regardless of their
   // liquidity — owner directive. The multi-quote capability is Robinhood's alone this release, and
   // a one-asset list here is what makes "widen it later" a deliberate edit rather than a default.
-  56: Object.freeze({ label: "BNB Smart Chain", nativeSymbol: "BNB", wrappedNativeSymbol: "WBNB", canonicalQuoteSymbols: Object.freeze(["WBNB"]), buybackRouteState: "ROUTE_UNPROVEN" }),
+  56: Object.freeze({ label: "BNB Smart Chain", nativeSymbol: "BNB", wrappedNativeSymbol: "WBNB", canonicalQuoteSymbols: Object.freeze(["WBNB"]), buybackRouteState: "ROUTE_UNPROVEN", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL"]) }),
 });
+
+/**
+ * Every NFT secondary creator-earnings model that exists, in the order a creator meets them.
+ * A chain profile lists a SUBSET of these; it never introduces one.
+ */
+export const CREATOR_EARNINGS_MODES = Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]);
+
+/**
+ * The earnings models launchable on `chainId`. THROWS on an unknown chain, for the same reason
+ * `wrappedNativeSymbolFor` does: a caller that cannot name the chain cannot be told what is
+ * available on it, and the plausible-looking answer here is the full list — the one answer that
+ * could put a creator into a mode their chain will refuse at launch.
+ * @param {number} chainId
+ */
+export function creatorEarningsModesFor(chainId) {
+  const profile = CHAIN_PROFILES[chainId];
+  if (!profile) throw new Error(`creatorEarningsModesFor(${chainId}): unknown chain — there is no default earnings capability to fall back to`);
+  return profile.creatorEarningsModes;
+}
+
+/**
+ * Whether ENFORCED earnings may be OFFERED on `chainId`. Note the verb: this answers "may a
+ * creator select it", never "are earnings being enforced". The second question is a marketplace
+ * fact no chain profile can answer, and only a live marketplace observation ever licenses it.
+ * @param {number} chainId
+ */
+export function enforcedEarningsAvailableOn(chainId) {
+  return creatorEarningsModesFor(chainId).includes("ENFORCED");
+}
 
 /** @param {number} chainId */
 export function chainProfile(chainId) {
@@ -147,6 +198,123 @@ export const STARTING_PRESET_TO_INDEX = Object.freeze({ LOW: 0, MID: 1, HIGH: 2 
 
 /** How many whole project tokens back one active artwork. */
 export const BACKING_MODELS = Object.freeze(["FULL_PARITY", "PARTIAL"]);
+
+// ---------------------------------------------------------------------------------------------
+// BURN POLICY — chosen at launch, IMMUTABLE afterwards, default NONE.
+//
+// THE THING TO NOT GET WRONG HERE IS THE SUBJECT. A project token launched with HOLDER_BURN
+// genuinely burns: `totalSupply` decreases and `Transfer(account, address(0))` is emitted. The
+// RELICS token does NOT, has never had a burn path, and its `totalSupply` is fixed at 10,000 —
+// the flagship's mechanism is buy-and-entomb, which moves tokens out of circulation without
+// destroying them. Both statements are true at once, and a creator reading about their own
+// burnable token must not conclude that RELICS burns.
+//
+// The default is NONE because a supply that cannot decrease is the weaker claim and the one a
+// creator can always fall back on. Burning is opt-in, per project, forever.
+// ---------------------------------------------------------------------------------------------
+
+/** Mirrors the launchpad `ProjectToken.BurnPolicy` enum, index for index. */
+export const BURN_POLICIES = Object.freeze(["NONE", "HOLDER_BURN", "HOLDER_AND_ALLOWANCE_BURN"]);
+export const BURN_POLICY_TO_INDEX = Object.freeze({ NONE: 0, HOLDER_BURN: 1, HOLDER_AND_ALLOWANCE_BURN: 2 });
+
+/** The policy a bundle gets when it says nothing. Never inferred from anything else. */
+export const DEFAULT_BURN_POLICY = "NONE";
+
+/**
+ * Creator-facing copy, one source so the kit, the studio and any test read the same sentence.
+ * `immutabilityWarning` is not decoration: the policy cannot be changed after launch, and a
+ * creator must confirm they understand that before a burning policy can be selected.
+ */
+export const BURN_POLICY_CARDS = Object.freeze([
+  Object.freeze({
+    policy: "NONE",
+    title: "NONE",
+    summary: "Supply can never decrease.",
+    detail: "No burn entry point exists on the token. totalSupply is fixed at launch for the life of the project.",
+  }),
+  Object.freeze({
+    policy: "HOLDER_BURN",
+    title: "HOLDER BURN",
+    summary: "Any holder may permanently destroy their own tokens.",
+    detail:
+      "A holder can burn from their own balance and nobody else's. Burning is irreversible, it lowers totalSupply, and it emits Transfer(account, address(0)).",
+  }),
+  Object.freeze({
+    policy: "HOLDER_AND_ALLOWANCE_BURN",
+    title: "HOLDER + ALLOWANCE",
+    summary:
+      "Holders may burn directly or authorize another contract to burn within an allowance. Supports burn-to-activate, burn-to-mint, and buyback-and-burn integrations.",
+    detail:
+      "Everything HOLDER BURN allows, plus burning against an ERC-20 allowance so a contract a holder has approved can burn on their behalf, up to that allowance and no further.",
+  }),
+]);
+
+/** The confirmation a creator must give before a burning policy can be selected. */
+export const BURN_POLICY_IMMUTABILITY_ACK =
+  "I understand the burn policy is written into the token at launch and can never be changed.";
+
+/**
+ * The flagship contrast, stated once so no page has to improvise it. Required reading next to any
+ * burn-policy UI: the sentence a creator is most likely to get wrong is not about their own token.
+ */
+export const RELICS_BURN_CONTRAST_COPY =
+  "This setting describes your project token. It does not describe the original RELICS token, which is non-burnable: RELICS uses buy-and-entomb, its supply is removed from circulation rather than destroyed, and its totalSupply stays fixed at 10,000.";
+
+/** True when the policy actually permits supply to decrease. */
+export function burnPolicyAllowsBurning(policy) {
+  return policy === "HOLDER_BURN" || policy === "HOLDER_AND_ALLOWANCE_BURN";
+}
+
+// ---------------------------------------------------------------------------------------------
+// ANTI-SNIPE STRATEGY — what a launch actually does about being sniped at open.
+//
+// NOT SYBIL-PROOF, AND THE COPY MUST NOT SAY IT IS. A wallet cap and progressive liquidity both
+// raise the cost and the clumsiness of taking an outsized share at open. Neither identifies a
+// person: an attacker splits across addresses for the price of gas, and any claim that these
+// "prevent bots", "guarantee fair distribution" or "stop snipers" is false. Say what they do —
+// they shape the first minutes of the curve — and let a creator decide with that.
+// ---------------------------------------------------------------------------------------------
+
+export const ANTI_SNIPE_STRATEGIES = Object.freeze([
+  "INSTANT_V4",
+  "FIXED_PRICE_FAIR_LAUNCH",
+  "BONDING_CURVE_TO_V4",
+  "PROGRESSIVE_LIQUIDITY",
+]);
+
+/**
+ * How each strategy relates to the `launchMode` a bundle already declares.
+ *
+ * NOTHING IS RENAMED. `LAUNCH_MODES` keeps its published values, because renaming an enum member
+ * invalidates every bundle in the corpus and there is no migration that can recover a value the
+ * old name no longer describes. `PROGRESSIVE_LIQUIDITY` is the one strategy with no existing
+ * launch mode, so it maps to null until the launch mode that carries it ships.
+ */
+export const ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE = Object.freeze({
+  INSTANT_V4: "INSTANT_V4",
+  FIXED_PRICE_FAIR_LAUNCH: "FIXED_PRICE_SALE_TO_V4",
+  BONDING_CURVE_TO_V4: "BONDING_CURVE_SALE_TO_V4",
+  PROGRESSIVE_LIQUIDITY: null,
+});
+
+/** Honest, per-strategy copy. Each says what the mechanism DOES; none claims it identifies anyone. */
+export const ANTI_SNIPE_STRATEGY_COPY = Object.freeze({
+  INSTANT_V4:
+    "The pool opens and trading begins immediately. Nothing constrains the first buy: whoever transacts first, at whatever size the pool allows, gets that fill.",
+  FIXED_PRICE_FAIR_LAUNCH:
+    "Everyone buys at one published price until the sale closes, so being early does not get a better price. It does not limit how much one buyer can take.",
+  BONDING_CURVE_TO_V4:
+    "Price rises along a published curve as the sale fills, so buying more costs more. Being first is still an advantage — it is a cheaper price, not an excluded one.",
+  PROGRESSIVE_LIQUIDITY:
+    "Liquidity is released in steps rather than all at once, so a single large buy at open moves price further and fills worse. It shapes the first minutes of the curve; it does not decide who is buying.",
+});
+
+/**
+ * The disclaimer that must accompany any wallet cap or progressive-liquidity control.
+ * Stated as a constant so it cannot quietly soften into a marketing claim.
+ */
+export const ANTI_SNIPE_NOT_SYBIL_PROOF_COPY =
+  "These controls are not Sybil-resistant. They limit what one ADDRESS can do, and an attacker can split across as many addresses as they like for the cost of gas. Treat them as shaping the opening curve, never as proof that buyers are distinct people.";
 
 /** Launch method. All three end in one canonical Uniswap v4 pool pairing the project token with
  *  the market's QUOTE ASSET (see QUOTE_ASSET_REQUEST_MODES below). */

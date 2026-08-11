@@ -26,7 +26,7 @@
         "runtimeCodeHash": null,
         "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
         "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-        "schemaVersion": "3.1.0",
+        "schemaVersion": "3.2.0",
         "scriptPointer": null,
         "templateId": "0",
         "templateParamsHash": null,
@@ -117,10 +117,10 @@
         "traitSchema": "add2ef67cd47a2f438eae5d04339455ba734a3ec4755a37de1d4d0846bd1ef45"
       },
       "integrity": {
-        "bundleCommitment": "b600eda069634948fb43626f628a17c0990be4debeb2bf72b20220c6e449165e",
-        "bundleHash": "40d309839ea48148e3073736d1022c93f33c444ed46edc451f29b610a2fd80e7",
+        "bundleCommitment": "0a6ddaeae23d098656acb802de393bb634eda2399742a7ab1f87ffd7c707714e",
+        "bundleHash": "57ebbee774ca00822751b9aa850b9e44cd939d659e129aa89ed08f08241f2e38",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "projectConfigHash": "b7b7065101efa8a3696ecc3c1cfde2a7455aace3d37e6180c717186f33b5431e"
+        "projectConfigHash": "90519b9c26293da192912d3953af54262c00ab545fe165a148e28105d92d55a2"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -153,7 +153,7 @@
           "runtimeCodeHash": null,
           "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
           "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-          "schemaVersion": "3.1.0",
+          "schemaVersion": "3.2.0",
           "scriptPointer": null,
           "templateId": "0",
           "templateParamsHash": null,
@@ -161,10 +161,10 @@
         },
         "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "3fd279d0d0647ac5ec0cddaed5c0a387571351139a857c45a44a22210b188d56",
-        "bundleCommitment": "b600eda069634948fb43626f628a17c0990be4debeb2bf72b20220c6e449165e",
-        "bundleHash": "40d309839ea48148e3073736d1022c93f33c444ed46edc451f29b610a2fd80e7",
+        "bundleCommitment": "0a6ddaeae23d098656acb802de393bb634eda2399742a7ab1f87ffd7c707714e",
+        "bundleHash": "57ebbee774ca00822751b9aa850b9e44cd939d659e129aa89ed08f08241f2e38",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "creatorKitVersion": "3.8.0",
+        "creatorKitVersion": "3.9.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -177,7 +177,7 @@
         "marketMappingHash": "9c02cbc1e8445352c3939efcc2da84d00f531ba153d81029d10bb287a52a1bcf",
         "mediaHashes": {},
         "metadataHash": "c1a712bbeceec116ecdfba3935c073824427bcfe40c55f578b3ad68febdcbf15",
-        "projectConfigHash": "b7b7065101efa8a3696ecc3c1cfde2a7455aace3d37e6180c717186f33b5431e",
+        "projectConfigHash": "90519b9c26293da192912d3953af54262c00ab545fe165a148e28105d92d55a2",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -189,7 +189,7 @@
           8453
         ],
         "runtimeVersion": "relics-art-runtime/1",
-        "schemaVersion": "3.1.0",
+        "schemaVersion": "3.2.0",
         "scriptHash": "030b4efc69051c6bd2bc9576dce3e51d4fbd2689f73d8880c101bfac31c65c3a",
         "source": "relics-bundle",
         "templateParams": null,
@@ -248,6 +248,7 @@
         "collection": {
           "artworkBackingUnits": "1000",
           "backingModel": "FULL_PARITY",
+          "burnPolicy": "NONE",
           "collaborators": [],
           "creatorRecipient": "0x7A6f3B4c2D1e0F9a8B7c6D5e4F3a2B1c0D9e8F7a",
           "description": "A minimal generative collection: concentric rings around a single core, with the palette chosen by the token's seed.",
@@ -314,7 +315,7 @@
         "runtimeCodeHash": null,
         "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
         "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-        "schemaVersion": "3.1.0",
+        "schemaVersion": "3.2.0",
         "scriptPointer": null,
         "templateId": "0",
         "templateParamsHash": null,
@@ -419,10 +420,10 @@
         "traitSchema": "fe862ce63970cc0abfb237bf50fc313fe7d9fb13156e26095783c06469912fca"
       },
       "integrity": {
-        "bundleCommitment": "45312e1c3c6d4474bcb24c6b00c33aa2ae5ff6aff53b897e01b0bd012b570aa2",
-        "bundleHash": "a62c17a96085f0803a76f9941f014d2e2f7abf57da10da03aa140f56251f1b75",
+        "bundleCommitment": "c8f987aaedf125ecfb9c17a119b26e535e467476ee400b9f55a6aeb52a2701a9",
+        "bundleHash": "9177abd59b91d03b706090b76313cc7696163050ff1981de74ba7d899ed4fc91",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "projectConfigHash": "9b555c51fdae82a01b3022276f087348e9890c5a2a07955b4ef5724f7f1088d3"
+        "projectConfigHash": "8dc56521288b1d9cccaf76197f72a50ef0b0f939aa7747e76de816b1f6aeadb3"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -460,7 +461,7 @@
           "runtimeCodeHash": null,
           "runtimeId": "ONCHAIN_JAVASCRIPT_V1",
           "runtimeIdHash": "e17106bfa7080e05dc2311bf4a8e4c347f2e69655aa7747a40d13a4a4ec55e41",
-          "schemaVersion": "3.1.0",
+          "schemaVersion": "3.2.0",
           "scriptPointer": null,
           "templateId": "0",
           "templateParamsHash": null,
@@ -468,10 +469,10 @@
         },
         "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "ff8491d996770cbe1fc291c15e09f372874a81ee862bd93906daec74abbf5da5",
-        "bundleCommitment": "45312e1c3c6d4474bcb24c6b00c33aa2ae5ff6aff53b897e01b0bd012b570aa2",
-        "bundleHash": "a62c17a96085f0803a76f9941f014d2e2f7abf57da10da03aa140f56251f1b75",
+        "bundleCommitment": "c8f987aaedf125ecfb9c17a119b26e535e467476ee400b9f55a6aeb52a2701a9",
+        "bundleHash": "9177abd59b91d03b706090b76313cc7696163050ff1981de74ba7d899ed4fc91",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "creatorKitVersion": "3.8.0",
+        "creatorKitVersion": "3.9.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [
@@ -491,7 +492,7 @@
           "assets/cover.svg": "d93c7b0ca903633608710fe41510e117ad1f8099efa5cda31dbce504b871bf22"
         },
         "metadataHash": "93b3f6a3be7976d5ef203af2c94facde53d3068d13bd94354e67c0b4785d46e6",
-        "projectConfigHash": "9b555c51fdae82a01b3022276f087348e9890c5a2a07955b4ef5724f7f1088d3",
+        "projectConfigHash": "8dc56521288b1d9cccaf76197f72a50ef0b0f939aa7747e76de816b1f6aeadb3",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -504,7 +505,7 @@
           1
         ],
         "runtimeVersion": "relics-art-runtime/1",
-        "schemaVersion": "3.1.0",
+        "schemaVersion": "3.2.0",
         "scriptHash": "db28f60aaea2c07c25d1c9169f44b670dbe7b1fc6e51df5a62588d368709ba93",
         "source": "relics-bundle",
         "templateParams": null,
@@ -603,6 +604,7 @@
         "collection": {
           "artworkBackingUnits": "2000",
           "backingModel": "PARTIAL",
+          "burnPolicy": "NONE",
           "collaborators": [
             {
               "bps": 1500,
@@ -675,7 +677,7 @@
         "runtimeCodeHash": null,
         "runtimeId": "SOLIDITY_SVG_V1",
         "runtimeIdHash": "59cb42c7866bcc760f80ea62070bd424669ce5f87aee62137516feccbaf485f4",
-        "schemaVersion": "3.1.0",
+        "schemaVersion": "3.2.0",
         "scriptPointer": null,
         "templateId": "1",
         "templateParamsHash": "371f09ac854383b96e5418a5f5bd8ea477c7fe55400d50a333c45ac54f4fa6c6",
@@ -772,10 +774,10 @@
         "traitSchema": "affff1ec04accd1c83579ad7a6f42e597916b118845d18af06ade7037aaa9d61"
       },
       "integrity": {
-        "bundleCommitment": "cd6ff286f8718e2430477cbfd2b30be5437531e7a1f2fd625aa729b335a8a213",
-        "bundleHash": "5ffc0e864e85df1a86ac8425860709fb84e1f6bc6319becb16c04d31a210b230",
+        "bundleCommitment": "77f2370f90606227dabec023dc74e287476a44e95c153aa891c7de96c3dad6f9",
+        "bundleHash": "d5378ec505da6a5c97fd2a06d11bfb6e57f653d96920447c10a855f9717b8290",
         "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
-        "projectConfigHash": "5c6e6eb966469598348330b427d2e4b24f7bd98cb89189f3656e5718ad35529b"
+        "projectConfigHash": "fa349d2d58e0e6c3c8b058970e8c43e4ed93d464718d2dc6ec4a91235f3a012b"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -808,7 +810,7 @@
           "runtimeCodeHash": null,
           "runtimeId": "SOLIDITY_SVG_V1",
           "runtimeIdHash": "59cb42c7866bcc760f80ea62070bd424669ce5f87aee62137516feccbaf485f4",
-          "schemaVersion": "3.1.0",
+          "schemaVersion": "3.2.0",
           "scriptPointer": null,
           "templateId": "1",
           "templateParamsHash": "371f09ac854383b96e5418a5f5bd8ea477c7fe55400d50a333c45ac54f4fa6c6",
@@ -816,10 +818,10 @@
         },
         "artConfigFormat": "ACV1",
         "artConfigHash": "c6c38611369c4862f58f9c8a4994091c798643c32d77387a3f1d4ce41d098cff",
-        "bundleCommitment": "cd6ff286f8718e2430477cbfd2b30be5437531e7a1f2fd625aa729b335a8a213",
-        "bundleHash": "5ffc0e864e85df1a86ac8425860709fb84e1f6bc6319becb16c04d31a210b230",
+        "bundleCommitment": "77f2370f90606227dabec023dc74e287476a44e95c153aa891c7de96c3dad6f9",
+        "bundleHash": "d5378ec505da6a5c97fd2a06d11bfb6e57f653d96920447c10a855f9717b8290",
         "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
-        "creatorKitVersion": "3.8.0",
+        "creatorKitVersion": "3.9.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -832,7 +834,7 @@
         "marketMappingHash": "618b5d0b385b02455000ace3fac407d478483bd8563d113ea6a9a552054ed645",
         "mediaHashes": {},
         "metadataHash": "a54cbeef868d0c80eacefcf25af0d600705da907adaaf63490e2a3593c547a14",
-        "projectConfigHash": "5c6e6eb966469598348330b427d2e4b24f7bd98cb89189f3656e5718ad35529b",
+        "projectConfigHash": "fa349d2d58e0e6c3c8b058970e8c43e4ed93d464718d2dc6ec4a91235f3a012b",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -844,7 +846,7 @@
           8453
         ],
         "runtimeVersion": "relics-art-runtime/1",
-        "schemaVersion": "3.1.0",
+        "schemaVersion": "3.2.0",
         "scriptHash": "40754cf332429310ef69988c9ca1856c98c83d057e18c53674f38e18ee2954db",
         "source": "relics-bundle",
         "templateParams": {
@@ -982,6 +984,7 @@
         "collection": {
           "artworkBackingUnits": "1000",
           "backingModel": "FULL_PARITY",
+          "burnPolicy": "NONE",
           "collaborators": [],
           "creatorRecipient": "0x7A6f3B4c2D1e0F9a8B7c6D5e4F3a2B1c0D9e8F7a",
           "description": "A parameter-driven collection rendered by a registered on-chain Solidity template. The bundle carries the parameter values, never contract code.",

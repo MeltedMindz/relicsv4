@@ -28,6 +28,8 @@ import {
   QUOTE_ASSET_REQUEST_MODES,
   QUOTE_ASSET_KINDS,
   CREATOR_LP_FEE_ASSET_MODES,
+  BURN_POLICIES,
+  DEFAULT_BURN_POLICY,
 } from "./vocabulary.js";
 import { isSchemaCompatible, SCHEMA_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, parseSemver, explainIncompatibility } from "./version.js";
 import { isSha256Hex } from "./hashes.js";
@@ -90,6 +92,10 @@ export const REFUSED_MANIFEST_KEYS = Object.freeze({
   runtimeCodeHash:
     "a bundle cannot pin a renderer's code hash — the importer reads it from the chain being launched on, and a bundle that could pin a renderer could pin one of its choosing",
   scriptPointer: "a bundle cannot name a script pointer; the storage address does not exist until the launch transaction writes it",
+  currentSupply:
+    "a bundle cannot state currentSupply — it is live chain state that changes with every burn, and a file written before launch cannot know it. Declare supply.totalSupplyWhole; the chain reports what is left",
+  cumulativeBurned:
+    "a bundle cannot state cumulativeBurned — it is live chain state, zero at launch by construction, and a bundle asserting any value for it would be asserting a history that has not happened",
   artRuntimeAddress: "a bundle cannot name a runtime address",
   renderer: "the renderer is protocol code selected by runtime id, not an address a bundle supplies",
   rpcUrl: "a bundle never carries an endpoint",
@@ -184,7 +190,19 @@ export function validateManifest(manifest) {
   if (!isObject(supply)) {
     issues.push(error("SUPPLY_SHAPE", `${at}#supply`, "supply must be an object"));
   } else {
-    onlyKeys(issues, supply, `${at}#supply`, ["totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork"]);
+    onlyKeys(issues, supply, `${at}#supply`, ["totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork", "burnPolicy"]);
+    // BURN POLICY. Optional and defaulted to NONE, so every schema 3.1.0 bundle keeps its exact
+    // present meaning: a file that says nothing about burning launches a token that cannot burn.
+    // An absent field is therefore not "unspecified", it is NONE, and that is the safe direction.
+    if (supply.burnPolicy !== undefined && !BURN_POLICIES.includes(supply.burnPolicy)) {
+      issues.push(
+        error(
+          "SUPPLY_BURN_POLICY",
+          `${at}#supply.burnPolicy`,
+          `burnPolicy must be one of ${BURN_POLICIES.join(", ")} (omit it for ${DEFAULT_BURN_POLICY}). It is written into the token at launch and can never be changed`,
+        ),
+      );
+    }
     totalSupply = decimal(issues, supply.totalSupplyWhole, `${at}#supply.totalSupplyWhole`, "SUPPLY_TOTAL");
     artworkSupply = decimal(issues, supply.artworkSupply, `${at}#supply.artworkSupply`, "SUPPLY_ARTWORK");
     if (totalSupply !== null && (totalSupply < LIMITS.minTotalSupplyWhole || totalSupply > LIMITS.maxTotalSupplyWhole)) {

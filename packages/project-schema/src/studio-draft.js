@@ -7,7 +7,7 @@
 // it lives next to the schema that defines both sides, and the provenance block it returns lets
 // the importer display the same hashes the CLI printed at export time.
 
-import { ART_RUNTIME_TO_MODE, STARTING_PRESET_TO_INDEX } from "./vocabulary.js";
+import { ART_RUNTIME_TO_MODE, STARTING_PRESET_TO_INDEX, DEFAULT_BURN_POLICY } from "./vocabulary.js";
 import { toHex } from "./sha256.js";
 
 /**
@@ -67,6 +67,10 @@ export function toStudioDraft(validated, byPath, options = {}) {
       totalSupplyWhole: manifest.supply.totalSupplyWhole,
       artworkBackingUnits: manifest.supply.artworkSupply,
       backingModel: manifest.supply.backingModel,
+      // BURN POLICY. An absent field is NONE, not "unspecified" -- the same meaning every bundle
+      // written before the field existed already had. Defaulting here rather than in the studio
+      // keeps one answer to "what does silence mean", and it is the non-burning one.
+      burnPolicy: manifest.supply.burnPolicy ?? DEFAULT_BURN_POLICY,
       creatorRecipient: manifest.earnings.creatorRecipient,
       license: manifest.project.license,
       collaborators: (manifest.earnings.collaborators ?? []).map((c) => ({ recipient: c.recipient, bps: c.bps })),

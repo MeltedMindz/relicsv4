@@ -96,6 +96,14 @@ export interface ProjectManifest {
     artworkSupply: string;
     backingModel: BackingModel;
     tokensPerArtwork?: string;
+    /**
+     * Chosen at launch, IMMUTABLE afterwards. Omit for NONE — which is what every bundle written
+     * before schema 3.2.0 meant, because no project token could burn at all.
+     *
+     * This describes the PROJECT token. The RELICS token is non-burnable and uses buy-and-entomb;
+     * its totalSupply stays fixed at 10,000.
+     */
+    burnPolicy?: BurnPolicy;
   };
   art: {
     runtime: ArtRuntime;
@@ -307,12 +315,16 @@ export type QuoteAssetRequestMode = "DEFAULT" | "ADDRESS";
 /** `NATIVE_WRAPPED` is canonical; `NATIVE_WETH` is its deprecated alias and maps to the same kind. */
 export type QuoteAssetKind = "NATIVE_WRAPPED" | "NATIVE_WETH" | "STABLE" | "STOCK_TOKEN" | "ECOSYSTEM_TOKEN";
 export type BuybackRouteState = "IDENTITY_WETH" | "ROUTE_UNPROVEN";
+/** NFT SECONDARY earnings on a resale — unrelated to the project market's LP fee split. */
+export type CreatorEarningsMode = "NONE" | "OPTIONAL" | "ENFORCED";
 export interface ChainProfile {
   label: string;
   nativeSymbol: string;
   wrappedNativeSymbol: string;
   canonicalQuoteSymbols: readonly string[];
   buybackRouteState: BuybackRouteState;
+  /** The earnings models launchable on this chain. NONE and OPTIONAL are always present. */
+  creatorEarningsModes: readonly CreatorEarningsMode[];
 }
 export type CreatorLpFeeAssetMode = "DUAL_ASSET" | "QUOTE_ONLY";
 
@@ -352,6 +364,11 @@ export function chainProfile(chainId: number): Readonly<ChainProfile> | null;
 export function wrappedNativeSymbolFor(chainId: number): string;
 /** THROWS on an unknown chain — there is deliberately no "ETH" fallback. */
 export function nativeSymbolFor(chainId: number): string;
+export const CREATOR_EARNINGS_MODES: readonly CreatorEarningsMode[];
+/** THROWS on an unknown chain — the plausible answer is the full list, and it is the wrong one. */
+export function creatorEarningsModesFor(chainId: number): readonly CreatorEarningsMode[];
+/** May ENFORCED be OFFERED here? Never "are earnings being enforced" — only an observation says that. */
+export function enforcedEarningsAvailableOn(chainId: number): boolean;
 export const DEPRECATED_QUOTE_ASSET_KIND_ALIASES: Readonly<Record<string, string>>;
 export function canonicalQuoteAssetKind(kind: string): string;
 export const ART_RUNTIMES: readonly ArtRuntime[];
@@ -365,6 +382,30 @@ export const ART_RUNTIME_TO_MODE: Readonly<Record<ArtRuntime, 0 | 1>>;
 export const STARTING_PRESETS: readonly StartingPreset[];
 export const STARTING_PRESET_TO_INDEX: Readonly<Record<StartingPreset, 0 | 1 | 2>>;
 export const BACKING_MODELS: readonly BackingModel[];
+/** Mirrors the launchpad `ProjectToken.BurnPolicy` enum, index for index. */
+export type BurnPolicy = "NONE" | "HOLDER_BURN" | "HOLDER_AND_ALLOWANCE_BURN";
+export const BURN_POLICIES: readonly BurnPolicy[];
+export const BURN_POLICY_TO_INDEX: Readonly<Record<BurnPolicy, number>>;
+/** What an absent `supply.burnPolicy` means. Always NONE; never inferred from anything else. */
+export const DEFAULT_BURN_POLICY: BurnPolicy;
+export interface BurnPolicyCard {
+  policy: BurnPolicy;
+  title: string;
+  summary: string;
+  detail: string;
+}
+export const BURN_POLICY_CARDS: readonly BurnPolicyCard[];
+/** A creator must confirm this before a burning policy can be selected. */
+export const BURN_POLICY_IMMUTABILITY_ACK: string;
+/** The flagship contrast: a creator's burnable token does not make RELICS burnable. */
+export const RELICS_BURN_CONTRAST_COPY: string;
+export function burnPolicyAllowsBurning(policy: string): boolean;
+/** Anti-snipe strategies. NOT Sybil-resistant -- see ANTI_SNIPE_NOT_SYBIL_PROOF_COPY. */
+export type AntiSnipeStrategy = "INSTANT_V4" | "FIXED_PRICE_FAIR_LAUNCH" | "BONDING_CURVE_TO_V4" | "PROGRESSIVE_LIQUIDITY";
+export const ANTI_SNIPE_STRATEGIES: readonly AntiSnipeStrategy[];
+export const ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE: Readonly<Record<AntiSnipeStrategy, string | null>>;
+export const ANTI_SNIPE_STRATEGY_COPY: Readonly<Record<AntiSnipeStrategy, string>>;
+export const ANTI_SNIPE_NOT_SYBIL_PROOF_COPY: string;
 export const LAUNCH_MODES: readonly LaunchMode[];
 export const CURVE_PRESETS: readonly string[];
 export const MARKET_SENSORS: readonly { id: MarketSensor; label: string; description: string }[];

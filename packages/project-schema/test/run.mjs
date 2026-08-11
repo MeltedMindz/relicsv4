@@ -36,7 +36,6 @@ import {
   stripComments,
   buildRenderContext,
   LIMITS,
-  REFUSED_MANIFEST_KEYS,
   keccak256Utf8,
   keccak256Hex,
   computeArtBinding,
@@ -117,6 +116,21 @@ import {
   chainProfile,
   wrappedNativeSymbolFor,
   nativeSymbolFor,
+  creatorEarningsModesFor,
+  enforcedEarningsAvailableOn,
+  BURN_POLICIES,
+  BURN_POLICY_TO_INDEX,
+  DEFAULT_BURN_POLICY,
+  BURN_POLICY_CARDS,
+  BURN_POLICY_IMMUTABILITY_ACK,
+  RELICS_BURN_CONTRAST_COPY,
+  burnPolicyAllowsBurning,
+  ANTI_SNIPE_STRATEGIES,
+  ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE,
+  ANTI_SNIPE_STRATEGY_COPY,
+  ANTI_SNIPE_NOT_SYBIL_PROOF_COPY,
+  LAUNCH_MODES,
+  REFUSED_MANIFEST_KEYS,
   QUOTE_ASSET_KINDS,
   DEPRECATED_QUOTE_ASSET_KIND_ALIASES,
   canonicalQuoteAssetKind,
@@ -1275,6 +1289,34 @@ function assertChainVocabulary(profiles, chainIds) {
   // No chain's settlement symbol may be reachable by guessing.
   const symbols = new Set(Object.values(profiles).map((p) => p.wrappedNativeSymbol));
   must(symbols.size > 1, "every chain reports the same wrapped-native symbol, so a hardcoded default would still pass");
+
+  // ---- NFT secondary creator earnings ---------------------------------------------------------
+  // NONE and OPTIONAL are unconditional: they depend on no marketplace integration, so no chain
+  // fact may remove them. A chain that "supports" neither would be a chain a creator cannot ask
+  // for anything on, which is not a state this product has.
+  for (const id of chainIds) {
+    const modes = profiles[id]?.creatorEarningsModes;
+    must(Array.isArray(modes), `chain ${id} declares no creatorEarningsModes`);
+    must(modes.includes("NONE"), `chain ${id} does not offer NONE, which is unconditional`);
+    must(modes.includes("OPTIONAL"), `chain ${id} does not offer OPTIONAL, which needs no marketplace integration`);
+    for (const m of modes) must(["NONE", "OPTIONAL", "ENFORCED"].includes(m), `chain ${id} declares unknown earnings mode ${m}`);
+  }
+
+  // ENFORCED is the one mode whose availability is not ours to decide, and it is claimed on
+  // exactly two chains. BNB Smart Chain is not one of them: OpenSea carries no NFT listings or
+  // offers there at all, so there is no order book for enforcement to act on, and live validator
+  // bytecode at the canonical addresses does not change that — Limit Break's v5 deploys
+  // permissionlessly to identical addresses on any EVM chain.
+  must(!profiles[56].creatorEarningsModes.includes("ENFORCED"), "BNB Smart Chain claims ENFORCED earnings; OpenSea carries no NFT orders on that chain");
+  must(!profiles[4663].creatorEarningsModes.includes("ENFORCED"), "Robinhood Chain claims ENFORCED earnings; no validator codehash is vetted or pinned for it");
+  for (const id of [1, 8453]) {
+    must(profiles[id].creatorEarningsModes.includes("ENFORCED"), `chain ${id} lost ENFORCED, which it does support`);
+  }
+
+  // And the capability must actually vary. If every chain listed the same modes, none of the
+  // assertions above would be testing a per-chain fact.
+  const modeSets = new Set(chainIds.map((id) => profiles[id].creatorEarningsModes.join(",")));
+  must(modeSets.size > 1, "every chain offers the same earnings modes, so a hardcoded list would still pass");
 }
 
 test("BNB Smart Chain is first-class, and WBNB is its only admitted quote", () => {
@@ -1282,6 +1324,141 @@ test("BNB Smart Chain is first-class, and WBNB is its only admitted quote", () =
   assert(CHAIN_LABELS[56] === "BNB Smart Chain", "chain 56 has no label");
   assert(chainProfile(56).wrappedNativeSymbol === "WBNB", "the accessor disagrees with the table");
   assert(chainProfile(137) === null, "an unsupported chain returned a profile");
+});
+
+test("burn policy: NONE is the default, the enum mirrors the contract, and burning is opt-in", () => {
+  assert(BURN_POLICIES.join(",") === "NONE,HOLDER_BURN,HOLDER_AND_ALLOWANCE_BURN", "the burn-policy enum drifted from ProjectToken.BurnPolicy");
+  // Index for index with the Solidity enum. A reordering here silently relabels every launch.
+  assert(BURN_POLICY_TO_INDEX.NONE === 0, "NONE must be enum index 0");
+  assert(BURN_POLICY_TO_INDEX.HOLDER_BURN === 1, "HOLDER_BURN must be enum index 1");
+  assert(BURN_POLICY_TO_INDEX.HOLDER_AND_ALLOWANCE_BURN === 2, "HOLDER_AND_ALLOWANCE_BURN must be enum index 2");
+  assert(DEFAULT_BURN_POLICY === "NONE", "the default must be the policy that cannot decrease supply");
+
+  assert(!burnPolicyAllowsBurning("NONE"), "NONE must not permit burning");
+  assert(burnPolicyAllowsBurning("HOLDER_BURN"), "HOLDER_BURN must permit burning");
+  assert(burnPolicyAllowsBurning("HOLDER_AND_ALLOWANCE_BURN"), "HOLDER_AND_ALLOWANCE_BURN must permit burning");
+  assert(!burnPolicyAllowsBurning("SOMETHING_ELSE"), "an unknown policy must never read as burning");
+});
+
+test("burn policy: a bundle that says nothing launches a token that cannot burn", () => {
+  // The whole reason 3.2.0 is a MINOR and not a MAJOR. Silence must mean NONE -- which is exactly
+  // what every bundle written before the field existed already meant. These assert on the burn
+  // ISSUE CODE rather than whole-manifest validity, so an unrelated required field cannot make
+  // the test look like it is checking burn policy when it is not.
+  const supplyOnly = (burnPolicy) => {
+    const supply = { totalSupplyWhole: "1000000", artworkSupply: "1000", backingModel: "PARTIAL", tokensPerArtwork: "1000" };
+    if (burnPolicy !== undefined) supply.burnPolicy = burnPolicy;
+    return validateManifest({ supply }).filter((i) => i.code === "SUPPLY_BURN_POLICY");
+  };
+
+  assert(supplyOnly(undefined).length === 0, "an absent burnPolicy must be accepted and mean NONE");
+  for (const policy of BURN_POLICIES) {
+    assert(supplyOnly(policy).length === 0, `burnPolicy ${policy} must be accepted`);
+  }
+
+  const bad = supplyOnly("BURN_ANYONES");
+  assert(bad.length === 1, "an invented burn policy must be refused");
+  assert(/can never be changed/.test(bad[0].message), "the refusal must state that the policy is immutable at launch");
+
+  // The dangerous near-miss: a policy that reads like a real one.
+  assert(supplyOnly("ALLOWANCE_BURN").length === 1, "a near-miss policy name must be refused, not coerced");
+  assert(supplyOnly("none").length === 1, "the enum is case-sensitive; a lowercase value is not the NONE member");
+});
+
+test("burn policy: live chain state is refused by name", () => {
+  // currentSupply changes with every burn and cumulativeBurned is zero at launch by construction.
+  // A bundle asserting either would be asserting a history that has not happened -- the same rule
+  // that already refuses runtimeCodeHash and scriptPointer.
+  for (const key of ["currentSupply", "cumulativeBurned"]) {
+    assert(typeof REFUSED_MANIFEST_KEYS[key] === "string", `${key} must be refused by name with an explanation`);
+    const issues = validateManifest({ [key]: "1000" });
+    assert(
+      issues.some((i) => i.code === "MANIFEST_REFUSED_KEY" && i.where.includes(key)),
+      `a bundle asserting ${key} must be specifically refused`,
+    );
+  }
+});
+
+test("burn policy: the creator copy is exactly what was specified, and names the immutability", () => {
+  const byPolicy = Object.fromEntries(BURN_POLICY_CARDS.map((c) => [c.policy, c]));
+  assert(BURN_POLICY_CARDS.length === BURN_POLICIES.length, "every policy needs a card");
+  assert(byPolicy.NONE.summary === "Supply can never decrease.", "NONE copy drifted");
+  assert(byPolicy.HOLDER_BURN.summary === "Any holder may permanently destroy their own tokens.", "HOLDER_BURN copy drifted");
+  assert(
+    byPolicy.HOLDER_AND_ALLOWANCE_BURN.summary.startsWith("Holders may burn directly or authorize another contract to burn within an allowance."),
+    "HOLDER_AND_ALLOWANCE_BURN copy drifted",
+  );
+  assert(
+    /burn-to-activate.*burn-to-mint.*buyback-and-burn/.test(byPolicy.HOLDER_AND_ALLOWANCE_BURN.summary),
+    "the integration list must stay in the allowance card",
+  );
+  // The confirmation is required copy, not a nicety: the policy cannot be changed after launch.
+  assert(/never be changed/.test(BURN_POLICY_IMMUTABILITY_ACK), "the acknowledgment must state that the policy is permanent");
+});
+
+test("burn policy: the flagship contrast says RELICS does not burn", () => {
+  // A creator reading about their own burnable token must not conclude that RELICS burns.
+  const c = RELICS_BURN_CONTRAST_COPY;
+  assert(/non-burnable/.test(c), "the contrast must say the RELICS token is non-burnable");
+  assert(/buy-and-entomb/.test(c), "the contrast must name buy-and-entomb as the RELICS mechanism");
+  assert(/10,000/.test(c), "the contrast must state the fixed RELICS supply");
+  assert(!/buy-and-burn/.test(c), "the RELICS mechanism is never buy-and-burn");
+});
+
+test("anti-snipe: the four strategies exist, and NONE of them is sold as Sybil-proof", () => {
+  assert(
+    ANTI_SNIPE_STRATEGIES.join(",") === "INSTANT_V4,FIXED_PRICE_FAIR_LAUNCH,BONDING_CURVE_TO_V4,PROGRESSIVE_LIQUIDITY",
+    "the anti-snipe strategy set drifted",
+  );
+
+  // Nothing was renamed out from under the published corpus: every strategy either maps onto an
+  // existing launch mode or declares that it has none yet.
+  for (const s of ANTI_SNIPE_STRATEGIES) {
+    const mapped = ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE[s];
+    assert(mapped === null || LAUNCH_MODES.includes(mapped), `${s} maps to ${mapped}, which is not a launch mode`);
+  }
+  assert(ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE.PROGRESSIVE_LIQUIDITY === null, "PROGRESSIVE_LIQUIDITY has no launch mode yet and must say so");
+
+  // The claim that must never appear. A wallet cap limits an ADDRESS; an attacker splits across
+  // addresses for the cost of gas.
+  const forbidden = /sybil[- ]?(proof|resistant)|prevents? bots|stops? snipers|guarantees? fair|bot[- ]?proof|one person per/i;
+  for (const s of ANTI_SNIPE_STRATEGIES) {
+    const copy = ANTI_SNIPE_STRATEGY_COPY[s];
+    assert(typeof copy === "string" && copy.length > 0, `${s} has no copy`);
+    assert(!forbidden.test(copy), `${s} copy makes a Sybil-resistance claim: "${copy}"`);
+  }
+  assert(/not Sybil-resistant/i.test(ANTI_SNIPE_NOT_SYBIL_PROOF_COPY), "the disclaimer must state that these are not Sybil-resistant");
+  assert(/cost of gas/i.test(ANTI_SNIPE_NOT_SYBIL_PROOF_COPY), "the disclaimer must say why: splitting across addresses is cheap");
+});
+
+test("BNB can launch with earnings; it just cannot claim enforced ones", () => {
+  // The whole point of stating earnings capability per chain: an unavailable ENFORCED must not
+  // take a BNB launch down with it. NONE and OPTIONAL are enough to launch, on every chain.
+  const modesOf = (id) => [...creatorEarningsModesFor(id)].join(",");
+  assert(modesOf(56) === "NONE,OPTIONAL", `BNB's earnings capability drifted to ${modesOf(56)}`);
+  assert(modesOf(4663) === "NONE,OPTIONAL", `Robinhood's earnings capability drifted to ${modesOf(4663)}`);
+  assert(modesOf(1) === "NONE,OPTIONAL,ENFORCED", `Ethereum's earnings capability drifted to ${modesOf(1)}`);
+  assert(modesOf(8453) === "NONE,OPTIONAL,ENFORCED", `Base's earnings capability drifted to ${modesOf(8453)}`);
+
+  assert(enforcedEarningsAvailableOn(1) && enforcedEarningsAvailableOn(8453), "the two enforced-capable chains lost the capability");
+  assert(!enforcedEarningsAvailableOn(56), "ENFORCED must not be offerable on BNB Smart Chain");
+  assert(!enforcedEarningsAvailableOn(4663), "ENFORCED must not be offerable on Robinhood Chain");
+
+  // Every chain keeps the two unconditional modes, so no launch is ever blocked by this.
+  for (const id of SUPPORTED_CHAIN_IDS) {
+    const modes = creatorEarningsModesFor(id);
+    assert(modes.includes("NONE") && modes.includes("OPTIONAL"), `chain ${id} cannot launch with earnings at all`);
+  }
+
+  // An unknown chain refuses rather than returning the full list — the plausible answer here is
+  // the one that could put a creator into a mode their chain will refuse at launch.
+  let threw = false;
+  try {
+    creatorEarningsModesFor(137);
+  } catch {
+    threw = true;
+  }
+  assert(threw, "creatorEarningsModesFor answered for an unknown chain instead of refusing");
 });
 
 test("the chain-vocabulary assertions FAIL under mutation", () => {
@@ -1299,6 +1476,17 @@ test("the chain-vocabulary assertions FAIL under mutation", () => {
     ["chain 56 dropped from the supported set", () => [base(), ids.filter((c) => c !== 56)]],
     ["an Ether chain relabelled to WBNB", () => { const p = base(); p[1].wrappedNativeSymbol = "WBNB"; return [p, ids]; }],
     ["every chain given the same symbol", () => { const p = base(); for (const k of Object.keys(p)) p[k].wrappedNativeSymbol = "WETH"; return [p, ids]; }],
+    // The mistake this release exists to prevent: reading live validator bytecode on chain 56 as
+    // permission to light the ENFORCED toggle.
+    ["ENFORCED granted to BNB", () => { const p = base(); p[56].creatorEarningsModes = ["NONE", "OPTIONAL", "ENFORCED"]; return [p, ids]; }],
+    ["ENFORCED granted to Robinhood", () => { const p = base(); p[4663].creatorEarningsModes = ["NONE", "OPTIONAL", "ENFORCED"]; return [p, ids]; }],
+    // The opposite failure: letting an unavailable ENFORCED take OPTIONAL down with it. BNB launches
+    // are not blocked by any of this.
+    ["OPTIONAL withdrawn from BNB", () => { const p = base(); p[56].creatorEarningsModes = ["NONE"]; return [p, ids]; }],
+    ["NONE withdrawn from BNB", () => { const p = base(); p[56].creatorEarningsModes = ["OPTIONAL"]; return [p, ids]; }],
+    ["ENFORCED withdrawn from Ethereum", () => { const p = base(); p[1].creatorEarningsModes = ["NONE", "OPTIONAL"]; return [p, ids]; }],
+    ["every chain given the same earnings modes", () => { const p = base(); for (const k of Object.keys(p)) p[k].creatorEarningsModes = ["NONE", "OPTIONAL"]; return [p, ids]; }],
+    ["an invented earnings mode", () => { const p = base(); p[56].creatorEarningsModes = ["NONE", "OPTIONAL", "GUARANTEED"]; return [p, ids]; }],
   ];
 
   for (const [name, mutate] of mutations) {

@@ -8,29 +8,51 @@
  * added; bump the MINOR when a purely additive optional field appears. An importer accepts a
  * bundle whose MAJOR it knows and whose MINOR is <= its own.
  *
+ * 3.2.0 — `supply.burnPolicy` joined the manifest: NONE (the default), HOLDER_BURN, or
+ * HOLDER_AND_ALLOWANCE_BURN, chosen at launch and immutable afterwards.
+ *
+ * MINOR, not MAJOR, and the defaulting is what makes that true. The field is OPTIONAL and an
+ * absent value means NONE — which is precisely what every 3.1.0 bundle already meant, because
+ * before this release no project token could burn at all. So no existing bundle changes meaning,
+ * no existing field changes meaning, and every 3.1.0 bundle imports here unchanged.
+ *
+ * The compatibility rule does the half that matters in the other direction: a 3.2.0 bundle
+ * declaring HOLDER_BURN is REFUSED by a 3.1.0 importer, because that importer would silently
+ * launch a non-burnable token and hand the creator something they did not ask for. An importer
+ * that cannot honour a field must not quietly drop it.
+ *
+ * `currentSupply` and `cumulativeBurned` are deliberately NOT bundle fields. They are live chain
+ * state — one changes with every burn, the other is zero at launch by construction — and a bundle
+ * that asserted either would be asserting a history that has not happened. Both are refused by
+ * name, alongside `runtimeCodeHash` and `scriptPointer`, for the same reason.
+ *
  * 3.1.0 — BNB Smart Chain (56) joined the chain vocabulary, and `NATIVE_WRAPPED` joined the quote
  * kinds as the canonical name for `NATIVE_WETH`. Both widen an accepted value set without changing
  * any field's meaning, which is exactly what a MINOR is for — and the compatibility rule then does
  * the work that matters: a 3.1.0 bundle declaring chain 56 is REFUSED by a 3.0.0 importer, because
  * that importer genuinely cannot launch it. A 3.0.0 bundle still imports here unchanged.
- *
- * This is the first time the schema version has moved since 3.0.0. Six kit releases changed only
- * what the kit SAYS about launchpad economics and left the format alone; this one changes what a
- * bundle may legally contain.
  */
-export const SCHEMA_VERSION = "3.1.0";
+export const SCHEMA_VERSION = "3.2.0";
 
 /**
  * Version of the creator kit (this repo's CLI + templates) that produced the bundle.
  *
- * 3.2.0, and still NOT a schema bump. Two kit releases have now changed what the kit SAYS about
- * the launchpad's economics (`src/economics.js`) without changing what a `.relics` bundle
- * CONTAINS: 3.1.0 moved the RELICS buyback to half the platform share, and 3.2.0 moved the
- * platform entitlement itself into the market's selected quote asset. Neither adds, removes or
- * redefines a bundle field, so `SCHEMA_VERSION` stays 3.0.0 and every 3.0.0 bundle remains
- * readable. Bumping the schema because a policy moved would strand a corpus for nothing.
+ * 3.9.0. It carries a schema MINOR (3.2.0, `supply.burnPolicy`) AND a kit-only change.
+ *
+ * The kit-only half is `creatorEarningsModes` on `CHAIN_PROFILES` — which NFT secondary-earnings
+ * models (NONE / OPTIONAL / ENFORCED) may be launched on each chain — plus the
+ * `creatorEarningsModesFor` and `enforcedEarningsAvailableOn` accessors. A chain PROFILE is not a
+ * bundle FIELD, so on its own that would not have moved `SCHEMA_VERSION` at all; the burn policy
+ * is what moved it.
+ *
+ * What it says: ENFORCED is offerable on Ethereum (1) and Base (8453) only. BNB Smart Chain (56)
+ * and Robinhood Chain (4663) offer NONE and OPTIONAL, which is enough to launch — an unavailable
+ * ENFORCED never blocks a chain. BNB is excluded because OpenSea carries no NFT listings or offers
+ * on that chain at all; Robinhood because no per-chain validator codehash has been vetted and
+ * pinned. Live validator bytecode exists at the canonical addresses on both and is not evidence
+ * either way: Limit Break's v5 deploys permissionlessly to identical addresses on any EVM chain.
  */
-export const CREATOR_KIT_VERSION = "3.8.0";
+export const CREATOR_KIT_VERSION = "3.9.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the

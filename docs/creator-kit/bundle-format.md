@@ -162,13 +162,14 @@ an error, not a passthrough.
 
 ```jsonc
 {
-  "schemaVersion": "3.1.0",
-  "creatorKitVersion": "3.8.0",
+  "schemaVersion": "3.2.0",
+  "creatorKitVersion": "3.9.0",
   "runtimeVersion": "relics-art-runtime/1",
   "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
 
   "project":  { "name", "symbol", "description", "license", "website?", "twitterHandle?" },
-  "supply":   { "totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork?" },
+  "supply":   { "totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork?",
+               "burnPolicy?" },
   "art":      { "runtime", "templateId", "entry", "seed", "scriptBytes", "traitDimensions?" },
   "market":   { "startingPreset", "launchMode", "mappingCount", "sale?" },
   "earnings": { "mode", "creatorRecipient", "collaborators", "creatorAllocationBps?" },
@@ -311,6 +312,35 @@ Four version strings travel in every bundle:
 - `runtimeVersion` — the `render(context)` contract the generator was written against.
 - `protocolReleaseCompatibility` — the launchpad parameter surface it was built for. This
   identifies a parameter surface, never a deployment.
+
+### `supply.burnPolicy` — chosen at launch, immutable afterwards
+
+Optional. One of `NONE` (the default), `HOLDER_BURN`, or `HOLDER_AND_ALLOWANCE_BURN`. It mirrors
+the launchpad's `ProjectToken.BurnPolicy` enum index for index.
+
+| Policy | What it allows |
+| --- | --- |
+| `NONE` | Supply can never decrease. No burn entry point exists on the token. |
+| `HOLDER_BURN` | Any holder may permanently destroy their own tokens. |
+| `HOLDER_AND_ALLOWANCE_BURN` | Holders may burn directly or authorize another contract to burn within an allowance. Supports burn-to-activate, burn-to-mint, and buyback-and-burn integrations. |
+
+**Omitting the field means `NONE`**, which is exactly what every bundle written before schema
+3.2.0 meant — no project token could burn at all. That is why 3.2.0 is a MINOR: no existing bundle
+changes meaning. In the other direction the compatibility rule does the work, and should: a 3.2.0
+bundle declaring `HOLDER_BURN` is refused by a 3.1.0 importer rather than silently launching a
+non-burnable token.
+
+The policy is written into the token at launch and **can never be changed**. A creator must
+confirm they understand that before a burning policy can be selected.
+
+**`currentSupply` and `cumulativeBurned` are not bundle fields and are refused by name.** They are
+live chain state — one changes with every burn, the other is zero at launch by construction — so a
+bundle asserting either would be asserting a history that has not happened. Same rule, same
+reason, as `runtimeCodeHash` and `scriptPointer`.
+
+> **This describes YOUR project token.** It does not describe the original RELICS token, which is
+> non-burnable: RELICS uses buy-and-entomb, its supply is removed from circulation rather than
+> destroyed, and its `totalSupply` stays fixed at 10,000.
 
 ### Why 3.0.0 is a MAJOR
 
