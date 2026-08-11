@@ -15,10 +15,16 @@ export {
   SCHEMA_MAJOR_RATIONALE,
   BUNDLE_MAGIC,
   BUNDLE_EXTENSION,
+  DRAFT_MAGIC,
+  DRAFT_EXTENSION,
+  BUNDLE_STATUSES,
+  magicForStatus,
   isSchemaCompatible,
   explainIncompatibility,
   parseSemver,
 } from "./src/version.js";
+
+export { SYMBOL_RE } from "./src/manifest.js";
 
 export { LIMITS, ALLOWED_EXTENSIONS, FORBIDDEN_EXTENSIONS, BUNDLE_LAYOUT, REQUIRED_ENTRIES } from "./src/limits.js";
 

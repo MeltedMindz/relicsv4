@@ -7,7 +7,7 @@
       },
       "file": "path-traversal.relics",
       "refusedBy": "container",
-      "sizeBytes": 13957
+      "sizeBytes": 13978
     },
     {
       "attack": "absolute entry path",
@@ -16,7 +16,7 @@
       },
       "file": "absolute-path.relics",
       "refusedBy": "container",
-      "sizeBytes": 13941
+      "sizeBytes": 13962
     },
     {
       "attack": "windows separator smuggling a traversal",
@@ -25,7 +25,7 @@
       },
       "file": "backslash-path.relics",
       "refusedBy": "container",
-      "sizeBytes": 13956
+      "sizeBytes": 13977
     },
     {
       "attack": "symbolic link entry",
@@ -34,7 +34,7 @@
       },
       "file": "symlink-entry.relics",
       "refusedBy": "container",
-      "sizeBytes": 13950
+      "sizeBytes": 13971
     },
     {
       "attack": "two entries that collide on a case-insensitive filesystem",
@@ -43,7 +43,7 @@
       },
       "file": "duplicate-normalized-path.relics",
       "refusedBy": "container",
-      "sizeBytes": 13935
+      "sizeBytes": 13956
     },
     {
       "attack": "zero-width character hiding a second generator",
@@ -52,7 +52,7 @@
       },
       "file": "unicode-confusable-path.relics",
       "refusedBy": "container",
-      "sizeBytes": 13993
+      "sizeBytes": 14014
     },
     {
       "attack": "zip bomb: a deflate entry claiming a 4 GB expansion",
@@ -62,7 +62,7 @@
       "file": "compressed-entry.relics",
       "note": "The container is uncompressed by construction, so an expansion ratio above 1:1 cannot be expressed at all. The reader refuses the entry before allocating anything.",
       "refusedBy": "container",
-      "sizeBytes": 14003
+      "sizeBytes": 14024
     },
     {
       "attack": "central directory declaring far more data than the file holds",
@@ -80,7 +80,7 @@
       },
       "file": "encrypted-entry.relics",
       "refusedBy": "container",
-      "sizeBytes": 13952
+      "sizeBytes": 13973
     },
     {
       "attack": "streaming data descriptor (sizes not known up front)",
@@ -89,7 +89,7 @@
       },
       "file": "data-descriptor.relics",
       "refusedBy": "container",
-      "sizeBytes": 13951
+      "sizeBytes": 13972
     },
     {
       "attack": "ZIP64 layout",
@@ -98,7 +98,7 @@
       },
       "file": "zip64.relics",
       "refusedBy": "container",
-      "sizeBytes": 13853
+      "sizeBytes": 13874
     },
     {
       "attack": "payload appended after the end-of-central-directory record",
@@ -107,7 +107,7 @@
       },
       "file": "trailing-bytes.relics",
       "refusedBy": "container",
-      "sizeBytes": 13849
+      "sizeBytes": 13870
     },
     {
       "attack": "two central-directory records pointing at the same local data",
@@ -120,7 +120,7 @@
       },
       "file": "overlapping-entries.relics",
       "refusedBy": "container",
-      "sizeBytes": 13833
+      "sizeBytes": 13854
     },
     {
       "attack": "entry-count exhaustion",
@@ -152,7 +152,7 @@
       "file": "arbitrary-hook-solidity.relics",
       "note": "Two independent refusals: .sol is on the forbidden-extension list, and `hook` is on the refused-manifest-key list. The manifest schema is closed, so there is no field in which a hook could be named even without the file.",
       "refusedBy": "validator",
-      "sizeBytes": 14153
+      "sizeBytes": 14174
     },
     {
       "attack": "a manifest trying to replace ProjectToken, the liquidity kernel and the buyback",
@@ -164,7 +164,7 @@
       },
       "file": "protocol-override.relics",
       "refusedBy": "validator",
-      "sizeBytes": 14029
+      "sizeBytes": 14050
     },
     {
       "attack": "__proto__ and constructor keys in bundle JSON",
@@ -175,7 +175,7 @@
       "file": "prototype-pollution.relics",
       "note": "safeJsonParse drops __proto__/constructor/prototype and returns null-prototype objects, so the keys never reach Object.prototype. The bundle then fails on its checksums because the document no longer matches its declared digest.",
       "refusedBy": "parser",
-      "sizeBytes": 13279
+      "sizeBytes": 13300
     },
     {
       "attack": "truncated manifest JSON",
@@ -199,7 +199,7 @@
       },
       "file": "unapproved-runtime.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13825
+      "sizeBytes": 13846
     },
     {
       "attack": "a generator that fetches a remote palette",
@@ -212,7 +212,7 @@
       },
       "file": "external-network.relics",
       "refusedBy": "validator",
-      "sizeBytes": 11653
+      "sizeBytes": 11674
     },
     {
       "attack": "a generator importing an npm package",
@@ -224,7 +224,7 @@
       },
       "file": "dependency-import.relics",
       "refusedBy": "validator",
-      "sizeBytes": 11601
+      "sizeBytes": 11622
     },
     {
       "attack": "prototype-chain escape from the render context",
@@ -237,7 +237,7 @@
       "file": "sandbox-escape.relics",
       "note": "Refused statically. It would also fail at runtime: the render context is built INSIDE the sandbox realm from a JSON string, so its constructor chain leads to the realm's own Function, and code generation from strings is disabled in that realm.",
       "refusedBy": "validator",
-      "sizeBytes": 11612
+      "sizeBytes": 11633
     },
     {
       "attack": "a private key smuggled inside metadata",
@@ -249,7 +249,7 @@
       },
       "file": "secret-exfiltration.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13960
+      "sizeBytes": 13981
     },
     {
       "attack": "a scripted SVG asset",
@@ -261,7 +261,7 @@
       },
       "file": "malicious-svg-asset.relics",
       "refusedBy": "validator",
-      "sizeBytes": 14175
+      "sizeBytes": 14196
     },
     {
       "attack": "a generator that draws nothing",
@@ -274,7 +274,7 @@
       "file": "blank-output.relics",
       "refusedBy": "validator",
       "requiresExecution": true,
-      "sizeBytes": 11413
+      "sizeBytes": 11434
     },
     {
       "attack": "hidden module state, so the same seed renders differently each time",
@@ -288,7 +288,7 @@
       "note": "Math.random is unavailable in the sandbox, so a determinism attack has to use module state instead. Rendering each seed twice catches it.",
       "refusedBy": "validator",
       "requiresExecution": true,
-      "sizeBytes": 11624
+      "sizeBytes": 11645
     },
     {
       "attack": "an unbounded loop written to dodge the `while (true)` pattern",
@@ -303,7 +303,7 @@
       "note": "The static scan only catches the literal `while (true)` / `for (;;)` shapes. This one is caught by the sandbox timeout, which is why the timeout exists.",
       "refusedBy": "sandbox",
       "requiresExecution": true,
-      "sizeBytes": 11603
+      "sizeBytes": 11624
     },
     {
       "attack": "unbounded allocation",
@@ -318,7 +318,7 @@
       "note": "The isolated backend runs with a hard heap cap, so the child process dies and the host reports a refusal instead of being taken down with it.",
       "refusedBy": "sandbox",
       "requiresExecution": true,
-      "sizeBytes": 11657
+      "sizeBytes": 11678
     },
     {
       "attack": "an output large enough to freeze a browser tab",
@@ -331,7 +331,7 @@
       "file": "oversized-output.relics",
       "refusedBy": "validator",
       "requiresExecution": true,
-      "sizeBytes": 11640
+      "sizeBytes": 11661
     },
     {
       "attack": "generator source edited after the bundle was signed off",
@@ -345,7 +345,7 @@
       },
       "file": "hash-tamper.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13833
+      "sizeBytes": 13854
     },
     {
       "attack": "a bundle asserting which renderer contract is deployed, so the launch binds a renderer of the forger's choosing",
@@ -358,7 +358,7 @@
       "file": "binding-pins-runtime-codehash.relics",
       "note": "runtimeCodeHash is a chain fact. The importer reads it from the chain being launched on; a bundle carries null and nothing else.",
       "refusedBy": "validator",
-      "sizeBytes": 13895
+      "sizeBytes": 13916
     },
     {
       "attack": "a bundle naming the storage address its art should be read from, pointing the collection at bytes it does not contain",
@@ -370,7 +370,7 @@
       },
       "file": "binding-pins-script-pointer.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13873
+      "sizeBytes": 13894
     },
     {
       "attack": "the binding claims a different art config than the generator in the bundle hashes to",
@@ -383,7 +383,7 @@
       "file": "binding-art-config-hash-swap.relics",
       "note": "The binding is recomputed from the container, so a value that does not follow from the bundle's own bytes cannot survive.",
       "refusedBy": "validator",
-      "sizeBytes": 13833
+      "sizeBytes": 13854
     },
     {
       "attack": "re-pointing a project at a different art runtime by editing the binding",
@@ -395,7 +395,7 @@
       },
       "file": "binding-runtime-swap.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13833
+      "sizeBytes": 13854
     },
     {
       "attack": "the art swapped out from under a manifest that still commits to the original renders",
@@ -411,7 +411,7 @@
       "file": "binding-output-commitment-lie.relics",
       "note": "Caught twice over: the file digests move, and so does the binding's art-config hash. The output commitment is the third net, and it is the only one that still catches a swap where every digest was recomputed but the art no longer draws what the creator approved.",
       "refusedBy": "validator",
-      "sizeBytes": 13818
+      "sizeBytes": 13839
     },
     {
       "attack": "a mapping with unbounded transform parameters",
@@ -423,7 +423,7 @@
       },
       "file": "market-mapping-out-of-bounds.relics",
       "refusedBy": "validator",
-      "sizeBytes": 14037
+      "sizeBytes": 14058
     },
     {
       "attack": "a chain the launchpad does not target",
@@ -435,7 +435,7 @@
       },
       "file": "unsupported-chain.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13844
+      "sizeBytes": 13865
     },
     {
       "attack": "more artworks than there are whole tokens to back them",
@@ -447,7 +447,7 @@
       },
       "file": "overbacked-supply.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13834
+      "sizeBytes": 13855
     },
     {
       "attack": "collaborator shares summing past 100% of the creator portion",
@@ -459,7 +459,7 @@
       },
       "file": "earnings-over-allocated.relics",
       "refusedBy": "validator",
-      "sizeBytes": 14046
+      "sizeBytes": 14067
     },
     {
       "attack": "a shell script riding along in assets/",
@@ -471,7 +471,7 @@
       },
       "file": "executable-payload.relics",
       "refusedBy": "validator",
-      "sizeBytes": 13993
+      "sizeBytes": 14014
     },
     {
       "attack": "a Solidity project with no art configuration at all",
@@ -484,7 +484,7 @@
       "file": "art-config-missing.relics",
       "note": "The bundle that used to launch happily and render the runtime's built-in shapes instead of the creator's art. There is no default configuration to fall back to, by design.",
       "refusedBy": "validator",
-      "sizeBytes": 20060
+      "sizeBytes": 20081
     },
     {
       "attack": "four bytes of opaque look data standing in for an art configuration",
@@ -498,7 +498,7 @@
       "file": "art-config-four-byte-blob.relics",
       "note": "The hash is internally consistent — it really is keccak256 of those four bytes. Still refused: the format check reads the magic, and the binding is recomputed from the creator's own params.json.",
       "refusedBy": "validator",
-      "sizeBytes": 20811
+      "sizeBytes": 20832
     },
     {
       "attack": "a configuration whose magic is not ACV1",
@@ -511,7 +511,7 @@
       },
       "file": "art-config-bad-magic.relics",
       "refusedBy": "validator",
-      "sizeBytes": 20988
+      "sizeBytes": 21009
     },
     {
       "attack": "a configuration claiming a format version nothing implements",
@@ -525,7 +525,7 @@
       "file": "art-config-bad-version.relics",
       "note": "ACV1's version byte is checked for exact equality with 1. A future format is a new parser, never a negotiated field.",
       "refusedBy": "validator",
-      "sizeBytes": 20988
+      "sizeBytes": 21009
     },
     {
       "attack": "a layer driven by FRAGMENTATION, the one sensor a layer may not name",
@@ -538,7 +538,7 @@
       "file": "art-config-out-of-range.relics",
       "note": "Refused while deriving the configuration, so the bundle cannot be assembled at all. FRAGMENTATION stays legal as a TRAIT source, where it is labelled for what it is and cannot masquerade as a magnitude.",
       "refusedBy": "validator",
-      "sizeBytes": 21217
+      "sizeBytes": 21238
     },
     {
       "attack": "a manifest carrying a different artwork than the creator's parameters describe",
@@ -551,7 +551,7 @@
       "file": "art-config-params-mismatch.relics",
       "note": "Every field is self-consistent and the configuration is perfectly valid ACV1. It is refused because the binding is RECOMPUTED from generator/params.json, so a manifest cannot describe art the project does not contain.",
       "refusedBy": "validator",
-      "sizeBytes": 20884
+      "sizeBytes": 20905
     },
     {
       "attack": "a config hash that is not keccak256 of the config beside it",
@@ -565,7 +565,7 @@
       "file": "art-config-hash-lie.relics",
       "note": "On chain this is BadArtHash in LaunchpadFactory._storeArt. Here it costs nothing to discover.",
       "refusedBy": "validator",
-      "sizeBytes": 20988
+      "sizeBytes": 21009
     }
   ],
   "note": "Generated by packages/project-schema/fixtures/build.mjs. Every bundle here MUST be refused. `refusedBy` says which layer is expected to refuse it: container = readContainer throws; parser = safeJsonParse; validator = validateBundle reports errors; sandbox = the isolated execution backend. Fixtures marked requiresExecution only fail when the host supplies an evaluate capability."

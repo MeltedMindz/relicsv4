@@ -26,6 +26,7 @@
 import { LIMITS } from "./limits.js";
 import { normalizeEntryPath, collisionKey } from "./paths.js";
 import { BUNDLE_MAGIC } from "./version.js";
+
 import { utf8, fromUtf8 } from "./sha256.js";
 
 export class ContainerError extends Error {}
@@ -67,7 +68,7 @@ export function crc32(bytes) {
  * @param {BundleEntry[]} entries
  * @returns {Uint8Array}
  */
-export function writeContainer(entries) {
+export function writeContainer(entries, options = {}) {
   if (!Array.isArray(entries) || entries.length === 0) throw new ContainerError("a bundle needs at least one entry");
   if (entries.length > LIMITS.maxEntries) throw new ContainerError(`too many entries (${entries.length} > ${LIMITS.maxEntries})`);
 
@@ -86,7 +87,7 @@ export function writeContainer(entries) {
   const total = normalized.reduce((sum, e) => sum + e.bytes.length, 0);
   if (total > LIMITS.maxTotalEntryBytes) throw new ContainerError(`bundle content is larger than ${LIMITS.maxTotalEntryBytes} bytes`);
 
-  const commentBytes = utf8(BUNDLE_MAGIC);
+  const commentBytes = utf8(options.magic ?? BUNDLE_MAGIC);
   let size = 0;
   for (const e of normalized) size += 30 + e.nameBytes.length + e.bytes.length + 46 + e.nameBytes.length;
   size += 22 + commentBytes.length;

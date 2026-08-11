@@ -81,7 +81,7 @@ export async function main(argv) {
     }
 
     case "export":
-      return exportProject(root, { output: flags.output, seeds: flags.count, inProcess: flags["in-process"] });
+      return exportProject(root, { output: flags.output, seeds: flags.count, inProcess: flags["in-process"], draft: flags.draft });
 
     case "migrate": {
       if (!positional[0]) return fail("migrate needs a .relics file");

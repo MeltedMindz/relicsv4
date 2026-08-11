@@ -34,7 +34,7 @@ export function validateCollectionMetadata(document) {
 
   str(issues, document.name, `${at}#name`, "METADATA_NAME", LIMITS.maxNameLength);
   str(issues, document.description, `${at}#description`, "METADATA_DESCRIPTION", LIMITS.maxDescriptionLength);
-  if (typeof document.symbol !== "string" || !SYMBOL_RE.test(document.symbol) || document.symbol.length > LIMITS.maxSymbolLength) {
+  if (typeof document.symbol !== "string" || !SYMBOL_RE.test(document.symbol)) {
     issues.push(error("METADATA_SYMBOL", `${at}#symbol`, `symbol must be 1-${LIMITS.maxSymbolLength} uppercase letters and digits`));
   }
 

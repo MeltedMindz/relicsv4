@@ -129,8 +129,11 @@ export function keccakJson(document) {
  * @param {string} projectConfigHash
  * @param {string} contentHash
  */
-export function computeBundleCommitment(projectConfigHash, contentHash) {
-  return keccak256Utf8(`${BUNDLE_MAGIC}\n${projectConfigHash}\n${contentHash}`);
+export function computeBundleCommitment(projectConfigHash, contentHash, magic = BUNDLE_MAGIC) {
+  // The marker is already the first line of the preimage, which is what makes draft-ness part of
+  // the commitment rather than a label beside it: a draft and a final bundle with byte-identical
+  // content commit to different values, and no FINAL commitment changes because its marker did not.
+  return keccak256Utf8(`${magic}\n${projectConfigHash}\n${contentHash}`);
 }
 
 /**

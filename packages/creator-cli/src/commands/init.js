@@ -127,10 +127,18 @@ function defaultName(root) {
     .slice(0, 64);
 }
 
+/**
+ * A SYMBOL MAY START WITH A DIGIT, and the scaffold must not mangle one that does.
+ *
+ * This used to prepend "P" to anything not starting with a letter, so a project called "1inch
+ * Tribute" was scaffolded as `P1INCH`. That silently renamed the creator's token to satisfy a
+ * constraint the schema does not have — `SYMBOL_RE` is `^[A-Z0-9]{1,11}$` and always accepted a
+ * leading digit. The only reason a symbol is rejected here is that it contains nothing usable.
+ * @param {string} name
+ */
 function defaultSymbol(name) {
   const letters = name.toUpperCase().replace(/[^A-Z0-9]/g, "");
-  const symbol = (letters || "PROJECT").slice(0, 6);
-  return /^[A-Z]/.test(symbol) ? symbol : `P${symbol}`.slice(0, 6);
+  return (letters || "PROJECT").slice(0, 6);
 }
 
 export { TEMPLATES_DIR };

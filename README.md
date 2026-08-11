@@ -1,37 +1,58 @@
-# relics-v4
+# relics-v4 — the creator kit
 
-**On-chain generative art that owns its own market** — an ERC-721 collection linked to an ERC-20,
-with a Uniswap v4 hook turning swaps, liquidity, volatility and market history into live artistic
-evolution.
+**Build a `.relics` bundle, upload it, sign one transaction.** That is the arc this repository
+exists to teach, end to end:
 
-**The market becomes the art.**
+```
+relics init          scaffold a project
+relics preview       render deterministic previews of your art
+relics validate      run every check the importer will run
+relics test-seeds    sweep a wide seed range for errors and duplicates
+relics export        write a validated .relics bundle
+        ↓
+upload at relics.wtf → review what it derived → sign → broadcast
+```
 
-This repository holds three ways in, plus the production reference.
+### What a `.relics` file is
 
-| | What it is | Start here |
-| --- | --- | --- |
-| 🎨 **The creator kit** | Build your project locally: customize the art, preview it deterministically, configure traits and market mappings, validate, and export one `.relics` bundle you import in the creator app. | **[docs/creator-kit/](docs/creator-kit/)** |
-| 🚀 **Build on the RELICS Launchpad** | A protocol where you supply art and parameters and **one transaction** deploys and wires the whole project — token, collection, hook, pool, liquidity, registry. | **[docs/launchpad/](docs/launchpad/)** |
-| 🔧 **Fork the starter template** | A clean-room, MIT-licensed codebase you customize and deploy **yourself**, with no launchpad, no factory, and no fee split. | **[docs/00 — Make it your own](docs/00-make-it-your-own.md)** |
-| 🏛️ **Flagship reference** | The exact production source of the live RELICS Uniswap v4 hook. | **[flagship/](flagship/)** |
+One deterministic, STORE-only ZIP holding your generator, traits, market mappings, collection
+metadata and previews, plus a generated manifest (`relics.project.json`) and `checksums.json`.
+It carries dual **SHA-256 and keccak-256** commitments over its own contents, so the launchpad
+re-derives every hash from the bytes you uploaded and can prove it is reading exactly what you
+exported. It contains **no executable protocol code** — a bundle can never supply a hook, a token
+or a router.
 
-> ⚠️ **The RELICS Launchpad is NOT deployed.** It is marked `PREPARED_NOT_DEPLOYED` on Ethereum
-> (1), Base (8453), Robinhood Chain (4663) and BNB Smart Chain (56) — there is no factory, locker or registry address on
-> any chain, and no launch can succeed today. All review to date is **internal only**; there has
-> been **no external audit**. See
-> [docs/launchpad/08 — Status and limitations](docs/launchpad/08-status.md).
+You edit **`relics.config.json`**. You never edit `relics.project.json` — that file is *generated*
+at export from your config and your files, and hand-editing it only makes the hashes disagree.
 
-> ⚠️ **The starter template is educational. NOT audited. NOT affiliated with or endorsed by
-> Uniswap, OpenZeppelin, OpenSea, or any auditor.** The template layers contain no private
-> material and are a clean-room teaching rewrite. Get your own security, legal, and economic
-> review before deploying or trading anything. See the [Disclaimer](#26-disclaimer).
+### The one step that is not live yet
 
-> 🏛️ **Flagship reference:** [`flagship/`](flagship/) contains the **exact production source of
-> the live RELICS Uniswap v4 hook** on Ethereum mainnet
-> (`0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440`), published here by the RELICS operator as an
-> explicitly authorized public reference. Every file there is byte-identical to the
-> Etherscan-verified source, and `flagship/test/DeploymentProof.t.sol` proves offline that the
-> tree reproduces the deployed init code. The template and the flagship share no code.
+> ⚠️ **You can build and export a real bundle today. You cannot broadcast one.**
+> The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663)
+> and BNB Smart Chain (56) — no factory, locker or registry exists on any chain. Uploading a valid
+> bundle returns **`LAUNCHPAD_NOT_PUBLIC`**, which is the honest answer rather than a vague
+> failure. Everything before that step is real and works now.
+
+> ⚠️ **No external audit.** All review to date is **internal only**. Nothing here has been audited
+> by a third party — not the launchpad, not the starter template, not the creator kit. Get your own
+> security, legal and economic review before deploying or trading anything.
+
+### Start here
+
+1. **[docs/creator-kit/](docs/creator-kit/)** — the kit itself: install, scaffold, the CLI
+   reference, the bundle format, and what the importer refuses.
+2. **[docs/creator-kit/bundle-format.md](docs/creator-kit/bundle-format.md)** — every field, every
+   hash, and which files are yours versus generated.
+3. **[docs/launchpad/](docs/launchpad/)** — what the transaction you eventually sign actually does:
+   deploys the token and collection, mines and binds the hook, opens the pool, mints genesis
+   liquidity, registers metadata. One atomic call.
+
+### Also in this repository
+
+| | What it is |
+| --- | --- |
+| 🔧 **[Fork the starter template](docs/00-make-it-your-own.md)** | A clean-room, MIT-licensed codebase you deploy **yourself** — no launchpad, no factory, no fee split. Educational; not audited. |
+| 🏛️ **[Flagship reference](flagship/)** | The exact production source of the live RELICS Uniswap v4 hook (`0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440`), byte-identical to the Etherscan-verified source and proven offline by `flagship/test/DeploymentProof.t.sol` to reproduce the deployed init code. Shares no code with the template. |
 
 ---
 

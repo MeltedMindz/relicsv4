@@ -30,7 +30,7 @@ export const SCHEMA_VERSION = "3.1.0";
  * redefines a bundle field, so `SCHEMA_VERSION` stays 3.0.0 and every 3.0.0 bundle remains
  * readable. Bumping the schema because a policy moved would strand a corpus for nothing.
  */
-export const CREATOR_KIT_VERSION = "3.7.0";
+export const CREATOR_KIT_VERSION = "3.8.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
@@ -109,6 +109,29 @@ export const BUNDLE_MAGIC = "relics-project-bundle/1";
 
 /** Canonical file extension. */
 export const BUNDLE_EXTENSION = ".relics";
+
+/**
+ * DRAFT IDENTITY IS INTRINSIC, NOT A FILENAME.
+ *
+ * A creator needs a reviewable artifact before the final treasury details exist. The obvious way
+ * to give them one is a flag that skips a check and writes the same file — and then draft-ness
+ * lives only in the name, so `mv draft.relics-draft final.relics` produces a launchable bundle
+ * that never passed the checks it skipped.
+ *
+ * So a draft differs in three committed ways, none of which a rename touches:
+ *   1. the ARCHIVE MARKER is `relics-project-draft/1`, so `readContainer` refuses it as a bundle;
+ *   2. the MANIFEST carries `status: "DRAFT"`, which is inside both integrity hashes;
+ *   3. the COMMITMENT is computed over the draft marker, so it can never equal a final one.
+ *
+ * The extension is the courtesy, not the mechanism.
+ */
+export const DRAFT_MAGIC = "relics-project-draft/1";
+export const DRAFT_EXTENSION = ".relics-draft";
+export const BUNDLE_STATUSES = Object.freeze(["FINAL", "DRAFT"]);
+/** @param {string} status */
+export function magicForStatus(status) {
+  return status === "DRAFT" ? DRAFT_MAGIC : BUNDLE_MAGIC;
+}
 
 /**
  * True when an importer at `importerSchemaVersion` should accept a bundle written at

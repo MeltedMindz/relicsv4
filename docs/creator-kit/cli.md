@@ -130,6 +130,58 @@ relics migrate <file.relics> [--out directory]
 
 Opens a bundle exported by an older creator kit into a project directory you can finish.
 
+### Previews cannot go stale
+
+`relics export` **writes** `previews/seed-*.svg` into the bundle from the render it just performed
+— it does not copy whatever sits in your `previews/` directory. Editing the generator and
+forgetting to re-render can no longer ship images of the old art.
+
+`relics validate` still tells you when the copies **in your project** are behind, as
+`PREVIEW_STALE` warnings naming the file and the fix (`relics preview`). The bundle is correct
+either way; the warning is so you do not believe the images in your repo are current.
+
+A bundle assembled by hand or by an older kit is checked directly: `PREVIEWS_FRESH` compares each
+`previews/seed-N.svg` against what the generator draws for that seed and fails with
+`PREVIEW_STALE`, `PREVIEW_MISSING`, or warns `PREVIEW_UNEXPECTED` for a preview of a seed nothing
+verifies.
+
+### `relics export --draft`
+
+Writes a **`.relics-draft`** you can circulate for review before the final details — a treasury
+address, a recipient — exist.
+
+A draft is not a renamed bundle. Three things say so, and none of them is the filename:
+
+- the **archive marker** is `relics-project-draft/1`, so the importer refuses it outright;
+- the **manifest** carries `status: "DRAFT"`, which is inside both integrity hashes;
+- the **commitment** is computed over the draft marker, so a draft and a final bundle with
+  identical content commit to different values.
+
+`mv project.relics-draft project.relics` therefore produces a file the launchpad still refuses.
+Re-run `relics export` without `--draft` to produce the real thing.
+
+### Choosing a quote asset
+
+Your project is priced and traded in a **quote asset**, and you request it in
+`relics.config.json` under `market.quoteAsset`:
+
+```json
+"market": {
+  "quoteAsset": { "mode": "DEFAULT" }
+}
+```
+
+- `{"mode": "DEFAULT"}` — the importing chain's default. The portable choice; every chain has one.
+- `{"mode": "ADDRESS", "address": "0x…", "expectedKind": "STABLE"}` — a specific asset. The
+  address is **a request, not a claim**: the importer re-resolves it against the live registry, and
+  `expectedKind` is a cross-check that can only ever cause a refusal, never an approval.
+
+**Requested is not approved.** A bundle naming an asset the registry does not currently enable
+imports as a draft with launch readiness BLOCKED, and you pick another. A bundle can never widen
+the set of assets the platform accepts. Multi-quote is a Robinhood Chain capability; Ethereum,
+Base and BNB each admit exactly one asset — that chain's wrapped native (WETH, WETH and **WBNB**
+respectively).
+
 A pre-3.0.0 Solidity bundle **cannot** be converted automatically, and this command does not
 pretend otherwise. ACV1 needs a market sensor and a response curve for every layer, a literal RGB
 palette and a background index; a 2.x bundle records none of them. Its palette is an index into a

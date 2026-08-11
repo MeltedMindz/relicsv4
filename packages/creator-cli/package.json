@@ -1,6 +1,6 @@
 {
   "name": "@relics/creator-cli",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "description": "Local creator kit for RELICS Launchpad projects: scaffold, preview deterministically, validate, and export one canonical .relics bundle.",
   "license": "MIT",
   "type": "module",

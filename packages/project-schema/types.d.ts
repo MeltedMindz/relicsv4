@@ -327,6 +327,11 @@ export const RUNTIME_VERSION: string;
 export const PROTOCOL_RELEASE_COMPATIBILITY: string;
 export const BUNDLE_MAGIC: string;
 export const BUNDLE_EXTENSION: string;
+/** Draft identity is intrinsic: distinct archive marker, committed `status`, distinct commitment. */
+export const DRAFT_MAGIC: string;
+export const DRAFT_EXTENSION: string;
+export const BUNDLE_STATUSES: readonly ("FINAL" | "DRAFT")[];
+export function magicForStatus(status: string): string;
 export const SCHEMA_MAJOR_RATIONALE: string;
 export function isSchemaCompatible(bundleSchemaVersion: string, importerSchemaVersion?: string): boolean;
 /** A refusal message that names the reason and the fix, for a bundle this importer cannot read. */

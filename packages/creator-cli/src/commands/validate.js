@@ -3,7 +3,7 @@
 // without writing anything.
 
 import { readFileSync } from "node:fs";
-import { assembleBundle, validateBundle, validateBundleBytes, readContainer, sha256Utf8, BINDING_SEEDS } from "../schema.js";
+import { assembleBundle, validateBundle, validateBundleBytes, readContainer, sha256Utf8, fromUtf8, BINDING_SEEDS } from "../schema.js";
 import { readConfig, readProjectFiles, generatorSources } from "../project.js";
 import { renderSeedsIsolated, makeReplayEvaluator, makeVmEvaluator } from "../sandbox.js";
 import { printChecks, printIssues, printHashes, printBinding, heading, green, red, yellow, dim, plural } from "../report.js";
@@ -35,20 +35,21 @@ function seedsToRender(seedCount) {
  * which the binding influences, so the two passes cannot chase each other.
  *
  * @param {string} root
- * @param {{ seeds?: number, inProcess?: boolean }} [options]
+ * @param {{ seeds?: number, inProcess?: boolean, status?: string }} [options]
  */
 export function validateProject(root, options = {}) {
   const config = readConfig(root);
   const files = readProjectFiles(root);
 
-  const probe = assembleBundle({ files, config });
+  const status = options.status ?? "FINAL";
+  const probe = assembleBundle({ files, config, status });
   const seedCount = options.seeds ?? 24;
 
   if (options.inProcess) {
     // The in-process path has no separate recording step, so it renders during validation. It
     // still needs the binding digests up front, which it gets from one throwaway evaluation.
     const outputs = recordBindingOutputsInProcess(probe.entries, probe.manifest);
-    const assembled = assembleBundle({ files, config, representativeOutputs: outputs });
+    const assembled = assembleBundle({ files, config, representativeOutputs: outputs, status });
     return { ...validateBundle(assembled.entries, { evaluate: makeVmEvaluator(), seeds: seedCount }), assembled };
   }
 
@@ -61,8 +62,17 @@ export function validateProject(root, options = {}) {
   });
 
   const representativeOutputs = recorded.ok ? bindingOutputsFrom(recorded) : null;
-  const assembled = assembleBundle({ files, config, representativeOutputs });
+  // The previews the bundle ships are WRITTEN from this render, never copied from `previews/`.
+  // A creator who edits the generator and forgets to re-render cannot ship images of the old art.
+  const canonicalPreviews = recorded.ok ? canonicalPreviewsFrom(recorded) : null;
+  const assembled = assembleBundle({ files, config, representativeOutputs, canonicalPreviews, status });
   const result = finishValidation(assembled.entries, recorded, seedCount);
+
+  // AND SAY SO. Because assembly now writes previews from the render, the assembled bundle is
+  // always fresh — which would make the bundle-level check silently "fix" a stale `previews/`
+  // directory and tell the creator nothing. The working tree is compared separately: export
+  // produces correct bytes, and validate still reports that the files on disk are behind.
+  reportStalePreviewsOnDisk(files, canonicalPreviews, result);
   return { ...result, assembled };
 }
 
@@ -82,6 +92,60 @@ function bindingOutputsFrom(recorded) {
     outputs[seed] = sha256Utf8(value);
   }
   return outputs;
+}
+
+/**
+ * The SVG text for each binding seed, as the generator draws it right now. Returns null on any
+ * failure for the same reason `bindingOutputsFrom` does: a partial preview set is a misleading one,
+ * and the validator refuses it rather than the builder quietly shipping half.
+ * @param {ReturnType<typeof renderSeedsIsolated>} recorded
+ */
+function canonicalPreviewsFrom(recorded) {
+  /** @type {Record<string, string>} */
+  const previews = {};
+  for (const seed of BINDING_SEEDS) {
+    const value = recorded.results?.[seed]?.outputs?.[0];
+    if (typeof value !== "string") return null;
+    previews[seed] = value;
+  }
+  return previews;
+}
+
+/**
+ * Compares `previews/` in the PROJECT DIRECTORY against what the generator currently draws, and
+ * adds a real issue for each file that is behind. Warnings, not errors: the exported bundle is
+ * correct either way, so this must not block an export — it must stop the creator believing the
+ * images in their repo are current.
+ * @param {Map<string, Uint8Array>} files
+ * @param {Record<string, string> | null} canonicalPreviews
+ * @param {any} result
+ */
+function reportStalePreviewsOnDisk(files, canonicalPreviews, result) {
+  if (!canonicalPreviews) return;
+  const add = (code, where, message) => {
+    const issue = { severity: "warning", code, where, message };
+    result.issues.push(issue);
+    result.summary.warnings.push(issue);
+    result.summary.warningCount += 1;
+  };
+
+  let behind = 0;
+  for (const [seed, svg] of Object.entries(canonicalPreviews)) {
+    const path = `previews/seed-${seed}.svg`;
+    const onDisk = files.get(path);
+    if (!onDisk) {
+      add("PREVIEW_MISSING", path, `${path} does not exist in your project. \`relics export\` writes it into the bundle from the render; run \`relics preview\` to have it on disk too.`);
+      continue;
+    }
+    if (fromUtf8(onDisk) !== svg) {
+      behind += 1;
+      add("PREVIEW_STALE", path, `${path} shows older art than your generator now draws. The bundle export writes the current render, so the exported file is correct — but the copy in your project is behind. Run \`relics preview\` to refresh it.`);
+    }
+  }
+  if (behind > 0) {
+    const check = result.checks?.find((c) => c.id === "PREVIEWS_FRESH");
+    if (check && check.status === "pass") check.detail = `bundle previews were written from the render; ${behind} file(s) in previews/ are behind — run \`relics preview\``;
+  }
 }
 
 /** @param {Map<string, Uint8Array>} entries @param {any} manifest */

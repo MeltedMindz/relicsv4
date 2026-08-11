@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import {
   writeContainer,
   readContainer,
+  ContainerError,
   canonicalJson,
   safeJsonParse,
   sha256Utf8,
@@ -104,6 +105,12 @@ import {
   CONDITIONALLY_TRUE_MARKER,
   ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES,
   isOffchainDerivedStatus,
+  DRAFT_MAGIC,
+  DRAFT_EXTENSION,
+  BUNDLE_STATUSES,
+  magicForStatus,
+  BUNDLE_MAGIC,
+  SYMBOL_RE,
   CHAIN_PROFILES,
   CHAIN_LABELS,
   SUPPORTED_CHAIN_IDS,
@@ -1343,6 +1350,59 @@ test("a chain-56 bundle is refused by a 3.0.0 importer, and accepted here", () =
   assert(isSchemaCompatible("3.1.0", "3.1.0"), "the current schema rejects its own bundles");
   assert(!isSchemaCompatible("3.1.0", "3.0.0"), "a 3.0.0 importer accepted a 3.1.0 bundle it cannot launch");
   assert(isSchemaCompatible("3.0.0", "3.1.0"), "a 3.0.0 bundle stopped importing after an additive change");
+});
+
+// ---------------------------------------------------------------- creator-kit hardening
+
+test("a symbol may start with a digit, and the rule lives in one place", () => {
+  // 1INCH, 0X and 9LIVES are real tokens. A leading-letter requirement is a ROUTING constraint;
+  // applying it to an economic identifier silently renames someone's project.
+  for (const ok of ["1INCH", "0X", "9LIVES", "RELICS", "A", "ABCDEFGHIJK"]) {
+    assert(SYMBOL_RE.test(ok), `${ok} was rejected but is a legal symbol`);
+  }
+  for (const bad of ["", "lower", "A-B", "A B", "ABCDEFGHIJKL", "ÅB"]) {
+    assert(!SYMBOL_RE.test(bad), `${bad} was accepted but is not a legal symbol`);
+  }
+  // Length is INSIDE the pattern, not a separate check each call site must remember.
+  assert(SYMBOL_RE.source.includes("{1,11}"), "the length bound left the canonical pattern");
+});
+
+test("draft identity is intrinsic — a rename cannot launder one", () => {
+  assert(BUNDLE_STATUSES.join(",") === "FINAL,DRAFT", "the status vocabulary drifted");
+  assert(DRAFT_MAGIC !== BUNDLE_MAGIC, "a draft carries the same archive marker as a bundle");
+  assert(DRAFT_EXTENSION !== ".relics", "a draft carries the launchable extension");
+  assert(magicForStatus("DRAFT") === DRAFT_MAGIC && magicForStatus("FINAL") === BUNDLE_MAGIC, "status does not select the marker");
+
+  // The commitment differs for byte-identical content, because the marker is in the preimage.
+  const a = computeBundleCommitment("cfg", "content", BUNDLE_MAGIC);
+  const b = computeBundleCommitment("cfg", "content", DRAFT_MAGIC);
+  assert(a !== b, "a draft and a final bundle commit to the same value");
+
+  // And FINAL commitments are unchanged by the feature existing.
+  assert(computeBundleCommitment("cfg", "content") === a, "the default commitment changed for final bundles");
+});
+
+test("a draft archive is refused as a bundle no matter what it is called", () => {
+  const bytes = writeContainer([{ path: "relics.project.json", bytes: utf8("{}") }], { magic: DRAFT_MAGIC });
+  let refused = false;
+  try {
+    readContainer(bytes);
+  } catch (err) {
+    refused = err instanceof ContainerError;
+  }
+  assert(refused, "a draft archive was accepted as a launchable bundle");
+  // It is still readable when a caller deliberately asks for it — review needs to open drafts.
+  const opened = readContainer(bytes, { requireMagic: false });
+  assert(opened.byPath.has("relics.project.json"), "a draft cannot be opened for review");
+});
+
+test("a fresh JavaScript scaffold has templateId null, and that is correct", () => {
+  // RETRACTED FINDING, PINNED. This was reported as a bug and is not one: a scaffold that has not
+  // been bound to a published template has no template id, and inventing one would be a claim
+  // about provenance nobody made. The test exists so it is not "fixed" later.
+  const parity = JSON.parse(readFileSync(join(FIXTURES, "parity/expected.json"), "utf8"));
+  const js = parity.bundles.find((b) => b.manifest?.art?.runtime === "JAVASCRIPT");
+  if (js) assert(js.manifest.art.templateId === null, "a JavaScript scaffold gained a fabricated templateId");
 });
 
 // ---------------------------------------------------------------- summary

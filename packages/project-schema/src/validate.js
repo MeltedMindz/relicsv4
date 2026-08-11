@@ -20,7 +20,7 @@ import { scanTextForSecrets, isTextPath } from "./secrets.js";
 import { inspectRenderOutput, outputFingerprint } from "./svg.js";
 import { error, warn, sortIssues, summarize } from "./issues.js";
 import { fromUtf8 } from "./sha256.js";
-import { SCHEMA_VERSION } from "./version.js";
+import { SCHEMA_VERSION, magicForStatus } from "./version.js";
 import { makeRandom } from "./prng.js";
 import { computeArtBinding, computeBundleCommitment, diffArtBinding, representativeOutputsCommitment, deriveArtConfig, BINDING_SEEDS } from "./binding.js";
 import { PREVIEW_ONLY_ART_RUNTIMES } from "./vocabulary.js";
@@ -49,6 +49,7 @@ export const CHECKS = Object.freeze([
   { id: "BLANK_OUTPUTS", title: "no blank or unsafe outputs" },
   { id: "DETERMINISTIC_OUTPUT", title: "deterministic output" },
   { id: "DUPLICATE_RATE", title: "trait duplicate rate" },
+  { id: "PREVIEWS_FRESH", title: "previews match the generator" },
 ]);
 
 /**
@@ -334,6 +335,7 @@ export function validateBundle(byPath, options = {}) {
   // Runs AFTER execution because half the binding is a claim about what the generator draws, and
   // the only way to check that claim is to have drawn it.
   const binding = checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark });
+  checkPreviewsFresh({ byPath, execution, collect, mark });
 
   const summary = summarize(issues);
   return {
@@ -351,7 +353,7 @@ export function validateBundle(byPath, options = {}) {
           bundleHash: computed.bundleHash,
           projectConfigHash: computed.projectConfigHash,
           contentHash: computed.contentHash,
-          bundleCommitment: computeBundleCommitment(computed.projectConfigHash, computed.contentHash),
+          bundleCommitment: computeBundleCommitment(computed.projectConfigHash, computed.contentHash, magicForStatus(documents.manifest?.status ?? "FINAL")),
           files: computed.files,
         }
       : null,
@@ -369,6 +371,67 @@ export function validateBundle(byPath, options = {}) {
  * and it stops matching the files it claims to describe. There is nothing here an importer has to
  * take on trust, which is exactly why an importer can build launch parameters straight from it.
  */
+/**
+ * PREVIEWS ARE A CLAIM ABOUT THE ART, AND CLAIMS GET CHECKED.
+ *
+ * `previews/seed-N.svg` is what a reviewer, an importer and a marketplace look at. If the creator
+ * edits the generator and re-exports without re-rendering, those files still show the previous
+ * artwork and NOTHING fails — the bundle is internally consistent, because previews were never
+ * part of any commitment. That is a release-integrity defect, not a cosmetic one: the pictures
+ * shipped with the bundle are not the pictures the generator draws.
+ *
+ * The comparison is exact and free. Execution already renders every binding seed and records
+ * `sha256(rendered)`; a fresh preview is one whose file digest equals that. Anything else is
+ * stale, missing, or a leftover from a seed set that no longer exists.
+ *
+ * `relics export` now WRITES these files from the render rather than copying them, so this check
+ * exists to catch the two paths that bypass that: a hand-assembled bundle, and one exported by an
+ * older kit.
+ */
+function checkPreviewsFresh({ byPath, execution, collect, mark }) {
+  if (!execution?.ran) {
+    mark("PREVIEWS_FRESH", "skipped", execution?.reason || "the generator was not executed, so there is nothing to compare previews against");
+    return;
+  }
+  if (!execution.bindingOutputs) {
+    mark("PREVIEWS_FRESH", "skipped", "the generator did not produce output for every binding seed");
+    return;
+  }
+
+  const expected = execution.bindingOutputs;
+  const present = [...byPath.keys()].filter((p) => /^previews\/seed-[^/]+\.svg$/.test(p));
+  if (present.length === 0) {
+    mark("PREVIEWS_FRESH", "skipped", "this bundle carries no previews; they are optional");
+    return;
+  }
+
+  let stale = 0;
+  let missing = 0;
+  for (const seed of Object.keys(expected)) {
+    const path = `previews/seed-${seed}.svg`;
+    const bytes = byPath.get(path);
+    if (!bytes) {
+      missing += 1;
+      collect("error", "PREVIEW_MISSING", path, `${path} is absent while other previews are present — a partial preview set misrepresents the collection. Run \`relics preview\` to regenerate them, or \`relics export\`, which now writes them from the render.`);
+      continue;
+    }
+    if (sha256Utf8(fromUtf8(bytes)) !== expected[seed]) {
+      stale += 1;
+      collect("error", "PREVIEW_STALE", path, `${path} does not match what the generator currently draws for seed ${seed} — it is a preview of older art. Run \`relics preview\` to regenerate it, or \`relics export\`, which now writes previews from the render.`);
+    }
+  }
+
+  for (const path of present) {
+    const seed = /^previews\/seed-(.+)\.svg$/.exec(path)?.[1];
+    if (seed && !(seed in expected)) {
+      collect("warning", "PREVIEW_UNEXPECTED", path, `${path} is not one of the binding seeds, so nothing verifies it. Remove it or regenerate with \`relics preview\`.`);
+    }
+  }
+
+  if (stale === 0 && missing === 0) mark("PREVIEWS_FRESH", "pass", `${Object.keys(expected).length} previews match the generator`);
+  else mark("PREVIEWS_FRESH", "fail", `${stale} stale, ${missing} missing`);
+}
+
 function checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark }) {
   if (!manifest || !manifest.artBinding || typeof manifest.artBinding !== "object") {
     mark("ART_BINDING", "fail", "the bundle declares no art binding");
@@ -431,7 +494,10 @@ function checkArtBinding({ manifest, byPath, documents, computed, execution, col
 
   // The chain-shaped bundle identity, recomputed the same way.
   if (computed && manifest.integrity?.bundleCommitment) {
-    const expected = computeBundleCommitment(computed.projectConfigHash, computed.contentHash);
+    // The marker comes from the manifest's own committed `status`, so a draft verifies as a draft
+    // and a final bundle as a final one. Editing `status` to launder a draft changes contentHash,
+    // which changes the commitment, which fails right here.
+    const expected = computeBundleCommitment(computed.projectConfigHash, computed.contentHash, magicForStatus(manifest.status ?? "FINAL"));
     if (manifest.integrity.bundleCommitment !== expected) {
       collect("ART_BINDING", [error("BUNDLE_COMMITMENT_MISMATCH", "relics.project.json#integrity.bundleCommitment", `declared ${manifest.integrity.bundleCommitment}, recomputed ${expected}`)]);
     }

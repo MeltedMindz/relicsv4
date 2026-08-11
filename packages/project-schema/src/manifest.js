@@ -38,6 +38,7 @@ import { isKeccak256Hex } from "./keccak256.js";
 /** Top-level manifest keys. Anything else is refused. */
 export const MANIFEST_KEYS = Object.freeze([
   "schemaVersion",
+  "status",
   "creatorKitVersion",
   "runtimeVersion",
   "protocolReleaseCompatibility",
@@ -100,7 +101,17 @@ export const REFUSED_MANIFEST_KEYS = Object.freeze({
 
 const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const SYMBOL_RE = /^[A-Z0-9]+$/;
+/**
+ * THE ONE SYMBOL VALIDATOR. Length is part of the pattern, not a separate `&&` that each call site
+ * has to remember — `metadata.js` already imports this, and a second rule living beside it is how
+ * the two drift.
+ *
+ * A symbol MAY START WITH A DIGIT. `1INCH`, `0X` and `9LIVES` are real tokens, and a leading-letter
+ * requirement is a routing constraint borrowed from somewhere it belonged, applied to an economic
+ * identifier where it does not. If a downstream surface needs a slug it can safely put in a path
+ * or a subdomain, that is a DIFFERENT field with its own rule — never this one narrowed to suit it.
+ */
+export const SYMBOL_RE = /^[A-Z0-9]{1,11}$/;
 const DECIMAL_RE = /^(0|[1-9][0-9]*)$/;
 
 /**
@@ -155,7 +166,7 @@ export function validateManifest(manifest) {
   } else {
     onlyKeys(issues, project, `${at}#project`, ["name", "symbol", "description", "license", "website", "twitterHandle"]);
     requireString(issues, project.name, `${at}#project.name`, "PROJECT_NAME", LIMITS.maxNameLength, 1);
-    if (typeof project.symbol !== "string" || !SYMBOL_RE.test(project.symbol) || project.symbol.length > LIMITS.maxSymbolLength) {
+    if (typeof project.symbol !== "string" || !SYMBOL_RE.test(project.symbol)) {
       issues.push(error("PROJECT_SYMBOL", `${at}#project.symbol`, `symbol must be 1-${LIMITS.maxSymbolLength} uppercase letters and digits`));
     }
     requireString(issues, project.description, `${at}#project.description`, "PROJECT_DESCRIPTION", LIMITS.maxDescriptionLength, 1);

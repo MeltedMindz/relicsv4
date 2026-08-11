@@ -13,6 +13,17 @@ Import `my-project.relics` in the RELICS Launchpad creator app. It derives the s
 config hash and component hashes the CLI printed, and the draft arrives filled in — art, traits,
 market mappings, metadata, earnings, supply, chains. Nothing is re-entered by hand.
 
+## Which file do I edit?
+
+| File | Yours or generated | What it is |
+| --- | --- | --- |
+| `relics.config.json` | **yours — edit this** | The project's source of truth: name, symbol, supply, art runtime, earnings, chains, quote asset. |
+| `generator/generate.js` | **yours** | The art. Deterministic, sandboxed, no I/O. |
+| `traits/schema.json`, `market/mappings.json`, `metadata/collection.json` | **yours** | Trait dimensions, market-to-art mappings, collection metadata. |
+| `previews/seed-*.svg` | **generated** by `relics preview`; **rewritten** at export from the live render | Deterministic previews. Never hand-edit — export writes these from the generator, so a hand-edit is discarded. |
+| `relics.project.json` | **generated at export** | The bundle manifest, derived from your config and files. Editing it changes nothing except making the hashes disagree. It does not exist in your project directory; it exists inside the `.relics` file. |
+| `checksums.json` | **generated at export** | Per-file digests plus the bundle hash and commitment. |
+
 The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663) and
 BNB Smart Chain (56),
 and its review to date is internal only. Nothing in this kit signs or broadcasts anything.
