@@ -996,6 +996,29 @@ test("the retired register catches the WETH-only platform claims", () => {
   assert(!wethOnly.test("the locker at this integration HEAD is WETH-denominated"), "the pattern forbids an honest deployment fact");
 });
 
+test("the register catches references to selectors removed from the bytecode", () => {
+  const removed = RETIRED_ALLOCATION_CLAIMS.find((c) => c.id === "REMOVED_KERNEL_SELECTORS");
+  assert(removed, "the removed-selector claim is not registered");
+  const re = new RegExp(removed.pattern, "gi");
+  for (const s of [
+    '"name": "subdividePlatformWeth"',
+    '"name": "TREASURY_SOURCE_ASSET_CLAIM"',
+    "kernel.subdividePlatformWeth(poolId)",
+    'functionName: "TREASURY_SOURCE_ASSET_CLAIM"',
+  ]) {
+    re.lastIndex = 0;
+    assert(re.test(s), `the removed-selector pattern misses a real reference: ${s}`);
+  }
+  // Describing the removal is not depending on it, and must stay sayable.
+  for (const s of [
+    "subdividePlatformWeth was removed from the bytecode",
+    "TREASURY_SOURCE_ASSET_CLAIM no longer exists",
+  ]) {
+    re.lastIndex = 0;
+    assert(!re.test(s), `the pattern forbids describing the removal: ${s}`);
+  }
+});
+
 test("splitting the entitlement conserves every unit and floors toward the treasury", () => {
   for (const units of [0n, 1n, 2n, 3n, 999n, 1000n, 10n ** 18n, 123456789987654321n]) {
     const { buybackReserve, treasuryRetained } = allocatePlatformEntitlement(units);

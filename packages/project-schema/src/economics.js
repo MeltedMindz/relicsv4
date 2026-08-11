@@ -283,6 +283,24 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
       "|treasury\\s+never\\s+acquires\\s+a\\s+claim\\s+on\\s+a\\s+non-WETH",
     description: "the retired claim that the platform has no direct claim in a non-WETH quote (the treasury half is now claimable in it)",
   }),
+  // ---- selectors REMOVED FROM THE BYTECODE, not merely deprecated (2026-08-10) ---------------
+  //
+  // `subdividePlatformWeth` and `TREASURY_SOURCE_ASSET_CLAIM` are gone from the rebuilt economic
+  // kernel. A surviving reference is worse than a stale comment: an ABI entry or a call site
+  // implies a step that no longer exists, and a consumer that reaches for it calls into nothing.
+  //
+  // The pattern deliberately matches CALL AND ABI SHAPES ONLY — `"name": "..."`, `.selector(`,
+  // `functionName: "..."` — so a document that says "subdividePlatformWeth was removed" is still
+  // free to say it. Describing a removal is the opposite of depending on it.
+  Object.freeze({
+    id: "REMOVED_KERNEL_SELECTORS",
+    counter: "ACTIVE_STALE_REMOVED_KERNEL_SELECTOR_CLAIMS",
+    pattern:
+      "[\"']name[\"']\\s*:\\s*[\"'](?:subdividePlatformWeth|TREASURY_SOURCE_ASSET_CLAIM)[\"']" +
+      "|\\.(?:subdividePlatformWeth|TREASURY_SOURCE_ASSET_CLAIM)\\s*\\(" +
+      "|functionName\\s*:\\s*[\"'](?:subdividePlatformWeth|TREASURY_SOURCE_ASSET_CLAIM)[\"']",
+    description: "a reference to a kernel selector that no longer exists in the bytecode (subdividePlatformWeth / TREASURY_SOURCE_ASSET_CLAIM)",
+  }),
 ]);
 
 /**
