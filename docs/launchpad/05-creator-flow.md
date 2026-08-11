@@ -10,7 +10,7 @@ project exists on chain.
 
 ## Step 0 — Pick a chain
 
-Three cards: Ethereum (1), Base (8453), Robinhood Chain (4663). None is pre-selected, and the
+Four cards: Ethereum (1), Base (8453), Robinhood Chain (4663), BNB Smart Chain (56). None is pre-selected, and the
 studio does not open until you choose one.
 
 Each card shows the chain id, the gas currency, the WETH address, a live estimated launch cost from

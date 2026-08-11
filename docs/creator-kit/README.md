@@ -13,7 +13,8 @@ Import `my-project.relics` in the RELICS Launchpad creator app. It derives the s
 config hash and component hashes the CLI printed, and the draft arrives filled in — art, traits,
 market mappings, metadata, earnings, supply, chains. Nothing is re-entered by hand.
 
-The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453) and Robinhood Chain (4663),
+The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663) and
+BNB Smart Chain (56),
 and its review to date is internal only. Nothing in this kit signs or broadcasts anything.
 
 ---

@@ -5,14 +5,71 @@
 // which a sensor, a transform or a destination can be expressed as something the launchpad would
 // have to execute or compile.
 
-/** Chains the launchpad targets. PREPARED_NOT_DEPLOYED on all three; no factory exists anywhere. */
-export const SUPPORTED_CHAIN_IDS = Object.freeze([1, 8453, 4663]);
+/** Chains the launchpad targets. PREPARED_NOT_DEPLOYED on all four; no factory exists anywhere. */
+export const SUPPORTED_CHAIN_IDS = Object.freeze([1, 8453, 4663, 56]);
 
 export const CHAIN_LABELS = Object.freeze({
   1: "Ethereum",
   8453: "Base",
   4663: "Robinhood Chain",
+  56: "BNB Smart Chain",
 });
+
+/**
+ * THE SETTLEMENT TOKEN IS NOT ALWAYS CALLED WETH, and nothing here may guess that it is.
+ *
+ * Three of the four chains wrap Ether, so `?? "WETH"` was a default that happened to be right
+ * everywhere it was ever evaluated. On BNB Smart Chain it is wrong: the native asset is BNB and
+ * the wrapped form is WBNB. A default that is right until it is silently wrong is worse than no
+ * default, so there is none — `wrappedNativeSymbolFor` REFUSES an unknown chain rather than
+ * returning a plausible string, and every public surface takes the symbol from here.
+ *
+ * `buybackRouteState` is stated per chain rather than inferred from the symbol:
+ *
+ *   IDENTITY_WETH   the chain's settlement asset already IS the buyback's terminal asset, so
+ *                   there is nothing to convert.
+ *   ROUTE_UNPROVEN  no route from this chain's settlement asset to the terminal asset has been
+ *                   proven BY THIS REPO. Weaker than "none exists", and the only claim we own.
+ *
+ * BNB is ROUTE_UNPROVEN, NOT IDENTITY_WETH. WBNB is not WETH, so the buy-and-entomb half stays
+ * WBNB-denominated until an approved route exists — the ordinary
+ * `BUYBACK_ALLOCATED_AWAITING_ROUTE` state. Claiming IDENTITY_WETH for BNB would assert a
+ * conversion that does not exist. It does not touch creator fees, and it must never gate
+ * admission (see QUOTE_ADMISSION_REQUIRES_PROVEN_WETH_ROUTE in economics.js).
+ */
+export const CHAIN_PROFILES = Object.freeze({
+  1: Object.freeze({ label: "Ethereum", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH" }),
+  8453: Object.freeze({ label: "Base", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH" }),
+  4663: Object.freeze({ label: "Robinhood Chain", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH" }),
+  // RC3: WBNB is the ONLY admitted quote on BNB. No BSC USDT, no BSC USDC, regardless of their
+  // liquidity — owner directive. The multi-quote capability is Robinhood's alone this release, and
+  // a one-asset list here is what makes "widen it later" a deliberate edit rather than a default.
+  56: Object.freeze({ label: "BNB Smart Chain", nativeSymbol: "BNB", wrappedNativeSymbol: "WBNB", canonicalQuoteSymbols: Object.freeze(["WBNB"]), buybackRouteState: "ROUTE_UNPROVEN" }),
+});
+
+/** @param {number} chainId */
+export function chainProfile(chainId) {
+  return CHAIN_PROFILES[chainId] ?? null;
+}
+
+/**
+ * The chain's wrapped-native symbol. THROWS on an unknown chain rather than returning a default:
+ * a caller that cannot name the chain cannot name its settlement asset either, and printing
+ * "WETH" at that point is how a BNB market ends up labelled in the wrong token.
+ * @param {number} chainId
+ */
+export function wrappedNativeSymbolFor(chainId) {
+  const profile = CHAIN_PROFILES[chainId];
+  if (!profile) throw new Error(`wrappedNativeSymbolFor(${chainId}): unknown chain — there is no default settlement symbol to fall back to`);
+  return profile.wrappedNativeSymbol;
+}
+
+/** The chain's native (unwrapped) symbol. Same refusal for the same reason. @param {number} chainId */
+export function nativeSymbolFor(chainId) {
+  const profile = CHAIN_PROFILES[chainId];
+  if (!profile) throw new Error(`nativeSymbolFor(${chainId}): unknown chain — there is no default native symbol to fall back to`);
+  return profile.nativeSymbol;
+}
 
 /** Art runtimes. Mirrors the launchpad `ArtMode` enum: 0 = SOLIDITY_SVG, 1 = JAVASCRIPT. */
 export const ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"]);
@@ -127,7 +184,20 @@ export const QUOTE_ASSET_REQUEST_MODES = Object.freeze(["DEFAULT", "ADDRESS"]);
  * bundle was built against a different world and the mismatch is surfaced rather than ignored.
  * The registry's answer always wins — this field can only ever cause a REFUSAL, never an approval.
  */
-export const QUOTE_ASSET_KINDS = Object.freeze(["NATIVE_WETH", "STABLE", "STOCK_TOKEN", "ECOSYSTEM_TOKEN"]);
+export const QUOTE_ASSET_KINDS = Object.freeze(["NATIVE_WRAPPED", "NATIVE_WETH", "STABLE", "STOCK_TOKEN", "ECOSYSTEM_TOKEN"]);
+
+/**
+ * `NATIVE_WRAPPED` is the canonical name for "this chain's wrapped native asset" — WETH on
+ * Ethereum, Base and Robinhood; WBNB on BNB. `NATIVE_WETH` is the DEPRECATED ALIAS it replaces,
+ * still accepted so no existing bundle is invalidated, and mapping to the same kind rather than a
+ * second one. The old name asserted a token symbol in a field that means a ROLE.
+ */
+export const DEPRECATED_QUOTE_ASSET_KIND_ALIASES = Object.freeze({ NATIVE_WETH: "NATIVE_WRAPPED" });
+
+/** Canonicalises a bundle's declared kind. @param {string} kind */
+export function canonicalQuoteAssetKind(kind) {
+  return DEPRECATED_QUOTE_ASSET_KIND_ALIASES[kind] ?? kind;
+}
 
 /**
  * Which asset(s) the creator's share of collected LP fees is denominated in.

@@ -104,6 +104,15 @@ import {
   CONDITIONALLY_TRUE_MARKER,
   ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES,
   isOffchainDerivedStatus,
+  CHAIN_PROFILES,
+  CHAIN_LABELS,
+  SUPPORTED_CHAIN_IDS,
+  chainProfile,
+  wrappedNativeSymbolFor,
+  nativeSymbolFor,
+  QUOTE_ASSET_KINDS,
+  DEPRECATED_QUOTE_ASSET_KIND_ALIASES,
+  canonicalQuoteAssetKind,
 } from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
@@ -1213,6 +1222,127 @@ test("splitting the entitlement conserves every unit and floors toward the treas
     threw = true;
   }
   assert(threw, "a JS number was accepted for economic math");
+});
+
+// ---------------------------------------------------------------- chain vocabulary
+
+/**
+ * THE ASSERTIONS, FACTORED OUT SO THEY CAN BE RUN AGAINST A LIE.
+ *
+ * A vocabulary test that only ever sees correct data proves nothing: it passes on the day it is
+ * written and would pass just as happily if someone replaced WBNB with WETH. Everything below is a
+ * function of the profile table, and the mutation test underneath feeds it deliberately wrong
+ * tables and requires each one to be REJECTED. A test that has never been shown to fail is not
+ * evidence.
+ *
+ * @param {Record<number, any>} profiles
+ * @param {readonly number[]} chainIds
+ */
+function assertChainVocabulary(profiles, chainIds) {
+  const must = (cond, why) => {
+    if (!cond) throw new Error(why);
+  };
+
+  for (const id of [1, 8453, 4663, 56]) must(chainIds.includes(id), `chain ${id} is not in the supported set`);
+
+  const bnb = profiles[56];
+  must(bnb, "chain 56 has no profile");
+  must(bnb.nativeSymbol === "BNB", `BNB's native symbol is ${bnb.nativeSymbol}, not BNB`);
+  must(bnb.wrappedNativeSymbol === "WBNB", `BNB's wrapped native is ${bnb.wrappedNativeSymbol}, not WBNB`);
+
+  // WBNB is the ONLY admitted quote on BNB this release. A second entry is a BEP-20 the owner did
+  // not admit, whatever its liquidity.
+  must(bnb.canonicalQuoteSymbols.length === 1, `BNB admits ${bnb.canonicalQuoteSymbols.length} quotes; RC3 admits exactly one`);
+  must(bnb.canonicalQuoteSymbols[0] === "WBNB", `BNB's only admitted quote is ${bnb.canonicalQuoteSymbols[0]}, not WBNB`);
+
+  // The fabrication this exists to prevent: WBNB is not WETH, so there is nothing to identity-convert.
+  must(bnb.buybackRouteState === "ROUTE_UNPROVEN", `BNB claims buyback route ${bnb.buybackRouteState}; no route is proven`);
+
+  // The three Ether chains keep their own truth — the point is per-chain data, not a new default.
+  for (const id of [1, 8453, 4663]) {
+    must(profiles[id].nativeSymbol === "ETH", `chain ${id} native symbol drifted`);
+    must(profiles[id].wrappedNativeSymbol === "WETH", `chain ${id} wrapped native drifted`);
+    must(profiles[id].buybackRouteState === "IDENTITY_WETH", `chain ${id} buyback route drifted`);
+  }
+
+  // No chain's settlement symbol may be reachable by guessing.
+  const symbols = new Set(Object.values(profiles).map((p) => p.wrappedNativeSymbol));
+  must(symbols.size > 1, "every chain reports the same wrapped-native symbol, so a hardcoded default would still pass");
+}
+
+test("BNB Smart Chain is first-class, and WBNB is its only admitted quote", () => {
+  assertChainVocabulary(CHAIN_PROFILES, SUPPORTED_CHAIN_IDS);
+  assert(CHAIN_LABELS[56] === "BNB Smart Chain", "chain 56 has no label");
+  assert(chainProfile(56).wrappedNativeSymbol === "WBNB", "the accessor disagrees with the table");
+  assert(chainProfile(137) === null, "an unsupported chain returned a profile");
+});
+
+test("the chain-vocabulary assertions FAIL under mutation", () => {
+  // Each mutation is a plausible mistake someone could actually make, and each must turn the
+  // assertions red. A mutation that survives means the matching assertion is decorative.
+  const base = () => JSON.parse(JSON.stringify(CHAIN_PROFILES));
+  const ids = [...SUPPORTED_CHAIN_IDS];
+
+  const mutations = [
+    ["settlement symbol -> WETH", () => { const p = base(); p[56].wrappedNativeSymbol = "WETH"; return [p, ids]; }],
+    ["native symbol -> ETH", () => { const p = base(); p[56].nativeSymbol = "ETH"; return [p, ids]; }],
+    ["buyback route -> IDENTITY_WETH", () => { const p = base(); p[56].buybackRouteState = "IDENTITY_WETH"; return [p, ids]; }],
+    ["an unadmitted BEP-20 quote", () => { const p = base(); p[56].canonicalQuoteSymbols = ["WBNB", "USDT"]; return [p, ids]; }],
+    ["the only quote swapped for a stablecoin", () => { const p = base(); p[56].canonicalQuoteSymbols = ["USDT"]; return [p, ids]; }],
+    ["chain 56 dropped from the supported set", () => [base(), ids.filter((c) => c !== 56)]],
+    ["an Ether chain relabelled to WBNB", () => { const p = base(); p[1].wrappedNativeSymbol = "WBNB"; return [p, ids]; }],
+    ["every chain given the same symbol", () => { const p = base(); for (const k of Object.keys(p)) p[k].wrappedNativeSymbol = "WETH"; return [p, ids]; }],
+  ];
+
+  for (const [name, mutate] of mutations) {
+    const [profiles, chainIds] = mutate();
+    let rejected = false;
+    try {
+      assertChainVocabulary(profiles, chainIds);
+    } catch {
+      rejected = true;
+    }
+    assert(rejected, `MUTATION SURVIVED: "${name}" — the assertions accept it, so they are not testing it`);
+  }
+
+  // And the unmutated table must still pass, or the harness is rejecting everything.
+  assertChainVocabulary(CHAIN_PROFILES, SUPPORTED_CHAIN_IDS);
+});
+
+test("there is no fallback settlement symbol to guess with", () => {
+  // The `?? "WETH"` default was right on every chain that existed when it was written. On BNB it is
+  // wrong, and a default that is right until it is silently wrong is worse than a refusal.
+  for (const id of SUPPORTED_CHAIN_IDS) {
+    assert(typeof wrappedNativeSymbolFor(id) === "string", `chain ${id} has no wrapped-native symbol`);
+    assert(typeof nativeSymbolFor(id) === "string", `chain ${id} has no native symbol`);
+  }
+  for (const fn of [wrappedNativeSymbolFor, nativeSymbolFor]) {
+    let threw = false;
+    try {
+      fn(137);
+    } catch {
+      threw = true;
+    }
+    assert(threw, `${fn.name} returned something for an unknown chain instead of refusing`);
+  }
+  assert(wrappedNativeSymbolFor(56) === "WBNB" && wrappedNativeSymbolFor(1) === "WETH", "the accessor returns one symbol for every chain");
+});
+
+test("NATIVE_WRAPPED is canonical and NATIVE_WETH still resolves to it", () => {
+  assert(QUOTE_ASSET_KINDS.includes("NATIVE_WRAPPED"), "the chain-neutral kind is missing");
+  assert(QUOTE_ASSET_KINDS.includes("NATIVE_WETH"), "the deprecated alias was removed, invalidating existing bundles");
+  assert(canonicalQuoteAssetKind("NATIVE_WETH") === "NATIVE_WRAPPED", "the alias does not map to the canonical kind");
+  assert(canonicalQuoteAssetKind("NATIVE_WRAPPED") === "NATIVE_WRAPPED", "the canonical kind was rewritten");
+  assert(canonicalQuoteAssetKind("STABLE") === "STABLE", "an unrelated kind was rewritten");
+  assert(DEPRECATED_QUOTE_ASSET_KIND_ALIASES.NATIVE_WETH === "NATIVE_WRAPPED", "the alias table disagrees with the function");
+});
+
+test("a chain-56 bundle is refused by a 3.0.0 importer, and accepted here", () => {
+  // The whole reason the schema version moved: an importer predating chain 56 cannot launch a
+  // chain-56 bundle and must say so, rather than accept it and fail later.
+  assert(isSchemaCompatible("3.1.0", "3.1.0"), "the current schema rejects its own bundles");
+  assert(!isSchemaCompatible("3.1.0", "3.0.0"), "a 3.0.0 importer accepted a 3.1.0 bundle it cannot launch");
+  assert(isSchemaCompatible("3.0.0", "3.1.0"), "a 3.0.0 bundle stopped importing after an additive change");
 });
 
 // ---------------------------------------------------------------- summary

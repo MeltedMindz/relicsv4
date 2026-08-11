@@ -4,7 +4,8 @@ A creator's guide to launching a fully on-chain generative art collection that i
 Uniswap v4 pool from the first block.
 
 > **Status: not deployed yet.** The launchpad contracts are prepared for Ethereum (1), Base (8453)
-> and Robinhood Chain (4663) and are marked `PREPARED_NOT_DEPLOYED` on all three. No factory,
+> Robinhood Chain (4663) and BNB Smart Chain (56), and are marked `PREPARED_NOT_DEPLOYED` on all
+> four. No factory,
 > locker or registry address exists on any mainnet. Everything below describes a system you can
 > read, reason about, and prepare art for — not one you can transact against today. Review to date
 > is **internal only**; there has been no external audit. See

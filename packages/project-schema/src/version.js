@@ -7,8 +7,18 @@
  * Bundle schema version. Bump the MAJOR when a field changes meaning or a required field is
  * added; bump the MINOR when a purely additive optional field appears. An importer accepts a
  * bundle whose MAJOR it knows and whose MINOR is <= its own.
+ *
+ * 3.1.0 — BNB Smart Chain (56) joined the chain vocabulary, and `NATIVE_WRAPPED` joined the quote
+ * kinds as the canonical name for `NATIVE_WETH`. Both widen an accepted value set without changing
+ * any field's meaning, which is exactly what a MINOR is for — and the compatibility rule then does
+ * the work that matters: a 3.1.0 bundle declaring chain 56 is REFUSED by a 3.0.0 importer, because
+ * that importer genuinely cannot launch it. A 3.0.0 bundle still imports here unchanged.
+ *
+ * This is the first time the schema version has moved since 3.0.0. Six kit releases changed only
+ * what the kit SAYS about launchpad economics and left the format alone; this one changes what a
+ * bundle may legally contain.
  */
-export const SCHEMA_VERSION = "3.0.0";
+export const SCHEMA_VERSION = "3.1.0";
 
 /**
  * Version of the creator kit (this repo's CLI + templates) that produced the bundle.
@@ -20,7 +30,7 @@ export const SCHEMA_VERSION = "3.0.0";
  * redefines a bundle field, so `SCHEMA_VERSION` stays 3.0.0 and every 3.0.0 bundle remains
  * readable. Bumping the schema because a policy moved would strand a corpus for nothing.
  */
-export const CREATOR_KIT_VERSION = "3.6.2";
+export const CREATOR_KIT_VERSION = "3.7.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the

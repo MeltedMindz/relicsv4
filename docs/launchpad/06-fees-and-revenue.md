@@ -120,6 +120,22 @@ Volume is not fee revenue, and settlement is not free.
 Getting the platform's own slice from a project token into the quote, and from the quote into WETH,
 is the platform's problem, paid out of the platform's own share.
 
+### BNB Smart Chain settles in WBNB
+
+On BNB the platform's entitlement is denominated in **WBNB**, not WETH, and WBNB is the **only**
+admitted quote asset there for this release — no BSC USDT, no BSC USDC, whatever their liquidity.
+
+WBNB is not WETH, so the buy-and-entomb half stays **WBNB-denominated until an approved route to
+WETH exists**, and none is proven today. That is the ordinary `BUYBACK_ALLOCATED_AWAITING_ROUTE`
+state described above: the retained-treasury half is claimable in WBNB immediately, the buyback
+half waits, and **none of it touches creator fees or blocks a launch**.
+
+Any interface that prints "WETH" for a BNB market is naming the wrong token. The symbol comes from
+the chain's own profile — `wrappedNativeSymbolFor(chainId)` in `@relics/project-schema`, which
+**throws on an unknown chain rather than returning a default**. There is no `?? "WETH"` anywhere,
+because that default was correct on every chain that existed when it was written and silently wrong
+on the first one that followed.
+
 ### Quote admission does not wait for a WETH route
 
 A quote asset can be enabled for new launches without the platform's route from that quote to WETH

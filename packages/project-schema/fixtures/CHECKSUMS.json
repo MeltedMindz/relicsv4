@@ -6,107 +6,107 @@
       "bundles": {
         "absolute-path.relics": {
           "bytes": 13941,
-          "sha256": "4af6191e21c860fb30b09667630fc14d1515cadc4ca1e194fea168eeba085579"
+          "sha256": "acc924f115bfbacd84d04d5132a06e48a591097ff2ffebf303be575ba7bf8516"
         },
         "arbitrary-hook-solidity.relics": {
           "bytes": 14153,
-          "sha256": "3fc7503f4c91e8722eeade151bb866ece9628e0b85fe6252c8ed6ce28433ce67"
+          "sha256": "51a71f4555526b333aeb6533cdc58f2161ee5cd6fd0ad9c03f10c716a0e49f6e"
         },
         "art-config-bad-magic.relics": {
           "bytes": 20988,
-          "sha256": "26cde944900031491722a3b69f6507364c2846772fc797a1ee052ee07bfa1812"
+          "sha256": "e1300bef8ea7d8c3051345c7e8a88887e9e346448287a45935809f6f34bfa367"
         },
         "art-config-bad-version.relics": {
           "bytes": 20988,
-          "sha256": "4766f43cffe41f686d9f1683221496346c73ab9b5c885570751beebafb384721"
+          "sha256": "c70f57a178d957c8b63dedec752b5e594cdf01182d2e28136306ff91392cf4f7"
         },
         "art-config-four-byte-blob.relics": {
           "bytes": 20811,
-          "sha256": "13a731643528829f068784b7fbb0bc9d4eb3e49d1253ffc5b51dddaa03ec6a55"
+          "sha256": "c79cae958cf02f4face52721d8840b8a5257826887891d09d20c67f16af1214a"
         },
         "art-config-hash-lie.relics": {
           "bytes": 20988,
-          "sha256": "e3bd2d5738cede1c966d8e026034289df2c00987b804de224341580e1a091859"
+          "sha256": "87c05885f647661610ea16636b3aa29a7c8c443e3882b8f4c9f3e8c2ac0ff634"
         },
         "art-config-missing.relics": {
           "bytes": 20060,
-          "sha256": "0e8abdb56a941c4957b9b58429afdfcdd03ecc4ead32400786c913e2069d0623"
+          "sha256": "b817c8db9fc8228f9f361c550759edcee94d27809ba6a807817500f186edf892"
         },
         "art-config-out-of-range.relics": {
           "bytes": 21217,
-          "sha256": "79dc72ca61593a5a9c25cbe64249453057bb53927d7ee99423af8dc473c9545f"
+          "sha256": "302a2a54fcb3ab6031df990732b9f13dbb72f01a0f9fec5ecfe29d2abfd49b87"
         },
         "art-config-params-mismatch.relics": {
           "bytes": 20884,
-          "sha256": "f61c6552e74e75a8bb39642e5a6b6faeaf91e77dac8b7cd2bc191d65c3f5a8fa"
+          "sha256": "12e905ad81fcafa9571dcb2dda47629e12d3954cfae6f9c0bec0a11e86d86ac7"
         },
         "backslash-path.relics": {
           "bytes": 13956,
-          "sha256": "9b52720dd65e690299612dc9a3cffbc910443e4b38b03540d4578c2ba8ca16f8"
+          "sha256": "df7dfef1d8f99dd8049a8489046574bb6742043054ed1b1bb73ee3a7df8d59e2"
         },
         "binding-art-config-hash-swap.relics": {
           "bytes": 13833,
-          "sha256": "198be43ddbd11df6fe91b49e16b4659480ad6d2ee3b901deb3029e0bc90006cf"
+          "sha256": "d60472ce7d8afcbe6bd934bcd6a3def7bdeab1add18cf79b9dfd48cc997d2746"
         },
         "binding-output-commitment-lie.relics": {
           "bytes": 13818,
-          "sha256": "edde4dc85cd4628e974b33f7c2ae2fbeb77b104349d3abba7ce7f45ca07217b5"
+          "sha256": "af17fd335e13de5ce007a83698541f8f4f1ed93e2f9d7658bbf96ef1b546a7d9"
         },
         "binding-pins-runtime-codehash.relics": {
           "bytes": 13895,
-          "sha256": "a2a6355a7acccaaaa15c44fc5d6b31d90b54c2b53067f0557b1072e4bbf41534"
+          "sha256": "da4d99b05ce5b8e6895895fc97531f99d44f1ad289e67ddf73047798738e22aa"
         },
         "binding-pins-script-pointer.relics": {
           "bytes": 13873,
-          "sha256": "61a19481faf007d039131ec9e9bf3fe28f73deb516c01c7f221f54e6b84107b4"
+          "sha256": "ec30b391b70ae52ff4bbd00801dc8b50a6ea134f60b2c5b70703afe067d590ed"
         },
         "binding-runtime-swap.relics": {
           "bytes": 13833,
-          "sha256": "7130c1f107f523dc7e0559c2fee87377e79f8f06b9d93c5a4526583ece20d104"
+          "sha256": "14b7ec60701f5c33ae67108d1d3f049201023f0cb5230beea34da3d483410a46"
         },
         "blank-output.relics": {
           "bytes": 11413,
-          "sha256": "00e1383764cce609b8f00b3a73070425c49e4ea3d69105fb5dc329dcb2a28016"
+          "sha256": "94509089095602052a25119e7fcf85a139aea379212b37eae035931efdc6244a"
         },
         "compressed-entry.relics": {
           "bytes": 14003,
-          "sha256": "9e8bb3f6c2eed75f7b73afd976aaa3885bb5ef2444cd9002d3b14ebb86b882a1"
+          "sha256": "973a9b5ae300ae48da30b45724316baafae9c9dedde21597dc800225718c4720"
         },
         "data-descriptor.relics": {
           "bytes": 13951,
-          "sha256": "088952ee2e78ce3c7fca1f2cf088bb14df19f7055523b4fd33cebaf80c1f71cd"
+          "sha256": "de6c931d619adb934a9d7061a6f5b6c9cc59cc2e4bdc508211445a4ff4068922"
         },
         "dependency-import.relics": {
           "bytes": 11601,
-          "sha256": "2f56043eeb9b18dce714fccb67b78dad45dc2391d4cd6ea3df68d0e2291db610"
+          "sha256": "ddff72a1c51eac9e4b0e8b3c0d2f5cc72fdc33eb070eb5181b1b9dfdf78de733"
         },
         "duplicate-normalized-path.relics": {
           "bytes": 13935,
-          "sha256": "6674bb17afd345b7e175a20c32e9fe765fce8877201e54aa3aa1f8d3d9c0eef8"
+          "sha256": "2dc25ba71baef14692e0c8f644034426def58aa1493f330e9918d35c4d1748d1"
         },
         "earnings-over-allocated.relics": {
           "bytes": 14046,
-          "sha256": "e3e02e9b43ffedb2b62fece97cc798e228b75b52661e1c45f833b279bb576023"
+          "sha256": "bc9e30af4eea2fdf3c58784443db9a877e25f230ca3cca2c2c340ea22b1ac40e"
         },
         "encrypted-entry.relics": {
           "bytes": 13952,
-          "sha256": "0d34deb563b14f7baeb883ff942a29f1a1a61d445c9031a4ea40b65a2a41c5a0"
+          "sha256": "834814a33008de80274a623591ab7af0ff5647a4fecdf42ed9253453f7450bad"
         },
         "executable-payload.relics": {
           "bytes": 13993,
-          "sha256": "a3d5f96675f9e4c7b0ca5231690756a00eec39fc0195a75724ce9eb8346409ed"
+          "sha256": "33d5cedbdd6a7f999116b3dd2ed163540a52e6b300a21a275bbc24ed675f7b72"
         },
         "external-network.relics": {
           "bytes": 11653,
-          "sha256": "b7846ab979fd659361ec7b255769b638ee7dfed5acf3ac6df2a437aaf4b1965b"
+          "sha256": "79de8b99888aa3c8f44291b704f450e047617a58af9d145136385716514811c6"
         },
         "hash-tamper.relics": {
           "bytes": 13833,
-          "sha256": "ba7dbb2adbda06ea152804984e691adc7e4f2dd117b478ad57003df7afe653a4"
+          "sha256": "58db4f971946935da860cbdf36a1c5c8c8c900139b0f4c21df94e319834ac655"
         },
         "infinite-loop.relics": {
           "bytes": 11603,
-          "sha256": "4c8fc196bf72b63569d86683d1aa9e45e17c6c199fe7b370f9f86446c07fea0d"
+          "sha256": "109648d7084a7f43405e9d3806efab6468e615f4388b3d3bbfdc2d9434ee1948"
         },
         "lying-size-header.relics": {
           "bytes": 161,
@@ -114,23 +114,23 @@
         },
         "malformed-json.relics": {
           "bytes": 10794,
-          "sha256": "68cb374530bca16803b31fc8f22ed31254dbe486828f8f03699eb6a3efe8170f"
+          "sha256": "7f080a36a7c070906b92f030c86b8dece1eba5c156a2a4e519a53512236cb20f"
         },
         "malicious-svg-asset.relics": {
           "bytes": 14175,
-          "sha256": "c9d338b9d3054202a5a8e08b7ab1b8a05a3d707f226b92db203b116224d61e93"
+          "sha256": "e04d6db8d50cc9abf786904d037356f452dcd4f3c5c99e77f718d4dcb4a5ce5f"
         },
         "market-mapping-out-of-bounds.relics": {
           "bytes": 14037,
-          "sha256": "80ba46cf9fc11d2f26c4e9557bee75e2c4441f3a3a245676a1703242dd1eea3d"
+          "sha256": "088f452201e44d17e63f36f657d87a0248fca39b54e7696fcf07004f318e0d55"
         },
         "memory-bomb.relics": {
           "bytes": 11657,
-          "sha256": "3f38b88f3556e08fcb55248bcd858717804f8dc4a20c1e893f1b9f1be29e6fe4"
+          "sha256": "8e3279ed5d441beaa279c48c9b5777a29de499bb2f1dd8fb4d8fe2bdad45801a"
         },
         "nondeterministic.relics": {
           "bytes": 11624,
-          "sha256": "18639ce49fe18588cbcde2090d325ea3434981c4bfd17c37db49395d273ff717"
+          "sha256": "80d3fe859c5a55a31b1defd98b282398288aa819eec7807e21703b2f305eff2b"
         },
         "not-a-bundle.relics": {
           "bytes": 128,
@@ -138,39 +138,39 @@
         },
         "overbacked-supply.relics": {
           "bytes": 13834,
-          "sha256": "df089cae26a58b1763a0664a9fe047754eaf04d7e344dc18ad787c19870e5fc7"
+          "sha256": "cd032b4fcf432c36f8a2a99a1123fa9d7d0fb7e015450ad5f337cb69c80790af"
         },
         "overlapping-entries.relics": {
           "bytes": 13833,
-          "sha256": "063c7e9274c2f3a43fc76cd82f3e3048be6d98cebb24e9f3be3ae290e9f1591b"
+          "sha256": "a11d1b1a8f22e43bd0730834139a33835c3f453886053cd62774ff554ab5efd9"
         },
         "oversized-output.relics": {
           "bytes": 11640,
-          "sha256": "3f11f455f3eeaef53d90c03f011a8b2bb35ff5e219af26436526c6a95b9603a7"
+          "sha256": "ffd3699211648de7a4fa2d144d425a039bc9c2e0269ad910a647975a4a7dbb3c"
         },
         "path-traversal.relics": {
           "bytes": 13957,
-          "sha256": "a404cfed633763e8a0072dcd531b5bffd47a493fbc96b46fa77f56a537198ba1"
+          "sha256": "2e619959e55ceaa2171c5f70717742ae602a2fe6a324bcd84cbcb427c492c18d"
         },
         "protocol-override.relics": {
           "bytes": 14029,
-          "sha256": "66e4cfe08bd7fdc2575536e134b4c1197a688179ff1b8e6373231c22d12407e0"
+          "sha256": "5f95268ac1a34d6a2870ed5194284c3e656839c4cf87f8630e32b9c3176a4465"
         },
         "prototype-pollution.relics": {
           "bytes": 13279,
-          "sha256": "3209c438849ebbea2cd29bb9f68a031c1d1c1a2af3e6371057ed4d1a23db9d96"
+          "sha256": "f24b705f48ad4bb274979ae45fe187e70e01e0798e2d872a25331d5cc6560da6"
         },
         "sandbox-escape.relics": {
           "bytes": 11612,
-          "sha256": "7ed5e55f2e3b4f42190a846e81866d8ee8d0eee92af4cd2a6cd2439e8e2ac473"
+          "sha256": "b35a04c91d8ffb0fc45817540fabb03a1cbf4f839ab44ea40c630f2e3bf9d7b1"
         },
         "secret-exfiltration.relics": {
           "bytes": 13960,
-          "sha256": "59e28ea927fbb98ed752f67a2b795f4ce69f2c681293b026ca2e1a2c805fee74"
+          "sha256": "dd8c3e92c493395304bde174eefcec97ecd55c5b4cee469c602647733a81af50"
         },
         "symlink-entry.relics": {
           "bytes": 13950,
-          "sha256": "7c92cbed0813439cb543381f1adfc6d6a4805f5217ac361fc035475a0898a7c0"
+          "sha256": "ce8d99a7e1f4ae2a4cc8cb40b4533626d099e25189fafab2baf4f6dfcc780704"
         },
         "too-many-entries.relics": {
           "bytes": 66535,
@@ -178,23 +178,23 @@
         },
         "trailing-bytes.relics": {
           "bytes": 13849,
-          "sha256": "bd8ec75cdeda235a9788953452be1b1fd9eef7b7bfea2bb581acea2b49438ba7"
+          "sha256": "16c625255f4763635f9ff948d8c354e3f32af6d98db67e5f9e5e7cbcc89b13e7"
         },
         "unapproved-runtime.relics": {
           "bytes": 13825,
-          "sha256": "29d39aa1e1455960270165c2fcd9cf6e982c16c3f46f5fdae9b6e79c2b1467d6"
+          "sha256": "afca46dbe5b369d503de3dea3a49c9500d4443fa430df0438422903f2058c58f"
         },
         "unicode-confusable-path.relics": {
           "bytes": 13993,
-          "sha256": "6342562b7f41825f68a903223437fa148646e1f0140727810aa9cb61ecf22084"
+          "sha256": "bc05b65701d262f2fdfdd83c26bbb429568ac8b2868b12e708ad7a7955790e11"
         },
         "unsupported-chain.relics": {
           "bytes": 13844,
-          "sha256": "346a4264f223c88ad127767b4019748dc1cc880cdb7ddbff99e362ec469eecf1"
+          "sha256": "e33ad6a23048bb2aaaf1e015d437d741e6e3000870852d9df9be48a1be85e71d"
         },
         "zip64.relics": {
           "bytes": 13853,
-          "sha256": "073c72be426f288733d0f69f3b7322240e63dcc2a36607f724aedc0337f98e54"
+          "sha256": "f0e79f4e6fc0305458de160ef903c716bad5dc48fd0f16a7505347bf88baf34c"
         }
       }
     },
@@ -203,20 +203,20 @@
       "bundles": {
         "market-responsive.relics": {
           "bytes": 53804,
-          "sha256": "78bba56efe2cbf383b681424162c23ee8ee28bdaa4a5dd8fc4c45cab853d40cb"
+          "sha256": "290743291df21257d990f90e6e3077f958761ae30c257959738bbcf3bf76f14a"
         },
         "minimal.relics": {
           "bytes": 13833,
-          "sha256": "c04e6053d082497ba35ebfcb4df85bb0eb3980475bd5014869f8614ebab41c1b"
+          "sha256": "70161a38912270b8a987cc35e33496c8a1d91a827beaeee4c0e7cfb7c398dec3"
         },
         "solidity-svg-params.relics": {
           "bytes": 20988,
-          "sha256": "8442ca3d7f5a34ada8b2e709f809cb10e087b1ef65c855428a819da8b88f3c6c"
+          "sha256": "9c1a3a139195d434ad863af6a9f3c713b90fa6a7096fa8e5fe38a531739e7fc6"
         }
       }
     }
   },
-  "creatorKitVersion": "3.6.2",
+  "creatorKitVersion": "3.7.0",
   "note": "AUTHORED by packages/project-schema/fixtures/build.mjs in the relicsv4 repository, and guarded by its CI (`kit:fixtures` then `git diff --exit-code`). Consumers that mirror this corpus MUST verify against these digests and MUST NOT recompute their own — a corpus checked against numbers derived from itself proves nothing. Digests are sha256 of the raw .relics bytes.",
-  "schemaVersion": "3.0.0"
+  "schemaVersion": "3.1.0"
 }

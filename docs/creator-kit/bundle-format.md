@@ -8,7 +8,8 @@ same component hashes the CLI printed at export time, because both sides run the
 `@relics/project-schema` (`packages/project-schema/`), a zero-dependency ES module package with
 no build step. There is no second handwritten schema anywhere.
 
-The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453) and Robinhood Chain (4663),
+The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663) and
+BNB Smart Chain (56),
 and its review to date is internal only. Nothing in this kit signs or broadcasts anything.
 
 ---
@@ -161,8 +162,8 @@ an error, not a passthrough.
 
 ```jsonc
 {
-  "schemaVersion": "3.0.0",
-  "creatorKitVersion": "3.6.2",
+  "schemaVersion": "3.1.0",
+  "creatorKitVersion": "3.7.0",
   "runtimeVersion": "relics-art-runtime/1",
   "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
 

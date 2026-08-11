@@ -4,7 +4,8 @@
 > See [08 — Status and limitations](08-status.md).
 
 **Can I launch today?**
-No. The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum, Base and Robinhood Chain. There is no
+No. The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum, Base, Robinhood Chain and BNB Smart
+Chain. There is no
 factory address to call anywhere. You can read the design, prepare art, and check your byte budget.
 
 **Has it been audited?**

@@ -3,7 +3,8 @@
 What the RELICS Launchpad creator app — or any other importer — does with a `.relics` file, and
 what it must not do.
 
-The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453) and Robinhood Chain (4663),
+The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663) and
+BNB Smart Chain (56),
 and its review to date is internal only. Importing a bundle fills in a draft; it does not deploy
 anything.
 

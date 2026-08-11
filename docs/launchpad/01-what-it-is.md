@@ -1,6 +1,7 @@
 # 01 — What the RELICS Launchpad is
 
-> Not deployed on any chain yet (`PREPARED_NOT_DEPLOYED` on Ethereum, Base and Robinhood Chain).
+> Not deployed on any chain yet (`PREPARED_NOT_DEPLOYED` on Ethereum, Base, Robinhood Chain and
+> BNB Smart Chain).
 > Internal review only — no external audit. See [08 — Status and limitations](08-status.md).
 
 ## The one paragraph

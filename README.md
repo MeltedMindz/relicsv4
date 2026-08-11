@@ -16,7 +16,7 @@ This repository holds three ways in, plus the production reference.
 | 🏛️ **Flagship reference** | The exact production source of the live RELICS Uniswap v4 hook. | **[flagship/](flagship/)** |
 
 > ⚠️ **The RELICS Launchpad is NOT deployed.** It is marked `PREPARED_NOT_DEPLOYED` on Ethereum
-> (1), Base (8453) and Robinhood Chain (4663) — there is no factory, locker or registry address on
+> (1), Base (8453), Robinhood Chain (4663) and BNB Smart Chain (56) — there is no factory, locker or registry address on
 > any chain, and no launch can succeed today. All review to date is **internal only**; there has
 > been **no external audit**. See
 > [docs/launchpad/08 — Status and limitations](docs/launchpad/08-status.md).

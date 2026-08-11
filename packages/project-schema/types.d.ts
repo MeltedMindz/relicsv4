@@ -16,7 +16,7 @@ export interface Issue {
   message: string;
 }
 
-export type SupportedChainId = 1 | 8453 | 4663;
+export type SupportedChainId = 1 | 8453 | 4663 | 56;
 export type ArtRuntime = "SOLIDITY_SVG" | "JAVASCRIPT";
 export type StartingPreset = "LOW" | "MID" | "HIGH";
 export type BackingModel = "FULL_PARITY" | "PARTIAL";
@@ -304,7 +304,16 @@ export interface StudioDraftProjection {
 }
 
 export type QuoteAssetRequestMode = "DEFAULT" | "ADDRESS";
-export type QuoteAssetKind = "NATIVE_WETH" | "STABLE" | "STOCK_TOKEN" | "ECOSYSTEM_TOKEN";
+/** `NATIVE_WRAPPED` is canonical; `NATIVE_WETH` is its deprecated alias and maps to the same kind. */
+export type QuoteAssetKind = "NATIVE_WRAPPED" | "NATIVE_WETH" | "STABLE" | "STOCK_TOKEN" | "ECOSYSTEM_TOKEN";
+export type BuybackRouteState = "IDENTITY_WETH" | "ROUTE_UNPROVEN";
+export interface ChainProfile {
+  label: string;
+  nativeSymbol: string;
+  wrappedNativeSymbol: string;
+  canonicalQuoteSymbols: readonly string[];
+  buybackRouteState: BuybackRouteState;
+}
 export type CreatorLpFeeAssetMode = "DUAL_ASSET" | "QUOTE_ONLY";
 
 export const QUOTE_ASSET_REQUEST_MODES: readonly QuoteAssetRequestMode[];
@@ -332,6 +341,14 @@ export const BUNDLE_LAYOUT: readonly { path: string; kind: "file" | "dir"; role:
 export const REQUIRED_ENTRIES: readonly string[];
 export const SUPPORTED_CHAIN_IDS: readonly SupportedChainId[];
 export const CHAIN_LABELS: Readonly<Record<number, string>>;
+export const CHAIN_PROFILES: Readonly<Record<number, Readonly<ChainProfile>>>;
+export function chainProfile(chainId: number): Readonly<ChainProfile> | null;
+/** THROWS on an unknown chain — there is deliberately no "WETH" fallback. */
+export function wrappedNativeSymbolFor(chainId: number): string;
+/** THROWS on an unknown chain — there is deliberately no "ETH" fallback. */
+export function nativeSymbolFor(chainId: number): string;
+export const DEPRECATED_QUOTE_ASSET_KIND_ALIASES: Readonly<Record<string, string>>;
+export function canonicalQuoteAssetKind(kind: string): string;
 export const ART_RUNTIMES: readonly ArtRuntime[];
 export const APPROVED_ART_RUNTIMES: readonly ArtRuntime[];
 export const UNAPPROVED_ART_RUNTIMES: readonly string[];
