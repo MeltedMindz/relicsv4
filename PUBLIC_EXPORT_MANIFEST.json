@@ -6951,7 +6951,7 @@
     },
     {
       "path": "packages/project-schema/src/economics.js",
-      "sha256": "05f2007f90e4b724f897e970f539fe35f06a1c6c1bddb281e7053ad313df35dd",
+      "sha256": "8f5c3ddd1d7a628d2f5508b0d0901a8ef9823dc28550d3101fd108ce139bfaec",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7084,7 +7084,7 @@
     },
     {
       "path": "packages/project-schema/test/run.mjs",
-      "sha256": "fcf0b36455a88e841012dfdc5f37a79b04dcb09d9fe8db3a5712e4f5e54a8b04",
+      "sha256": "c692be8efe4ebbdb19e6fe90ef42e18559469689c68e3aaf632fde03316266c0",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

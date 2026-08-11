@@ -971,11 +971,23 @@ test("the retired register catches the WETH-only platform claims", () => {
   const wethOnly = byId.PLATFORM_TREASURY_ASSET_WETH_ONLY;
   const noQuoteClaim = byId.PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM_NO;
   assert(wethOnly && noQuoteClaim, "the two quote-model retired claims are not registered");
-  for (const s of ["PLATFORM_TREASURY_ASSET=WETH_ONLY", "the platform NEVER has a token entitlement", "the platform is only paid in WETH"]) {
+  for (const s of [
+    "PLATFORM_TREASURY_ASSET=WETH_ONLY",
+    "| PLATFORM_TREASURY_ASSET | **WETH_ONLY** |",
+    "TREASURY_WETH_ONLY",
+    "platform-treasury-WETH-only",
+    "Platform treasury stays **WETH-only**.",
+    "the platform NEVER has a token entitlement",
+    "the platform is only paid in WETH",
+  ]) {
     wethOnly.lastIndex = 0;
     assert(wethOnly.test(s), `the WETH-only pattern misses: ${s}`);
   }
-  for (const s of ["PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM=NO", "the platform cannot claim in a non-WETH quote"]) {
+  for (const s of [
+    "PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM=NO",
+    "the platform cannot claim in a non-WETH quote",
+    "the treasury never acquires a claim on a non-WETH asset",
+  ]) {
     noQuoteClaim.lastIndex = 0;
     assert(noQuoteClaim.test(s), `the no-direct-quote-claim pattern misses: ${s}`);
   }

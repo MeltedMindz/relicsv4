@@ -259,10 +259,16 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
     id: "PLATFORM_TREASURY_ASSET_WETH_ONLY",
     counter: "ACTIVE_STALE_PLATFORM_TREASURY_WETH_ONLY_CLAIMS",
     pattern:
-      "PLATFORM_TREASURY_ASSET\\s*[=:]\\s*[\"']?WETH_ONLY" +
+      // The invariant name, however it is punctuated: `PLATFORM_TREASURY_ASSET = WETH_ONLY`,
+      // `| PLATFORM_TREASURY_ASSET | **WETH_ONLY** |` in a table, or the bare gate id.
+      "PLATFORM_TREASURY_ASSET[^\\n]{0,24}WETH_ONLY" +
+      "|\\bTREASURY_WETH_ONLY\\b" +
+      "|platform[- ]treasury[- ]WETH[- ]only" +
+      // Prose forms.
       "|platform\\s+(?:NEVER|never)\\s+has\\s+a\\s+token\\s+entitlement" +
       "|platform\\s+(?:is\\s+)?(?:only|always)\\s+(?:paid|settles?|settled)\\s+in\\s+WETH" +
-      "|platform\\s+treasury\\s+is\\s+WETH[- ]only" +
+      "|platform\\s+treasury\\s+(?:is|stays|remains)[^.\\n]{0,20}WETH[- ]only" +
+      "|treasury\\s+(?:stays|remains|is)\\s+\\*{0,2}WETH[- ]only" +
       "|platform\\s+(?:share|entitlement)\\s+is\\s+always\\s+WETH",
     description: "the retired claim that the platform treasury is paid only in WETH (it is now claimable in the selected quote)",
   }),
@@ -270,10 +276,11 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
     id: "PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM_NO",
     counter: "ACTIVE_STALE_PLATFORM_NO_DIRECT_QUOTE_CLAIM_CLAIMS",
     pattern:
-      "PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM\\s*[=:]\\s*[\"']?NO\\b" +
+      "PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM[^\\n]{0,24}\\bNO\\b" +
       "|platform\\s+cannot\\s+claim\\s+(?:directly\\s+)?in\\s+(?:a\\s+)?(?:non-WETH\\s+)?quote" +
       "|no\\s+direct\\s+(?:non-WETH\\s+)?quote\\s+claim\\s+for\\s+the\\s+platform" +
-      "|platform\\s+has\\s+no\\s+quote-denominated\\s+(?:claim|entitlement)",
+      "|platform\\s+has\\s+no\\s+quote-denominated\\s+(?:claim|entitlement)" +
+      "|treasury\\s+never\\s+acquires\\s+a\\s+claim\\s+on\\s+a\\s+non-WETH",
     description: "the retired claim that the platform has no direct claim in a non-WETH quote (the treasury half is now claimable in it)",
   }),
 ]);
