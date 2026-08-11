@@ -369,6 +369,28 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
     description: "the retired claim that the 50/50 divides NET SETTLED PLATFORM WETH (it divides the quote-denominated entitlement)",
   }),
 
+  // ---- the retired ORDER of operations (2026-08-10) ------------------------------------------
+  //
+  // Lifted verbatim from `scripts/launchpad/verify-economic-split-parity.mjs`, which declared it
+  // locally because this repo saw the amendment before the published register did. Same id, same
+  // counter, so the gate's own duplicate check retires the local copy.
+  //
+  // Distinct from SPLIT_APPLIED_TO_SETTLED_WETH, which is about the BASE. This one is about the
+  // ORDER: "after the platform's share settles into WETH, it divides" describes conversion
+  // happening BEFORE the split. It now happens after, and only to the buy-and-entomb half. The
+  // "of NET settled platform WETH" alternative the local copy carried is deliberately NOT
+  // duplicated here — the base claim already owns that phrasing, and one line should not be
+  // reported twice under two counters.
+  Object.freeze({
+    id: "PLATFORM_CONVERTS_BEFORE_SPLIT",
+    counter: "ACTIVE_STALE_CONVERT_BEFORE_SPLIT_CLAIMS",
+    pattern:
+      "after\\s+(?:that\\s+share|the\\s+platform(?:'s)?[^.\\n]{0,30})\\s+settles?\\s+into\\s+WETH" +
+      "|platform\\s+assets\\s+settle\\s+into\\s+WETH\\s+first" +
+      "|divide\\s+the\\s+net\\s+WETH\\s+received\\s+after\\s+conversion",
+    description: "conversion to WETH happening BEFORE the 50/50 split (it now happens after, and only to the buyback half)",
+  }),
+
   // ---- selectors REMOVED FROM THE BYTECODE, not merely deprecated (2026-08-10) ---------------
   //
   // `subdividePlatformWeth` and `TREASURY_SOURCE_ASSET_CLAIM` are gone from the rebuilt economic

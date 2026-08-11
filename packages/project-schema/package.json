@@ -1,6 +1,6 @@
 {
   "name": "@relics/project-schema",
-  "version": "3.4.1",
+  "version": "3.5.0",
   "description": "Canonical .relics project-bundle schema, deterministic container, and hostile-input validator. Zero dependencies; identical source runs in Node, in a browser worker, and in the RELICS Launchpad web importer.",
   "license": "MIT",
   "type": "module",
