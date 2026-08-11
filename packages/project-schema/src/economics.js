@@ -351,13 +351,83 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
 ]);
 
 /**
- * A file asserting a retired claim is TOLERATED only if one of these markers appears in it. The
- * marker has to be explicit: "historical" in a filename is not a supersession header.
+ * A file asserting a retired claim is TOLERATED only if one of these markers appears in it AS A
+ * HEADER. The marker has to be explicit: "historical" in a filename is not a supersession header.
  */
 export const SUPERSESSION_MARKERS = Object.freeze([
   "SUPERSEDED_HISTORICAL_DO_NOT_USE_FOR_LAUNCH",
   "SUPERSEDED_BY_RC3_PLATFORM_ALLOCATION_AMENDMENT",
 ]);
+
+/**
+ * How far into a file a supersession marker still counts as a BANNER.
+ *
+ * Anywhere-in-the-file was a loophole with teeth: a document that merely NAMES a marker while
+ * explaining the convention — a contributor guide, a project-memory file — exempted itself
+ * entirely, including any real retired claim further down. A banner goes at the top, so that is
+ * where it is looked for.
+ */
+export const SUPERSESSION_BANNER_LINES = 40;
+
+/** @param {string} text */
+export function hasSupersessionBanner(text) {
+  const head = String(text).split(/\r?\n/, SUPERSESSION_BANNER_LINES).join("\n");
+  return SUPERSESSION_MARKERS.some((m) => head.includes(m));
+}
+
+/**
+ * THE ONE MATCHER. Both repositories' gates call this rather than each assembling regexes, because
+ * a matcher maintained twice is a matcher that disagrees with itself — and because every subtlety
+ * below was learned the hard way and should not have to be learned again.
+ *
+ * Three things it does that a naive scan does not:
+ *
+ *   1. MATCHES PER LINE, not per file. The normaliser collapses newlines to spaces, which silently
+ *      destroys every `[^\n]{0,40}` proximity guard: a claim on one line and a keyword on the next
+ *      become neighbours, and a correct sentence gets reported. Lines are normalised individually
+ *      so proximity means what it says.
+ *
+ *   2. STRIPS COUNTER NAMES FIRST. `ACTIVE_STALE_PLATFORM_TREASURY_WETH_ONLY_CLAIMS` normalises to
+ *      a phrase its own pattern matches, so any document naming the gate would report itself.
+ *      Naming a counter is describing the check, not asserting the claim.
+ *
+ *   3. RUNS BOTH MATCHERS. Raw text where punctuation carries the meaning (an ABI entry, a call
+ *      site); normalised text where it does not (an identifier, a JSON value, a trailing comment).
+ *
+ * @param {string} text
+ * @returns {{ id: string, counter: string, description: string, line: number, sample: string }[]}
+ */
+export function scanTextForRetiredClaims(text) {
+  const counterNoise = RETIRED_ALLOCATION_CLAIMS.map((c) => normalizeForClaimScan(c.counter)).filter(Boolean);
+  const lines = String(text).split(/\r?\n/);
+  /** @type {{ id: string, counter: string, description: string, line: number, sample: string }[]} */
+  const hits = [];
+
+  for (const claim of RETIRED_ALLOCATION_CLAIMS) {
+    const raw = claim.pattern ? new RegExp(claim.pattern, "gi") : null;
+    const norm = claim.normalizedPattern ? new RegExp(claim.normalizedPattern, "gi") : null;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const seen = new Set();
+
+      if (raw) {
+        raw.lastIndex = 0;
+        for (const m of line.matchAll(raw)) seen.add(m[0].trim().replace(/\s+/g, " "));
+      }
+      if (norm) {
+        let normalized = normalizeForClaimScan(line);
+        for (const noise of counterNoise) normalized = normalized.split(noise).join(" ");
+        norm.lastIndex = 0;
+        for (const m of normalized.matchAll(norm)) seen.add(m[0].trim());
+      }
+      for (const sample of seen) {
+        hits.push({ id: claim.id, counter: claim.counter, description: claim.description, line: i + 1, sample });
+      }
+    }
+  }
+  return hits;
+}
 
 /** Phrases that are FALSE about this allocation, published so gates and reviewers share one list. */
 export const FORBIDDEN_ALLOCATION_PHRASINGS = Object.freeze([

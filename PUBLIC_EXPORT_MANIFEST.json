@@ -6895,7 +6895,7 @@
     },
     {
       "path": "packages/project-schema/index.js",
-      "sha256": "408254f97ea737494e58248507927063df6077af44e142127337b1646ec25df2",
+      "sha256": "e150398b41ea6c26c6050805b29f31436870270009af1043198e79c2f7bad2c0",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6951,7 +6951,7 @@
     },
     {
       "path": "packages/project-schema/src/economics.js",
-      "sha256": "0c1d75f3caa5c7e79a394ea0f0e0d90e6ca58a37bba3eeaa16420b6c198e3f5e",
+      "sha256": "b668b335e4f3a6cee2830b99ee12d41b2c80569d72a664d9403623e2447864d6",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7084,14 +7084,14 @@
     },
     {
       "path": "packages/project-schema/test/run.mjs",
-      "sha256": "ffa4118fe68728a9c058455d73b0d377807d9172d1568eeaeecc4156e4eaa37d",
+      "sha256": "007813a3708bf529fad0942cf632dd5acc5fa8f8e0a915ea88f11e502682c446",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/types.d.ts",
-      "sha256": "118a1af01f5836965470142bb65f8618e5dec4bbcce11e4f30d4bcfbbd75b25e",
+      "sha256": "6f042406256563708e4c5037f2d4971ce54dccbfcae09ea41514408bc7aa3275",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7168,7 +7168,7 @@
     },
     {
       "path": "scripts/check-economics.mjs",
-      "sha256": "abe328a6dbb10740f5722fb9f2a13126d39e3d6d5a8f7bcc5b8c2cb4dc766ae1",
+      "sha256": "5f720dffedac77ad364f9a6c128ef1e0010a28c77dc57a7e934f15698921126e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

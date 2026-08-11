@@ -31,8 +31,8 @@ import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
 import {
   RETIRED_ALLOCATION_CLAIMS,
-  SUPERSESSION_MARKERS,
-  normalizeForClaimScan,
+  hasSupersessionBanner,
+  scanTextForRetiredClaims,
   RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE,
   PLATFORM_RETAINED_BPS_OF_PLATFORM_SHARE,
   NOMINAL_ALLOCATION_BPS,
@@ -79,30 +79,11 @@ function scannable(rel) {
 
 // ---------------------------------------------------------------------------------------------
 
-// Each claim gets up to two matchers: one over the raw text, one over the normalised text. The
-// second is what catches a claim written as an identifier, a JSON value or a trailing comment —
-// the shapes a prose regex silently misses, which is how a gate reports zero for the wrong reason.
-const retired = RETIRED_ALLOCATION_CLAIMS.map((c) => ({
-  ...c,
-  regex: c.pattern ? new RegExp(c.pattern, "gi") : null,
-  normalizedRegex: c.normalizedPattern ? new RegExp(c.normalizedPattern, "gi") : null,
-  hits: [],
-  superseded: [],
-}));
-
-/** Matches over raw and (when the claim has one) normalised text, de-duplicating the overlap. */
-function claimMatches(claim, text, normalized) {
-  const found = [];
-  if (claim.regex) {
-    claim.regex.lastIndex = 0;
-    for (const m of text.matchAll(claim.regex)) found.push(m[0].trim().replace(/\s+/g, " "));
-  }
-  if (claim.normalizedRegex) {
-    claim.normalizedRegex.lastIndex = 0;
-    for (const m of normalized.matchAll(claim.normalizedRegex)) found.push(m[0].trim());
-  }
-  return [...new Set(found)];
-}
+// The MATCHER lives in the schema package (`scanTextForRetiredClaims`) so both repositories' gates
+// share one implementation — per-line, counter-name-stripped, raw + normalised. This file only
+// keeps the per-claim tally.
+const retired = RETIRED_ALLOCATION_CLAIMS.map((c) => ({ ...c, hits: [], superseded: [] }));
+const byId = new Map(retired.map((c) => [c.id, c]));
 
 /**
  * Live-value declarations outside the one declaration site. Deliberately narrow: it fires on the
@@ -140,17 +121,22 @@ for (const abs of walk(ROOT)) {
     continue;
   }
   filesScanned++;
-  const isSuperseded = SUPERSESSION_MARKERS.some((m) => text.includes(m));
+  const isSuperseded = hasSupersessionBanner(text);
   const isRuleFile = RULE_FILES.has(rel);
 
-  const normalized = normalizeForClaimScan(text);
-  for (const claim of retired) {
-    const found = claimMatches(claim, text, normalized);
-    if (found.length === 0) continue;
-    const record = { file: rel, count: found.length, samples: found.slice(0, 3) };
-    if (isRuleFile) continue;
-    if (isSuperseded) claim.superseded.push(record);
-    else claim.hits.push(record);
+  if (!isRuleFile) {
+    const grouped = new Map();
+    for (const hit of scanTextForRetiredClaims(text)) {
+      if (!grouped.has(hit.id)) grouped.set(hit.id, []);
+      grouped.get(hit.id).push(hit);
+    }
+    for (const [id, hits] of grouped) {
+      const claim = byId.get(id);
+      if (!claim) continue;
+      const record = { file: rel, count: hits.length, samples: hits.slice(0, 3).map((h) => `L${h.line}: ${h.sample}`) };
+      if (isSuperseded) claim.superseded.push(record);
+      else claim.hits.push(record);
+    }
   }
 
   if (rel === DECLARATION_SITE || isRuleFile) continue;

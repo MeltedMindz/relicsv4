@@ -418,6 +418,20 @@ export interface RetiredAllocationClaim {
 export function normalizeForClaimScan(text: string): string;
 export const RETIRED_ALLOCATION_CLAIMS: readonly Readonly<RetiredAllocationClaim>[];
 export const SUPERSESSION_MARKERS: readonly string[];
+export const SUPERSESSION_BANNER_LINES: number;
+/** True only when a marker appears within the first `SUPERSESSION_BANNER_LINES` lines — a banner,
+ *  not a passing mention of the convention. */
+export function hasSupersessionBanner(text: string): boolean;
+export interface RetiredClaimHit {
+  id: string;
+  counter: string;
+  description: string;
+  line: number;
+  sample: string;
+}
+/** THE ONE MATCHER both repositories' gates call. Matches per line (so proximity guards survive
+ *  normalisation), strips counter names first, and runs raw and normalised patterns. */
+export function scanTextForRetiredClaims(text: string): RetiredClaimHit[];
 export const CREATOR_FEE_ASSET_MODES: readonly [CreatorFeeAssetMode, ...CreatorFeeAssetMode[]];
 /** Declared as a NON-EMPTY TUPLE so a consumer that needs `readonly [string, ...string[]]` — the
  *  indexer's `onchainEnum`, for one — can pass it straight through without a cast or a second copy

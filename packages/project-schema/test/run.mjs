@@ -97,6 +97,8 @@ import {
   allocatePlatformEntitlement,
   RETIRED_ALLOCATION_CLAIMS,
   normalizeForClaimScan,
+  scanTextForRetiredClaims,
+  hasSupersessionBanner,
   ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES,
   isOffchainDerivedStatus,
 } from "../index.js";
@@ -990,6 +992,38 @@ test("the claim matcher sees a claim written as code, not only as prose", () => 
     re.lastIndex = 0;
     assert(!re.test(normalizeForClaimScan(text)), `the matcher false-positives on current copy: ${text}`);
   }
+});
+
+test("the matcher works per line, so a proximity guard survives normalisation", () => {
+  // Normalisation collapses newlines, which would make a claim on one line and a keyword on the
+  // next into neighbours. This exact pair produced a false positive on a CORRECT sentence.
+  const twoLines =
+    '| `V4_ART_CREATOR_QUOTE_ONLY_FEES` | **PASS** | an NVDA-quoted project is **NVDA-only, not "WETH-only"** |\n' +
+    "| 8 | V4 ART PLATFORM | **PASS** | something else entirely |";
+  assert(scanTextForRetiredClaims(twoLines).length === 0, "the matcher joined two lines and reported correct copy");
+
+  // And a real single-line claim is still caught.
+  const real = "| 7 | FEES | **PASS** | creator WETH+token; treasury WETH-only (token bal 0). |";
+  const hits = scanTextForRetiredClaims(real);
+  assert(hits.length > 0 && hits[0].id === "PLATFORM_TREASURY_ASSET_WETH_ONLY", "a real claim on one line was missed");
+  assert(hits[0].line === 1, "the hit does not carry its line number");
+});
+
+test("naming a counter is describing the gate, not asserting the claim", () => {
+  // The counter name normalises to a phrase its own pattern matches, so any document explaining
+  // the check would report itself.
+  const mention = "never write that it has no claim in a non-WETH quote — `ACTIVE_STALE_PLATFORM_TREASURY_WETH_ONLY_CLAIMS` scans for it";
+  assert(scanTextForRetiredClaims(mention).length === 0, "naming the counter triggered the counter");
+});
+
+test("a supersession marker exempts a file only as a BANNER", () => {
+  const banner = "# Title\n\n> SUPERSEDED_HISTORICAL_DO_NOT_USE_FOR_LAUNCH\n\nbody";
+  assert(hasSupersessionBanner(banner), "a real banner was not recognised");
+
+  // A guide that merely explains the convention, deep in the file, must NOT exempt itself — that
+  // loophole would carry every retired claim below it too.
+  const mention = Array.from({ length: 60 }, (_, i) => `line ${i}`).join("\n") + "\nHistorical reports are bannered SUPERSEDED_HISTORICAL_DO_NOT_USE_FOR_LAUNCH.";
+  assert(!hasSupersessionBanner(mention), "a passing mention exempted the whole file");
 });
 
 test("normalisation collapses identifier, comment and prose spellings to one string", () => {
