@@ -135,9 +135,17 @@ side: it produces launchpad project bundles, never template deployments.
   the platform's own share splits in half, so nominally 75.00 / 12.50 / 12.50. The technical
   sentence is "50% of the launchpad's net platform-fee revenue is allocated to RELICS
   buy-and-entomb" — never "50% of all trading fees", "of creator fees", "of the pool fee", or
-  anything involving Uniswap's protocol fee. The exact invariant is on net SETTLED platform
-  WETH, after conversion fees, slippage and rounding; those costs fall on the platform share
-  only, never on the creator's.
+  anything involving Uniswap's protocol fee. Conversion costs fall on the platform share only,
+  never on the creator's.
+- **The platform is paid in the SELECTED QUOTE, and the 50/50 divides it there.** Treasury half:
+  claimable in the quote immediately. Buyback half: quote-denominated until an approved route
+  converts it to WETH. A WETH-quoted market is the special case, not the definition. Never write
+  that the platform is paid only in WETH, or that it has no claim in a non-WETH quote — both are
+  retired claims the gate now scans for.
+- **Allocated is not settled.** A buyback half sitting in USDG is allocated; call it settled only
+  once WETH is received. "Awaiting a route" is a normal state, not a failure.
+- **Quote admission is not gated on a proven WETH route.** Do not encode or imply otherwise. The
+  creator's QUOTE_ONLY mode is a separate route with its own, still-required proof.
 - Say **buy-and-entomb**, never "burn". $RELICS is bought and sent permanently to `0x…dEaD`, so
   spendable and circulating supply fall — but `totalSupply` does NOT fall and no ERC-20 burn
   event occurs, because the token has no burn function. State all three together.

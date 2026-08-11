@@ -7,6 +7,7 @@
 // the format simply has no field that can hold one.
 
 import { LIMITS } from "./limits.js";
+import { SYMBOL_RE } from "./manifest.js";
 import { error, warn } from "./issues.js";
 
 const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
@@ -33,8 +34,8 @@ export function validateCollectionMetadata(document) {
 
   str(issues, document.name, `${at}#name`, "METADATA_NAME", LIMITS.maxNameLength);
   str(issues, document.description, `${at}#description`, "METADATA_DESCRIPTION", LIMITS.maxDescriptionLength);
-  if (typeof document.symbol !== "string" || !/^[A-Z][A-Z0-9]*$/.test(document.symbol) || document.symbol.length > LIMITS.maxSymbolLength) {
-    issues.push(error("METADATA_SYMBOL", `${at}#symbol`, `symbol must be 1-${LIMITS.maxSymbolLength} uppercase letters/digits starting with a letter`));
+  if (typeof document.symbol !== "string" || !SYMBOL_RE.test(document.symbol) || document.symbol.length > LIMITS.maxSymbolLength) {
+    issues.push(error("METADATA_SYMBOL", `${at}#symbol`, `symbol must be 1-${LIMITS.maxSymbolLength} uppercase letters and digits`));
   }
 
   for (const key of ["image", "bannerImage", "featuredImage"]) {

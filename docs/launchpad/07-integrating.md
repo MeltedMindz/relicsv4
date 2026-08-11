@@ -103,7 +103,7 @@ from the confirmed receipt — never from a simulation.
 | Project record | `readProject(chainId, projectId, { publicClient })` | Published flag, launch result, canonical `eip155:<chainId>:<token>` identity |
 | Fee state | `readProjectFeeState(chainId, {...})` | LP fee pips, live protocol fee both directions, compounded effective fees, the 7500/2500 split bps, and the disclosure string |
 | Creator revenue | `readCreatorRevenue(chainId, projectId, {...})` | `creatorProjectTokenClaimable`, `creatorQuoteTokenClaimable`, `creatorQuoteOnlyPendingConversion`, `creatorFeeAssetMode`, plus nested rights info |
-| Platform revenue | `readPlatformRevenue(chainId, projectId, {...})` | `platformProjectTokenPendingSettlement`, `platformQuotePendingSettlement`, `platformWethSettled`, `platformWethBuybackReserve`, `platformWethTreasuryRetained`, `platformSettlementStatus` |
+| Platform revenue | `readPlatformRevenue(chainId, projectId, {...})` | `platformProjectTokenPendingSettlement`, `platformQuoteTreasuryClaimable`, `platformBuybackReserveQuote`, `platformWethBuybackReserve`, `platformWethTreasuryRetained`, `platformWethSettled`, `platformSettlementAsset` (+ symbol/decimals), `platformSettlementStatus` |
 | Rights | `readProjectRights(chainId, projectId, {...})` | Owner, payout recipient, and the on-chain transfer warning |
 | Art state | `readArtState(chainId, projectId, {...})` | Backing token, max active artworks, active count, available capacity, dormant count, fully-backed flag |
 | Market state | `readMarketState(chainId, projectId, {...})` | Organic swap count, buy/sell volume, net flow, oracle readiness, sqrt price, tick, fees, liquidity |
@@ -189,14 +189,27 @@ Errors you will want to decode and render: `BadArtHash`, `BadTemplate`, `ScriptT
   [06 — Fees and revenue](06-fees-and-revenue.md).
 - **Fees are not volume.** Display "75% of collected LP fees", and compute the trader's effective
   fee from live pool state rather than printing a hardcoded 1%.
-- **Never present an unsettled source asset as WETH.** The platform's project-token and quote-asset
-  buckets are separate fields from `platformWethSettled` for a reason: until a conversion clears,
-  there is no WETH figure. `platformWethBuybackReserve` and `platformWethTreasuryRetained` are
-  populated only when `platformSettlementStatus` says a settled WETH figure exists.
+- **The platform is paid in the selected quote, not in WETH.** Its 25% is denominated in the
+  market's quote asset and the 50/50 divides it there: the treasury half is claimable in the quote
+  immediately, and the buyback half stays quote-denominated until an approved route converts it to
+  WETH. A WETH-quoted market is the special case where that is already done. Read
+  `platformSettlementAsset` (with its symbol and decimals) before formatting any platform figure —
+  a USDG entitlement has 6 decimals, not 18.
+- **Allocated is not settled, and never present an unsettled asset as WETH.**
+  `platformBuybackReserveQuote` holds the buyback half in the quote asset;
+  `platformWethBuybackReserve` holds it in WETH and is `null` until WETH is actually received.
+  Adding them, or rendering the first under a WETH label, is the specific error these two fields
+  exist to prevent. `platformWethSettled` is likewise never populated from a quote-denominated
+  balance.
 - **`UNKNOWN` is a value, not a zero.** `platformSettlementStatus` is one of `NOT_ACCRUED`,
-  `SOURCE_ASSETS_PENDING`, `PROJECT_TOKEN_TO_QUOTE_PENDING`, `QUOTE_TO_WETH_PENDING`,
-  `WETH_SETTLED`, `SPLIT_ALLOCATED`, `DEGRADED_ROUTE`, `RETRYABLE_FAILURE`, `UNKNOWN`. Render the
-  gap; substituting `0` turns an absent measurement into a false one.
+  `SOURCE_ASSETS_PENDING`, `PROJECT_TOKEN_TO_QUOTE_PENDING`, `SPLIT_ALLOCATED`,
+  `BUYBACK_ALLOCATED_AWAITING_ROUTE`, `QUOTE_TO_WETH_PENDING`, `WETH_SETTLED`, `DEGRADED_ROUTE`,
+  `RETRYABLE_FAILURE`, `UNKNOWN`. Render the gap; substituting `0` turns an absent measurement into
+  a false one.
+- **`BUYBACK_ALLOCATED_AWAITING_ROUTE` is not an error.** No approved route to WETH existing yet is
+  an ordinary condition of this model, not a fault. Show it as pending, not as a failure, and do
+  not colour it like `RETRYABLE_FAILURE` — which means a step actually failed.
+- **Do not infer a WETH route from a quote being enabled.** Quote admission is not gated on one.
 - **Quote-only is not WETH-only.** For a `QUOTE_ONLY` project, read the market's quote asset and
   label the creator's settlement in it — USDG for a USDG-quoted market, NVDA for an NVDA-quoted
   one. Only a WETH-quoted market settles the creator in WETH.

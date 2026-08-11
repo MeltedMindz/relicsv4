@@ -22,10 +22,16 @@ per unit of volume fall — while your 75% share of what *is* collected stays ex
 [06](06-fees-and-revenue.md).
 
 **Where does the platform's 25% go?**
-It is split in half. **50% of the launchpad's net platform-fee revenue is allocated to $RELICS
-buy-and-entomb** — the reserve buys $RELICS and sends it permanently to `0x…dEaD` — and the other
-50% is retained by the protocol Safe. Nominally that is 12.50% and 12.50% of collected LP fees.
-Both are compile-time constants with no setter, and neither touches the creator's 75%.
+It is split in half, **in the market's selected quote asset**. **50% of the launchpad's net
+platform-fee revenue is allocated to $RELICS buy-and-entomb** — that half stays quote-denominated
+until an approved route converts it to WETH, and only then does the reserve buy $RELICS and send it
+permanently to `0x…dEaD`. The other 50% is retained by the protocol Safe, claimable in the quote
+asset immediately. Nominally that is 12.50% and 12.50% of collected LP fees. Both are compile-time
+constants with no setter, and neither touches the creator's 75%.
+
+On a WETH-quoted market both halves are WETH straight away — that is the special case, not the
+rule. A buyback half sitting in USDG is *allocated*, not *settled*, and any honest interface shows
+it that way.
 
 Read "50% of net platform-fee revenue" literally: not 50% of all trading fees, not 50% of creator
 fees, not 50% of the pool fee, and nothing to do with Uniswap's protocol fee. The exact invariant

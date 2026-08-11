@@ -361,9 +361,10 @@ export type PlatformSettlementStatus =
   | "NOT_ACCRUED"
   | "SOURCE_ASSETS_PENDING"
   | "PROJECT_TOKEN_TO_QUOTE_PENDING"
+  | "SPLIT_ALLOCATED"
+  | "BUYBACK_ALLOCATED_AWAITING_ROUTE"
   | "QUOTE_TO_WETH_PENDING"
   | "WETH_SETTLED"
-  | "SPLIT_ALLOCATED"
   | "DEGRADED_ROUTE"
   | "RETRYABLE_FAILURE"
   | "UNKNOWN";
@@ -390,6 +391,17 @@ export const BUYBACK_DISCLOSURE: string;
 export const BUYBACK_DISCLOSURE_SHORT: string;
 export const BUYBACK_TECHNICAL_NOTE: string;
 export const PLATFORM_SETTLEMENT_INVARIANT: string;
+export const PLATFORM_ENTITLEMENT_MODEL: Readonly<{
+  entitlementAsset: "SELECTED_QUOTE";
+  treasuryHalf: string;
+  buybackHalf: string;
+  wethQuoteIs: string;
+  projectTokenDirectPlatformClaim: false;
+  buybackTerminalAsset: "WETH";
+}>;
+/** Deliberately `false`, and deliberately stated: quote admission is NOT gated on a proven WETH
+ *  route, because the treasury half is claimable in the quote and the buyback half may wait. */
+export const QUOTE_ADMISSION_REQUIRES_PROVEN_WETH_ROUTE: false;
 export const FORBIDDEN_ALLOCATION_PHRASINGS: readonly string[];
 export interface RetiredAllocationClaim {
   id: string;
@@ -404,9 +416,17 @@ export const CREATOR_FEE_ASSET_MODES: readonly [CreatorFeeAssetMode, ...CreatorF
  *  indexer's `onchainEnum`, for one — can pass it straight through without a cast or a second copy
  *  of the list. The union above is the authority on membership; this only says "at least one". */
 export const PLATFORM_SETTLEMENT_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
+export const ALLOCATED_PLATFORM_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
+export const BUYBACK_WETH_SETTLED_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
+/** @deprecated Use `BUYBACK_WETH_SETTLED_STATUSES`. */
 export const SETTLED_PLATFORM_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
 export function isPlatformSettlementStatus(status: string): boolean;
+export function hasAllocatedPlatformEntitlement(status: string): boolean;
+export function hasSettledBuybackWeth(status: string): boolean;
+/** @deprecated Use `hasSettledBuybackWeth`. */
 export function hasSettledPlatformWeth(status: string): boolean;
+export function allocatePlatformEntitlement(entitlement: bigint): Readonly<{ buybackReserve: bigint; treasuryRetained: bigint }>;
+/** @deprecated Use `allocatePlatformEntitlement`; the name asserts WETH, now only the special case. */
 export function allocateSettledPlatformWeth(netSettledWeth: bigint): Readonly<{ buybackReserve: bigint; treasuryRetained: bigint }>;
 
 // ---- hashing and serialization ---------------------------------------------------------------

@@ -36,6 +36,11 @@ export const PLATFORM_SHARE_BPS = BPS_DENOMINATOR - CREATOR_SHARE_BPS;
  *
  * RC3 amendment (2026-08-10): 2_500 -> 5_000. The creator's 7_500 and the platform's 2_500 did not
  * move; this is entirely a re-division of the platform's own share.
+ *
+ * WHAT THE RATIO APPLIES TO — read PLATFORM_ENTITLEMENT_MODEL below before using this. The 50/50
+ * divides the platform entitlement **in its own settlement asset**, which is the market's SELECTED
+ * QUOTE. It is NOT a division of WETH. WETH is the special case where the selected quote happens
+ * to be WETH, not the definition of the model.
  */
 export const RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE = 5_000;
 
@@ -148,21 +153,66 @@ export const BUYBACK_TECHNICAL_NOTE =
   "RELICS uses entombment rather than a supply-decreasing burn: circulating supply falls, totalSupply does not, and no ERC-20 burn event occurs.";
 
 /**
- * WHAT IS AND IS NOT PROMISED.
+ * THE PLATFORM ENTITLEMENT MODEL — read this before naming any platform figure.
  *
- * The nominal percentages above are ratios applied to COLLECTED LP FEES, and on the platform side
- * the exact invariant holds on NET SETTLED PLATFORM WETH — after conversion fees, slippage and
- * deterministic floor-division rounding. Nobody may promise that exactly
- * NOMINAL_ALLOCATION_PERCENT.relicsBuybackReserve of gross trading volume reaches the buyback
- * reserve; volume is not fee revenue, and settlement is not free.
+ * The platform's 25% is denominated in the market's SELECTED QUOTE, and the 50/50 divides it THERE:
  *
- * Conversion costs fall ONLY on the platform's own share. A creator's entitlement is never charged
- * for the platform's route to WETH.
+ *     platform 25% entitlement, in the SELECTED QUOTE
+ *     |- 50% retained treasury -> claimable IN THE QUOTE ASSET, immediately
+ *     `- 50% RELICS buyback    -> QUOTE-denominated pending; becomes WETH only when an approved
+ *                                 route exists. Retryable. NEVER reported as settled until WETH is
+ *                                 actually received.
+ *
+ * WETH IS THE SPECIAL CASE, NOT THE DEFINITION. On a WETH-quoted market the selected quote already
+ * is WETH, so both halves are WETH the moment the split happens and there is nothing to convert.
+ * On a USDG-quoted market the treasury half is claimable in USDG and the buyback half is USDG
+ * waiting for a route; on a GME-quoted market, GME.
+ *
+ * THE DISTINCTION THIS EXISTS TO CARRY. A buyback half sitting in GME is ALLOCATED, not SETTLED.
+ * The public claim — "50% of net platform revenue is allocated to RELICS buy-and-entomb" — stays
+ * true only while pending is visibly pending. So no surface may populate a WETH figure from a
+ * quote-denominated balance, and `BUYBACK_ALLOCATED_AWAITING_ROUTE` is a normal, healthy state
+ * rather than a failure: no approved route existing yet is an ordinary condition of this model.
+ *
+ * WHAT DID NOT CHANGE. The platform still takes NO direct claim in the PROJECT TOKEN — that share
+ * still converts into the selected quote first. And the buyback still ends in WETH; it just gets
+ * there later, or not yet.
+ *
+ * WHAT IS AND IS NOT PROMISED. The nominal percentages above are ratios applied to COLLECTED LP
+ * FEES. Nobody may promise that exactly NOMINAL_ALLOCATION_PERCENT.relicsBuybackReserve of gross
+ * trading volume reaches either destination; volume is not fee revenue, and settlement is not free.
+ * Conversion costs fall ONLY on the platform's own share — a creator's entitlement is never charged
+ * for the platform's route, in either direction.
  */
+export const PLATFORM_ENTITLEMENT_MODEL = Object.freeze({
+  entitlementAsset: "SELECTED_QUOTE",
+  treasuryHalf: "CLAIMABLE_IN_SELECTED_QUOTE_IMMEDIATELY",
+  buybackHalf: "QUOTE_DENOMINATED_UNTIL_AN_APPROVED_ROUTE_CONVERTS_IT_TO_WETH",
+  wethQuoteIs: "THE_SPECIAL_CASE_WHERE_SELECTED_QUOTE_IS_ALREADY_WETH",
+  projectTokenDirectPlatformClaim: false,
+  buybackTerminalAsset: "WETH",
+});
+
 export const PLATFORM_SETTLEMENT_INVARIANT =
-  `Of NET SETTLED platform WETH, ${PLATFORM_SUBDIVISION_PROSE.relicsBuybackReserve} is allocated to the RELICS ` +
-  `buy-and-entomb reserve and ${PLATFORM_SUBDIVISION_PROSE.platformTreasury} to retained treasury, after conversion ` +
-  `fees, slippage and rounding. Conversion costs fall only on the platform share, never on the creator's.`;
+  `The platform's ${bpsToProsePercentString(PLATFORM_SHARE_BPS)} entitlement is denominated in the market's SELECTED QUOTE, and ` +
+  `divides there: ${PLATFORM_SUBDIVISION_PROSE.platformTreasury} is retained treasury, claimable in the quote asset ` +
+  `immediately, and ${PLATFORM_SUBDIVISION_PROSE.relicsBuybackReserve} is allocated to the RELICS buy-and-entomb reserve, ` +
+  `which stays quote-denominated until an approved route converts it to WETH. A WETH-quoted market is the special case ` +
+  `where that conversion is already done. An allocated buyback half is not a settled one, and is never reported as WETH ` +
+  `before WETH is received. Conversion costs fall only on the platform share, never on the creator's.`;
+
+/**
+ * QUOTE ADMISSION IS NOT GATED ON A PROVEN WETH ROUTE — and no surface may re-encode a rule saying
+ * it is. A quote can be enabled for new launches while the platform's route from that quote to WETH
+ * is unproven, because the treasury half is claimable in the quote regardless and the buyback half
+ * is allowed to wait. This constant exists so the absence of that rule is a STATED decision rather
+ * than an omission somebody helpfully "fixes" later.
+ *
+ * Separate and still true: the CREATOR's `QUOTE_ONLY` mode does need a proven route from the
+ * project token into the quote, because that conversion is what the mode promises the creator. The
+ * two are different routes with different requirements; do not collapse them.
+ */
+export const QUOTE_ADMISSION_REQUIRES_PROVEN_WETH_ROUTE = false;
 
 /**
  * THE RETIRED-CLAIM REGISTER. Published as data so that every repository's stale-claim gate scans
@@ -194,6 +244,37 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
     counter: "ACTIVE_STALE_RETAINED_18_75_PERCENT_CLAIMS",
     pattern: "\\b18[.,]75\\s*%|\\b1875\\b\\s*(?:bps|basis points)|platformTreasury\\s*:\\s*1875\\b",
     description: "the retired 18.75%-of-collected-fees retained figure (now 12.50%)",
+  }),
+  // ---- retired by the quote-denominated platform entitlement (2026-08-10) --------------------
+  //
+  // Both of these were stated as live truth across the SDK, the indexer and the documentation
+  // until the entitlement moved into the selected quote. They are the exact shape of assertion
+  // this register exists to catch: a policy sentence, repeated, that a model change falsifies.
+  //
+  // NOTE THE LINE THESE PATTERNS DO NOT CROSS. "The locker AT THIS INTEGRATION HEAD is
+  // WETH-denominated" is a FACT ABOUT A SPECIFIC DEPLOYMENT and stays sayable — a contract that
+  // does not implement the model yet genuinely cannot report quote-denominated figures, and saying
+  // so is honest. What is retired is the POLICY claim that the platform is paid only in WETH.
+  Object.freeze({
+    id: "PLATFORM_TREASURY_ASSET_WETH_ONLY",
+    counter: "ACTIVE_STALE_PLATFORM_TREASURY_WETH_ONLY_CLAIMS",
+    pattern:
+      "PLATFORM_TREASURY_ASSET\\s*[=:]\\s*[\"']?WETH_ONLY" +
+      "|platform\\s+(?:NEVER|never)\\s+has\\s+a\\s+token\\s+entitlement" +
+      "|platform\\s+(?:is\\s+)?(?:only|always)\\s+(?:paid|settles?|settled)\\s+in\\s+WETH" +
+      "|platform\\s+treasury\\s+is\\s+WETH[- ]only" +
+      "|platform\\s+(?:share|entitlement)\\s+is\\s+always\\s+WETH",
+    description: "the retired claim that the platform treasury is paid only in WETH (it is now claimable in the selected quote)",
+  }),
+  Object.freeze({
+    id: "PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM_NO",
+    counter: "ACTIVE_STALE_PLATFORM_NO_DIRECT_QUOTE_CLAIM_CLAIMS",
+    pattern:
+      "PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM\\s*[=:]\\s*[\"']?NO\\b" +
+      "|platform\\s+cannot\\s+claim\\s+(?:directly\\s+)?in\\s+(?:a\\s+)?(?:non-WETH\\s+)?quote" +
+      "|no\\s+direct\\s+(?:non-WETH\\s+)?quote\\s+claim\\s+for\\s+the\\s+platform" +
+      "|platform\\s+has\\s+no\\s+quote-denominated\\s+(?:claim|entitlement)",
+    description: "the retired claim that the platform has no direct claim in a non-WETH quote (the treasury half is now claimable in it)",
   }),
 ]);
 
@@ -239,19 +320,30 @@ export const FORBIDDEN_ALLOCATION_PHRASINGS = Object.freeze([
 export const CREATOR_FEE_ASSET_MODES = Object.freeze(["DUAL_ASSET", "QUOTE_ONLY"]);
 
 /**
- * Where a project's PLATFORM-side fee revenue currently stands on its way to the 50/50 allocation.
- * One closed list, shared by the SDK's `platformSettlementStatus` and the indexer's
- * `platform_settlement_status` column, so the two can never drift.
+ * Where a project's PLATFORM-side fee revenue currently stands. One closed list, shared by the
+ * SDK's `platformSettlementStatus` and the indexer's `platform_settlement_status` column, so the
+ * two can never drift. Listed in PIPELINE ORDER.
  *
- *  - NOT_ACCRUED                  — no platform fee revenue has accrued for this project yet.
- *  - SOURCE_ASSETS_PENDING        — fees collected, still sitting in their source assets.
- *  - PROJECT_TOKEN_TO_QUOTE_PENDING — a project-token bucket awaits conversion into the quote asset.
- *  - QUOTE_TO_WETH_PENDING        — a quote-asset bucket awaits conversion into WETH.
- *  - WETH_SETTLED                 — net WETH is credited to the platform; allocation not yet split.
- *  - SPLIT_ALLOCATED              — settled WETH is divided into buyback reserve and retained treasury.
- *  - DEGRADED_ROUTE               — a conversion route is unavailable or unproven; figures are stale.
- *  - RETRYABLE_FAILURE            — a settlement step failed and can be retried.
- *  - UNKNOWN                      — the state could not be determined.
+ *  - NOT_ACCRUED                     — no platform fee revenue has accrued for this project yet.
+ *  - SOURCE_ASSETS_PENDING           — fees collected, still sitting in their source assets.
+ *  - PROJECT_TOKEN_TO_QUOTE_PENDING  — the project-token share awaits conversion into the selected
+ *                                      quote. The platform takes no direct claim in the project
+ *                                      token, so this step always precedes the split.
+ *  - SPLIT_ALLOCATED                 — the entitlement is divided IN THE SELECTED QUOTE. The
+ *                                      treasury half is claimable in the quote from this point on.
+ *  - BUYBACK_ALLOCATED_AWAITING_ROUTE — the buyback half is allocated and quote-denominated, and no
+ *                                      approved route to WETH exists yet. A NORMAL, HEALTHY STATE,
+ *                                      not a failure: under this model waiting is expected, and
+ *                                      calling it RETRYABLE_FAILURE would report an ordinary
+ *                                      condition as a fault.
+ *  - QUOTE_TO_WETH_PENDING           — an approved route exists and the conversion is outstanding.
+ *  - WETH_SETTLED                    — WETH has actually been RECEIVED for the buyback half. This
+ *                                      is the ONLY status under which a WETH figure exists.
+ *  - DEGRADED_ROUTE                  — a route that did exist is unavailable or unproven; figures
+ *                                      are a stale prefix rather than current.
+ *  - RETRYABLE_FAILURE               — a settlement step FAILED and can be retried. Reserve it for
+ *                                      actual failures; "no route yet" is the state above.
+ *  - UNKNOWN                         — the state could not be determined.
  *
  * UNKNOWN IS LOAD-BEARING. It is never to be replaced with zero, and no consumer may render a
  * number without first reading the status: a false zero reads as a measurement, an honest gap does
@@ -261,40 +353,86 @@ export const PLATFORM_SETTLEMENT_STATUSES = Object.freeze([
   "NOT_ACCRUED",
   "SOURCE_ASSETS_PENDING",
   "PROJECT_TOKEN_TO_QUOTE_PENDING",
+  "SPLIT_ALLOCATED",
+  "BUYBACK_ALLOCATED_AWAITING_ROUTE",
   "QUOTE_TO_WETH_PENDING",
   "WETH_SETTLED",
-  "SPLIT_ALLOCATED",
   "DEGRADED_ROUTE",
   "RETRYABLE_FAILURE",
   "UNKNOWN",
 ]);
 
-/** The statuses under which a settled-WETH figure exists at all. Every other status means the
- *  buyback/retained fields are unknown, not zero. */
-export const SETTLED_PLATFORM_STATUSES = Object.freeze(["WETH_SETTLED", "SPLIT_ALLOCATED"]);
+/**
+ * Statuses under which the 50/50 division exists AT ALL — in the settlement asset, which is the
+ * quote. From here the treasury half is claimable; it says nothing about WETH.
+ */
+export const ALLOCATED_PLATFORM_STATUSES = Object.freeze([
+  "SPLIT_ALLOCATED",
+  "BUYBACK_ALLOCATED_AWAITING_ROUTE",
+  "QUOTE_TO_WETH_PENDING",
+  "WETH_SETTLED",
+]);
+
+/**
+ * Statuses under which WETH has actually been RECEIVED for the buyback half. Exactly one, and
+ * deliberately so: every other status means the WETH fields are unknown or not-yet, never zero.
+ */
+export const BUYBACK_WETH_SETTLED_STATUSES = Object.freeze(["WETH_SETTLED"]);
+
+/**
+ * @deprecated Use `BUYBACK_WETH_SETTLED_STATUSES`. The old list included `SPLIT_ALLOCATED`, which
+ * under the quote-denominated model means the split happened in the QUOTE and implies nothing about
+ * WETH at all.
+ */
+export const SETTLED_PLATFORM_STATUSES = BUYBACK_WETH_SETTLED_STATUSES;
 
 /** @param {string} status */
 export function isPlatformSettlementStatus(status) {
   return PLATFORM_SETTLEMENT_STATUSES.includes(status);
 }
 
-/** True when `status` means a settled WETH figure exists. @param {string} status */
+/** True when the entitlement has been divided in the settlement asset. @param {string} status */
+export function hasAllocatedPlatformEntitlement(status) {
+  return ALLOCATED_PLATFORM_STATUSES.includes(status);
+}
+
+/** True when WETH has actually been received for the buyback half. @param {string} status */
+export function hasSettledBuybackWeth(status) {
+  return BUYBACK_WETH_SETTLED_STATUSES.includes(status);
+}
+
+/** @deprecated Use `hasSettledBuybackWeth`; the old name read as "the platform has settled",
+ *  which is now true of the treasury half long before any WETH exists. @param {string} status */
 export function hasSettledPlatformWeth(status) {
-  return SETTLED_PLATFORM_STATUSES.includes(status);
+  return hasSettledBuybackWeth(status);
 }
 
 /**
- * Splits NET SETTLED platform WETH into the two destinations, using the kernels' own floor-division
- * order: buyback = floor(settled * buybackBps / 10_000), retained = the remainder. The remainder
- * form (rather than a second floor) is what makes the two halves sum to the input exactly, with no
- * dust stranded — the same rule the on-chain kernels apply.
+ * Splits the platform entitlement into its two destinations, using the kernels' own floor-division
+ * order: buyback = floor(entitlement * buybackBps / 10_000), retained = the remainder. The
+ * remainder form (rather than a second floor) is what makes the two halves sum to the input
+ * exactly, with no dust stranded — the same rule the on-chain kernels apply.
  *
- * Takes and returns `bigint` wei. JS `number` is forbidden for economic math.
+ * ASSET-AGNOSTIC BY DESIGN. The input is denominated in the platform's SETTLEMENT ASSET — the
+ * market's selected quote — and both outputs are in that same asset. The buyback half is not WETH
+ * yet unless the quote already was; see PLATFORM_ENTITLEMENT_MODEL.
+ *
+ * Takes and returns `bigint` base units. JS `number` is forbidden for economic math.
+ * @param {bigint} entitlement
+ */
+export function allocatePlatformEntitlement(entitlement) {
+  if (typeof entitlement !== "bigint") throw new TypeError("allocatePlatformEntitlement requires a bigint (base units of the settlement asset)");
+  if (entitlement < 0n) throw new RangeError("entitlement cannot be negative");
+  const buybackReserve = (entitlement * BigInt(RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE)) / BigInt(BPS_DENOMINATOR);
+  return Object.freeze({ buybackReserve, treasuryRetained: entitlement - buybackReserve });
+}
+
+/**
+ * @deprecated The name asserts WETH, which is now only the special case. Use
+ * `allocatePlatformEntitlement`. Kept as a delegating alias — one implementation, two names — so
+ * existing callers keep resolving; it is still exactly correct for a WETH-quoted market.
  * @param {bigint} netSettledWeth
  */
 export function allocateSettledPlatformWeth(netSettledWeth) {
-  if (typeof netSettledWeth !== "bigint") throw new TypeError("allocateSettledPlatformWeth requires a bigint (wei)");
-  if (netSettledWeth < 0n) throw new RangeError("netSettledWeth cannot be negative");
-  const buybackReserve = (netSettledWeth * BigInt(RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE)) / BigInt(BPS_DENOMINATOR);
-  return Object.freeze({ buybackReserve, treasuryRetained: netSettledWeth - buybackReserve });
+  return allocatePlatformEntitlement(netSettledWeth);
 }

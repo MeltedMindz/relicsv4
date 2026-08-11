@@ -80,21 +80,56 @@ The buyback slice is carved only from platform revenue. It never reads or touche
 collaborator ledger, and the creator's 75% is untouched by this subdivision — it was 75% when the
 platform split its own share 25/75, and it is 75% now.
 
-### Nominal is not settled
+### Which asset the platform is paid in
 
-The 12.50% above is a **nominal** figure: a ratio applied to collected LP fees. The exact invariant
-the system upholds is stated on **net settled platform WETH**:
+The platform's 25% is denominated in the market's **selected quote**, and the 50/50 divides it
+there — not in WETH. WETH is the special case, not the definition.
 
-> Of net settled platform WETH, 50% is allocated to the $RELICS buy-and-entomb reserve and 50% to
-> retained treasury, after conversion fees, slippage and deterministic rounding.
+```
+platform 25% entitlement, in the SELECTED QUOTE
+├─ 50% retained treasury → claimable IN THE QUOTE ASSET, immediately
+└─ 50% $RELICS buyback   → QUOTE-denominated; becomes WETH only when an approved
+                            route exists. Retryable. Never called settled until
+                            WETH is actually received.
+```
+
+So on a `PROJECT/USDG` market the protocol Safe claims USDG and the buyback reserve holds USDG
+waiting for a route; on a `PROJECT/WETH` market both halves are WETH the moment the split happens,
+because there is nothing left to convert.
+
+Two things this does **not** change:
+
+- **The platform still takes no direct claim in your project token.** That share converts into the
+  selected quote first, exactly as before.
+- **The buyback still ends in WETH.** It just gets there later — or, for now, not yet.
+
+### Allocated is not settled
+
+The 12.50% figures above are **nominal**: ratios applied to collected LP fees. A buyback half
+sitting in USDG is *allocated*, not *settled*. The claim "50% of net platform revenue is allocated
+to $RELICS buy-and-entomb" is only honest while what is pending is visibly pending, so the SDK and
+the indexer keep the quote-denominated reserve in a field of its own
+(`platformBuybackReserveQuote`, carrying the asset and its decimals) and leave the WETH field empty
+until WETH arrives. "Waiting for a route" is a normal state with its own status
+(`BUYBACK_ALLOCATED_AWAITING_ROUTE`) — not an error, and not a zero.
 
 Nobody should promise that exactly 12.50% of gross trading volume reaches either destination.
-Volume is not fee revenue, and settlement is not free — platform fees may arrive in a project token
-or in a non-WETH quote asset and have to be converted before the split applies.
+Volume is not fee revenue, and settlement is not free.
 
-**Conversion costs fall only on the platform share, never on the creator's.** The route from a
-project token or a quote asset to WETH is the platform's own problem, paid out of the platform's
-own slice.
+**Conversion costs fall only on the platform share, never on the creator's** — in either direction.
+Getting the platform's own slice from a project token into the quote, and from the quote into WETH,
+is the platform's problem, paid out of the platform's own share.
+
+### Quote admission does not wait for a WETH route
+
+A quote asset can be enabled for new launches without the platform's route from that quote to WETH
+having been proven, because the treasury half is claimable in the quote regardless and the buyback
+half is allowed to wait. Do not read "enabled" as "a WETH route exists".
+
+That is a different route from the one your `QUOTE_ONLY` mode needs. `QUOTE_ONLY` still requires a
+proven route from the **project token into the quote**, because that conversion is what the mode
+promises *you*. The two are separate requirements on separate routes; the launchpad will not offer
+you `QUOTE_ONLY` without the second one.
 
 ## What "buy-and-entomb" actually means here
 

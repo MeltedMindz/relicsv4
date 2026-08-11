@@ -100,7 +100,7 @@ export const REFUSED_MANIFEST_KEYS = Object.freeze({
 
 const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-const SYMBOL_RE = /^[A-Z][A-Z0-9]*$/;
+export const SYMBOL_RE = /^[A-Z0-9]+$/;
 const DECIMAL_RE = /^(0|[1-9][0-9]*)$/;
 
 /**
@@ -156,7 +156,7 @@ export function validateManifest(manifest) {
     onlyKeys(issues, project, `${at}#project`, ["name", "symbol", "description", "license", "website", "twitterHandle"]);
     requireString(issues, project.name, `${at}#project.name`, "PROJECT_NAME", LIMITS.maxNameLength, 1);
     if (typeof project.symbol !== "string" || !SYMBOL_RE.test(project.symbol) || project.symbol.length > LIMITS.maxSymbolLength) {
-      issues.push(error("PROJECT_SYMBOL", `${at}#project.symbol`, `symbol must be 1-${LIMITS.maxSymbolLength} uppercase letters/digits starting with a letter`));
+      issues.push(error("PROJECT_SYMBOL", `${at}#project.symbol`, `symbol must be 1-${LIMITS.maxSymbolLength} uppercase letters and digits`));
     }
     requireString(issues, project.description, `${at}#project.description`, "PROJECT_DESCRIPTION", LIMITS.maxDescriptionLength, 1);
     requireString(issues, project.license, `${at}#project.license`, "PROJECT_LICENSE", LIMITS.maxLicenseLength, 1);

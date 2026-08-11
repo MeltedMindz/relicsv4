@@ -88,6 +88,14 @@ import {
   hasSettledPlatformWeth,
   allocateSettledPlatformWeth,
   bpsToPercentString,
+  PLATFORM_ENTITLEMENT_MODEL,
+  QUOTE_ADMISSION_REQUIRES_PROVEN_WETH_ROUTE,
+  ALLOCATED_PLATFORM_STATUSES,
+  BUYBACK_WETH_SETTLED_STATUSES,
+  hasAllocatedPlatformEntitlement,
+  hasSettledBuybackWeth,
+  allocatePlatformEntitlement,
+  RETIRED_ALLOCATION_CLAIMS,
 } from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
@@ -888,11 +896,12 @@ test("the mechanism is buy-and-entomb, and no published sentence calls it a burn
   assert(/no ERC-20 burn event/i.test(BUYBACK_TECHNICAL_NOTE), "the technical note must deny the burn event");
 });
 
-test("the platform invariant is stated on NET SETTLED WETH, not on volume", () => {
-  assert(/NET SETTLED platform WETH/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not name its base");
+test("the platform invariant names its settlement asset, and never promises a share of volume", () => {
+  assert(/SELECTED QUOTE/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not name the asset it divides");
   assert(/conversion/i.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not mention conversion cost");
   assert(/only on the platform share/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not protect the creator's share");
   assert(!/volume/i.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant must never promise a share of volume");
+  assert(/never reported as WETH before WETH is received/i.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not forbid reporting quote as WETH");
 });
 
 test("creator modes stay two, and quote-only is not WETH-only", () => {
@@ -900,14 +909,15 @@ test("creator modes stay two, and quote-only is not WETH-only", () => {
   assert(CREATOR_FEE_ASSET_MODES.includes("DUAL_ASSET") && CREATOR_FEE_ASSET_MODES.includes("QUOTE_ONLY"), "the two modes are not the two modes");
 });
 
-test("the settlement status list is closed, and UNKNOWN is in it", () => {
+test("the settlement status list is closed, in pipeline order, and UNKNOWN is in it", () => {
   const expected = [
     "NOT_ACCRUED",
     "SOURCE_ASSETS_PENDING",
     "PROJECT_TOKEN_TO_QUOTE_PENDING",
+    "SPLIT_ALLOCATED",
+    "BUYBACK_ALLOCATED_AWAITING_ROUTE",
     "QUOTE_TO_WETH_PENDING",
     "WETH_SETTLED",
-    "SPLIT_ALLOCATED",
     "DEGRADED_ROUTE",
     "RETRYABLE_FAILURE",
     "UNKNOWN",
@@ -915,22 +925,80 @@ test("the settlement status list is closed, and UNKNOWN is in it", () => {
   assert(PLATFORM_SETTLEMENT_STATUSES.join(",") === expected.join(","), "the settlement status vocabulary drifted");
   assert(isPlatformSettlementStatus("UNKNOWN"), "UNKNOWN is not a member of its own list");
   assert(!isPlatformSettlementStatus("SETTLED"), "an unknown status was accepted");
-  assert(hasSettledPlatformWeth("WETH_SETTLED") && hasSettledPlatformWeth("SPLIT_ALLOCATED"), "a settled status does not report settled");
-  for (const s of ["NOT_ACCRUED", "SOURCE_ASSETS_PENDING", "DEGRADED_ROUTE", "RETRYABLE_FAILURE", "UNKNOWN"]) {
-    assert(!hasSettledPlatformWeth(s), `${s} must not claim a settled WETH figure exists`);
+});
+
+test("allocated is not settled — the whole point of the quote-denominated model", () => {
+  // A buyback half sitting in a non-WETH quote is ALLOCATED. Reporting it as settled is the exact
+  // misstatement this vocabulary exists to make impossible.
+  assert(hasAllocatedPlatformEntitlement("SPLIT_ALLOCATED"), "the split status does not report an allocation");
+  assert(hasAllocatedPlatformEntitlement("BUYBACK_ALLOCATED_AWAITING_ROUTE"), "awaiting a route is still allocated");
+  assert(!hasSettledBuybackWeth("BUYBACK_ALLOCATED_AWAITING_ROUTE"), "awaiting a route must never report settled WETH");
+  assert(!hasSettledBuybackWeth("SPLIT_ALLOCATED"), "a split in the QUOTE says nothing about WETH");
+  assert(!hasSettledBuybackWeth("QUOTE_TO_WETH_PENDING"), "an outstanding conversion is not a receipt");
+  assert(hasSettledBuybackWeth("WETH_SETTLED"), "WETH_SETTLED must be the one status that means WETH arrived");
+  assert(BUYBACK_WETH_SETTLED_STATUSES.length === 1, "exactly one status may mean WETH was received");
+  for (const s of ["NOT_ACCRUED", "SOURCE_ASSETS_PENDING", "PROJECT_TOKEN_TO_QUOTE_PENDING", "DEGRADED_ROUTE", "RETRYABLE_FAILURE", "UNKNOWN"]) {
+    assert(!hasAllocatedPlatformEntitlement(s), `${s} must not claim the entitlement is divided`);
+    assert(!hasSettledBuybackWeth(s), `${s} must not claim a settled WETH figure exists`);
+  }
+  // The deprecated predicate must agree with the new one, or two call sites disagree in production.
+  for (const s of PLATFORM_SETTLEMENT_STATUSES) {
+    assert(hasSettledPlatformWeth(s) === hasSettledBuybackWeth(s), `the deprecated predicate disagrees on ${s}`);
   }
 });
 
-test("splitting settled WETH conserves every wei and floors toward the treasury", () => {
-  for (const wei of [0n, 1n, 2n, 3n, 999n, 1000n, 10n ** 18n, 123456789987654321n]) {
-    const { buybackReserve, treasuryRetained } = allocateSettledPlatformWeth(wei);
-    assert(buybackReserve + treasuryRetained === wei, `the split of ${wei} does not conserve the input`);
-    assert(buybackReserve * BigInt(BPS_DENOMINATOR) <= wei * BigInt(RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE), `the buyback slice of ${wei} exceeds its ceiling`);
+test("waiting for a route is a normal state, not a failure", () => {
+  assert(PLATFORM_SETTLEMENT_STATUSES.includes("BUYBACK_ALLOCATED_AWAITING_ROUTE"), "the awaiting-route state is missing");
+  assert(ALLOCATED_PLATFORM_STATUSES.includes("BUYBACK_ALLOCATED_AWAITING_ROUTE"), "awaiting a route must still count as allocated");
+  assert(!ALLOCATED_PLATFORM_STATUSES.includes("RETRYABLE_FAILURE"), "a failure is not an allocation");
+});
+
+test("the platform entitlement is denominated in the selected quote, with WETH as the special case", () => {
+  assert(PLATFORM_ENTITLEMENT_MODEL.entitlementAsset === "SELECTED_QUOTE", "the entitlement asset is not the selected quote");
+  assert(PLATFORM_ENTITLEMENT_MODEL.projectTokenDirectPlatformClaim === false, "the platform must take no direct project-token claim");
+  assert(PLATFORM_ENTITLEMENT_MODEL.buybackTerminalAsset === "WETH", "the buyback still ends in WETH");
+  assert(/SELECTED QUOTE/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not name the settlement asset");
+  assert(/special case/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant does not mark WETH as the special case");
+  assert(!/^Of NET SETTLED platform WETH/.test(PLATFORM_SETTLEMENT_INVARIANT), "the invariant still defines itself on WETH");
+});
+
+test("quote admission is NOT gated on a proven WETH route, and that is stated rather than omitted", () => {
+  assert(QUOTE_ADMISSION_REQUIRES_PROVEN_WETH_ROUTE === false, "a proven-WETH-route admission rule came back");
+});
+
+test("the retired register catches the WETH-only platform claims", () => {
+  const byId = Object.fromEntries(RETIRED_ALLOCATION_CLAIMS.map((c) => [c.id, new RegExp(c.pattern, "gi")]));
+  const wethOnly = byId.PLATFORM_TREASURY_ASSET_WETH_ONLY;
+  const noQuoteClaim = byId.PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM_NO;
+  assert(wethOnly && noQuoteClaim, "the two quote-model retired claims are not registered");
+  for (const s of ["PLATFORM_TREASURY_ASSET=WETH_ONLY", "the platform NEVER has a token entitlement", "the platform is only paid in WETH"]) {
+    wethOnly.lastIndex = 0;
+    assert(wethOnly.test(s), `the WETH-only pattern misses: ${s}`);
   }
-  assert(allocateSettledPlatformWeth(1n).buybackReserve === 0n, "one wei must floor to zero buyback, not round up");
+  for (const s of ["PLATFORM_DIRECT_NON_WETH_QUOTE_CLAIM=NO", "the platform cannot claim in a non-WETH quote"]) {
+    noQuoteClaim.lastIndex = 0;
+    assert(noQuoteClaim.test(s), `the no-direct-quote-claim pattern misses: ${s}`);
+  }
+  // The line the patterns must NOT cross: a fact about a specific deployment stays sayable.
+  wethOnly.lastIndex = 0;
+  assert(!wethOnly.test("the locker at this integration HEAD is WETH-denominated"), "the pattern forbids an honest deployment fact");
+});
+
+test("splitting the entitlement conserves every unit and floors toward the treasury", () => {
+  for (const units of [0n, 1n, 2n, 3n, 999n, 1000n, 10n ** 18n, 123456789987654321n]) {
+    const { buybackReserve, treasuryRetained } = allocatePlatformEntitlement(units);
+    assert(buybackReserve + treasuryRetained === units, `the split of ${units} does not conserve the input`);
+    assert(buybackReserve * BigInt(BPS_DENOMINATOR) <= units * BigInt(RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE), `the buyback slice of ${units} exceeds its ceiling`);
+    // The deprecated alias must be the same function, not a second implementation.
+    const legacy = allocateSettledPlatformWeth(units);
+    assert(legacy.buybackReserve === buybackReserve && legacy.treasuryRetained === treasuryRetained, "the deprecated alias diverged");
+  }
+  assert(allocatePlatformEntitlement(1n).buybackReserve === 0n, "one unit must floor to zero buyback, not round up");
+  // 6-decimal assets exist (USDG); the split must be unit-agnostic, not wei-shaped.
+  assert(allocatePlatformEntitlement(1_000_000n).buybackReserve === 500_000n, "the split is not unit-agnostic");
   let threw = false;
   try {
-    allocateSettledPlatformWeth(100);
+    allocatePlatformEntitlement(100);
   } catch {
     threw = true;
   }

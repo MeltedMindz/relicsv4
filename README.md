@@ -57,9 +57,11 @@ that is the launchpad. You bring art and a handful of parameters.
 
 Headline economics, stated the way they should always be stated: your project pool has a static
 **1% LP fee**; LP fees **actually collected** are split **75% creator / 25% platform**; and the
-platform's own share is split in half — **50% of the launchpad's net platform-fee revenue is
-allocated to $RELICS buy-and-entomb**, which buys $RELICS and sends it permanently to `0x…dEaD`, and
-50% is retained by the protocol Safe. Nominally that is 75.00 / 12.50 / 12.50 of collected LP fees.
+platform's own share is split in half **in the market's selected quote asset** — **50% of the
+launchpad's net platform-fee revenue is allocated to $RELICS buy-and-entomb**, which converts to
+WETH when a route allows, then buys $RELICS and sends it permanently to `0x…dEaD`, and 50% is
+retained by the protocol Safe, claimable in the quote. Nominally that is 75.00 / 12.50 / 12.50 of
+collected LP fees.
 Entombment is not a burn: circulating supply falls, `totalSupply` stays fixed at 10,000, and no
 burn event occurs, because $RELICS has no burn function.
 

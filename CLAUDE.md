@@ -81,8 +81,13 @@ These are accuracy rules, not style. Getting one wrong publishes a false claim.
   an approved but gated runtime is marked, not deleted and not sold as launchable.
 - **Fees are a share of collected LP fees, never of volume.** Creator 75%; platform 25%, split
   in half — 50% of the launchpad's net platform-fee revenue is allocated to $RELICS
-  buy-and-entomb, 50% retained. Nominally 75.00 / 12.50 / 12.50. The exact invariant is on net
-  SETTLED platform WETH; conversion costs fall on the platform share only.
+  buy-and-entomb, 50% retained. Nominally 75.00 / 12.50 / 12.50. Conversion costs fall on the
+  platform share only.
+- **The platform is paid in the SELECTED QUOTE**, and the 50/50 divides it there: treasury half
+  claimable in the quote immediately, buyback half quote-denominated until an approved route
+  converts it to WETH. WETH-quoted is the special case. **Allocated is not settled** — never
+  report a quote balance as WETH, and never say the platform is paid only in WETH.
+- **Quote admission is not gated on a proven WETH route.** Do not re-add that rule.
 - **The numbers are declared once**, in `packages/project-schema/src/economics.js`. Import them;
   never type a bps or a percentage. `npm run kit:economics` enforces it.
 - **Say buy-and-entomb, never burn, and state all three halves:** spendable and circulating
