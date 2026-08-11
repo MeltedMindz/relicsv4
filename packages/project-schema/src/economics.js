@@ -481,6 +481,9 @@ export const CLAIM_SUPPRESSION_CUES = Object.freeze({
     "revers(?:e|ed|al)",
     "deprecated",
     "old failure mode",
+    "old (?:wording|phrasing|sentence|copy|model|name)",
+    "(?:is|was|would be|reads) (?:simply )?(?:wrong|false|incorrect)",
+    "describ(?:e|es|ed) the (?:superseded|old|pre-?amendment|retired)",
     "\\bstale\\b",
     "\\d+(?:\\.\\d+)?\\s*%\\s*(?:→|->|to)\\s*\\d+(?:\\.\\d+)?\\s*%",
   ],
@@ -507,6 +510,18 @@ export function isSuppressedMention(rawSegment) {
  * sibling gate does not need a hardcoded path entry in every scanner that might meet it.
  */
 export const DETECTOR_SELF_REFERENCE_MARKER = "RETIRED_CLAIM_DETECTOR_SELF_REFERENCE";
+
+/**
+ * A retired phrasing that is still EXACTLY TRUE under a stated condition.
+ *
+ * The mandated settlement-cost sentence — "…divide the net WETH received after conversion" — is
+ * correct verbatim for a market whose quote asset IS WETH, and the owner's wording is worth
+ * keeping intact for that case. A line (or the line above it) carrying this token is exempt, and
+ * ONLY that line: every other line in the file is still judged. Convention originally written for
+ * `verify-economic-split-parity.mjs`; lifted here so both gates honour it identically rather than
+ * one of them reporting what the other permits.
+ */
+export const CONDITIONALLY_TRUE_MARKER = "CONDITIONAL_BY_QUOTE_ASSET";
 
 /**
  * THE ONE MATCHER. Both repositories' gates call this rather than each assembling regexes, because
@@ -543,6 +558,10 @@ export function scanTextForRetiredClaims(text) {
 
     for (let i = 0; i < lines.length; i++) {
       const seen = new Set();
+
+      // A phrasing that is exactly true under a stated condition, marked on its own line or the
+      // one above it — narrow by construction, and it names its reason where a reader will see it.
+      if (`${i > 0 ? lines[i - 1] : ""}\n${lines[i]}`.includes(CONDITIONALLY_TRUE_MARKER)) continue;
 
       // TWO DIFFERENT SCOPES, on purpose. Suppression is CONTEXT and is judged over the whole line:
       // a markdown row puts the claim in one cell and the `file.sol:771` it is quoting in another,
