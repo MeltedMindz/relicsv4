@@ -32,6 +32,7 @@ import { dirname } from "node:path";
 import {
   RETIRED_ALLOCATION_CLAIMS,
   SUPERSESSION_MARKERS,
+  normalizeForClaimScan,
   RELICS_BUYBACK_BPS_OF_PLATFORM_SHARE,
   PLATFORM_RETAINED_BPS_OF_PLATFORM_SHARE,
   NOMINAL_ALLOCATION_BPS,
@@ -78,7 +79,30 @@ function scannable(rel) {
 
 // ---------------------------------------------------------------------------------------------
 
-const retired = RETIRED_ALLOCATION_CLAIMS.map((c) => ({ ...c, regex: new RegExp(c.pattern, "gi"), hits: [], superseded: [] }));
+// Each claim gets up to two matchers: one over the raw text, one over the normalised text. The
+// second is what catches a claim written as an identifier, a JSON value or a trailing comment —
+// the shapes a prose regex silently misses, which is how a gate reports zero for the wrong reason.
+const retired = RETIRED_ALLOCATION_CLAIMS.map((c) => ({
+  ...c,
+  regex: c.pattern ? new RegExp(c.pattern, "gi") : null,
+  normalizedRegex: c.normalizedPattern ? new RegExp(c.normalizedPattern, "gi") : null,
+  hits: [],
+  superseded: [],
+}));
+
+/** Matches over raw and (when the claim has one) normalised text, de-duplicating the overlap. */
+function claimMatches(claim, text, normalized) {
+  const found = [];
+  if (claim.regex) {
+    claim.regex.lastIndex = 0;
+    for (const m of text.matchAll(claim.regex)) found.push(m[0].trim().replace(/\s+/g, " "));
+  }
+  if (claim.normalizedRegex) {
+    claim.normalizedRegex.lastIndex = 0;
+    for (const m of normalized.matchAll(claim.normalizedRegex)) found.push(m[0].trim());
+  }
+  return [...new Set(found)];
+}
 
 /**
  * Live-value declarations outside the one declaration site. Deliberately narrow: it fires on the
@@ -119,11 +143,11 @@ for (const abs of walk(ROOT)) {
   const isSuperseded = SUPERSESSION_MARKERS.some((m) => text.includes(m));
   const isRuleFile = RULE_FILES.has(rel);
 
+  const normalized = normalizeForClaimScan(text);
   for (const claim of retired) {
-    claim.regex.lastIndex = 0;
-    const found = [...text.matchAll(claim.regex)];
+    const found = claimMatches(claim, text, normalized);
     if (found.length === 0) continue;
-    const record = { file: rel, count: found.length, samples: found.slice(0, 3).map((m) => m[0].trim()) };
+    const record = { file: rel, count: found.length, samples: found.slice(0, 3) };
     if (isRuleFile) continue;
     if (isSuperseded) claim.superseded.push(record);
     else claim.hits.push(record);

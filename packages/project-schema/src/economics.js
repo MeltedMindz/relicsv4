@@ -215,13 +215,50 @@ export const PLATFORM_SETTLEMENT_INVARIANT =
 export const QUOTE_ADMISSION_REQUIRES_PROVEN_WETH_ROUTE = false;
 
 /**
+ * NORMALISATION FOR CLAIM SCANNING — the matcher's answer to "the same claim, written as code".
+ *
+ * A retired claim does not only appear as prose. It appears as a gate identifier
+ * (`TREASURY_WETH_ONLY`), a camelCase test name (`test_treasuryWethOnly`), a JSON verdict value,
+ * a log label, and — the form that slipped past two independent scanners — a trailing code
+ * comment (`// weth-only`). Regexes written for sentences miss every one of those, and then the
+ * gate reports zero because it is looking for the wrong shape rather than because there is
+ * nothing.
+ *
+ * So the register carries TWO kinds of pattern. `pattern` runs against the raw text, where casing
+ * and punctuation are load-bearing (an ABI entry, a call site). `normalizedPattern` runs against
+ * the output of this function, where they are not: identifier separators, camelCase boundaries and
+ * surrounding punctuation all collapse to single spaces and everything lowercases, so
+ * `TREASURY_WETH_ONLY`, `treasuryWethOnly`, `treasury-weth-only`, `"TREASURY_WETH_ONLY"` and
+ * `// weth-only` all become the one string `treasury weth only`.
+ *
+ * `%` survives, and so does a dot BETWEEN DIGITS, because the retired PERCENTAGES need both —
+ * "6.25%" has to stay one token. Every other dot is a separator like any other, so `t.bigint` and
+ * `treasury.weth.only` both split.
+ * @param {string} text
+ */
+export function normalizeForClaimScan(text) {
+  return String(text)
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2") // camelCase -> spaced
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2") // ACRONYMWord -> spaced
+    .replace(/(?<!\d)\.(?!\d)/g, " ") // a dot that is not a decimal point is a separator
+    .replace(/[^A-Za-z0-9%.]+/g, " ") // remaining identifier separators + punctuation -> space
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+/**
  * THE RETIRED-CLAIM REGISTER. Published as data so that every repository's stale-claim gate scans
  * for the same things, and so adding a retired claim is a one-line change in one file rather than
  * an edit to each scanner.
  *
  * `pattern` is a JavaScript regular-expression SOURCE string (case-insensitive, global is applied
- * by the scanner). `counter` is the environment-style name a gate must report a count under — the
- * three RC3 counters are contractual and are checked by name.
+ * by the scanner), run against the RAW text. `normalizedPattern`, where present, is run against
+ * `normalizeForClaimScan(text)` and is what catches identifier-, comment- and JSON-value-shaped
+ * occurrences. A claim may carry either or both; a claim whose meaning depends on punctuation —
+ * the removed selectors, matched by call and ABI shape — deliberately carries only `pattern`.
+ *
+ * `counter` is the environment-style name a gate must report a count under — the three RC3
+ * counters are contractual and are checked by name.
  *
  * A historical document may still assert a retired claim, but ONLY behind an explicit supersession
  * header; see SUPERSESSION_MARKERS.
@@ -270,6 +307,12 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
       "|platform\\s+treasury\\s+(?:is|stays|remains)[^.\\n]{0,20}WETH[- ]only" +
       "|treasury\\s+(?:stays|remains|is)\\s+\\*{0,2}WETH[- ]only" +
       "|platform\\s+(?:share|entitlement)\\s+is\\s+always\\s+WETH",
+    // Proximity-guarded on purpose. A bare "weth only" also appears in the CURRENT and correct
+    // sentence "quote-only is not WETH-only", so the normalized form only fires when a
+    // platform/treasury word sits within ~40 characters of it.
+    normalizedPattern:
+      "(?:platform|treasury|accrued|claimed|entitlement|retained)[^\\n]{0,40}weth only" +
+      "|weth only[^\\n]{0,40}(?:platform|treasury)",
     description: "the retired claim that the platform treasury is paid only in WETH (it is now claimable in the selected quote)",
   }),
   Object.freeze({
@@ -281,6 +324,10 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
       "|no\\s+direct\\s+(?:non-WETH\\s+)?quote\\s+claim\\s+for\\s+the\\s+platform" +
       "|platform\\s+has\\s+no\\s+quote-denominated\\s+(?:claim|entitlement)" +
       "|treasury\\s+never\\s+acquires\\s+a\\s+claim\\s+on\\s+a\\s+non-WETH",
+    normalizedPattern:
+      "platform direct non weth quote claim no\\b" +
+      "|treasury never acquires a claim on a non weth" +
+      "|platform (?:cannot|has no) [^\\n]{0,30}quote (?:claim|entitlement)",
     description: "the retired claim that the platform has no direct claim in a non-WETH quote (the treasury half is now claimable in it)",
   }),
   // ---- selectors REMOVED FROM THE BYTECODE, not merely deprecated (2026-08-10) ---------------
@@ -368,12 +415,45 @@ export const CREATOR_FEE_ASSET_MODES = Object.freeze(["DUAL_ASSET", "QUOTE_ONLY"
  *                                      are a stale prefix rather than current.
  *  - RETRYABLE_FAILURE               — a settlement step FAILED and can be retried. Reserve it for
  *                                      actual failures; "no route yet" is the state above.
+ *
+ *                                      NEVER RETURNED ON-CHAIN, and that is deliberate rather than
+ *                                      a gap. A failed call reverts instead of writing a status, so
+ *                                      the kernel cannot know the failure happened — synthesising
+ *                                      the value would be inventing knowledge it does not have. An
+ *                                      indexer that wants this state must DERIVE it from an
+ *                                      observed reverted transaction, and an SDK caller must pass
+ *                                      it in from the same evidence. Reading it back from a
+ *                                      contract is not possible, and any surface claiming to have
+ *                                      done so is wrong.
  *  - UNKNOWN                         — the state could not be determined.
  *
  * UNKNOWN IS LOAD-BEARING. It is never to be replaced with zero, and no consumer may render a
  * number without first reading the status: a false zero reads as a measurement, an honest gap does
  * not.
  */
+/**
+ * The subset a contract can actually report. `RETRYABLE_FAILURE` is absent: a reverted call writes
+ * nothing, so no on-chain read can ever produce it. Published so an indexer can assert that a
+ * status it READ is in this list, and that a status it DERIVED from a revert is not mistaken for
+ * one the chain asserted.
+ */
+export const ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES = Object.freeze([
+  "NOT_ACCRUED",
+  "SOURCE_ASSETS_PENDING",
+  "PROJECT_TOKEN_TO_QUOTE_PENDING",
+  "SPLIT_ALLOCATED",
+  "BUYBACK_ALLOCATED_AWAITING_ROUTE",
+  "QUOTE_TO_WETH_PENDING",
+  "WETH_SETTLED",
+  "DEGRADED_ROUTE",
+  "UNKNOWN",
+]);
+
+/** Statuses that exist only as an OFF-CHAIN inference from observed evidence. @param {string} s */
+export function isOffchainDerivedStatus(s) {
+  return PLATFORM_SETTLEMENT_STATUSES.includes(s) && !ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES.includes(s);
+}
+
 export const PLATFORM_SETTLEMENT_STATUSES = Object.freeze([
   "NOT_ACCRUED",
   "SOURCE_ASSETS_PENDING",

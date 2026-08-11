@@ -117,10 +117,10 @@
         "traitSchema": "add2ef67cd47a2f438eae5d04339455ba734a3ec4755a37de1d4d0846bd1ef45"
       },
       "integrity": {
-        "bundleCommitment": "2b1f9781457e8dbf82831f4fea233b8dc732f82d03f0bccb5d2de562cb0db3e7",
-        "bundleHash": "109693787927e844107598d75b439a814159f306c1abefa43f781ed4de347df0",
+        "bundleCommitment": "cd2d84aacccd1fa98463d8cd4d1a06d79fe26f5d7ad1e4b51a8e68cb77ae4c56",
+        "bundleHash": "25829ff7c37e5fdd1c93d89fe778c48b8c431bcbe67c00c429336375a5120447",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "projectConfigHash": "a44786f7094f29c393e4e993cdf9bd7e0a9cf0130e5c4988030951d1c8ff99e8"
+        "projectConfigHash": "1c9be5320e63de1d57d2eb69b32db16772e50c4f011770c6b2df5db3f3a1e7a2"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -161,10 +161,10 @@
         },
         "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "3fd279d0d0647ac5ec0cddaed5c0a387571351139a857c45a44a22210b188d56",
-        "bundleCommitment": "2b1f9781457e8dbf82831f4fea233b8dc732f82d03f0bccb5d2de562cb0db3e7",
-        "bundleHash": "109693787927e844107598d75b439a814159f306c1abefa43f781ed4de347df0",
+        "bundleCommitment": "cd2d84aacccd1fa98463d8cd4d1a06d79fe26f5d7ad1e4b51a8e68cb77ae4c56",
+        "bundleHash": "25829ff7c37e5fdd1c93d89fe778c48b8c431bcbe67c00c429336375a5120447",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "creatorKitVersion": "3.2.1",
+        "creatorKitVersion": "3.3.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -177,7 +177,7 @@
         "marketMappingHash": "9c02cbc1e8445352c3939efcc2da84d00f531ba153d81029d10bb287a52a1bcf",
         "mediaHashes": {},
         "metadataHash": "c1a712bbeceec116ecdfba3935c073824427bcfe40c55f578b3ad68febdcbf15",
-        "projectConfigHash": "a44786f7094f29c393e4e993cdf9bd7e0a9cf0130e5c4988030951d1c8ff99e8",
+        "projectConfigHash": "1c9be5320e63de1d57d2eb69b32db16772e50c4f011770c6b2df5db3f3a1e7a2",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -419,10 +419,10 @@
         "traitSchema": "fe862ce63970cc0abfb237bf50fc313fe7d9fb13156e26095783c06469912fca"
       },
       "integrity": {
-        "bundleCommitment": "47a8e9bd46ccbe6a188cce12c5413b6b8cda7a36d5aa920eaa60180a91658a04",
-        "bundleHash": "9c71df81a7b6047af7b3edacfb7ef840a8091ce173be51496f74ed659a696835",
+        "bundleCommitment": "dbe82ec0903f624eb21731bbf1a5e7c2117e5ab66ceecf1ad3deadcfe227d315",
+        "bundleHash": "aecea3159ad3180e2a7114623917e2d8d1447c64f5717aa3c41fd3243f09a79f",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "projectConfigHash": "cf5084bb99c6ba4453f8b8f4bff24e72a4b0a2867f1b408e472514a2ce18f3c9"
+        "projectConfigHash": "2df4bb95cb14feb70dd9e177448461aea1a39604335f10fdce42773f9a1384ea"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -468,10 +468,10 @@
         },
         "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "ff8491d996770cbe1fc291c15e09f372874a81ee862bd93906daec74abbf5da5",
-        "bundleCommitment": "47a8e9bd46ccbe6a188cce12c5413b6b8cda7a36d5aa920eaa60180a91658a04",
-        "bundleHash": "9c71df81a7b6047af7b3edacfb7ef840a8091ce173be51496f74ed659a696835",
+        "bundleCommitment": "dbe82ec0903f624eb21731bbf1a5e7c2117e5ab66ceecf1ad3deadcfe227d315",
+        "bundleHash": "aecea3159ad3180e2a7114623917e2d8d1447c64f5717aa3c41fd3243f09a79f",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "creatorKitVersion": "3.2.1",
+        "creatorKitVersion": "3.3.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [
@@ -491,7 +491,7 @@
           "assets/cover.svg": "d93c7b0ca903633608710fe41510e117ad1f8099efa5cda31dbce504b871bf22"
         },
         "metadataHash": "93b3f6a3be7976d5ef203af2c94facde53d3068d13bd94354e67c0b4785d46e6",
-        "projectConfigHash": "cf5084bb99c6ba4453f8b8f4bff24e72a4b0a2867f1b408e472514a2ce18f3c9",
+        "projectConfigHash": "2df4bb95cb14feb70dd9e177448461aea1a39604335f10fdce42773f9a1384ea",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -772,10 +772,10 @@
         "traitSchema": "affff1ec04accd1c83579ad7a6f42e597916b118845d18af06ade7037aaa9d61"
       },
       "integrity": {
-        "bundleCommitment": "2cbeadaa0afaf72fdf5f15b1479b5ca981e788248996904a1a607ca00d27934f",
-        "bundleHash": "9ea359e17ecd80389338bd57087adf4c415a348b8ed9b87c50105382e43ea9cd",
+        "bundleCommitment": "2fa431751532a859f7b0512a65863148e0a9d95642e9f15cef9af4b5ecb4a00b",
+        "bundleHash": "e992eab2f3a1f2557706eb0f971dc90c7d24e39166ba4c9c122f8fdd783c6a6e",
         "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
-        "projectConfigHash": "389c9e4cc4fddb0fe7182d226f475ed23ffb5996668ae8fac53697e50288aae1"
+        "projectConfigHash": "463da74fb29e7785aaf349f3d0b96df5a0735508f4a2f2b8b32b890e7a075011"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -816,10 +816,10 @@
         },
         "artConfigFormat": "ACV1",
         "artConfigHash": "c6c38611369c4862f58f9c8a4994091c798643c32d77387a3f1d4ce41d098cff",
-        "bundleCommitment": "2cbeadaa0afaf72fdf5f15b1479b5ca981e788248996904a1a607ca00d27934f",
-        "bundleHash": "9ea359e17ecd80389338bd57087adf4c415a348b8ed9b87c50105382e43ea9cd",
+        "bundleCommitment": "2fa431751532a859f7b0512a65863148e0a9d95642e9f15cef9af4b5ecb4a00b",
+        "bundleHash": "e992eab2f3a1f2557706eb0f971dc90c7d24e39166ba4c9c122f8fdd783c6a6e",
         "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
-        "creatorKitVersion": "3.2.1",
+        "creatorKitVersion": "3.3.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -832,7 +832,7 @@
         "marketMappingHash": "618b5d0b385b02455000ace3fac407d478483bd8563d113ea6a9a552054ed645",
         "mediaHashes": {},
         "metadataHash": "a54cbeef868d0c80eacefcf25af0d600705da907adaaf63490e2a3593c547a14",
-        "projectConfigHash": "389c9e4cc4fddb0fe7182d226f475ed23ffb5996668ae8fac53697e50288aae1",
+        "projectConfigHash": "463da74fb29e7785aaf349f3d0b96df5a0735508f4a2f2b8b32b890e7a075011",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,

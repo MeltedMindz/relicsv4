@@ -20,7 +20,7 @@ export const SCHEMA_VERSION = "3.0.0";
  * redefines a bundle field, so `SCHEMA_VERSION` stays 3.0.0 and every 3.0.0 bundle remains
  * readable. Bumping the schema because a policy moved would strand a corpus for nothing.
  */
-export const CREATOR_KIT_VERSION = "3.2.1";
+export const CREATOR_KIT_VERSION = "3.3.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the

@@ -96,6 +96,9 @@ import {
   hasSettledBuybackWeth,
   allocatePlatformEntitlement,
   RETIRED_ALLOCATION_CLAIMS,
+  normalizeForClaimScan,
+  ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES,
+  isOffchainDerivedStatus,
 } from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
@@ -945,6 +948,56 @@ test("allocated is not settled — the whole point of the quote-denominated mode
   for (const s of PLATFORM_SETTLEMENT_STATUSES) {
     assert(hasSettledPlatformWeth(s) === hasSettledBuybackWeth(s), `the deprecated predicate disagrees on ${s}`);
   }
+});
+
+test("RETRYABLE_FAILURE is off-chain-derived, because a revert writes no status", () => {
+  // A failed call reverts instead of writing a status, so the kernel cannot know it happened.
+  // Synthesising the value would be inventing knowledge the contract does not have; it has to be
+  // derived from an observed reverted transaction instead.
+  assert(!ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES.includes("RETRYABLE_FAILURE"), "a contract cannot report a status a revert prevented it from writing");
+  assert(isOffchainDerivedStatus("RETRYABLE_FAILURE"), "RETRYABLE_FAILURE must be marked as derived, not read");
+  assert(ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES.length === PLATFORM_SETTLEMENT_STATUSES.length - 1, "exactly one status is off-chain-derived");
+  for (const s of ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES) {
+    assert(PLATFORM_SETTLEMENT_STATUSES.includes(s), `${s} is reportable but not in the vocabulary`);
+    assert(!isOffchainDerivedStatus(s), `${s} is on-chain reportable and must not be marked derived`);
+  }
+});
+
+test("the claim matcher sees a claim written as code, not only as prose", () => {
+  // Two independent scanners missed the same forms. The normaliser is where that is closed, so
+  // neither has to rediscover it.
+  const wethOnly = RETIRED_ALLOCATION_CLAIMS.find((c) => c.id === "PLATFORM_TREASURY_ASSET_WETH_ONLY");
+  assert(wethOnly.normalizedPattern, "the WETH-only claim has no normalized matcher");
+  const re = new RegExp(wethOnly.normalizedPattern, "gi");
+  const shapes = [
+    ['platformAccrued: t.bigint("platform_accrued"), // weth-only, see doc comment above', "a trailing code comment"],
+    ["function test_treasuryWethOnly() public {", "a camelCase test name"],
+    ['"id": "TREASURY_WETH_ONLY"', "a gate identifier as a JSON value"],
+    ['"verdict": "TREASURY_WETH_ONLY"', "a JSON verdict value"],
+    ["[TREASURY_WETH_ONLY] pass", "a test log label"],
+    ["platform-treasury-WETH-only", "a hyphenated compound"],
+  ];
+  for (const [text, shape] of shapes) {
+    re.lastIndex = 0;
+    assert(re.test(normalizeForClaimScan(text)), `the matcher misses ${shape}: ${text}`);
+  }
+  // And the sentences that are CURRENT and correct must survive it.
+  for (const text of [
+    "Quote-only is not WETH-only. For a QUOTE_ONLY project, read the market's quote asset",
+    '`QUOTE_ONLY` is **not** "WETH-only". The asset it settles in is whatever the market is quoted in',
+    "the locker at this integration HEAD is WETH-denominated",
+  ]) {
+    re.lastIndex = 0;
+    assert(!re.test(normalizeForClaimScan(text)), `the matcher false-positives on current copy: ${text}`);
+  }
+});
+
+test("normalisation collapses identifier, comment and prose spellings to one string", () => {
+  const forms = ["TREASURY_WETH_ONLY", "treasuryWethOnly", "treasury-weth-only", "Treasury Weth Only", "treasury.weth.only"];
+  const normalized = forms.map(normalizeForClaimScan);
+  for (const n of normalized) assert(n.includes("treasury weth only"), `normalisation left ${n} unmatched`);
+  // Percentages must survive, or the retired-figure patterns stop working.
+  assert(normalizeForClaimScan("6.25% of collected").includes("6.25%"), "normalisation destroyed a percentage");
 });
 
 test("waiting for a route is a normal state, not a failure", () => {

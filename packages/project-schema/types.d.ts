@@ -406,9 +406,16 @@ export const FORBIDDEN_ALLOCATION_PHRASINGS: readonly string[];
 export interface RetiredAllocationClaim {
   id: string;
   counter: string;
+  /** Run against the RAW text — casing and punctuation are load-bearing. */
   pattern: string;
+  /** Run against `normalizeForClaimScan(text)` — catches identifier-, comment- and
+   *  JSON-value-shaped occurrences that a prose regex misses. */
+  normalizedPattern?: string;
   description: string;
 }
+/** Collapses identifier separators, camelCase boundaries and punctuation to single spaces and
+ *  lowercases, so the same claim written as code normalises to the same string as prose. */
+export function normalizeForClaimScan(text: string): string;
 export const RETIRED_ALLOCATION_CLAIMS: readonly Readonly<RetiredAllocationClaim>[];
 export const SUPERSESSION_MARKERS: readonly string[];
 export const CREATOR_FEE_ASSET_MODES: readonly [CreatorFeeAssetMode, ...CreatorFeeAssetMode[]];
@@ -416,6 +423,10 @@ export const CREATOR_FEE_ASSET_MODES: readonly [CreatorFeeAssetMode, ...CreatorF
  *  indexer's `onchainEnum`, for one — can pass it straight through without a cast or a second copy
  *  of the list. The union above is the authority on membership; this only says "at least one". */
 export const PLATFORM_SETTLEMENT_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
+/** The subset a contract can report. `RETRYABLE_FAILURE` is absent by design: a reverted call
+ *  writes no status, so no on-chain read can produce it. */
+export const ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
+export function isOffchainDerivedStatus(status: string): boolean;
 export const ALLOCATED_PLATFORM_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
 export const BUYBACK_WETH_SETTLED_STATUSES: readonly [PlatformSettlementStatus, ...PlatformSettlementStatus[]];
 /** @deprecated Use `BUYBACK_WETH_SETTLED_STATUSES`. */
