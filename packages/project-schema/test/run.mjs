@@ -101,6 +101,7 @@ import {
   hasSupersessionBanner,
   isSuppressedMention,
   DETECTOR_SELF_REFERENCE_MARKER,
+  CONDITIONALLY_TRUE_MARKER,
   ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES,
   isOffchainDerivedStatus,
 } from "../index.js";
@@ -1060,6 +1061,17 @@ test("bare negation is NOT a suppression cue", () => {
   assert(!isSuppressedMention("the treasury never receives a non-WETH asset"), "bare 'never' suppressed a real claim");
   assert(!isSuppressedMention("the platform is only paid in WETH"), "a plain assertion was suppressed");
   assert(isSuppressedMention("this figure is no longer used"), "a real narration cue was not recognised");
+});
+
+test("a phrasing that is conditionally true is exempt on its own line only", () => {
+  // The mandated settlement sentence is exactly right for a WETH-quoted market, and the owner's
+  // wording is worth keeping verbatim for that case.
+  const marked = `  // ${CONDITIONALLY_TRUE_MARKER}\n  "The RELICS and treasury allocations divide the net WETH received after conversion.",`;
+  assert(scanTextForRetiredClaims(marked).length === 0, "a conditionally-true phrasing was reported");
+
+  // But it is a LINE exemption, not a file one: the next claim in the same file is still judged.
+  const alsoElsewhere = `${marked}\nconst bad = "treasury WETH-only";`;
+  assert(scanTextForRetiredClaims(alsoElsewhere).length > 0, "the marker leaked into a file-level exemption");
 });
 
 test("a detector may name what it detects", () => {
