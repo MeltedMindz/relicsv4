@@ -516,12 +516,19 @@ export const DETECTOR_SELF_REFERENCE_MARKER = "RETIRED_CLAIM_DETECTOR_SELF_REFER
  *
  * The mandated settlement-cost sentence — "…divide the net WETH received after conversion" — is
  * correct verbatim for a market whose quote asset IS WETH, and the owner's wording is worth
- * keeping intact for that case. A line (or the line above it) carrying this token is exempt, and
- * ONLY that line: every other line in the file is still judged. Convention originally written for
- * `verify-economic-split-parity.mjs`; lifted here so both gates honour it identically rather than
- * one of them reporting what the other permits.
+ * keeping intact for that case.
+ *
+ * The token may sit on the line itself or in the short comment block ABOVE it
+ * (`CONDITIONALLY_TRUE_LOOKBACK` lines). One line was too strict to survive contact: writing two
+ * sentences of explanation above a marked line — the natural thing to do, since the point of the
+ * marker is to name the reason — pushed the token out of range and the exemption stopped working.
+ * It is still LINE-scoped, not file-scoped: every other line in the file is judged.
+ *
+ * Convention originally written for `verify-economic-split-parity.mjs`; lifted here so both gates
+ * honour it identically rather than one reporting what the other permits.
  */
 export const CONDITIONALLY_TRUE_MARKER = "CONDITIONAL_BY_QUOTE_ASSET";
+export const CONDITIONALLY_TRUE_LOOKBACK = 3;
 
 /**
  * THE ONE MATCHER. Both repositories' gates call this rather than each assembling regexes, because
@@ -561,7 +568,7 @@ export function scanTextForRetiredClaims(text) {
 
       // A phrasing that is exactly true under a stated condition, marked on its own line or the
       // one above it — narrow by construction, and it names its reason where a reader will see it.
-      if (`${i > 0 ? lines[i - 1] : ""}\n${lines[i]}`.includes(CONDITIONALLY_TRUE_MARKER)) continue;
+      if (lines.slice(Math.max(0, i - CONDITIONALLY_TRUE_LOOKBACK), i + 1).join("\n").includes(CONDITIONALLY_TRUE_MARKER)) continue;
 
       // TWO DIFFERENT SCOPES, on purpose. Suppression is CONTEXT and is judged over the whole line:
       // a markdown row puts the claim in one cell and the `file.sol:771` it is quoting in another,

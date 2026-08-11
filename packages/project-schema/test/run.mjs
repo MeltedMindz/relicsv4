@@ -1069,9 +1069,25 @@ test("a phrasing that is conditionally true is exempt on its own line only", () 
   const marked = `  // ${CONDITIONALLY_TRUE_MARKER}\n  "The RELICS and treasury allocations divide the net WETH received after conversion.",`;
   assert(scanTextForRetiredClaims(marked).length === 0, "a conditionally-true phrasing was reported");
 
-  // But it is a LINE exemption, not a file one: the next claim in the same file is still judged.
-  const alsoElsewhere = `${marked}\nconst bad = "treasury WETH-only";`;
+  // But it is a LOCAL exemption, not a file one: a claim beyond the marker's stated lookback in
+  // the same file is still judged. (Within the lookback it is shielded — that is the cost of
+  // letting the marker carry its own explanation, and it is why the window is three lines and not
+  // thirty.)
+  const alsoElsewhere = [marked, "", "", "", "", 'const bad = "treasury WETH-only";'].join("\n");
   assert(scanTextForRetiredClaims(alsoElsewhere).length > 0, "the marker leaked into a file-level exemption");
+
+  // A marker with two lines of explanation under it must still reach the line it marks — writing
+  // that explanation is the whole point of the marker, and a one-line lookback broke on it.
+  const withReason = [
+    `    // ${CONDITIONALLY_TRUE_MARKER} — true for a market whose quote asset IS WETH,`,
+    "    // which is what this test pins. Any other quote gets the corrected sentence.",
+    '    "The RELICS and treasury allocations divide the net WETH received after conversion.",',
+  ].join("\n");
+  assert(scanTextForRetiredClaims(withReason).length === 0, "the marker did not reach across its own explanation");
+
+  // But it does not reach arbitrarily far.
+  const tooFar = [`// ${CONDITIONALLY_TRUE_MARKER}`, "//", "//", "//", '"divide the net WETH received after conversion"'].join("\n");
+  assert(scanTextForRetiredClaims(tooFar).length > 0, "the marker reached further than its stated lookback");
 });
 
 test("a detector may name what it detects", () => {

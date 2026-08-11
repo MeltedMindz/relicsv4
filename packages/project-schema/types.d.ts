@@ -445,6 +445,7 @@ export const DETECTOR_SELF_REFERENCE_MARKER: string;
  *  condition — the WETH-quoted form of the mandated settlement sentence. Line-scoped, never
  *  file-scoped. */
 export const CONDITIONALLY_TRUE_MARKER: string;
+export const CONDITIONALLY_TRUE_LOOKBACK: number;
 export const CREATOR_FEE_ASSET_MODES: readonly [CreatorFeeAssetMode, ...CreatorFeeAssetMode[]];
 /** Declared as a NON-EMPTY TUPLE so a consumer that needs `readonly [string, ...string[]]` — the
  *  indexer's `onchainEnum`, for one — can pass it straight through without a cast or a second copy
