@@ -432,6 +432,15 @@ export interface RetiredClaimHit {
 /** THE ONE MATCHER both repositories' gates call. Matches per line (so proximity guards survive
  *  normalisation), strips counter names first, and runs raw and normalised patterns. */
 export function scanTextForRetiredClaims(text: string): RetiredClaimHit[];
+/** Boundaries a fuzzy proximity match must not cross within a line — table cell walls and
+ *  sentence terminators. */
+export const SEGMENT_BOUNDARY: RegExp;
+export function segmentsForClaimScan(line: string): string[];
+export const CLAIM_SUPPRESSION_CUES: Readonly<{ negated: readonly string[]; narrated: readonly string[]; cited: readonly string[] }>;
+/** True when a line mentions a retired claim while negating, narrating or citing it. */
+export function isSuppressedMention(rawLine: string): boolean;
+/** A file whose job is detecting these claims declares itself with this marker and is skipped. */
+export const DETECTOR_SELF_REFERENCE_MARKER: string;
 export const CREATOR_FEE_ASSET_MODES: readonly [CreatorFeeAssetMode, ...CreatorFeeAssetMode[]];
 /** Declared as a NON-EMPTY TUPLE so a consumer that needs `readonly [string, ...string[]]` — the
  *  indexer's `onchainEnum`, for one — can pass it straight through without a cast or a second copy

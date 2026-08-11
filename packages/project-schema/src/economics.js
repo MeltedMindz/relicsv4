@@ -247,6 +247,22 @@ export function normalizeForClaimScan(text) {
 }
 
 /**
+ * Boundaries a proximity guard must not reach across, WITHIN a line.
+ *
+ * Per-line matching fixed the newline case; this fixes its twin. A markdown table row is one line
+ * and several unrelated statements — "| Who may claim platform WETH? | **Only** the recorded
+ * beneficiary. |" put "platform weth" and "only" three words apart across a cell wall and reported
+ * a sentence that says nothing of the kind. Cell walls and sentence terminators are real
+ * boundaries, so a line is split on them before matching.
+ */
+export const SEGMENT_BOUNDARY = /[|?!;]+/;
+
+/** @param {string} line */
+export function segmentsForClaimScan(line) {
+  return String(line).split(SEGMENT_BOUNDARY);
+}
+
+/**
  * THE RETIRED-CLAIM REGISTER. Published as data so that every repository's stale-claim gate scans
  * for the same things, and so adding a retired claim is a one-line change in one file rather than
  * an edit to each scanner.
@@ -310,9 +326,13 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
     // Proximity-guarded on purpose. A bare "weth only" also appears in the CURRENT and correct
     // sentence "quote-only is not WETH-only", so the normalized form only fires when a
     // platform/treasury word sits within ~40 characters of it.
+    // The trailing lookahead separates the EXCLUSIVE sense from the TEMPORAL one. "converts to
+    // WETH only once a route is approved" is the new model stated correctly; "the treasury is
+    // WETH-only" is the retired claim. Without this, the sentence describing the fix trips the
+    // gate meant to enforce it.
     normalizedPattern:
-      "(?:platform|treasury|accrued|claimed|entitlement|retained)[^\\n]{0,40}weth only" +
-      "|weth only[^\\n]{0,40}(?:platform|treasury)",
+      "(?:platform|treasury|accrued|claimed|entitlement|retained)[^\\n]{0,40}weth only(?! (?:once|after|when|if|where))" +
+      "|weth only(?! (?:once|after|when|if|where))[^\\n]{0,40}(?:platform|treasury)",
     description: "the retired claim that the platform treasury is paid only in WETH (it is now claimable in the selected quote)",
   }),
   Object.freeze({
@@ -330,6 +350,22 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
       "|platform (?:cannot|has no) [^\\n]{0,30}quote (?:claim|entitlement)",
     description: "the retired claim that the platform has no direct claim in a non-WETH quote (the treasury half is now claimable in it)",
   }),
+  // ---- the retired BASE the 50/50 was said to apply to (2026-08-10) --------------------------
+  //
+  // Distinct from the WETH-only treasury claim, and it survived it: a surface can say the treasury
+  // is paid in the quote and still say the division applies to "net settled platform WETH". It
+  // applies to the platform entitlement DENOMINATED IN THE SELECTED QUOTE, upstream of any WETH.
+  Object.freeze({
+    id: "SPLIT_APPLIED_TO_SETTLED_WETH",
+    counter: "ACTIVE_STALE_SPLIT_BASE_SETTLED_WETH_CLAIMS",
+    pattern: "",
+    normalizedPattern:
+      "(?:division|split|subdivision|50 50|allocation)[^\\n]{0,40}(?:applied to|of|on)[^\\n]{0,20}net settled(?: platform)? weth" +
+      "|applied to net settled(?: platform)? weth" +
+      "|(?:of|on) net settled platform weth[^\\n]{0,30}(?:division|split|allocat)",
+    description: "the retired claim that the 50/50 divides NET SETTLED PLATFORM WETH (it divides the quote-denominated entitlement)",
+  }),
+
   // ---- selectors REMOVED FROM THE BYTECODE, not merely deprecated (2026-08-10) ---------------
   //
   // `subdividePlatformWeth` and `TREASURY_SOURCE_ASSET_CLAIM` are gone from the rebuilt economic
@@ -376,6 +412,76 @@ export function hasSupersessionBanner(text) {
 }
 
 /**
+ * WHEN A SEGMENT MENTIONS A RETIRED CLAIM WITHOUT ASSERTING IT.
+ *
+ * Three ways that happens, all distinguishable on the same segment, all of which MUST be allowed —
+ * suppressing them would delete the guard tests that stop the figures returning, and the records
+ * that explain why they went.
+ *
+ *   NEGATED — a test asserting the figure is ABSENT. `mustNot(/\b6\.25\s*%/)`,
+ *   `expect(x).not.toContainText("18.75%")`, `assert.ok(!copy.includes(...))`. Deleting these to
+ *   satisfy the gate would remove exactly the checks the gate exists to back up.
+ *
+ *   NARRATED — a record describing the change. "no longer WETH-only", "the pre-amendment split",
+ *   "the owner reversed …", "from 25% to 50%". Describing a retirement is the opposite of
+ *   asserting it.
+ *
+ *   CITED — a quotation of another file's contents, carrying a `path.ext:NNN` reference or a
+ *   backticked code span. Quoting what some source currently says is reporting, not claiming.
+ *
+ * Every cue is deliberately narrow. `never` alone is NOT a cue: "the treasury never receives a
+ * non-WETH asset" IS the retired claim, and a bare-negation rule would have hidden it.
+ */
+export const CLAIM_SUPPRESSION_CUES = Object.freeze({
+  negated: [
+    "must ?not",
+    "\\.not\\.",
+    "assert\\w*\\(\\s*!",
+    "!\\s*/",
+    "!\\w+\\.(?:includes|test|match)",
+    "tobefalsy",
+    "notequal",
+    "never appears",
+    "does not (?:appear|contain|say)",
+    "do not (?:write|say|use|state)",
+  ],
+  narrated: [
+    "no longer",
+    "retire[ds]?\\b",
+    "supersed",
+    "pre-?amendment",
+    "previously",
+    "formerly",
+    "used to be",
+    "revers(?:e|ed|al)",
+    "deprecated",
+    "old failure mode",
+    "\\bstale\\b",
+    "\\d+(?:\\.\\d+)?\\s*%\\s*(?:→|->|to)\\s*\\d+(?:\\.\\d+)?\\s*%",
+  ],
+  cited: ["[\\w/.-]+\\.(?:sol|ts|tsx|js|mjs|cjs|json|md|yml|yaml):\\d+", "`[^`]*(?://|[\\w/.-]+\\.(?:sol|ts|tsx|js|mjs|json|md))[^`]*`"],
+});
+
+const SUPPRESSION_REGEXES = Object.values(CLAIM_SUPPRESSION_CUES)
+  .flat()
+  .map((p) => new RegExp(p, "i"));
+
+/**
+ * True when this raw segment mentions a claim in a way that is not an assertion of it.
+ * @param {string} rawSegment
+ */
+export function isSuppressedMention(rawSegment) {
+  return SUPPRESSION_REGEXES.some((re) => re.test(rawSegment));
+}
+
+/**
+ * A file whose JOB is detecting these claims has to name them. It declares itself with this marker
+ * and is skipped wholesale — the same trust model as a supersession banner, and the reason a
+ * sibling gate does not need a hardcoded path entry in every scanner that might meet it.
+ */
+export const DETECTOR_SELF_REFERENCE_MARKER = "RETIRED_CLAIM_DETECTOR_SELF_REFERENCE";
+
+/**
  * THE ONE MATCHER. Both repositories' gates call this rather than each assembling regexes, because
  * a matcher maintained twice is a matcher that disagrees with itself — and because every subtlety
  * below was learned the hard way and should not have to be learned again.
@@ -398,6 +504,7 @@ export function hasSupersessionBanner(text) {
  * @returns {{ id: string, counter: string, description: string, line: number, sample: string }[]}
  */
 export function scanTextForRetiredClaims(text) {
+  if (String(text).includes(DETECTOR_SELF_REFERENCE_MARKER)) return [];
   const counterNoise = RETIRED_ALLOCATION_CLAIMS.map((c) => normalizeForClaimScan(c.counter)).filter(Boolean);
   const lines = String(text).split(/\r?\n/);
   /** @type {{ id: string, counter: string, description: string, line: number, sample: string }[]} */
@@ -408,18 +515,32 @@ export function scanTextForRetiredClaims(text) {
     const norm = claim.normalizedPattern ? new RegExp(claim.normalizedPattern, "gi") : null;
 
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
       const seen = new Set();
 
+      // TWO DIFFERENT SCOPES, on purpose. Suppression is CONTEXT and is judged over the whole line:
+      // a markdown row puts the claim in one cell and the `file.sol:771` it is quoting in another,
+      // and a cue that only looked at its own cell would miss the citation entirely. Proximity is
+      // ADJACENCY and is judged per segment, because a cell wall is a real boundary.
+      if (isSuppressedMention(lines[i])) continue;
+
+      // RAW patterns run over the WHOLE LINE. They name both of their tokens explicitly
+      // (`PLATFORM_TREASURY_ASSET` … `WETH_ONLY`), so crossing a cell wall is safe and necessary —
+      // a key/value table row puts the two halves of the claim in adjacent cells.
       if (raw) {
         raw.lastIndex = 0;
-        for (const m of line.matchAll(raw)) seen.add(m[0].trim().replace(/\s+/g, " "));
+        for (const m of lines[i].matchAll(raw)) seen.add(m[0].trim().replace(/\s+/g, " "));
       }
+
+      // NORMALIZED patterns are proximity-based and fuzzy — "a platform/treasury word within 40
+      // characters of `weth only`". Those must respect cell walls, or "| … platform WETH? | Only
+      // the recorded beneficiary |" reads as a claim about WETH-only treasuries.
       if (norm) {
-        let normalized = normalizeForClaimScan(line);
-        for (const noise of counterNoise) normalized = normalized.split(noise).join(" ");
-        norm.lastIndex = 0;
-        for (const m of normalized.matchAll(norm)) seen.add(m[0].trim());
+        for (const segment of segmentsForClaimScan(lines[i])) {
+          let normalized = normalizeForClaimScan(segment);
+          for (const noise of counterNoise) normalized = normalized.split(noise).join(" ");
+          norm.lastIndex = 0;
+          for (const m of normalized.matchAll(norm)) seen.add(m[0].trim());
+        }
       }
       for (const sample of seen) {
         hits.push({ id: claim.id, counter: claim.counter, description: claim.description, line: i + 1, sample });

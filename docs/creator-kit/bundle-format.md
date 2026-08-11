@@ -162,7 +162,7 @@ an error, not a passthrough.
 ```jsonc
 {
   "schemaVersion": "3.0.0",
-  "creatorKitVersion": "3.3.1",
+  "creatorKitVersion": "3.4.0",
   "runtimeVersion": "relics-art-runtime/1",
   "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
 

@@ -99,6 +99,8 @@ import {
   normalizeForClaimScan,
   scanTextForRetiredClaims,
   hasSupersessionBanner,
+  isSuppressedMention,
+  DETECTOR_SELF_REFERENCE_MARKER,
   ONCHAIN_REPORTABLE_SETTLEMENT_STATUSES,
   isOffchainDerivedStatus,
 } from "../index.js";
@@ -1007,6 +1009,54 @@ test("the matcher works per line, so a proximity guard survives normalisation", 
   const hits = scanTextForRetiredClaims(real);
   assert(hits.length > 0 && hits[0].id === "PLATFORM_TREASURY_ASSET_WETH_ONLY", "a real claim on one line was missed");
   assert(hits[0].line === 1, "the hit does not carry its line number");
+});
+
+test("a mention that negates, narrates or cites is not an assertion", () => {
+  // These are the forms the guard tests and the change records are WRITTEN IN. If the gate reported
+  // them, the fix would be to delete the tests that keep the retired figures out — which is the
+  // opposite of what the gate is for.
+  const mustMiss = [
+    ['mustNot(/\\b6\\.25\\s*%/, "still asserts the retired 6.25%");', "a negated unit assertion"],
+    ['await expect(lp).not.toContainText("18.75%");', "a negated Playwright assertion"],
+    ['assert.ok(!copy.includes(X), "the WETH-only half must not appear on a non-WETH quote");', "a bang-negated assertion"],
+    ["// platform revenue from 25% to 50% of that share.", "before/after narration"],
+    ["* What they retire: the platform treasury is no longer WETH-only.", "a retirement note"],
+    ["its `18.75%` is the pre-amendment split", "a pre-amendment reference"],
+    ["| Kernel | NatSpec label `TREASURY_WETH_ONLY` | `src/quote/MultiQuoteEconomicKernel.sol:771-778` |", "a cited source line"],
+    ["`l2TreasurySafe // WETH-only recipient`, `buybackDepositor // sole source`", "a quoted code span"],
+    ["converts to WETH only once a route is approved. The retained treasury half is claimable now.", "the TEMPORAL sense of 'WETH only'"],
+    ["| 12 | Who may claim platform WETH? | **Only the recorded beneficiary.** |", "two table cells read as one phrase"],
+  ];
+  for (const [text, shape] of mustMiss) {
+    assert(scanTextForRetiredClaims(text).length === 0, `${shape} was reported as a claim: ${text}`);
+  }
+
+  // And the bare assertions must still be caught, or the suppression has eaten the gate.
+  const mustHit = [
+    ["treasury WETH-only (token bal 0); donation immunity.", "a bare WETH-only assertion"],
+    ["| PLATFORM_TREASURY_ASSET | **WETH_ONLY** |", "a key/value table row spanning two cells"],
+    ['platformAccrued: t.bigint("platform_accrued"), // weth-only, see doc comment above', "a trailing code comment"],
+    ["/** Division 2 — of the platform share only, applied to NET settled platform WETH. */", "the retired split base"],
+    ["- **Treasury role** — recipient of the retained **18.75% platform fee** claims", "a retired percentage"],
+  ];
+  for (const [text, shape] of mustHit) {
+    assert(scanTextForRetiredClaims(text).length > 0, `${shape} was missed: ${text}`);
+  }
+});
+
+test("bare negation is NOT a suppression cue", () => {
+  // "the treasury never receives a non-WETH asset" IS the retired claim. A rule that treated any
+  // negation as narration would have hidden exactly the sentence it exists to catch.
+  assert(!isSuppressedMention("the treasury never receives a non-WETH asset"), "bare 'never' suppressed a real claim");
+  assert(!isSuppressedMention("the platform is only paid in WETH"), "a plain assertion was suppressed");
+  assert(isSuppressedMention("this figure is no longer used"), "a real narration cue was not recognised");
+});
+
+test("a detector may name what it detects", () => {
+  const detector = `// ${DETECTOR_SELF_REFERENCE_MARKER}\nconst p = "TREASURY_WETH_ONLY";\nconst q = "6.25%";`;
+  assert(scanTextForRetiredClaims(detector).length === 0, "a self-declared detector was reported by the thing it detects");
+  const notDetector = 'const p = "TREASURY_WETH_ONLY";';
+  assert(scanTextForRetiredClaims(notDetector).length > 0, "the marker is doing nothing, or everything is exempt");
 });
 
 test("naming a counter is describing the gate, not asserting the claim", () => {
