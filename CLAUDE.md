@@ -64,17 +64,18 @@ Read the error; it names the file and the rule. The failures that actually happe
 
 These are accuracy rules, not style. Getting one wrong publishes a false claim.
 
-- **The launchpad is not deployed.** `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453) and
-  Robinhood Chain (4663). There is no launchpad address to give anyone. A creator can build and
-  export a bundle today; they cannot launch.
+- **RC5 contracts are deployed, but public launch is closed.** Ethereum (1), Base (8453) and
+  Robinhood Chain (4663) have source-verified platform addresses and `launchAccess: "PREPARED"`.
+  BNB Smart Chain (56) is deferred. A creator can build and export a bundle today; they cannot
+  launch until `acceptsPublicLaunches(chainId)` returns true.
 - **There has been no external audit.** Review has been internal only. Never write "audited",
   "security reviewed" or anything a reader would take as third-party assurance.
 - **Creator art reaches `tokenURI` through the art binding.** Every bundle carries an
   `artBinding` block: the runtime id, and the keccak256 of the exact bytes that runtime is given
   (`artConfigHash` — for the JavaScript runtime, `generator/generate.js` byte for byte, the same
   value the factory checks `keccak256(artConfig)` against). A launch writes that record into the
-  collection and `tokenURI` renders from it. Still say plainly that **nobody can launch yet**:
-  the launchpad is not deployed on any chain. And a bundle never names a deployed renderer —
+  collection and `tokenURI` renders from it. Still say plainly that **ordinary creators cannot
+  launch yet** while the factories remain `PREPARED`. And a bundle never names a deployed renderer —
   `runtimeCodeHash` and `scriptPointer` are chain facts, always `null`, refused by name if a
   bundle fills them in. See `docs/creator-kit/bundle-format.md`.
 - **Approved is not launchable.** `LAUNCHABLE_ART_RUNTIMES` in the schema decides. A template on
@@ -107,9 +108,9 @@ These are accuracy rules, not style. Getting one wrong publishes a false claim.
 
 - **Never commit a secret.** No keys, mnemonics, `.env` values or RPC credentials. Run
   `npm run secrets:scan` before you commit, and treat a failure as a stop.
-- **Never modify `packages/project-schema/`.** It is the single definition of the `.relics`
-  format and the launchpad mirrors it byte for byte. A schema that is closed on one side and
-  open on the other is not closed.
+- **Modify `packages/project-schema/` only deliberately.** It is the single definition of the
+  `.relics` format and the public deployment/quote reference. Any schema or reference change must
+  update docs, types and tests in the same change set.
 - **Dependencies under `lib/` are vendored, pinned and byte-exact.** Do not float or partially
   update them.
 - **Do not publish.** Commit locally and stop. Pushing is the owner's decision.

@@ -5,7 +5,12 @@
 // which a sensor, a transform or a destination can be expressed as something the launchpad would
 // have to execute or compile.
 
-/** Chains the launchpad targets. PREPARED_NOT_DEPLOYED on all four; no factory exists anywhere. */
+/**
+ * Chains the bundle format understands. RC5 platform contracts are deployed on 1 / 8453 / 4663
+ * but remain PREPARED, so public creator launches are still closed. Chain 56 stays in the schema
+ * vocabulary for compatibility with existing drafts and future deployment work, but this release
+ * marks BNB Smart Chain as deferred in `deployments.js`.
+ */
 export const SUPPORTED_CHAIN_IDS = Object.freeze([1, 8453, 4663, 56]);
 
 export const CHAIN_LABELS = Object.freeze({
@@ -63,9 +68,8 @@ export const CHAIN_PROFILES = Object.freeze({
   1: Object.freeze({ label: "Ethereum", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
   8453: Object.freeze({ label: "Base", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
   4663: Object.freeze({ label: "Robinhood Chain", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL"]) }),
-  // RC3: WBNB is the ONLY admitted quote on BNB. No BSC USDT, no BSC USDC, regardless of their
-  // liquidity — owner directive. The multi-quote capability is Robinhood's alone this release, and
-  // a one-asset list here is what makes "widen it later" a deliberate edit rather than a default.
+  // BNB is schema-compatible but deferred in RC5. If it is deployed later, WBNB remains the native
+  // wrapped quote in the chain profile; widening beyond that should be a deliberate registry edit.
   56: Object.freeze({ label: "BNB Smart Chain", nativeSymbol: "BNB", wrappedNativeSymbol: "WBNB", canonicalQuoteSymbols: Object.freeze(["WBNB"]), buybackRouteState: "ROUTE_UNPROVEN", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL"]) }),
 });
 

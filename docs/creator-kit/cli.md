@@ -19,6 +19,23 @@ Examples below use `relics` for readability.
 
 ---
 
+## `relics status`
+
+Prints the RC5 platform deployment record bundled with this kit: release tag, freeze commit,
+factory addresses, launch-access state, and the size of the Robinhood stock-token quote reference.
+
+```bash
+npm run kit:status
+# or
+npm run kit -- status
+```
+
+This command is offline. It does not poll a chain or try to infer whether public launch has opened.
+When public creation opens, the deployment record in `packages/project-schema/src/deployments.js`
+will change from `PREPARED` to `PUBLIC`.
+
+---
+
 ## `relics init <directory> [--template <id>] [--name …] [--symbol …] [--force]`
 
 Copies a starter template into a new directory and sets its name and symbol. `relics templates`
@@ -178,9 +195,18 @@ Your project is priced and traded in a **quote asset**, and you request it in
 
 **Requested is not approved.** A bundle naming an asset the registry does not currently enable
 imports as a draft with launch readiness BLOCKED, and you pick another. A bundle can never widen
-the set of assets the platform accepts. Multi-quote is a Robinhood Chain capability; Ethereum,
-Base and BNB each admit exactly one asset — that chain's wrapped native (WETH, WETH and **WBNB**
-respectively).
+the set of assets the platform accepts. Multi-quote is a Robinhood Chain capability; Ethereum and
+Base admit only WETH in this release. BNB Smart Chain is deferred.
+
+The complete RC5 Robinhood stock/ETF reference is exported from
+`packages/project-schema/src/robinhood-stock-tokens.js`. For example:
+
+```js
+import { robinhoodStockTokenBySymbol } from "@relics/project-schema";
+
+const gme = robinhoodStockTokenBySymbol("GME");
+// gme.address === "0x1b0E319c6A659F002271B69dB8A7df2F911c153E"
+```
 
 A pre-3.0.0 Solidity bundle **cannot** be converted automatically, and this command does not
 pretend otherwise. ACV1 needs a market sensor and a response curve for every layer, a literal RGB

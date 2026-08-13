@@ -94,7 +94,7 @@
           "sha256": "42dfe9fdea8b016bf53d267de0f3b83c13076e81651a50d84f54dea3ca238f99"
         },
         {
-          "bytes": 3087,
+          "bytes": 3088,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -117,10 +117,10 @@
         "traitSchema": "add2ef67cd47a2f438eae5d04339455ba734a3ec4755a37de1d4d0846bd1ef45"
       },
       "integrity": {
-        "bundleCommitment": "0a6ddaeae23d098656acb802de393bb634eda2399742a7ab1f87ffd7c707714e",
-        "bundleHash": "57ebbee774ca00822751b9aa850b9e44cd939d659e129aa89ed08f08241f2e38",
+        "bundleCommitment": "239bb9303175524ecd661fec6f0d6f200c68c1ac318c85694f4f7f7e12c86c56",
+        "bundleHash": "5d7740f77054e3627f2e744f288b52f8603da2159c520106c32bfa748b12521d",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "projectConfigHash": "90519b9c26293da192912d3953af54262c00ab545fe165a148e28105d92d55a2"
+        "projectConfigHash": "b0074e59106380514879e1aa2571ddb843a1f365a22e9a187aef2fb740a5dac8"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -161,10 +161,10 @@
         },
         "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "3fd279d0d0647ac5ec0cddaed5c0a387571351139a857c45a44a22210b188d56",
-        "bundleCommitment": "0a6ddaeae23d098656acb802de393bb634eda2399742a7ab1f87ffd7c707714e",
-        "bundleHash": "57ebbee774ca00822751b9aa850b9e44cd939d659e129aa89ed08f08241f2e38",
+        "bundleCommitment": "239bb9303175524ecd661fec6f0d6f200c68c1ac318c85694f4f7f7e12c86c56",
+        "bundleHash": "5d7740f77054e3627f2e744f288b52f8603da2159c520106c32bfa748b12521d",
         "contentHash": "7ff317597b1aaadf44867c26152a2325cc9579e4c78e6e2a27e7fc98c5cb3146",
-        "creatorKitVersion": "3.9.0",
+        "creatorKitVersion": "3.10.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -177,7 +177,7 @@
         "marketMappingHash": "9c02cbc1e8445352c3939efcc2da84d00f531ba153d81029d10bb287a52a1bcf",
         "mediaHashes": {},
         "metadataHash": "c1a712bbeceec116ecdfba3935c073824427bcfe40c55f578b3ad68febdcbf15",
-        "projectConfigHash": "90519b9c26293da192912d3953af54262c00ab545fe165a148e28105d92d55a2",
+        "projectConfigHash": "b0074e59106380514879e1aa2571ddb843a1f365a22e9a187aef2fb740a5dac8",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -229,7 +229,7 @@
           "sha256": "2d9ddc03941a5b9af45c74b6903a6f591fc2bb553533b4bf78d53b4f0ed52ca5"
         }
       },
-      "sizeBytes": 13854,
+      "sizeBytes": 13855,
       "studioDraft": {
         "art": {
           "artTemplateId": "",
@@ -394,7 +394,7 @@
           "sha256": "4f190e468d3fef7cf70571567e9323522dc3086a632d31805e3207541ac1d002"
         },
         {
-          "bytes": 3568,
+          "bytes": 3569,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -420,10 +420,10 @@
         "traitSchema": "fe862ce63970cc0abfb237bf50fc313fe7d9fb13156e26095783c06469912fca"
       },
       "integrity": {
-        "bundleCommitment": "c8f987aaedf125ecfb9c17a119b26e535e467476ee400b9f55a6aeb52a2701a9",
-        "bundleHash": "9177abd59b91d03b706090b76313cc7696163050ff1981de74ba7d899ed4fc91",
+        "bundleCommitment": "0fdbf620b8b64a7eea39332cc47ca6b0ef68fc451ec85408450fb67f6dbe0f6e",
+        "bundleHash": "0e287a2d61273f517c24cc68d3a9a57691d95a34fd68f2ef61b9db8d9523a031",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "projectConfigHash": "8dc56521288b1d9cccaf76197f72a50ef0b0f939aa7747e76de816b1f6aeadb3"
+        "projectConfigHash": "93c834d7a149ab42b670e1b7c6b0cd1435e3316f697ef920993ef1041adfb102"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -469,10 +469,10 @@
         },
         "artConfigFormat": "JS_SOURCE_V1",
         "artConfigHash": "ff8491d996770cbe1fc291c15e09f372874a81ee862bd93906daec74abbf5da5",
-        "bundleCommitment": "c8f987aaedf125ecfb9c17a119b26e535e467476ee400b9f55a6aeb52a2701a9",
-        "bundleHash": "9177abd59b91d03b706090b76313cc7696163050ff1981de74ba7d899ed4fc91",
+        "bundleCommitment": "0fdbf620b8b64a7eea39332cc47ca6b0ef68fc451ec85408450fb67f6dbe0f6e",
+        "bundleHash": "0e287a2d61273f517c24cc68d3a9a57691d95a34fd68f2ef61b9db8d9523a031",
         "contentHash": "c3d4906df7067b123bf0a2bc768fb262d1f5b6f9fba3f844b3ff613fa61286ec",
-        "creatorKitVersion": "3.9.0",
+        "creatorKitVersion": "3.10.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [
@@ -492,7 +492,7 @@
           "assets/cover.svg": "d93c7b0ca903633608710fe41510e117ad1f8099efa5cda31dbce504b871bf22"
         },
         "metadataHash": "93b3f6a3be7976d5ef203af2c94facde53d3068d13bd94354e67c0b4785d46e6",
-        "projectConfigHash": "8dc56521288b1d9cccaf76197f72a50ef0b0f939aa7747e76de816b1f6aeadb3",
+        "projectConfigHash": "93c834d7a149ab42b670e1b7c6b0cd1435e3316f697ef920993ef1041adfb102",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -545,7 +545,7 @@
           "sha256": "7f05ffe9c0ebbe2d3bff89df02b0493156c7f313362b8e9e939acbf81cd6e394"
         }
       },
-      "sizeBytes": 53825,
+      "sizeBytes": 53826,
       "studioDraft": {
         "art": {
           "artTemplateId": "",
@@ -750,7 +750,7 @@
           "sha256": "1579163cbcd6e354eb4ea3e6f4aa94a552ff98f08fa8633fd17e6fee34773cf3"
         },
         {
-          "bytes": 3579,
+          "bytes": 3580,
           "path": "relics.project.json",
           "sha256": null
         },
@@ -774,10 +774,10 @@
         "traitSchema": "affff1ec04accd1c83579ad7a6f42e597916b118845d18af06ade7037aaa9d61"
       },
       "integrity": {
-        "bundleCommitment": "77f2370f90606227dabec023dc74e287476a44e95c153aa891c7de96c3dad6f9",
-        "bundleHash": "d5378ec505da6a5c97fd2a06d11bfb6e57f653d96920447c10a855f9717b8290",
+        "bundleCommitment": "97415a28ceb852f04a2960300be7979aff1df02dfce4673b2c74277bf3b08078",
+        "bundleHash": "27fa5602da755c2733e5728fef088174866c9df5b7f0ffb7ed84211cf63836b3",
         "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
-        "projectConfigHash": "fa349d2d58e0e6c3c8b058970e8c43e4ed93d464718d2dc6ec4a91235f3a012b"
+        "projectConfigHash": "25bcea93b650fff28c3ae57691f1eb77a0862b0050a336a3c8e096a572103a52"
       },
       "market": {
         "launchMode": "INSTANT_V4",
@@ -818,10 +818,10 @@
         },
         "artConfigFormat": "ACV1",
         "artConfigHash": "c6c38611369c4862f58f9c8a4994091c798643c32d77387a3f1d4ce41d098cff",
-        "bundleCommitment": "77f2370f90606227dabec023dc74e287476a44e95c153aa891c7de96c3dad6f9",
-        "bundleHash": "d5378ec505da6a5c97fd2a06d11bfb6e57f653d96920447c10a855f9717b8290",
+        "bundleCommitment": "97415a28ceb852f04a2960300be7979aff1df02dfce4673b2c74277bf3b08078",
+        "bundleHash": "27fa5602da755c2733e5728fef088174866c9df5b7f0ffb7ed84211cf63836b3",
         "contentHash": "add463877fff26a4487bd77deaa737f588aeef6548777d5e34697d7fb4e1ea1a",
-        "creatorKitVersion": "3.9.0",
+        "creatorKitVersion": "3.10.0",
         "creatorLpFeeAssetMode": "DUAL_ASSET",
         "earningsBps": {
           "collaborators": [],
@@ -834,7 +834,7 @@
         "marketMappingHash": "618b5d0b385b02455000ace3fac407d478483bd8563d113ea6a9a552054ed645",
         "mediaHashes": {},
         "metadataHash": "a54cbeef868d0c80eacefcf25af0d600705da907adaaf63490e2a3593c547a14",
-        "projectConfigHash": "fa349d2d58e0e6c3c8b058970e8c43e4ed93d464718d2dc6ec4a91235f3a012b",
+        "projectConfigHash": "25bcea93b650fff28c3ae57691f1eb77a0862b0050a336a3c8e096a572103a52",
         "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
         "quoteAssetRequest": {
           "address": null,
@@ -946,7 +946,7 @@
           "sha256": "561dd5a2550045fcecc402f3f21e47b0e4e1bfcbb32df3c4e788b589f814a642"
         }
       },
-      "sizeBytes": 21009,
+      "sizeBytes": 21010,
       "studioDraft": {
         "art": {
           "artTemplateId": "1",

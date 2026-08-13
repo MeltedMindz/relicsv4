@@ -1,6 +1,7 @@
 # 03 — Art runtimes
 
-> Not deployed on any chain yet. Internal review only — no external audit.
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). Internal review only — no external audit.
 > See [08 — Status and limitations](08-status.md).
 
 You choose one of two runtimes at launch, as `LaunchParams.artMode`:
@@ -37,7 +38,8 @@ itself did not. That is what the binding replaced.
 
 Two limits still apply, and neither is about the binding:
 
-- **Nobody can launch yet.** The launchpad is `PREPARED_NOT_DEPLOYED` on 1 / 8453 / 4663.
+- **Ordinary creators cannot launch yet.** The RC5 factories are deployed but remain `PREPARED`
+  on 1 / 8453 / 4663.
 - **A bundle never names a deployed renderer.** `runtimeCodeHash` and `scriptPointer` are chain
   facts — the importer reads the first from the chain you are launching on, and the launch itself
   produces the second. A bundle carries them as `null` and is refused if it fills them in, because

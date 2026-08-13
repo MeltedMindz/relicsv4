@@ -1,6 +1,7 @@
 # 06 — Fees and revenue
 
-> Not deployed on any chain yet. Internal review only — no external audit.
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). Internal review only — no external audit.
 > See [08 — Status and limitations](08-status.md).
 
 This page states the fee mechanics precisely, because vague fee language is how creators get
@@ -120,15 +121,15 @@ Volume is not fee revenue, and settlement is not free.
 Getting the platform's own slice from a project token into the quote, and from the quote into WETH,
 is the platform's problem, paid out of the platform's own share.
 
-### BNB Smart Chain settles in WBNB
+### BNB Smart Chain is deferred in RC5
 
-On BNB the platform's entitlement is denominated in **WBNB**, not WETH, and WBNB is the **only**
-admitted quote asset there for this release — no BSC USDT, no BSC USDC, whatever their liquidity.
+The schema keeps BNB Smart Chain (56) in its chain vocabulary, and the settlement lesson still
+matters: a BNB deployment would denominate its native quote in **WBNB**, not WETH. But BNB is not
+deployed in RC5. It is deferred rather than shipped with an unproven egress route.
 
 WBNB is not WETH, so the buy-and-entomb half stays **WBNB-denominated until an approved route to
-WETH exists**, and none is proven today. That is the ordinary `BUYBACK_ALLOCATED_AWAITING_ROUTE`
-state described above: the retained-treasury half is claimable in WBNB immediately, the buyback
-half waits, and **none of it touches creator fees or blocks a launch**.
+WETH exists**. That would be the ordinary `BUYBACK_ALLOCATED_AWAITING_ROUTE` state described
+above, but it is not a live RC5 launch path.
 
 Any interface that prints "WETH" for a BNB market is naming the wrong token. The symbol comes from
 the chain's own profile — `wrappedNativeSymbolFor(chainId)` in `@relics/project-schema`, which
@@ -151,9 +152,9 @@ you `QUOTE_ONLY` without the second one.
 
 The economic kernel routes the buyback slice to a reserve recipient fixed at deployment. The
 buy-and-entomb executor that spends it is a **separately deployable part of the operational layer**
-— it is not wired by any committed deploy script, and like everything else on this page it is not
-deployed on any chain. What follows is what that component does by design, not a description of
-activity that has happened.
+— it is not part of the RC5 factory/locker/registry deployment record in
+`@relics/project-schema`. What follows is what that component does by design, not a description of
+buyback activity that has happened.
 
 The executor spends tracked platform WETH to buy $RELICS on the one canonical RELICS/WETH Uniswap
 v4 pool and sends **100% of the acquired $RELICS to the entombment address**

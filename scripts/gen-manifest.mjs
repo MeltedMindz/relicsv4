@@ -12,6 +12,12 @@ function classify(path) {
   if (SUBMODULES.has(path)) {
     return { provenance: "dependency-submodule-reference", license: "see THIRD_PARTY_NOTICES.md" };
   }
+  if (
+    path === "packages/project-schema/src/deployments.js" ||
+    path === "packages/project-schema/src/robinhood-stock-tokens.js"
+  ) {
+    return { provenance: "public-launchpad-reference-data", license: "MIT" };
+  }
   if (path === ".gitmodules") {
     return { provenance: "dependency-reference", license: "MIT" };
   }
@@ -60,7 +66,7 @@ const manifest = {
     "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not audited; not affiliated with any production project.",
   generatedBy: "scripts/gen-manifest.mjs",
   policy:
-    "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains no production addresses, keys, proofs, or private material. Third-party source is referenced via submodules, not vendored.",
+    "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
   fileCount: files.length,
   files,
 };

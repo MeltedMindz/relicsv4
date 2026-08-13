@@ -1,7 +1,7 @@
 # 01 — What the RELICS Launchpad is
 
-> Not deployed on any chain yet (`PREPARED_NOT_DEPLOYED` on Ethereum, Base, Robinhood Chain and
-> BNB Smart Chain).
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). BNB Smart Chain is deferred in this release.
 > Internal review only — no external audit. See [08 — Status and limitations](08-status.md).
 
 ## The one paragraph
@@ -70,22 +70,26 @@ This is the part most launchpads are vague about, so here is the exact division:
 If those trades are wrong for you, the [starter template](../00-make-it-your-own.md) in this repo
 is the fork-it-yourself alternative with no launchpad and no split.
 
-## The three target chains
+## The RC5 target chains
 
 | Chain | Chain ID | Explorer | Platform contracts |
 | --- | --- | --- | --- |
-| Ethereum | 1 | `etherscan.io` | `PREPARED_NOT_DEPLOYED` |
-| Base | 8453 | `basescan.org` | `PREPARED_NOT_DEPLOYED` |
-| Robinhood Chain | 4663 | `robinhoodchain.blockscout.com` | `PREPARED_NOT_DEPLOYED` |
+| Ethereum | 1 | `etherscan.io` | Deployed, `PREPARED` |
+| Base | 8453 | `basescan.org` | Deployed, `PREPARED` |
+| Robinhood Chain | 4663 | `robinhoodchain.blockscout.com` | Deployed, `PREPARED` |
+| BNB Smart Chain | 56 | `bscscan.com` | Deferred |
 
 Protocol policy is chain-invariant by design: the same 1% pool fee, the same 75/25 split, the same
 `0x1440` hook mask apply on every target chain. The addresses differ per chain, and per-chain gas
 and script budgets must be measured independently rather than assumed from Ethereum's numbers.
+See [10 — Deployments and quote assets](10-deployments-and-quote-assets.md) for the live address
+record.
 
 ## Its relationship to the RELICS collection
 
 RELICS itself — the collection at `https://www.relics.wtf` — is the flagship that the launchpad
-generalizes. It is live on Ethereum mainnet; the launchpad is not. They are separate systems: launching on the
+generalizes. It is live on Ethereum mainnet; the launchpad is deployed separately and public
+creator launches are not open yet. They are separate systems: launching on the
 launchpad does not mint, wrap, or entitle you to $RELICS, and holding $RELICS does not grant
 launchpad privileges. The only link is economic, and it runs one way: a slice of platform fee
 revenue buys $RELICS on the open market and sends it to an entombment address

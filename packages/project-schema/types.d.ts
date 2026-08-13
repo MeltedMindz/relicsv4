@@ -17,6 +17,8 @@ export interface Issue {
 }
 
 export type SupportedChainId = 1 | 8453 | 4663 | 56;
+export type DeployedChainId = 1 | 8453 | 4663;
+export type LaunchAccess = "PREPARED" | "PUBLIC";
 export type ArtRuntime = "SOLIDITY_SVG" | "JAVASCRIPT";
 export type StartingPreset = "LOW" | "MID" | "HIGH";
 export type BackingModel = "FULL_PARITY" | "PARTIAL";
@@ -327,10 +329,62 @@ export interface ChainProfile {
   creatorEarningsModes: readonly CreatorEarningsMode[];
 }
 export type CreatorLpFeeAssetMode = "DUAL_ASSET" | "QUOTE_ONLY";
+export interface PlatformContracts {
+  launchpadFactory: string;
+  artStreamableFeesLocker: string;
+  projectRegistry: string;
+  projectRights: string;
+  scriptStorage: string;
+  templateRegistry: string;
+  artRuntimeRegistry: string;
+  solidityGenerativeRuntimeV1: string;
+  protocolTimelock: string;
+  quoteAssetRegistry?: string;
+  multiQuoteEconomicKernel?: string;
+  immutableLiquidityKernel?: string;
+}
+export interface PlatformDeployment {
+  chainId: DeployedChainId;
+  label: string;
+  launchAccess: LaunchAccess;
+  explorer: string;
+  contracts: Readonly<PlatformContracts>;
+}
+export interface RobinhoodStockToken {
+  symbol: string;
+  name: string;
+  address: string;
+  decimals: 18;
+  isin: string | null;
+}
 
 export const QUOTE_ASSET_REQUEST_MODES: readonly QuoteAssetRequestMode[];
 export const QUOTE_ASSET_KINDS: readonly QuoteAssetKind[];
 export const CREATOR_LP_FEE_ASSET_MODES: readonly CreatorLpFeeAssetMode[];
+
+// ---- live deployment and quote-token reference ------------------------------------------------
+export const PLATFORM_RELEASE: Readonly<{
+  tag: string;
+  freezeCommit: string;
+  solidityTree: string;
+  deployedAt: string;
+  externalAudit: string;
+}>;
+export const PLATFORM_DEPLOYMENTS: Readonly<Record<SupportedChainId, Readonly<PlatformDeployment> | null>>;
+/** Chain ids with live RC5 platform contracts. Does NOT imply public launches are open. */
+export const DEPLOYED_CHAIN_IDS: readonly DeployedChainId[];
+export function platformDeployment(chainId: number): Readonly<PlatformDeployment> | null;
+export function isPlatformDeployed(chainId: number): boolean;
+export function acceptsPublicLaunches(chainId: number): boolean;
+export function launchAvailability(chainId: number): string;
+export function explorerAddressUrl(chainId: number, address: string): string;
+export const ROBINHOOD_STOCK_TOKENS_VERSION: string;
+export const ROBINHOOD_STOCK_TOKENS_SOURCE: string;
+export const ROBINHOOD_STOCK_TOKENS_CHAIN_ID: 4663;
+export const ROBINHOOD_STOCK_TOKENS: readonly Readonly<RobinhoodStockToken>[];
+export const ROBINHOOD_STOCK_TOKEN_COUNT: number;
+export function robinhoodStockTokenBySymbol(symbol: string): Readonly<RobinhoodStockToken> | null;
+export function robinhoodStockTokenByAddress(address: string): Readonly<RobinhoodStockToken> | null;
 
 // ---- versions --------------------------------------------------------------------------------
 export const SCHEMA_VERSION: string;

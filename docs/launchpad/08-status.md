@@ -2,39 +2,39 @@
 
 Read this before you plan a launch, a listing, an integration, or an announcement.
 
-## Deployment status: nothing is deployed
+## Deployment status: RC5 deployed, public launch closed
 
-The launchpad's platform contracts are marked `PREPARED_NOT_DEPLOYED` on **every** target chain:
+The launchpad's RC5 platform contracts are deployed on three chains, but every factory is still
+`PREPARED`. That means ordinary creator launches are intentionally closed. Public creation opens
+only after a separate operator transaction changes launch access to `PUBLIC`.
 
-| Chain | Chain ID | Factory | Locker | Registry | Script storage | Project rights |
-| --- | --- | --- | --- | --- | --- | --- |
-| Ethereum | 1 | none | none | none | none | none |
-| Base | 8453 | none | none | none | none | none |
-| Robinhood Chain | 4663 | none | none | none | none | none |
+| Chain | Chain ID | Status |
+| --- | ---: | --- |
+| Ethereum | 1 | Deployed, `PREPARED` |
+| Base | 8453 | Deployed, `PREPARED` |
+| Robinhood Chain | 4663 | Deployed, `PREPARED` |
+| BNB Smart Chain | 56 | Deferred |
 
-There is no factory address to call, no locker to claim from, and no registry to read. Any
-address you see presented as a live launchpad contract today is wrong. The SDK and the app are
-built to fail closed on this: address *prediction* works offline from parameters, but preflight
-reports a failing `factory-codehash` check because no factory has code on any chain, and the
-app renders `PREPARED_NOT_DEPLOYED` rather than inventing state.
-
-Treasury addresses and the release source commit are also still pending owner input, so even the
-deployment package is not finalized.
+See [10 — Deployments and quote assets](10-deployments-and-quote-assets.md) for the factory,
+locker, registry and quote-reference addresses. The same data is exported from
+`@relics/project-schema`, and `npm run kit:status` prints it locally.
 
 ## Review status: internal only
 
 Everything done so far is **internal review**. There has been **no external audit** and no
-third-party security review. Do not describe the launchpad as audited, reviewed, or verified by
-anyone outside the project, and do not repeat internal verdict language as if it were an audit
-finding.
+third-party security review. Do not describe the launchpad as audited, externally reviewed, or
+security-reviewed by a third party.
 
-What internal work does exist is fork-based: the launch path, fee accounting, and buyback
-behaviour have been exercised against pinned mainnet forks of all three target chains. Fork-proven
-is a real signal about correctness under the tested conditions. It is not deployment-proven, and it
-is not an audit.
+Internal fork work is still useful evidence: the launch path, fee accounting, art binding and
+multi-quote settlement model have been exercised against pinned forks. Fork-proven is a real
+signal about the tested conditions. It is not an external audit.
 
 ## Known limits worth planning around
 
+- **Public launch is closed.** Creators can build, validate and export real `.relics` bundles, but
+  should not broadcast launch transactions while factories remain `PREPARED`.
+- **BNB Smart Chain is deferred.** Chain 56 remains in the schema vocabulary for compatibility, but
+  there is no RC5 deployment there.
 - **One transaction, one gas budget.** A launch is a single atomic call, and it must fit under the
   chain's per-transaction gas cap. That is what forces the script byte budget in
   [04 — Constraints](04-constraints.md). Ethereum's budget has been measured; Base and Robinhood
@@ -42,19 +42,21 @@ is not an audit.
 - **Fee tier is fixed at 1%.** Not configurable per project.
 - **Genesis liquidity is single-sided.** There is no bid depth at launch until real buyers add
   quote currency. Nobody is obliged to buy.
+- **Quote admission and WETH conversion are separate.** A quote can be enabled for launch before
+  its route to WETH is proven; the buyback half then remains quote-denominated and visibly pending.
 - **No upgrade path for your project.** The factory, and the artifacts it deploys, are
   non-upgradeable by design. Your art configuration and script bytes are what they are once the
   launch transaction confirms.
-- **Chain-specific gaps exist.** Not every routing and indexing convenience is available on every
-  chain; per-chain limitations are disclosed per chain rather than papered over.
 
 ## How to talk about this honestly
 
 If you are writing about a project you intend to launch here:
 
-- Say "prepared, not deployed" — not "live", "launched", or "shipping".
+- Say "RC5 deployed, public launch closed" — not "permissionless launches are open".
 - Say "internally reviewed" — not "audited" or "security reviewed".
 - Say "75% of collected LP fees" — not "0.75% of volume forever".
+- Say "the platform share is denominated in the selected quote asset" — not "everything settles in
+  WETH".
 - Say "$RELICS bought and sent permanently to a dead address; circulating supply falls,
   `totalSupply` stays fixed at 10,000" — not "supply is burned".
 - Say "initialized price" for the price you open the pool at, and never call it a floor, a

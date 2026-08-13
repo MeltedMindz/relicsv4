@@ -8,9 +8,9 @@ same component hashes the CLI printed at export time, because both sides run the
 `@relics/project-schema` (`packages/project-schema/`), a zero-dependency ES module package with
 no build step. There is no second handwritten schema anywhere.
 
-The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663) and
-BNB Smart Chain (56),
-and its review to date is internal only. Nothing in this kit signs or broadcasts anything.
+RC5 platform contracts are deployed on Ethereum (1), Base (8453), and Robinhood Chain (4663), but
+public creator launches are still closed (`PREPARED`). BNB Smart Chain (56) is deferred in this
+release. Nothing in this kit signs or broadcasts anything.
 
 ---
 
@@ -163,7 +163,7 @@ an error, not a passthrough.
 ```jsonc
 {
   "schemaVersion": "3.2.0",
-  "creatorKitVersion": "3.9.0",
+  "creatorKitVersion": "3.10.0",
   "runtimeVersion": "relics-art-runtime/1",
   "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
 
@@ -171,7 +171,8 @@ an error, not a passthrough.
   "supply":   { "totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork?",
                "burnPolicy?" },
   "art":      { "runtime", "templateId", "entry", "seed", "scriptBytes", "traitDimensions?" },
-  "market":   { "startingPreset", "launchMode", "mappingCount", "sale?" },
+  "market":   { "startingPreset", "launchMode", "mappingCount", "sale?", "chainId?",
+                "quoteAsset?", "creatorLpFeeAssetMode?" },
   "earnings": { "mode", "creatorRecipient", "collaborators", "creatorAllocationBps?" },
   "chains":   { "requested": [1 | 8453 | 4663, …] },
   "media":    { "cover?": { "path", "sha256", "cid?" }, "files?": {} },
@@ -374,9 +375,9 @@ refuses those nulls **by name and all at once**, so a creator is told every deci
 rather than one per attempt. The source bundle hash is kept as provenance; the re-export mints a new
 one, because a different artwork is a different bundle.
 
-A 1.x or 2.x bundle is refused with the reason and the fix, not with a bare "incompatible". No 1.x
-or 2.x bundle has ever been launched; the launchpad is `PREPARED_NOT_DEPLOYED` on every supported
-chain, so the break strands nothing.
+A 1.x or 2.x bundle is refused with the reason and the fix, not with a bare "incompatible". No
+public creator launch accepted a 1.x or 2.x bundle before this release, so the break strands
+nothing.
 
 ---
 

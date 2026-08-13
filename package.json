@@ -19,6 +19,7 @@
     "web:test:unit": "npm run test:unit --workspace @relics-v4-starter/web",
     "secrets:scan": "bash scripts/secret-scan.sh",
     "kit": "node packages/creator-cli/bin/relics.js",
+    "kit:status": "node packages/creator-cli/bin/relics.js status",
     "kit:test": "node packages/project-schema/test/run.mjs",
     "kit:templates": "node scripts/check-templates.mjs",
     "kit:fixtures": "node packages/project-schema/fixtures/build.mjs",

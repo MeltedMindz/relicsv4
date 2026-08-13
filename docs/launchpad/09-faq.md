@@ -1,12 +1,14 @@
 # 09 — FAQ
 
-> Not deployed on any chain yet. Internal review only — no external audit.
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). Internal review only — no external audit.
 > See [08 — Status and limitations](08-status.md).
 
 **Can I launch today?**
-No. The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum, Base, Robinhood Chain and BNB Smart
-Chain. There is no
-factory address to call anywhere. You can read the design, prepare art, and check your byte budget.
+Not yet. RC5 contracts are deployed on Ethereum, Base and Robinhood Chain, but every factory is
+still `PREPARED`, so ordinary creator launches are closed. You can build, validate and export a
+real `.relics` file today. Do not broadcast a launch transaction until `acceptsPublicLaunches`
+returns true for your chain.
 
 **Has it been audited?**
 No. All review to date is internal. Do not describe it as audited, externally reviewed, or
@@ -43,8 +45,7 @@ on the platform's share alone.
 Say it precisely: bought-back $RELICS is sent to an address nobody controls, so **circulating
 supply falls**. But `$RELICS` has **no burn function** — `totalSupply` is fixed at 10,000 and does
 not change, ever. The ledger number stays the same; the reachable float shrinks. Anyone telling you
-the supply number goes down is wrong. (The buy-and-entomb executor is a separately deployable part
-of the operational layer, and like everything else here it is not deployed yet.)
+the supply number goes down is wrong.
 
 **Can I withdraw my liquidity?**
 No. Genesis liquidity is held by the shared fee locker, not by you. What you hold is the
@@ -112,8 +113,8 @@ No.
 
 **Can the platform change the fee split later?**
 Not on the shipped path — the split and its subdivision are compile-time constants in
-non-upgradeable contracts with no setters. And since nothing is deployed, there is no live bytecode
-to appeal to yet either; judge that claim against the deployed code when it exists.
+non-upgradeable contracts with no setters. Judge that claim against the deployed bytecode for the
+chain you use.
 
 **Who can trigger a fee claim?**
 Anyone. But the destination is resolved from your ProjectRights and the immutable fee policy, so a

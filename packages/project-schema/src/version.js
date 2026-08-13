@@ -37,7 +37,11 @@ export const SCHEMA_VERSION = "3.2.0";
 /**
  * Version of the creator kit (this repo's CLI + templates) that produced the bundle.
  *
- * 3.9.0. It carries a schema MINOR (3.2.0, `supply.burnPolicy`) AND a kit-only change.
+ * 3.10.0. It carries a kit-only live RC5 reference update: deployed platform addresses,
+ * launch-access state, the complete Robinhood stock-token quote reference, and `relics status`.
+ * The bundle schema stays 3.2.0 because no manifest field changes meaning.
+ *
+ * 3.9.0 carried a schema MINOR (3.2.0, `supply.burnPolicy`) AND a kit-only change.
  *
  * The kit-only half is `creatorEarningsModes` on `CHAIN_PROFILES` — which NFT secondary-earnings
  * models (NONE / OPTIONAL / ENFORCED) may be launched on each chain — plus the
@@ -52,7 +56,7 @@ export const SCHEMA_VERSION = "3.2.0";
  * pinned. Live validator bytecode exists at the canonical addresses on both and is not evidence
  * either way: Limit Break's v5 deploys permissionlessly to identical addresses on any EVM chain.
  */
-export const CREATOR_KIT_VERSION = "3.9.0";
+export const CREATOR_KIT_VERSION = "3.10.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
@@ -61,9 +65,10 @@ export const CREATOR_KIT_VERSION = "3.9.0";
 export const RUNTIME_VERSION = "relics-art-runtime/1";
 
 /**
- * The launchpad protocol release this schema mirrors. The launchpad is PREPARED_NOT_DEPLOYED on
- * every supported chain and its review to date is internal only — this string identifies the
- * parameter surface the bundle was built for, never a deployment.
+ * The launchpad protocol release this schema mirrors. RC5 platform contracts are deployed on
+ * Ethereum, Base and Robinhood Chain but remain PREPARED; public creator launches are still
+ * closed. This string identifies the parameter surface the bundle was built for, while
+ * `deployments.js` carries the current chain-address record.
  */
 export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/g-1.2";
 
@@ -99,8 +104,8 @@ export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/g-1.2";
  * instead: a 2.x bundle imports as a DRAFT with every recoverable field carried over, the creator
  * supplies the art configuration, and a new export is required.
  *
- * No 2.x bundle has ever been launched — the launchpad is PREPARED_NOT_DEPLOYED on every supported
- * chain — so there is no deployed corpus this break strands.
+ * No public creator launch accepted a 2.x bundle before this release, so there is no live project
+ * corpus this break strands.
  */
 export const SCHEMA_MAJOR_RATIONALE =
   "3.0.0 requires a bundle to carry the exact art configuration its launch would use (artConfigFormat, the configuration bytes and their keccak256); a 2.x bundle states no configuration a Solidity runtime could render and must be re-exported after the creator supplies one.";

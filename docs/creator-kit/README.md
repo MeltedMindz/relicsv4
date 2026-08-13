@@ -7,6 +7,7 @@ npm run kit -- init my-project --template market-responsive
 npm run kit -- dev my-project              # local studio on 127.0.0.1
 npm run kit -- validate my-project         # every check; writes nothing
 npm run kit -- export my-project --output my-project.relics
+npm run kit:status                         # deployed addresses + public launch state
 ```
 
 Import `my-project.relics` in the RELICS Launchpad creator app. It derives the same bundle hash,
@@ -24,9 +25,10 @@ market mappings, metadata, earnings, supply, chains. Nothing is re-entered by ha
 | `relics.project.json` | **generated at export** | The bundle manifest, derived from your config and files. Editing it changes nothing except making the hashes disagree. It does not exist in your project directory; it exists inside the `.relics` file. |
 | `checksums.json` | **generated at export** | Per-file digests plus the bundle hash and commitment. |
 
-The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663) and
-BNB Smart Chain (56),
-and its review to date is internal only. Nothing in this kit signs or broadcasts anything.
+RC5 platform contracts are deployed on Ethereum (1), Base (8453), and Robinhood Chain (4663), but
+public creator launches are still closed (`PREPARED`). BNB Smart Chain (56) is deferred in this
+release. Nothing in this kit signs or broadcasts anything; it builds one `.relics` file for the
+creator app to import when launching is open.
 
 ---
 
@@ -38,6 +40,7 @@ and its review to date is internal only. Nothing in this kit signs or broadcasts
 | **[The CLI](./cli.md)** | every command, every flag, and what each check means |
 | **[Treating every bundle as hostile](./bundle-security.md)** | the threat model, the seven defence layers, and what is *not* defended |
 | **[Importing a bundle](./importing.md)** | the contract for the web importer, and the parity/hostile fixtures |
+| **[Live deployments and quote assets](../launchpad/10-deployments-and-quote-assets.md)** | RC5 addresses, launch state, and the complete Robinhood stock-token reference |
 
 ## What lives where
 

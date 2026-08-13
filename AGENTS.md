@@ -61,15 +61,17 @@ The message names the file and the rule. In practice it is almost always one of 
 
 Accuracy rules, not style. Each one is a false claim if you get it wrong.
 
-1. **The launchpad is not deployed** (`PREPARED_NOT_DEPLOYED` on 1 / 8453 / 4663) and there is
-   no launchpad address. A creator can build and export today; they cannot launch.
+1. **RC5 contracts are deployed, but public launch is closed.** Ethereum (1), Base (8453) and
+   Robinhood Chain (4663) have source-verified platform addresses and `launchAccess: "PREPARED"`.
+   BNB Smart Chain (56) is deferred. A creator can build and export today; they cannot launch
+   until `acceptsPublicLaunches(chainId)` returns true.
 2. **No external audit has happened.** Review is internal only.
 3. **Creator art reaches `tokenURI` through the art binding — and only through it.** A bundle
    carries an `artBinding` block naming the runtime (`ONCHAIN_JAVASCRIPT_V1`, `SOLIDITY_SVG_V1`)
    and the keccak256 of the exact bytes that runtime is given; a launch writes that record into
    the collection, and `tokenURI` renders from it. Two things stay true and must be said if
-   asked: the launchpad is **not deployed anywhere**, so nobody can launch yet (rule 1); and the
-   binding a bundle carries is the launchpad release named in
+   asked: the factories are deployed but ordinary creator launch remains **closed** while
+   `launchAccess` is `PREPARED` (rule 1); and the binding a bundle carries is the launchpad release named in
    `protocolReleaseCompatibility` — a bundle never states which renderer is deployed at which
    address. `runtimeCodeHash` and `scriptPointer` are chain facts, always `null` in a bundle,
    and refused by name if filled in.
@@ -89,10 +91,12 @@ Three things under one roof:
 1. **`docs/launchpad/` — the RELICS Launchpad creator guide.** Documentation only: how an
    artist or developer builds and launches a project on the launchpad, what one `launch()`
    produces, the art runtimes, the constraints, the creator flow, the fee split, and the
-   SDK/ABI surface. **The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453)
-   and Robinhood Chain (4663)** — no factory, locker or registry exists on any chain. Review
-   to date is **internal only**; there is **no external audit**. No launchpad contract source
-   lives in this repo.
+   SDK/ABI surface. RC5 platform contracts are deployed on Ethereum (1), Base (8453) and
+   Robinhood Chain (4663), all with `launchAccess: "PREPARED"`; BNB Smart Chain (56) is deferred.
+   Review to date is **internal only**; there is **no external audit**. The public address and
+   quote-token reference lives in `packages/project-schema/src/deployments.js` and
+   `packages/project-schema/src/robinhood-stock-tokens.js`; private launchpad contract source does
+   not live in this repo.
 2. **The fork-and-launch template** (`src/`, `script/`, `test/`, `apps/web/`, `docs/00`–`18`)
    for a fully on-chain generative art collection linked to an ERC-20, with a **Uniswap v4
    hook** that turns swaps, liquidity, volatility, and market history into live on-chain
@@ -166,7 +170,8 @@ side: it produces launchpad project bundles, never template deployments.
    `npm run secrets:scan` before every commit. One scoped exception exists: `flagship/` and
    `submissions/` carry the RELICS operator's explicitly authorized production reference —
    Etherscan-verified source plus public on-chain identifiers only (addresses, pool id, CREATE2
-   salt/init-code hash). Public chain facts in that scope are allowed; private material never is.
+   salt/init-code hash). Public RC5 launchpad addresses and Robinhood quote-token addresses are
+   also allowed only in the dedicated public reference files and docs. Private material never is.
 2. **Dependencies are vendored, pinned and byte-exact.** Solidity deps live as real files under
    `lib/` (production-pinned trees: v4-core 1.0.2, uniswap-hooks 1.2.2, OpenZeppelin 5.6.1,
    v4-periphery 1.0.3, solmate, permit2, forge-std); the web app uses public npm. Never float,

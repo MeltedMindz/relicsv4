@@ -10,6 +10,7 @@ import { validateProject, validateBundleFile, printValidation } from "./commands
 import { exportProject } from "./commands/export.js";
 import { inspectBundle } from "./commands/inspect.js";
 import { migrateBundle } from "./commands/migrate.js";
+import { printStatus } from "./commands/status.js";
 import { bold, dim, red } from "./report.js";
 
 const FLAGS = {
@@ -56,6 +57,9 @@ export async function main(argv) {
 
     case "templates":
       return printTemplates();
+
+    case "status":
+      return printStatus();
 
     case "dev":
       return devServer(root, { port: flags.port });
@@ -165,6 +169,8 @@ const HELP = {
   Scaffold a project from a starter template. \`relics templates\` lists them.`,
   templates: `relics templates
   List the starter templates and the art runtime each one uses.`,
+  status: `relics status
+  Show the RC5 platform deployment addresses and whether public creator launches are open.`,
   dev: `relics dev [directory] [--port 4321]
   Serve a local studio on 127.0.0.1: render any seed, drag the market destinations, read traits.`,
   preview: `relics preview [directory] [--seeds 1,2,3 | --count 8] [--out previews] [--size 240]
@@ -205,6 +211,7 @@ ${bold("relics")} — the local creator kit for RELICS Launchpad projects
 
   ${bold("relics init")} <dir> [--template <id>]   scaffold a project
   ${bold("relics templates")}                      list the starter templates
+  ${bold("relics status")}                         show RC5 deployment addresses
   ${bold("relics dev")} [dir]                      local studio on 127.0.0.1
   ${bold("relics preview")} [dir]                  write deterministic SVGs
   ${bold("relics test-seeds")} [dir] --count 100   sample the collection at scale

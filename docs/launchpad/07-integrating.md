@@ -1,7 +1,8 @@
 # 07 — Integrating: the SDK and ABI surface
 
-> Not deployed on any chain yet, and the SDK is not published to npm. Internal review only — no
-> external audit. See [08 — Status and limitations](08-status.md).
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). The SDK is not published to npm. Internal review only —
+> no external audit. See [08 — Status and limitations](08-status.md).
 
 This page is for people building a marketplace view, an indexer, a custom mint page, or a portfolio
 tool against launchpad projects. It describes the shapes you would work with.
@@ -10,8 +11,18 @@ tool against launchpad projects. It describes the shapes you would work with.
 
 The SDK is a private workspace package (`@v4-art-launchpad/sdk`, version `0.1.0`), not published to
 npm and not resolvable as an installed dependency. There is no `npm install` for it today. Treat
-the surface below as a specification of the shapes, and read the contract ABIs as the durable
-interface — those are what will still be true after any packaging decision.
+the surface below as a specification of the shapes, and read the contract ABIs plus the public
+deployment record as the durable interface.
+
+The public creator-kit package in this repo does export the address and quote-token reference:
+
+```js
+import {
+  PLATFORM_DEPLOYMENTS,
+  acceptsPublicLaunches,
+  robinhoodStockTokenBySymbol,
+} from "@relics/project-schema";
+```
 
 ## The one rule the whole surface follows
 
@@ -23,7 +34,7 @@ Every read returns an envelope, and **a failed read is `null` with a populated `
 ```
 
 `source` is a provenance string (`"onchain:factory.predict"`, `"onchain:receipt:Launched-event"`,
-`"chain-registry:platform-not-deployed"`, and so on) so a UI can always say where a number came
+`"chain-registry:public-launch-closed"`, and so on) so a UI can always say where a number came
 from. And every `build*()` function returns an **inert** prepared transaction — the SDK does not
 sign or broadcast. Exactly one function submits anything, and it refuses unless readiness passed.
 
@@ -33,15 +44,15 @@ read" is how people get hurt.
 ## Chain registry
 
 ```ts
-type SupportedChainId = 1 | 8453 | 4663;
-type PlatformDeploymentStatus = "PREPARED_NOT_DEPLOYED" | "DEPLOYED";
+type SupportedChainId = 1 | 8453 | 4663 | 56;
+type LaunchAccess = "PREPARED" | "PUBLIC";
 ```
 
-`isPlatformDeployed(chainId)` is the non-throwing check for UI; `requireDeployedPlatform(chainId)`
-throws `PlatformNotDeployedError` unless the status is `DEPLOYED` **and** every required address is
-non-null. Today every chain returns `PREPARED_NOT_DEPLOYED` with every platform address `null`, so
-every launch and read path short-circuits with that as the stated source. Build your integration to
-handle that state honestly rather than special-casing it away.
+`isPlatformDeployed(chainId)` is the non-throwing check for UI. `acceptsPublicLaunches(chainId)` is
+the separate check that answers whether an ordinary creator launch may be submitted right now. RC5
+deployments on 1 / 8453 / 4663 return live addresses and `launchAccess: "PREPARED"`; BNB (56)
+returns `null` because it is deferred. Build your integration to handle both states honestly
+rather than special-casing them away.
 
 External addresses (Uniswap v4 PoolManager, WETH, Permit2, Quoter, StateView) are real and
 populated per chain — those are pre-existing third-party contracts, not launchpad ones.
@@ -49,6 +60,8 @@ populated per chain — those are pre-existing third-party contracts, not launch
 ## Composing a launch
 
 The order is: mine two salts → build params → validate → predict → simulate → estimate → sign.
+While RC5 remains `PREPARED`, ordinary creators should stop before broadcast even if local
+validation succeeds.
 
 ```ts
 // 1. Mine both salts. Each address has a constraint: the token must sort correctly
@@ -173,6 +186,10 @@ function TRANSFER_WARNING() external view returns (string memory);
 Errors you will want to decode and render: `BadArtHash`, `BadTemplate`, `ScriptTooLarge`,
 `BadSupply`, `BadBacking`, `BadCollaborator`, `TooManyCollaborators`, `BadRecipient`,
 `BadHookAddress`, `NotWired`, `WrongChain`.
+
+For quote-asset UI, import the complete Robinhood stock-token reference from
+`@relics/project-schema`; do not hardcode a partial selector. See
+[10 — Deployments and quote assets](10-deployments-and-quote-assets.md).
 
 ## Indexing notes
 

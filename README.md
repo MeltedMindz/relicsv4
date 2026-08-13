@@ -25,13 +25,20 @@ or a router.
 You edit **`relics.config.json`**. You never edit `relics.project.json` — that file is *generated*
 at export from your config and your files, and hand-editing it only makes the hashes disagree.
 
-### The one step that is not live yet
+### Live platform status
 
 > ⚠️ **You can build and export a real bundle today. You cannot broadcast one.**
-> The launchpad is `PREPARED_NOT_DEPLOYED` on Ethereum (1), Base (8453), Robinhood Chain (4663)
-> and BNB Smart Chain (56) — no factory, locker or registry exists on any chain. Uploading a valid
-> bundle returns **`LAUNCHPAD_NOT_PUBLIC`**, which is the honest answer rather than a vague
-> failure. Everything before that step is real and works now.
+> RC5 platform contracts are deployed and source-verified on Ethereum (1), Base (8453), and
+> Robinhood Chain (4663), but every factory is still `PREPARED`. Ordinary creator launches remain
+> closed until a separate one-way timelock operation opens public creation. BNB Smart Chain (56) is
+> deferred in this release. Everything before broadcast — scaffold, preview, validate, export and
+> import — is real and works now.
+
+Check the bundled address/status record any time:
+
+```bash
+npm run kit:status
+```
 
 > ⚠️ **No external audit.** All review to date is **internal only**. Nothing here has been audited
 > by a third party — not the launchpad, not the starter template, not the creator kit. Get your own
@@ -46,6 +53,8 @@ at export from your config and your files, and hand-editing it only makes the ha
 3. **[docs/launchpad/](docs/launchpad/)** — what the transaction you eventually sign actually does:
    deploys the token and collection, mines and binds the hook, opens the pool, mints genesis
    liquidity, registers metadata. One atomic call.
+4. **[docs/launchpad/10-deployments-and-quote-assets.md](docs/launchpad/10-deployments-and-quote-assets.md)** —
+   live RC5 addresses and the complete Robinhood stock-token reference for `.relics` quote requests.
 
 ### Also in this repository
 

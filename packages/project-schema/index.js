@@ -198,3 +198,24 @@ export { toStudioDraft } from "./src/studio-draft.js";
 
 export { mulberry32, seedStringToNumber, makeRandom } from "./src/prng.js";
 export { error, warn, hasErrors, summarize, sortIssues } from "./src/issues.js";
+
+export {
+  PLATFORM_RELEASE,
+  PLATFORM_DEPLOYMENTS,
+  DEPLOYED_CHAIN_IDS,
+  platformDeployment,
+  isPlatformDeployed,
+  acceptsPublicLaunches,
+  launchAvailability,
+  explorerAddressUrl,
+} from "./src/deployments.js";
+
+export {
+  ROBINHOOD_STOCK_TOKENS_VERSION,
+  ROBINHOOD_STOCK_TOKENS_SOURCE,
+  ROBINHOOD_STOCK_TOKENS_CHAIN_ID,
+  ROBINHOOD_STOCK_TOKENS,
+  ROBINHOOD_STOCK_TOKEN_COUNT,
+  robinhoodStockTokenBySymbol,
+  robinhoodStockTokenByAddress,
+} from "./src/robinhood-stock-tokens.js";

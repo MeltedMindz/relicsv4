@@ -1,6 +1,7 @@
 # 04 — Constraints that actually bite
 
-> Not deployed on any chain yet. Internal review only — no external audit.
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). Internal review only — no external audit.
 > See [08 — Status and limitations](08-status.md).
 
 Every platform has limits. These are the ones that will change what you make, ranked by how often

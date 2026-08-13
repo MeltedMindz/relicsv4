@@ -1,7 +1,8 @@
 # 05 — The creator flow, end to end
 
-> Not deployed on any chain yet, and the creator app is not publicly hosted. Route paths below are
-> the app's own routes, not URLs you can visit today. See
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). The creator app is not publicly hosted; route paths below
+> are the app's own routes, not URLs you can visit today. See
 > [08 — Status and limitations](08-status.md).
 
 The flow is: **pick a chain → work in the studio → review → sign once.** One transaction does the
@@ -10,8 +11,9 @@ project exists on chain.
 
 ## Step 0 — Pick a chain
 
-Four cards: Ethereum (1), Base (8453), Robinhood Chain (4663), BNB Smart Chain (56). None is pre-selected, and the
-studio does not open until you choose one.
+Three deployed RC5 cards: Ethereum (1), Base (8453), Robinhood Chain (4663). BNB Smart Chain (56)
+stays in the schema vocabulary for compatibility, but this release marks it deferred. None is
+pre-selected, and the studio does not open until you choose one.
 
 Each card shows the chain id, the gas currency, the WETH address, a live estimated launch cost from
 a real block and gas-price read, the maximum script bytes for that chain, whether your wallet is
@@ -102,9 +104,9 @@ funds no WETH of its own into the pool.
 
 This tab does the work, in order, against the server:
 
-1. **Prepare** — validates your input and builds the single canonical `LaunchParams`. If no factory
-   is deployed on the chain, the salts come back as explicit placeholders labeled "pending — mined
-   at deploy time". They are never fabricated.
+1. **Prepare** — validates your input and builds the single canonical `LaunchParams`. If the chain
+   is deferred, or public launch access is still closed, the response says that directly rather
+   than fabricating salts or addresses.
 2. **Predict** — returns the token, collection, hook and pool id your parameters will produce.
 3. **Mine the hook salt** — searches for a salt whose resulting address carries the `0x1440` mask.
 4. **Preflight** — a 15-point checklist. Eleven checks run server-side: chain identity, gas
@@ -119,8 +121,9 @@ Also on this tab: a metadata preview (marketplace card, project page, social car
 raw ERC-7572 JSON, JSON-LD and explorer packets in Advanced) and a plain-language governance and
 fee disclosure that is always visible in both modes.
 
-Today, preflight fails at the `factory-codehash` check on every chain, because no factory has code
-anywhere. That is the system telling the truth, not a bug.
+Today, preflight stops before ordinary creator launch because every deployed RC5 factory remains
+`PREPARED`. The factory codehash should be checked; it is no longer the expected failing check on
+the deployed chains.
 
 ## Step 6 — After the launch
 
@@ -128,9 +131,9 @@ anywhere. That is the system telling the truth, not a bug.
   mode).
 - Holders call `awaken(count)` themselves to mint artworks against escrowed backing tokens. A buy
   materializes nothing on its own — see [02](02-what-a-launch-produces.md).
-- Fees accrue in WETH and in your project token. Anyone may call `collectFees` and `claimCreator`;
-  the destination is resolved from your ProjectRights, so a stranger triggering a claim only ever
-  pays you. See [06 — Fees and revenue](06-fees-and-revenue.md).
+- Fees accrue in the selected quote asset and in your project token. Anyone may call `collectFees`
+  and `claimCreator`; the destination is resolved from your ProjectRights, so a stranger
+  triggering a claim only ever pays you. See [06 — Fees and revenue](06-fees-and-revenue.md).
 - Project and token pages live at `/p/<chainSlug>/<projectId>` and
   `/p/<chainSlug>/<projectId>/<tokenId>`; creator revenue at `/dashboard/fees`; a chain-filtered
   index at `/discover`.

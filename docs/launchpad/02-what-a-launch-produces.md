@@ -1,6 +1,7 @@
 # 02 — What a launch produces
 
-> Not deployed on any chain yet. Internal review only — no external audit.
+> RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
+> launches are still closed (`PREPARED`). Internal review only — no external audit.
 > See [08 — Status and limitations](08-status.md).
 
 One call to `ILaunchpadFactory.launch(LaunchParams)` is atomic. Either the whole project exists at
