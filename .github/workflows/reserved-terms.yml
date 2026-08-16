@@ -1,0 +1,35 @@
+name: reserved-terms
+
+# Runs on EVERY push and pull request, not only main. The failure mode this exists for is a
+# half-finished integration branch being pushed to main by someone who has forgotten what it
+# carries, so a gate that only watched main would be watching the wrong moment.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# No secrets and no network: this reads the working tree and nothing else.
+permissions:
+  contents: read
+
+jobs:
+  reserved-terms:
+    name: Reserved terms (other projects' identities stay theirs)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # The controls run FIRST and their failure is fatal on its own. A scanner that has never
+      # been shown to catch anything is not evidence, and a scanner that has never been shown to
+      # ALLOW anything is a build break waiting to happen -- both directions are exercised.
+      - name: Controls (must catch, and must not false-positive)
+        run: node scripts/check-reserved-terms.mjs --controls
+
+      - name: Scan the tree
+        run: node scripts/check-reserved-terms.mjs
