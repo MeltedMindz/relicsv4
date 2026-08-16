@@ -26,6 +26,7 @@ Uniswap v4 pool from the first block.
 | 09 | [FAQ](09-faq.md) | Short answers to the questions people actually ask |
 | 10 | [Deployments and quote assets](10-deployments-and-quote-assets.md) | RC5 addresses and the complete Robinhood stock-token reference |
 | 11 | [Governance and upgradeability](11-governance-and-upgradeability.md) | Who can change what, how fast, and the two things that can never change |
+| 12 | [Launch protection](12-launch-protection.md) | The mandatory buy-fee decay, the two hook generations and which is deployed, and the launch modes you can pick today |
 
 ## How this differs from the starter template in this repo
 

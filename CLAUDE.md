@@ -68,8 +68,11 @@ These are accuracy rules, not style. Getting one wrong publishes a false claim.
   Robinhood Chain (4663) have source-verified platform addresses and `launchAccess: "PREPARED"`.
   BNB Smart Chain (56) is deferred. A creator can build and export a bundle today; they cannot
   launch until `acceptsPublicLaunches(chainId)` returns true.
-- **There has been no external audit.** Review has been internal only. Never write "audited",
-  "security reviewed" or anything a reader would take as third-party assurance.
+- **No audit-status language, in either direction.** Review has been internal only, and the
+  checkable fact to publish instead is that every deployed contract is source-verified on its
+  explorer. Never write "audited", "security reviewed", or anything a reader would take as
+  third-party assurance — and equally never write the negative form, which invites a reader to
+  weigh a non-fact. `npm run kit:protection` enforces both directions.
 - **Creator art reaches `tokenURI` through the art binding.** Every bundle carries an
   `artBinding` block: the runtime id, and the keccak256 of the exact bytes that runtime is given
   (`artConfigHash` — for the JavaScript runtime, `generator/generate.js` byte for byte, the same

@@ -65,7 +65,8 @@ Accuracy rules, not style. Each one is a false claim if you get it wrong.
    Robinhood Chain (4663) have source-verified platform addresses and `launchAccess: "PREPARED"`.
    BNB Smart Chain (56) is deferred. A creator can build and export today; they cannot launch
    until `acceptsPublicLaunches(chainId)` returns true.
-2. **No external audit has happened.** Review is internal only.
+2. **Review is internal only, and audit-status language is banned in both directions.** Publish
+   the checkable fact instead: every deployed contract is source-verified on its explorer.
 3. **Creator art reaches `tokenURI` through the art binding — and only through it.** A bundle
    carries an `artBinding` block naming the runtime (`ONCHAIN_JAVASCRIPT_V1`, `SOLIDITY_SVG_V1`)
    and the keccak256 of the exact bytes that runtime is given; a launch writes that record into
@@ -93,7 +94,8 @@ Three things under one roof:
    produces, the art runtimes, the constraints, the creator flow, the fee split, and the
    SDK/ABI surface. RC5 platform contracts are deployed on Ethereum (1), Base (8453) and
    Robinhood Chain (4663), all with `launchAccess: "PREPARED"`; BNB Smart Chain (56) is deferred.
-   Review to date is **internal only**; there is **no external audit**. The public address and
+   Review to date is **internal only**, and every deployed contract is source-verified on its
+   chain's explorer so a reader can check the runtime bytecode against it. The public address and
    quote-token reference lives in `packages/project-schema/src/deployments.js` and
    `packages/project-schema/src/robinhood-stock-tokens.js`; private launchpad contract source does
    not live in this repo.
@@ -101,8 +103,8 @@ Three things under one roof:
    for a fully on-chain generative art collection linked to an ERC-20, with a **Uniswap v4
    hook** that turns swaps, liquidity, volatility, and market history into live on-chain
    artistic evolution. A forker changes a small, clearly marked set of things and ships their
-   own collection without reading the whole codebase. It is **educational, unaudited, and
-   MIT-licensed**, and **not affiliated** with Uniswap, OpenZeppelin, OpenSea, or any
+   own collection without reading the whole codebase. It is **educational and MIT-licensed**,
+   and **not affiliated** with Uniswap, OpenZeppelin, OpenSea, or any
    production collection. Every contract here is an original, genericized `Example*`
    implementation.
 3. **`flagship/`** — the operator-authorized production source of the live RELICS v4 hook.

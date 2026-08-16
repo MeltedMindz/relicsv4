@@ -28,6 +28,8 @@
     "export:manifest": "node scripts/gen-manifest.mjs",
     "export:manifest:check": "node scripts/gen-manifest.mjs --check",
     "reserved:check": "node scripts/check-reserved-terms.mjs",
-    "reserved:controls": "node scripts/check-reserved-terms.mjs --controls"
+    "reserved:controls": "node scripts/check-reserved-terms.mjs --controls",
+    "kit:protection": "node scripts/check-launch-protection.mjs",
+    "kit:protection:controls": "node scripts/check-launch-protection.mjs --controls"
   }
 }

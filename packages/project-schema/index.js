@@ -130,6 +130,37 @@ export {
   allocateSettledPlatformWeth,
 } from "./src/economics.js";
 
+export {
+  FEE_PIPS_DENOMINATOR,
+  DYNAMIC_FEE_FLAG,
+  ANTI_SNIPE_WINDOW_SECONDS,
+  ANTI_SNIPE_START_FEE_PIPS,
+  ANTI_SNIPE_END_FEE_PIPS,
+  SELL_FEE_PIPS,
+  PROTECTION_IS_MANDATORY,
+  NO_PRIVILEGED_FEE_EXEMPTIONS,
+  ANTI_SNIPE_WINDOW_ANCHOR,
+  ANTI_SNIPE_SALE_PHASE_DECAY,
+  ANTI_SNIPE_PUBLIC_DURATION_MINUTES,
+  pipsToPercentLabel,
+  HOOK_GENERATIONS,
+  DEPLOYED_HOOK_GENERATION,
+  LAUNCH_PROTECTION_HOOK_GENERATION,
+  maskLabel,
+  LAUNCH_MODE_AVAILABILITY,
+  LAUNCHABLE_MODES,
+  LAUNCH_MODE_UNAVAILABLE_REASON,
+  isLaunchModeAvailable,
+  IMMUTABLE_LIQUIDITY_CLAIM,
+  IMMUTABLE_LIQUIDITY_SCOPE,
+  PROHIBITED_DOC_PHRASES,
+  OVERREACH_CLAIMS,
+  AUDIT_STATUS_PHRASES,
+  WRONG_DURATION_PHRASES,
+  OVERREACH_NEGATORS,
+  EVIDENCE_REQUIRED_PHRASES,
+} from "./src/launch-protection.js";
+
 export { canonicalJson, safeJsonParse, toPlain, CanonicalJsonError, JsonParseError } from "./src/canonical-json.js";
 export { sha256Bytes, sha256Hex, sha256Utf8, toHex, utf8, fromUtf8 } from "./src/sha256.js";
 export { HASH_ALGORITHM, fileHash, jsonHash, parseAndHashJson, hashesUnder, computeContentHash, computeProjectConfigHash, computeBundleHash, computeIntegrity, isSha256Hex } from "./src/hashes.js";

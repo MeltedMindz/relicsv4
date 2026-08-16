@@ -23,7 +23,7 @@ Examples of unacceptable behavior:
 - Trolling, insulting or derogatory comments, and personal or political attacks.
 - Public or private harassment.
 - Publishing others' private information without explicit permission.
-- Encouraging others to deploy this unaudited software in ways likely to harm people.
+- Encouraging others to deploy this educational software in ways likely to harm people.
 
 ## Enforcement
 

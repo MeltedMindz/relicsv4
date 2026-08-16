@@ -7,8 +7,8 @@ without your own independent security, legal, and economic review.
 ## Scope and status
 
 This repository exists to teach patterns. The contracts compile, are tested, and illustrate
-sound techniques — but "tested" is not "audited." Treat every contract as a starting point to be
-reviewed, not a finished product.
+sound techniques — but a passing test suite is a statement about the cases it covers and nothing
+wider. Treat every contract as a starting point to be reviewed, not a finished product.
 
 ## Reporting
 

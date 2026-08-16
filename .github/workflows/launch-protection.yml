@@ -1,0 +1,44 @@
+name: launch-protection
+
+# THE STALENESS GATE. This repository documents a protocol that moves, and documentation about a
+# moving protocol goes stale silently — a launchpad page described the hook mask as 0x1440 long
+# after a second generation existed, and nothing failed until someone happened to notice. This
+# workflow is the "someone" being replaced by a machine.
+#
+# Every push and every pull request, not only main: the drift arrives on a branch, and catching it
+# at merge time means catching it after a reviewer has already read the wrong number.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# No secrets and no network: this reads the working tree and nothing else.
+permissions:
+  contents: read
+
+jobs:
+  launch-protection:
+    name: Launch-protection docs match the declaration
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # Controls first, and fatal on their own. A gate nobody has watched fail is not evidence,
+      # and one that has never been shown to ALLOW a legitimate sentence is a build break waiting
+      # to happen. Both directions are exercised: seven planted violations must be caught, and a
+      # properly evidenced "audited by ..., report at https://..." must NOT be.
+      - name: Controls (must catch, and must not false-positive)
+        run: node scripts/check-launch-protection.mjs --controls
+
+      # The gate itself. It fails if a figure in
+      # packages/project-schema/src/launch-protection.js no longer appears in the pages that own
+      # it, if a new export is added with no documentation rule claiming it, if an undeployed hook
+      # generation is presented without its status, or if any prohibited phrasing appears.
+      - name: Docs match the declaration
+        run: node scripts/check-launch-protection.mjs

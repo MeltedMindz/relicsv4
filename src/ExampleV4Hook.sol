@@ -34,7 +34,7 @@ import { IExampleHook } from "./interfaces/IExampleHook.sol";
 /// │ renderer. To remove one, stop reading it.                                               │
 /// └──────────────────────────────────────────────────────────────────────────────────────┘
 ///
-/// EDUCATIONAL — NOT AUDITED. See SECURITY.md.
+/// EDUCATIONAL. See SECURITY.md.
 contract ExampleV4Hook is BaseHook, Ownable, IExampleHook {
     using BalanceDeltaLibrary for BalanceDelta;
     using StateLibrary for IPoolManager;

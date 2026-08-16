@@ -34,7 +34,7 @@ contain. It is provided so an independent reviewer can verify the repository is 
    require **no** secrets. All deployment scripts and opt-in fork tests read secrets from the
    environment; only `*.example` templates (names + placeholders) are tracked.
 
-6. **Not audited, no endorsement.** This is unaudited educational software. Nothing here implies
+6. **No endorsement.** This is educational software. Nothing here implies
    endorsement or affiliation by Uniswap, OpenZeppelin, OpenSea, any auditor, or any production
    collection.
 

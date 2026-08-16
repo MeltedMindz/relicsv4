@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="container">{children}</main>
           <footer className="footer">
             <p>
-              Educational starter. NOT audited. NOT affiliated with Uniswap, OpenZeppelin,
+              Educational starter. NOT affiliated with Uniswap, OpenZeppelin,
               OpenSea, or any production collection. Do your own security, legal, and economic
               review before deploying anything.
             </p>

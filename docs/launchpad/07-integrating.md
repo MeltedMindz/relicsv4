@@ -57,6 +57,38 @@ rather than special-casing them away.
 External addresses (Uniswap v4 PoolManager, WETH, Permit2, Quoter, StateView) are real and
 populated per chain — those are pre-existing third-party contracts, not launchpad ones.
 
+## Deriving a PoolId: read the `fee` field before you hash
+
+If you derive `PoolId` yourself rather than reading it from an event, this is the mistake to avoid,
+and it is the one integrators hit most.
+
+An RC6 pool is created with a **dynamic-fee `PoolKey`**. Its `fee` field carries Uniswap v4's
+dynamic-fee sentinel, `0x800000` — a flag meaning "this pool's LP fee is set at runtime by its
+hook". It is **not a fee value**, and you cannot substitute the rate the pool currently charges.
+
+`PoolId` is the hash of the whole `PoolKey`, so hashing a key with a concrete fee where the real
+key carries the sentinel produces a **different id** — a well-formed id for a pool that does not
+exist. That fails quietly: reads against a non-existent pool return zeroes rather than reverting,
+so the symptom is an integration that looks like it is pointed at an empty pool rather than one
+that is pointed at the wrong one.
+
+```ts
+// WRONG for a dynamic-fee pool: 10000 is the rate the pool charges right now, not its key.
+const poolId = keccak256(encodeAbiParameters(POOL_KEY_ABI, [
+  [currency0, currency1, 10_000, tickSpacing, hookAddress],
+]));
+
+// RIGHT: the key carries the sentinel, whatever the pool currently charges.
+const DYNAMIC_FEE_FLAG = 0x800000;
+const poolId = keccak256(encodeAbiParameters(POOL_KEY_ABI, [
+  [currency0, currency1, DYNAMIC_FEE_FLAG, tickSpacing, hookAddress],
+]));
+```
+
+Deployed RC5 pools use a static fee and are unaffected. If a pool read comes back all zeroes when
+you expected liquidity, check the `fee` field in the key you hashed before you check anything else.
+See [12 — Launch protection](12-launch-protection.md) for the generation table.
+
 ## Composing a launch
 
 The order is: mine two salts → build params → validate → predict → simulate → estimate → sign.
@@ -65,7 +97,8 @@ validation succeeds.
 
 ```ts
 // 1. Mine both salts. Each address has a constraint: the token must sort correctly
-//    against WETH, and the hook must land on the 0x1440 mask. Both miners must also
+//    against WETH, and the hook must land on the mask for the generation you are
+//    targeting — 0x1440 on deployed RC5, 0x14C0 on RC6. Both miners must also
 //    check for live code at the candidate address, not just the mask.
 const hookMine = await mineArtHookSalt(chainId, { publicClient });
 const tokenSalt = /* token-salt miner, direction "belowWeth" for single-sided routing */;
