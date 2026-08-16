@@ -6,9 +6,10 @@ Uniswap v4 pool from the first block.
 > **Status: RC5 deployed, public launch closed.** Platform contracts are deployed on Ethereum (1),
 > Base (8453) and Robinhood Chain (4663), but every factory is still `PREPARED`. Ordinary creator
 > launches remain closed until a separate opening transaction moves the factories to public
-> creation. BNB Smart Chain (56) is deferred in this release. Review to date is **internal only**;
-> there has been no external audit. See
-> [08 — Status and limitations](08-status.md) before you plan anything real.
+> creation. BNB Smart Chain (56) is deferred in this release. Read
+> [08 — Status and limitations](08-status.md) before you plan anything real, and
+> [11 — Governance and upgradeability](11-governance-and-upgradeability.md) for who can change
+> what, and how fast.
 
 ## Read in this order
 
@@ -24,6 +25,7 @@ Uniswap v4 pool from the first block.
 | 08 | [Status and limitations](08-status.md) | What is proven, what is not, what is missing |
 | 09 | [FAQ](09-faq.md) | Short answers to the questions people actually ask |
 | 10 | [Deployments and quote assets](10-deployments-and-quote-assets.md) | RC5 addresses and the complete Robinhood stock-token reference |
+| 11 | [Governance and upgradeability](11-governance-and-upgradeability.md) | Who can change what, how fast, and the two things that can never change |
 
 ## How this differs from the starter template in this repo
 

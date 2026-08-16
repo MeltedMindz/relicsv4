@@ -1,7 +1,7 @@
 # 06 — Fees and revenue
 
 > RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
-> launches are still closed (`PREPARED`). Internal review only — no external audit.
+> launches are still closed (`PREPARED`).
 > See [08 — Status and limitations](08-status.md).
 
 This page states the fee mechanics precisely, because vague fee language is how creators get

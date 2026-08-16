@@ -1,7 +1,7 @@
 # 09 — FAQ
 
 > RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
-> launches are still closed (`PREPARED`). Internal review only — no external audit.
+> launches are still closed (`PREPARED`).
 > See [08 — Status and limitations](08-status.md).
 
 **Can I launch today?**
@@ -10,9 +10,10 @@ still `PREPARED`, so ordinary creator launches are closed. You can build, valida
 real `.relics` file today. Do not broadcast a launch transaction until `acceptsPublicLaunches`
 returns true for your chain.
 
-**Has it been audited?**
-No. All review to date is internal. Do not describe it as audited, externally reviewed, or
-security-reviewed by a third party.
+**How do I verify what I am launching against?**
+Every deployed contract is source-verified on its chain's explorer. Read the runtime bytecode against the published source before relying on any
+description of it. Do not describe the protocol as audited, externally reviewed, or
+security-reviewed by a third party — no such report exists to point at.
 
 **What does it cost me to launch?**
 Gas, and afterwards 25% of the LP fees your pool collects. There is no listing fee, no fee on
@@ -117,7 +118,7 @@ non-upgradeable contracts with no setters. Judge that claim against the deployed
 chain you use.
 
 **Who can trigger a fee claim?**
-Anyone. But the destination is resolved from your ProjectRights and the immutable fee policy, so a
+Anyone. But the destination is resolved from your ProjectRights and the deployed fee policy, so a
 stranger calling it only ever pays you. There is no caller-chosen recipient.
 
 **What happens if I sell my ProjectRights token?**

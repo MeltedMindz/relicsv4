@@ -52,5 +52,5 @@ from Ethereum state at the moment of the call. Trade activity literally reshapes
 - [03 — Uniswap v4 hooks, from zero](03-uniswap-v4-hooks.md)
 - [10 — Twenty hard-won lessons](10-twenty-lessons.md)
 
-> Reminder: this is an **educational** starter. It is **not audited**, not affiliated with any
+> Reminder: this is an **educational** starter. It is not affiliated with any
 > project, and everything here needs your own security, legal, and economic review.

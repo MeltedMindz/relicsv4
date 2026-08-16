@@ -1,7 +1,7 @@
 # 02 — What a launch produces
 
 > RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
-> launches are still closed (`PREPARED`). Internal review only — no external audit.
+> launches are still closed (`PREPARED`).
 > See [08 — Status and limitations](08-status.md).
 
 One call to `ILaunchpadFactory.launch(LaunchParams)` is atomic. Either the whole project exists at
@@ -106,7 +106,7 @@ the market opens:
 | --- | --- | --- |
 | `InstantV4` | one call: `launch()` | Whole supply becomes canonical liquidity immediately; the pool is tradeable at the end of the transaction |
 | `FixedPriceSaleToV4` | `launchSale()` then `finalizeSale()` | Buyers purchase at a flat price per token during a window, then the remainder graduates into the pool |
-| `BondingCurveSaleToV4` | `launchSale()` then `finalizeSale()` | Same, priced along a fixed audited curve preset (linear or constant-product-like) |
+| `BondingCurveSaleToV4` | `launchSale()` then `finalizeSale()` | Same, priced along a fixed curve preset (linear or constant-product-like) |
 
 All three end in the same canonical pool with the same 1% fee, the same hook, and the same
 economics. `finalizeSale()` is permissionless — anyone can trigger graduation once the terms are
@@ -196,7 +196,7 @@ other than the token holder; `address(0)` means "follow the owner". Note that th
 deliberately persists across transfers, which is how a collaborator splitter stays attached when
 the rights token changes hands.
 
-If you named collaborators at launch, the factory deploys an immutable `Splitter`, sets it as the
+If you named collaborators at launch, the factory deploys a `Splitter`, sets it as the
 payout recipient, and hands you the rights token — so creator revenue lands in the splitter and
 anyone can release it to the named shares.
 

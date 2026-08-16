@@ -19,15 +19,19 @@ See [10 — Deployments and quote assets](10-deployments-and-quote-assets.md) fo
 locker, registry and quote-reference addresses. The same data is exported from
 `@relics/project-schema`, and `npm run kit:status` prints it locally.
 
-## Review status: internal only
+## How to verify rather than trust
 
-Everything done so far is **internal review**. There has been **no external audit** and no
-third-party security review. Do not describe the launchpad as audited, externally reviewed, or
-security-reviewed by a third party.
+Every deployed contract is source-verified on its chain's explorer. Read the runtime bytecode
+against the published source before relying on any description of it, including this page. Do not
+describe the launchpad as audited, externally reviewed, or security-reviewed by a third party —
+there is no report to point at, and a claim with nothing behind it is worse than silence.
 
-Internal fork work is still useful evidence: the launch path, fee accounting, art binding and
-multi-quote settlement model have been exercised against pinned forks. Fork-proven is a real
-signal about the tested conditions. It is not an external audit.
+Internal fork work is real evidence about the conditions it tested: the launch path, fee
+accounting, art binding and multi-quote settlement model have been exercised against pinned forks.
+Fork-proven is a statement about those conditions and nothing wider.
+
+The other half of "what can I rely on" is not review at all — it is who can change the code and how
+fast. See [11 — Governance and upgradeability](11-governance-and-upgradeability.md).
 
 ## Known limits worth planning around
 

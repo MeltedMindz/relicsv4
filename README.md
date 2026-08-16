@@ -40,8 +40,8 @@ Check the bundled address/status record any time:
 npm run kit:status
 ```
 
-> ⚠️ **No external audit.** All review to date is **internal only**. Nothing here has been audited
-> by a third party — not the launchpad, not the starter template, not the creator kit. Get your own
+> ⚠️ **Verify before you rely on any of this.** Every deployed contract is source-verified on its chain's explorer. Read the runtime bytecode against the
+> published source rather than trusting a description of it, including this one. Get your own
 > security, legal and economic review before deploying or trading anything.
 
 ### Start here
@@ -60,7 +60,7 @@ npm run kit:status
 
 | | What it is |
 | --- | --- |
-| 🔧 **[Fork the starter template](docs/00-make-it-your-own.md)** | A clean-room, MIT-licensed codebase you deploy **yourself** — no launchpad, no factory, no fee split. Educational; not audited. |
+| 🔧 **[Fork the starter template](docs/00-make-it-your-own.md)** | A clean-room, MIT-licensed codebase you deploy **yourself** — no launchpad, no factory, no fee split. Educational. |
 | 🏛️ **[Flagship reference](flagship/)** | The exact production source of the live RELICS Uniswap v4 hook (`0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440`), byte-identical to the Etherscan-verified source and proven offline by `flagship/test/DeploymentProof.t.sol` to reproduce the deployed init code. Shares no code with the template. |
 
 ---
@@ -420,7 +420,7 @@ MIT — see [`LICENSE`](LICENSE). Third-party dependencies keep their own licens
 ## 26. Disclaimer
 
 This is **educational** software provided "as is," without warranty of any kind. It is **not
-audited** and **not production-ready**. It is **not affiliated with or endorsed by** Uniswap,
+production-ready**. It is **not affiliated with or endorsed by** Uniswap,
 OpenZeppelin, OpenSea, Foundry, any auditor, or any production collection. It contains **no
 private or production material** — no real addresses, keys, or proofs. Nothing here is financial,
 legal, or investment advice. Deploying tokens, launching liquidity, and distributing NFTs can

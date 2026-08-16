@@ -2,7 +2,7 @@
 
 > RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
 > launches are still closed (`PREPARED`). BNB Smart Chain is deferred in this release.
-> Internal review only — no external audit. See [08 — Status and limitations](08-status.md).
+> See [08 — Status and limitations](08-status.md).
 
 ## The one paragraph
 

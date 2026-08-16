@@ -1,6 +1,6 @@
 # 18 — FAQ
 
-**Is this audited / production-ready?**
+**Is this production-ready?**
 No. It is an educational starter with no warranty. Get your own security, legal, and economic
 review before deploying or trading anything.
 

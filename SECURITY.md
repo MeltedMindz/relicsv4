@@ -1,6 +1,6 @@
 # Security
 
-**relics-v4-starter is an unaudited educational project. It ships with NO warranty and is NOT
+**relics-v4-starter is an educational project. It ships with NO warranty and is NOT
 production-ready.** Do not deploy it, or anything derived from it, to a network holding real value
 without your own independent security, legal, and economic review.
 

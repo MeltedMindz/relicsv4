@@ -176,6 +176,6 @@ the web needs to read it.
 
 ---
 
-> Reminder: this is an **educational template**, **not audited**, and **not affiliated with**
+> Reminder: this is an **educational template**, and **not affiliated with**
 > Uniswap, OpenZeppelin, OpenSea, or any auditor. Your fork is your responsibility — get your own
 > security, legal, and economic review before launching.

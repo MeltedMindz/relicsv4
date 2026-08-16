@@ -1,8 +1,8 @@
 # 07 — Integrating: the SDK and ABI surface
 
 > RC5 platform contracts are deployed on Ethereum, Base and Robinhood Chain, but public creator
-> launches are still closed (`PREPARED`). The SDK is not published to npm. Internal review only —
-> no external audit. See [08 — Status and limitations](08-status.md).
+> launches are still closed (`PREPARED`). The SDK is not published to npm. See
+> [08 — Status and limitations](08-status.md).
 
 This page is for people building a marketplace view, an indexer, a custom mint page, or a portfolio
 tool against launchpad projects. It describes the shapes you would work with.
