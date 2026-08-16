@@ -53,7 +53,9 @@ contract LockPosition is ChainConfig {
             IPositionNFT(positionManager).ownerOf(positionId) == address(locker), "custody failed"
         );
 
-        _logHeader("Genesis position locked (no withdrawal path; fees to construction-fixed recipients)");
+        _logHeader(
+            "Genesis position locked (no withdrawal path; fees to construction-fixed recipients)"
+        );
         console2.log("locker:", address(locker));
         console2.log("recipient0 (currency0 fees):", recipient0);
         console2.log("recipient1 (currency1 fees):", recipient1);
