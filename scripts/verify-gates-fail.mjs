@@ -187,6 +187,12 @@ for (const spec of GATES) {
     // `export:manifest:check` reads git; give the scratch copy a repository so it can.
     const git = (...args) => execFileSync("git", args, { cwd: scratch, stdio: "pipe" });
     git("init", "-q");
+    // No background git. `git add -A` over a full tree can trip `gc --auto`, which keeps writing
+    // into .git after this block returns and makes the teardown below fail with ENOTEMPTY on a
+    // Linux runner while passing on a developer machine. Disable it rather than race it.
+    git("config", "gc.auto", "0");
+    git("config", "gc.autoDetach", "false");
+    git("config", "maintenance.auto", "false");
     git("add", "-A");
     git("-c", "user.email=gate@selftest", "-c", "user.name=gate", "commit", "-q", "-m", "baseline");
 
@@ -210,7 +216,9 @@ for (const spec of GATES) {
   } catch (err) {
     results.push({ gate: spec.gate, status: "ERROR", detail: err instanceof Error ? err.message : String(err) });
   } finally {
-    rmSync(scratch, { recursive: true, force: true });
+    // Retries, because a just-exited git can still hold a descriptor for a moment. `force` alone
+    // suppresses ENOENT, not ENOTEMPTY.
+    rmSync(scratch, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   }
 }
 

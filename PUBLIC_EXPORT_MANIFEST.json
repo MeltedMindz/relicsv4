@@ -7637,7 +7637,7 @@
     },
     {
       "path": "scripts/verify-gates-fail.mjs",
-      "sha256": "b2ad6d8e9a391226ed6d191e9b13d0425fc8d3fb10eba1d138304e619fc1051e",
+      "sha256": "d4505ded3a07e1f944bf01a5eb8d9be5acc47ff2772fbb33d54729f0acdd1d44",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
