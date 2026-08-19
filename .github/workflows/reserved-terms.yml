@@ -32,4 +32,6 @@ jobs:
         run: node scripts/check-reserved-terms.mjs --controls
 
       - name: Scan the tree
+        # The controls failing must not hide what the scan itself would have found.
+        if: always()
         run: node scripts/check-reserved-terms.mjs

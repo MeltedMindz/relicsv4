@@ -1,0 +1,14 @@
+{
+  "project": {
+    "name": "Geometric Abstract",
+    "symbol": "GEOAB",
+    "description": "Hard-edged forms arranged in a mirrored field. Liquidity sets how many forms are drawn; holder growth sets how many times the composition repeats around its centre. The seed decides what the forms are.",
+    "license": "CC0-1.0"
+  },
+  "supply": {
+    "totalSupplyWhole": "20000",
+    "artworkSupply": "1000",
+    "backingModel": "PARTIAL",
+    "tokensPerArtwork": "20"
+  }
+}

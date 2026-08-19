@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Palette",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Dune", "weight": 30 },
+        { "name": "Tide", "weight": 30 },
+        { "name": "Ember", "weight": 20 },
+        { "name": "Pine", "weight": 20 }
+      ]
+    },
+    {
+      "name": "Bands",
+      "distribution": "uniform",
+      "values": [{ "name": "Few" }, { "name": "Many" }]
+    },
+    {
+      "name": "Drift",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Level", "weight": 50 },
+        { "name": "Raked", "weight": 50 }
+      ]
+    }
+  ]
+}

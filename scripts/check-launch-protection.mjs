@@ -33,6 +33,7 @@ import {
   ANTI_SNIPE_WINDOW_SECONDS,
   ANTI_SNIPE_START_FEE_PIPS,
   ANTI_SNIPE_END_FEE_PIPS,
+  ANTI_SNIPE_INITIAL_ADDON_PIPS,
   SELL_FEE_PIPS,
   ANTI_SNIPE_PUBLIC_DURATION_MINUTES,
   ANTI_SNIPE_WINDOW_ANCHOR,
@@ -52,6 +53,8 @@ import {
   IMMUTABLE_LIQUIDITY_SCOPE,
   PROHIBITED_DOC_PHRASES,
   OVERREACH_CLAIMS,
+  AUDIT_STATUS_PHRASES,
+  AUDIT_ADJECTIVAL_CLAIM_RE,
   OVERREACH_NEGATORS,
   EVIDENCE_REQUIRED_PHRASES,
   isLaunchModeAvailable,
@@ -72,10 +75,59 @@ const PROTECTION_DOC = join("docs", "launchpad", "12-launch-protection.md");
 const INTEGRATING_DOC = join("docs", "launchpad", "07-integrating.md");
 const FAQ_DOC = join("docs", "launchpad", "09-faq.md");
 
-/** The declaration is allowed to name everything; it is the source. */
 const DECLARATION = join("packages", "project-schema", "src", "launch-protection.js");
-/** Files whose purpose is to state or check these rules, and so must name the phrases. */
-const RULE_FILES = new Set([DECLARATION, join("scripts", "check-launch-protection.mjs")]);
+
+/**
+ * THE BLOCKLIST EXEMPTION, and why it is a REGION rather than a file.
+ *
+ * Two files must contain the phrases they forbid: the declaration holds the lists, and this
+ * checker holds the fixtures that prove it can catch them. Exempting either FILE would be the
+ * loophole — the next edit could smuggle a real claim into prose, a doc comment or an error
+ * message in the same file and nothing would fire.
+ *
+ * So the exemption is by NAMED DECLARATION. For each file below, the bracket-matched extent of
+ * each named top-level binding is permitted and every other line is scanned exactly as any other
+ * file. A banned phrase one line outside the list still fails.
+ */
+const BLOCKLIST_REGIONS = new Map([
+  [DECLARATION, ["OVERREACH_CLAIMS", "AUDIT_STATUS_PHRASES", "AUDIT_ADJECTIVAL_CLAIM_RE", "WRONG_DURATION_PHRASES", "PROHIBITED_DOC_PHRASES", "OVERREACH_NEGATORS", "EVIDENCE_REQUIRED_PHRASES"]],
+  [join("scripts", "check-launch-protection.mjs"), ["RULE_STATEMENT_CUES", "controls"]],
+]);
+
+/**
+ * Line numbers (1-based, inclusive) covered by the named bindings, bracket-matched from each
+ * declaration so a list that grows stays covered and the lines after it do not.
+ *
+ * @param {string} source
+ * @param {string[]} names
+ * @returns {(line:number) => boolean}
+ */
+function blocklistRegionTest(source, names) {
+  const lines = source.split("\n");
+  /** @type {[number, number][]} */
+  const ranges = [];
+  for (const name of names) {
+    const start = lines.findIndex((l) => new RegExp(`^\\s*(?:export\\s+)?(?:const|let|var)\\s+${name}\\s*=`).test(l));
+    if (start === -1) continue;
+    let depth = 0;
+    let started = false;
+    let end = start;
+    for (let i = start; i < lines.length; i += 1) {
+      for (const ch of lines[i]) {
+        if (ch === "[" || ch === "(" || ch === "{") {
+          depth += 1;
+          started = true;
+        } else if (ch === "]" || ch === ")" || ch === "}") depth -= 1;
+      }
+      end = i;
+      if (started && depth <= 0) break;
+      // A single-line declaration with no brackets at all (a regex literal, say) ends on its line.
+      if (!started && /;\s*$/.test(lines[i])) break;
+    }
+    ranges.push([start + 1, end + 1]);
+  }
+  return (line) => ranges.some(([a, b]) => line >= a && line <= b);
+}
 
 const SKIP_DIRS = new Set([
   "node_modules", ".git", "lib", "out", "cache", "output", "submissions", ".next", "dist", "broadcast",
@@ -103,7 +155,7 @@ const DERIVED_FACTS = [
   {
     id: "WINDOW_SECONDS",
     claims: ["ANTI_SNIPE_WINDOW_SECONDS"],
-    text: `${ANTI_SNIPE_WINDOW_SECONDS} seconds`,
+    text: `${ANTI_SNIPE_WINDOW_SECONDS.toLocaleString("en-US")} seconds`,
     files: [PROTECTION_DOC],
   },
   {
@@ -115,37 +167,45 @@ const DERIVED_FACTS = [
   {
     id: "SELL_FEE",
     claims: ["SELL_FEE_PIPS"],
-    text: `sell-side LP fee is a flat ${pct(SELL_FEE_PIPS)}`,
+    text: `sell side is a flat ${pct(SELL_FEE_PIPS)}`,
     files: [PROTECTION_DOC],
   },
   {
     id: "PIPS_START",
     claims: ["ANTI_SNIPE_START_FEE_PIPS"],
-    text: `${ANTI_SNIPE_START_FEE_PIPS.toLocaleString("en-US")} pips`,
+    text: `MAX_EFFECTIVE_BUY = ${ANTI_SNIPE_START_FEE_PIPS}`,
+    files: [PROTECTION_DOC],
+  },
+  {
+    id: "DECAYING_ADDON",
+    claims: ["ANTI_SNIPE_INITIAL_ADDON_PIPS"],
+    // The add-on is what the hook interpolates. A curve rebuilt from the endpoints agrees at both
+    // ends and is one pip out almost everywhere between, so the page has to publish THIS number.
+    text: `ADDON = ${ANTI_SNIPE_INITIAL_ADDON_PIPS}`,
     files: [PROTECTION_DOC],
   },
   {
     id: "NO_EXEMPTIONS",
     claims: ["NO_PRIVILEGED_FEE_EXEMPTIONS"],
-    text: "no privileged exemptions",
+    text: NO_PRIVILEGED_FEE_EXEMPTIONS ? "neither mode has an exemption for anybody" : "some addresses are exempt from the schedule",
     files: [PROTECTION_DOC],
   },
   {
     id: "MANDATORY",
     claims: ["PROTECTION_IS_MANDATORY"],
-    text: "cannot be disabled",
+    text: PROTECTION_IS_MANDATORY ? "cannot be disabled" : "must never be described as protected",
     files: [PROTECTION_DOC],
   },
   {
     id: "ANCHOR",
     claims: ["ANTI_SNIPE_WINDOW_ANCHOR"],
-    text: ANTI_SNIPE_WINDOW_ANCHOR === "POOL_INITIALIZATION" ? "pool is initialized" : ANTI_SNIPE_WINDOW_ANCHOR,
+    text: ANTI_SNIPE_WINDOW_ANCHOR,
     files: [PROTECTION_DOC],
   },
   {
     id: "SALE_PHASE_NO_DECAY",
     claims: ["ANTI_SNIPE_SALE_PHASE_DECAY"],
-    text: ANTI_SNIPE_SALE_PHASE_DECAY ? "the sale phase decays" : "no fee decay during the sale",
+    text: ANTI_SNIPE_SALE_PHASE_DECAY ? "the sale phase decays" : "however long the sale ran",
     files: [PROTECTION_DOC],
   },
   {
@@ -256,6 +316,7 @@ const COVERAGE_EXEMPT = new Set([
   "PROHIBITED_DOC_PHRASES",
   "OVERREACH_CLAIMS",
   "AUDIT_STATUS_PHRASES",
+  "AUDIT_ADJECTIVAL_CLAIM_RE",
   "WRONG_DURATION_PHRASES",
   "OVERREACH_NEGATORS",
   "EVIDENCE_REQUIRED_PHRASES",
@@ -314,7 +375,9 @@ const RULE_STATEMENT_CUES = [
   /\bno\s+public\s+surface\b/i,
   // `Say "internally reviewed" — not "audited"`: negating a QUOTED term is contrast, not a claim.
   // The quotes are what make this narrow — bare "not audited" prose is still caught.
-  /\bnot\s+["“']/,
+  // Case-insensitive: a sentence may start with it. `Not "nobody can rug", which is unrestricted
+  // and false.` is the honest denial, and it was being reported as the claim.
+  /\bnot\s+["“']/i,
 ];
 
 /**
@@ -325,8 +388,43 @@ const RULE_STATEMENT_CUES = [
  * context is enough for a wrapped clause and short enough that it cannot launder a separate
  * sentence — the sibling economics gate uses a bounded lookback for the same reason.
  */
-const isRuleStatement = (line, prev = "") =>
-  RULE_STATEMENT_CUES.some((re) => re.test(line) || re.test(`${prev.trimEnd()} ${line.trimStart()}`));
+/**
+ * The [start, end) ranges of quoted text on a line, for all three quote characters.
+ *
+ * Used only together with {@link isCommentLine}: a banned phrase written INSIDE QUOTES INSIDE A
+ * COMMENT is a mention — the code is naming the phrase in order to reason about it — while the same
+ * phrase in reader-facing prose, a markdown blockquote, or an error message is an assertion and is
+ * still reported. Deliberately not applied to a markdown blockquote, which reaches a reader.
+ * @param {string} line
+ */
+function quotedSpans(line) {
+  const spans = [];
+  const quotes = new Set(['"', "'", "\u201c", "\u201d", "`"]);
+  let open = -1;
+  for (let i = 0; i < line.length; i += 1) {
+    if (!quotes.has(line[i])) continue;
+    if (open === -1) open = i;
+    else {
+      spans.push([open + 1, i]);
+      open = -1;
+    }
+  }
+  return spans;
+}
+
+const isCommentLine = (line) => /^\s*(\/\/|\*|\/\*|#)/.test(line);
+
+/** True when [at, at+len) lies wholly inside a quoted span on a comment line. */
+const isQuotedMention = (line, at, len) => isCommentLine(line) && quotedSpans(line).some(([a, b]) => at >= a && at + len <= b);
+
+const isRuleStatement = (line, prev = "", listIntro = "") =>
+  RULE_STATEMENT_CUES.some((re) => re.test(line) || re.test(`${prev.trimEnd()} ${line.trimStart()}`)) ||
+  // A LIST OF FORBIDDEN PHRASES is the commonest way a rules page names one, and its introducer
+  // ("Do not write, and do not let an interface imply:") sits above the whole list rather than one
+  // line above each item. `listIntro` is the introducer of the CONTIGUOUS list this line belongs to
+  // and nothing else — it is cleared by the first blank line or non-item, so it cannot reach across
+  // a paragraph break and launder an unrelated sentence.
+  (listIntro !== "" && RULE_STATEMENT_CUES.some((re) => re.test(listIntro)));
 
 /**
  * True when a negator sits in the few words immediately before `at`.
@@ -334,8 +432,12 @@ const isRuleStatement = (line, prev = "") =>
  * Deliberately local: it looks only at the run of text just before the phrase, so a "not" earlier
  * in a long sentence about something else cannot launder a claim at the end of it.
  */
-function negatedAt(lowerLine, at) {
-  const before = lowerLine.slice(Math.max(0, at - 24), at);
+function negatedAt(lowerLine, at, lowerPrev = "") {
+  // Prose wraps, and a negator can land at the end of the line above: "none of it is\nSybil-
+  // resistant". The lookback is the same bounded one `isRuleStatement` uses, and it applies only
+  // when the phrase sits at the very start of its line — so a "not" earlier in an unrelated
+  // sentence still cannot reach it.
+  const before = at <= 2 ? `${lowerPrev.trimEnd()} `.slice(-24) : lowerLine.slice(Math.max(0, at - 24), at);
   return OVERREACH_NEGATORS.some((n) => new RegExp(`\\b${n.replace(/'/g, "'")}\\b[\\s\\-—:,]*$`).test(before));
 }
 
@@ -358,34 +460,59 @@ let filesScanned = 0;
 let phraseHits = 0;
 for (const abs of walk(ROOT)) {
   const rel = relative(ROOT, abs);
-  if (RULE_FILES.has(rel)) continue;
   const text = readFileSync(abs, "utf8");
   filesScanned += 1;
+  // A phrase inside a named blocklist is the list doing its job. A phrase anywhere else in the
+  // same file is a claim, and is reported like any other.
+  const inBlocklist = BLOCKLIST_REGIONS.has(rel) ? blocklistRegionTest(text, BLOCKLIST_REGIONS.get(rel)) : () => false;
 
   // A file whose job is to name these phrases in order to ban them declares itself, exactly as the
   // sibling economics gate allows. Same trust model, same marker.
   if (text.includes(DETECTOR_SELF_REFERENCE_MARKER)) continue;
 
   const lines = text.split("\n");
+  // The introducer of the contiguous markdown list the current line belongs to, or "".
+  let listIntro = "";
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i];
     const lower = line.toLowerCase();
+    if (/^\s*[-*+]\s/.test(line)) {
+      if (listIntro === "") {
+        // One blank line between the introducer and the list is ordinary Markdown, so look past
+        // exactly one. Two would be a paragraph break, and reaching across it is how a lookback
+        // stops being a lookback.
+        const above = (lines[i - 1] ?? "").trim();
+        listIntro = above === "" ? (lines[i - 2] ?? "").trim() : above;
+      }
+    } else {
+      listIntro = "";
+    }
+
+    if (inBlocklist(i + 1)) continue;
+
+    // The adjectival form, never suppressed by a link elsewhere on the page.
+    const adjectival = new RegExp(AUDIT_ADJECTIVAL_CLAIM_RE.source, "gi").exec(line);
+    if (adjectival && !isSuppressedMention(line) && !isRuleStatement(line, lines[i - 1] ?? "", listIntro) && !isQuotedMention(line, adjectival.index, adjectival[0].length)) {
+      phraseHits += 1;
+      fail("PROHIBITED_PHRASE", `${rel}:${i + 1}`, "an assurance asserted about a specific component");
+    }
 
     for (const phrase of PROHIBITED_DOC_PHRASES) {
       const at = lower.indexOf(phrase.toLowerCase());
       if (at === -1) continue;
-      if (isSuppressedMention(line) || isRuleStatement(line, lines[i - 1] ?? "")) continue;
-      // An OVERREACH claim is inverted by a negator right before it: "these controls are NOT
-      // Sybil-resistant" is the honest sentence. Audit-status and wrong-duration phrases are NOT
-      // suppressible this way — see the declaration for why.
-      if (OVERREACH_CLAIMS.includes(phrase) && negatedAt(lower, at)) continue;
+      if (isSuppressedMention(line) || isRuleStatement(line, lines[i - 1] ?? "", listIntro)) continue;
+      if (isQuotedMention(line, at, phrase.length)) continue;
+      // An OVERREACH claim is inverted by a negator immediately before it: denying the claim is
+      // the honest sentence and must stay legal. Audit-status and wrong-duration phrases are NOT
+      // suppressible this way; see the declaration for why.
+      if (OVERREACH_CLAIMS.includes(phrase) && negatedAt(lower, at, (lines[i - 1] ?? "").toLowerCase())) continue;
       phraseHits += 1;
       fail("PROHIBITED_PHRASE", `${rel}:${i + 1}`, `"${phrase}"`);
     }
 
     for (const [phrase, evidence] of Object.entries(EVIDENCE_REQUIRED_PHRASES)) {
       if (!lower.includes(phrase.toLowerCase())) continue;
-      if (isSuppressedMention(line) || isRuleStatement(line, lines[i - 1] ?? "")) continue;
+      if (isSuppressedMention(line) || isRuleStatement(line, lines[i - 1] ?? "", listIntro)) continue;
       // Evidence may sit anywhere on the page, not necessarily on the same line.
       if (evidence.some((e) => text.toLowerCase().includes(e.toLowerCase()))) continue;
       phraseHits += 1;
@@ -442,7 +569,28 @@ if (CONTROLS) {
     { name: "audit-positive-backed", text: "audited by Example Labs, audit report at https://example.com", shouldCatch: () => false, expectPass: true },
     { name: "sybil-overreach", text: "the schedule is sybil-resistant", shouldCatch: (t) => PROHIBITED_DOC_PHRASES.some((p) => t.toLowerCase().includes(p.toLowerCase())) },
     { name: "fair-distribution", text: "it guarantees fair distribution", shouldCatch: (t) => PROHIBITED_DOC_PHRASES.some((p) => t.toLowerCase().includes(p.toLowerCase())) },
+    // The five POSITIVE claims found in shipped Solidity that the literal list matched none of.
+    { name: "adjectival-curve-presets", text: "Audited fixed curve presets", shouldCatch: (t) => AUDIT_ADJECTIVAL_CLAIM_RE.test(t) },
+    { name: "adjectival-curve-sale", text: "audited fixed-curve-preset sale", shouldCatch: (t) => AUDIT_ADJECTIVAL_CLAIM_RE.test(t) },
+    { name: "adjectival-template", text: "audited Solidity-SVG template", shouldCatch: (t) => AUDIT_ADJECTIVAL_CLAIM_RE.test(t) },
+    { name: "adjectival-template-2", text: "the audited Solidity-SVG template a launch binds", shouldCatch: (t) => AUDIT_ADJECTIVAL_CLAIM_RE.test(t) },
+    { name: "adjectival-library", text: "v4-core's audited {FullMath}", shouldCatch: (t) => AUDIT_ADJECTIVAL_CLAIM_RE.test(t) },
+    // …and the evidenced form it must not swallow.
+    { name: "adjectival-by-form", text: "audited by Example Labs, report at https://example.com", shouldCatch: (t) => AUDIT_ADJECTIVAL_CLAIM_RE.test(t), expectPass: true },
   ];
+
+  // THE EXEMPTION IS A REGION, NOT A FILE. Prove it on the declaration itself: a line inside the
+  // blocklist is permitted, and the SAME phrase one line outside it is not.
+  const declSourceForControls = readFileSync(join(ROOT, DECLARATION), "utf8");
+  const inList = blocklistRegionTest(declSourceForControls, BLOCKLIST_REGIONS.get(DECLARATION));
+  const declLines = declSourceForControls.split("\n");
+  // The needle is DERIVED from the imported list, so this line does not itself have to contain a
+  // banned phrase in order to look for one.
+  const needle = JSON.stringify(AUDIT_STATUS_PHRASES[0]);
+  const listLine = declLines.findIndex((l) => l.trim().startsWith(needle)) + 1;
+  const proseLine = declLines.findIndex((l) => l.startsWith("// SPDX")) + 1;
+  const regionScoped = listLine > 0 && proseLine > 0 && inList(listLine) && !inList(proseLine);
+  if (!regionScoped) console.error("  control NOT caught: the blocklist exemption is not region-scoped");
   let caught = 0;
   let falsePositives = 0;
   for (const c of controls) {
@@ -455,7 +603,8 @@ if (CONTROLS) {
   const expected = controls.filter((c) => !c.expectPass).length;
   console.log(`LAUNCH_PROTECTION_CONTROLS_CAUGHT=${caught}/${expected}`);
   console.log(`LAUNCH_PROTECTION_CONTROL_FALSE_POSITIVES=${falsePositives}`);
-  const ok = caught === expected && falsePositives === 0;
+  console.log(`BLOCKLIST_EXEMPTION_IS_REGION_SCOPED=${regionScoped ? "yes" : "NO"}`);
+  const ok = caught === expected && falsePositives === 0 && regionScoped;
   console.log(`LAUNCH_PROTECTION_CONTROLS=${ok ? "PASS" : "FAIL"}`);
   process.exit(ok ? 0 : 1);
 }

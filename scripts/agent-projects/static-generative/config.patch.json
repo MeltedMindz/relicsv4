@@ -1,0 +1,14 @@
+{
+  "project": {
+    "name": "Static Generative",
+    "symbol": "STATG",
+    "description": "Layered bands fixed at birth. This collection declares no market mappings: every piece is a pure function of its seed and renders identically forever.",
+    "license": "CC0-1.0"
+  },
+  "supply": {
+    "totalSupplyWhole": "5000",
+    "artworkSupply": "500",
+    "backingModel": "PARTIAL",
+    "tokensPerArtwork": "10"
+  }
+}

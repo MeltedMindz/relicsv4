@@ -1,0 +1,13 @@
+{
+  "project": {
+    "name": "Monochrome Pixel Field",
+    "symbol": "MPXF",
+    "description": "512 one-bit pixel fields. Drawdown removes what the seed drew; volatility lights what it did not. There is no colour response - the piece is monochrome by construction.",
+    "license": "CC0-1.0"
+  },
+  "supply": {
+    "totalSupplyWhole": "512",
+    "artworkSupply": "512",
+    "backingModel": "FULL_PARITY"
+  }
+}

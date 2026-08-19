@@ -25,6 +25,35 @@ jobs:
       - name: every starter template validates and exports
         run: npm run kit:templates
 
+      - name: every required failure names a file to edit and a command to run
+        # A remedy table is easy to write and easy to fool. This BREAKS a real project thirteen ways,
+        # runs the CLI, and reads what a creator would read: the code, a file in the PROJECT (never
+        # the generated manifest alone), a fix line, and a `$ relics …` command. It is part of
+        # kit:test, and named here so a failure reads as what it is.
+        run: node --test packages/creator-cli/test/error-remedies.test.mjs
+
+      - name: every advertised template completes the whole creator lifecycle
+        # kit:templates proves a template EXPORTS. This walks the path the docs give a creator, in
+        # order, through the CLI binary: init -> preview -> test-seeds -> validate -> export ->
+        # inspect. It includes `init` itself, which the export check skipped by copying the template
+        # directory out of the repo, and the two steps that only fail when art is really rendered.
+        # Emits ALL_ADVERTISED_TEMPLATES_TESTED and ADVERTISED_TEMPLATES_FAILED.
+        run: npm run kit:lifecycle
+
+      - name: the README quickstart actually runs
+        # Parsed OUT of README.md rather than restated, so the test cannot drift from the document
+        # it is testing. Asserts what the quickstart promises: the placeholder recipient really does
+        # refuse, a real address gets a clean run, a .relics file exists, its container marker and
+        # manifest both say FINAL, and it validates with zero errors.
+        # Emits README_QUICKSTART_EXECUTABLE.
+        run: npm run kit:readme
+
+      - name: three natural-language briefs still build with the public workflow
+        # Evidence that a brief becomes a project using `relics init` plus ordinary file edits, with
+        # no fixture copied and no case in the validator that knows these projects exist. Each one
+        # asserts the MECHANICS its brief promised, not merely that the pipeline ran.
+        run: npm run kit:agent-projects
+
       - name: the fee allocation is declared once, and no retired figure is active
         # The RC3 platform-allocation amendment moved the RELICS buyback from 25% to 50% of the
         # platform share. This gate reports ACTIVE_STALE_BUYBACK_25_PERCENT_OF_PLATFORM_CLAIMS,
@@ -39,6 +68,36 @@ jobs:
         # nobody runs is a gate that is already stale.
         run: npm run export:manifest:check
 
+      - name: the kit publishes no address for a generation that is not deployed
+        # RC6 is not on any chain and its derived addresses move with the source tree, so a copyable
+        # RC6 address in a creator kit would be the contract a creator targets and never reaches.
+        # This half of the guard needs no launchpad checkout; `kit:deployments:check` compares the
+        # records against the launchpad's own packages and says plainly when it cannot run.
+        run: npm run kit:deployments:check
+
+      - name: the schema cannot drift from the production importer
+        # THE DRIFT GATE. The launchpad's web importer imports this package (mirrored byte for byte)
+        # rather than restating a format rule, so the two can only agree by construction — and only
+        # while the mirror is a mirror. The launchpad guards its own copy against a pinned upstream
+        # COMMIT; this guards the commit, in the repository where the drift would originate:
+        # a surface pin over every mirrored file, the importer's check-id contract, security
+        # invariants that survive a re-signed pin, and a behavioural fixture the launchpad's CI
+        # consumes. Emits PUBLIC_SCHEMA_PRODUCTION_IMPORTER_PARITY and
+        # PUBLIC_AND_PRODUCTION_SCHEMA_DRIFT_POSSIBLE.
+        run: npm run kit:parity
+
+      - name: the drift gate has been watched failing
+        # A gate nobody has seen go red is decorative. This mutates the schema nine plausible ways —
+        # including re-signing the pin after each edit — and requires every one to be refused.
+        run: npm run kit:parity:selftest
+
+      - name: the production-compatibility corpus is byte-reproducible
+        # Rebuilding must be a no-op. A diff means an exported bundle no longer imports to the values
+        # the launchpad's CI is checking itself against.
+        run: |
+          npm run kit:compat
+          git diff --exit-code -- packages/project-schema/fixtures/production-compat
+
       - name: the ACV1 conformance corpus is byte-reproducible
         # This corpus is the shared expectation the Solidity decoder is ALSO checked against
         # (launchpad/test/art/ArtConfigV1Parity.t.sol). A diff here means the JavaScript codec
@@ -46,6 +105,42 @@ jobs:
         run: |
           npm run kit:acv1
           git diff --exit-code -- packages/project-schema/fixtures/acv1
+
+      - name: the launch state a document tells a reader to quote
+        # README.md and AGENTS.md both instruct a reader to run `npm run kit:status` and quote it
+        # rather than restating a chain status from memory. A command a document points at should
+        # be one CI has actually executed.
+        run: npm run kit:status
+
+      - name: no template implies its trait labels describe its art
+        # deriveTraits draws each dimension off its own stream and the render context has no
+        # `traits` field, so a label names the token rather than describing the picture. Three
+        # templates additionally pick from names their own trait schema declares, which makes the
+        # coincidence look like a relationship. Every one of them has to say so.
+        run: |
+          npm run kit:traits:controls
+          npm run kit:traits
+
+      - name: every launchability claim matches the deployment records
+        # Derived from the deployment records, not typed: it asks `acceptsPublicLaunches` the same
+        # question `relics status` asks, and only then decides what a document may claim. When a
+        # chain opens, the gate reports REVIEW_REQUIRED instead of silently relaxing.
+        run: |
+          npm run kit:launch-claims:controls
+          npm run kit:launch-claims
+
+      - name: no gate passes on zero input
+        # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
+        # is the only evidence that the rest of this file means anything. It existed, it worked,
+        # and no workflow invoked it.
+        run: npm run kit:gates:selftest
+
+      - name: every promised gate is actually wired into CI, and cannot be skipped
+        # The gate that would have caught `forge fmt --check` aborting the contracts job before
+        # the EIP-170 size assertion ever ran.
+        run: |
+          npm run ci:gates:controls
+          npm run ci:gates
 
       - name: fixtures are byte-reproducible
         # Regenerating must be a no-op. A diff here means a fixture drifted from the code that

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Monochrome Pixel Field",
+  "symbol": "MPXF",
+  "description": "512 one-bit pixel fields. Drawdown removes what the seed drew; volatility lights what it did not. There is no colour response - the piece is monochrome by construction.",
+  "tokenNamePattern": "Field #{id}"
+}

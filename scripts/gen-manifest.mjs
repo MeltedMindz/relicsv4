@@ -63,7 +63,7 @@ const files = tracked
 const manifest = {
   repository: "relics-v4-starter",
   description:
-    "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not affiliated with any production project.",
+    "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   generatedBy: "scripts/gen-manifest.mjs",
   policy:
     "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",

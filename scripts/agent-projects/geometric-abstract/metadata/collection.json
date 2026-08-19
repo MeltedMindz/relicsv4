@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Geometric Abstract",
+  "symbol": "GEOAB",
+  "description": "Hard-edged forms arranged in a mirrored field. Liquidity sets how many forms are drawn; holder growth sets how many times the composition repeats around its centre. The seed decides what the forms are.",
+  "tokenNamePattern": "Composition #{id}"
+}

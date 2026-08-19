@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "mappings": [
+    {
+      "id": "drawdown-damage",
+      "sensor": "drawdown",
+      "transform": "clamp",
+      "transformParams": { "min": 0, "max": 0.9 },
+      "destination": "fracture"
+    },
+    {
+      "id": "volatility-noise",
+      "sensor": "volatility",
+      "transform": "range",
+      "transformParams": { "inMin": 0, "inMax": 0.8 },
+      "destination": "distortion"
+    }
+  ]
+}

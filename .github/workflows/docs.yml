@@ -17,5 +17,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: check internal doc links (offline)
-        run: node scripts/check-links.mjs
+      - name: internal links, anchors, assets, templates and npm scripts (offline)
+        # Internal references are facts about this repository: deterministic, instant and offline.
+        # External links depend on someone else's uptime and bot policy, so they are a SEPARATE
+        # command (`npm run docs:links:external`) — a gate that goes red for reasons no commit
+        # caused is a gate people learn to ignore, and then it stops catching the internal breakage
+        # it was good at. Emits README_INTERNAL_LINKS_BROKEN as a count.
+        run: npm run docs:links
+
+      - name: generated doc facts + assets are current
+        # The hero and launch-protection SVGs and the generated fact blocks are DERIVED from
+        # docs/launchpad/protocol-facts.json. Generating them is only worth doing if a stale one
+        # fails the build: an out-of-date diagram is a confident, wrong picture of the protocol.
+        run: npm run docs:assets:check

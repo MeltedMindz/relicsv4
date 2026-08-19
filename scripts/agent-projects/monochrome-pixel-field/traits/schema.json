@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Ink",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Bone", "weight": 40 },
+        { "name": "Phosphor", "weight": 25 },
+        { "name": "Amber", "weight": 20 },
+        { "name": "Ash", "weight": 15 }
+      ]
+    },
+    {
+      "name": "Fill",
+      "distribution": "uniform",
+      "values": [{ "name": "Sparse" }, { "name": "Even" }, { "name": "Crowded" }]
+    },
+    {
+      "name": "Register",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Low", "weight": 50 },
+        { "name": "High", "weight": 50 }
+      ]
+    }
+  ]
+}

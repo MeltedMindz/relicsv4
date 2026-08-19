@@ -22,6 +22,31 @@ jobs:
           docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest \
             dir /repo --config /repo/.gitleaks.toml --redact --verbose --exit-code 1
 
+      # The repo's OWN scanner, not only the vendored one. AGENTS.md lists `npm run secrets:scan`
+      # as a required gate and no workflow ran it, so `scripts/secret-scan.sh` could rot silently
+      # while a document called it required. `always()` because the two scanners look for
+      # different things and a hit in one must not hide the other.
+      - name: repo secret scan (scripts/secret-scan.sh)
+        if: always()
+        run: npm run secrets:scan
+
+  # FORMATTING IS ITS OWN JOB, and that is the whole point.
+  #
+  # `forge fmt --check` used to be the first step of the `foundry` job. It exited 1 on a single
+  # over-long line, a failed step aborts its job, and so `forge build --sizes` and `forge test`
+  # never ran: the EIP-170 renderer-size assertion was not executing in CI at all, and contracts
+  # were green by never being tested. A formatting nit must be able to fail without taking the
+  # correctness gates down with it, so it lives in a job that shares nothing with them.
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+      - name: forge fmt --check
+        run: forge fmt --check
+
   foundry:
     runs-on: ubuntu-latest
     steps:
@@ -30,15 +55,32 @@ jobs:
         with:
           version: stable
 
-      - name: forge fmt --check
-        run: forge fmt --check
-
+      # `if: always()` on every gate below, belt as well as braces. Splitting formatting out fixed
+      # the failure that happened; this stops the NEXT step anyone adds here from being able to
+      # skip the size gate the same way. `npm run ci:gates` enforces that these carry it.
       - name: forge build --sizes (EIP-170 visibility)
-        # Informational: the hard 24,576-byte gate on the renderer is enforced by
-        # test_runtimeSizeUnderEip170 in the test job below.
+        if: always()
+        # Informational: the hard 24,576-byte gate on the renderer is the assertion below.
         run: forge build --sizes
 
+      # THE EIP-170 GATE, RUN BY NAME AND PROVEN TO HAVE RUN.
+      #
+      # `forge test --match-test <name-that-does-not-exist>` prints "No tests found in project!"
+      # and EXITS 0. So a renamed, moved or deleted size test would leave this step green while
+      # asserting nothing — a gate passing on zero input, which this repository forbids. The step
+      # therefore reads forge's own summary and fails unless exactly the expected test ran.
+      - name: EIP-170 renderer size gate (must actually execute)
+        if: always()
+        run: |
+          set -o pipefail
+          forge test --match-test test_runtimeSizeUnderEip170 -vvv | tee /tmp/eip170.txt
+          grep -q "\[PASS\] test_runtimeSizeUnderEip170" /tmp/eip170.txt || {
+            echo "::error::the EIP-170 renderer-size test did not run. A filter that matches nothing exits 0; that is not a pass."
+            exit 1
+          }
+
       - name: forge test (unit + fuzz + invariant; fork tests self-skip)
+        if: always()
         run: forge test -vvv
 
   fork:

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "mappings": [
+    {
+      "id": "liquidity-density",
+      "sensor": "liquidity",
+      "transform": "range",
+      "transformParams": { "inMin": 0, "inMax": 0.9 },
+      "destination": "density"
+    },
+    {
+      "id": "holders-symmetry",
+      "sensor": "holder_growth",
+      "transform": "tier",
+      "transformParams": { "steps": 8 },
+      "destination": "symmetry"
+    }
+  ]
+}

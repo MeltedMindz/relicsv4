@@ -34,8 +34,32 @@
 // Every pattern below was measured against the published tree and returns zero hits on it. If you
 // add a pattern, measure it the same way before committing, or you have shipped a tripwire that
 // fires on the repository's own contents.
+//
+// WHAT THE 2026-08-19 MEASUREMENT CHANGED
+//
+// The gate was replayed against the material that actually reached a working branch — the staged
+// integration's own files, read out of history — rather than against a synthetic fixture. The first
+// ten patterns caught 4 of the 30 sensitive lines in it. They matched the project's ticker written
+// with digits and nothing else: not the SAME RUN SPELT AS WORDS, which is how the template's
+// identifier was written and the single most repeated token in the leak; not the branded amounts
+// (genesis supply, activation thresholds, the opening-valuation corridor); and not the five schema
+// field names that exist only for that one product. So the guard was not merely absent from the
+// release branch — it was also insufficient, and both had to be fixed. Patterns 10-22 close that,
+// measured the same way: 26 of 30 caught, and still zero hits on the published tree.
+//
+// The four still uncaught are bare mentions of a real quote asset with no project attached
+// ("quoteAsset: \"GME\""). Those stay allowed ON PURPOSE — see WHAT IT DELIBERATELY DOES NOT MATCH.
+// A file carrying the private template trips several other patterns on other lines, so the file
+// still fails; what is permitted is a legitimate ticker documented on its own.
+//
+// COMMENTS ARE IN SCOPE, and that is load-bearing. The scan reads raw lines, so a term inside a
+// `//`, `#`, `<!--`, `/* */` or `///` comment is a hit exactly like code. A runbook comment is the
+// most likely place for this material to survive a cleanup, and it is the one a reader copies into
+// a terminal verbatim. `--controls` proves it by running the real scanner over a fixture whose
+// only occurrences are comments.
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -55,14 +79,48 @@ const RESERVED_B64 = [
   "NjY2XHMrc3Rha2luZw==",
   "NjY2XHMrdG9rZW4=",
   "c2t1bGw=",
+  // 10-22, added 2026-08-19 after replaying the gate against the real staged material.
+  "c2l4X3NpeF9zaXg=",
+  "XGI2NjZbLF9dPzY2NlssX10/NjY2XGI=",
+  "XGIoPzpbMTIzXT82NlssX10/NjY2fDMzM1ssX10/MzMzKVxi",
+  "YWN0aXZhdGlvblRocmVzaG9sZHNXaG9sZQ==",
+  "aW5jcmVtZW50YWxBY3RpdmF0aW9uQ29zdHNXaG9sZQ==",
+  "YWN0aXZhdGlvbk1pbGVzdG9uZXM=",
+  "dGFyZ2V0T3BlbmluZ0ZkdlVzZA==",
+  "b3BlbmluZ0ZkdkNvcnJpZG9yVXNk",
+  "YWN0aXZhdGlvbkJ1cm4=",
+  "ZXJjKD86MjBHZW5lc2lzU3VwcGx5V2hvbGV8NzIxTWF4U3VwcGx5KVxzKls6PV0rXHMqNjY2XGI=",
+  "NjY2W15cbl17MCw0OH1cYkdNRVxi",
+  "XGJHTUVcYlteXG5dezAsNDh9NjY2",
+  "XGIxNjZccyosXHMqMzMzXHMqLFxzKjUwMFxzKixccyo2NjZcYg==",
 ];
+
+// Probes for the patterns whose regex syntax the naive deriver below cannot invert into a matching
+// string — alternation, bounded gaps, character classes. Index-keyed and base64 for the same reason
+// the patterns are: a literal probe here would be a copy of the thing this file refuses to publish.
+// A pattern with no entry has its probe DERIVED, which is the stronger form and stays the default.
+const PROBE_B64 = {
+  11: "NjY2NjY2NjY2",
+  12: "MTY2NjY2",
+  19: "ZXJjNzIxTWF4U3VwcGx5ID09PSA2NjY=",
+  20: "NjY2IHBhaXJzIHdpdGggR01F",
+  21: "R01FIHF1b3RlZCBhZ2FpbnN0IDY2Ng==",
+  22: "MTY2LCAzMzMsIDUwMCwgNjY2",
+};
 const RESERVED = RESERVED_B64.map((b) => new RegExp(Buffer.from(b, "base64").toString("utf8"), "i"));
 
 // Vendored dependencies and generated art are out of scope: we do not author them, and their
 // contents are byte-pinned elsewhere. `.git` is excluded because scanning it would read history,
 // and history is not what is being published by this commit.
 const SKIP_DIR = new Set([".git", "node_modules", "lib", "out", "cache", "dist", ".next", "previews"]);
-const EXT = [".js", ".mjs", ".cjs", ".ts", ".tsx", ".json", ".md", ".sol", ".yml", ".yaml", ".toml", ".txt", ".sh"];
+// Every text-bearing tracked extension. `.svg` and `.css` are here because a doc asset carries
+// prose in `<title>`/`<desc>` and a stylesheet carries comments; `.example` because an env template
+// is prose a creator copies. Binary and generated containers (`.relics`, `.png`) are not text and
+// are not scanned.
+const EXT = [
+  ".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx", ".json", ".md", ".sol", ".yml", ".yaml",
+  ".toml", ".txt", ".sh", ".svg", ".css", ".html", ".example",
+];
 
 function collect(dir, acc = []) {
   let entries;
@@ -101,24 +159,61 @@ function scan(files) {
   return hits;
 }
 
+/** The string a pattern must match: its own explicit probe, else derived from the pattern itself. */
+function probeFor(i) {
+  if (PROBE_B64[i]) return Buffer.from(PROBE_B64[i], "base64").toString("utf8");
+  return Buffer.from(RESERVED_B64[i], "base64")
+    .toString("utf8")
+    .replace(/\\s\*/g, " ")
+    .replace(/\\s\+/g, " ")
+    .replace(/\\b/g, "")
+    .replace(/\\\$/g, "$");
+}
+
 if (CONTROLS) {
   // A scanner nobody has watched fail is not evidence. Both directions are exercised, and the
   // must-catch fixtures are BUILT FROM the decoded patterns so this file still contains none.
   let caught = 0;
   let wrong = 0;
   RESERVED.forEach((re, i) => {
-    const probe = Buffer.from(RESERVED_B64[i], "base64")
-      .toString("utf8")
-      .replace(/\\s\*/g, " ")
-      .replace(/\\s\+/g, " ")
-      .replace(/\\b/g, "")
-      .replace(/\\\$/g, "$");
+    const probe = probeFor(i);
     if (re.test(probe)) caught += 1;
     else {
       wrong += 1;
       console.log(`  MISSED  pattern ${i} does not match its own decoded form`);
     }
   });
+
+  // COMMENTS ARE IN SCOPE. This does not re-test the regexes -- it writes a real file whose ONLY
+  // occurrences are inside comments, in the five comment syntaxes this tree actually uses, and
+  // runs `scan()` over it. A runbook comment is where this material most plausibly survives a
+  // cleanup, and it is what a reader pastes into a terminal.
+  const wrap = [
+    (t) => `// ${t}`,
+    (t) => `# ${t}`,
+    (t) => `<!-- ${t} -->`,
+    (t) => `/* ${t} */`,
+    (t) => `/// @notice ${t}`,
+  ];
+  const tmp = join(mkdtempSync(join(tmpdir(), "reserved-controls-")), "runbook.md");
+  let commentCaught = 0;
+  RESERVED.forEach((_, i) => {
+    const probe = probeFor(i);
+    for (const w of wrap) {
+      writeFileSync(tmp, `a line with nothing reserved on it\n${w(probe)}\nanother clean line\n`);
+      if (scan([tmp]).length > 0) commentCaught += 1;
+      else console.log(`  MISSED  pattern ${i} inside a comment: ${w("<probe>")}`);
+    }
+  });
+  const commentExpected = RESERVED.length * wrap.length;
+
+  // The scan must also REFUSE an empty read rather than report a clean pass, so a control that
+  // exercises the catch direction cannot be satisfied by a scanner that reads nothing.
+  writeFileSync(tmp, "nothing reserved here at all\n");
+  const zeroInput = scan([tmp]).length === 0 && scan([]).length === 0;
+
+  rmSync(dirname(tmp), { recursive: true, force: true });
+
   // Must-allow: the shapes that made a naive scanner unusable. A digest that happens to contain the
   // digit run, and a genuine quote-asset ticker documented on its own.
   const allow = [
@@ -126,6 +221,13 @@ if (CONTROLS) {
     "GME is an admitted quote asset on Robinhood Chain.",
     "erc721MaxSupply: 10000",
     '<path d="M6 6 6 66 666 6" />',
+    // Added with patterns 10-22: the generic mechanism keeps these shapes, and a gate that fired on
+    // them would fire on the repository's own schema tests.
+    "erc20GenesisSupplyWhole: 1000000",
+    "erc721MaxSupply: 666666",
+    "id: \"MY_REVIEWED_TEMPLATE_V1\"",
+    '"bundleSha256": "3d17ba29f8f4ac4818d9b3267fd2d6e5fcf430fc09d7b4d762e8de50396bd092"',
+    "totalSupplyWhole: 1000000000",
   ];
   let falsePositives = 0;
   for (const s of allow) {
@@ -135,8 +237,10 @@ if (CONTROLS) {
     }
   }
   console.log(`RESERVED_TERM_CONTROLS_CAUGHT=${caught}/${RESERVED.length}`);
+  console.log(`RESERVED_TERM_CONTROLS_CAUGHT_IN_COMMENTS=${commentCaught}/${commentExpected}`);
+  console.log(`RESERVED_TERM_CONTROL_ZERO_INPUT_IS_NOT_A_HIT=${zeroInput ? "yes" : "NO"}`);
   console.log(`RESERVED_TERM_CONTROL_FALSE_POSITIVES=${falsePositives}`);
-  const ok = wrong === 0 && falsePositives === 0;
+  const ok = wrong === 0 && falsePositives === 0 && commentCaught === commentExpected && zeroInput;
   console.log(`RESERVED_TERM_CONTROLS=${ok ? "PASS" : "FAIL"}`);
   process.exit(ok ? 0 : 1);
 }

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Palette",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Slate", "weight": 35 },
+        { "name": "Oxide", "weight": 25 },
+        { "name": "Moss", "weight": 25 },
+        { "name": "Violet", "weight": 15 }
+      ]
+    },
+    {
+      "name": "Vocabulary",
+      "distribution": "uniform",
+      "values": [{ "name": "Planar" }, { "name": "Linear" }, { "name": "Wedged" }]
+    },
+    {
+      "name": "Weight",
+      "distribution": "weighted",
+      "values": [
+        { "name": "Light", "weight": 40 },
+        { "name": "Medium", "weight": 40 },
+        { "name": "Heavy", "weight": 20 }
+      ]
+    }
+  ]
+}

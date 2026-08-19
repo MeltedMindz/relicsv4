@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Static Generative",
+  "symbol": "STATG",
+  "description": "Layered bands fixed at birth. This collection declares no market mappings: every piece is a pure function of its seed and renders identically forever.",
+  "tokenNamePattern": "Strata #{id}"
+}
