@@ -1,135 +1,50 @@
 # CLAUDE.md — relics-v4-starter
 
-Read [`AGENTS.md`](AGENTS.md) for the full, tool-agnostic guide. This file front-loads the one
-request this repository exists to answer, so you can act on it immediately.
+**Read [`AGENTS.md`](AGENTS.md).** It is the canonical, tool-agnostic agent guide for this
+repository, and it is kept current. This file exists only so Claude Code finds it; it deliberately
+does not restate the rules, because a second copy of them would drift out of date.
 
----
+## Orientation
 
-## IF THE USER ASKS "HOW DO I CREATE A PROJECT?" — DO THIS
+This repository holds four separate things that share no code. Do not blend them.
 
-They want a `.relics` bundle: one file describing a generative art project, which they import
-into the RELICS Launchpad creator app. Everything happens locally. Nothing here signs a
-transaction, contacts a network, or touches a chain.
+1. **The creator kit** — `packages/project-schema/`, `packages/creator-cli/`, `docs/creator-kit/`.
+   Builds a `.relics` art-project bundle locally. This is what most requests are about.
+2. **`docs/launchpad/`** — the RELICS Launchpad creator guide. Documentation only.
+3. **The fork-and-launch Solidity template** — `src/`, `script/`, `apps/web/`, `docs/00`–`18`.
+   Clean-room, MIT, educational — **not production software**.
+4. **`flagship/`** — operator-authorized production reference for the live RELICS artwork.
+
+## If the user asks "how do I create a project?"
+
+They want a `.relics` bundle. Follow **[`AGENTS.md` §1–§9](AGENTS.md)** — the scaffold-outside-the-repo
+rule, the template launchability table, the render contract, the market-preview endpoints, the
+validation codes and the export contract are all there.
+
+Hand a non-technical creator
+[`docs/creator-kit/create-with-an-agent.md`](docs/creator-kit/create-with-an-agent.md); it contains a
+copy/paste prompt they can give to any agent, including you.
+
+## The rules most likely to be broken
+
+Full statements and reasoning in [`AGENTS.md` §0](AGENTS.md) and [§9](AGENTS.md).
+
+- Never edit `packages/project-schema/` to make a project validate. Change the project instead.
+- Never invent a schema field, sensor, transform, destination, or runtime. They are closed sets.
+- Never bypass validation, hand-assemble a bundle, or edit one after export.
+- Never fabricate an address, a hash, or a chain status. Run `npm run kit:status` and quote it.
+  Public creator launch is closed; no chain is publicly open.
+- Never claim any review was an external audit. Review is internal only.
+- Never write a secret. `npm run secrets:scan` before any commit.
+- Never commit or push unless asked. Never publish.
+
+## Commands
 
 ```bash
-npm install                                  # once
-npm run kit -- templates                     # see what they can start from
-npm run kit -- init my-project --template minimal
-# REQUIRED before export: set earnings.creatorRecipient in my-project/relics.config.json
-# to your own wallet. The scaffold ships a placeholder and validation fails until you change it.
-npm run kit -- dev my-project                # local studio on 127.0.0.1
-npm run kit -- test-seeds my-project --count 100
-npm run kit -- validate my-project           # every check, writes nothing
-npm run kit -- export my-project --output my-project.relics
+npm run kit -- <command>     # the creator CLI; the `--` is required
+npm run kit:status           # deployment state — quote this, never memory
+npm run secrets:scan         # before any commit
 ```
 
-`npm run kit -- <command>` is the invocation. The `--` matters: without it npm eats the flags.
-
-**Templates:** `minimal`, `solidity-svg-params`, `onchain-js`, `market-responsive`,
-`static-art`. Start a beginner on `minimal`. Use `market-responsive` when they want the pool's
-own history to drive the image — that is the point of the platform, and the template shows the
-sensor→transform→destination vocabulary without them inventing it.
-
-**What they actually edit:** `generator/` (the art), `traits/schema.json`,
-`market/mappings.json`, `metadata/collection.json`. Read
-[`docs/creator-kit/`](docs/creator-kit/) before improvising — the manifest key space is closed
-and the validator is the authority, not your intuition.
-
-**`export` refuses to write a bundle that fails validation, and there is no `--force`.** When
-it fails, fix the project. Never work around the validator, never hand-assemble a `.relics`
-file, and never edit one after export — every file is digest-pinned and the importer checks.
-
-### Debugging a failed `validate`
-
-Read the error; it names the file and the rule. The failures that actually happen:
-
-- **`EARNINGS_RECIPIENT_PLACEHOLDER`** — the scaffold ships a placeholder wallet. Fix it in
-  `relics.config.json`. Be aware the message cites `relics.project.json#earnings.creatorRecipient`:
-  that is the path inside the *generated bundle manifest*, not a file in their project
-  directory. Point them at `relics.config.json`.
-- **Non-determinism** — the same seed must produce the same output forever. `Math.random()`,
-  `Date.now()`, any ambient state carried between renders. Use the seeded PRNG the template
-  gives you.
-- **Byte budget** — the script is stored on chain; there is a hard ceiling.
-- **Network access** — a generator that fetches anything is refused. All assets travel inside
-  the bundle.
-- **Blank or duplicate output** — `test-seeds --count 100` catches a collection that collapses
-  to one image or renders nothing at some seeds.
-- **Market mapping out of the vocabulary** — sensors, transforms and destinations are a closed
-  set; check `market/mappings.json` against the schema.
-
----
-
-## THINGS YOU MUST NOT TELL A CREATOR
-
-These are accuracy rules, not style. Getting one wrong publishes a false claim.
-
-- **RC5 contracts are deployed, but public launch is closed.** Ethereum (1), Base (8453) and
-  Robinhood Chain (4663) have source-verified platform addresses and `launchAccess: "PREPARED"`.
-  BNB Smart Chain (56) is deferred. A creator can build and export a bundle today; they cannot
-  launch until `acceptsPublicLaunches(chainId)` returns true.
-- **No audit-status language, in either direction.** Review has been internal only, and the
-  checkable fact to publish instead is that every deployed contract is source-verified on its
-  explorer. Never write "audited", "security reviewed", or anything a reader would take as
-  third-party assurance — and equally never write the negative form, which invites a reader to
-  weigh a non-fact. `npm run kit:protection` enforces both directions.
-- **Creator art reaches `tokenURI` through the art binding.** Every bundle carries an
-  `artBinding` block: the runtime id, and the keccak256 of the exact bytes that runtime is given
-  (`artConfigHash` — for the JavaScript runtime, `generator/generate.js` byte for byte, the same
-  value the factory checks `keccak256(artConfig)` against). A launch writes that record into the
-  collection and `tokenURI` renders from it. Still say plainly that **ordinary creators cannot
-  launch yet** while the factories remain `PREPARED`. And a bundle never names a deployed renderer —
-  `runtimeCodeHash` and `scriptPointer` are chain facts, always `null`, refused by name if a
-  bundle fills them in. See `docs/creator-kit/bundle-format.md`.
-- **Approved is not launchable.** `LAUNCHABLE_ART_RUNTIMES` in the schema decides. A template on
-  an approved but gated runtime is marked, not deleted and not sold as launchable.
-- **Fees are a share of collected LP fees, never of volume.** Creator 75%; platform 25%, split
-  in half — 50% of the launchpad's net platform-fee revenue is allocated to $RELICS
-  buy-and-entomb, 50% retained. Nominally 75.00 / 12.50 / 12.50. Conversion costs fall on the
-  platform share only.
-- **The platform is paid in the SELECTED QUOTE**, and the 50/50 divides it there: treasury half
-  claimable in the quote immediately, buyback half quote-denominated until an approved route
-  converts it to WETH. WETH-quoted is the special case. **Allocated is not settled** — never
-  report a quote balance as WETH, and never say the platform is paid only in WETH.
-- **Quote admission is not gated on a proven WETH route.** Do not re-add that rule.
-- **The numbers are declared once**, in `packages/project-schema/src/economics.js`. Import them;
-  never type a bps or a percentage. `npm run kit:economics` enforces it.
-- **Say buy-and-entomb, never burn, and state all three halves:** spendable and circulating
-  supply fall; `totalSupply` does NOT fall; no ERC-20 burn event occurs, because the token has
-  no burn function.
-- **Never call locked LP "burned"**, and never write "locked forever", "permanent" or "fees
-  route immutably" about any custody arrangement.
-- **A bundle can never carry protocol code.** The manifest key space is closed and `.sol`,
-  `.vy`, `.yul` and `.wasm` are refused by extension, so no bundle can replace the hook, the
-  project token, the collection, the escrow, the router or the buyback. If a user asks for a
-  custom hook, tell them that needs a separate reviewed process — do not try to smuggle it into
-  a bundle.
-
----
-
-## WORKING IN THIS REPO
-
-- **Never commit a secret.** No keys, mnemonics, `.env` values or RPC credentials. Run
-  `npm run secrets:scan` before you commit, and treat a failure as a stop.
-- **Modify `packages/project-schema/` only deliberately.** It is the single definition of the
-  `.relics` format and the public deployment/quote reference. Any schema or reference change must
-  update docs, types and tests in the same change set.
-- **Dependencies under `lib/` are vendored, pinned and byte-exact.** Do not float or partially
-  update them.
-- **Do not publish.** Commit locally and stop. Pushing is the owner's decision.
-- Gates: `npm run kit:test`, `npm run kit:templates`, `npm run kit:fixtures`,
-  `npm run secrets:scan`.
-
-## WHAT ELSE IS HERE
-
-This repo holds three separate things; do not blend them.
-
-1. **The creator kit** — `packages/creator-cli/`, `packages/project-schema/`,
-   `docs/creator-kit/`. The subject of this file.
-2. **A clean-room fork-and-launch template** — `src/`, `script/`, `docs/00-*`…, for building
-   your own on-chain generative collection bound to a Uniswap v4 pool. Shares no code with the
-   launchpad.
-3. **`flagship/`** — the operator-authorized production reference for the live RELICS artwork
-   at `https://www.relics.wtf`. Verified source and public on-chain facts only.
-
-Full detail, repo map and the reasoning behind each rule: [`AGENTS.md`](AGENTS.md).
+Gates: `npm run kit:test`, `kit:templates`, `kit:fixtures`, `kit:economics`. If one already fails on
+an untouched checkout, report it — do not "fix" it by editing the schema.
