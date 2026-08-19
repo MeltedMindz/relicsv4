@@ -7616,7 +7616,7 @@
     },
     {
       "path": "scripts/secret-scan.sh",
-      "sha256": "a6ad1ac813a409501b94137c890f4390f6aa44f89d39d3b2cca80603bd7862b1",
+      "sha256": "d64c2cc6188e4a903aaec44c5fe63d20098b409a1d2dc616daf8d84c82052e7b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
