@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 1125,
+  "fileCount": 1126,
   "files": [
     {
       "path": ".env.example",
@@ -595,7 +595,7 @@
     },
     {
       "path": "docs/launchpad/03-art-runtimes.md",
-      "sha256": "4fb38247fdf8eb2e6e2cf5f7a0105c6db131ac2b9c24dba833244b994e6431c7",
+      "sha256": "382a4632786d2a58aa8b6a3188e86036d1cf5b4eca41459a5b95ab0ae6021330",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -678,8 +678,15 @@
       "publicSafe": true
     },
     {
+      "path": "docs/launchpad/15-art-runtimes.md",
+      "sha256": "c8ca422839382d12d3d233a3bdd1efa577797b9afd12e1937cc8afadd81341b0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "docs/launchpad/README.md",
-      "sha256": "53d32c35bf5a10f1c944f020067349ca93171bb7afe326da49e22eb3f8718d9d",
+      "sha256": "75b0dd29b28516134b514f5add7ddd9790aa53715320235d702c3b38facf14ad",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

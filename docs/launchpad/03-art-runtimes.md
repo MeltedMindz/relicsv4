@@ -9,6 +9,12 @@
 
 <!-- /generated:status-banner -->
 
+> **Designing a bespoke runtime, or art that reacts to something?** Read
+> [15 — The art runtime contract](15-art-runtimes.md) first. It is the normative statement of what a
+> runtime is handed (an immutable token identity, your own config bytes, and 22 bounded market
+> fields — nothing else), the purity rule that makes reading any other contract impossible, and the
+> registration gate that accepts a runtime which then fails at first render on a live collection.
+
 You choose one of two runtimes at launch, as `LaunchParams.artMode`:
 
 ```solidity

@@ -30,6 +30,7 @@ Uniswap v4 pool from the first block.
 | 12 | [Launch protection](12-launch-protection.md) | The election every launch makes, and the fee schedule behind it |
 | 13 | [Collection metadata and `contractURI`](13-metadata-and-contracturi.md) | How media and metadata reach the chain, in one transaction |
 | 14 | [Glossary](14-glossary.md) | Every term this documentation uses, defined for a creator |
+| 15 | [The art runtime contract](15-art-runtimes.md) | What a runtime is handed, what it may never do, and why registering one proves almost nothing |
 
 ## How this differs from the starter template in this repo
 
@@ -65,4 +66,7 @@ launch, then committed to inside the launch transaction itself
 
 [03 — Art runtimes](03-art-runtimes.md) is specific about where your own art bytes sit in that
 picture, including the part most launchpad marketing skips: what the shipped `tokenURI` actually
-draws today.
+draws today. If you are designing art whose behaviour depends on anything — a staking contract, a
+holder tier, a counter you keep somewhere — read
+[15 — The art runtime contract](15-art-runtimes.md) **before** you write the renderer. It states
+the input set a render is allowed to see, and it is smaller than most people assume.
