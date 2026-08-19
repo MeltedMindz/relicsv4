@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" width="1200" height="460" role="img" aria-labelledby="hero-title hero-desc" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+  <title id="hero-title">RELICS Launchpad — a .relics bundle becomes a collection whose art reads its own market</title>
+  <desc id="hero-desc">Four stations, left to right. First, a sealed .relics bundle: one file carrying the generator, traits, market mapping and metadata. Second, the RELICS Launchpad: one creator transaction deploys the token, the collection, the Uniswap v4 art hook and the canonical pool. Third, art and market, drawn as two chambers joined by a two-way link — the pool's own trading history is an input to the image, and the image is what the market is trading. Fourth, the evolving collection: a stone artifact whose strata and fracture deepen as the market writes to it, rendered on chain at read time.</desc>
+
+  <defs>
+    <radialGradient id="vignette" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#131a24"/>
+      <stop offset="100%" stop-color="#080b0f"/>
+    </radialGradient>
+    <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#222b36"/>
+      <stop offset="100%" stop-color="#141a22"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5f6e7e"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e0a04a"/>
+    </marker>
+  </defs>
+
+  <style>
+    .h1{fill:#e8eaed;font-size:21px;letter-spacing:.34em}
+    .h2{fill:#7f8c9c;font-size:11.5px;letter-spacing:.22em}
+    .station{fill:#e8eaed;font-size:14px;letter-spacing:.16em}
+    .caption{fill:#8b98a8;font-size:11px;letter-spacing:.04em}
+    .rule{stroke:#2a3340;stroke-width:1}
+    .flow{stroke:#5f6e7e;stroke-width:1.5;fill:none}
+    .flowAmber{stroke:#e0a04a;stroke-width:2;fill:none}
+    .slabFill{fill:url(#stone)}
+    .slabEdge{fill:none;stroke:#41505f;stroke-width:1.5}
+    .strata{stroke:#2f3b48;stroke-width:1}
+    .scar{stroke:#e0a04a;stroke-width:1.6;fill:none;stroke-linecap:round}
+    .seal{fill:none;stroke:#63b7c9;stroke-width:1.5}
+    .sealDim{fill:none;stroke:#63b7c9;stroke-width:1;opacity:.45}
+    .core{fill:#0f151d;stroke:#e0a04a;stroke-width:1.6}
+    .coreDim{fill:none;stroke:#9d8ec4;stroke-width:1.2;opacity:.7}
+    .tag{fill:#63b7c9;font-size:11px;letter-spacing:.1em}
+    .tagV{fill:#9d8ec4;font-size:11px;letter-spacing:.1em}
+  </style>
+
+  <rect x="0" y="0" width="1200" height="460" fill="url(#vignette)"/>
+  <rect x="0.5" y="0.5" width="1199" height="459" fill="none" stroke="#222b36" stroke-width="1"/>
+
+  <!-- masthead -->
+  <text x="60" y="60" class="h1">RELICS LAUNCHPAD</text>
+  <text x="60" y="84" class="h2">THE MARKET IS THE FORGE</text>
+  <line class="rule" x1="60" y1="104" x2="1140" y2="104"/>
+
+  <!-- ============================ 1. the .relics bundle ============================ -->
+  <g transform="translate(150 250)">
+    <!-- three stacked strata, sealed -->
+    <path class="slabFill" d="M-64 -46 L64 -46 L56 -22 L-56 -22 Z"/>
+    <path class="slabEdge" d="M-64 -46 L64 -46 L56 -22 L-56 -22 Z"/>
+    <path class="slabFill" d="M-56 -18 L56 -18 L50 6 L-50 6 Z"/>
+    <path class="slabEdge" d="M-56 -18 L56 -18 L50 6 L-50 6 Z"/>
+    <path class="slabFill" d="M-50 10 L50 10 L44 34 L-44 34 Z"/>
+    <path class="slabEdge" d="M-50 10 L50 10 L44 34 L-44 34 Z"/>
+    <circle class="seal" cx="0" cy="-6" r="13"/>
+    <circle class="sealDim" cx="0" cy="-6" r="19"/>
+    <path class="seal" d="M-5 -6 L-1 -1 L6 -12"/>
+  </g>
+  <text x="150" y="322" class="station" text-anchor="middle">.relics</text>
+  <text x="150" y="344" class="caption" text-anchor="middle">one sealed file</text>
+  <text x="150" y="360" class="caption" text-anchor="middle">generator · traits · market map · metadata</text>
+  <text x="150" y="382" class="tag" text-anchor="middle">every byte digest-pinned</text>
+
+  <line class="flow" x1="228" y1="244" x2="322" y2="244" marker-end="url(#arrow)"/>
+
+  <!-- ============================ 2. the launchpad ============================ -->
+  <g transform="translate(430 244)">
+    <!-- a monolithic slab: the factory -->
+    <path class="slabFill" d="M-78 -74 L78 -74 L64 74 L-64 74 Z"/>
+    <path class="slabEdge" d="M-78 -74 L78 -74 L64 74 L-64 74 Z"/>
+    <line class="strata" x1="-74" y1="-40" x2="74" y2="-40"/>
+    <line class="strata" x1="-71" y1="-8" x2="71" y2="-8"/>
+    <line class="strata" x1="-68" y1="24" x2="68" y2="24"/>
+    <line class="strata" x1="-66" y1="52" x2="66" y2="52"/>
+    <!-- four artifacts one transaction creates -->
+    <rect x="-46" y="-62" width="30" height="14" fill="none" stroke="#63b7c9" stroke-width="1.2"/>
+    <rect x="16" y="-62" width="30" height="14" fill="none" stroke="#63b7c9" stroke-width="1.2"/>
+    <rect x="-46" y="-30" width="30" height="14" fill="none" stroke="#63b7c9" stroke-width="1.2"/>
+    <rect x="16" y="-30" width="30" height="14" fill="none" stroke="#63b7c9" stroke-width="1.2"/>
+  </g>
+  <text x="430" y="342" class="station" text-anchor="middle">ONE TRANSACTION</text>
+  <text x="430" y="364" class="caption" text-anchor="middle">token · collection · v4 art hook · canonical pool</text>
+  <text x="430" y="386" class="tag" text-anchor="middle">contractURI answers in the same receipt</text>
+
+  <line class="flow" x1="512" y1="244" x2="612" y2="244" marker-end="url(#arrow)"/>
+
+  <!-- ============================ 3. art and market ============================ -->
+  <g transform="translate(730 244)">
+    <!-- two chambers, joined both ways -->
+    <path class="slabFill" d="M-84 -70 L-8 -70 L-8 6 L-84 6 Z"/>
+    <path class="slabEdge" d="M-84 -70 L-8 -70 L-8 6 L-84 6 Z"/>
+    <path class="slabFill" d="M8 -70 L84 -70 L84 6 L8 6 Z"/>
+    <path class="slabEdge" d="M8 -70 L84 -70 L84 6 L8 6 Z"/>
+    <text x="-46" y="-28" class="caption" text-anchor="middle" fill="#e8eaed">ART</text>
+    <text x="46" y="-28" class="caption" text-anchor="middle" fill="#e8eaed">MARKET</text>
+    <!-- deterministic seeds, drawn as a lattice -->
+    <path class="coreDim" d="M-72 -10 L-56 -18 L-40 -10 L-24 -18"/>
+    <path class="coreDim" d="M-72 -2 L-56 -10 L-40 -2 L-24 -10"/>
+    <!-- trades, drawn as a step series -->
+    <path class="scar" d="M22 -2 L34 -12 L46 -6 L58 -20 L70 -14"/>
+    <!-- the two-way link -->
+    <line class="flowAmber" x1="-4" y1="-46" x2="4" y2="-46" marker-start="url(#arrowAmber)" marker-end="url(#arrowAmber)"/>
+    <line class="flowAmber" x1="-6" y1="-46" x2="6" y2="-46"/>
+  </g>
+  <text x="730" y="284" class="station" text-anchor="middle">ART ↔ MARKET</text>
+  <text x="730" y="322" class="caption" text-anchor="middle">the pool's own history is an input to the image;</text>
+  <text x="730" y="338" class="caption" text-anchor="middle">the image is what the market is trading</text>
+  <text x="730" y="364" class="tagV" text-anchor="middle">recorded by the hook, not by a server</text>
+
+  <line class="flow" x1="820" y1="244" x2="924" y2="244" marker-end="url(#arrow)"/>
+
+  <!-- ============================ 4. the evolving collection ============================ -->
+  <g transform="translate(1030 244)">
+    <!-- the artifact: strata, and a fracture that deepens -->
+    <path class="slabFill" d="M-70 -78 L70 -78 L56 78 L-56 78 Z"/>
+    <path class="slabEdge" d="M-70 -78 L70 -78 L56 78 L-56 78 Z"/>
+    <line class="strata" x1="-66" y1="-44" x2="66" y2="-44"/>
+    <line class="strata" x1="-63" y1="-12" x2="63" y2="-12"/>
+    <line class="strata" x1="-60" y1="20" x2="60" y2="20"/>
+    <line class="strata" x1="-58" y1="50" x2="58" y2="50"/>
+    <!-- hexagonal core -->
+    <path class="core" d="M0 -34 L29 -17 L29 17 L0 34 L-29 17 L-29 -17 Z"/>
+    <path class="coreDim" d="M0 -20 L17 -10 L17 10 L0 20 L-17 10 L-17 -10 Z"/>
+    <!-- the scar -->
+    <path class="scar" d="M-40 -60 L-16 -26 L-26 4 L2 44 L-8 70"/>
+  </g>
+  <text x="1030" y="352" class="station" text-anchor="middle">EVOLVING COLLECTION</text>
+  <text x="1030" y="376" class="caption" text-anchor="middle">tokenURI computed on chain, at read time</text>
+
+  <!-- footer rule -->
+  <line class="rule" x1="60" y1="416" x2="1140" y2="416"/>
+  <text x="60" y="438" class="h2">PERMANENT · UNFINISHED · ON CHAIN</text>
+  <text x="1140" y="438" class="h2" text-anchor="end">relics.wtf</text>
+</svg>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 470" width="880" height="470" role="img" aria-labelledby="lp-title lp-desc" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+  <title id="lp-title">RELICS Launchpad launch-protection fee schedule</title>
+  <desc id="lp-desc">Buy-side LP fee against minutes since the pool opened. With PROTECTED_98_MINUTES the buy fee starts at 99% and falls to 1% over 98 minutes; 0 min 99%, 1 min 98%, 10 min 89%, 30 min 69%, 60 min 39%, 90 min 9%, 98 min 1%. With NONE the buy fee is a flat 1% from the first block. The sell fee is a flat 1% in both modes, at every instant. The three series are distinguished by line pattern as well as colour: the decaying buy fee is a solid line, the unprotected buy fee is long-dashed, and the sell fee is short-dashed. The unprotected buy fee and the sell fee are the same number at every instant, so they share one line: the long teal dashes are the unprotected buy and the short violet dashes between them are the sell side.</desc>
+  <style>
+    .bg{fill:#0b0e13}
+    .panel{fill:none;stroke:#2a3340;stroke-width:1}
+    .grid{stroke:#1c2430;stroke-width:1}
+    .axis{stroke:#5a6878;stroke-width:1.5}
+    .tick{fill:#8b98a8;font-size:12px}
+    .h1{fill:#e8eaed;font-size:17px;letter-spacing:.06em}
+    .h2{fill:#8b98a8;font-size:12px;letter-spacing:.04em}
+    .note{fill:#7f8c9c;font-size:11px}
+    .onLine{fill:#a8b6c6;font-size:11.5px}
+    .lead{stroke:#4a5765;stroke-width:1}
+    .lbl{font-size:12.5px}
+    .sub{font-size:10.5px;opacity:.72}
+    .legendBox{fill:#101620;stroke:#2a3340;stroke-width:1}
+    .protectedLine{fill:none;stroke:#e0a04a;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+    .protectedLbl{fill:#e0a04a}
+    .noneLine{fill:none;stroke:#63b7c9;stroke-width:3;stroke-dasharray:14 14;stroke-linecap:butt}
+    .noneLbl{fill:#63b7c9}
+    .sellLine{fill:none;stroke:#b3a4dd;stroke-width:3;stroke-dasharray:6 22;stroke-dashoffset:-18;stroke-linecap:butt}
+    .sellSwatch{fill:none;stroke:#b3a4dd;stroke-width:3;stroke-dasharray:5 5;stroke-linecap:butt}
+    .sellLbl{fill:#b3a4dd}
+    .dot{fill:#e0a04a;stroke:#0b0e13;stroke-width:1.5}
+  </style>
+  <rect class="bg" x="0" y="0" width="880" height="470"/>
+  <rect class="panel" x="0.5" y="0.5" width="879" height="469"/>
+  <text x="74" y="32" class="h1">LAUNCH PROTECTION — LP FEE BY SIDE</text>
+  <text x="74" y="50" class="h2">98-minute decay · anchored at pool initialization · no exemptions</text>
+  <g>
+    <line x1="74" y1="378.0" x2="846.0" y2="378.0" class="grid"/><text x="62" y="382.0" class="tick" text-anchor="end">0%</text>
+    <line x1="74" y1="314.2" x2="846.0" y2="314.2" class="grid"/><text x="62" y="318.2" class="tick" text-anchor="end">20%</text>
+    <line x1="74" y1="250.3" x2="846.0" y2="250.3" class="grid"/><text x="62" y="254.3" class="tick" text-anchor="end">40%</text>
+    <line x1="74" y1="186.5" x2="846.0" y2="186.5" class="grid"/><text x="62" y="190.5" class="tick" text-anchor="end">60%</text>
+    <line x1="74" y1="122.6" x2="846.0" y2="122.6" class="grid"/><text x="62" y="126.6" class="tick" text-anchor="end">80%</text>
+    <line x1="74" y1="62.0" x2="846.0" y2="62.0" class="grid"/><text x="62" y="66.0" class="tick" text-anchor="end">99%</text>
+    <line x1="74.0" y1="62" x2="74.0" y2="378.0" class="grid"/><text x="74.0" y="402.0" class="tick" text-anchor="middle">0</text>
+    <line x1="231.6" y1="62" x2="231.6" y2="378.0" class="grid"/><text x="231.6" y="402.0" class="tick" text-anchor="middle">20</text>
+    <line x1="389.1" y1="62" x2="389.1" y2="378.0" class="grid"/><text x="389.1" y="402.0" class="tick" text-anchor="middle">40</text>
+    <line x1="546.7" y1="62" x2="546.7" y2="378.0" class="grid"/><text x="546.7" y="402.0" class="tick" text-anchor="middle">60</text>
+    <line x1="704.2" y1="62" x2="704.2" y2="378.0" class="grid"/><text x="704.2" y="402.0" class="tick" text-anchor="middle">80</text>
+    <line x1="846.0" y1="62" x2="846.0" y2="378.0" class="grid"/><text x="846.0" y="402.0" class="tick" text-anchor="middle">98</text>
+  </g>
+  <line class="axis" x1="74" y1="62" x2="74" y2="378"/>
+  <line class="axis" x1="74" y1="378" x2="846" y2="378"/>
+  <path class="noneLine" d="M74.0 374.8 L846.0 374.8"/>
+  <path class="sellLine" d="M74.0 374.8 L846.0 374.8"/>
+  <line class="lead" x1="247.3" y1="370.8" x2="247.3" y2="328.8"/>
+  <text x="247.3" y="322.8" class="onLine" text-anchor="middle">1% — NONE buy AND sell side, coincident</text>
+  <path class="protectedLine" d="M74.0 62.0 L77.9 63.6 L81.9 65.2 L85.8 66.8 L89.8 68.4 L93.7 70.0 L97.6 71.6 L101.6 73.2 L105.5 74.8 L109.4 76.4 L113.4 78.0 L117.3 79.6 L121.3 81.2 L125.2 82.7 L129.1 84.3 L133.1 85.9 L137.0 87.5 L141.0 89.1 L144.9 90.7 L148.8 92.3 L152.8 93.9 L156.7 95.5 L160.7 97.1 L164.6 98.7 L168.5 100.3 L172.5 101.9 L176.4 103.5 L180.3 105.1 L184.3 106.7 L188.2 108.3 L192.2 109.9 L196.1 111.5 L200.0 113.1 L204.0 114.7 L207.9 116.3 L211.9 117.9 L215.8 119.5 L219.7 121.1 L223.7 122.6 L227.6 124.2 L231.6 125.8 L235.5 127.4 L239.4 129.0 L243.4 130.6 L247.3 132.2 L251.2 133.8 L255.2 135.4 L259.1 137.0 L263.1 138.6 L267.0 140.2 L270.9 141.8 L274.9 143.4 L278.8 145.0 L282.8 146.6 L286.7 148.2 L290.6 149.8 L294.6 151.4 L298.5 153.0 L302.4 154.6 L306.4 156.2 L310.3 157.8 L314.3 159.4 L318.2 160.9 L322.1 162.5 L326.1 164.1 L330.0 165.7 L334.0 167.3 L337.9 168.9 L341.8 170.5 L345.8 172.1 L349.7 173.7 L353.7 175.3 L357.6 176.9 L361.5 178.5 L365.5 180.1 L369.4 181.7 L373.3 183.3 L377.3 184.9 L381.2 186.5 L385.2 188.1 L389.1 189.7 L393.0 191.3 L397.0 192.9 L400.9 194.5 L404.9 196.1 L408.8 197.7 L412.7 199.3 L416.7 200.8 L420.6 202.4 L424.6 204.0 L428.5 205.6 L432.4 207.2 L436.4 208.8 L440.3 210.4 L444.2 212.0 L448.2 213.6 L452.1 215.2 L456.1 216.8 L460.0 218.4 L463.9 220.0 L467.9 221.6 L471.8 223.2 L475.8 224.8 L479.7 226.4 L483.6 228.0 L487.6 229.6 L491.5 231.2 L495.4 232.8 L499.4 234.4 L503.3 236.0 L507.3 237.6 L511.2 239.2 L515.1 240.7 L519.1 242.3 L523.0 243.9 L527.0 245.5 L530.9 247.1 L534.8 248.7 L538.8 250.3 L542.7 251.9 L546.7 253.5 L550.6 255.1 L554.5 256.7 L558.5 258.3 L562.4 259.9 L566.3 261.5 L570.3 263.1 L574.2 264.7 L578.2 266.3 L582.1 267.9 L586.0 269.5 L590.0 271.1 L593.9 272.7 L597.9 274.3 L601.8 275.9 L605.7 277.5 L609.7 279.1 L613.6 280.6 L617.6 282.2 L621.5 283.8 L625.4 285.4 L629.4 287.0 L633.3 288.6 L637.2 290.2 L641.2 291.8 L645.1 293.4 L649.1 295.0 L653.0 296.6 L656.9 298.2 L660.9 299.8 L664.8 301.4 L668.8 303.0 L672.7 304.6 L676.6 306.2 L680.6 307.8 L684.5 309.4 L688.4 311.0 L692.4 312.6 L696.3 314.2 L700.3 315.8 L704.2 317.4 L708.1 318.9 L712.1 320.5 L716.0 322.1 L720.0 323.7 L723.9 325.3 L727.8 326.9 L731.8 328.5 L735.7 330.1 L739.7 331.7 L743.6 333.3 L747.5 334.9 L751.5 336.5 L755.4 338.1 L759.3 339.7 L763.3 341.3 L767.2 342.9 L771.2 344.5 L775.1 346.1 L779.0 347.7 L783.0 349.3 L786.9 350.9 L790.9 352.5 L794.8 354.1 L798.7 355.7 L802.7 357.3 L806.6 358.8 L810.6 360.4 L814.5 362.0 L818.4 363.6 L822.4 365.2 L826.3 366.8 L830.2 368.4 L834.2 370.0 L838.1 371.6 L842.1 373.2 L846.0 374.8 L846.0 374.8"/>
+  <g>
+    <circle cx="152.8" cy="93.9" r="3.5" class="dot"/>
+    <circle cx="310.3" cy="157.8" r="3.5" class="dot"/>
+    <circle cx="546.7" cy="253.5" r="3.5" class="dot"/>
+    <circle cx="783.0" cy="349.3" r="3.5" class="dot"/>
+  </g>
+  <g>
+    <rect class="legendBox" x="584" y="78" width="262" height="94" rx="2"/>
+    <line x1="596" y1="104" x2="636" y2="104" class="protectedLine"/><text x="646" y="108" class="lbl protectedLbl">PROTECTED_98_MINUTES</text><text x="646" y="121" class="sub protectedLbl">buy side — solid</text>
+    <line x1="596" y1="130" x2="636" y2="130" class="noneLine"/><text x="646" y="134" class="lbl noneLbl">NONE</text><text x="646" y="147" class="sub noneLbl">buy side — long dash</text>
+    <line x1="596" y1="156" x2="636" y2="156" class="sellSwatch"/><text x="646" y="160" class="lbl sellLbl">SELL SIDE</text><text x="646" y="173" class="sub sellLbl">both modes — short dash</text>
+  </g>
+  <text x="460.0" y="426.0" class="tick" text-anchor="middle">MINUTES SINCE THE POOL OPENED</text>
+  <text x="20" y="220.0" class="tick" text-anchor="middle" transform="rotate(-90 20 220.0)">LP FEE ON THE SWAP INPUT</text>
+  <text x="74" y="440" class="note">Unprotected buy and sell are the same number, so they share one line: long teal dashes, short violet dashes between.</text>
+  <text x="74" y="456" class="note">Plotted from the hook's own add-on arithmetic, never from typed checkpoints.</text>
+</svg>
