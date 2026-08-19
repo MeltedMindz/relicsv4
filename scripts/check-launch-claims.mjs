@@ -20,9 +20,21 @@
 //
 // SO THE RULE IS DERIVED, NOT TYPED. This gate asks the deployment records the same question
 // `relics status` asks — `acceptsPublicLaunches(chainId, generation)` across every chain and every
-// generation — and only then decides what the documents are allowed to say. When a chain does open,
-// this gate stops forbidding the claim by itself, because the fact it derives from will have moved.
-// Nobody has to remember to relax it.
+// generation — and only then decides what the documents are allowed to say.
+//
+// WHEN A CHAIN OPENS, THE PREMISE MOVES AND THE GATE DEMANDS A REVIEW — ONCE, PINNED TO THE COUNT.
+// The first version exited non-zero forever after any chain opened, which is a gate that has to be
+// edited to go green and therefore a gate people edit without reading. Instead the reviewed count
+// is recorded below. While the observed count matches it, the scan keeps running and keeps failing
+// on an unqualified claim. When the count MOVES AGAIN — another chain opening, or one that never
+// should have — the acknowledgement no longer describes reality and the gate hard-stops for a fresh
+// review. An acknowledgement that cannot expire is a comment, not a control.
+//
+// WHY THE SCAN STILL RUNS WITH A CHAIN OPEN. "Launchable today" collapses two independent yeses:
+// a runtime a launch will bind (`LAUNCHABLE_ART_RUNTIMES`, one entry) and a chain whose factory is
+// open (one of four). A column asking the collapsed question is misleading in the new world for the
+// same reason it was in the old one — it now answers "yes" for a combination most readers are not
+// in — so the header stays refused and the honest answer stays two facts, stated separately.
 //
 // WHAT IS DELIBERATELY STILL ALLOWED. "Approved is not the same as launchable", "not launchable
 // yet", "preview only" — every sentence that draws the distinction rather than collapsing it. The
@@ -34,6 +46,19 @@ import { dirname, extname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { acceptsPublicLaunches, PLATFORM_GENERATION_IDS, SUPPORTED_CHAIN_IDS } from "../packages/project-schema/index.js";
+
+/**
+ * THE REVIEW, PINNED TO THE FACT IT REVIEWED.
+ *
+ * `REVIEWED_OPEN_PAIRS` is how many chain/generation pairs accepted public launches when the tree's
+ * launchability claims were last read end to end. It is not a threshold and not a maximum: any
+ * disagreement in either direction stops the gate, because a pair closing is as much a change of
+ * premise as a pair opening.
+ */
+const REVIEWED_OPEN_PAIRS = 1;
+const REVIEWED_AT = "2026-08-19";
+const REVIEWED_NOTE =
+  "RC6 went live on Robinhood Chain (4663) with launchAccess PUBLIC. Every launchability claim in README.md, AGENTS.md, docs/launchpad/** and docs/creator-kit/** was re-read and re-framed: launchability is a RUNTIME question (LAUNCHABLE_ART_RUNTIMES is SOLIDITY_SVG alone) crossed with a CHAIN question (`relics status`), and no surface may state either half as if it were both.";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const JSON_OUT = process.argv.includes("--json");
@@ -161,11 +186,13 @@ if (CONTROLS) {
 
 const open = openChainCount();
 
-if (open > 0) {
-  // The derived fact moved. Say so loudly rather than continuing to enforce a rule whose premise
-  // has expired — and do not silently pass either, because the documents now need a real review.
-  console.log(`launch-claims gate: ${open} chain/generation pairs now accept public launches.`);
-  console.log("The premise of this gate has changed. Re-read every 'not launchable yet' claim in the tree before relaxing it.");
+if (open !== REVIEWED_OPEN_PAIRS) {
+  // The derived fact moved away from what was reviewed. Say so loudly rather than continuing to
+  // enforce a rule whose premise has expired — and do not silently pass either, because every
+  // launchability claim in the tree now needs re-reading against a different world.
+  console.log(`launch-claims gate: ${open} chain/generation pairs accept public launches; the recorded review covered ${REVIEWED_OPEN_PAIRS}.`);
+  console.log(`Recorded review: ${REVIEWED_AT} — ${REVIEWED_NOTE}`);
+  console.log("Re-read every launchability claim in the tree, then update REVIEWED_OPEN_PAIRS/REVIEWED_AT/REVIEWED_NOTE in this file.");
   console.log(`PUBLIC_LAUNCH_OPEN_PAIRS=${open}`);
   console.log("LAUNCH_CLAIM_GATE=REVIEW_REQUIRED");
   process.exit(1);
@@ -175,10 +202,15 @@ const { files, hits } = scanTree();
 const pass = hits.length === 0;
 
 if (JSON_OUT) {
-  console.log(JSON.stringify({ LAUNCH_CLAIM_GATE: pass ? "PASS" : "FAIL", openPairs: open, scanned: files, hits }, null, 2));
+  console.log(JSON.stringify({ LAUNCH_CLAIM_GATE: pass ? "PASS" : "FAIL", openPairs: open, reviewedOpenPairs: REVIEWED_OPEN_PAIRS, scanned: files, hits }, null, 2));
 } else {
-  console.log(`launch-claims gate: no chain/generation pair accepts public launches, ${files} files scanned`);
+  console.log(
+    open === 0
+      ? `launch-claims gate: no chain/generation pair accepts public launches, ${files} files scanned`
+      : `launch-claims gate: ${open} chain/generation pair(s) open (reviewed ${REVIEWED_AT}), ${files} files scanned`,
+  );
   for (const h of hits) console.error(`  ${h.rule}  ${h.file}:${h.line}\n      ${h.text}`);
+  console.log(`PUBLIC_LAUNCH_OPEN_PAIRS=${open}`);
   console.log(`AFFIRMATIVE_LAUNCHABLE_CLAIMS=${hits.length}`);
   console.log(`LAUNCH_CLAIM_GATE=${pass ? "PASS" : "FAIL"}`);
 }

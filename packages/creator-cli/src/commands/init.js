@@ -57,12 +57,13 @@ export function printTemplates() {
   for (const template of listTemplates()) {
     console.log(`  ${bold(template.id.padEnd(22))} ${template.summary}`);
     const runtime = `runtime ${template.runtimeId}`;
-    // NOTHING HERE SAYS "LAUNCHABLE", because today nothing is: public creator launch is closed on
-    // every chain (`relics status`). A blank status next to the one bound runtime used to read as
-    // "this one you can launch", which is a claim the CLI is not entitled to make. The distinction
-    // that IS true per template is which runtime a launch binds and renders FIRST.
+    // THIS COLUMN IS ABOUT THE RUNTIME AND SAYS SO. Launching needs two independent yeses — a
+    // runtime a launch will bind, and a chain whose factory is open — and only the first is a
+    // property of a template. It used to append "launching itself is closed", which was a chain
+    // fact stated in a per-template line and went stale the moment one chain opened. The chain half
+    // has exactly one honest source and the CLI points at it instead of restating it.
     const status = template.launchable
-      ? dim("— the runtime a launch binds first; launching itself is closed, see `relics status`")
+      ? dim("— the runtime a launch binds; whether YOUR chain is open is a separate answer, see `relics status`")
       : yellow("— preview only; this runtime is not bound by a launch yet");
     console.log(`  ${" ".repeat(22)} ${dim(runtime)} ${status}`);
   }

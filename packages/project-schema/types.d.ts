@@ -436,8 +436,15 @@ export interface PlatformGeneration {
   solidityTree: string | null;
   deployedAt: string | null;
   externalAudit: string;
-  /** False when the generation's addresses are derived but nothing exists at them. */
+  /** False when this kit publishes no address for the generation, whatever its deployment state. */
   publishesAddresses: boolean;
+  /**
+   * What each chain's factory answers, READ FROM THE CHAIN. `null` means no factory of this
+   * generation exists there. Independent of whether an address is published here.
+   */
+  chainLaunchAccess?: Readonly<Record<number, LaunchAccess | null>>;
+  /** Why no address is published, when `publishesAddresses` is false. */
+  addressPublication?: string;
   summary: string;
 }
 
@@ -463,6 +470,10 @@ export function platformGeneration(generation: string): Readonly<PlatformGenerat
 export function deployedChainIds(generation?: string): number[];
 export function platformDeployment(chainId: number, generation?: string): Readonly<PlatformDeployment> | null;
 export function isPlatformDeployed(chainId: number, generation?: string): boolean;
+/** What `chainId`'s factory answers in `generation`; `null` when no such factory exists there. */
+export function launchAccessFor(chainId: number, generation?: string): LaunchAccess | null;
+/** Chain ids the generation is LIVE on, published address or not. */
+export function liveChainIds(generation?: string): number[];
 export function acceptsPublicLaunches(chainId: number, generation?: string): boolean;
 export function launchAvailability(chainId: number, generation?: string): string;
 export function explorerAddressUrl(chainId: number, address: string, generation?: string): string;

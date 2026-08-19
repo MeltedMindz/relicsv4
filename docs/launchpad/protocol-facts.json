@@ -30,11 +30,12 @@
     "predecessorNote": "RC5 is the previous launchpad generation. Its deployed addresses, its 0x1440 hook mask and its post-launch metadata-bind step are HISTORICAL. Do not describe any of them as current behaviour."
   },
   "deployment": {
-    "status": "PREPARED_NOT_DEPLOYED",
-    "statusSentence": "RC6 is not deployed on any chain. Every RC6 contract address is still to be determined and will change; this repository publishes none.",
-    "source": "launchpad/deployments/{1,8453,4663}.json -> status / release.verificationStatus",
+    "status": "LIVE ON ROBINHOOD CHAIN",
+    "statusSentence": "RC6 is deployed on Robinhood Chain (4663) as of 2026-08-19, and its factory there is PUBLIC: that chain accepts ordinary creator launches. RC6 is NOT deployed on Ethereum, Base or BNB Smart Chain, and no date is set for any of them.",
+    "source": "chain 4663, read from LaunchpadFactoryV1.launchAccessState(); launchpad artifacts/rc6/robinhood-release-state.json -> ROBINHOOD_MAINNET_DEPLOYMENT (STATUS LIVE_AND_OPEN_TO_PUBLIC_CREATORS, deployed 2026-08-19, frozen source 63b3a5bb3a2a8f3835e7f17be68ea88242555ab2)",
     "addressesPublishedHere": false,
-    "publicCreatorLaunchOpen": false,
+    "addressesPublishedHereReason": "RC6 is live on chain 4663 and this repository still publishes no RC6 address. The launchpad's own deployment package for that chain has not been regenerated as signed+broadcast since the broadcast, so `npm run kit:deployments:sync` -- the only sanctioned writer of the address table -- has no broadcast package to publish from and refuses. Read the addresses off robinhoodchain.blockscout.com meanwhile; every RC6 contract there is source-verified.",
+    "publicCreatorLaunchOpenChainIds": [4663],
     "launchAccessStates": ["PREPARED", "PUBLIC"],
     "launchAccessSource": "launchpad/src/rc6/factory/LaunchpadFactoryV1.sol -> enum LaunchAccessState",
     "launchAccessNote": "A freshly initialized factory holds PREPARED, which is the zero value. It becomes PUBLIC exactly once, when the upgrade authority calls openPublicLaunches(). Nothing returns it to PREPARED."
@@ -185,8 +186,8 @@
       "explorer": "https://robinhoodchain.blockscout.com",
       "nativeCurrencySymbol": "ETH",
       "wrappedNativeSymbol": "WETH",
-      "rc6Status": "PREPARED_NOT_DEPLOYED",
-      "publicCreatorLaunch": "CLOSED",
+      "rc6Status": "DEPLOYED",
+      "publicCreatorLaunch": "OPEN",
       "defaultQuote": "WETH",
       "additionalQuoteSupport": "Multi-quote. Any asset QuoteAssetRegistryV1 currently admits AND leaves enabled: the stablecoin, the Robinhood stock/ETF tokens and the ecosystem token. Governance admits; a bundle can only request."
     },
@@ -204,9 +205,48 @@
     }
   ],
   "chainsSource": "launchpad/config/chains/{1,8453,4663,56}.json; site/public/chain-manifest.json (generated); launchpad/deployments/*.json; scripts/launchpad/verify-bnb-opening-blocked.mjs",
-  "chainsNote": "All four chains are configured and all four are closed to public creator launch. No chain is more open than another today. The per-chain difference that survives is the quote leg, not the launch state.",
+  "chainsNote": "Robinhood Chain is the only chain RC6 exists on, and it is open to ordinary creator launches. Ethereum, Base and BNB Smart Chain are configured in the bundle format and the chain profiles, and RC6 is not deployed on any of them; configured is not deployed, and no date is announced for any of the three. The chains now differ in launch state as well as in the quote leg, so read the row rather than assuming they match.",
   "multiQuoteChainId": 4663,
   "quoteAssetRegistryVersion": "quote-assets/2026-08-09.1",
+  "creatorEarnings": {
+    "modes": ["NONE", "OPTIONAL", "ENFORCED"],
+    "modesSource": "launchpad/src/earnings/CreatorEarnings.sol -> enum CreatorEarningsMode",
+    "defaultMode": "NONE",
+    "maxRoyaltyBps": 1000,
+    "maxRoyaltyBpsNote": "10%, the maximum OpenSea documents a collection may set. Configuring above it is rejected outright, never silently clamped.",
+    "defaultPolicyVersion": 1,
+    "latestPolicyVersion": 3,
+    "policyVersionNote": "A policy version means ONE validator architecture on every chain that resolves it. Versions 1 and 2 are Limit Break CreatorTokenTransferValidator deployments; version 3 is OpenSea's StrictAuthorizedTransferSecurityRegistry, a different contract with a different authorization model. Reusing version 2 for it would have made one label mean two architectures depending on where a creator launched.",
+    "policyVersions": [
+      {
+        "version": 1,
+        "architecture": "Limit Break CreatorTokenTransferValidator",
+        "validator": "0x721C0078c2328597Ca70F5451ffF5A7B38D4E947",
+        "chainIds": [1, 8453],
+        "isDefault": true,
+        "note": "The deployment OpenSea's own creator-fee-enforcement documentation names. Same address on both chains, DIFFERENT runtime codehash on each, which is why the pin is chain-scoped."
+      },
+      {
+        "version": 2,
+        "architecture": "Limit Break CreatorTokenTransferValidator (modular ruleset)",
+        "validator": "0x721C008fdff27BF06E7E123956E2Fe03B63342e3",
+        "chainIds": [1, 8453],
+        "isDefault": false,
+        "note": "Limit Break's current library default. Offered, never defaulted, because OpenSea's integration documentation still names the version-1 address."
+      },
+      {
+        "version": 3,
+        "architecture": "OpenSea StrictAuthorizedTransferSecurityRegistry",
+        "validator": "0xA000027A9B2802E1ddf7000061001e5c005A0000",
+        "chainIds": [4663],
+        "isDefault": false,
+        "note": "Robinhood Chain only, and it must be named explicitly. Version 1's validator has codesize 0 on 4663 and version 2 is not offered there, so a creator who expresses no preference resolves to version 1 and is REFUSED with EnforcedEarningsUnavailableOnChain rather than moved onto a validator they did not choose."
+      }
+    ],
+    "enforcedUnavailableChainIds": [56],
+    "enforcedUnavailableNote": "BNB Smart Chain has no vetted validator under any policy version. Presence of Limit Break bytecode at the canonical addresses there is a consequence of permissionless CREATE2 deployment, not a supported-chain announcement, and OpenSea carries no NFT listings or offers on BNB at all. NONE and OPTIONAL remain available on every chain.",
+    "source": "launchpad/src/earnings/CreatorEarnings.sol -> library CreatorEarningsPolicy (DEFAULT_POLICY_VERSION, LATEST_POLICY_VERSION, MAX_ROYALTY_BPS, validatorFor); launchpad/src/rc6/factory/LaunchPolicyV1.sol -> _validateEarnings"
+  },
   "governance": {
     "upgradeAuthority": "protocol 2-of-3 Safe, holding UUPS upgrade authority directly",
     "governanceTimelock": "NONE",

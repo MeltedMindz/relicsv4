@@ -339,13 +339,30 @@ function esc(s) {
 const totalMinutes = P.durationSeconds / 60;
 
 const BLOCKS = {
-  /** The status line every launchpad page opens with. One sentence, one source. */
-  "status-banner": () =>
-    [
+  /**
+   * The status line every launchpad page opens with. One sentence, one source.
+   *
+   * THE OPEN/CLOSED LINE IS COUNTED, NOT TYPED. It used to read "closed on all N configured chains"
+   * as a literal, which stayed on every page for as long as it took someone to notice a chain had
+   * opened. Now the sentence cannot disagree with the chain table beneath it, because both are the
+   * same array.
+   */
+  "status-banner": () => {
+    const open = facts.chains.filter((c) => c.publicCreatorLaunch === "OPEN");
+    const closed = facts.chains.filter((c) => c.publicCreatorLaunch !== "OPEN");
+    const names = (list) => list.map((c) => `${c.displayName} (${c.chainId})`).join(", ");
+    const access =
+      open.length === 0
+        ? `> Public creator launch is **closed** on all ${facts.chains.length} configured chains.`
+        : closed.length === 0
+          ? `> Public creator launch is **open** on all ${facts.chains.length} configured chains.`
+          : `> Public creator launch is **open** on ${names(open)} and **closed** on the other ${closed.length} configured chain${closed.length === 1 ? "" : "s"}.`;
+    return [
       `> **${facts.generation.id} is ${facts.deployment.status}.** ${facts.deployment.statusSentence}`,
-      `> Public creator launch is **closed** on all ${facts.chains.length} configured chains.`,
+      access,
       `> See [08 — Status and limitations](08-status.md).`,
-    ].join("\n"),
+    ].join("\n");
+  },
 
   /** The chain table. All four chains, truthful per-chain status, no addresses. */
   chains: () =>
@@ -476,6 +493,29 @@ const BLOCKS = {
       `- \`contractURI()\` is non-empty in the launch receipt state: **${facts.metadata.contractUriNonEmptyAtReceipt ? "yes" : "no"}**.`,
       `- A second, post-launch metadata-bind transaction: **${facts.metadata.postLaunchBindTransaction ? "yes" : "no"}**. ${facts.metadata.postLaunchBindTransactionNote}`,
       `- ${facts.metadata.addressInvarianceNote}`,
+    ].join("\n"),
+
+  /**
+   * Enforced creator royalties, per chain. The table exists because the answer is NOT the same on
+   * every chain and the difference is a launch-time revert, not a footnote.
+   */
+  "creator-earnings": () =>
+    [
+      "| Policy version | Validator architecture | Validator address | Chains that resolve it | Default? |",
+      "| ---: | --- | --- | --- | --- |",
+      ...facts.creatorEarnings.policyVersions.map(
+        (v) =>
+          `| ${v.version} | ${v.architecture} | \`${v.validator}\` | ${v.chainIds.join(", ")} | ${v.isDefault ? "**yes**" : "no"} |`,
+      ),
+      "",
+      `A creator elects a **mode** — \`${facts.creatorEarnings.modes.join("`, `")}\` — and, for \`ENFORCED\`, a **policy version**. They never name a validator address; the version resolves one, per chain, against a codehash pinned for that chain.`,
+      "",
+      `- Expressing no preference resolves to policy version **${facts.creatorEarnings.defaultPolicyVersion}**. The highest version this build knows is **${facts.creatorEarnings.latestPolicyVersion}**; above it the launch reverts \`InvalidValidatorPolicyVersion\`.`,
+      `- On a chain where the requested version resolves to nothing, the launch reverts \`EnforcedEarningsUnavailableOnChain(chainId, policyVersion)\`. **There is no silent downgrade to another version, and no fallback to \`OPTIONAL\`.**`,
+      `- Ceiling: **${facts.creatorEarnings.maxRoyaltyBps} bps**. ${facts.creatorEarnings.maxRoyaltyBpsNote}`,
+      `- \`ENFORCED\` is unavailable on chain ${facts.creatorEarnings.enforcedUnavailableChainIds.join(", ")}. ${facts.creatorEarnings.enforcedUnavailableNote}`,
+      "",
+      facts.creatorEarnings.policyVersionNote,
     ].join("\n"),
 
   /** The creator's fee-asset election. */

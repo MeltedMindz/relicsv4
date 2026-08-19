@@ -236,12 +236,12 @@ Five ship. All five scaffold, validate and export cleanly — that is checked in
 | `onchain-js` | `ONCHAIN_JAVASCRIPT_V1` | no | not yet |
 | `static-art` | `ONCHAIN_JAVASCRIPT_V1` | no, by design | not yet |
 
-**Nothing in that last column says "launchable today", because today the answer is no for all
-five.** Public creator launch is closed on every chain and RC6 is not deployed anywhere — run `npm
-run kit:status` and read it rather than trusting this table. The column asks a narrower and more
-useful question: when launching opens, which runtime will the launchpad bind and render first. That
-is `SOLIDITY_SVG`. The four JavaScript templates author, preview, validate and export exactly as
-well; they are behind it in the queue, not broken.
+**That last column is about the RUNTIME, not the chain.** Creator launches are open on Robinhood
+Chain (4663) and there is no RC6 factory on the other three — run `npm run kit:status` and read it
+rather than trusting this table. What the column asks is which runtime a launch will bind and
+render: that is `SOLIDITY_SVG`, and it is the only one, so the four JavaScript templates cannot be
+launched anywhere yet. They author, preview, validate and export exactly as well; they are behind it
+in the queue, not broken.
 
 **Approved and launchable are different questions, and the kit does not collapse them.** Both
 runtimes are approved: the format accepts them, they validate, they preview, they export. The
@@ -343,11 +343,13 @@ restate them, because a percentage asserted in two places is how a retired one s
 
 **Chains.** The bundle format understands four — Ethereum (1), Base (8453), Robinhood Chain
 (4663) and BNB Smart Chain (56) — and all four pass `chains.requested` validation. Ethereum, Base
-and Robinhood quote in WETH; BNB quotes in WBNB, which is never to be called WETH. **All four are
-closed to public creator launch.** RC6 is not deployed on any of them and every RC6 address is
-still to be determined, so this repository publishes none. Requesting a chain in a bundle is a
-schema fact; it is not that chain being open. Current table:
-[08 — Status](docs/launchpad/08-status.md#the-chains).
+and Robinhood quote in WETH; BNB quotes in WBNB, which is never to be called WETH. **RC6 is
+deployed on Robinhood Chain and open to public creator launches there since 2026-08-19; it is not
+deployed on Ethereum, Base or BNB, and no date is set for any of them.** This repository still
+publishes no RC6 address, because the deployment package it publishes from has not been regenerated
+as broadcast — read them from `robinhoodchain.blockscout.com`, where every RC6 contract is
+source-verified. Requesting a chain in a bundle is a schema fact; it is not that chain being open.
+Current table: [08 — Status](docs/launchpad/08-status.md#the-chains).
 
 **Launch protection.** Two launch methods are offered — **Instant V4** and **Bonding curve**.
 Fixed-price sale is withdrawn, because its sale phase had no per-buyer cap, no cooldown and no
@@ -418,11 +420,14 @@ template and is here to be read, not forked.
 
 ## Status, honestly
 
-**You can build and export a real `.relics` bundle today. You cannot broadcast one yet.**
-Scaffolding, the studio, previews, seed sweeps, validation, export and inspection are all real and
-all work offline right now. RC6 is not deployed on any chain and public creator launch is closed
-on all four: you can build, validate and export a real `.relics` bundle today; you cannot broadcast
-one.
+**You can build and export a real `.relics` bundle on any of the four chains. You can broadcast
+one on Robinhood Chain (4663).** Scaffolding, the studio, previews, seed sweeps, validation, export
+and inspection are all real and all work offline right now. RC6 is deployed on Robinhood Chain and
+its factory there is `PUBLIC`; it is not deployed on Ethereum, Base or BNB Smart Chain, and no date
+is set for any of them. This repository publishes no RC6 address yet — see
+[08 — Status](docs/launchpad/08-status.md) for why, and read them off the chain's explorer. Note
+separately that every launchable template targets `SOLIDITY_SVG`, so a JavaScript-runtime bundle
+cannot be launched on any chain, open or not.
 
 **Verify before you rely on any of this**, including on this README. This repository is educational
 software provided "as is", without warranty. It is not affiliated with or endorsed by Uniswap,

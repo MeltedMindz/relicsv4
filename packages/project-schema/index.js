@@ -268,6 +268,8 @@ export {
   deployedChainIds,
   platformDeployment,
   isPlatformDeployed,
+  launchAccessFor,
+  liveChainIds,
   acceptsPublicLaunches,
   launchAvailability,
   explorerAddressUrl,

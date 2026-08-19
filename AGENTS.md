@@ -101,10 +101,11 @@ and tell the creator the absolute path you used.
 npm run kit -- templates
 ```
 
-**Launchable today is `no` for all five.** Public creator launch is closed on every chain — run
+**Launchable today is `no` for all five, and the reason is the RUNTIME, not the chain.** Creator
+launches are open on Robinhood Chain (4663) and there is no RC6 factory on the other three — run
 `npm run kit:status` and quote that, never this table. The column below asks the question that
-still has different answers per template: which runtime the launchpad will bind and render first
-when launching does open.
+decides a template: which runtime a launch will actually bind and render. Today that is
+`SOLIDITY_SVG` alone, so a JAVASCRIPT template cannot be launched on an open chain either.
 
 | id | runtime | bound and rendered first? | use it when |
 | --- | --- | --- | --- |
@@ -320,12 +321,13 @@ having produced a file whose location you never stated.
 
 Accuracy rules. Each one is a false claim if you get it wrong.
 
-1. **Public creator launch is closed on every chain.** A creator can build, validate and export a
-   real bundle today; they cannot broadcast one. The generation this kit's schema mirrors and the
-   generation a creator would launch through are not the same — see
-   [08 — Status](docs/launchpad/08-status.md) — and no RC6 address exists yet, so there is nothing
-   to quote. **Run `npm run kit:status` for the current per-chain state and quote that** — never
-   restate an address or a status from memory, and never describe any chain as publicly open.
+1. **Name the chain; never say "the launchpad is live" or "closed everywhere".** RC6 is deployed on
+   Robinhood Chain (4663) and open to ordinary creator launches there since 2026-08-19. It is NOT
+   deployed on Ethereum, Base or BNB Smart Chain, and **no date is announced for any of them** — do
+   not turn a live chain into a roadmap. This repository publishes no RC6 address: the deployment
+   package it publishes from has not been regenerated as broadcast, so read addresses off the
+   chain's explorer and never transcribe one into this repo by hand. **Run `npm run kit:status` for
+   the current per-chain state and quote that** — never restate an address or a status from memory.
 2. **Never assert an audit status in either direction.** Do not write "audited", "security
    reviewed", "unaudited", "not audited", or anything a reader takes as third-party assurance or
    as its absence. State checkable facts instead — source verification, runtime hashes, which

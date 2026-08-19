@@ -51,8 +51,10 @@ purpose, so nobody exports a project that pays a placeholder.
 ## `relics templates`
 
 Lists the starter templates, the art runtime each one targets, and whether a launch binds that
-runtime yet. It does not say any of them is launchable today, because none is — public creator
-launch is closed on every chain. Run `relics status` for that.
+runtime yet. Whether a template can be launched is a question about the RUNTIME, not about the
+chain: every template below targets `ONCHAIN_JAVASCRIPT_V1`, which no launch binds in this release,
+so none is launchable — on Robinhood Chain, where creator launches are open, or anywhere else. Run
+`relics status` for the per-chain half of the answer.
 
 | id | runtime id | bound by a launch | what it shows |
 | --- | --- | --- | --- |

@@ -4,7 +4,7 @@
   "version": "3.3.0",
   "packageVersion": "3.12.0",
   "creatorKitVersion": "3.12.0",
-  "surfaceSha256": "31a55f44819203205d98bbceb0af0c0bc963c15a67bc91d11032651632b26b3f",
+  "surfaceSha256": "8b87766aa10cfc5c3406fb60e41d6fff80eba816e529fb76ae0eada3f96734b0",
   "checks": [
     "ALLOWED_DEPENDENCIES",
     "ALLOWED_RUNTIME",
@@ -45,7 +45,7 @@
     },
     {
       "path": "index.js",
-      "sha256": "2627e2fdff433cc32082cd9cf39fbc2e8d96c9264e466d8cf1a36442c809eff1"
+      "sha256": "ae0add31171a4c59894e3fad316ac0cedc372143e14be4af61c1bf6aa8c79629"
     },
     {
       "path": "package.json",
@@ -77,7 +77,7 @@
     },
     {
       "path": "src/deployments.js",
-      "sha256": "16c0cb4c68cb254ad00d7708fadd9e281694431247c65dc882c112900d9f3b52"
+      "sha256": "7364b2a305784f27f0f4f64db3f09036c9cf520c4395003d02e5c864c337db39"
     },
     {
       "path": "src/economics.js",
@@ -169,7 +169,7 @@
     },
     {
       "path": "types.d.ts",
-      "sha256": "3633904b63999e3c53006a3325a70ae7f2a496cf320855df0f5f177a3a4987ab"
+      "sha256": "3f9b134efc9532adcadda88254b0916eef1db75c16192851615f324ddf5d97dd"
     }
   ]
 }

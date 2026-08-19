@@ -157,6 +157,9 @@ import {
   platformGeneration,
   platformDeployment,
   launchAvailability,
+  launchAccessFor,
+  liveChainIds,
+  acceptsPublicLaunches,
 } from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
@@ -501,9 +504,9 @@ test("every published contract address names the generation it belongs to", () =
 });
 
 test("AN UNDEPLOYED GENERATION PUBLISHES NO ADDRESS", () => {
-  // The whole point of the generational split. RC6's addresses are derivable today and move with
-  // every source change, so a copyable one in a creator kit is worse than none: it is the contract
-  // a creator would target and never reach.
+  // The whole point of the generational split. An undeployed generation's addresses are derivable
+  // today and move with every source change, so a copyable one in a creator kit is worse than none:
+  // it is the contract a creator would target and never reach.
   for (const generation of PLATFORM_GENERATION_IDS) {
     const record = PLATFORM_GENERATIONS[generation];
     if (record.status !== "NOT_DEPLOYED") continue;
@@ -512,7 +515,58 @@ test("AN UNDEPLOYED GENERATION PUBLISHES NO ADDRESS", () => {
       assert(entry === null, `${generation} is not deployed, yet chain ${chainId} carries an address`);
     }
     assert(deployedChainIds(generation).length === 0, `${generation} is not deployed, yet reports deployed chains`);
+    assert(liveChainIds(generation).length === 0, `${generation} is not deployed, yet reports live chains`);
   }
+});
+
+test("publishesAddresses:false MEANS no address, deployed or not", () => {
+  // The guard above only bites on NOT_DEPLOYED. RC6 is deployed and still publishes nothing, so
+  // without this the moment a generation flips to DEPLOYED nothing checks its address table again.
+  for (const generation of PLATFORM_GENERATION_IDS) {
+    if (PLATFORM_GENERATIONS[generation].publishesAddresses) continue;
+    for (const [chainId, entry] of Object.entries(deploymentsFor(generation))) {
+      assert(entry === null, `${generation} publishes no addresses, yet chain ${chainId} carries one`);
+    }
+    assert(
+      typeof PLATFORM_GENERATIONS[generation].addressPublication === "string",
+      `${generation} publishes no address and does not say why; an unexplained blank reads as "nothing is deployed"`,
+    );
+  }
+});
+
+test("LAUNCH ACCESS IS A CHAIN FACT, NOT AN ADDRESS-TABLE SIDE EFFECT", () => {
+  // The bug this exists for: RC6 went live and PUBLIC on chain 4663 while its address table stayed
+  // null, and every surface that derived access from the table reported the chain as closed.
+  for (const generation of PLATFORM_GENERATION_IDS) {
+    const g = PLATFORM_GENERATIONS[generation];
+    for (const chainId of KNOWN_DEPLOYMENT_CHAIN_IDS) {
+      const access = launchAccessFor(chainId, generation);
+      assert(access === null || access === "PREPARED" || access === "PUBLIC", `${generation}/${chainId}: unusable launch access ${access}`);
+
+      const entry = platformDeployment(chainId, generation);
+      if (entry !== null) {
+        assert(access === entry.launchAccess, `${generation}/${chainId}: a published record's own launchAccess was overridden`);
+      }
+      // A live chain must never be describable as undeployed, and vice versa.
+      const line = launchAvailability(chainId, generation);
+      if (access === null) assert(/is not deployed/.test(line), `${generation}/${chainId}: "${line}" does not say it is undeployed`);
+      else assert(!/is not deployed/.test(line), `${generation}/${chainId}: "${line}" calls a live chain undeployed`);
+      assert(acceptsPublicLaunches(chainId, generation) === (access === "PUBLIC"), `${generation}/${chainId}: acceptsPublicLaunches disagrees with launchAccessFor`);
+    }
+    // Every live chain is named, whether or not an address is printed for it.
+    for (const chainId of liveChainIds(generation)) {
+      assert(launchAccessFor(chainId, generation) !== null, `${generation}/${chainId} is listed live with no launch access`);
+    }
+    if (g.status === "NOT_DEPLOYED") assert(liveChainIds(generation).length === 0, `${generation} is NOT_DEPLOYED yet is live somewhere`);
+    else assert(liveChainIds(generation).length > 0, `${generation} is DEPLOYED yet is live nowhere`);
+  }
+});
+
+test("an unknown chain REFUSES a launch-access answer rather than defaulting to closed", () => {
+  // "closed" is the plausible default and the dangerous one: it is indistinguishable from a real
+  // answer, so a typo'd chain id would read as a considered no.
+  assertThrows(() => launchAccessFor(999999, "RC6"), "unknown chain", "an unknown chain resolved to a launch access");
+  assertThrows(() => acceptsPublicLaunches(999999, "RC6"), "unknown chain", "an unknown chain resolved to a launchability");
 });
 
 test("NO CHAIN IS OMITTED: every generation states every known chain, deployed or not", () => {

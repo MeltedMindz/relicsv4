@@ -105,7 +105,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "864bad0ec412df86581fb0f87cba4f0832c9d89e4f06db8ae27e1b41a5ba0c4d",
+      "sha256": "f1577994f3dc0539e3bd03e8d180366d328e00895c61f5e2c9123f4009e8552c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -154,7 +154,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "0b64e5bb2cf92d9fb7e342aada0abca7298038390836fd69f83e58c8270e21db",
+      "sha256": "31ba735517d93f262d831d087e2e1790e7e0787a55f6b36ebfc0d489e54f2820",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -539,7 +539,7 @@
     },
     {
       "path": "docs/creator-kit/cli.md",
-      "sha256": "d1ac9d8193ef74fdf549e0c2b72afc97e987da9f8c46a177db4ce54a0534e2bd",
+      "sha256": "bca5c44a71e2d4d786bb165c2cc2b150d408ef804e987833469cf4aff22a2464",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -581,112 +581,112 @@
     },
     {
       "path": "docs/launchpad/01-what-it-is.md",
-      "sha256": "b5f66c07cea9c00eb9ac1bbb5b17dad2eb530ac1058091ae61812ee07d3e15f0",
+      "sha256": "82f3a261e5e7e5bc2dc8d7c00cfe9fb738f21db4f21b8b4b61f571d784c1e3e6",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/02-what-a-launch-produces.md",
-      "sha256": "78d44f562db49d64e3f5c3d4d30ef5b35a84e10061156043e07d1766b0b2dcc9",
+      "sha256": "feaf4816b8c58aabc3c013b1874773c679716383d452175eaa3a4a47a6831189",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/03-art-runtimes.md",
-      "sha256": "df9179301ace1faa56675c526cb629f408aa37db9f7dd3ade0868663afb02c98",
+      "sha256": "4fb38247fdf8eb2e6e2cf5f7a0105c6db131ac2b9c24dba833244b994e6431c7",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/04-constraints.md",
-      "sha256": "4fba24e68e010e60df306c40a7c14a21ea947564cde609bf178fcebc04c1b0ad",
+      "sha256": "77e325117b819822e5d243748dbbc95cd9921f8e0a41160c2f2b4b3674665608",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/05-creator-flow.md",
-      "sha256": "d50e88279cb60bbf3e89dafb15197d033e92d965dc8fec689d95e2d5315bc41f",
+      "sha256": "c3996a76e82fecd145d9a73a335c7aca281a0f7a98e4e3238444252523471eea",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/06-fees-and-revenue.md",
-      "sha256": "28a0f460330e215c11990f817aa9219cb212437a2e96b5a47ba26340de27a37e",
+      "sha256": "03799b053d4e3de07458869d11b10c42f9f1174558ac9445b983b1da57b83038",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/07-integrating.md",
-      "sha256": "acdcc00944d31c0fda30bcfd97e5fdd3ead5c14d2a0973c0391c2307d8a4f376",
+      "sha256": "57cb27e269c3c82cf32bbe110a29c5e94603df795ec9dd182e23db746aec5468",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/08-status.md",
-      "sha256": "f8ba7ca3a06be59a89bc342b4c09016087ca4e4460d54fa72f97db3e99ba238b",
+      "sha256": "19533b12fd88a47e69027cac166c0891587c0120233b1413cf79a19f564d0f99",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/09-faq.md",
-      "sha256": "70483177dfbe6b0fd08c4a66d3760e8ea5ffb3f8ef9d87bf96e68585f25cfd43",
+      "sha256": "09ad7a61e27c256eb1a17d3c79828cdf681f2f728f94be501f3410ee4f1174a3",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/10-deployments-and-quote-assets.md",
-      "sha256": "e8bfa02c4edd14700f9c383f4635a796a330a755bdd90a31b4e47cf622dfd0da",
+      "sha256": "9159d7a33a835fe6b1b460ac7118c19221c41d0978dc2229dde4ea0fc590daa1",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/11-governance-and-upgradeability.md",
-      "sha256": "64a3388ec5df67a4a83e6176f91f07819abea7d121ba3a05fb2faf8f03c67566",
+      "sha256": "b473ad0001a3428d785bb655caf39edd3a9dde141cc7b452cd1fbd17f907a5f3",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/12-launch-protection.md",
-      "sha256": "228c9a091dc7074d554e0da29df058afee4e3fdd39ffa6f829a9ba9566ab749c",
+      "sha256": "1954dd99e51f865d2aecb5f2ef5fc3b802cda1ac4b7d375fc125ca6f0362e422",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/13-metadata-and-contracturi.md",
-      "sha256": "f4b33fb06920ca717b359bdb43195cfdc7fe38bd571acb752c1f377629e5bf18",
+      "sha256": "a6c6ded6aeb7f9324b9f48add5e766b944dc08e315d9550f6781ba827bf53d58",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/14-glossary.md",
-      "sha256": "72d2580afefef8975a56935868ee86a0be65778d87f9828b4cdaad056e1c1e62",
+      "sha256": "3b2d51d4cbd449314d83c1688ddd4c5849476e6b96da6a269471819c248ae354",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/README.md",
-      "sha256": "6fad15c05ed4c55ef768cbdb0d3e33b9d02c77b9a03f5349c1c80e9247a7e26c",
+      "sha256": "53d32c35bf5a10f1c944f020067349ca93171bb7afe326da49e22eb3f8718d9d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/launchpad/protocol-facts.json",
-      "sha256": "12103ebd371490301742af5848e84bfd967be227796629db04382bd341dd2652",
+      "sha256": "a9d5f01afd77acbda72757a9fa0304dce626df6a8af2cc9253f265c75b18a76e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6083,7 +6083,7 @@
     },
     {
       "path": "packages/creator-cli/src/commands/init.js",
-      "sha256": "074c23ac15249a4e4bef5b627cdb662e5798aefd619cefb533b92c024494132e",
+      "sha256": "6af78e7e6a1ddeb435af34fbd83885e530c5a3e86443b1326588004cbd4bc47d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6111,7 +6111,7 @@
     },
     {
       "path": "packages/creator-cli/src/commands/status.js",
-      "sha256": "d2466fcf1561fd7e16d47d39aed5121f11a31a7b0d7b8856b8cd40a3062dbf30",
+      "sha256": "330488f4fb70ed1efac74947b961314a37c774031e260f41754d58046a509991",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6636,7 +6636,7 @@
     },
     {
       "path": "packages/project-schema/SCHEMA_SURFACE.json",
-      "sha256": "525257234d8962e45f90e8eb5a78385c24a1a50c60a8b94dd723381dd8479f57",
+      "sha256": "c2a367587e163faefcc1c6cdad509f8cab8ba86deab8c887a8a22da9c0f47f19",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7098,7 +7098,7 @@
     },
     {
       "path": "packages/project-schema/index.js",
-      "sha256": "2627e2fdff433cc32082cd9cf39fbc2e8d96c9264e466d8cf1a36442c809eff1",
+      "sha256": "ae0add31171a4c59894e3fad316ac0cedc372143e14be4af61c1bf6aa8c79629",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7154,7 +7154,7 @@
     },
     {
       "path": "packages/project-schema/src/deployments.js",
-      "sha256": "16c0cb4c68cb254ad00d7708fadd9e281694431247c65dc882c112900d9f3b52",
+      "sha256": "7364b2a305784f27f0f4f64db3f09036c9cf520c4395003d02e5c864c337db39",
       "provenance": "public-launchpad-reference-data",
       "license": "MIT",
       "publicSafe": true
@@ -7315,14 +7315,14 @@
     },
     {
       "path": "packages/project-schema/test/run.mjs",
-      "sha256": "7aa6acbfe5cf821c344b74df9c29453d28fa586fed8293747fdf1916030243ce",
+      "sha256": "e8077c45809c5734a757fd1c36e85cc7a1aa3c783d2755d926e3663192430014",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/types.d.ts",
-      "sha256": "3633904b63999e3c53006a3325a70ae7f2a496cf320855df0f5f177a3a4987ab",
+      "sha256": "3f9b134efc9532adcadda88254b0916eef1db75c16192851615f324ddf5d97dd",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7539,7 +7539,7 @@
     },
     {
       "path": "scripts/check-launch-claims.mjs",
-      "sha256": "c01b7f0f61712577acaedd4bf3713c29b35db203529c4b7707a975dcc6457b72",
+      "sha256": "6b53c49973cc44bd2025e9e13aea458e03537d2540ba539251678f707c26678e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7602,7 +7602,7 @@
     },
     {
       "path": "scripts/generate-doc-assets.mjs",
-      "sha256": "b1f8e99baeaddb1f1f672f1f365759c43d0e2aab331d09485da566bc33fd778a",
+      "sha256": "3cd82138e12d33a792bf9a6d88f988624a80ee7ac3b859a245f31ab72d70dca5",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

@@ -26,15 +26,26 @@
 //        every factory is in `PREPARED`, which refuses an ordinary `launch`. Opening public creation
 //        is a separate, ONE-WAY timelock operation that has not been scheduled.
 //
-//   RC6  is NOT DEPLOYED ANYWHERE. Its deployment packages exist, are unsigned and unbroadcast, and
-//        their deterministic addresses still move whenever the source tree moves. This file
-//        therefore publishes NO RC6 ADDRESS AT ALL — a predicted address is worse than an absent
-//        one, because it is copyable.
+//   RC6  is DEPLOYED on Robinhood Chain (4663) as of 2026-08-19, and its factory there is `PUBLIC`:
+//        that chain accepts ordinary creator launches. It is NOT deployed on Ethereum, Base or BNB
+//        Smart Chain, whose deployment packages remain unsigned and unbroadcast and whose
+//        deterministic addresses still move whenever the source tree moves.
 //
-// So today you can build, validate and export a real `.relics` bundle and see exactly which
-// generation and which contracts it would target; you cannot broadcast one yet.
+// DEPLOYED AND PUBLISHED-HERE ARE TWO DIFFERENT FACTS, AND THIS FILE KEEPS THEM APART.
 //
-// THE RC6 ENTRIES ARE GENERATED, NEVER HAND-EDITED. When a generation is broadcast, run
+// Whether a chain accepts your launch is read from that chain's factory. Whether THIS KIT prints an
+// address for it is decided by the rule below — and today the two disagree for chain 4663. RC6 is
+// live and open there, and `RC6_DEPLOYMENTS[4663]` is still `null`, because the launchpad's own
+// deployment package for that chain has not been regenerated as signed+broadcast since the
+// broadcast, so `npm run kit:deployments:sync` has nothing to publish from. That is the rule
+// working, not the rule failing: the launch-access fact comes from the chain, the address does not
+// get invented to match it. Read the factory address off the chain's explorer until the sync
+// publishes one. `PLATFORM_GENERATIONS.RC6.chainLaunchAccess` carries the chain-read half.
+//
+// So today you can build, validate and export a real `.relics` bundle, and you can launch it on
+// Robinhood Chain — using an address this kit does not yet print.
+//
+// THE RC6 ADDRESS ENTRIES ARE GENERATED, NEVER HAND-EDITED. When a generation is broadcast, run
 //
 //     npm run kit:deployments:sync
 //
@@ -75,14 +86,35 @@ export const PLATFORM_GENERATIONS = Object.freeze({
   RC6: Object.freeze({
     id: "RC6",
     tag: "v1.0.0-rc6",
-    status: /** @type {GenerationStatus} */ ("NOT_DEPLOYED"),
-    freezeCommit: null,
+    status: /** @type {GenerationStatus} */ ("DEPLOYED"),
+    freezeCommit: "63b3a5bb3a2a8f3835e7f17be68ea88242555ab2",
     solidityTree: null,
-    deployedAt: null,
+    deployedAt: "2026-08-19",
     externalAudit: "NOT_PERFORMED",
     publishesAddresses: false,
+    /**
+     * WHAT EACH CHAIN'S FACTORY ANSWERS RIGHT NOW — read from the chain, not from a package.
+     *
+     * `null` means no RC6 factory exists on that chain at all. `"PREPARED"` and `"PUBLIC"` are the
+     * two states a deployed factory can hold; `PREPARED` is the zero value a freshly initialized
+     * factory is born in and `PUBLIC` is reached exactly once, by `openPublicLaunches()`.
+     *
+     * This map exists because a chain's launch access and this kit's willingness to print an
+     * address are answered by different evidence, and collapsing them made the kit assert that RC6
+     * was "not deployed on any chain" for a chain that was live and open to creators. Publishing
+     * no address is a publication decision; being closed is a chain fact. They are not the same
+     * sentence and they must not share a field.
+     */
+    chainLaunchAccess: Object.freeze({
+      1: null,
+      8453: null,
+      4663: /** @type {LaunchAccess} */ ("PUBLIC"),
+      56: null,
+    }),
+    addressPublication:
+      "None yet. RC6 is live on Robinhood Chain, but the launchpad's deployment package for chain 4663 has not been regenerated as signed+broadcast since the broadcast, so `npm run kit:deployments:sync` has no broadcast package to publish from and this kit prints no RC6 address. Read the factory address from the chain's explorer meanwhile.",
     summary:
-      "Not deployed on any chain. Its deployment packages are unsigned and unbroadcast, and every derived address — including the mined hook addresses — still moves when the source tree moves, so this kit publishes none of them.",
+      "Deployed on Robinhood Chain (4663) on 2026-08-19 and open to public creator launches there. Not deployed on Ethereum, Base or BNB Smart Chain. This kit publishes no RC6 address yet — see addressPublication.",
   }),
 });
 
@@ -221,22 +253,27 @@ export const RC5_CANARY_METADATA_PROOF = Object.freeze({
 /**
  * RC6 platform contracts per chain — GENERATED, and currently `null` everywhere.
  *
- * The launchpad's own RC6 deployment packages carry deterministic addresses for all four chains.
- * They are not published here, and the reason is not caution for its own sake: those packages are
- * `PREPARED_UNSIGNED` with `signed: false` and `broadcast: false`, so nothing at those addresses
- * exists, and they are re-derived from the source tree — an in-flight change to the factory moves
- * every one of them, including all ten mined hook addresses. An address a creator can copy but
- * cannot use is worse than one they have to go and ask for.
+ * `null` HERE MEANS "THIS KIT PUBLISHES NO ADDRESS", NOT "NOTHING IS DEPLOYED". For chains 1, 8453
+ * and 56 both readings happen to be true. For chain 4663 only the first is: RC6 is live and open to
+ * creators there, and the address is still absent from this table because the launchpad's own
+ * deployment package for that chain has not been regenerated as signed+broadcast since the
+ * broadcast. `PLATFORM_GENERATIONS.RC6.chainLaunchAccess` is the field that answers the other
+ * question, and `launchAvailability()` reads it rather than inferring an answer from this table.
+ *
+ * The launchpad's RC6 packages carry deterministic addresses for all four chains long before
+ * anything exists at them, and those addresses are re-derived from the source tree — an in-flight
+ * change to the factory moves every one of them, including all ten mined hook addresses. An address
+ * a creator can copy but cannot use is worse than one they have to go and read off an explorer.
  *
  * `npm run kit:deployments:sync` fills this in from the launchpad's packages and REFUSES to write
  * an address from a package that is not broadcast, so the emptiness below cannot be filled by
  * mistake — only by a real broadcast.
  */
 export const RC6_DEPLOYMENTS = Object.freeze({
-  1: null, // not deployed — package is PREPARED_UNSIGNED (signed: false, broadcast: false)
+  1: null, // not deployed — package is not broadcast (signed: false, broadcast: false)
   56: null, // not deployed — package is PREPARED_UNSIGNED (signed: false, broadcast: false)
   4663: null, // not deployed — package is PREPARED_UNSIGNED (signed: false, broadcast: false)
-  8453: null, // not deployed — package is PREPARED_UNSIGNED (signed: false, broadcast: false)
+  8453: null, // not deployed — package is not broadcast (signed: false, broadcast: false)
 });
 
 /** Every generation's per-chain deployment table, keyed by generation id. */
@@ -254,7 +291,11 @@ export const DEPLOYMENTS_BY_GENERATION = Object.freeze({
  */
 export const CURRENT_DEPLOYED_GENERATION = PLATFORM_GENERATION_IDS.filter((id) => PLATFORM_GENERATIONS[id].status === "DEPLOYED").at(-1) ?? null;
 
-/** @deprecated Prefer `deploymentsFor(generation)`; this is the current DEPLOYED generation's table. */
+/**
+ * @deprecated Prefer `deploymentsFor(generation)`; this is the current DEPLOYED generation's table.
+ * It is currently RC6's, which is every chain `null` — a table of published addresses, not of
+ * deployments. Read `launchAccessFor(chainId)` for whether a chain is live.
+ */
 export const PLATFORM_DEPLOYMENTS = CURRENT_DEPLOYED_GENERATION ? DEPLOYMENTS_BY_GENERATION[CURRENT_DEPLOYED_GENERATION] : Object.freeze({});
 
 /** Every chain id any generation names, ascending. Includes chains nothing is deployed on. */
@@ -283,7 +324,12 @@ export function platformGeneration(generation) {
   return PLATFORM_GENERATIONS[generation];
 }
 
-/** Chain ids with a live platform in `generation`, ascending. Does NOT imply public launches. */
+/**
+ * Chain ids `generation` PUBLISHES AN ADDRESS FOR here, ascending. Does NOT imply public launches,
+ * and — since RC6 — does not imply a chain is undeployed when it is absent. `liveChainIds` is the
+ * one that answers "where does this generation exist".
+ * @param {string} [generation]
+ */
 export function deployedChainIds(generation = CURRENT_DEPLOYED_GENERATION) {
   const table = deploymentsFor(generation);
   return Object.keys(table)
@@ -292,7 +338,7 @@ export function deployedChainIds(generation = CURRENT_DEPLOYED_GENERATION) {
     .sort((a, b) => a - b);
 }
 
-/** Chain ids with a live platform in the current DEPLOYED generation, ascending. */
+/** Chain ids the current DEPLOYED generation publishes an address for here, ascending. */
 export const DEPLOYED_CHAIN_IDS = Object.freeze(CURRENT_DEPLOYED_GENERATION ? deployedChainIds(CURRENT_DEPLOYED_GENERATION) : []);
 
 /**
@@ -317,15 +363,44 @@ export function isPlatformDeployed(chainId, generation = CURRENT_DEPLOYED_GENERA
 }
 
 /**
+ * What `chainId`'s factory answers in `generation`: `"PREPARED"`, `"PUBLIC"`, or `null` when no
+ * factory of that generation exists on that chain.
+ *
+ * IT DOES NOT ASK WHETHER AN ADDRESS IS PUBLISHED. A published deployment record carries its own
+ * `launchAccess` and is preferred, because it was generated from the same source as the address
+ * beside it. When no address is published, the generation's `chainLaunchAccess` map answers — a
+ * value read from the chain's own factory. Deriving launch access from the presence of an address
+ * is what made this kit report a live, publicly-open chain as "not deployed on any chain".
+ *
+ * THROWS on an unknown chain, exactly as `platformDeployment` does.
+ * @param {number} chainId
+ * @param {string} [generation]
+ * @returns {LaunchAccess|null}
+ */
+export function launchAccessFor(chainId, generation = CURRENT_DEPLOYED_GENERATION) {
+  const d = platformDeployment(chainId, generation);
+  if (d !== null) return d.launchAccess;
+  const declared = platformGeneration(generation).chainLaunchAccess;
+  return declared?.[chainId] ?? null;
+}
+
+/** Chain ids `generation` is LIVE on, published address or not, ascending. @param {string} [generation] */
+export function liveChainIds(generation = CURRENT_DEPLOYED_GENERATION) {
+  return Object.keys(deploymentsFor(generation))
+    .map(Number)
+    .filter((id) => launchAccessFor(id, generation) !== null)
+    .sort((a, b) => a - b);
+}
+
+/**
  * Whether `chainId` will accept an ordinary creator launch right now, in `generation`.
- * Currently false everywhere. Kept as a function rather than a constant so tools read the CURRENT
- * record instead of baking in today's answer.
+ * Kept as a function rather than a constant so tools read the CURRENT record instead of baking in
+ * today's answer — which is exactly what happened when every answer was no.
  * @param {number} chainId
  * @param {string} [generation]
  */
 export function acceptsPublicLaunches(chainId, generation = CURRENT_DEPLOYED_GENERATION) {
-  const d = platformDeployment(chainId, generation);
-  return d !== null && d.launchAccess === "PUBLIC";
+  return launchAccessFor(chainId, generation) === "PUBLIC";
 }
 
 /**
@@ -338,11 +413,15 @@ export function acceptsPublicLaunches(chainId, generation = CURRENT_DEPLOYED_GEN
 export function launchAvailability(chainId, generation = CURRENT_DEPLOYED_GENERATION) {
   const g = platformGeneration(generation);
   const d = platformDeployment(chainId, generation);
-  if (d === null) {
+  const access = launchAccessFor(chainId, generation);
+  if (access === null) {
     return g.status === "NOT_DEPLOYED" ? `${g.id} is not deployed on any chain` : `${g.id} is not deployed on this chain`;
   }
-  if (d.launchAccess === "PUBLIC") return `${g.id} live — accepting creator launches`;
-  return `${g.id} contracts live, public creation not yet open`;
+  // Live. Say so, and say separately whether this kit prints the address — the reader is about to
+  // go looking for one, and "no address here" is a different problem from "no factory there".
+  const withheld = d === null ? ", address not published in this kit" : "";
+  if (access === "PUBLIC") return `${g.id} live — accepting creator launches${withheld}`;
+  return `${g.id} contracts live, public creation not yet open${withheld}`;
 }
 
 /** Explorer URL for a contract on `chainId`. @param {number} chainId @param {string} address */
