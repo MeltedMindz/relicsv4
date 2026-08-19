@@ -1,445 +1,468 @@
-# relics-v4 — the creator kit
+# RELICS Creator Kit
 
-**Build a `.relics` bundle, upload it, sign one transaction.** That is the arc this repository
-exists to teach, end to end:
+**Write generative art as one JavaScript file or a set of Solidity-SVG parameters, wire market
+signals to it, render a hundred seeds until you like them, and export a single `.relics` file that
+a launchpad can turn into a token, an NFT collection and a Uniswap v4 pool.**
 
 ```
-relics init          scaffold a project
-relics preview       render deterministic previews of your art
-relics validate      run every check the importer will run
-relics test-seeds    sweep a wide seed range for errors and duplicates
-relics export        write a validated .relics bundle
-        ↓
-upload at relics.wtf → review what it derived → sign → broadcast
+YOUR IDEA  +  YOUR ART  +  YOUR RULES   →   ONE .relics FILE   →   RELICS LAUNCHPAD
 ```
-
-### What a `.relics` file is
-
-One deterministic, STORE-only ZIP holding your generator, traits, market mappings, collection
-metadata and previews, plus a generated manifest (`relics.project.json`) and `checksums.json`.
-It carries dual **SHA-256 and keccak-256** commitments over its own contents, so the launchpad
-re-derives every hash from the bytes you uploaded and can prove it is reading exactly what you
-exported. It contains **no executable protocol code** — a bundle can never supply a hook, a token
-or a router.
-
-You edit **`relics.config.json`**. You never edit `relics.project.json` — that file is *generated*
-at export from your config and your files, and hand-editing it only makes the hashes disagree.
-
-### Live platform status
-
-> ⚠️ **You can build and export a real bundle today. You cannot broadcast one.**
-> RC5 platform contracts are deployed and source-verified on Ethereum (1), Base (8453), and
-> Robinhood Chain (4663), but every factory is still `PREPARED`. Ordinary creator launches remain
-> closed until a separate one-way timelock operation opens public creation. BNB Smart Chain (56) is
-> deferred in this release. Everything before broadcast — scaffold, preview, validate, export and
-> import — is real and works now.
-
-Check the bundled address/status record any time:
-
-```bash
-npm run kit:status
-```
-
-> ⚠️ **Verify before you rely on any of this.** Every deployed contract is source-verified on its chain's explorer. Read the runtime bytecode against the
-> published source rather than trusting a description of it, including this one. Get your own
-> security, legal and economic review before deploying or trading anything.
 
 ### Start here
 
-1. **[docs/creator-kit/](docs/creator-kit/)** — the kit itself: install, scaffold, the CLI
-   reference, the bundle format, and what the importer refuses.
-2. **[docs/creator-kit/bundle-format.md](docs/creator-kit/bundle-format.md)** — every field, every
-   hash, and which files are yours versus generated.
-3. **[docs/launchpad/](docs/launchpad/)** — what the transaction you eventually sign actually does:
-   deploys the token and collection, mines and binds the hook, opens the pool, mints genesis
-   liquidity, registers metadata. One atomic call.
-4. **[docs/launchpad/10-deployments-and-quote-assets.md](docs/launchpad/10-deployments-and-quote-assets.md)** —
-   live RC5 addresses and the complete Robinhood stock-token reference for `.relics` quote requests.
-
-### Also in this repository
-
-| | What it is |
+| | |
 | --- | --- |
-| 🔧 **[Fork the starter template](docs/00-make-it-your-own.md)** | A clean-room, MIT-licensed codebase you deploy **yourself** — no launchpad, no factory, no fee split. Educational. |
-| 🏛️ **[Flagship reference](flagship/)** | The exact production source of the live RELICS Uniswap v4 hook (`0xA6f73cc88723f04b85E2c2aF3e35F759Dc1A9440`), byte-identical to the Etherscan-verified source and proven offline by `flagship/test/DeploymentProof.t.sol` to reproduce the deployed init code. Shares no code with the template. |
+| 🤖 **[Create with an AI agent](docs/creator-kit/create-with-an-agent.md)** | Clone the repo, paste one prompt, describe your collection in plain language. The agent writes the generator and runs the checks. |
+| 🛠 **[Build it yourself](docs/creator-kit/getting-started.md)** | Six commands, no network, no wallet. Scaffold → preview → validate → export. |
+| 📖 **[See how it works](#what-a-relics-file-is)** | The bundle, the market-to-art model, and what a launch actually does. |
+
+[![creator kit 3.12.0](https://img.shields.io/badge/creator%20kit-3.12.0-c9a227)](packages/creator-cli/)
+[![bundle schema 3.3.0](https://img.shields.io/badge/bundle%20schema-3.3.0-8a8681)](docs/creator-kit/bundle-format.md)
+[![creator-kit CI](https://github.com/MeltedMindz/relicsv4/actions/workflows/creator-kit.yml/badge.svg)](https://github.com/MeltedMindz/relicsv4/actions/workflows/creator-kit.yml)
+[![Node >= 20](https://img.shields.io/badge/node-%3E%3D20-8a8681)](package.json)
+[![MIT](https://img.shields.io/badge/license-MIT-8a8681)](LICENSE)
+
+
+![Four deterministic renders from the shipped starter templates, arranged left to right. Each is a
+dark square: concentric pale rings around a lit core; a fractured line lattice with two bright
+accent scars cutting across it; a dense field of short strokes; a single geometric form with a halo.
+Each caption pairs a seed number with the trait labels the kit derived for it — labels are metadata,
+drawn from their own seeded stream, so they name the token rather than describe the
+image.](docs/assets/hero.svg)
+
+*Every image above came out of `relics preview`. Same seed, same picture — on your laptop, in the
+importer, and in ten years.*
 
 ---
 
-## Building on the RELICS Launchpad
+## Table of contents
 
-If you want the plumbing solved — a hook mined to a valid address, a pool opened at a computed
-price, genesis liquidity minted, marketplace and explorer metadata wired, all in one atomic call —
-that is the launchpad. You bring art and a handful of parameters.
+- [What you actually build](#what-you-actually-build)
+- [Create with an AI agent](#create-with-an-ai-agent)
+- [Build it yourself](#build-it-yourself)
+- [The one file you edit](#the-one-file-you-edit)
+- [The whole path, end to end](#the-whole-path-end-to-end)
+- [What a `.relics` file is](#what-a-relics-file-is)
+- [The starter templates](#the-starter-templates)
+- [Market history is the medium](#market-history-is-the-medium)
+- [Launch protection, chains and fees](#launch-protection-chains-and-fees)
+- [Advanced paths](#advanced-paths)
+- [Status, honestly](#status-honestly)
 
-**[→ Read the creator guide](docs/launchpad/)**
+---
 
-| # | Page | What you get |
+## What you actually build
+
+A RELICS project is a directory on your machine. It holds:
+
+- **a generator** — one JavaScript file exporting `render(context)`, or a parameter file for a
+  registered on-chain Solidity renderer;
+- **a trait schema** — the named dimensions and weights the collection draws from;
+- **market mappings** — declarative wiring from market signals to art parameters;
+- **collection metadata** — name, symbol, description, cover image;
+- **`relics.config.json`** — supply, earnings, chains, runtime.
+
+`relics export` packs all of it into one `.relics` file with hashes over its own contents. That
+file is what you hand the launchpad.
+
+Nothing in this kit signs a transaction, broadcasts anything, or contacts a network. You can do
+every step below on a plane.
+
+---
+
+## Create with an AI agent
+
+You describe the collection. The agent writes the generator, wires the market mappings, runs the
+checks, and iterates until the previews look right.
+
+```bash
+git clone https://github.com/MeltedMindz/relicsv4.git
+cd relicsv4
+npm install
+```
+
+Then open your agent in this directory and paste:
+
+> Read `docs/creator-kit/create-with-an-agent.md` and `AGENTS.md`, then help me build a RELICS
+> project. Scaffold it with `npm run kit -- init`, write the generator, and use
+> `npm run kit -- preview` and `npm run kit -- validate` after every change until validation
+> passes with no errors. Ask me about the art before you write any code.
+
+**[→ The full prompt, and what the agent may and may not decide for you](docs/creator-kit/create-with-an-agent.md)**
+
+---
+
+## Build it yourself
+
+Six commands. Everything below was run against this commit.
+
+```bash
+git clone https://github.com/MeltedMindz/relicsv4.git
+cd relicsv4
+npm install
+```
+
+```bash
+# 1. see what you can start from
+npm run kit -- templates
+
+# 2. scaffold a project
+npm run kit -- init my-project --template minimal
+
+# 3. open the local studio on 127.0.0.1 — render any seed, drag the market sliders
+npm run kit -- dev my-project
+
+# 4. write deterministic SVGs and a contact sheet
+npm run kit -- preview my-project --count 8
+
+# 5. sweep a wide seed range for failures, blanks and duplicate traits
+npm run kit -- test-seeds my-project --count 100
+
+# 6. run every check the importer will run. Writes nothing.
+npm run kit -- validate my-project
+
+# 7. validate, then write the bundle
+npm run kit -- export my-project --output my-project.relics
+
+# read a bundle someone sent you — without executing its generator
+npm run kit -- inspect my-project.relics
+```
+
+> **A fresh project fails validation on purpose.** Every template ships
+> `earnings.creatorRecipient: "0x1111…1111"`, and `validate` refuses it with
+> `EARNINGS_RECIPIENT_PLACEHOLDER`. Put your own address in `relics.config.json` before you export.
+> That gate is the only thing standing between a scaffolded template and a clean run.
+
+The CLI has **zero runtime dependencies** — plain ESM, no build step. `npm install` is for the demo
+web app and the test tooling; `npm run kit` works in a freshly cloned repo before it finishes.
+
+**[→ Getting started, step by step](docs/creator-kit/getting-started.md)** ·
+**[→ Every command and flag](docs/creator-kit/cli.md)**
+
+---
+
+## The one file you edit
+
+This is the single most common confusion, so it gets its own section.
+
+| File | Where it lives | Who writes it |
 | --- | --- | --- |
-| 01 | [What the launchpad is](docs/launchpad/01-what-it-is.md) | The one-paragraph version, and who it is for |
-| 02 | [What a launch produces](docs/launchpad/02-what-a-launch-produces.md) | The exact artifacts one `launch()` creates |
-| 03 | [Art runtimes](docs/launchpad/03-art-runtimes.md) | Solidity-SVG template vs. deterministic JavaScript |
-| 04 | [Constraints that actually bite](docs/launchpad/04-constraints.md) | Byte budgets, EIP-170, determinism, legibility |
-| 05 | [The creator flow](docs/launchpad/05-creator-flow.md) | Draft → studio → preview/cover → launch |
-| 06 | [Fees and revenue](docs/launchpad/06-fees-and-revenue.md) | The 75/25 split, stated precisely |
-| 07 | [Integrating](docs/launchpad/07-integrating.md) | The SDK and ABI surface for builders |
-| 08 | [Status and limitations](docs/launchpad/08-status.md) | What is proven, what is not, what is missing |
-| 09 | [FAQ](docs/launchpad/09-faq.md) | Short answers to the questions people actually ask |
+| **`relics.config.json`** | your project directory | **YOU.** Name, symbol, supply, runtime, earnings, chains. |
+| `relics.project.json` | **only inside the `.relics` file** | **GENERATED at export.** Never appears in your project directory. |
 
-Headline economics, stated the way they should always be stated: your project pool has a static
-**1% LP fee**; LP fees **actually collected** are split **75% creator / 25% platform**; and the
-platform's own share is split in half **in the market's selected quote asset** — **50% of the
-launchpad's net platform-fee revenue is allocated to $RELICS buy-and-entomb**, which converts to
-WETH when a route allows, then buys $RELICS and sends it permanently to `0x…dEaD`, and 50% is
-retained by the protocol Safe, claimable in the quote. Nominally that is 75.00 / 12.50 / 12.50 of
-collected LP fees.
-Entombment is not a burn: circulating supply falls, `totalSupply` stays fixed at 10,000, and no
-burn event occurs, because $RELICS has no burn function.
+`relics.project.json` is derived from your config and your files at export time. Hand-editing it
+cannot change what launches — it can only make the hashes disagree, and then the importer refuses
+the bundle. If you find yourself opening it, you want `relics.config.json` instead.
 
 ---
 
-## The starter template
+## The whole path, end to end
 
-Everything from here down describes the fork-it-yourself template, which is independent of the
-launchpad and shares no code with it.
+```mermaid
+flowchart TD
+    A["relics init<br/>scaffold from a template"] --> B["edit generator/generate.js<br/>+ relics.config.json"]
+    B --> C["relics dev<br/>local studio, market sliders"]
+    C --> D["relics preview<br/>deterministic SVGs"]
+    D --> E["relics test-seeds<br/>100 seeds: blanks, dupes, drift"]
+    E -->|not right yet| B
+    E --> F["relics validate<br/>every importer check"]
+    F -->|errors| B
+    F -->|clean| G["relics export<br/>one .relics file"]
+    G --> H["import in the launchpad<br/>hashes re-derived from your bytes"]
+    H --> I["review the derived draft<br/>art, traits, supply, earnings"]
+    I --> J["sign one transaction"]
 
-## 1. The promise
-
-Fork this repo, change a small, clearly-marked set of things, and ship YOUR collection — without
-reading the whole codebase. You customize **four layers**, then launch:
-
-1. the **ERC-20 token** (name, symbol, supply),
-2. the **v4 hook logic** (which market signals drive the art, and how strongly),
-3. the **on-chain renderer** (your art — three sample systems ship, or bring your own),
-4. the **deployment tooling** (fully parameterized: mine → bind → pool → liquidity → lock).
-
-Then: **generate art locally → deploy to a testnet → create the pool → add + lock liquidity →
-go to mainnet after your own review.** Everything a forker edits lives in one config surface
-([`config/collection.config.ts`](config/collection.config.ts) + your `.env`) or is pointed to
-from there. Start with **[docs/00 — Make it your own](docs/00-make-it-your-own.md)**.
-
-The core idea:
-
-```
-immutable per-token DNA  +  live market state  =  a phenotype that evolves with the market
+    style A fill:#1a1a1c,stroke:#c9a227,color:#e8e6e3
+    style G fill:#1a1a1c,stroke:#c9a227,color:#e8e6e3
+    style J fill:#1a1a1c,stroke:#c9a227,color:#e8e6e3
 ```
 
-There is no stored image, no IPFS, no API. `tokenURI` reads Ethereum state at query time and
-returns a base64 JSON with an embedded base64 SVG.
-
-## 2. What you will build
-
-Deployed and wired together, driven by your config:
-
-- **`ExampleToken`** — a fixed-supply ERC-20 with no tax, blacklist, or hidden mint.
-- **`ExampleV4Hook`** — a Uniswap v4 hook mined to the correct address, distilling pool activity
-  into a `MarketState` via one clearly-marked mapping function you customize.
-- **`ExampleArtNFT`** — an ERC-721 with fully on-chain metadata and a swappable acquisition model.
-- **A renderer** — one of three shipped art systems (**Sigil**, **Strata**, **Orbital**) or your
-  own, behind a single `_renderArt(dna, marketState)` seam.
-- **`ImmutablePositionLocker`** — an ownerless custodian whose bytecode contains no path to
-  withdraw LP principal, while keeping fee collection permissionless.
-- A **config-driven Next.js web app** (Home / Acquire / Mint / Explore / Technical).
-
-## 3. Who this is for
-
-- Solidity developers who have never written a Uniswap v4 hook and want a working, commented
-  example.
-- Artists/tinkerers curious how on-chain generative art actually renders from state.
-- Anyone who wants a **correct, honest** template for a single-sided v4 launch and immutable LP
-  finality — with the sharp edges labeled.
-
-No prior v4 knowledge is assumed. Every term is defined in [Glossary](#glossary) and in
-[`docs/03`](docs/03-uniswap-v4-hooks.md).
-
-## 4. Architecture
-
-```
-                      ┌─────────────────────┐
-                      │   ExampleToken       │  fixed-supply ERC-20
-                      └──────────┬──────────┘
-                                 │ one canonical v4 pool
-                                 ▼
-   ┌──────────────┐      ┌──────────────────┐      ┌─────────────────────────┐
-   │ Uniswap v4   │◀────▶│  ExampleV4Hook   │      │ ImmutablePositionLocker │
-   │ PoolManager  │      │ observes swaps + │      │ principal locked;       │
-   └──────┬───────┘      │ liquidity → state│      │ fees to fixed recipients│
-          │ mints LP NFT └────────┬─────────┘      └─────────────────────────┘
-          ▼                       │ read (view)
-   ┌──────────────┐               ▼
-   │PositionManager│      ┌──────────────────┐   ┌────────────────────────┐
-   │  (v4 NFT)     │      │  ExampleArtNFT   │──▶│  Renderer (your art):  │
-   └──────────────┘      │  ERC-721 + 4906  │   │  Sigil / Strata /      │
-                         │ injects holder ct │   │  Orbital / bring-your- │
-                         └──────────────────┘   │  own via RendererBase  │
-                                                └────────────────────────┘
-```
-
-## 5. How it works (5 steps)
-
-1. **Deploy** the token, then the hook (to a CREATE2-mined address whose bits declare its
-   permissions), then the renderer and NFT.
-2. **Bind** the canonical PoolKey to the hook (one-shot), recording the exact opening price.
-3. **Initialize** the pool at that price; the hook rejects any other price.
-4. **Add** the whole supply as a single-sided position and **lock** the LP NFT in the custodian.
-5. **Trade.** Every swap updates market state; `tokenURI` renders each piece from its DNA plus
-   that live state.
-
-## 6. Prerequisites
-
-- [Foundry](https://book.getfoundry.sh/getting-started/installation) (`forge` ≥ 1.0)
-- Node.js ≥ 20 and npm
-- git
-
-## 7. Quick start (~15 minutes)
-
-```bash
-git clone <your-fork-url> relics-v4-starter
-cd relics-v4-starter
-# no submodules: all Solidity dependencies are vendored under lib/
-
-# contracts
-forge build
-forge test
-
-# generate example art (writes deterministic SVGs to output/examples/)
-forge script script/GenerateExamples.s.sol --tc GenerateExamples
-
-# web app
-npm install
-npm run web:dev   # http://localhost:3000
-```
-
-That is the whole loop with no network and no secrets. Everything below is optional and for
-taking it on-chain.
-
-## 8. Run the tests
-
-```bash
-forge test                       # unit + fuzz + invariant + local deployment integration
-forge test --match-path "test/fork/*"   # fork tests (self-skip if MAINNET_RPC_URL is unset)
-forge build --sizes | grep -E "Renderer"   # EIP-170 budget check (all art systems)
-```
-
-Test layout: `test/unit`, `test/fuzz`, `test/invariant`, `test/fork`, `test/deployment`, with
-mocks under `test/mocks` and shared v4 scaffolding in `test/utils`.
-
-## 9. Generate art
-
-```bash
-mkdir -p output/examples   # first time only
-RENDERER_STYLE=orbital forge script script/GenerateExamples.s.sol --tc GenerateExamples
-# styles: sigil (default) | strata | orbital
-# optional knobs: EXAMPLE_COUNT, MARKET_DRAWDOWN, MARKET_SWAPS, MARKET_VOLATILITY, MARKET_HOLDERS, MARKET_EPOCH
-```
-
-Regeneration at the same commit is byte-identical — that reproducibility is your art-integrity
-check.
-
-## 10. Start the web app
-
-```bash
-npm install
-cp apps/web/.env.example apps/web/.env.local   # optional; edit to point at a deployment
-npm run web:dev
-```
-
-The app works offline with deterministic local fixtures (Explore page) and fails closed on any
-surface you have not configured.
-
-## 11. Customize the art
-
-Pick one of three shipped art systems with `rendererStyle` (`sigil` | `strata` | `orbital`), or
-**bring your own**: extend [`RendererBase`](src/RendererBase.sol) and implement the single seam
-`_renderArt(tokenId, dna, market)`. The base handles JSON + base64 + canvas and gives you shared
-palette/number helpers. Keep every market-driven loop bounded, and after every edit run
-`forge build --sizes` — every renderer must stay under 24,576 bytes. See
-[`docs/00`](docs/00-make-it-your-own.md), [`docs/06`](docs/06-onchain-renderer.md), and
-[`docs/16`](docs/16-renderer-size-budget.md).
-
-## 12. Customize the hook (market → art mapping)
-
-Edit `src/ExampleV4Hook.sol` in two clearly-marked places: the `CUSTOMIZE` signal weights, and
-`_evolveState(MarketState, MarketEvent)` — the single function mapping each market event to the
-next state. You do NOT touch the v4 plumbing. If you change which callbacks the hook uses, update
-`getHookPermissions` **and** the flag constant, then re-mine the address. Keep callbacks bounded;
-never render or loop over NFTs inside them. See [`docs/04`](docs/04-the-hook.md) and
-[`docs/00`](docs/00-make-it-your-own.md).
-
-## 13. Mine the hook address
-
-```bash
-POOL_MANAGER=0x... ART_TOKEN=0x... HOOK_OWNER=0x... \
-  forge script script/MineHookAddress.s.sol --tc MineHookAddress
-```
-
-Mine against the **exact** constructor args you will deploy with. See
-[`docs/13`](docs/13-mining-hook-address.md).
-
-## 14. Deploy to Sepolia
-
-```bash
-POOL_MANAGER=0x... WETH=0x... INITIAL_HOLDER=0x... HOOK_OWNER=0x... \
-  forge script script/DeployExample.s.sol --tc DeployExample \
-  --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $DEPLOYER_PRIVATE_KEY
-```
-
-Look up the canonical Uniswap v4 addresses for your chain from the official Uniswap deployments
-docs; this repo ships no baked-in address book. Full sequence in
-[`docs/14`](docs/14-deploy-and-pool.md).
-
-## 15. Create the pool
-
-```bash
-POOL_MANAGER=0x... HOOK=0x... ART_TOKEN=0x... WETH=0x... LAUNCH_TICK=-23040 \
-  forge script script/BindAndCreatePool.s.sol --tc BindAndCreatePool \
-  --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $HOOK_OWNER_PRIVATE_KEY
-```
-
-Bind **before** initialize so a wrong opening price is rejected.
-
-## 16. Add liquidity
-
-```bash
-POSITION_MANAGER=0x... PERMIT2=0x... ART_TOKEN=0x... WETH=0x... HOOK=0x... \
-LP_RECIPIENT=0x... LAUNCH_TICK=-23040 LIQUIDITY=... \
-  forge script script/AddLiquidity.s.sol --tc AddLiquidity \
-  --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $DEPLOYER_PRIVATE_KEY
-```
-
-Single-sided by design. **Read the new position id from the tx receipt** — never a simulation
-([`docs/11`](docs/11-position-manager-token-id.md), [`docs/08`](docs/08-genesis-liquidity.md)).
-
-## 17. Lock liquidity (preserving fees)
-
-```bash
-POSITION_MANAGER=0x... ART_TOKEN=0x... WETH=0x... TREASURY=0x... \
-ENTOMBMENT=0x000000000000000000000000000000000000dEaD POSITION_ID=<from receipt> \
-  forge script script/LockPosition.s.sol --tc LockPosition \
-  --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $DEPLOYER_PRIVATE_KEY
-```
-
-Principal becomes permanent; `collectFees()` stays permissionless and routes to immutable
-recipients. This is **not** a burn ([`docs/09`](docs/09-locker-and-lp-finality.md)).
-
-## 18. Verify the contracts
-
-```bash
-TOKEN=0x... HOOK=0x... RENDERER=0x... NFT=0x... \
-  forge script script/VerifyDeployment.s.sol --tc VerifyDeployment --rpc-url $SEPOLIA_RPC_URL
-```
-
-Reverts on the first inconsistency, so it doubles as an operational gate. Also verify source on a
-block explorer for your chain.
-
-## 19. Configure the website
-
-Put your identity and deployed addresses in [`config/collection.config.ts`](config/collection.config.ts)
-(`addressesByChain[<chainId>]`). For per-deploy hosting you can also set `NEXT_PUBLIC_*` in
-`apps/web/.env.local` (see `apps/web/.env.example`), which override the config. Unset surfaces stay
-"not configured." Public env is read **statically** — never dynamically
-([`docs/17`](docs/17-frontend-integration.md)).
-
-## 20. Mainnet safety checklist
-
-- [ ] Full rehearsal on a fork / Sepolia, including a real swap and a fee collection.
-- [ ] Token sort order chosen deliberately (art token as currency0 for single-sided routing).
-- [ ] Hook address bits verified `== 0x1440`; mined against the real constructor args.
-- [ ] Canonical pool bound **before** initialize; opening price asserted.
-- [ ] Position id read from the confirmed receipt (never a simulation).
-- [ ] LP locked in the immutable custodian; `feePolicyHash()` recorded.
-- [ ] Owner powers (token/hook) renounced only after proofs exist; never claim a renounce before
-      the tx and post-state reads exist.
-- [ ] No project-funded bootstrap buy. Launch on real, independent trades.
-- [ ] Honest launch language (see [`docs/15`](docs/15-launch-economics.md)); never "LP burned."
-- [ ] No signing secret in any hosting environment.
-- [ ] Independent security + legal review completed.
-
-## 21. Security warnings
-
-Read [`SECURITY.md`](SECURITY.md). Highlights: hook callbacks must stay bounded; only the
-canonical pool may drive art state; market signals and randomness must never gate financial
-outcomes; the renderer must stay under EIP-170; treat marketplace metadata as a cache of the
-canonical `tokenURI`.
-
-## 22. Project structure
-
-```
-config/         collection.config.ts — the ONE web/human config surface
-src/            contracts: token, hook, NFT, RendererBase + 3 art systems, locker, interfaces/, libraries/
-script/         Foundry tooling (config/DeployConfig.s.sol + mine/deploy/bind/liquidity/lock/verify/art)
-test/           unit/ fuzz/ invariant/ fork/ deployment/ + mocks/ + utils/
-apps/web/       config-driven Next.js app (wagmi/viem, EIP-6963)
-docs/           make-it-your-own guide + 18 numbered guides
-docs/launchpad/ RELICS Launchpad creator guide (the launchpad is a separate system)
-scripts/        secret scan, manifest generator, link checker (Node)
-.github/        CI workflows + issue/PR templates
-lib/            vendored, production-pinned deps (forge-std, uniswap-hooks, v4-core, v4-periphery, OZ, solmate, permit2)
-flagship/       the exact deployed RELICS production hook (byte-identical to Etherscan) + offline CREATE2 proof
-submissions/    Programmable Builder Beta application package (relics-v4)
-```
-
-## 23. Docs index
-
-| # | Guide |
-| --- | --- |
-| 00 | [Make it your own (start here)](docs/00-make-it-your-own.md) |
-| 01 | [System overview](docs/01-system-overview.md) |
-| 02 | [Contracts and the token](docs/02-contracts-and-token.md) |
-| 03 | [Uniswap v4 hooks, from zero](docs/03-uniswap-v4-hooks.md) |
-| 04 | [The hook in detail](docs/04-the-hook.md) |
-| 05 | [NFT and awakening](docs/05-nft-and-awakening.md) |
-| 06 | [On-chain renderer](docs/06-onchain-renderer.md) |
-| 07 | [Market state as art](docs/07-market-state-as-art.md) |
-| 08 | [Genesis liquidity](docs/08-genesis-liquidity.md) |
-| 09 | [Locker and LP finality](docs/09-locker-and-lp-finality.md) |
-| 10 | [Twenty hard-won lessons](docs/10-twenty-lessons.md) |
-| 11 | [PositionManager token id](docs/11-position-manager-token-id.md) |
-| 12 | [Token sort order](docs/12-token-sort-order.md) |
-| 13 | [Mining the hook address](docs/13-mining-hook-address.md) |
-| 14 | [Deploy and pool](docs/14-deploy-and-pool.md) |
-| 15 | [Launch economics](docs/15-launch-economics.md) |
-| 16 | [Renderer size budget](docs/16-renderer-size-budget.md) |
-| 17 | [Frontend integration](docs/17-frontend-integration.md) |
-| 18 | [FAQ](docs/18-faq.md) |
-| + | [Exporting on-chain SVG as PNG](docs/exporting-onchain-svg-as-png.md) |
-
-Building on the RELICS Launchpad instead of forking this template? That is a separate guide:
-[`docs/launchpad/`](docs/launchpad/).
-
-## 24. Contributing
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
-Contributions are judged by how well they teach a real pattern. Never add secrets or private data.
-
-## 25. License
-
-MIT — see [`LICENSE`](LICENSE). Third-party dependencies keep their own licenses; note that
-**Uniswap v4-core is BUSL-1.1** (a dependency, not vendored here) — see
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
-
-## 26. Disclaimer
-
-This is **educational** software provided "as is," without warranty of any kind. It is **not
-production-ready**. It is **not affiliated with or endorsed by** Uniswap,
-OpenZeppelin, OpenSea, Foundry, any auditor, or any production collection. It contains **no
-private or production material** — no real addresses, keys, or proofs. Nothing here is financial,
-legal, or investment advice. Deploying tokens, launching liquidity, and distributing NFTs can
-carry serious security, legal, tax, and regulatory consequences; obtain your own qualified review
-before doing anything real. You are solely responsible for your use of this code.
+Every step through `relics export` works today, offline, with no wallet. The import and signing
+steps depend on the launchpad's current launch state — see [Status, honestly](#status-honestly).
 
 ---
 
-## Glossary
+## What a `.relics` file is
 
-- **hook** — a contract the Uniswap v4 PoolManager calls at specific pool events (initialize,
-  add/remove liquidity, swap, donate). Its address bits declare which callbacks it implements.
-- **PoolKey** — the struct identifying a pool: `currency0`, `currency1`, `fee`, `tickSpacing`,
-  `hooks`.
-- **PoolId** — `keccak256(abi.encode(poolKey))`, a `bytes32` handle for a pool.
-- **tick** — an integer price index; each tick is a 0.01% step. Tick 0 is price 1.0.
-- **sqrtPriceX96** — the pool price stored as `sqrt(price) * 2**96` (Q64.96 fixed point).
-- **PositionManager NFT** — the ERC-721 the v4 periphery mints to represent a liquidity position;
-  its token id comes from a shared counter (read it, don't predict it).
-- **tokenURI** — the ERC-721 metadata function; here it returns an on-chain `data:` URI.
-- **CREATE2** — deploys a contract to a pre-computable address derived from
-  `keccak256(0xff, deployer, salt, keccak256(initCode))`; used to mine hook addresses.
+One deterministic, uncompressed ZIP. Standard `unzip` reads it. It carries dual **SHA-256** and
+**keccak-256** commitments over its own contents, so an importer re-derives every hash from the
+bytes you uploaded and can prove it is reading exactly what you exported.
+
+Here is a real bundle, exported from the `minimal` template — 16 entries, 18,283 bytes:
+
+```
+my-project.relics
+├── generator/generate.js        2,501 B   ← YOU WROTE THIS   (the art)
+├── traits/schema.json             720 B   ← YOU WROTE THIS   (dimensions + weights)
+├── market/mappings.json            37 B   ← YOU WROTE THIS   (sensor → transform → destination)
+├── metadata/collection.json       241 B   ← YOU WROTE THIS   (name, description, cover)
+├── assets/                                ← YOU WROTE THIS   (cover image, if any)
+├── README.md                    1,344 B   ← optional
+├── LICENSE                        435 B   ← optional
+│
+├── previews/seed-1.svg            971 B   ⟵ GENERATED  written from the live render at export,
+├── previews/seed-2.svg            595 B   ⟵ GENERATED  not copied from your previews/ directory
+├── previews/seed-3.svg            565 B   ⟵ GENERATED
+├── …seeds 5, 8, 13, 21, 34                ⟵ GENERATED
+│
+├── relics.project.json          3,094 B   ⟵ GENERATED  the manifest
+└── checksums.json               1,808 B   ⟵ GENERATED  per-file digests + the bundle hash
+```
+
+**A bundle configures art, never contracts.** It cannot carry `.sol`, `.wasm`, executables, shell
+scripts, key material or `.env` files — those extensions are refused everywhere, each with its own
+message. There is no manifest field in which a bundle could supply a hook, a token, a router or a
+fee. A custom hook is a separate, reviewed process.
+
+**A render is a pure function of its inputs.** No clock, no network, no `Math.random`. Validation
+renders every sampled seed twice and refuses a generator whose output moves between the two runs.
+
+**[→ The bundle format: every field, every hash recipe](docs/creator-kit/bundle-format.md)** ·
+**[→ Why every bundle is treated as hostile](docs/creator-kit/bundle-security.md)** ·
+**[→ Writing an importer](docs/creator-kit/importing.md)**
+
+---
+
+## The starter templates
+
+Five ship. All five scaffold, validate and export cleanly — that is checked in CI on every push
+(`npm run kit:templates`). The output below is verbatim from that check.
+
+| Template | Runtime | Market-responsive | Runtime the launchpad binds first |
+| --- | --- | --- | --- |
+| `solidity-svg-params` | `SOLIDITY_SVG_V1` | yes | **yes** |
+| `market-responsive` | `ONCHAIN_JAVASCRIPT_V1` | yes — 4 mappings | not yet |
+| `minimal` | `ONCHAIN_JAVASCRIPT_V1` | no | not yet |
+| `onchain-js` | `ONCHAIN_JAVASCRIPT_V1` | no | not yet |
+| `static-art` | `ONCHAIN_JAVASCRIPT_V1` | no, by design | not yet |
+
+**Nothing in that last column says "launchable today", because today the answer is no for all
+five.** Public creator launch is closed on every chain and RC6 is not deployed anywhere — run `npm
+run kit:status` and read it rather than trusting this table. The column asks a narrower and more
+useful question: when launching opens, which runtime will the launchpad bind and render first. That
+is `SOLIDITY_SVG`. The four JavaScript templates author, preview, validate and export exactly as
+well; they are behind it in the queue, not broken.
+
+**Approved and launchable are different questions, and the kit does not collapse them.** Both
+runtimes are approved: the format accepts them, they validate, they preview, they export. The
+JavaScript templates are marked "preview only" everywhere they appear — in `relics templates`, in
+`relics init`, in `relics validate` and in the CI table — rather than quietly presented as
+launchable. They are not being deleted for a release-schedule reason.
+
+- **`solidity-svg-params`** — configure a registered on-chain Solidity renderer by parameters, with
+  a local preview of the same shapes.
+- **`market-responsive`** — a lattice that fractures under drawdown, thickens with volume, and
+  keeps its scars. Four sensors wired to four art parameters, and a split-earnings config.
+- **`minimal`** — the smallest complete project: one generator, two trait dimensions, no market
+  mappings.
+- **`onchain-js`** — a compact generator written with the 36,000-byte script budget in view the
+  whole time.
+- **`static-art`** — seed-driven composition with no market mappings at all. The art never changes.
+
+There is no p5-style template, because p5 is not an approved runtime and the schema refuses a
+bundle that names one. Shipping a template that could not export would be a worse answer than
+shipping none.
+
+---
+
+## Market history is the medium
+
+The art is not a stored image. A collection reads its own market and renders from it:
+
+```
+IMMUTABLE DNA  +  MARKET HISTORY  +  CURRENT MARKET STATE  =  THE ART YOU SEE NOW
+```
+
+- **Immutable DNA** — the token's seed. Fixed at mint, forever. It decides what the piece *is*.
+- **Current market state** — what the pool looks like right now.
+- **Market history** — carried by transforms that remember: `accumulation` is a monotonic running
+  total that never decreases, `decay` falls back toward baseline over a half-life in epochs, and
+  `smoothing` is an exponential moving average over a window of samples. A scar driven by
+  `accumulation` stays in the composition after the drawdown that cut it has recovered.
+
+You wire it in `market/mappings.json`, and every id comes from a closed vocabulary. There is no
+expression to parse, no callback, no address:
+
+```json
+{
+  "id": "drawdown-fracture",
+  "sensor": "drawdown",
+  "transform": "clamp",
+  "transformParams": { "min": 0, "max": 0.85 },
+  "destination": "fracture"
+}
+```
+
+**11 sensors** — what the market is doing:
+
+`buying_pressure` · `selling_pressure` · `volume` · `tick` (price) · `volatility` · `drawdown` ·
+`recovery` · `liquidity` · `holder_growth` · `epoch` · `market_seed`
+
+**9 transforms** — how the signal is shaped:
+
+`threshold` · `range` · `clamp` · `smoothing` · `tier` · `accumulation` · `decay` · `inverse` ·
+`weighted_mix`
+
+**11 destinations** — what changes in the art:
+
+`palette` · `brightness` · `density` · `scale` · `symmetry` · `fracture` · `line_weight` ·
+`distortion` · `geometry` · `scar` · `animation`
+
+A sensor reading arrives in `[-1, 1]`; every transform clamps its output to `[0, 1]`, so a
+destination can never receive an out-of-range value however strange the reading is. Your generator
+reads them as `context.market.fracture`, `context.market.density`, and so on — with a fallback, so
+a preview on day zero, before a single trade, still renders something honest rather than blank.
+
+The validator refuses any id outside those three lists, any transform parameter outside its
+published bounds, and warns when two mappings contest the same destination.
+
+### Where the picture actually comes from
+
+- **`tokenURI(id)`** is the artwork. It renders from the collection's immutable on-chain art
+  binding — the runtime, the art configuration bytes and their hash — not from a file you uploaded.
+  There is no IPFS pin to rot and no API to go down.
+- **`contractURI()`** is the collection profile: name, description, the cover image. That one *is*
+  published media, and the importer has to normalize it, publish it to an `ipfs://`, `https://` or
+  `ar://` URI, and verify the bytes before writing it on chain. Relative paths and `data:` URIs are
+  valid inside your bundle and invalid as contract-level media.
+
+Keep the two separate in your head and the metadata story stops being confusing.
+
+---
+
+## Launch protection, chains and fees
+
+**Fees.** Collected LP fees are split between the creator and the platform, and the platform's
+share divides again into a $RELICS buy-and-entomb allocation and the retained protocol treasury.
+Two things about that are easy to state wrongly. They are ratios applied to **fees actually
+collected**, never to trading volume. And buy-and-entomb is **not a burn**: circulating supply
+falls, `totalSupply` does not, and no burn event is emitted. The numbers themselves are declared
+exactly once, in `packages/project-schema/src/economics.js`, and explained in
+[06 — Fees and revenue](docs/launchpad/06-fees-and-revenue.md); this page deliberately does not
+restate them, because a percentage asserted in two places is how a retired one survives a change.
+
+**Chains.** The bundle format understands four — Ethereum (1), Base (8453), Robinhood Chain
+(4663) and BNB Smart Chain (56) — and all four pass `chains.requested` validation. Ethereum, Base
+and Robinhood quote in WETH; BNB quotes in WBNB, which is never to be called WETH. **All four are
+closed to public creator launch.** RC6 is not deployed on any of them and every RC6 address is
+still to be determined, so this repository publishes none. Requesting a chain in a bundle is a
+schema fact; it is not that chain being open. Current table:
+[08 — Status](docs/launchpad/08-status.md#the-chains).
+
+**Launch protection.** Two launch methods are offered — **Instant V4** and **Bonding curve**.
+Fixed-price sale is withdrawn, because its sale phase had no per-buyer cap, no cooldown and no
+maximum per transaction, so one address could take the whole allocation in one transaction. It is
+refused in two places, and the difference matters:
+
+- **Here, when you build.** `relics validate` and `relics export` refuse a bundle that elects
+  `FIXED_PRICE_SALE_TO_V4`, by name, with the reason. You cannot export one.
+- **At launch.** The deployed sale contract refuses it for every caller, including the protocol
+  Safe and the pre-public canary path. That refusal is a comparison against a compile-time enum
+  member — there is no setter and no flag that lifts it. It is a statement about the bytecode that
+  is deployed, not a claim of immutability: that contract sits behind a proxy whose upgrade
+  authority is a 2-of-3 Safe with no timelock, as
+  [11 — Governance and upgradeability](docs/launchpad/11-governance-and-upgradeability.md) sets out.
+
+The mode name itself stays in the format. Launch modes are an on-chain enum, and deleting a member
+renumbers the ones after it, which would silently change what an already-written bundle means.
+
+Separately, every launch elects launch protection once and permanently:
+
+- **`PROTECTED_98_MINUTES`** — the buy-side LP fee starts at 99% and decays to 1% over 98 minutes.
+  The sell side is 1% throughout. This is the studio default.
+- **`NONE`** — a flat 1% both ways from the first block. It takes an explicit acknowledgement, and
+  it is never to be described as protected.
+
+There are no exemptions; the hook reads nothing about who is swapping. Protection makes immediate
+acquisition expensive and removes the block-one speed advantage. It does **not** guarantee equal
+allocation, identify anyone, or stop a buyer from simply waiting. It is
+not Sybil-resistant: it limits what one address can do, and an attacker can split across addresses
+for the cost of gas. Full detail:
+[12 — Launch protection](docs/launchpad/12-launch-protection.md).
+
+![Buy-side LP fee against minutes since the pool opened: with PROTECTED_98_MINUTES the buy fee falls from 99% to 1% over 98 minutes, while with NONE it is a flat 1% from the first block; the sell fee is a flat 1% in both modes, drawn on the same line as the unprotected buy fee because they are the same number.](docs/assets/launch-protection.svg)
+
+Checkpoints, as text: 0 min 99% · 1 min 98% · 10 min 89% · 30 min 69% · 60 min 39% · 90 min 9% ·
+98 min and after, 1%. The sell side is 1% at every instant, in both modes.
+
+**[→ The launchpad guide](docs/launchpad/)**
+
+---
+
+## Advanced paths
+
+Two other things live in this repository. Neither is the creator kit, and neither is where a
+first-time reader should start.
+
+### Fork the starter template and deploy it yourself
+
+A clean-room, MIT-licensed Solidity codebase: a fixed-supply ERC-20, a Uniswap v4 hook mined to a
+valid address, an ERC-721 with fully on-chain metadata, three shipped renderers, and an immutable
+position locker. No launchpad, no factory, no fee split — you deploy all of it, you own all of it,
+and you are responsible for all of it.
+
+Requires Foundry as well as Node. Educational; not production-ready.
+
+**[→ Make it your own](docs/00-make-it-your-own.md)** ·
+**[→ All 18 numbered guides](docs/)**
+
+### Flagship reference
+
+The exact production source of the live RELICS Uniswap v4 hook, byte-identical to its verified
+source and proven offline to reproduce the deployed init code. It shares no code with the starter
+template and is here to be read, not forked.
+
+**[→ `flagship/`](flagship/)**
+
+---
+
+## Status, honestly
+
+**You can build and export a real `.relics` bundle today. You cannot broadcast one yet.**
+Scaffolding, the studio, previews, seed sweeps, validation, export and inspection are all real and
+all work offline right now. RC6 is not deployed on any chain and public creator launch is closed
+on all four: you can build, validate and export a real `.relics` bundle today; you cannot broadcast
+one.
+
+**Verify before you rely on any of this**, including on this README. This repository is educational
+software provided "as is", without warranty. It is not affiliated with or endorsed by Uniswap,
+OpenZeppelin, OpenSea, Foundry, any auditor, or any production collection. Nothing here is
+financial, legal or investment advice. Deploying tokens, launching liquidity and distributing NFTs
+carry real security, legal, tax and regulatory consequences — get your own qualified review before
+doing anything real.
+
+---
+
+## Repository map
+
+```
+packages/project-schema/   the ONE schema, container, validator and hash implementation.
+                           Zero dependencies. The CLI and the web importer run this exact code.
+packages/creator-cli/      the `relics` CLI and its five starter templates
+docs/creator-kit/          the kit: getting started, CLI, bundle format, security, importing
+docs/launchpad/            what the transaction you eventually sign actually does
+docs/00-…18-*.md           the fork-it-yourself starter template guides
+src/ script/ test/         the starter template's Solidity, tooling and tests
+apps/web/                  a config-driven Next.js demo app for the starter template
+flagship/                  the deployed RELICS production hook + its offline CREATE2 proof
+```
+
+## Checks you can run
+
+```bash
+npm run kit:test        # schema, container, validator, sandbox, and every fixture
+npm run kit:templates   # every starter template scaffolds, validates and exports
+npm run kit:fixtures    # regenerate the fixtures — a diff means drift
+npm run kit:status      # the bundled deployment record and launch-access state
+```
+
+All of these run in CI on every push. See
+[`.github/workflows/creator-kit.yml`](.github/workflows/creator-kit.yml).
+
+## Contributing and licence
+
+[`CONTRIBUTING.md`](CONTRIBUTING.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) ·
+[`SECURITY.md`](SECURITY.md)
+
+MIT — see [`LICENSE`](LICENSE). Third-party dependencies keep their own licences; note that
+**Uniswap v4-core is BUSL-1.1**. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).

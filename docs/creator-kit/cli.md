@@ -5,6 +5,9 @@ it against every rule the importer enforces, and writes one `.relics` bundle.
 
 Nothing in it signs a transaction, broadcasts anything, or contacts a network.
 
+This is the reference. If you have not built a project yet, start at
+**[Getting started](./getting-started.md)** and come back here for the flags.
+
 ## Running it
 
 From this repository, with Node 20 or newer:
@@ -22,7 +25,8 @@ Examples below use `relics` for readability.
 ## `relics status`
 
 Prints the RC5 platform deployment record bundled with this kit: release tag, freeze commit,
-factory addresses, launch-access state, and the size of the Robinhood stock-token quote reference.
+factory addresses, launch-access state, the size of the Robinhood stock-token quote reference, and
+the current TEST canary metadata proof summary.
 
 ```bash
 npm run kit:status
@@ -46,18 +50,26 @@ purpose, so nobody exports a project that pays a placeholder.
 
 ## `relics templates`
 
-Lists the starter templates and the art runtime each one targets.
+Lists the starter templates, the art runtime each one targets, and whether a launch binds that
+runtime yet. It does not say any of them is launchable today, because none is — public creator
+launch is closed on every chain. Run `relics status` for that.
 
-| id | runtime | what it shows |
-| --- | --- | --- |
-| `minimal` | JAVASCRIPT | the smallest complete project |
-| `market-responsive` | JAVASCRIPT | four sensors wired to four art parameters, and a SPLIT earnings config |
-| `static-art` | JAVASCRIPT | no mappings at all — the art never changes |
-| `onchain-js` | JAVASCRIPT | writing for the 36,000-byte script budget |
-| `solidity-svg-params` | SOLIDITY_SVG | parameters for a registered on-chain template, with a local preview |
+| id | runtime id | bound by a launch | what it shows |
+| --- | --- | --- | --- |
+| `minimal` | `ONCHAIN_JAVASCRIPT_V1` | preview only | the smallest complete project |
+| `market-responsive` | `ONCHAIN_JAVASCRIPT_V1` | preview only | four sensors wired to four art parameters, and a SPLIT earnings config |
+| `static-art` | `ONCHAIN_JAVASCRIPT_V1` | preview only | no mappings at all — the art never changes |
+| `onchain-js` | `ONCHAIN_JAVASCRIPT_V1` | preview only | writing for the 36,000-byte script budget |
+| `solidity-svg-params` | `SOLIDITY_SVG_V1` | first in line | parameters for a registered on-chain template, with a local preview |
+
+**Approved is not the same as launchable.** Both runtimes are approved — the format accepts them,
+and all five templates validate, preview and export. Only `SOLIDITY_SVG` is currently bound and
+rendered by a deployed collection, so the four JavaScript templates are marked `preview only` here,
+in `relics init` and in `relics validate` rather than presented as launchable. A template on a
+gated runtime is marked, never deleted.
 
 There is no p5-style template. p5 is not an approved art runtime, so the schema refuses a bundle
-that names it rather than shipping a template that could not launch.
+that names it rather than shipping a template that could not export.
 
 ## `relics dev [directory] [--port 4321]`
 
@@ -107,7 +119,7 @@ entirely.
 | collection metadata | required fields, bundle-relative images, https-only links |
 | earnings configuration | mode, recipient, collaborator bps sum, no placeholder recipient |
 | supply and artwork backing | backing model consistency, artworks backed by tokens that exist |
-| requested chains | 1, 8453 or 4663; no duplicates |
+| requested chains | ids the schema knows — 1, 8453, 4663 or 56; no duplicates. Requesting a chain is not the same as that chain being open; see [`../launchpad/08-status.md`](../launchpad/08-status.md). |
 | secret scan | key material, credentialed RPC URLs, tokens, keystores, mnemonics |
 | hash integrity | every declared hash recomputed from the bytes |
 | art binding matches the bundle | the runtime, art config, generator, trait, mapping and metadata hashes recomputed from the container; the output commitment checked against a real render; no chain fact asserted |
@@ -164,8 +176,12 @@ verifies.
 
 ### `relics export --draft`
 
-Writes a **`.relics-draft`** you can circulate for review before the final details — a treasury
-address, a recipient — exist.
+Writes a **`.relics-draft`** you can circulate while the work is still in progress.
+
+A draft is **not** a way around validation. `relics export --draft` runs every check `relics
+export` runs and refuses to write a file that fails, so a draft still needs a real
+`creatorRecipient` — the scaffold placeholder is rejected at either status, and so is the burn
+address. What `--draft` changes is what the artifact *is*, not what it had to pass.
 
 A draft is not a renamed bundle. Three things say so, and none of them is the filename:
 

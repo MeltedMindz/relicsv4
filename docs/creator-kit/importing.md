@@ -3,10 +3,9 @@
 What the RELICS Launchpad creator app — or any other importer — does with a `.relics` file, and
 what it must not do.
 
-RC5 platform contracts are deployed on Ethereum (1), Base (8453) and Robinhood Chain (4663), but
-public creator launches are still closed (`PREPARED`). BNB Smart Chain (56) is deferred in this
-release, and review to date is internal only. Importing a bundle fills in a draft; it does not
-deploy anything.
+Public creator launches are not open yet, and review to date is internal only. Importing a bundle
+fills in a draft; it does not deploy anything. Per-chain deployment and launch state is stated
+once, in [`../launchpad/08-status.md`](../launchpad/08-status.md).
 
 ---
 
@@ -82,6 +81,24 @@ can compare it with what their CLI printed.
 
 If your recomputed hash differs from the bundle's declared `integrity.bundleHash`, the validator
 has already reported it as a `HASH_INTEGRITY` failure. Do not import "with a warning".
+
+## Publishing project metadata
+
+Imported media paths are not on-chain metadata yet. The app must normalize collection/profile
+media, pin or publish it to an allowed public URI (`ipfs://`, `https://` or `ar://`), verify the
+published bytes, and write the resulting URI into `ProjectMetadataRegistry` after the project
+record exists. Relative bundle paths and `data:` URIs must not be written as contract-level media.
+
+Keep the two read paths separate in your UI:
+
+- `contractURI()` is the project/collection profile and should be non-empty after the metadata
+  registry is bound.
+- `tokenURI(id)` is the artwork metadata for an awakened NFT and renders from the immutable
+  on-chain art binding.
+
+Do not show a deployed token as launch-complete until the ERC-20 `contractURI()` readback includes
+the published image. That is the surface DEX/token-discovery tooling can use beyond
+`name()`/`symbol()`/`decimals()`.
 
 ## Parity fixtures
 

@@ -8,9 +8,12 @@ same component hashes the CLI printed at export time, because both sides run the
 `@relics/project-schema` (`packages/project-schema/`), a zero-dependency ES module package with
 no build step. There is no second handwritten schema anywhere.
 
-RC5 platform contracts are deployed on Ethereum (1), Base (8453), and Robinhood Chain (4663), but
-public creator launches are still closed (`PREPARED`). BNB Smart Chain (56) is deferred in this
-release. Nothing in this kit signs or broadcasts anything.
+Public creator launches are not open yet. Nothing in this kit signs or broadcasts anything; it
+builds one file. Per-chain deployment and launch state is stated once, in
+[`../launchpad/08-status.md`](../launchpad/08-status.md) — not restated here, so it cannot go stale
+here.
+
+New to the kit? Start at [Getting started](./getting-started.md).
 
 ---
 
@@ -86,6 +89,17 @@ its own message.
 Exactly one `.js` file may live under `generator/`. A launch stores one script, so a generator
 split across files could not be submitted as written; refusing it at export beats discovering it
 at prepare time.
+
+### Local media versus published metadata
+
+`metadata/collection.json` and `assets/` are local bundle inputs. They make the bundle reviewable
+and hashable; they are not already public URLs.
+
+Before a launch writes project metadata, the importer must normalize the chosen collection image,
+publish it to an allowed public URI (`ipfs://`, `https://` or `ar://`), verify the bytes, and then
+write that URI through `ProjectMetadataRegistry`. Relative asset paths and `data:` URIs are
+therefore valid inside the bundle but invalid as contract-level media. The per-NFT artwork remains
+separate: `tokenURI(id)` renders from the on-chain art binding, not from the collection image.
 
 ---
 

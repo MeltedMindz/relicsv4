@@ -2,17 +2,27 @@
 
 Build your project locally, then hand the launchpad one file.
 
+**New here? → [Getting started](./getting-started.md)** walks the whole path, from a fresh clone to
+an exported bundle, in about twenty minutes. **Want an agent to do the writing? →
+[Create with an agent](./create-with-an-agent.md).**
+
 ```bash
 npm run kit -- init my-project --template market-responsive
 npm run kit -- dev my-project              # local studio on 127.0.0.1
 npm run kit -- validate my-project         # every check; writes nothing
 npm run kit -- export my-project --output my-project.relics
-npm run kit:status                         # deployed addresses + public launch state
+npm run kit:status                         # bundled deployment record + launch state
 ```
 
 Import `my-project.relics` in the RELICS Launchpad creator app. It derives the same bundle hash,
 config hash and component hashes the CLI printed, and the draft arrives filled in — art, traits,
 market mappings, metadata, earnings, supply, chains. Nothing is re-entered by hand.
+
+Nothing in this kit signs or broadcasts anything, and nothing in it contacts a network. It builds
+one `.relics` file. Public creator launches are not open yet; for the current per-chain deployment
+state read [`../launchpad/08-status.md`](../launchpad/08-status.md) and
+[`../launchpad/10-deployments-and-quote-assets.md`](../launchpad/10-deployments-and-quote-assets.md),
+or run `npm run kit:status` for the record bundled with this commit.
 
 ## Which file do I edit?
 
@@ -22,25 +32,25 @@ market mappings, metadata, earnings, supply, chains. Nothing is re-entered by ha
 | `generator/generate.js` | **yours** | The art. Deterministic, sandboxed, no I/O. |
 | `traits/schema.json`, `market/mappings.json`, `metadata/collection.json` | **yours** | Trait dimensions, market-to-art mappings, collection metadata. |
 | `previews/seed-*.svg` | **generated** by `relics preview`; **rewritten** at export from the live render | Deterministic previews. Never hand-edit — export writes these from the generator, so a hand-edit is discarded. |
-| `relics.project.json` | **generated at export** | The bundle manifest, derived from your config and files. Editing it changes nothing except making the hashes disagree. It does not exist in your project directory; it exists inside the `.relics` file. |
+| `relics.project.json` | **generated at export** | The bundle manifest, derived from your config and files. It does **not** exist in your project directory; it exists only inside the `.relics` file. Editing it changes nothing except making the hashes disagree. |
 | `checksums.json` | **generated at export** | Per-file digests plus the bundle hash and commitment. |
-
-RC5 platform contracts are deployed on Ethereum (1), Base (8453), and Robinhood Chain (4663), but
-public creator launches are still closed (`PREPARED`). BNB Smart Chain (56) is deferred in this
-release. Nothing in this kit signs or broadcasts anything; it builds one `.relics` file for the
-creator app to import when launching is open.
 
 ---
 
-## The four pages
+After you launch, your NFT collection's metadata is already handled — but your ERC-20's
+discoverability metadata is not. See [Token metadata](./token-metadata.md).
+
+## The pages
 
 | Page | What it covers |
 | --- | --- |
-| **[The `.relics` bundle format](./bundle-format.md)** | the container, the layout, the manifest, and every hash recipe |
+| **[Getting started](./getting-started.md)** | fresh clone → exported bundle, step by step, with the failure modes |
+| **[Create with an agent](./create-with-an-agent.md)** | building a project with an AI agent, and what it may not decide for you |
 | **[The CLI](./cli.md)** | every command, every flag, and what each check means |
+| **[The `.relics` bundle format](./bundle-format.md)** | the container, the layout, the manifest, and every hash recipe |
 | **[Treating every bundle as hostile](./bundle-security.md)** | the threat model, the seven defence layers, and what is *not* defended |
 | **[Importing a bundle](./importing.md)** | the contract for the web importer, and the parity/hostile fixtures |
-| **[Live deployments and quote assets](../launchpad/10-deployments-and-quote-assets.md)** | RC5 addresses, launch state, and the complete Robinhood stock-token reference |
+| **[Live deployments and quote assets](../launchpad/10-deployments-and-quote-assets.md)** | per-chain launch state and the quote-token reference |
 
 ## What lives where
 
@@ -59,7 +69,9 @@ npm run kit:templates   # every starter template scaffolds, validates and export
 npm run kit:fixtures    # regenerate the fixtures (deterministic; a diff means drift)
 ```
 
-## The two rules worth knowing before you start
+All three run in CI on every push — see [`creator-kit.yml`](../../.github/workflows/creator-kit.yml).
+
+## The three rules worth knowing before you start
 
 **A bundle configures art, never contracts.** It may carry art code, traits, metadata,
 declarative sensor-to-art mappings, earnings, supply and artwork backing. It cannot carry hook
@@ -71,3 +83,10 @@ process.
 **A render is a pure function of its inputs.** No clock, no network, no `Math.random`. The same
 seed draws the same picture on your laptop, in the importer, and in ten years. Validation renders
 each seed twice and refuses a generator whose output moves.
+
+**Approved is not the same as launchable.** Both art runtimes — `SOLIDITY_SVG` and `JAVASCRIPT` —
+are approved: the format accepts them, and every shipped template validates, previews and exports.
+Only `SOLIDITY_SVG` is currently bound and rendered by a deployed collection, so the JavaScript
+templates are marked `preview only` in `relics templates`, `relics init` and `relics validate`
+rather than quietly presented as launchable. A template on a gated runtime is marked, never deleted
+and never oversold.
