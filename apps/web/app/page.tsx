@@ -19,7 +19,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <span className="badge">Fork-and-launch template · educational</span>
+      <span className="badge">Fork-and-launch template · educational · not production software</span>
       <h1>{c.nftName}</h1>
       <p style={{ fontSize: 18 }}>
         A fully on-chain, fully customizable art collection linked to an ERC-20, with Uniswap v4
@@ -82,7 +82,7 @@ export default function HomePage() {
       <div className="panel">
         <strong>Please read before you do anything real</strong>
         <ul className="tight">
-          <li>Educational template. NO warranty. Read the source before you deploy it.</li>
+          <li>Educational template. NOT production software. NO warranty.</li>
           <li>
             Works with Uniswap v4, but is NOT affiliated with or endorsed by Uniswap, OpenZeppelin,
             OpenSea, or any auditor.
