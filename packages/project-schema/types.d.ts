@@ -22,6 +22,43 @@ export type LaunchAccess = "PREPARED" | "PUBLIC";
 export type ArtRuntime = "SOLIDITY_SVG" | "JAVASCRIPT";
 export type StartingPreset = "LOW" | "MID" | "HIGH";
 export type BackingModel = "FULL_PARITY" | "PARTIAL";
+/**
+ * A reviewed protocol template id. The FORMAT does not enumerate them: an instance is one
+ * launchpad operator's reviewed product integration, registered into the schema's registry at
+ * start-up by that operator. This package registers none, so a build that has not registered one
+ * refuses every `protocolTemplate` block by name.
+ */
+export type ReviewedProtocolTemplateId = string;
+
+/**
+ * The canonical economics artifact a reviewed template binds. Its INTERNAL shape belongs to the
+ * operator who authored and reviewed it — the format's only requirements are that it is a JSON
+ * object, that it names its own template, and that `economicsSha256` commits to its canonical
+ * serialization.
+ */
+export interface ReviewedCanonicalEconomics {
+  launchpadTemplateId: ReviewedProtocolTemplateId;
+  [key: string]: unknown;
+}
+
+export interface ReviewedProtocolTemplateBinding {
+  id: ReviewedProtocolTemplateId;
+  canonicalEconomics: ReviewedCanonicalEconomics;
+  /** sha256 of `canonicalJson(canonicalEconomics)`, lowercase hex, no prefix. */
+  economicsSha256: string;
+}
+
+/** What an operator registers. `supply` and `verify` are the optional INSTANCE rules. */
+export interface ReviewedProtocolTemplateSpec {
+  id: ReviewedProtocolTemplateId;
+  /** Pins the reviewed artifact. A binding carrying a different digest is refused. */
+  economicsSha256?: string;
+  /** Pins the supply the template launches with, as whole-number decimal strings. */
+  supply?: Readonly<{ totalSupplyWhole: string; artworkSupply: string; genesisTokensPerPossibleNftWhole: string }>;
+  /** Extra instance checks over the economics document. */
+  verify?: (canonicalEconomics: ReviewedCanonicalEconomics) => Issue[];
+}
+
 export type LaunchMode = "INSTANT_V4" | "FIXED_PRICE_SALE_TO_V4" | "BONDING_CURVE_SALE_TO_V4";
 export type EarningsMode = "SOLO" | "SPLIT";
 export type MarketSensor =
@@ -96,8 +133,6 @@ export interface ProjectManifest {
   supply: {
     totalSupplyWhole: string;
     artworkSupply: string;
-    backingModel: BackingModel;
-    tokensPerArtwork?: string;
     /**
      * Chosen at launch, IMMUTABLE afterwards. Omit for NONE — which is what every bundle written
      * before schema 3.2.0 meant, because no project token could burn at all.
@@ -106,7 +141,11 @@ export interface ProjectManifest {
      * its totalSupply stays fixed at 10,000.
      */
     burnPolicy?: BurnPolicy;
-  };
+  } & (
+    | { backingModel: BackingModel; tokensPerArtwork?: string; genesisTokensPerPossibleNftWhole?: never }
+    | { genesisTokensPerPossibleNftWhole: string; backingModel?: never; tokensPerArtwork?: never }
+  );
+  protocolTemplate?: ReviewedProtocolTemplateBinding;
   art: {
     runtime: ArtRuntime;
     templateId: string | null;
@@ -281,6 +320,7 @@ export interface StudioDraftProjection {
     creatorKitVersion: string;
     runtimeVersion: string;
     protocolReleaseCompatibility: string;
+    protocolTemplate?: ReviewedProtocolTemplateBinding;
     bundleHash: string | null;
     projectConfigHash: string | null;
     contentHash: string | null;
@@ -333,6 +373,7 @@ export interface PlatformContracts {
   launchpadFactory: string;
   artStreamableFeesLocker: string;
   projectRegistry: string;
+  projectMetadataRegistry: string;
   projectRights: string;
   scriptStorage: string;
   templateRegistry: string;
@@ -342,10 +383,13 @@ export interface PlatformContracts {
   quoteAssetRegistry?: string;
   multiQuoteEconomicKernel?: string;
   immutableLiquidityKernel?: string;
+  robinhoodV4SwapRouter?: string;
 }
 export interface PlatformDeployment {
   chainId: DeployedChainId;
   label: string;
+  /** Which platform generation these addresses belong to. Never inferred. */
+  generation: PlatformGenerationId;
   launchAccess: LaunchAccess;
   explorer: string;
   contracts: Readonly<PlatformContracts>;
@@ -357,27 +401,71 @@ export interface RobinhoodStockToken {
   decimals: 18;
   isin: string | null;
 }
+export interface Rc5CanaryMetadataProjectProof {
+  chainId: DeployedChainId;
+  label: string;
+  symbol: "TEST";
+  canary: "TEST-INSTANT";
+  projectId: 1;
+  projectToken: string;
+  projectCollection: string;
+  artHook: string;
+  poolId: string;
+  verifiedTokenId: 1;
+}
+export interface Rc5CanaryMetadataProof {
+  repairedAt: string;
+  media: Readonly<{ imageUri: string; gatewayUrl: string }>;
+  expectation: Readonly<{ contractURI: string; tokenURI: string }>;
+  projects: Readonly<Record<DeployedChainId, Readonly<Rc5CanaryMetadataProjectProof>>>;
+}
 
 export const QUOTE_ASSET_REQUEST_MODES: readonly QuoteAssetRequestMode[];
 export const QUOTE_ASSET_KINDS: readonly QuoteAssetKind[];
 export const CREATOR_LP_FEE_ASSET_MODES: readonly CreatorLpFeeAssetMode[];
 
 // ---- live deployment and quote-token reference ------------------------------------------------
-export const PLATFORM_RELEASE: Readonly<{
+export type PlatformGenerationId = "RC5" | "RC6";
+export type GenerationStatus = "DEPLOYED" | "NOT_DEPLOYED";
+
+export interface PlatformGeneration {
+  id: PlatformGenerationId;
   tag: string;
-  freezeCommit: string;
-  solidityTree: string;
-  deployedAt: string;
+  status: GenerationStatus;
+  freezeCommit: string | null;
+  solidityTree: string | null;
+  deployedAt: string | null;
   externalAudit: string;
-}>;
+  /** False when the generation's addresses are derived but nothing exists at them. */
+  publishesAddresses: boolean;
+  summary: string;
+}
+
+export const PLATFORM_GENERATION_IDS: readonly PlatformGenerationId[];
+export const PLATFORM_GENERATIONS: Readonly<Record<PlatformGenerationId, Readonly<PlatformGeneration>>>;
+/** The RC5 generation record. Same object as `PLATFORM_GENERATIONS.RC5`. */
+export const PLATFORM_RELEASE: Readonly<PlatformGeneration>;
+export const RC5_DEPLOYMENTS: Readonly<Record<SupportedChainId, Readonly<PlatformDeployment> | null>>;
+/** GENERATED by scripts/sync-deployments.mjs. Null everywhere until a package is broadcast. */
+export const RC6_DEPLOYMENTS: Readonly<Record<SupportedChainId, Readonly<PlatformDeployment> | null>>;
+export const DEPLOYMENTS_BY_GENERATION: Readonly<Record<PlatformGenerationId, Readonly<Record<SupportedChainId, Readonly<PlatformDeployment> | null>>>>;
+/** The newest generation that is actually DEPLOYED — never merely the newest that exists. */
+export const CURRENT_DEPLOYED_GENERATION: PlatformGenerationId | null;
+/** @deprecated Prefer `deploymentsFor(generation)`. The current DEPLOYED generation's table. */
 export const PLATFORM_DEPLOYMENTS: Readonly<Record<SupportedChainId, Readonly<PlatformDeployment> | null>>;
-/** Chain ids with live RC5 platform contracts. Does NOT imply public launches are open. */
+/** Every chain id any generation names, including ones nothing is deployed on. */
+export const KNOWN_DEPLOYMENT_CHAIN_IDS: readonly number[];
+export const RC5_CANARY_METADATA_PROOF: Readonly<Rc5CanaryMetadataProof>;
+/** Chain ids with live platform contracts in the current DEPLOYED generation. */
 export const DEPLOYED_CHAIN_IDS: readonly DeployedChainId[];
-export function platformDeployment(chainId: number): Readonly<PlatformDeployment> | null;
-export function isPlatformDeployed(chainId: number): boolean;
-export function acceptsPublicLaunches(chainId: number): boolean;
-export function launchAvailability(chainId: number): string;
-export function explorerAddressUrl(chainId: number, address: string): string;
+export function deploymentsFor(generation: string): Readonly<Record<SupportedChainId, Readonly<PlatformDeployment> | null>>;
+export function platformGeneration(generation: string): Readonly<PlatformGeneration>;
+export function deployedChainIds(generation?: string): number[];
+export function platformDeployment(chainId: number, generation?: string): Readonly<PlatformDeployment> | null;
+export function isPlatformDeployed(chainId: number, generation?: string): boolean;
+export function acceptsPublicLaunches(chainId: number, generation?: string): boolean;
+export function launchAvailability(chainId: number, generation?: string): string;
+export function explorerAddressUrl(chainId: number, address: string, generation?: string): string;
 export const ROBINHOOD_STOCK_TOKENS_VERSION: string;
 export const ROBINHOOD_STOCK_TOKENS_SOURCE: string;
 export const ROBINHOOD_STOCK_TOKENS_CHAIN_ID: 4663;
@@ -436,6 +524,18 @@ export const ART_RUNTIME_TO_MODE: Readonly<Record<ArtRuntime, 0 | 1>>;
 export const STARTING_PRESETS: readonly StartingPreset[];
 export const STARTING_PRESET_TO_INDEX: Readonly<Record<StartingPreset, 0 | 1 | 2>>;
 export const BACKING_MODELS: readonly BackingModel[];
+export const PROTOCOL_TEMPLATE_KEYS: readonly ["id", "canonicalEconomics", "economicsSha256"];
+/** LIVE binding: reassigned by `registerReviewedProtocolTemplate`. Empty in this package. */
+export const REVIEWED_PROTOCOL_TEMPLATE_IDS: readonly ReviewedProtocolTemplateId[];
+export function reviewedProtocolTemplateIds(): readonly ReviewedProtocolTemplateId[];
+export function reviewedProtocolTemplate(id: string): Readonly<ReviewedProtocolTemplateSpec> | null;
+export function reviewedTemplateSupplyPin(
+  id: string,
+): Readonly<{ totalSupplyWhole: string; artworkSupply: string; genesisTokensPerPossibleNftWhole: string }> | null;
+export function registerReviewedProtocolTemplate(spec: ReviewedProtocolTemplateSpec): Readonly<ReviewedProtocolTemplateSpec>;
+export function clearReviewedProtocolTemplates(): void;
+export function bindCanonicalEconomics(id: ReviewedProtocolTemplateId, canonicalEconomics: ReviewedCanonicalEconomics): ReviewedProtocolTemplateBinding;
+export function validateReviewedProtocolTemplate(binding: unknown): Issue[];
 /** Mirrors the launchpad `ProjectToken.BurnPolicy` enum, index for index. */
 export type BurnPolicy = "NONE" | "HOLDER_BURN" | "HOLDER_AND_ALLOWANCE_BURN";
 export const BURN_POLICIES: readonly BurnPolicy[];

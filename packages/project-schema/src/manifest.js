@@ -36,6 +36,8 @@ import { isSha256Hex } from "./hashes.js";
 import { ART_BINDING_KEYS, ART_CONFIG_SOURCES, ART_CONFIG_FORMATS, ART_RUNTIME_TO_CONFIG_FORMAT, CHAIN_RESOLVED_BINDING_FIELDS } from "./binding.js";
 import { isArtConfigV1, validateArtConfigV1, hashArtConfigV1 } from "./art-config-v1.js";
 import { isKeccak256Hex } from "./keccak256.js";
+import { reviewedTemplateSupplyPin, validateReviewedProtocolTemplate } from "./protocol-templates.js";
+import { isLaunchModeAvailable, LAUNCHABLE_MODES, LAUNCH_MODE_UNAVAILABLE_REASON } from "./launch-protection.js";
 
 /** Top-level manifest keys. Anything else is refused. */
 export const MANIFEST_KEYS = Object.freeze([
@@ -47,6 +49,7 @@ export const MANIFEST_KEYS = Object.freeze([
   "generatedBy",
   "project",
   "supply",
+  "protocolTemplate",
   "art",
   "market",
   "earnings",
@@ -183,14 +186,34 @@ export function validateManifest(manifest) {
     }
   }
 
-  // ---- supply / artwork backing -----------------------------------------------------------
+  // ---- reviewed protocol template ---------------------------------------------------------
+  //
+  // The branch below is on the PRESENCE of the block, not on any particular template id. That is
+  // deliberate: `studio-draft.js` projects `genesisTokensPerPossibleNftWhole` for any bundle whose
+  // manifest carries a protocolTemplate, so a validator that keyed off one id would accept a
+  // second template under the backingModel key space and then project a field the manifest never
+  // validated. One condition, both places.
+  const protocolTemplate = manifest.protocolTemplate;
+  const hasReviewedTemplate = isObject(protocolTemplate);
+  if (protocolTemplate !== undefined) {
+    issues.push(...validateReviewedProtocolTemplate(protocolTemplate));
+  }
+
+  // ---- supply relationship ---------------------------------------------------------------
   const supply = manifest.supply;
   let totalSupply = null;
   let artworkSupply = null;
   if (!isObject(supply)) {
     issues.push(error("SUPPLY_SHAPE", `${at}#supply`, "supply must be an object"));
   } else {
-    onlyKeys(issues, supply, `${at}#supply`, ["totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork", "burnPolicy"]);
+    onlyKeys(
+      issues,
+      supply,
+      `${at}#supply`,
+      hasReviewedTemplate
+        ? ["totalSupplyWhole", "artworkSupply", "genesisTokensPerPossibleNftWhole", "burnPolicy"]
+        : ["totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork", "burnPolicy"],
+    );
     // BURN POLICY. Optional and defaulted to NONE, so every schema 3.1.0 bundle keeps its exact
     // present meaning: a file that says nothing about burning launches a token that cannot burn.
     // An absent field is therefore not "unspecified", it is NONE, and that is the safe direction.
@@ -211,10 +234,43 @@ export function validateManifest(manifest) {
     if (artworkSupply !== null && artworkSupply < 1n) {
       issues.push(error("SUPPLY_ARTWORK_RANGE", `${at}#supply.artworkSupply`, "artworkSupply must be at least 1"));
     }
-    if (!BACKING_MODELS.includes(supply.backingModel)) {
-      issues.push(error("SUPPLY_BACKING_MODEL", `${at}#supply.backingModel`, `backingModel must be one of ${BACKING_MODELS.join(", ")}`));
+    if (hasReviewedTemplate) {
+      const genesisRatio = decimal(
+        issues,
+        supply.genesisTokensPerPossibleNftWhole,
+        `${at}#supply.genesisTokensPerPossibleNftWhole`,
+        "SUPPLY_GENESIS_RATIO",
+      );
+      // STRUCTURAL, and owned by the format: the declared ratio must be the ratio the declared
+      // supplies produce. True of every reviewed template that has ever existed or will.
+      if (totalSupply !== null && artworkSupply !== null && genesisRatio !== null && totalSupply / artworkSupply !== genesisRatio) {
+        issues.push(error("SUPPLY_GENESIS_RATIO", `${at}#supply.genesisTokensPerPossibleNftWhole`, "genesis ratio must equal totalSupplyWhole / artworkSupply"));
+      }
+      // INSTANCE, and owned by whoever registered the template. No product's numbers are written
+      // into this file; a registered spec that pins its supply gets it enforced, one that does not
+      // keeps only the structural rule above.
+      const pin = typeof protocolTemplate?.id === "string" ? reviewedTemplateSupplyPin(protocolTemplate.id) : null;
+      if (pin) {
+        const mismatch =
+          String(supply.totalSupplyWhole) !== pin.totalSupplyWhole ||
+          String(supply.artworkSupply) !== pin.artworkSupply ||
+          String(supply.genesisTokensPerPossibleNftWhole) !== pin.genesisTokensPerPossibleNftWhole;
+        if (mismatch) {
+          issues.push(
+            error(
+              "SUPPLY_REVIEWED_TEMPLATE_MISMATCH",
+              `${at}#supply`,
+              `supply must match the canonical economics reviewed for ${protocolTemplate.id} — the supply of a reviewed template is not editable`,
+            ),
+          );
+        }
+      }
+    } else {
+      if (!BACKING_MODELS.includes(supply.backingModel)) {
+        issues.push(error("SUPPLY_BACKING_MODEL", `${at}#supply.backingModel`, `backingModel must be one of ${BACKING_MODELS.join(", ")}`));
+      }
     }
-    if (totalSupply !== null && artworkSupply !== null) {
+    if (!hasReviewedTemplate && totalSupply !== null && artworkSupply !== null) {
       if (artworkSupply > totalSupply) {
         issues.push(
           error(
@@ -302,8 +358,30 @@ export function validateManifest(manifest) {
     if (!STARTING_PRESETS.includes(market.startingPreset)) {
       issues.push(error("MARKET_PRESET", `${at}#market.startingPreset`, `startingPreset must be one of ${STARTING_PRESETS.join(", ")}`));
     }
+    // MEMBERSHIP IS NOT AVAILABILITY, and treating them as the same thing let a creator build,
+    // validate and export a bundle electing a launch method the deployed contract refuses.
+    //
+    // `LAUNCH_MODES` is the wire vocabulary. A member is never removed from it: the modes are an
+    // on-chain enum and deleting one renumbers the members after it, invalidating every bundle in
+    // the corpus. So `FIXED_PRICE_SALE_TO_V4` stays a KNOWN value and stops being a SELECTABLE one,
+    // and those are two different questions asked in two different lines below.
+    //
+    // The refusal is here, at validate and export, rather than only in prose, because the
+    // alternative is a creator discovering it at the launch gate with a finished bundle in hand.
+    // The reason travels with the refusal for the same reason: "not allowed" without "because"
+    // reads as a bug in the tool.
     if (!LAUNCH_MODES.includes(market.launchMode)) {
       issues.push(error("MARKET_LAUNCH_MODE", `${at}#market.launchMode`, `launchMode must be one of ${LAUNCH_MODES.join(", ")}`));
+    } else if (!isLaunchModeAvailable(market.launchMode)) {
+      issues.push(
+        error(
+          "MARKET_LAUNCH_MODE",
+          `${at}#market.launchMode`,
+          `launchMode ${market.launchMode} is not offered and cannot be launched. ` +
+            `${LAUNCH_MODE_UNAVAILABLE_REASON[market.launchMode] ?? ""} ` +
+            `Select one of: ${LAUNCHABLE_MODES.join(", ")}.`,
+        ),
+      );
     }
     if (!Number.isInteger(market.mappingCount) || market.mappingCount < 0 || market.mappingCount > LIMITS.maxMarketMappings) {
       issues.push(error("MARKET_MAPPING_COUNT", `${at}#market.mappingCount`, `mappingCount must be an integer between 0 and ${LIMITS.maxMarketMappings}`));
@@ -366,6 +444,10 @@ export function validateManifest(manifest) {
       }
     }
 
+    // A sale-shaped mode still gets its sale block checked even when the mode itself is refused
+    // above, deliberately: a creator fixing one error at a time should see every problem with the
+    // bundle at once rather than a new one after each edit. The refusal above is what stops the
+    // export; this only stops the message being incomplete.
     const isSale = market.launchMode === "FIXED_PRICE_SALE_TO_V4" || market.launchMode === "BONDING_CURVE_SALE_TO_V4";
     if (!isSale && market.sale !== undefined) {
       issues.push(error("MARKET_SALE_UNEXPECTED", `${at}#market.sale`, "market.sale is only allowed for a sale launch mode"));
@@ -602,8 +684,8 @@ function validateArtBindingBlock(manifest, at) {
     }
   }
 
-  if (binding.schemaVersion !== SCHEMA_VERSION) {
-    issues.push(error("ART_BINDING_SCHEMA_VERSION", `${where}.schemaVersion`, `artBinding.schemaVersion must be "${SCHEMA_VERSION}"`));
+  if (binding.schemaVersion !== manifest.schemaVersion) {
+    issues.push(error("ART_BINDING_SCHEMA_VERSION", `${where}.schemaVersion`, "artBinding.schemaVersion must equal the bundle schemaVersion"));
   }
   if (binding.runtime !== manifest.art?.runtime) {
     issues.push(error("ART_BINDING_RUNTIME", `${where}.runtime`, "artBinding.runtime must equal art.runtime — one project cannot declare two runtimes"));

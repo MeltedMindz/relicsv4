@@ -56,18 +56,28 @@ export const CHAIN_LABELS = Object.freeze({
  *
  * BNB Smart Chain (56) omits ENFORCED because OpenSea carries no NFT listings or offers on that
  * chain at all — it removed them in 2023, BNB is absent from OpenSea's current compatible-chains
- * article, and the OpenSea API `chain` enum has no BSC value. Robinhood Chain (4663) omits it for
- * a different reason: OpenSea DOES carry NFT orders there, but no per-chain validator codehash has
- * been vetted and pinned, and adding one is a deliberate owner decision, not an inference.
+ * article, and the OpenSea API `chain` enum has no BSC value. That is a marketplace fact and no
+ * amount of contract work changes it.
  *
- * Live validator BYTECODE exists at the canonical addresses on both 56 and 4663 and means nothing
- * here: Limit Break's v5 deployment model is permissionless CREATE2 to identical addresses on any
- * EVM chain, so its presence is a property of CREATE2 rather than a statement about support.
+ * Robinhood Chain (4663) LISTS ENFORCED as of 2026-08-18, by owner decision. OpenSea has always
+ * carried NFT orders there; what was missing was the vetting half, and it is now done: the chain's
+ * per-chain validator codehash is pinned in `CreatorEarningsPolicy` under POLICY VERSION 3 ONLY,
+ * for OpenSea's own `StrictAuthorizedTransferSecurityRegistry` — a DIFFERENT contract family from
+ * the Limit Break validators versions 1 and 2 name, which is why it got its own version rather
+ * than reusing one. Two consequences a caller must not lose: versions 1 and 2 are unresolvable on
+ * 4663, and the default policy version is 1, so an ENFORCED launch on Robinhood must NAME version
+ * 3 or be refused. This list answers "which modes", never "which policy version" — read the chain profile
+ * in `config/chains/4663.json` for that.
+ *
+ * Live validator BYTECODE exists at the canonical addresses on 56 as well and means nothing here,
+ * and it is not what admitted 4663 either: Limit Break's v5 deployment model is permissionless
+ * CREATE2 to identical addresses on any EVM chain, so its presence is a property of CREATE2 rather
+ * than a statement about support.
  */
 export const CHAIN_PROFILES = Object.freeze({
   1: Object.freeze({ label: "Ethereum", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
   8453: Object.freeze({ label: "Base", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
-  4663: Object.freeze({ label: "Robinhood Chain", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL"]) }),
+  4663: Object.freeze({ label: "Robinhood Chain", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
   // BNB is schema-compatible but deferred in RC5. If it is deployed later, WBNB remains the native
   // wrapped quote in the chain profile; widening beyond that should be a deliberate registry edit.
   56: Object.freeze({ label: "BNB Smart Chain", nativeSymbol: "BNB", wrappedNativeSymbol: "WBNB", canonicalQuoteSymbols: Object.freeze(["WBNB"]), buybackRouteState: "ROUTE_UNPROVEN", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL"]) }),
@@ -305,8 +315,12 @@ export const ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE = Object.freeze({
 export const ANTI_SNIPE_STRATEGY_COPY = Object.freeze({
   INSTANT_V4:
     "The pool opens and trading begins immediately. Nothing constrains the first buy: whoever transacts first, at whatever size the pool allows, gets that fill.",
+  // NOT SELECTABLE. Kept in the vocabulary because the strategy names are a published list and the
+  // launch mode it maps to is a wire value that cannot be renumbered — but the copy has to say so,
+  // or a studio renders a card for a method the contract refuses. The clause that used to read as
+  // a caveat is in fact the disqualifying reason, and it now says which of the two it is.
   FIXED_PRICE_FAIR_LAUNCH:
-    "Everyone buys at one published price until the sale closes, so being early does not get a better price. It does not limit how much one buyer can take.",
+    "NOT OFFERED. Everyone would buy at one published price until the sale closed, so being early would not get a better price — but nothing limits how much one buyer can take, so a single address can acquire the entire allocation in one transaction at the moment the sale opens. Its launch mode, FIXED_PRICE_SALE_TO_V4, is refused at validate and export here and refused by the deployed sale contract for every caller.",
   BONDING_CURVE_TO_V4:
     "Price rises along a published curve as the sale fills, so buying more costs more. Being first is still an advantage — it is a cheaper price, not an excluded one.",
   PROGRESSIVE_LIQUIDITY:
@@ -320,8 +334,23 @@ export const ANTI_SNIPE_STRATEGY_COPY = Object.freeze({
 export const ANTI_SNIPE_NOT_SYBIL_PROOF_COPY =
   "These controls are not Sybil-resistant. They limit what one ADDRESS can do, and an attacker can split across as many addresses as they like for the cost of gas. Treat them as shaping the opening curve, never as proof that buyers are distinct people.";
 
-/** Launch method. All three end in one canonical Uniswap v4 pool pairing the project token with
- *  the market's QUOTE ASSET (see QUOTE_ASSET_REQUEST_MODES below). */
+/**
+ * Launch method — THE WIRE VOCABULARY, not the menu.
+ *
+ * Every member here is a value the format knows how to read. That is a narrower claim than it
+ * looks: `FIXED_PRICE_SALE_TO_V4` is a known value that CANNOT BE LAUNCHED. The deployed sale
+ * contract refuses it by name for every caller, and `manifest.js` refuses a bundle that elects it
+ * at validate and export time, so a creator learns at the first command rather than at the last.
+ *
+ * IT STAYS IN THIS LIST ANYWAY. The modes are an on-chain enum and removing a member renumbers
+ * every member after it, which would silently change what an existing bundle means. Availability
+ * is therefore declared separately, in `launch-protection.js -> LAUNCH_MODE_AVAILABILITY`, and
+ * `LAUNCHABLE_MODES` is derived from it — so a surface that offers a choice reads the derived list
+ * and cannot offer a withdrawn one by forgetting to filter.
+ *
+ * The two launchable methods both end in one canonical Uniswap v4 pool pairing the project token
+ * with the market's QUOTE ASSET (see QUOTE_ASSET_REQUEST_MODES below).
+ */
 export const LAUNCH_MODES = Object.freeze(["INSTANT_V4", "FIXED_PRICE_SALE_TO_V4", "BONDING_CURVE_SALE_TO_V4"]);
 
 // ---------------------------------------------------------------------------------------------

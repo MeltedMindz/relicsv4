@@ -66,7 +66,9 @@ export function toStudioDraft(validated, byPath, options = {}) {
       twitterHandle: manifest.project.twitterHandle ?? "",
       totalSupplyWhole: manifest.supply.totalSupplyWhole,
       artworkBackingUnits: manifest.supply.artworkSupply,
-      backingModel: manifest.supply.backingModel,
+      ...(manifest.protocolTemplate
+        ? { genesisTokensPerPossibleNftWhole: manifest.supply.genesisTokensPerPossibleNftWhole }
+        : { backingModel: manifest.supply.backingModel }),
       // BURN POLICY. An absent field is NONE, not "unspecified" -- the same meaning every bundle
       // written before the field existed already had. Defaulting here rather than in the studio
       // keeps one answer to "what does silence mean", and it is the non-burning one.
@@ -110,6 +112,7 @@ export function toStudioDraft(validated, byPath, options = {}) {
       creatorKitVersion: manifest.creatorKitVersion,
       runtimeVersion: manifest.runtimeVersion,
       protocolReleaseCompatibility: manifest.protocolReleaseCompatibility,
+      ...(manifest.protocolTemplate ? { protocolTemplate: { ...manifest.protocolTemplate } } : {}),
       bundleHash: validated.hashes?.bundleHash ?? null,
       projectConfigHash: validated.hashes?.projectConfigHash ?? null,
       contentHash: validated.hashes?.contentHash ?? null,

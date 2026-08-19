@@ -130,10 +130,33 @@ import {
   ANTI_SNIPE_STRATEGY_COPY,
   ANTI_SNIPE_NOT_SYBIL_PROOF_COPY,
   LAUNCH_MODES,
+  CURVE_PRESETS,
+  LAUNCHABLE_MODES,
+  LAUNCH_MODE_UNAVAILABLE_REASON,
+  isLaunchModeAvailable,
   REFUSED_MANIFEST_KEYS,
   QUOTE_ASSET_KINDS,
   DEPRECATED_QUOTE_ASSET_KIND_ALIASES,
   canonicalQuoteAssetKind,
+  bindCanonicalEconomics,
+  validateReviewedProtocolTemplate,
+  registerReviewedProtocolTemplate,
+  clearReviewedProtocolTemplates,
+  reviewedProtocolTemplateIds,
+  reviewedProtocolTemplate,
+  reviewedTemplateSupplyPin,
+  REVIEWED_PROTOCOL_TEMPLATE_IDS,
+  PROTOCOL_TEMPLATE_KEYS,
+  PLATFORM_GENERATION_IDS,
+  PLATFORM_GENERATIONS,
+  DEPLOYMENTS_BY_GENERATION,
+  CURRENT_DEPLOYED_GENERATION,
+  KNOWN_DEPLOYMENT_CHAIN_IDS,
+  deploymentsFor,
+  deployedChainIds,
+  platformGeneration,
+  platformDeployment,
+  launchAvailability,
 } from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
@@ -167,6 +190,405 @@ function assertThrows(fn, contains, message) {
   }
   assert(threw !== null, `${message}: nothing was thrown`);
   if (contains) assert(threw.toLowerCase().includes(contains.toLowerCase()), `${message}: expected "${contains}", got "${threw}"`);
+}
+
+// ---------------------------------------------------- reviewed protocol templates (MECHANISM)
+//
+// The schema ships the mechanism and NO instance. A concrete reviewed template is one launchpad
+// operator's reviewed commercial configuration — publishing it here would publish their launch
+// strategy and would make one product's numbers look like part of the format. So everything below
+// registers a NEUTRAL, invented template, exercises the mechanism against it, and clears the
+// registry again. Nothing in these tests is any real project's economics.
+
+const EXAMPLE_TEMPLATE_ID = "EXAMPLE_REVIEWED_TEMPLATE_V1";
+
+/** An invented canonical economics document. Illustrative only. */
+function exampleEconomics() {
+  return {
+    schemaVersion: 1,
+    launchpadTemplateId: EXAMPLE_TEMPLATE_ID,
+    erc20GenesisSupplyWhole: 1000000,
+    erc20Decimals: 18,
+    erc721MaxSupply: 1000,
+    genesisTokensPerPossibleNftWhole: 1000,
+    rewardDistributionMode: "IMMEDIATE_CLAIMABLE",
+  };
+}
+
+const EXAMPLE_ECONOMICS_SHA256 = sha256Utf8(canonicalJson(exampleEconomics()));
+
+const EXAMPLE_SPEC = Object.freeze({
+  id: EXAMPLE_TEMPLATE_ID,
+  economicsSha256: EXAMPLE_ECONOMICS_SHA256,
+  supply: Object.freeze({ totalSupplyWhole: "1000000", artworkSupply: "1000", genesisTokensPerPossibleNftWhole: "1000" }),
+});
+
+/** Run `fn` with exactly `EXAMPLE_SPEC` registered, and leave the registry empty afterwards. */
+function withExampleTemplate(fn, spec = EXAMPLE_SPEC) {
+  clearReviewedProtocolTemplates();
+  registerReviewedProtocolTemplate({ ...spec });
+  try {
+    return fn();
+  } finally {
+    clearReviewedProtocolTemplates();
+  }
+}
+
+test("the published schema registers NO reviewed protocol template", () => {
+  clearReviewedProtocolTemplates();
+  assert(REVIEWED_PROTOCOL_TEMPLATE_IDS.length === 0, "the format ships a concrete product template");
+  assert(reviewedProtocolTemplateIds().length === 0, "the snapshot accessor disagrees with the live binding");
+  assert(reviewedProtocolTemplate(EXAMPLE_TEMPLATE_ID) === null, "an unregistered id resolved to a spec");
+  assert(reviewedTemplateSupplyPin(EXAMPLE_TEMPLATE_ID) === null, "an unregistered id pinned a supply");
+});
+
+test("with nothing registered, ANY protocolTemplate block is refused by name", () => {
+  clearReviewedProtocolTemplates();
+  const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics());
+  const issues = validateReviewedProtocolTemplate(binding);
+  assert(issues.length === 1, `expected one refusal, got ${issues.map((i) => i.code).join(", ")}`);
+  assert(issues[0].code === "PROTOCOL_TEMPLATE_ID", "the refusal must be about the id, not the economics");
+  assert(/implements no reviewed protocol template/.test(issues[0].message), "the refusal must say WHY");
+  assert(/without the protocolTemplate block/.test(issues[0].message), "the refusal must name the fix");
+});
+
+test("registering is the ONLY way a template becomes honourable, and the registry is data", () => {
+  clearReviewedProtocolTemplates();
+  registerReviewedProtocolTemplate({ id: EXAMPLE_TEMPLATE_ID, economicsSha256: EXAMPLE_ECONOMICS_SHA256 });
+  assert(REVIEWED_PROTOCOL_TEMPLATE_IDS.includes(EXAMPLE_TEMPLATE_ID), "the live binding did not update after registration");
+  assert(reviewedProtocolTemplate(EXAMPLE_TEMPLATE_ID)?.economicsSha256 === EXAMPLE_ECONOMICS_SHA256, "the spec was not stored");
+
+  // Idempotent for an identical spec; a CONFLICTING re-registration throws rather than silently
+  // replacing a reviewed artifact.
+  registerReviewedProtocolTemplate({ id: EXAMPLE_TEMPLATE_ID, economicsSha256: EXAMPLE_ECONOMICS_SHA256 });
+  assertThrows(() => registerReviewedProtocolTemplate({ id: EXAMPLE_TEMPLATE_ID, economicsSha256: "b".repeat(64) }), "already registered", "a conflicting re-registration was accepted");
+
+  clearReviewedProtocolTemplates();
+  assert(REVIEWED_PROTOCOL_TEMPLATE_IDS.length === 0, "clearing left the registry populated");
+});
+
+test("registration refuses a malformed spec rather than storing it", () => {
+  clearReviewedProtocolTemplates();
+  assertThrows(() => registerReviewedProtocolTemplate(null), "must be an object", "null was registered");
+  assertThrows(() => registerReviewedProtocolTemplate({ id: "lower_case_v1" }), "id must match", "a non-id was registered");
+  assertThrows(() => registerReviewedProtocolTemplate({ id: EXAMPLE_TEMPLATE_ID, economicsSha256: "0x" + "a".repeat(64) }), "64 lowercase hex", "a prefixed digest was registered");
+  assertThrows(() => registerReviewedProtocolTemplate({ id: EXAMPLE_TEMPLATE_ID, supply: { totalSupplyWhole: "1e6", artworkSupply: "1", genesisTokensPerPossibleNftWhole: "1" } }), "whole-number decimal", "scientific notation was registered");
+  assertThrows(() => registerReviewedProtocolTemplate({ id: EXAMPLE_TEMPLATE_ID, nonsense: 1 }), "unknown spec key", "an unknown spec key was registered");
+  assert(REVIEWED_PROTOCOL_TEMPLATE_IDS.length === 0, "a refused registration still mutated the registry");
+});
+
+test("a registered template binds its artifact and its hash", () => {
+  withExampleTemplate(() => {
+    const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics());
+    assert(binding.id === EXAMPLE_TEMPLATE_ID, "wrong template id");
+    assert(/^[0-9a-f]{64}$/.test(binding.economicsSha256), "canonical economics hash is not sha256");
+    assert(validateReviewedProtocolTemplate(binding).length === 0, "a correctly bound reviewed template was rejected");
+  });
+});
+
+test("the block is a CLOSED key space", () => {
+  withExampleTemplate(() => {
+    assert(PROTOCOL_TEMPLATE_KEYS.join(",") === "id,canonicalEconomics,economicsSha256", "the key space drifted");
+    const binding = { ...bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics()), extra: 1 };
+    const codes = validateReviewedProtocolTemplate(binding).map((i) => i.code);
+    assert(codes.includes("PROTOCOL_TEMPLATE_UNKNOWN_KEY"), "an unknown key was ignored instead of refused");
+  });
+});
+
+test("a lying economicsSha256 is refused", () => {
+  withExampleTemplate(() => {
+    const binding = { id: EXAMPLE_TEMPLATE_ID, canonicalEconomics: exampleEconomics(), economicsSha256: "0".repeat(64) };
+    const codes = validateReviewedProtocolTemplate(binding).map((i) => i.code);
+    assert(codes.includes("PROTOCOL_TEMPLATE_ECONOMICS_HASH"), "a false economics hash was accepted");
+  });
+});
+
+test("SELF-CONSISTENT IS NOT REVIEWED: an edited artifact is refused against the pin", () => {
+  withExampleTemplate(() => {
+    // `bindCanonicalEconomics` makes any document internally consistent, which is exactly why
+    // consistency cannot be the test for "did anyone review these numbers".
+    const edited = { ...exampleEconomics(), erc721MaxSupply: 2000 };
+    const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, edited);
+    const codes = validateReviewedProtocolTemplate(binding).map((i) => i.code);
+    assert(!codes.includes("PROTOCOL_TEMPLATE_ECONOMICS_HASH"), "the binding was not self-consistent, so this proves nothing");
+    assert(codes.includes("PROTOCOL_TEMPLATE_ECONOMICS_PIN"), "an unreviewed artifact passed the pin");
+  });
+});
+
+test("the artifact must name its own template", () => {
+  withExampleTemplate(() => {
+    const economics = { ...exampleEconomics(), launchpadTemplateId: "SOMETHING_ELSE_V1" };
+    const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, economics);
+    const codes = validateReviewedProtocolTemplate(binding).map((i) => i.code);
+    assert(codes.includes("PROTOCOL_TEMPLATE_ID_MISMATCH"), "an artifact belonging to another template was accepted");
+  });
+});
+
+test("an operator's own instance rules run, and their failures are reported", () => {
+  const spec = {
+    id: EXAMPLE_TEMPLATE_ID,
+    verify: (economics) => (economics.rewardDistributionMode === "IMMEDIATE_CLAIMABLE" ? [] : [{ severity: "error", code: "OPERATOR_REWARD_TIMING", where: "x", message: "timed rewards are not reviewed" }]),
+  };
+  withExampleTemplate(() => {
+    const ok = validateReviewedProtocolTemplate(bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics()));
+    assert(ok.length === 0, `the operator rule rejected its own artifact: ${ok.map((i) => i.code).join(", ")}`);
+    const timed = { ...exampleEconomics(), rewardDistributionMode: "VESTED" };
+    const codes = validateReviewedProtocolTemplate(bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, timed)).map((i) => i.code);
+    assert(codes.includes("OPERATOR_REWARD_TIMING"), "the operator's own rule did not run");
+  }, spec);
+});
+
+// ------------------------------------------------------- launch modes: known is not selectable
+//
+// A creator could complete the entire documented path with `FIXED_PRICE_SALE_TO_V4` -- validate
+// exit 0, export exit 0, "READY TO UPLOAD" -- and hold a bundle electing a launch method the
+// deployed sale contract refuses by name for every caller. Nothing warned them. The refusal lives
+// in the format now, so it arrives at the first command instead of the last.
+
+test("a withdrawn launch mode is refused BY NAME, with the reason and the alternatives", () => {
+  const market = {
+    startingPreset: "MID",
+    launchMode: "FIXED_PRICE_SALE_TO_V4",
+    mappingCount: 0,
+    sale: { allocationBps: 2500, durationDays: 7, minRaiseEth: "0" },
+  };
+  const issues = validateManifest({ market }).filter((i) => i.code === "MARKET_LAUNCH_MODE");
+  assert(issues.length === 1, `a withdrawn launch mode was accepted (issues: ${issues.length})`);
+  const message = issues[0].message;
+  assert(message.includes("FIXED_PRICE_SALE_TO_V4"), "the refusal does not name the mode it refused");
+  assert(message.includes("per-buyer cap"), "the refusal does not say WHY, so it reads as a bug in the tool");
+  for (const mode of LAUNCHABLE_MODES) {
+    assert(message.includes(mode), `the refusal does not offer ${mode} as an alternative`);
+  }
+});
+
+test("the two offered launch modes are still accepted, so the refusal is not a blanket one", () => {
+  for (const mode of LAUNCHABLE_MODES) {
+    const market = { startingPreset: "MID", launchMode: mode, mappingCount: 0 };
+    if (mode === "BONDING_CURVE_SALE_TO_V4") {
+      market.sale = { allocationBps: 2500, durationDays: 7, minRaiseEth: "0", curvePresetId: CURVE_PRESETS[0] };
+    }
+    const codes = validateManifest({ market })
+      .filter((i) => i.code === "MARKET_LAUNCH_MODE")
+      .map((i) => i.message);
+    assert(codes.length === 0, `${mode} is offered and was refused: ${codes.join(" | ")}`);
+  }
+});
+
+test("availability is DERIVED from one declaration, so a surface cannot offer a withdrawn mode", () => {
+  // The wire vocabulary keeps every member -- removing one renumbers the on-chain enum and changes
+  // what existing bundles mean. So membership and availability must be separate questions, and
+  // LAUNCHABLE_MODES must be derived rather than typed a second time.
+  assert(LAUNCH_MODES.includes("FIXED_PRICE_SALE_TO_V4"), "the wire vocabulary dropped a member; existing bundles would be renumbered");
+  assert(!LAUNCHABLE_MODES.includes("FIXED_PRICE_SALE_TO_V4"), "a withdrawn mode is in the derived selectable list");
+  assert(!isLaunchModeAvailable("FIXED_PRICE_SALE_TO_V4"), "the availability predicate disagrees with the derived list");
+  for (const mode of LAUNCHABLE_MODES) assert(isLaunchModeAvailable(mode), `${mode} is derived launchable but the predicate says otherwise`);
+  assert(typeof LAUNCH_MODE_UNAVAILABLE_REASON.FIXED_PRICE_SALE_TO_V4 === "string", "a mode is unavailable with no stated reason");
+});
+
+test("manifest: the supply KEY SPACE follows the block's presence, not any particular id", () => {
+  withExampleTemplate(() => {
+    const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics());
+    const issues = validateManifest({
+      protocolTemplate: binding,
+      supply: { totalSupplyWhole: "1000000", artworkSupply: "1000", genesisTokensPerPossibleNftWhole: "1000", burnPolicy: "HOLDER_AND_ALLOWANCE_BURN" },
+    });
+    const relevant = issues.filter((i) => i.code.startsWith("PROTOCOL_TEMPLATE") || i.code.startsWith("SUPPLY"));
+    assert(relevant.length === 0, `reviewed supply shape failed: ${relevant.map((i) => i.code).join(", ")}`);
+
+    // `backingModel` belongs to the ordinary shape and is refused inside the template shape.
+    const wrongShape = validateManifest({
+      protocolTemplate: binding,
+      supply: { totalSupplyWhole: "1000000", artworkSupply: "1000", backingModel: "PARTIAL", tokensPerArtwork: "1000" },
+    }).map((i) => i.code);
+    assert(wrongShape.includes("MANIFEST_UNKNOWN_KEY") || wrongShape.some((c) => c.startsWith("SUPPLY")), `the ordinary supply shape was accepted under a reviewed template: ${wrongShape.join(", ")}`);
+  });
+});
+
+test("manifest: the genesis ratio must be ARITHMETIC, not merely declared", () => {
+  withExampleTemplate(() => {
+    const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics());
+    const codes = validateManifest({
+      protocolTemplate: binding,
+      supply: { totalSupplyWhole: "1000000", artworkSupply: "1000", genesisTokensPerPossibleNftWhole: "999" },
+    }).map((i) => i.code);
+    assert(codes.includes("SUPPLY_GENESIS_RATIO"), "a ratio that does not follow from the supplies was accepted");
+  });
+});
+
+test("manifest: a pinned supply is enforced; an unpinned template keeps only the structural rule", () => {
+  // Pinned: the numbers are the operator's, so a different supply is refused.
+  withExampleTemplate(() => {
+    const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics());
+    const codes = validateManifest({
+      protocolTemplate: binding,
+      supply: { totalSupplyWhole: "2000000", artworkSupply: "1000", genesisTokensPerPossibleNftWhole: "2000" },
+    }).map((i) => i.code);
+    assert(codes.includes("SUPPLY_REVIEWED_TEMPLATE_MISMATCH"), "a supply the operator did not review was accepted");
+  });
+
+  // Unpinned: arithmetic still holds, but the format invents no numbers of its own.
+  withExampleTemplate(
+    () => {
+      const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics());
+      const codes = validateManifest({
+        protocolTemplate: binding,
+        supply: { totalSupplyWhole: "2000000", artworkSupply: "1000", genesisTokensPerPossibleNftWhole: "2000" },
+      }).map((i) => i.code);
+      assert(!codes.includes("SUPPLY_REVIEWED_TEMPLATE_MISMATCH"), "the format enforced a supply nobody pinned");
+    },
+    { id: EXAMPLE_TEMPLATE_ID, economicsSha256: EXAMPLE_ECONOMICS_SHA256 },
+  );
+});
+
+test("a reviewed template projects without inventing artwork backing", () => {
+  withExampleTemplate(() => {
+    const binding = bindCanonicalEconomics(EXAMPLE_TEMPLATE_ID, exampleEconomics());
+    const projection = toStudioDraft(
+      {
+        manifest: {
+          schemaVersion: "3.3.0",
+          creatorKitVersion: "3.12.0",
+          runtimeVersion: "relics-art-runtime/1",
+          protocolReleaseCompatibility: "v4-art-launchpad/g-1.2",
+          protocolTemplate: binding,
+          project: { name: "Example", symbol: "EXAMPLE", description: "reviewed", license: "Proprietary" },
+          supply: {
+            totalSupplyWhole: "1000000",
+            artworkSupply: "1000",
+            genesisTokensPerPossibleNftWhole: "1000",
+            burnPolicy: "HOLDER_AND_ALLOWANCE_BURN",
+          },
+          art: { runtime: "JAVASCRIPT", seed: "1", templateId: null },
+          market: { startingPreset: "MID", launchMode: "INSTANT_V4", mappingCount: 0 },
+          earnings: { mode: "SOLO", creatorRecipient: "0x000000000000000000000000000000000000dEaD", collaborators: [] },
+          chains: { requested: [4663] },
+          hashes: { generator: "a", script: "b", traitSchema: "c", marketMapping: "d", metadata: "e", media: {} },
+        },
+        hashes: {},
+        traitSchema: { dimensions: [] },
+        marketMappings: { mappings: [] },
+        collectionMetadata: {},
+      },
+      new Map([["generator/generate.js", utf8("export function render() {}")]]),
+    );
+
+    assert(!("backingModel" in projection.draft.collection), "a reviewed template gained a backing model");
+    assert(projection.draft.collection.genesisTokensPerPossibleNftWhole === "1000", "the genesis ratio was not projected");
+    assert(projection.provenance.protocolTemplate?.id === EXAMPLE_TEMPLATE_ID, "the reviewed template binding was dropped");
+  });
+});
+
+// --------------------------------------------------- platform generations (deployment honesty)
+//
+// The failure these guard against is not a wrong address. It is a RIGHT address published under the
+// wrong generation, or a generation that is silently absent — both of which a reader has no way to
+// detect, because nothing about them looks wrong.
+
+const ADDRESS_SHAPED = /^0x[0-9a-fA-F]{40}$/;
+
+test("every published contract address names the generation it belongs to", () => {
+  for (const generation of PLATFORM_GENERATION_IDS) {
+    for (const [chainId, entry] of Object.entries(deploymentsFor(generation))) {
+      if (entry === null) continue;
+      assert(entry.generation === generation, `chain ${chainId} publishes ${entry.generation ?? "an unlabelled"} addresses inside the ${generation} table`);
+      assert(entry.chainId === Number(chainId), `chain ${chainId}'s record says chainId ${entry.chainId}`);
+      for (const [name, address] of Object.entries(entry.contracts)) {
+        assert(ADDRESS_SHAPED.test(address), `${generation}/${chainId}/${name} is not an address: ${address}`);
+      }
+    }
+  }
+});
+
+test("AN UNDEPLOYED GENERATION PUBLISHES NO ADDRESS", () => {
+  // The whole point of the generational split. RC6's addresses are derivable today and move with
+  // every source change, so a copyable one in a creator kit is worse than none: it is the contract
+  // a creator would target and never reach.
+  for (const generation of PLATFORM_GENERATION_IDS) {
+    const record = PLATFORM_GENERATIONS[generation];
+    if (record.status !== "NOT_DEPLOYED") continue;
+    assert(record.publishesAddresses === false, `${generation} is NOT_DEPLOYED but claims to publish addresses`);
+    for (const [chainId, entry] of Object.entries(deploymentsFor(generation))) {
+      assert(entry === null, `${generation} is not deployed, yet chain ${chainId} carries an address`);
+    }
+    assert(deployedChainIds(generation).length === 0, `${generation} is not deployed, yet reports deployed chains`);
+  }
+});
+
+test("NO CHAIN IS OMITTED: every generation states every known chain, deployed or not", () => {
+  // Absence is what gets misread. A chain a generation is not on must be a stated null, so the CLI
+  // can print a row that says so rather than leaving the reader to infer it from a missing line.
+  for (const generation of PLATFORM_GENERATION_IDS) {
+    const table = deploymentsFor(generation);
+    for (const chainId of KNOWN_DEPLOYMENT_CHAIN_IDS) {
+      assert(Object.hasOwn(table, chainId), `${generation} says nothing about chain ${chainId}; silence reads as "fine"`);
+    }
+  }
+});
+
+test("the current generation is the newest DEPLOYED one, not the newest that exists", () => {
+  assert(CURRENT_DEPLOYED_GENERATION !== null, "no generation is deployed at all");
+  assert(PLATFORM_GENERATIONS[CURRENT_DEPLOYED_GENERATION].status === "DEPLOYED", "the current generation is not deployed");
+  const newest = PLATFORM_GENERATION_IDS.at(-1);
+  if (PLATFORM_GENERATIONS[newest].status !== "DEPLOYED") {
+    assert(CURRENT_DEPLOYED_GENERATION !== newest, `the newest generation ${newest} is undeployed but is being used as current`);
+  }
+});
+
+test("availability strings always name a generation", () => {
+  for (const generation of PLATFORM_GENERATION_IDS) {
+    for (const chainId of KNOWN_DEPLOYMENT_CHAIN_IDS) {
+      const line = launchAvailability(chainId, generation);
+      assert(line.includes(generation), `"${line}" does not say which generation it is about`);
+    }
+  }
+});
+
+test("an unknown generation REFUSES rather than falling back to the current one", () => {
+  assertThrows(() => deploymentsFor("RC7"), "unknown generation", "an unknown generation resolved to a table");
+  assertThrows(() => platformGeneration("RC7"), "unknown generation", "an unknown generation resolved to a record");
+  assertThrows(() => platformDeployment(1, "RC7"), "unknown generation", "an unknown generation resolved to a deployment");
+  assertThrows(() => platformDeployment(999999, "RC5"), "unknown chain", "an unknown chain resolved to a deployment");
+});
+
+test("the generation assertions FAIL under mutation", () => {
+  // Each mutation is a plausible mistake. A survivor means the matching assertion is decorative.
+  const mutations = [
+    ["an RC5 address copied into the RC6 table", (t) => { t.RC6[1] = { ...t.RC5[1] }; }],
+    ["an RC6 record left with an RC5 generation label", (t) => { t.RC6[1] = { ...t.RC5[1], generation: "RC5" }; }],
+    ["a chain quietly dropped from a generation", (t) => { delete t.RC6[56]; }],
+    ["a contract address replaced with a placeholder string", (t) => { t.RC5[1] = { ...t.RC5[1], contracts: { ...t.RC5[1].contracts, launchpadFactory: "TBD" } }; }],
+  ];
+  for (const [name, mutate] of mutations) {
+    const table = { RC5: { ...DEPLOYMENTS_BY_GENERATION.RC5 }, RC6: { ...DEPLOYMENTS_BY_GENERATION.RC6 } };
+    mutate(table);
+    let rejected = false;
+    try {
+      assertGenerationTables(table);
+    } catch {
+      rejected = true;
+    }
+    assert(rejected, `MUTATION SURVIVED: "${name}" — the assertions accept it, so they are not testing it`);
+  }
+  assertGenerationTables({ RC5: DEPLOYMENTS_BY_GENERATION.RC5, RC6: DEPLOYMENTS_BY_GENERATION.RC6 });
+});
+
+/** The assertions above, factored out so the mutation test can run them against a lie. */
+function assertGenerationTables(tables) {
+  const must = (cond, why) => {
+    if (!cond) throw new Error(why);
+  };
+  const chains = [...new Set(Object.values(tables).flatMap((t) => Object.keys(t).map(Number)))];
+  for (const [generation, table] of Object.entries(tables)) {
+    const deployed = PLATFORM_GENERATIONS[generation]?.status === "DEPLOYED";
+    for (const chainId of chains) must(Object.hasOwn(table, chainId), `${generation} says nothing about chain ${chainId}`);
+    for (const [chainId, entry] of Object.entries(table)) {
+      if (entry === null) continue;
+      must(deployed, `${generation} is not deployed, yet chain ${chainId} carries an address`);
+      must(entry.generation === generation, `chain ${chainId} carries ${entry.generation} addresses inside the ${generation} table`);
+      for (const [name, address] of Object.entries(entry.contracts)) must(ADDRESS_SHAPED.test(address), `${generation}/${chainId}/${name} is not an address`);
+    }
+  }
 }
 
 // ---------------------------------------------------------------- canonical json + hashing
@@ -1302,14 +1724,19 @@ function assertChainVocabulary(profiles, chainIds) {
     for (const m of modes) must(["NONE", "OPTIONAL", "ENFORCED"].includes(m), `chain ${id} declares unknown earnings mode ${m}`);
   }
 
-  // ENFORCED is the one mode whose availability is not ours to decide, and it is claimed on
-  // exactly two chains. BNB Smart Chain is not one of them: OpenSea carries no NFT listings or
-  // offers there at all, so there is no order book for enforcement to act on, and live validator
-  // bytecode at the canonical addresses does not change that — Limit Break's v5 deploys
-  // permissionlessly to identical addresses on any EVM chain.
+  // ENFORCED is the one mode whose availability is not ours to decide.
+  //
+  // Ethereum (1), Base (8453) and — since the 2026-08-18 owner decision recorded in vocabulary.js
+  // — Robinhood Chain (4663) list it. Robinhood's admission is the VETTING half being done: its own
+  // measured validator codehash is pinned in CreatorEarningsPolicy under policy version 3 only, for
+  // OpenSea's StrictAuthorizedTransferSecurityRegistry.
+  //
+  // BNB Smart Chain is still not one of them, and for a reason no contract work can change: OpenSea
+  // carries no NFT listings or offers on that chain at all, so there is no order book for
+  // enforcement to act on. Live validator bytecode at the canonical addresses does not change that
+  // either — Limit Break's v5 deploys permissionlessly to identical addresses on any EVM chain.
   must(!profiles[56].creatorEarningsModes.includes("ENFORCED"), "BNB Smart Chain claims ENFORCED earnings; OpenSea carries no NFT orders on that chain");
-  must(!profiles[4663].creatorEarningsModes.includes("ENFORCED"), "Robinhood Chain claims ENFORCED earnings; no validator codehash is vetted or pinned for it");
-  for (const id of [1, 8453]) {
+  for (const id of [1, 8453, 4663]) {
     must(profiles[id].creatorEarningsModes.includes("ENFORCED"), `chain ${id} lost ENFORCED, which it does support`);
   }
 
@@ -1436,13 +1863,12 @@ test("BNB can launch with earnings; it just cannot claim enforced ones", () => {
   // take a BNB launch down with it. NONE and OPTIONAL are enough to launch, on every chain.
   const modesOf = (id) => [...creatorEarningsModesFor(id)].join(",");
   assert(modesOf(56) === "NONE,OPTIONAL", `BNB's earnings capability drifted to ${modesOf(56)}`);
-  assert(modesOf(4663) === "NONE,OPTIONAL", `Robinhood's earnings capability drifted to ${modesOf(4663)}`);
   assert(modesOf(1) === "NONE,OPTIONAL,ENFORCED", `Ethereum's earnings capability drifted to ${modesOf(1)}`);
   assert(modesOf(8453) === "NONE,OPTIONAL,ENFORCED", `Base's earnings capability drifted to ${modesOf(8453)}`);
+  assert(modesOf(4663) === "NONE,OPTIONAL,ENFORCED", `Robinhood's earnings capability drifted to ${modesOf(4663)}`);
 
-  assert(enforcedEarningsAvailableOn(1) && enforcedEarningsAvailableOn(8453), "the two enforced-capable chains lost the capability");
+  assert(enforcedEarningsAvailableOn(1) && enforcedEarningsAvailableOn(8453) && enforcedEarningsAvailableOn(4663), "an enforced-capable chain lost the capability");
   assert(!enforcedEarningsAvailableOn(56), "ENFORCED must not be offerable on BNB Smart Chain");
-  assert(!enforcedEarningsAvailableOn(4663), "ENFORCED must not be offerable on Robinhood Chain");
 
   // Every chain keeps the two unconditional modes, so no launch is ever blocked by this.
   for (const id of SUPPORTED_CHAIN_IDS) {
@@ -1479,13 +1905,15 @@ test("the chain-vocabulary assertions FAIL under mutation", () => {
     // The mistake this release exists to prevent: reading live validator bytecode on chain 56 as
     // permission to light the ENFORCED toggle.
     ["ENFORCED granted to BNB", () => { const p = base(); p[56].creatorEarningsModes = ["NONE", "OPTIONAL", "ENFORCED"]; return [p, ids]; }],
-    ["ENFORCED granted to Robinhood", () => { const p = base(); p[4663].creatorEarningsModes = ["NONE", "OPTIONAL", "ENFORCED"]; return [p, ids]; }],
+    // The mirror image of the BNB mistake: withdrawing an admission the owner HAS made. Robinhood
+    // was admitted on 2026-08-18 and the assertions must notice if it silently disappears.
+    ["ENFORCED withdrawn from Robinhood", () => { const p = base(); p[4663].creatorEarningsModes = ["NONE", "OPTIONAL"]; return [p, ids]; }],
     // The opposite failure: letting an unavailable ENFORCED take OPTIONAL down with it. BNB launches
     // are not blocked by any of this.
     ["OPTIONAL withdrawn from BNB", () => { const p = base(); p[56].creatorEarningsModes = ["NONE"]; return [p, ids]; }],
     ["NONE withdrawn from BNB", () => { const p = base(); p[56].creatorEarningsModes = ["OPTIONAL"]; return [p, ids]; }],
     ["ENFORCED withdrawn from Ethereum", () => { const p = base(); p[1].creatorEarningsModes = ["NONE", "OPTIONAL"]; return [p, ids]; }],
-    ["every chain given the same earnings modes", () => { const p = base(); for (const k of Object.keys(p)) p[k].creatorEarningsModes = ["NONE", "OPTIONAL"]; return [p, ids]; }],
+    ["every chain given the same earnings modes", () => { const p = base(); for (const k of Object.keys(p)) p[k].creatorEarningsModes = ["NONE", "OPTIONAL", "ENFORCED"]; return [p, ids]; }],
     ["an invented earnings mode", () => { const p = base(); p[56].creatorEarningsModes = ["NONE", "OPTIONAL", "GUARANTEED"]; return [p, ids]; }],
   ];
 

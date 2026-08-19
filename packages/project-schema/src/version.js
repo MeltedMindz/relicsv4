@@ -8,6 +8,10 @@
  * added; bump the MINOR when a purely additive optional field appears. An importer accepts a
  * bundle whose MAJOR it knows and whose MINOR is <= its own.
  *
+ * 3.3.0 — reviewed protocol templates may bind a canonical economics artifact by hash. The
+ * optional `protocolTemplate` block is validated as an immutable product integration; ordinary
+ * creator projects retain the existing backing-model supply shape.
+ *
  * 3.2.0 — `supply.burnPolicy` joined the manifest: NONE (the default), HOLDER_BURN, or
  * HOLDER_AND_ALLOWANCE_BURN, chosen at launch and immutable afterwards.
  *
@@ -32,12 +36,14 @@
  * the work that matters: a 3.1.0 bundle declaring chain 56 is REFUSED by a 3.0.0 importer, because
  * that importer genuinely cannot launch it. A 3.0.0 bundle still imports here unchanged.
  */
-export const SCHEMA_VERSION = "3.2.0";
+export const SCHEMA_VERSION = "3.3.0";
 
 /**
  * Version of the creator kit (this repo's CLI + templates) that produced the bundle.
  *
- * 3.10.0. It carries a kit-only live RC5 reference update: deployed platform addresses,
+ * 3.11.0 adds reviewed protocol-template bindings and canonical economics materialization.
+ *
+ * 3.10.0 carried a kit-only live RC5 reference update: deployed platform addresses,
  * launch-access state, the complete Robinhood stock-token quote reference, and `relics status`.
  * The bundle schema stays 3.2.0 because no manifest field changes meaning.
  *
@@ -49,14 +55,23 @@ export const SCHEMA_VERSION = "3.2.0";
  * bundle FIELD, so on its own that would not have moved `SCHEMA_VERSION` at all; the burn policy
  * is what moved it.
  *
- * What it says: ENFORCED is offerable on Ethereum (1) and Base (8453) only. BNB Smart Chain (56)
- * and Robinhood Chain (4663) offer NONE and OPTIONAL, which is enough to launch — an unavailable
- * ENFORCED never blocks a chain. BNB is excluded because OpenSea carries no NFT listings or offers
- * on that chain at all; Robinhood because no per-chain validator codehash has been vetted and
- * pinned. Live validator bytecode exists at the canonical addresses on both and is not evidence
- * either way: Limit Break's v5 deploys permissionlessly to identical addresses on any EVM chain.
+ * What it says: ENFORCED is offerable on Ethereum (1), Base (8453) and — as of 3.12.0 — Robinhood
+ * Chain (4663). BNB Smart Chain (56) offers NONE and OPTIONAL, which is enough to launch: an
+ * unavailable ENFORCED never blocks a chain. BNB stays excluded because OpenSea carries no NFT
+ * listings or offers on that chain at all. Live validator bytecode exists at the canonical
+ * addresses on 56 and is not evidence either way: Limit Break's v5 deploys permissionlessly to
+ * identical addresses on any EVM chain.
+ *
+ * 3.12.0 is the Robinhood admission, and it is kit-only for the same reason 3.9.0's half was: a
+ * chain PROFILE is not a bundle FIELD, so `SCHEMA_VERSION` does not move. What changed is that
+ * `CreatorEarningsPolicy` now pins 4663's own measured validator codehash under POLICY VERSION 3
+ * ONLY, for OpenSea's `StrictAuthorizedTransferSecurityRegistry`. Versions 1 and 2 remain
+ * unresolvable there, and since the default policy version is 1, an ENFORCED launch on Robinhood
+ * must name version 3 explicitly or be refused at the contract. A
+ * bundle still cannot request enforcement — the manifest has no field for it — so nothing about
+ * `.relics` import behaviour changes.
  */
-export const CREATOR_KIT_VERSION = "3.10.0";
+export const CREATOR_KIT_VERSION = "3.12.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
@@ -65,10 +80,17 @@ export const CREATOR_KIT_VERSION = "3.10.0";
 export const RUNTIME_VERSION = "relics-art-runtime/1";
 
 /**
- * The launchpad protocol release this schema mirrors. RC5 platform contracts are deployed on
- * Ethereum, Base and Robinhood Chain but remain PREPARED; public creator launches are still
- * closed. This string identifies the parameter surface the bundle was built for, while
- * `deployments.js` carries the current chain-address record.
+ * The launchpad protocol release this schema mirrors — the PARAMETER SURFACE a bundle was built
+ * for, not a statement about what is deployed.
+ *
+ * The two are genuinely different questions and this string only answers the first. What is
+ * deployed, on which chains, under which generation, and whether any of them accepts a public
+ * creator launch, is answered by `deployments.js` (read it, or run `relics status`) and reconciled
+ * in prose in `docs/launchpad/08-status.md` — "the kit mirrors RC5; the product you will launch
+ * through is RC6".
+ *
+ * That section is where the reconciliation belongs. Restating it here would put the same claim in
+ * two places, and the copy in a code comment is the one nobody updates.
  */
 export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/g-1.2";
 

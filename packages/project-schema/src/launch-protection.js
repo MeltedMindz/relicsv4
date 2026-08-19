@@ -57,8 +57,31 @@ export const ANTI_SNIPE_END_FEE_PIPS = 10_000;
 /** The sell-side LP fee, flat for the whole life of the market: 10_000 pips = 1%. */
 export const SELL_FEE_PIPS = 10_000;
 
-/** Launch protection is not opt-in and there is no parameter that disables it. */
-export const PROTECTION_IS_MANDATORY = true;
+/**
+ * The quantity that actually decays, in pips: 980_000 = 98%.
+ *
+ * THE HOOK DOES NOT INTERPOLATE BETWEEN THE ENDPOINTS. It computes
+ *
+ *     fee = BASE + floor(ADDON * max(DURATION - elapsed, 0) / DURATION)
+ *
+ * clamped to [BASE, START]. `START - floor(span * elapsed / DURATION)` agrees at both ends and
+ * differs by one pip almost everywhere between them, because the floor falls on the other side, so
+ * a curve derived from the wrong form disagrees with the chain in the middle of the window — which
+ * is the whole of the window a reader cares about. Declared rather than derived so the generated
+ * fee curve reads it from here.
+ */
+export const ANTI_SNIPE_INITIAL_ADDON_PIPS = ANTI_SNIPE_START_FEE_PIPS - ANTI_SNIPE_END_FEE_PIPS;
+
+/**
+ * Whether a creator may launch with no protection at all.
+ *
+ * FALSE since the owner amendment of 2026-08-16. It WAS mandatory and is not now: `NONE` is a
+ * selectable anti-snipe mode, and a project on it pays a flat sell-side-equal fee from the first
+ * block. Anything that describes protection as un-disable-able is describing the retired rule.
+ * Mirrors `docs/launchpad/protocol-facts.json -> launchProtection.protectionIsMandatory`, whose
+ * own source is `launchpad/packages/launch-protection/src/schedule.js`.
+ */
+export const PROTECTION_IS_MANDATORY = false;
 
 /**
  * No address is exempt from the buy-side schedule — not the creator, the platform, the deployer,
@@ -227,6 +250,23 @@ export const AUDIT_STATUS_PHRASES = Object.freeze([
   "certified secure",
   "formally verified",
 ]);
+
+/**
+ * AUDIT CLAIMS WRITTEN AS AN ADJECTIVE, which the literal list above cannot reach.
+ *
+ * "audited fixed-curve-preset sale", "audited Solidity-SVG template", an "audited {FullMath}" —
+ * five of these were found in shipped Solidity while the blocklist matched none of them, because a
+ * literal list can only hold the noun phrases somebody already thought of. This is the shape
+ * instead: `audited` immediately followed by anything that is not `by`.
+ *
+ * WHY IT IS NOT EVIDENCE-SUPPRESSIBLE. `audited by Firm, report at https://…` is the evidenced
+ * form and is allowed — that is the `by` carve-out, and EVIDENCE_REQUIRED_PHRASES handles the
+ * page-level case. But "the audited curve preset" on a page that happens to carry any link is a
+ * third-party assurance about a SPECIFIC COMPONENT, borrowing credibility from a link that is
+ * about something else. Removing "not audited" from a repository while leaving "audited" in it is
+ * the worse of the two directions, so this half is matched as strictly as the negative half.
+ */
+export const AUDIT_ADJECTIVAL_CLAIM_RE = /\baudited\s+(?!by\b)\S/i;
 
 /**
  * The wrong name for the schedule. 99 − 1 = 98 points at one point per minute, so the window is 98

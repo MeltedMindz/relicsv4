@@ -26,6 +26,21 @@ export {
 
 export { SYMBOL_RE } from "./src/manifest.js";
 
+// Reviewed protocol templates: the MECHANISM only. This package registers no concrete template —
+// an instance is one operator's commercial configuration, so the operator registers it into this
+// registry at start-up rather than the format carrying it. See src/protocol-templates.js.
+export {
+  PROTOCOL_TEMPLATE_KEYS,
+  REVIEWED_PROTOCOL_TEMPLATE_IDS,
+  reviewedProtocolTemplateIds,
+  reviewedProtocolTemplate,
+  reviewedTemplateSupplyPin,
+  registerReviewedProtocolTemplate,
+  clearReviewedProtocolTemplates,
+  bindCanonicalEconomics,
+  validateReviewedProtocolTemplate,
+} from "./src/protocol-templates.js";
+
 export { LIMITS, ALLOWED_EXTENSIONS, FORBIDDEN_EXTENSIONS, BUNDLE_LAYOUT, REQUIRED_ENTRIES } from "./src/limits.js";
 
 export {
@@ -130,12 +145,17 @@ export {
   allocateSettledPlatformWeth,
 } from "./src/economics.js";
 
+// The public declaration of launch protection, hook generations and launch-mode availability.
+// `scripts/check-launch-protection.mjs` derives the sentences the documentation must contain from
+// these, and `scripts/generate-doc-assets.mjs` renders the fee curve from them, so a figure that
+// moves here fails the build rather than leaving a page confidently wrong.
 export {
   FEE_PIPS_DENOMINATOR,
   DYNAMIC_FEE_FLAG,
   ANTI_SNIPE_WINDOW_SECONDS,
   ANTI_SNIPE_START_FEE_PIPS,
   ANTI_SNIPE_END_FEE_PIPS,
+  ANTI_SNIPE_INITIAL_ADDON_PIPS,
   SELL_FEE_PIPS,
   PROTECTION_IS_MANDATORY,
   NO_PRIVILEGED_FEE_EXEMPTIONS,
@@ -156,6 +176,7 @@ export {
   PROHIBITED_DOC_PHRASES,
   OVERREACH_CLAIMS,
   AUDIT_STATUS_PHRASES,
+  AUDIT_ADJECTIVAL_CLAIM_RE,
   WRONG_DURATION_PHRASES,
   OVERREACH_NEGATORS,
   EVIDENCE_REQUIRED_PHRASES,
@@ -231,9 +252,20 @@ export { mulberry32, seedStringToNumber, makeRandom } from "./src/prng.js";
 export { error, warn, hasErrors, summarize, sortIssues } from "./src/issues.js";
 
 export {
+  PLATFORM_GENERATION_IDS,
+  PLATFORM_GENERATIONS,
   PLATFORM_RELEASE,
+  RC5_DEPLOYMENTS,
+  RC6_DEPLOYMENTS,
+  DEPLOYMENTS_BY_GENERATION,
+  CURRENT_DEPLOYED_GENERATION,
   PLATFORM_DEPLOYMENTS,
+  KNOWN_DEPLOYMENT_CHAIN_IDS,
+  RC5_CANARY_METADATA_PROOF,
   DEPLOYED_CHAIN_IDS,
+  deploymentsFor,
+  platformGeneration,
+  deployedChainIds,
   platformDeployment,
   isPlatformDeployed,
   acceptsPublicLaunches,

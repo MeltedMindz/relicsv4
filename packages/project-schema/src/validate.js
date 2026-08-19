@@ -32,6 +32,7 @@ export const CHECKS = Object.freeze([
   { id: "LAYOUT_AND_PATHS", title: "layout and entry paths" },
   { id: "NO_ARBITRARY_HOOK", title: "no contract code or protocol override" },
   { id: "MANIFEST_SCHEMA", title: "manifest schema" },
+  { id: "PROTOCOL_TEMPLATE", title: "reviewed protocol template" },
   { id: "ALLOWED_RUNTIME", title: "approved art runtime" },
   { id: "ALLOWED_DEPENDENCIES", title: "allowed dependencies" },
   { id: "NO_EXTERNAL_NETWORK", title: "no external network dependency" },
@@ -40,7 +41,7 @@ export const CHECKS = Object.freeze([
   { id: "MARKET_MAPPING_BOUNDS", title: "market mapping bounds" },
   { id: "COLLECTION_METADATA", title: "collection metadata" },
   { id: "EARNINGS_CONFIG", title: "earnings configuration" },
-  { id: "SUPPLY_AND_BACKING", title: "supply and artwork backing" },
+  { id: "SUPPLY_AND_BACKING", title: "supply relationship" },
   { id: "CHAIN_FEATURES", title: "requested chains" },
   { id: "SECRET_SCAN", title: "secret scan" },
   { id: "HASH_INTEGRITY", title: "hash integrity" },
@@ -163,6 +164,8 @@ export function validateBundle(byPath, options = {}) {
               ? "SCRIPT_BYTE_LIMIT"
               : issue.code.startsWith("EARNINGS")
                 ? "EARNINGS_CONFIG"
+                : issue.code.startsWith("PROTOCOL_TEMPLATE")
+                  ? "PROTOCOL_TEMPLATE"
                 : issue.code.startsWith("SUPPLY")
                   ? "SUPPLY_AND_BACKING"
                   : issue.code.startsWith("CHAIN")
@@ -467,6 +470,7 @@ function checkArtBinding({ manifest, byPath, documents, computed, execution, col
   }
 
   const derived = computeArtBinding({
+    schemaVersion: manifest.schemaVersion,
     runtime: manifest.art?.runtime,
     templateId: manifest.art?.templateId,
     scriptBytes,
@@ -682,8 +686,19 @@ function runExecutionChecks({ options, sources, manifest, traitSchema, marketDoc
 
 /**
  * Builds the frozen context a generator receives. This is the whole surface: a seed, a seeded
- * random helper, the evaluated market destinations, and the declared trait set. No clock, no
- * network, no host objects.
+ * random helper, the evaluated market destinations and sensor readings, the canvas size, and three
+ * project facts. No clock, no network, no host objects.
+ *
+ * THERE IS NO `traits` FIELD, and the docstring used to claim there was. A token's labels are
+ * derived separately by `deriveTraits`, each dimension off its own `<seed>:trait:<dimension>`
+ * stream, so a generator cannot read the labels its output will be shipped with and a label
+ * describes the token rather than the picture. Every shipped template says so where a creator
+ * reads it, and `npm run kit:traits` fails if one stops.
+ *
+ * Adding the field is not this repository's change to make alone: the production importer runs a
+ * byte-for-byte mirror of this package, and a generator that read `context.traits` here would
+ * render differently there and be refused by its own representative-output commitment. It is a
+ * same-release change in both repositories or it is a trap.
  */
 export function buildRenderContext({ manifest, marketDocument, seed, sensors }) {
   const readings = sensors ?? neutralSensors(seed);

@@ -38,7 +38,7 @@ import { encodeArtConfigV1, validateArtConfigV1, decodeArtConfigV1, withArtConfi
 import { visualHashArtConfigV1, traitSchemaHashArtConfigV1 } from "./art-config-v1-hashes.js";
 import { keccak256Hex, keccak256Utf8, isKeccak256Hex } from "./keccak256.js";
 import { utf8, toHex } from "./sha256.js";
-import { ART_RUNTIME_IDS, ART_RUNTIME_TO_MODE, ART_RUNTIME_VERSIONS, LAUNCHABLE_ART_RUNTIMES } from "./vocabulary.js";
+import { APPROVED_ART_RUNTIMES, ART_RUNTIME_IDS, ART_RUNTIME_TO_MODE, ART_RUNTIME_VERSIONS, LAUNCHABLE_ART_RUNTIMES } from "./vocabulary.js";
 import { BUNDLE_MAGIC, SCHEMA_VERSION } from "./version.js";
 
 /** Raised when a project cannot state the art configuration its own launch would carry. */
@@ -155,6 +155,7 @@ export function representativeOutputsCommitment(outputs) {
  * refuses any difference, which is what makes the block impossible to hand-edit.
  *
  * @param {{
+ *   schemaVersion?: string,
  *   runtime: string,
  *   templateId?: string | null,
  *   scriptBytes: Uint8Array,
@@ -191,7 +192,7 @@ export function computeArtBinding(input) {
   }
 
   return {
-    schemaVersion: SCHEMA_VERSION,
+    schemaVersion: input.schemaVersion ?? SCHEMA_VERSION,
     runtime,
     runtimeId: ART_RUNTIME_IDS[runtime] ?? null,
     runtimeIdHash: ART_RUNTIME_IDS[runtime] ? keccak256Utf8(ART_RUNTIME_IDS[runtime]) : null,
@@ -287,6 +288,19 @@ export { utf8 };
  */
 export function deriveArtConfig({ runtime, templateParams, scriptBytes }) {
   if (runtime === "JAVASCRIPT") return { bytes: scriptBytes, visualHash: null, traitSchemaHash: null };
+
+  // AN UNKNOWN RUNTIME IS REFUSED BY NAME, not treated as the other one.
+  //
+  // This used to be a bare `if (JAVASCRIPT) … else SOLIDITY_SVG`, so `runtime: "WASM"` — or a typo
+  // — silently became a Solidity project and failed with "generator/params.json is required for the
+  // SOLIDITY_SVG runtime". A creator who never chose SOLIDITY_SVG then went looking for a file that
+  // has nothing to do with their mistake. Two values is exactly when an else-branch stops being a
+  // dispatch and starts being an assumption.
+  if (!APPROVED_ART_RUNTIMES.includes(runtime)) {
+    throw new ArtConfigDerivationError(
+      `"${runtime}" is not an art runtime this format approves. The approved runtimes are ${APPROVED_ART_RUNTIMES.join(" and ")}; nothing else can be bound, so no bundle declaring one could ever be launched.`,
+    );
+  }
 
   if (!templateParams || typeof templateParams !== "object") {
     throw new ArtConfigDerivationError(
