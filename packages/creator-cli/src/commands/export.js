@@ -56,6 +56,23 @@ export function exportProject(root, options = {}) {
     console.log("");
     return 0;
   }
-  console.log(green("  import this file in the launchpad creator app; it derives the same hashes."));
+  // ---- THE CLOSING BLOCK -----------------------------------------------------------------
+  //
+  // What a creator holds now, and what they do next. Three things and no more: the file, the digest
+  // that identifies it, and the next step.
+  //
+  // NO UPLOAD URL IS PRINTED. The public creator route is not confirmed open — `relics status`
+  // reports every generation and chain as closed to public creation — so printing an address here
+  // would be inventing a destination, which is the same failure as a placeholder contract address:
+  // copyable, plausible and wrong. The bundle is complete and portable either way; where it goes is
+  // the launchpad's announcement to make, not this command's guess.
+  console.log(green("  READY TO UPLOAD"));
+  console.log(`    ${dim("bundle")}       ${bold(target)}`);
+  console.log(`    ${dim("bundle hash")}  ${cyan(assembled.manifest.integrity.bundleHash)}`);
+  console.log(`    ${dim("next step")}    Import this file in the launchpad creator app. It re-derives every hash above from`);
+  console.log(`    ${" ".repeat(12)}   your bytes, so the value it shows must match the one printed here — if it does`);
+  console.log(`    ${" ".repeat(12)}   not, the file changed after export and you should re-run this command.`);
+  console.log(`    ${" ".repeat(12)}   Run ${bold("relics status")} for the current chains and whether public creation is open.`);
+  console.log("");
   return 0;
 }

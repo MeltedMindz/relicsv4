@@ -42,6 +42,11 @@ export function render(context) {
   const brightness = value(market.brightness, 0.5);
   const scar = value(market.scar, 0);
 
+  // THIS PICK IS NOT THE `Palette` TRAIT. The trait schema declares the same five names, but a
+  // token's labels are drawn from their own seeded stream (`<seed>:trait:<dimension>`) while this
+  // draws off `context.random`, which is seeded on the bare seed. The two agree only by
+  // coincidence -- 0 times out of 8 on seeds 1-8. Derive the value here if you want the label to
+  // describe the picture; see this template's README.
   const palette = random.pick(PALETTES);
   const columns = 4 + Math.round(density * 8);
   const rows = columns;

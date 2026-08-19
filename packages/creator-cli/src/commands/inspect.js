@@ -59,7 +59,11 @@ export function inspectBundle(path, options = {}) {
     console.log(`  ${dim(truncate(m.project.description, 100))}`);
     console.log("");
     row("schema", `${m.schemaVersion}  ${dim(`kit ${m.creatorKitVersion} · runtime ${m.runtimeVersion} · ${m.protocolReleaseCompatibility}`)}`);
-    row("supply", `${Number(m.supply.totalSupplyWhole).toLocaleString()} whole tokens · ${Number(m.supply.artworkSupply).toLocaleString()} artworks · ${m.supply.backingModel}`);
+    const supplyRelationship = m.protocolTemplate
+      ? `${Number(m.supply.genesisTokensPerPossibleNftWhole).toLocaleString()} genesis tokens per possible NFT`
+      : m.supply.backingModel;
+    row("supply", `${Number(m.supply.totalSupplyWhole).toLocaleString()} whole tokens · ${Number(m.supply.artworkSupply).toLocaleString()} artworks · ${supplyRelationship}`);
+    if (m.protocolTemplate) row("protocol", `${m.protocolTemplate.id} · economics ${m.protocolTemplate.economicsSha256}`);
     row("art", `${m.art.runtime}${m.art.templateId ? ` template ${m.art.templateId}` : ""} · seed ${m.art.seed} · ${m.art.scriptBytes.toLocaleString()} script bytes`);
     row("market", `${m.market.launchMode} · ${m.market.startingPreset} tier · ${m.market.mappingCount} mapping(s)`);
     row("earnings", `${m.earnings.mode} → ${m.earnings.creatorRecipient}${m.earnings.collaborators.length ? ` + ${m.earnings.collaborators.length} collaborator(s)` : ""}`);

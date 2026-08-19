@@ -6,7 +6,7 @@
 
 import { readdirSync, readFileSync, statSync, lstatSync, existsSync } from "node:fs";
 import { join, relative, sep, resolve } from "node:path";
-import { LIMITS, safeJsonParse, checkEntryPolicy } from "./schema.js";
+import { LIMITS, safeJsonParse, checkEntryPolicy, bindCanonicalEconomics, validateReviewedProtocolTemplate } from "./schema.js";
 
 export const CONFIG_FILE = "relics.config.json";
 
@@ -28,11 +28,81 @@ export function readConfig(root) {
   } catch (err) {
     throw new ProjectError(`could not read ${CONFIG_FILE}: ${err instanceof Error ? err.message : String(err)}`);
   }
+  let config;
   try {
-    return safeJsonParse(text, { maxDepth: LIMITS.maxJsonDepth, maxNodes: LIMITS.maxJsonNodes });
+    config = safeJsonParse(text, { maxDepth: LIMITS.maxJsonDepth, maxNodes: LIMITS.maxJsonNodes });
   } catch (err) {
     throw new ProjectError(`${CONFIG_FILE} is not valid JSON: ${err instanceof Error ? err.message : String(err)}`);
   }
+  return materializeProtocolTemplate(resolve(root), config);
+}
+
+/**
+ * Turns a `protocolTemplate` REQUEST in relics.config.json into the BINDING a bundle carries.
+ *
+ * A reviewed protocol template is a launchpad operator's immutable product integration, not a
+ * creator setting, so the creator kit registers none: on a stock kit this whole path ends in a
+ * refusal that names the field, the file and the fix. Ordinary projects never reach it — the block
+ * is absent and this returns immediately.
+ */
+function materializeProtocolTemplate(root, config) {
+  const request = config.protocolTemplate;
+  if (request === undefined) return config;
+  const at = `${CONFIG_FILE} #protocolTemplate`;
+  if (!request || typeof request !== "object" || Array.isArray(request)) {
+    throw new ProjectError(
+      `${at} must be an object.\n` +
+        `  where   ${join(root, CONFIG_FILE)}\n` +
+        `  edit    remove the protocolTemplate block, or make it an object with "id" and "canonicalEconomicsPath"\n` +
+        `  then    relics validate ${root}`,
+    );
+  }
+  const relativePath = request.canonicalEconomicsPath;
+  if (typeof relativePath !== "string" || relativePath.length === 0) {
+    throw new ProjectError(
+      `${at}.canonicalEconomicsPath is required — a reviewed template binds an artifact the operator gave you, and the kit will not invent one.\n` +
+        `  where   ${join(root, CONFIG_FILE)}\n` +
+        `  edit    set "canonicalEconomicsPath" to the JSON file the launchpad operator issued, relative to this project\n` +
+        `  then    relics validate ${root}`,
+    );
+  }
+  const artifactPath = resolve(root, relativePath);
+  if (!existsSync(artifactPath)) {
+    throw new ProjectError(
+      `BLOCKED_CANONICAL_ECONOMICS_MISSING: ${artifactPath}\n` +
+        `  what    ${at}.canonicalEconomicsPath points at a file that does not exist\n` +
+        `  where   ${relativePath} (resolved to ${artifactPath})\n` +
+        `  edit    put the operator's canonical economics JSON there, or correct the path in ${CONFIG_FILE}\n` +
+        `  then    relics validate ${root}`,
+    );
+  }
+  let canonicalEconomics;
+  try {
+    canonicalEconomics = safeJsonParse(readFileSync(artifactPath, "utf8"), {
+      maxDepth: LIMITS.maxJsonDepth,
+      maxNodes: LIMITS.maxJsonNodes,
+    });
+  } catch (err) {
+    throw new ProjectError(
+      `canonical economics is not valid JSON: ${err instanceof Error ? err.message : String(err)}\n` +
+        `  where   ${artifactPath}\n` +
+        `  edit    restore the file exactly as the operator issued it — a reviewed artifact is never hand-edited\n` +
+        `  then    relics validate ${root}`,
+    );
+  }
+  const binding = bindCanonicalEconomics(request.id, canonicalEconomics);
+  const issues = validateReviewedProtocolTemplate(binding);
+  if (issues.length > 0) {
+    const detail = issues.map((issue) => `  ${issue.code}  ${issue.message}`).join("\n");
+    throw new ProjectError(
+      `BLOCKED_CANONICAL_ECONOMICS_INVALID: ${issues.map((issue) => issue.code).join(", ")}\n` +
+        `${detail}\n` +
+        `  where   ${join(root, CONFIG_FILE)} and ${artifactPath}\n` +
+        `  edit    remove the protocolTemplate block from ${CONFIG_FILE} unless a launchpad operator gave you one\n` +
+        `  then    relics validate ${root}`,
+    );
+  }
+  return { ...config, protocolTemplate: binding };
 }
 
 /**

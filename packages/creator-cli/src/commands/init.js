@@ -9,7 +9,7 @@ import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { bold, cyan, dim, green, red, yellow, heading } from "../report.js";
-import { ART_RUNTIME_IDS, LAUNCHABLE_ART_RUNTIMES } from "../schema.js";
+import { ART_RUNTIME_IDS, LAUNCHABLE_ART_RUNTIMES, reviewedProtocolTemplateIds } from "../schema.js";
 
 const TEMPLATES_DIR = fileURLToPath(new URL("../../templates/", import.meta.url));
 
@@ -42,12 +42,35 @@ export function listTemplates() {
     .sort((a, b) => (a.id < b.id ? -1 : 1));
 }
 
+/**
+ * Reviewed protocol templates this build implements — NOT art scaffolds and never `relics init`
+ * targets. A reviewed template is an immutable product integration a launchpad operator registers
+ * into the schema; the creator kit registers none, so this is normally empty and the CLI says so
+ * rather than listing a heading with nothing under it.
+ */
+export function listReviewedProtocolTemplates() {
+  return reviewedProtocolTemplateIds().map((id) => ({ id }));
+}
+
 export function printTemplates() {
   heading("templates");
   for (const template of listTemplates()) {
     console.log(`  ${bold(template.id.padEnd(22))} ${template.summary}`);
     const runtime = `runtime ${template.runtimeId}`;
-    console.log(`  ${" ".repeat(22)} ${template.launchable ? dim(runtime) : `${dim(runtime)} ${yellow("— preview only, not launchable yet")}`}`);
+    // NOTHING HERE SAYS "LAUNCHABLE", because today nothing is: public creator launch is closed on
+    // every chain (`relics status`). A blank status next to the one bound runtime used to read as
+    // "this one you can launch", which is a claim the CLI is not entitled to make. The distinction
+    // that IS true per template is which runtime a launch binds and renders FIRST.
+    const status = template.launchable
+      ? dim("— the runtime a launch binds first; launching itself is closed, see `relics status`")
+      : yellow("— preview only; this runtime is not bound by a launch yet");
+    console.log(`  ${" ".repeat(22)} ${dim(runtime)} ${status}`);
+  }
+  const reviewed = listReviewedProtocolTemplates();
+  if (reviewed.length > 0) {
+    console.log("");
+    console.log(dim("  reviewed protocol templates (an operator binding, not an art scaffold — not an init target)"));
+    for (const template of reviewed) console.log(`  ${bold(template.id)}`);
   }
   console.log("");
   console.log(dim("  relics init <directory> --template <id>"));

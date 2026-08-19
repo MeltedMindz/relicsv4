@@ -30,6 +30,20 @@ you must), or splitting the file, which the format refuses because exactly one s
 | `market/mappings.json` | sensor → transform → art-parameter wiring. |
 | `metadata/collection.json` | collection-level metadata (name, symbol, description, images). |
 
+## Traits are metadata, not a description of the picture
+
+The trait values a token is minted with are **drawn from their own seeded stream**, one per
+dimension, independently of anything the generator does. The render context a generator receives
+carries `seed`, `random`, `market`, `sensors`, `size` and `project` — there is no `traits` field,
+and there deliberately is not one yet: adding it here without the same change in the launchpad's
+importer would make a generator that used it render differently at import time and fail its own
+output commitment.
+
+So a label says what the token is *called*, not what it *looks like*. That is a normal thing for a
+collection whose image is a function of the market rather than of an attribute table — but decide
+it on purpose. If you want a label to describe the image, the generator has to derive the value it
+draws with, not pick independently and hope.
+
 ## Before you export
 
 Set `earnings.creatorRecipient` in `relics.config.json` to your own address. The template ships

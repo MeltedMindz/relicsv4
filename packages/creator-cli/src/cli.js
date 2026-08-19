@@ -11,7 +11,8 @@ import { exportProject } from "./commands/export.js";
 import { inspectBundle } from "./commands/inspect.js";
 import { migrateBundle } from "./commands/migrate.js";
 import { printStatus } from "./commands/status.js";
-import { bold, dim, red } from "./report.js";
+import { doctor } from "./commands/doctor.js";
+import { bold, dim, printFatal, red } from "./report.js";
 
 const FLAGS = {
   template: "string",
@@ -47,6 +48,22 @@ export async function main(argv) {
 
   const root = positional[0] ?? ".";
 
+  // A THROWN failure is still a creator-facing failure.
+  //
+  // `assembleBundle`, `readProjectFiles` and the container writer all refuse by throwing, and those
+  // throws used to escape all the way to bin/relics.js, which prints one bare `relics: <message>`
+  // line. The message was accurate and the creator was left with no file to open and no command to
+  // run — missing exactly where they are most stuck. `printFatal` renders them in the same
+  // WHAT / WHERE / fix / then shape every validation issue gets.
+  try {
+    return await dispatch(command, positional, flags, root);
+  } catch (err) {
+    if (process.env.RELICS_DEBUG && err instanceof Error && err.stack) console.error(err.stack);
+    return printFatal(err, { root, command });
+  }
+}
+
+async function dispatch(command, positional, flags, root) {
   switch (command) {
     case "init":
       if (!positional[0]) {
@@ -60,6 +77,9 @@ export async function main(argv) {
 
     case "status":
       return printStatus();
+
+    case "doctor":
+      return doctor();
 
     case "dev":
       return devServer(root, { port: flags.port });
@@ -170,7 +190,13 @@ const HELP = {
   templates: `relics templates
   List the starter templates and the art runtime each one uses.`,
   status: `relics status
-  Show the RC5 platform deployment addresses and whether public creator launches are open.`,
+  Show the platform deployment addresses BY GENERATION and whether public creator launches are
+  open. A generation that is not deployed prints a row saying so rather than being omitted.`,
+  doctor: `relics doctor
+  Check that THIS MACHINE can run the kit: Node version, dependencies, the schema package, the
+  templates, and the isolated sandbox (by actually rendering in it). Offline — it contacts no
+  network, no RPC and no chain, so a green result says nothing about the launchpad. Use
+  \`relics status\` for that.`,
   dev: `relics dev [directory] [--port 4321]
   Serve a local studio on 127.0.0.1: render any seed, drag the market destinations, read traits.`,
   preview: `relics preview [directory] [--seeds 1,2,3 | --count 8] [--out previews] [--size 240]
@@ -211,7 +237,8 @@ ${bold("relics")} — the local creator kit for RELICS Launchpad projects
 
   ${bold("relics init")} <dir> [--template <id>]   scaffold a project
   ${bold("relics templates")}                      list the starter templates
-  ${bold("relics status")}                         show RC5 deployment addresses
+  ${bold("relics status")}                         deployment addresses, by generation
+  ${bold("relics doctor")}                         check this machine can run the kit (offline)
   ${bold("relics dev")} [dir]                      local studio on 127.0.0.1
   ${bold("relics preview")} [dir]                  write deterministic SVGs
   ${bold("relics test-seeds")} [dir] --count 100   sample the collection at scale

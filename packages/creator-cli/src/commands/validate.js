@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { assembleBundle, validateBundle, validateBundleBytes, readContainer, sha256Utf8, fromUtf8, BINDING_SEEDS } from "../schema.js";
 import { readConfig, readProjectFiles, generatorSources } from "../project.js";
 import { renderSeedsIsolated, makeReplayEvaluator, makeVmEvaluator } from "../sandbox.js";
+import { checkPreviewDrift } from "../preview-drift.js";
 import { printChecks, printIssues, printHashes, printBinding, heading, green, red, yellow, dim, plural } from "../report.js";
 
 /**
@@ -50,7 +51,9 @@ export function validateProject(root, options = {}) {
     // still needs the binding digests up front, which it gets from one throwaway evaluation.
     const outputs = recordBindingOutputsInProcess(probe.entries, probe.manifest);
     const assembled = assembleBundle({ files, config, representativeOutputs: outputs, status });
-    return { ...validateBundle(assembled.entries, { evaluate: makeVmEvaluator(), seeds: seedCount }), assembled };
+    const inProcessResult = validateBundle(assembled.entries, { evaluate: makeVmEvaluator(), seeds: seedCount });
+    reportPreviewDrift(files, inProcessResult);
+    return { ...inProcessResult, assembled };
   }
 
   const structural = validateBundle(probe.entries, { skipExecution: true });
@@ -73,7 +76,40 @@ export function validateProject(root, options = {}) {
   // directory and tell the creator nothing. The working tree is compared separately: export
   // produces correct bytes, and validate still reports that the files on disk are behind.
   reportStalePreviewsOnDisk(files, canonicalPreviews, result);
+  // AND THE OTHER STALENESS. `previews/` going stale is visible; the SKETCH going stale is not,
+  // because both files still hash to themselves. See ../preview-drift.js.
+  reportPreviewDrift(files, result);
   return { ...result, assembled };
+}
+
+/**
+ * Compares the preview sketch against the configuration that is actually launched, and folds the
+ * findings into the run's own summary so `validate` and `export` both act on them.
+ *
+ * This lives in the CLI rather than in the bundle schema on purpose. It is a check on a PROJECT
+ * DIRECTORY -- two authored files that must agree -- not a property of the exported bundle, and the
+ * schema package is mirrored byte for byte by the production importer, which never sees a project
+ * directory at all.
+ *
+ * @param {Map<string, Uint8Array>} files
+ * @param {{issues: any[], summary: {errors: any[], warnings: any[], errorCount: number, warningCount: number}}} result
+ */
+function reportPreviewDrift(files, result) {
+  for (const issue of checkPreviewDrift(files)) {
+    result.issues.push(issue);
+    if (issue.severity === "error") {
+      result.summary.errors.push(issue);
+      result.summary.errorCount += 1;
+      // `ok` is computed once by the schema's own summarize() and is what the command's exit code
+      // and export's refusal both read. An error appended afterwards has to move it, or the run
+      // prints the failure and returns 0 — which is the shape of every bug in this review.
+      result.ok = false;
+      result.summary.ok = false;
+    } else {
+      result.summary.warnings.push(issue);
+      result.summary.warningCount += 1;
+    }
+  }
 }
 
 /**

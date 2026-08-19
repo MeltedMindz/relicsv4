@@ -21,9 +21,23 @@ export const manifest = {
   description: "Local sketch of the ACV1 configuration this project launches with.",
 };
 
-// Mirrors generator/params.json. Keep them in step by hand — the preview reads them from here so it
-// stays a single, dependency-free file. `relics validate` refuses a bundle whose params.json does
-// not encode to the configuration the manifest commits to, so a drift here is caught, not shipped.
+// Mirrors generator/params.json. The preview reads its values from here rather than from the JSON,
+// so this file stays a single dependency-free sketch the sandbox can run.
+//
+// WHAT KEEPS THE TWO IN STEP, precisely, because the answer used to be "nothing":
+//
+//   `relics validate` and `relics export` compare this object against generator/params.json, field
+//   by field, over the keys they share — title, animate, background, palette, and every field of
+//   every layer — and REFUSE on any disagreement (ART_PREVIEW_DRIFT). params.json wins every
+//   comparison: it is the art, and this is the sketch of it.
+//
+// WHAT IS STILL NOT CHECKED. Nothing verifies that the code below DRAWS what these values mean.
+// The sketch approximates; it is not the renderer and it does not match the on-chain output pixel
+// for pixel. Keep it honest by hand.
+//
+// If you restructure this file so the mirrored values are no longer one `const CONFIG = { … }`
+// object literal, validate says so (ART_PREVIEW_UNCHECKED) instead of quietly passing — a check
+// that cannot run is not a check that passed.
 const CONFIG = {
   title: "Parameter Study",
   animate: true,
