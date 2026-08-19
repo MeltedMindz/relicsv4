@@ -21,6 +21,14 @@ function getHookPermissions() public pure override returns (Hooks.Permissions me
 which reverts unless the deployed address carries exactly these bits (`0x1440`). That is why a
 plain `new ExampleV4Hook(...)` almost always reverts and you must deploy via a mined CREATE2 salt.
 
+> **`0x1440` is this template's mask, and not a universal one.** The example hook here declares
+> three "after" callbacks, so its address must carry those bits. A Uniswap v4 hook's mask is whatever
+> its own `getHookPermissions()` declares — a hook that also sets a dynamic fee needs `beforeSwap`
+> and lands on a different mask. The RELICS Launchpad's per-project ArtHook is one such hook; see
+> [`docs/launchpad/02`](launchpad/02-what-a-launch-produces.md#the-hook) for its mask. Mine against
+> the mask your own hook declares, never against a number copied from another project.
+
+
 ## One-shot binding, before initialize
 
 ```solidity

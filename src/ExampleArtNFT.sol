@@ -26,7 +26,7 @@ import { IExampleArtNFT } from "./interfaces/IExampleArtNFT.sol";
 /// │    minted, only that each has immutable DNA.                                             │
 /// └──────────────────────────────────────────────────────────────────────────────────────┘
 ///
-/// EDUCATIONAL. See SECURITY.md.
+/// EDUCATIONAL REFERENCE — NOT PRODUCTION SOFTWARE. See SECURITY.md.
 contract ExampleArtNFT is ERC721, IERC4906, IExampleArtNFT {
     error ZeroAddress();
     error ZeroMaxSupply();

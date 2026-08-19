@@ -1,0 +1,267 @@
+{
+  "$comment": [
+    "THE ONE PLACE THIS REPOSITORY'S DOCUMENTATION DECLARES A FAST-MOVING PROTOCOL VALUE.",
+    "",
+    "Everything here is a value that (a) a reader will act on, and (b) changes when the protocol",
+    "changes. Hook mask, launch-protection schedule, launch-mode availability, per-chain deployment",
+    "status, quote support. Prose in docs/launchpad/*.md may DESCRIBE these; it may not RESTATE the",
+    "numbers, because a number typed in nine pages goes stale in eight of them.",
+    "",
+    "HOW IT REACHES THE PAGES: `node scripts/generate-doc-assets.mjs` renders every value below into",
+    "the `<!-- generated:*:start -->` blocks in docs/launchpad/*.md and into docs/assets/*.svg.",
+    "`--check` re-renders and diffs, so a stale page fails rather than ships.",
+    "",
+    "WHAT IS DELIBERATELY NOT HERE: the fee allocation (creator / platform / buy-and-entomb /",
+    "treasury). That is declared exactly once, in packages/project-schema/src/economics.js, and",
+    "`npm run kit:economics` fails any second declaration of it. The generator imports it from there.",
+    "",
+    "EVERY FIELD CARRIES ITS OWN SOURCE. `source` names the contract constant, config file or",
+    "package export this value mirrors, so the next person can re-derive it instead of trusting it.",
+    "",
+    "THIS FILE IS A MIRROR, NOT AN AUTHORITY. The deployed contracts are the authority. When they",
+    "disagree with this file, this file is wrong."
+  ],
+  "declarationVersion": 1,
+  "generation": {
+    "id": "RC6",
+    "releaseTag": "v1.0.0-rc6",
+    "source": "launchpad/src/rc6/** banner (Release v1.0.0-rc6)",
+    "predecessor": "RC5",
+    "predecessorNote": "RC5 is the previous launchpad generation. Its deployed addresses, its 0x1440 hook mask and its post-launch metadata-bind step are HISTORICAL. Do not describe any of them as current behaviour."
+  },
+  "deployment": {
+    "status": "PREPARED_NOT_DEPLOYED",
+    "statusSentence": "RC6 is not deployed on any chain. Every RC6 contract address is still to be determined and will change; this repository publishes none.",
+    "source": "launchpad/deployments/{1,8453,4663}.json -> status / release.verificationStatus",
+    "addressesPublishedHere": false,
+    "publicCreatorLaunchOpen": false,
+    "launchAccessStates": ["PREPARED", "PUBLIC"],
+    "launchAccessSource": "launchpad/src/rc6/factory/LaunchpadFactoryV1.sol -> enum LaunchAccessState",
+    "launchAccessNote": "A freshly initialized factory holds PREPARED, which is the zero value. It becomes PUBLIC exactly once, when the upgrade authority calls openPublicLaunches(). Nothing returns it to PREPARED."
+  },
+  "hook": {
+    "permissionMask": "0x14C0",
+    "permissionMaskDecimal": 5312,
+    "callbacks": ["afterInitialize", "afterAddLiquidity", "beforeSwap", "afterSwap"],
+    "flagBits": {
+      "afterInitialize": "1<<12 = 0x1000",
+      "afterAddLiquidity": "1<<10 = 0x400",
+      "beforeSwap": "1<<7 = 0x80",
+      "afterSwap": "1<<6 = 0x40"
+    },
+    "returnsDeltaPermissions": false,
+    "generation": 1,
+    "classification": "IMMUTABLE_MARKET_OBSERVER_AND_LAUNCH_FEE_POLICY",
+    "supersededClassification": "IMMUTABLE_MARKET_OBSERVER_ONLY",
+    "supersededMask": "0x1440",
+    "supersededMaskNote": "0x1440 is the RC5 launchpad mask AND the mask of the live flagship RELICS collection hook on Ethereum mainnet. It is correct in both of those contexts and wrong for an RC6 launchpad hook. Read the context before copying either number.",
+    "source": "launchpad/src/rc6/hook/ArtHookRc6.sol -> EXPECTED_HOOK_FLAGS, HOOK_GENERATION; launchpad/src/rc6/hook/HookMinerRc6.sol -> REQUIRED_FLAGS"
+  },
+  "poolFee": {
+    "kind": "DYNAMIC",
+    "dynamicFeeFlag": "0x800000",
+    "note": "The canonical pool is initialized with Uniswap v4's DYNAMIC_FEE_FLAG and the hook returns a per-swap LP-fee override from beforeSwap with OVERRIDE_FEE_FLAG set. It is Uniswap's own dynamic-fee mechanism: not a transfer tax, not a router toll, not a return-delta skim. The hook takes no custody of it; it accrues to the position like any LP fee.",
+    "source": "launchpad/src/rc6/hook/ArtHookRc6.sol -> beforeSwap; packages/launch-protection DYNAMIC_FEE_FLAG"
+  },
+  "launchProtection": {
+    "feePipsDenominator": 1000000,
+    "feePipsDenominatorSource": "Uniswap v4 LPFeeLibrary.MAX_LP_FEE",
+    "baseLpFeePips": 10000,
+    "baseLpFeePipsSource": "ArtHookRc6.BASE_LP_FEE_PIPS",
+    "initialAddonPips": 980000,
+    "initialAddonPipsSource": "ArtHookRc6.INITIAL_ANTI_SNIPE_ADDON_PIPS",
+    "maxEffectiveBuyFeePips": 990000,
+    "maxEffectiveBuyFeePipsSource": "ArtHookRc6.MAX_EFFECTIVE_BUY_FEE_PIPS",
+    "durationSeconds": 5880,
+    "durationSecondsSource": "ArtHookRc6.ANTI_SNIPE_DURATION_SECONDS",
+    "sellFeePips": 10000,
+    "sellFeePipsSource": "ArtHookRc6.currentSellFeePips (returns BASE_LP_FEE_PIPS, pure)",
+    "scheduleVersion": 1,
+    "scheduleFormula": "fee = BASE + floor(ADDON * max(DURATION - elapsed, 0) / DURATION), clamped to [BASE, MAX_EFFECTIVE_BUY]",
+    "scheduleFormulaNote": "The decaying quantity is the ADD-ON, not the span between the endpoints. `START - floor(span * elapsed / DURATION)` agrees at both ends and differs by one pip almost everywhere between, because the floor falls on the other side. Derive the curve from the add-on form or it disagrees with the chain.",
+    "anchor": "POOL_INITIALIZATION",
+    "anchorSource": "ArtHookRc6.poolOpenedAt, written once by PoolManager inside afterInitialize",
+    "anchorNote": "The window belongs to the pool, in every launch mode. A bonding-curve project's pool is created at finalization, so it opens at the maximum fee however long the sale ran first.",
+    "exemptions": "NONE",
+    "exemptionsNote": "beforeSwap reads nothing about who is swapping - not sender, not tx.origin, not hookData - so an exemption is inexpressible rather than merely refused. Creator, platform, deployer, Safe, routers and aggregators pay the same schedule.",
+    "mutableAfterLaunch": false,
+    "protectionIsMandatory": false,
+    "protectionIsMandatorySource": "launchpad/packages/launch-protection/src/schedule.js -> PROTECTION_IS_MANDATORY (owner amendment 2026-08-16; it WAS mandatory and is not now)",
+    "studioDefaultMode": "PROTECTED_98_MINUTES",
+    "studioDefaultModeSource": "launchpad/packages/launch-protection/src/schedule.js -> DEFAULT_ANTI_SNIPE_MODE; site/app/(launchpad)/components/studio/AntiSnipeSection.tsx",
+    "modes": [
+      {
+        "id": "UNSPECIFIED",
+        "wireValue": 0,
+        "selectable": false,
+        "label": "not a mode",
+        "summary": "The enum-zero sentinel. It is what an unset field, an omitted argument and a default-constructed value all read as, so it means nobody chose. `bind` refuses it, the fee path treats it as the maximum rather than the minimum, and it must never be rendered as NONE."
+      },
+      {
+        "id": "NONE",
+        "wireValue": 1,
+        "selectable": true,
+        "label": "NO_LAUNCH_PROTECTION",
+        "protected": false,
+        "startBuyFeePips": 10000,
+        "terminalBuyFeePips": 10000,
+        "sellFeePips": 10000,
+        "durationSeconds": 0,
+        "summary": "A flat 1% LP fee in both directions from the first block. No window, no decay, no countdown. A project on this mode must never be described as protected, sniper-resistant or fair-launched.",
+        "requiresAcknowledgement": true
+      },
+      {
+        "id": "PROTECTED_98_MINUTES",
+        "wireValue": 2,
+        "selectable": true,
+        "label": "PROTECTED_98_MINUTE_DECAY",
+        "protected": true,
+        "startBuyFeePips": 990000,
+        "terminalBuyFeePips": 10000,
+        "sellFeePips": 10000,
+        "durationSeconds": 5880,
+        "summary": "The buy-side LP fee falls from 99% to 1% across 5,880 seconds of wall-clock time from the moment the pool opens. The sell side is a flat 1% throughout, including the first second.",
+        "requiresAcknowledgement": false
+      }
+    ],
+    "modesSource": "launchpad/src/rc6/AntiSnipeTypes.sol -> enum AntiSnipeMode; launchpad/packages/launch-protection/src/schedule.js -> ANTI_SNIPE_MODE_SPEC",
+    "whatItDoes": "For the first minutes of a market, buying costs a multiple of what the same buy costs later. That removes the advantage of being first in the block, because being first is exactly when the fee is highest.",
+    "whatItDoesNotDo": "It does not guarantee equal allocation, it does not identify anyone, and it does not stop a buyer from waiting for the fee to fall and then buying. It prices the first minutes; it does not decide who is allowed to transact in them."
+  },
+  "launchModes": [
+    {
+      "id": "INSTANT_V4",
+      "wireValue": 0,
+      "availability": "AVAILABLE",
+      "label": "Instant V4",
+      "summary": "The whole supply enters the canonical Uniswap v4 pool in one transaction. The market exists from the launch receipt."
+    },
+    {
+      "id": "FIXED_PRICE_SALE_TO_V4",
+      "wireValue": 1,
+      "availability": "DISABLED_FOR_PUBLIC_LAUNCH",
+      "label": "Fixed-price sale",
+      "summary": "Withdrawn. Not offered, not selectable, and refused by the contract for every caller including the protocol Safe.",
+      "reason": "The fixed-price sale phase does not limit how much of a sale any one buyer can take: there is no per-buyer cap, no cooldown and no maximum per transaction, so a single address can acquire the entire allocation in one transaction at the moment the sale opens. The launch-protection schedule cannot apply there, because it governs the Uniswap v4 pool and that pool does not exist until the sale finalizes."
+    },
+    {
+      "id": "BONDING_CURVE_SALE_TO_V4",
+      "wireValue": 2,
+      "availability": "AVAILABLE",
+      "label": "Bonding curve",
+      "summary": "A sale along a published, versioned price curve, then a permissionless finalization that opens the canonical v4 pool. Two shipped presets: linear and constant-product."
+    }
+  ],
+  "launchModesSource": "launchpad/packages/launch-protection/src/schedule.js -> LAUNCH_MODE_AVAILABILITY / LAUNCH_MODE_UNAVAILABLE_REASON; launchpad/src/rc6/sale/SaleLaunchpadV1.sol -> FixedPriceSaleDisabled, BadMode",
+  "chains": [
+    {
+      "chainId": 1,
+      "slug": "ethereum",
+      "displayName": "Ethereum",
+      "explorer": "https://etherscan.io",
+      "nativeCurrencySymbol": "ETH",
+      "wrappedNativeSymbol": "WETH",
+      "rc6Status": "PREPARED_NOT_DEPLOYED",
+      "publicCreatorLaunch": "CLOSED",
+      "defaultQuote": "WETH",
+      "additionalQuoteSupport": "None. A non-WETH quote is refused by chain id, not by convention."
+    },
+    {
+      "chainId": 8453,
+      "slug": "base",
+      "displayName": "Base",
+      "explorer": "https://basescan.org",
+      "nativeCurrencySymbol": "ETH",
+      "wrappedNativeSymbol": "WETH",
+      "rc6Status": "PREPARED_NOT_DEPLOYED",
+      "publicCreatorLaunch": "CLOSED",
+      "defaultQuote": "WETH",
+      "additionalQuoteSupport": "None. A non-WETH quote is refused by chain id, not by convention."
+    },
+    {
+      "chainId": 4663,
+      "slug": "robinhood",
+      "displayName": "Robinhood Chain",
+      "explorer": "https://robinhoodchain.blockscout.com",
+      "nativeCurrencySymbol": "ETH",
+      "wrappedNativeSymbol": "WETH",
+      "rc6Status": "PREPARED_NOT_DEPLOYED",
+      "publicCreatorLaunch": "CLOSED",
+      "defaultQuote": "WETH",
+      "additionalQuoteSupport": "Multi-quote. Any asset QuoteAssetRegistryV1 currently admits AND leaves enabled: the stablecoin, the Robinhood stock/ETF tokens and the ecosystem token. Governance admits; a bundle can only request."
+    },
+    {
+      "chainId": 56,
+      "slug": "bnb",
+      "displayName": "BNB Smart Chain",
+      "explorer": "https://bscscan.com",
+      "nativeCurrencySymbol": "BNB",
+      "wrappedNativeSymbol": "WBNB",
+      "rc6Status": "PREPARED_NOT_DEPLOYED",
+      "publicCreatorLaunch": "CLOSED",
+      "defaultQuote": "WBNB",
+      "additionalQuoteSupport": "None. WBNB is not WETH; never print \"WETH\" or \"ETH\" on this chain."
+    }
+  ],
+  "chainsSource": "launchpad/config/chains/{1,8453,4663,56}.json; site/public/chain-manifest.json (generated); launchpad/deployments/*.json; scripts/launchpad/verify-bnb-opening-blocked.mjs",
+  "chainsNote": "All four chains are configured and all four are closed to public creator launch. No chain is more open than another today. The per-chain difference that survives is the quote leg, not the launch state.",
+  "multiQuoteChainId": 4663,
+  "quoteAssetRegistryVersion": "quote-assets/2026-08-09.1",
+  "governance": {
+    "upgradeAuthority": "protocol 2-of-3 Safe, holding UUPS upgrade authority directly",
+    "governanceTimelock": "NONE",
+    "governanceTimelockNote": "A 2-of-3 decision takes effect as soon as the threshold is met. Protocol-mechanic time windows - TWAP windows, sale durations, signature expiries - are not governance timelocks and are unaffected by this.",
+    "safeModel": "UNIFIED_PROTOCOL_AND_TREASURY_SAFE",
+    "safeModelNote": "One Safe address serves both protocol governance and retained-platform-treasury custody, and each chain carries a distinct chain-local instance with its own nonce and holdings. Never aggregate across chains.",
+    "source": "launchpad/src/rc6/RC6Component.sol; every RC6 component's @custom:upgrade-authority tag; launchpad/deployments/*.json -> treasury.treasurySafeModel"
+  },
+  "components": [
+    { "name": "ArtHookRc6", "scope": "per project", "upgradeable": false, "authority": "none", "note": "Direct CREATE2, no proxy, no admin. The launch-protection election is written once at bind and has no setter." },
+    { "name": "ArtStreamableFeesLockerRc6", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "No proxy, no UUPS, no beacon, no implementation slot, no upgrade path." },
+    { "name": "ImmutableLiquidityKernel", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Holds genesis liquidity principal. Deliberately the only non-upgradeable principal custodian in the system." },
+    { "name": "ImmutableEconomicKernel", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "The economic twin of the liquidity kernel." },
+    { "name": "MetadataResolverRc6", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Content-addressed: a writer cannot choose the key, because the key is derived from the bytes being published." },
+    { "name": "LaunchPolicyV1", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Validates launch params; no owner, no admin." },
+    { "name": "LaunchPredictorV1", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Address prediction; no owner, no admin." },
+    { "name": "ProjectComponentDeployerV1", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Deploys a project's components and binds its birth metadata in the same CREATE2 call." },
+    { "name": "ArtHookDeployerRc6", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "The 0x14C0 salts in a release are mined against this address and this creation code." },
+    { "name": "LaunchpadFactoryV1", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Behind RelicsFactoryProxy. Cannot reach a launched pool's hook, liquidity principal or art binding." },
+    { "name": "FeeAccountingV1", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Holds no position principal. Fees already collected here are within reach of an upgrade; principal is not." },
+    { "name": "EconomicKernelV1 / MultiQuoteEconomicKernelV1", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Settlement routing for collected fees." },
+    { "name": "ProjectCollectionV1", "scope": "per project (proxy)", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "The art binding it serves is written at birth and has no rewrite path; the runtime around it is upgradeable." },
+    { "name": "ProjectTokenV1 / ProjectTokenBurnableV1", "scope": "per project (proxy)", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Supply is fixed at launch; the implementation behind the clone is not." },
+    { "name": "ProjectRightsV1", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "The rights TOKEN is creator-owned and indestructible; the registry CODE is upgradeable. The Safe can never mint, move or redirect rights." },
+    { "name": "ProjectMetadataRegistryV1", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Project/profile media surface. Not in an RC6 collection's contractURI() path, which reads the birth document from the resolver." },
+    { "name": "QuoteAssetRegistryV1", "scope": "protocol (chain 4663)", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock; a separate guardian may only disable", "note": "Forward-only: no function takes a projectId or a PoolId, so no call reaches a launched project." },
+    { "name": "SaleLaunchpadV1 / sale escrows", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "The fixed-price refusal is a comparison against a compile-time enum member, not a configuration flag." },
+    { "name": "ScriptStorageV1", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Stored art bytes are content-addressed by the launch's artScriptHash commitment." },
+    { "name": "TemplateRegistryV1 / ArtRuntimeRegistryV1 / HookGenerationRegistry", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Forward-only: they select what a FUTURE launch may use and can never change an existing project's." },
+    { "name": "Buyback / treasury components", "scope": "protocol", "upgradeable": true, "authority": "2-of-3 Safe, direct, no timelock", "note": "Platform-side settlement only. They never read a creator or collaborator ledger." }
+  ],
+  "componentsSource": "@custom:upgrade-authority NatSpec tag on each contract in launchpad/src/rc6/** and launchpad/src/kernel/**",
+  "metadata": {
+    "onChainField": "metadataUriHash",
+    "onChainFieldDefinition": "keccak256(bytes(uri)) - the hash of the URI STRING, and nothing else.",
+    "offChainField": "metadataContentHash",
+    "offChainFieldDefinition": "A content digest over the metadata JSON, carried by the .relics bundle. It NEVER reaches a chain.",
+    "confusionNote": "Two digests exist and they are not interchangeable. An earlier draft named the on-chain field metadataContentHash, which put a name meaning one quantity on a field holding the other. If you see that name in a chain context, it is the wrong one.",
+    "zeroRefused": true,
+    "contractUriNonEmptyAtReceipt": true,
+    "postLaunchBindTransaction": false,
+    "postLaunchBindTransactionNote": "RC5 had a post-launch bindMetadataRegistry step. RC6 does not carry that path at all: LaunchPolicyV1 refuses a launch whose metadataUriHash is zero, and the collection's bindBirthMetadata runs inside the same CREATE2 call that creates the proxy.",
+    "addressInvariance": true,
+    "addressInvarianceNote": "metadataUriHash is not a CREATE2 salt and not part of any component's initializer calldata, so changing a project's metadata leaves its token, collection and mined hook addresses exactly where they were.",
+    "source": "launchpad/src/interfaces/ILaunchpad.sol -> LaunchParams.metadataUriHash; launchpad/src/rc6/nft/ProjectCollectionV1.sol -> bindBirthMetadata / contractURI"
+  },
+  "creatorPayout": {
+    "modes": [
+      { "id": "DUAL_ASSET", "wireValue": 0, "summary": "The creator accrues and claims both real legs of their own pool: the project token and the selected quote asset, unconverted." },
+      { "id": "QUOTE_ONLY", "wireValue": 1, "summary": "The creator's own project-token entitlement is converted into THE PROJECT'S SELECTED QUOTE - not into WETH, unless WETH happens to be the quote." }
+    ],
+    "defaulted": false,
+    "defaultedNote": "Never defaulted to QUOTE_ONLY. Converting a creator's fees without their say-so is not a default anyone may pick for them.",
+    "immutableAfterLaunch": true,
+    "availableOnBothLanes": true,
+    "source": "launchpad/src/interfaces/ILaunchpad.sol -> LaunchQuote.creatorLpFeeAssetMode; launchpad/src/rc6/fee/FeeAccountingV1.sol"
+  }
+}

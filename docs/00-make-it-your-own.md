@@ -137,7 +137,7 @@ render your collection from the config + on-chain reads, failing closed on anyth
 ## Step 9 — Mainnet, after review
 
 Only after your own security + legal + economic review. Follow the
-[mainnet safety checklist](../README.md#20-mainnet-safety-checklist). No project-funded bootstrap
+[mainnet safety checklist](README.md#mainnet-safety-checklist). No project-funded bootstrap
 buy; honest launch language ([15](15-launch-economics.md)); never call the locked LP "burned".
 
 ---
@@ -176,6 +176,6 @@ the web needs to read it.
 
 ---
 
-> Reminder: this is an **educational template**, and **not affiliated with**
-> Uniswap, OpenZeppelin, OpenSea, or any auditor. Your fork is your responsibility — get your own
-> security, legal, and economic review before launching.
+> Reminder: this is an **educational template**, and **not affiliated with** Uniswap, OpenZeppelin,
+> OpenSea, or any production collection. A fork is yours to answer for: it is your deployment, your
+> keys, and your users.

@@ -52,6 +52,14 @@ This starter's hook needs three callbacks:
 
 Summed, the low bits must equal `0x1440`.
 
+> **`0x1440` is this template's mask, and not a universal one.** The example hook here declares
+> three "after" callbacks, so its address must carry those bits. A Uniswap v4 hook's mask is whatever
+> its own `getHookPermissions()` declares — a hook that also sets a dynamic fee needs `beforeSwap`
+> and lands on a different mask. The RELICS Launchpad's per-project ArtHook is one such hook; see
+> [`docs/launchpad/02`](launchpad/02-what-a-launch-produces.md#the-hook) for its mask. Mine against
+> the mask your own hook declares, never against a number copied from another project.
+
+
 ## The lifecycle we use
 
 1. **Deploy** the token, then the hook (to a mined `0x1440` address), renderer, and NFT.

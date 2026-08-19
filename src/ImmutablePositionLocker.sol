@@ -52,7 +52,7 @@ interface IERC20BalanceOf {
 /// encoded are DECREASE_LIQUIDITY and TAKE, and the DECREASE amount is the LITERAL zero — a
 /// principal withdrawal cannot be expressed by this bytecode.
 ///
-/// EDUCATIONAL. See SECURITY.md. This is a teaching artifact. Verify every
+/// EDUCATIONAL REFERENCE — NOT PRODUCTION SOFTWARE. See SECURITY.md. This is a teaching artifact. Verify every
 /// property against the v4-periphery version you deploy against, on a fork, before trusting it.
 contract ImmutablePositionLocker is IERC721Receiver, ReentrancyGuard {
     error ZeroAddress(string field);

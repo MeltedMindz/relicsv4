@@ -20,7 +20,7 @@ import { IExampleToken } from "./interfaces/IExampleToken.sol";
 /// │  the "no rug surface" promise and change the whole security story.                       │
 /// └──────────────────────────────────────────────────────────────────────────────────────┘
 ///
-/// EDUCATIONAL. See SECURITY.md.
+/// EDUCATIONAL REFERENCE — NOT PRODUCTION SOFTWARE. See SECURITY.md.
 contract ExampleToken is ERC20, IExampleToken {
     error ZeroHolder();
     error ZeroSupply();
