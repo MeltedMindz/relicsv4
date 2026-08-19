@@ -93,6 +93,8 @@ const RESERVED_B64 = [
   "NjY2W15cbl17MCw0OH1cYkdNRVxi",
   "XGJHTUVcYlteXG5dezAsNDh9NjY2",
   "XGIxNjZccyosXHMqMzMzXHMqLFxzKjUwMFxzKixccyo2NjZcYg==",
+  "XGIxWyxfXT8wMDFbLF9dPzAwMVxi",
+  "ZXJjKD86MjBHZW5lc2lzU3VwcGx5V2hvbGV8NzIxTWF4U3VwcGx5KVxzKls6PV0rXHMqXGQqNjY2XGQqXGI=",
 ];
 
 // Probes for the patterns whose regex syntax the naive deriver below cannot invert into a matching
@@ -106,6 +108,8 @@ const PROBE_B64 = {
   20: "NjY2IHBhaXJzIHdpdGggR01F",
   21: "R01FIHF1b3RlZCBhZ2FpbnN0IDY2Ng==",
   22: "MTY2LCAzMzMsIDUwMCwgNjY2",
+  23: "MTAwMTAwMQ==",
+  24: "ZXJjNzIxTWF4U3VwcGx5OiA2NjY2NjY=",
 };
 const RESERVED = RESERVED_B64.map((b) => new RegExp(Buffer.from(b, "base64").toString("utf8"), "i"));
 
@@ -222,9 +226,12 @@ if (CONTROLS) {
     "erc721MaxSupply: 10000",
     '<path d="M6 6 6 66 666 6" />',
     // Added with patterns 10-22: the generic mechanism keeps these shapes, and a gate that fired on
-    // them would fire on the repository's own schema tests.
+    // them would fire on the repository's own schema tests. NOTE: the must-allow here is a NEUTRAL
+    // supply. An earlier revision asserted the same field carrying a six-run must pass, which is the exact
+    // shape of the leak it exists to stop -- a must-allow is a promise to stay blind, so it has to
+    // name a value nobody would ever be leaking.
     "erc20GenesisSupplyWhole: 1000000",
-    "erc721MaxSupply: 666666",
+    "erc721MaxSupply: 100000",
     "id: \"MY_REVIEWED_TEMPLATE_V1\"",
     '"bundleSha256": "3d17ba29f8f4ac4818d9b3267fd2d6e5fcf430fc09d7b4d762e8de50396bd092"',
     "totalSupplyWhole: 1000000000",

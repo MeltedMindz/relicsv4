@@ -7560,7 +7560,7 @@
     },
     {
       "path": "scripts/check-reserved-terms.mjs",
-      "sha256": "72a9c16d7473989c0b6b4445eb338077a1149fdb153a7be246b0862969feb19c",
+      "sha256": "794875ee7a187d64eb9cd9b474f9a9171bb33c0e61847ee3d139a14abef25235",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
