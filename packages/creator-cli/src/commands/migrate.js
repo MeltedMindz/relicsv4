@@ -115,7 +115,14 @@ export function migrateBundle(path, options = {}) {
       project: manifest.project,
       supply: manifest.supply,
       art: { runtime: manifest.art?.runtime, templateId: manifest.art?.templateId ?? null, seed: manifest.art?.seed },
-      market: { startingPreset: manifest.market?.startingPreset, launchMode: manifest.market?.launchMode },
+      // A pre-4.0.0 bundle carries no election. UNSPECIFIED is written rather than a guess: the
+      // migration's whole job is to hand back a draft the creator finishes, and inventing NONE
+      // here would silently choose a fee schedule on their behalf.
+      market: {
+        startingPreset: manifest.market?.startingPreset,
+        launchMode: manifest.market?.launchMode,
+        antiSnipeMode: manifest.market?.antiSnipeMode ?? "UNSPECIFIED",
+      },
       earnings: manifest.earnings,
       chains: manifest.chains,
     }),

@@ -30,6 +30,8 @@ import {
   CREATOR_LP_FEE_ASSET_MODES,
   BURN_POLICIES,
   DEFAULT_BURN_POLICY,
+  ANTI_SNIPE_WIRE_VALUES,
+  ANTI_SNIPE_ELECTIONS,
 } from "./vocabulary.js";
 import { isSchemaCompatible, SCHEMA_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, parseSemver, explainIncompatibility } from "./version.js";
 import { isSha256Hex } from "./hashes.js";
@@ -354,7 +356,28 @@ export function validateManifest(manifest) {
   if (!isObject(market)) {
     issues.push(error("MARKET_SHAPE", `${at}#market`, "market must be an object"));
   } else {
-    onlyKeys(issues, market, `${at}#market`, ["startingPreset", "launchMode", "mappingCount", "sale", "chainId", "quoteAsset", "creatorLpFeeAssetMode"]);
+    onlyKeys(issues, market, `${at}#market`, ["startingPreset", "launchMode", "antiSnipeMode", "mappingCount", "sale", "chainId", "quoteAsset", "creatorLpFeeAssetMode"]);
+
+    // ANTI-SNIPE ELECTION. Required at 4.0.0 and deliberately NOT defaulted. Both values are
+    // real economic choices — NONE opens at a flat 1%/1%, PROTECTED_98_MINUTES ramps the buy
+    // side from 99% down over 5,880 seconds — so inferring one from silence would put a fee
+    // schedule the creator never chose onto a permanent pool.
+    //
+    // UNSPECIFIED is the honest draft value and is refused for FINAL, which is what makes the
+    // requirement enforceable without forcing a creator to decide before they are ready.
+    if (!ANTI_SNIPE_WIRE_VALUES.includes(market.antiSnipeMode)) {
+      issues.push(
+        error("MARKET_ANTI_SNIPE_MODE", `${at}#market.antiSnipeMode`, `antiSnipeMode must be one of ${ANTI_SNIPE_WIRE_VALUES.join(", ")}`),
+      );
+    } else if (manifest.status === "FINAL" && !ANTI_SNIPE_ELECTIONS.includes(market.antiSnipeMode)) {
+      issues.push(
+        error(
+          "MARKET_ANTI_SNIPE_UNSPECIFIED",
+          `${at}#market.antiSnipeMode`,
+          `a FINAL bundle must elect ${ANTI_SNIPE_ELECTIONS.join(" or ")}; UNSPECIFIED is draft-only and cannot be defaulted, because either value is an economic choice the creator has to make`,
+        ),
+      );
+    }
     if (!STARTING_PRESETS.includes(market.startingPreset)) {
       issues.push(error("MARKET_PRESET", `${at}#market.startingPreset`, `startingPreset must be one of ${STARTING_PRESETS.join(", ")}`));
     }

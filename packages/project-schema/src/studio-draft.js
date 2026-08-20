@@ -81,6 +81,7 @@ export function toStudioDraft(validated, byPath, options = {}) {
     market: {
       startingPreset: STARTING_PRESET_TO_INDEX[manifest.market.startingPreset],
       launchMode: manifest.market.launchMode,
+      antiSnipeMode: manifest.market.antiSnipeMode,
       saleAllocationBps: manifest.market.sale?.allocationBps ?? 2500,
       creatorAllocationBps: manifest.earnings.creatorAllocationBps ?? 0,
       curvePresetId: manifest.market.sale?.curvePresetId ?? "linear",

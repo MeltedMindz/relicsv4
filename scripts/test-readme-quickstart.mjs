@@ -114,6 +114,10 @@ try {
       const configPath = join(project, "relics.config.json");
       const config = JSON.parse(readFileSync(configPath, "utf8"));
       config.earnings.creatorRecipient = RECIPIENT;
+      // A template scaffolds as a DRAFT: `market.antiSnipeMode` ships UNSPECIFIED so no project
+      // launches on a fee schedule its author never chose. Elect it here exactly as a creator
+      // would, for the same reason creatorRecipient is filled in — a template ships neither.
+      config.market.antiSnipeMode = "NONE";
       writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
     }
 

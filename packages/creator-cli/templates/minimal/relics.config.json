@@ -17,7 +17,8 @@
   },
   "market": {
     "startingPreset": "MID",
-    "launchMode": "INSTANT_V4"
+    "launchMode": "INSTANT_V4",
+    "antiSnipeMode": "UNSPECIFIED"
   },
   "earnings": {
     "mode": "SOLO",
@@ -25,6 +26,8 @@
     "collaborators": []
   },
   "chains": {
-    "requested": [8453]
+    "requested": [
+      8453
+    ]
   }
 }

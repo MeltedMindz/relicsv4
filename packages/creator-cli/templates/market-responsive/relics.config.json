@@ -18,7 +18,8 @@
   },
   "market": {
     "startingPreset": "MID",
-    "launchMode": "INSTANT_V4"
+    "launchMode": "INSTANT_V4",
+    "antiSnipeMode": "UNSPECIFIED"
   },
   "earnings": {
     "mode": "SPLIT",

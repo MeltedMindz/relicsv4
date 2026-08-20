@@ -39,6 +39,7 @@ export const CHECKS = Object.freeze([
   { id: "SCRIPT_BYTE_LIMIT", title: "script byte budget" },
   { id: "TRAIT_SCHEMA", title: "trait schema" },
   { id: "MARKET_MAPPING_BOUNDS", title: "market mapping bounds" },
+  { id: "MARKET_ANTI_SNIPE", title: "anti-snipe election" },
   { id: "COLLECTION_METADATA", title: "collection metadata" },
   { id: "EARNINGS_CONFIG", title: "earnings configuration" },
   { id: "SUPPLY_AND_BACKING", title: "supply relationship" },
@@ -170,6 +171,8 @@ export function validateBundle(byPath, options = {}) {
                   ? "SUPPLY_AND_BACKING"
                   : issue.code.startsWith("CHAIN")
                     ? "CHAIN_FEATURES"
+                    : issue.code.startsWith("MARKET_ANTI_SNIPE")
+                      ? "MARKET_ANTI_SNIPE"
                     : issue.code.startsWith("MARKET")
                       ? "MARKET_MAPPING_BOUNDS"
                       : "MANIFEST_SCHEMA";

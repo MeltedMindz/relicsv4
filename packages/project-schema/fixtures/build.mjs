@@ -93,7 +93,11 @@ function renderBindingSeeds(byPath, manifest) {
 const parity = [];
 for (const id of ["minimal", "market-responsive", "solidity-svg-params"]) {
   const files = templateFiles(id);
-  const config = templateConfig(id);
+  // TEMPLATES SCAFFOLD AS DRAFTS. `market.antiSnipeMode` ships UNSPECIFIED so a new project cannot
+  // be exported until its author elects a fee schedule deliberately. A parity fixture is a FINAL
+  // bundle, so it has to make that election here rather than inherit the draft value — electing
+  // NONE keeps every fixture's opening fees flat, which is what the reproduced hashes assume.
+  const config = { ...templateConfig(id), market: { ...templateConfig(id).market, antiSnipeMode: "NONE" } };
 
   // TWO PASSES, the same shape the CLI uses: a probe bundle exists only to give the generator a
   // render context, and the real bundle is assembled with the resulting digests committed into its

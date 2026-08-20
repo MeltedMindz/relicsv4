@@ -96,6 +96,10 @@ export function buildOne(project) {
     const configPath = join(dir, "relics.config.json");
     const config = JSON.parse(readFileSync(configPath, "utf8"));
     config.earnings.creatorRecipient = COMPAT_CREATOR_RECIPIENT;
+    // A template scaffolds as a DRAFT: market.antiSnipeMode ships UNSPECIFIED so no project
+    // launches on a fee schedule its author never chose. A compatibility fixture is FINAL, so it
+    // elects here exactly as a creator would — NONE keeps the opening fees flat across fixtures.
+    config.market.antiSnipeMode = "NONE";
     if (config.earnings.collaborators?.length) config.earnings.collaborators[0].recipient = COMPAT_COLLABORATOR;
     writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
 

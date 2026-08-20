@@ -247,8 +247,14 @@ const BY_CODE = {
     edit: "market/mappings.json routes two sensors to the same destination. Legal, and rarely what you meant: the second reading overwrites the first, so one of the two sensors has no visible effect.",
     run: "relics dev .",
   },
+  MARKET_ANTI_SNIPE_MODE: {
+    edit: "relics.config.json -> market.antiSnipeMode must be UNSPECIFIED, NONE or PROTECTED_98_MINUTES. It is independent of launchMode: any launch mode can carry any of the three.",
+  },
+  MARKET_ANTI_SNIPE_UNSPECIFIED: {
+    edit: "relics.config.json -> market.antiSnipeMode is still UNSPECIFIED, which is a draft value. Choose NONE (the pool opens at a flat 1% buy / 1% sell LP fee) or PROTECTED_98_MINUTES (the buy LP fee falls linearly from 99% to 1% over 5,880 seconds while the sell fee stays at 1%). The kit will not choose for you, because either one is a permanent economic decision about your own launch.",
+  },
   MARKET_LAUNCH_MODE: {
-    edit: 'relics.config.json -> market.launchMode must be one the format knows AND one that is still offered. Two are offered: INSTANT_V4, which has no sale phase at all, and BONDING_CURVE_SALE_TO_V4, which has one and carries the sale block. FIXED_PRICE_SALE_TO_V4 is a value the format still reads and no longer launches -- the deployed sale contract refuses it for every caller, so this kit refuses it here rather than letting you find out with a finished bundle. This is also where anti-snipe lives: a strategy is not a separate field, it is the launch mode you pick. `relics dev` shows which mode implements which strategy.',
+    edit: 'relics.config.json -> market.launchMode must be one the format knows AND one that is still offered. Two are offered: INSTANT_V4, which has no sale phase at all, and BONDING_CURVE_SALE_TO_V4, which has one and carries the sale block. FIXED_PRICE_SALE_TO_V4 is a value the format still reads and no longer launches -- the deployed sale contract refuses it for every caller, so this kit refuses it here rather than letting you find out with a finished bundle. Anti-snipe is NOT decided here: since RC6 it is its own field, `market.antiSnipeMode`, and every launch mode can carry either value.',
     run: "relics dev .",
   },
   ART_PREVIEW_DRIFT: {

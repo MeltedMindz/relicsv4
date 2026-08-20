@@ -66,6 +66,7 @@ export function inspectBundle(path, options = {}) {
     if (m.protocolTemplate) row("protocol", `${m.protocolTemplate.id} · economics ${m.protocolTemplate.economicsSha256}`);
     row("art", `${m.art.runtime}${m.art.templateId ? ` template ${m.art.templateId}` : ""} · seed ${m.art.seed} · ${m.art.scriptBytes.toLocaleString()} script bytes`);
     row("market", `${m.market.launchMode} · ${m.market.startingPreset} tier · ${m.market.mappingCount} mapping(s)`);
+    row("anti-snipe", `${m.market.antiSnipeMode ?? "UNSPECIFIED"}`);
     row("earnings", `${m.earnings.mode} → ${m.earnings.creatorRecipient}${m.earnings.collaborators.length ? ` + ${m.earnings.collaborators.length} collaborator(s)` : ""}`);
     row("chains", m.chains.requested.join(", "));
     row("license", m.project.license);

@@ -59,6 +59,9 @@ export function fillCreatorRecipient(root) {
   const path = join(root, "relics.config.json");
   const config = JSON.parse(readFileSync(path, "utf8"));
   config.earnings.creatorRecipient = TEST_RECIPIENT;
+  // A template scaffolds as a DRAFT: market.antiSnipeMode ships UNSPECIFIED so no project
+  // launches on a fee schedule its author never chose. Elect it here exactly as a creator would.
+  config.market.antiSnipeMode = "NONE";
   if (config.earnings.collaborators?.length) config.earnings.collaborators[0].recipient = TEST_COLLABORATOR;
   writeFileSync(path, `${JSON.stringify(config, null, 2)}\n`);
 }

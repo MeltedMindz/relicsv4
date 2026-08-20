@@ -6097,14 +6097,14 @@
     },
     {
       "path": "packages/creator-cli/src/commands/inspect.js",
-      "sha256": "4d52efce9210d0934a4bd6b81a2cabc2b6bf6858ea1fdd589fcb6b354c9a1038",
+      "sha256": "b30f5af90370a955078ee56fe0d33833718f160c5a0374d5f2fe8ef13e7719e1",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/creator-cli/src/commands/migrate.js",
-      "sha256": "f375d1df01236a7e6f1ca3dde6d5a1cfeef1d56113d5548884e3b75f976f9485",
+      "sha256": "5271019fb602b3d348d9f9122d3ec876faead9cd2fe69da0fbaf33a042412b96",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6146,7 +6146,7 @@
     },
     {
       "path": "packages/creator-cli/src/remedies.js",
-      "sha256": "5c3a5781d6021d5288c14d6862b0ece08dfa21ade78f4426f63cc2b1a8b84f17",
+      "sha256": "9ccd672ea53d3ebc57d9d8d4c1533e45f4f774a060c4e1a3a97948de9b67ad69",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6251,7 +6251,7 @@
     },
     {
       "path": "packages/creator-cli/templates/market-responsive/relics.config.json",
-      "sha256": "1e891ddfd98cd6dd19e6219d5b8d74e5e646c5bb23e526425eaaa75c5343e9e5",
+      "sha256": "9dee3c3c51d2afd48caa76b3589dc1edea564297a3f4c852a72e3eda8341bc2f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6335,7 +6335,7 @@
     },
     {
       "path": "packages/creator-cli/templates/minimal/relics.config.json",
-      "sha256": "603698e23f8cad866125fc216ae57c0e0a61d2d93d2318a9be700b796789ae1c",
+      "sha256": "261fa9ea957b579e1b0f62c551a31680d84b70ec2a9daffdbb93104113a6f58d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6419,7 +6419,7 @@
     },
     {
       "path": "packages/creator-cli/templates/onchain-js/relics.config.json",
-      "sha256": "4c59344d4b4e0c86ff56de0a776239d5eb1d6afa932b8f6847fc2b82db206e53",
+      "sha256": "d8475b16bafdb9fbf37d3f417b3375ca93258f99da2ebe542b2eb1779fcdee7b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6510,7 +6510,7 @@
     },
     {
       "path": "packages/creator-cli/templates/solidity-svg-params/relics.config.json",
-      "sha256": "140b1b427cff90dd5c0b0c370b2df8291b7e104d86cd5d546b9701634c99926e",
+      "sha256": "f5afcfdde695a631612e84e22cf6b941c55c3cafae8ff06a10574db86fdac14d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6601,7 +6601,7 @@
     },
     {
       "path": "packages/creator-cli/templates/static-art/relics.config.json",
-      "sha256": "4cb6d7535c036dbadf647218979a47257174585d47db2c2e3a74b4add9b9b704",
+      "sha256": "c8446e647748e4d2aeb4a0de0fc8d57e3f86e1c4f78261771c46bc7fa5c74e43",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6643,7 +6643,7 @@
     },
     {
       "path": "packages/project-schema/SCHEMA_SURFACE.json",
-      "sha256": "c2a367587e163faefcc1c6cdad509f8cab8ba86deab8c887a8a22da9c0f47f19",
+      "sha256": "6cf8e4d086fb251513fb35b747f3c3eaa30368fed26c2ec91879a57db7d2ae2b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6664,7 +6664,7 @@
     },
     {
       "path": "packages/project-schema/fixtures/CHECKSUMS.json",
-      "sha256": "d5fa54579884659259289e352db34c667f0bcde87b2b0cc708e3e19af4767b90",
+      "sha256": "42d7b3b16aa139686d8bac4e799d5e7d72966b46a5aac7deeb64a64a85693f66",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6685,7 +6685,7 @@
     },
     {
       "path": "packages/project-schema/fixtures/build.mjs",
-      "sha256": "7ba325630ae00af78fe2ac89ee029890f23ffae2fdb7223cf6b684a8d79189f8",
+      "sha256": "8227f895513b250b87afe4f1688a21dbefe68cc2c403f9ed6401aeceab3e56bf",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6699,189 +6699,189 @@
     },
     {
       "path": "packages/project-schema/fixtures/hostile/absolute-path.relics",
-      "sha256": "a1a830de6f92db0adbe842ee49e713e19ecd97b96cb0bddd4356bc0c706c926f",
+      "sha256": "0ad96ca4cc9bd375a77194b70bdba7e6b9e2d8b268fcb6ce0ab892343ca53e2d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/arbitrary-hook-solidity.relics",
-      "sha256": "219eb48321e0d57a647937405d140814bc9db49dd2b95251151180bee2d99646",
+      "sha256": "98eccca38df4216a4d00dc0024675c7e72b5dd3a86f03799d800d4f186f29db2",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/art-config-bad-magic.relics",
-      "sha256": "507ca4dc2bf892bca356d16a6e7234d46d31809d92c8332aee17db25feed1e13",
+      "sha256": "6a3203884432bc0683464c017d837521df10bfe1ef2e66475d667114d5d9e867",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/art-config-bad-version.relics",
-      "sha256": "7b413cc24dd28760aa09dd429c9806ed64ffd77b29a18bfd9fbf9c83f2eb1c99",
+      "sha256": "5ddffdcd1331d03434e49ec012969729bd572007667ab203ec16bd56954561c1",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/art-config-four-byte-blob.relics",
-      "sha256": "de49c6c33299af7a06084da118b31ceaccf50d6b4a987c061f59cc85727e4cf6",
+      "sha256": "241c3a44bdc5bc947b841f12300e4f604c415828c0a0586687e7a3e108c8708e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/art-config-hash-lie.relics",
-      "sha256": "fca2d51dda27cf091c3f0755e3911dc4b5fb76ac8fdf5b3066c1d57362044675",
+      "sha256": "100d5455511c3a58c6a721a9150a43117e2d03886ed03695fe9bc2f1accaa0a3",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/art-config-missing.relics",
-      "sha256": "343089059a8101654e5e2d0cfbd8a234cd9cd311c53e1f500a3e6d20b7b07704",
+      "sha256": "94e4141cb1f0a9df2b0559e01a93339ddbd9760cc86504d921c1f9fde0b6ed3d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/art-config-out-of-range.relics",
-      "sha256": "e82c457748010ea03f06a95b087b330bfa14d3bd23671b666f46bc288a5b7e60",
+      "sha256": "731321ad6a7b1ffdc1708d01afb11d3256e0c03682c9c0445c10c97a6e6223e4",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/art-config-params-mismatch.relics",
-      "sha256": "ab19e7fe69f5fb6f5a28899fd9371576c322942e70edf6fa34c703f1e5826da1",
+      "sha256": "9925027440dfc25ece1367fae4500d55d0d249408d1b1279aede7141c3c3c114",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/backslash-path.relics",
-      "sha256": "b321504ea3fcbc787c914a71955e9a9c576efc0ce7ed2b4f16be1b5708e1438b",
+      "sha256": "e34ceb5a43ecaee492547e8fca293a94afa7447c83d71b7619ce72a4aa8b26db",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/binding-art-config-hash-swap.relics",
-      "sha256": "b86593bf8a798a6de3323fb4489b4f4ab5574c082d4acd4fc5f87081a6042726",
+      "sha256": "1209a729d8d8a1e7e5db06339a5af8d2bf01626a43114c7ed1f764e033a788d0",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/binding-output-commitment-lie.relics",
-      "sha256": "9573e5d0efa6f91daffa730527ac62817f257a5bdcb39a949111f2bd3c2a18ec",
+      "sha256": "ae01b0849b8b1628f7724c37dbb3789a4ff4aa40c88c6c72e1bd374d6cbb1a85",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/binding-pins-runtime-codehash.relics",
-      "sha256": "35d453abdb06996ac414c7e749f44f3dc5045be29e2e6435881ed189700b800d",
+      "sha256": "e668079a436095ed283c6c9e4698cc6bd719e481f14d4d34edf4cce7317a6887",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/binding-pins-script-pointer.relics",
-      "sha256": "96574d0b927d702629ecd928817de3c096714fc9b4029ae1bd4b7839ae562047",
+      "sha256": "99e58b08f0e8af0fcf3469a35760bf019ee357ad664fd6c20c610c1f33e8a9f6",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/binding-runtime-swap.relics",
-      "sha256": "22f1f4f8cfd10d73c0bf4491963f082300de9f397d93d23641205fafdf85c9d7",
+      "sha256": "0bcacd4099b44971c3b39e733a13018daaf76e3c0cf30293dddb17aa0a27bcd8",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/blank-output.relics",
-      "sha256": "88ae11cbbfa770201aae93d1baa023e6b1de1072f1d39cb74a36bd6dfa37f5e3",
+      "sha256": "6643b0e5e9237a57c520d9e4b694b4f058a9f52a6b7d515f762c7e22deb4766e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/compressed-entry.relics",
-      "sha256": "440a7df88d6b5f8e25a421f2394a54a9699bb799d1c16f6bd9e5c86f48ddce99",
+      "sha256": "094e8677fbe47f56bcb981c7af2f3d7b4e6170f0ef2ee69be2a5f965044cd437",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/data-descriptor.relics",
-      "sha256": "6993041a754a031551f0b276213564be136d6c42fba5a46896ae80ddfce49a8e",
+      "sha256": "0827771c28bb092cca77efcd40d15095675914756a4ef749be33892164e35854",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/dependency-import.relics",
-      "sha256": "a9eedc6adb09deeda95bfb3bb24a5fbe79aaf45dcfdc186032d5722aaaf33d25",
+      "sha256": "ff380e8c39b24d9195285ca17f4fc8df2a07fe6d432cbeb60547cab5604e04e6",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/duplicate-normalized-path.relics",
-      "sha256": "77a92b5f6fe1afd64d06bb9a76a74e8fed0fddd20c2f399de3bd37b65146412d",
+      "sha256": "01f8abd2ed2f048ce25d428989187443d4aed5e0ff6b2f601b32be401552a642",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/earnings-over-allocated.relics",
-      "sha256": "636b60cab0f4ad7a66ad01a4be9b8b6ff966f17d16cad3783b3fe5a788046c26",
+      "sha256": "6117a860c493cd210792ee3233c70b414cd1f12f959923e0047b4808be6f611e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/encrypted-entry.relics",
-      "sha256": "39e51d4f346536222b971ae51ffdb33840cbb4472ffb3732d5a6e467d8387e84",
+      "sha256": "8ade257a455eceb257151f9e9e6bd1808eaba1a3c035a13128839e9374a6bce4",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/executable-payload.relics",
-      "sha256": "5f5d67d032668d0f806cb39575b28884dada0f6d778554364d3a8e7ce74185a2",
+      "sha256": "7d00c7db99c86f8b55b2802fbb6efc8bd328d738cae245626ea0fd4be5521dfc",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/expectations.json",
-      "sha256": "9f0983990476c883ba9a66dc8c25ee3cfcfce9353c5afdda0fab67e73f65ffce",
+      "sha256": "6f296d673499e433b14a426612866ffc66bbca9dc4a532ffbc316451ba38be21",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/external-network.relics",
-      "sha256": "6e976db1fe1006ae53a6ae160d6422db6414c727140d727ee27966a8ddd75cf0",
+      "sha256": "e779e24de8375e2f8a2b86798242b8ec74674be46fd545c62aa30a8d26ec7c9a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/hash-tamper.relics",
-      "sha256": "d3f5abee2d9dbfe4fa041cb41cee70afc4444211d78af1fd7c557ad7d7780804",
+      "sha256": "7d03cde054952763495bc17b8a67382cbff3a1410140816138849517671d298d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/infinite-loop.relics",
-      "sha256": "18dbde87b4aef4bc7492e1fa0abfc114046ac4688ab137931a519c80e534c41b",
+      "sha256": "2064a458b788aff2f60c0606e09ee4fd953865f7695a4dd407e984a7102222bc",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6895,35 +6895,35 @@
     },
     {
       "path": "packages/project-schema/fixtures/hostile/malformed-json.relics",
-      "sha256": "5e34391e060cf1d4f7ac5ab05cd649ec38b250ae1afa001108506a4be18c328d",
+      "sha256": "8daf06b3358b5ffcb4a9eaa323eaa88c5b85c1494d516d2818c151a394379a0d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/malicious-svg-asset.relics",
-      "sha256": "21b11d44e73af2188279de482cb2049c032bac9df0fe25b58ff062406d597f4d",
+      "sha256": "5ea2d23c384e095899b3acc25305314df7d5f3c6ac6ea00812808eec50d62330",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/market-mapping-out-of-bounds.relics",
-      "sha256": "a27e33f5af8cf6064552c34ca3b240ff28cf6f7da1277abc5d07b393a053e5a8",
+      "sha256": "29c11d46cf188b13bb4d42767274869ef474fcfa680732a6e4346b0ef02ef073",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/memory-bomb.relics",
-      "sha256": "16d16cdb9f0a31555cb656bfd77f23a5a99de87e17e13c62e2b9e32a05fd2c30",
+      "sha256": "5155462a0fbfb13d8ee7bfdb42d9e96b9f2b6cee2b6dae8ce3ad246a835d760f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/nondeterministic.relics",
-      "sha256": "c518c7675f0caf130c7c79d69f6402ea3be1a39fbf500d31bf385f16dda69e6f",
+      "sha256": "b626ba3455482910298077c63e60869ce8003375512841dd7211ccabffdceb4a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6937,63 +6937,63 @@
     },
     {
       "path": "packages/project-schema/fixtures/hostile/overbacked-supply.relics",
-      "sha256": "3b4f1a988d005d8e5cb87240a6b0dc0914e2b2b6019eba7a547ace998bb7aadd",
+      "sha256": "cebc4acdcca1e457cd283961ab8eb7f25f8fe976428e7aa9b8ba91b970dfccec",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/overlapping-entries.relics",
-      "sha256": "9b4a852d31c716ca02618fcb49b77a2b6488ca9114d477bc4868038dad8f8636",
+      "sha256": "9dbe794085bd92103c9f6b5fefed8d59b2096655edefb6d584cb5038e1f70b11",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/oversized-output.relics",
-      "sha256": "f278af7cbcaccbb3676743e718a178c9eee8fd94aafafafd779f46a237480a89",
+      "sha256": "0580f36227b149ce73aa4ea232719ee75a326ae8e3b9b9523bef23208eb3402e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/path-traversal.relics",
-      "sha256": "18eeaf31a7bc9dfbebec25b2bbf0a641f4b3ef74aa2c56452b840c40d22d890b",
+      "sha256": "1306f2721a5179508d513ae58ae00d7c54a41218aedc8586a812432ca08bfb38",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/protocol-override.relics",
-      "sha256": "297bda170ec6967b92b928a4901a23837b2d9a49b1cb726e7412034751976c55",
+      "sha256": "77ffc266b03b50acfc75108f501d7e05419241e548cc7f0426894f1fe2c77108",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/prototype-pollution.relics",
-      "sha256": "334f13505bdb557839131022b6fba15160a48686ab743a245dcf933c371ff129",
+      "sha256": "b0b383e1fe192783d5e9759ffaf9db868da5a42510f35b8c0dcc263c30cc830c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/sandbox-escape.relics",
-      "sha256": "134862e66305281f082182d66e268421168526a1f5cc6e4cae9bf56789ee8beb",
+      "sha256": "c1841cce0d1914b416be881083944a180efedce043ad64a991ce72d720b5e86f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/secret-exfiltration.relics",
-      "sha256": "8ca3214d6fd5154068a00ef093d7bcaa0c07367d7faf41557e7bbe77539bb2de",
+      "sha256": "a2b943dcce1e9d6089e515469168900e986c2ba93b5ac5a515e11eef0d1bfce9",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/symlink-entry.relics",
-      "sha256": "ddebbc521c3030c6150eb5519efa1ee5489d7efb13d8383883106dfe81c7aa70",
+      "sha256": "08848c868132cf7aca56a7d9c63b19de5327dd491d40ce5c77cae8673b07fdec",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7007,63 +7007,63 @@
     },
     {
       "path": "packages/project-schema/fixtures/hostile/trailing-bytes.relics",
-      "sha256": "0c3ec676f8131f83ce61a9a8cad26595602e1632303f9413d401b5632357d730",
+      "sha256": "fb9ad2ea01a72033cd47e4b903c851b8e54622cc66ff927f96733cd3e25c243b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/unapproved-runtime.relics",
-      "sha256": "22d37d73d0a4b1da3931e983cc5160e4383299f60a52a21f05b7b1ef4fcd8603",
+      "sha256": "c766e3898d1482bd59b5439095f1fe1cfe2ce157cdfdf324dad7d18da3e1a5f2",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/unicode-confusable-path.relics",
-      "sha256": "f847252f13153045cac9c6c785c92d1f19aa249553fad1536a0e485c714f83b6",
+      "sha256": "8ef14ed012d0a738379e7fe8fe5466ed84a207b60582deca12f6db7a468861d2",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/unsupported-chain.relics",
-      "sha256": "af9d38a9c821ac25f85576aaa6df6cbd8c0a380021910c8c57a7ea2d598a3b58",
+      "sha256": "cf329de949268306f61ef5e93d41b853c2ee383f1a0a6547aced1e844a66439c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/hostile/zip64.relics",
-      "sha256": "47c783043466d228301f90f425c78edd5d238e0e2cdae2037bc08dc19be5f097",
+      "sha256": "1d96ef751134c5337ba4a3d3e2a619a9570adddadb2737fd0e54e982940a3874",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/parity/expected.json",
-      "sha256": "53b64130f9044c47171d6cd9dfcb9822f9360601b6c237ae25e9126f9b0f5c0b",
+      "sha256": "c0727b954fcc5a848e33d0df6c742de2df57431fdce1f1ea43712620121dbeec",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/parity/market-responsive.relics",
-      "sha256": "f98170317317404db02e2f9b7d0c0f75bc67224c2ee981a2a969ecdf85ebe44e",
+      "sha256": "feebdfdb68555bf658376c2dcc8f3cca15ee308a30b335253aeac7ebf43709c5",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/parity/minimal.relics",
-      "sha256": "0ed2477439b0aa7285305a02c92a913a7315d5379e375766b7a7ba65778c64bc",
+      "sha256": "8d7e46b49711da8632bf8a871158bd015683681941b328598b49eabbaa18f739",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/parity/solidity-svg-params.relics",
-      "sha256": "b12e5ac0c4ae762a72089990e17a783590d7c6ab583a5dd1a9a7506a9091489e",
+      "sha256": "7ba3d7e7480fc945901d8d19d4df25c7a5eb4e2dfb81fc4e2fb2a69b4e65054c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7077,35 +7077,35 @@
     },
     {
       "path": "packages/project-schema/fixtures/production-compat/compat.json",
-      "sha256": "ec7baa8d8dbb616390981678539502a053c55ee7e7b8c62beea43f9d44929f16",
+      "sha256": "677a9231d20afd430b5f8567b2a9d9ee0ba7dfe67323d5f38bbce62b075f130b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/production-compat/market-responsive.relics",
-      "sha256": "59ff2a315a0be60e5470813e0590a144010832b5eab10685b60af7f9940a5ae0",
+      "sha256": "b7f097f871bfe84a027c8eb6774b24e3861c0efdbbe57a6a79b5b16b8e139c6f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/production-compat/minimal.relics",
-      "sha256": "7130a70a3a70390ae60bc8a0c67267f85d9d110c4c4b8551b4041921bc7cfec2",
+      "sha256": "90c4b1a312d0f088189052dc7dd8fba0fa57af23fc30b3c80c55e244a43ef14d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/fixtures/production-compat/solidity-svg-params.relics",
-      "sha256": "6ecb8c4261454144f50cd500a2c1fe5e85016192771dcb975044e2e53b495e2a",
+      "sha256": "8c3f08c8e7ca771f591309dfc5797f474e2536c71dbe795ad8bf93ac6ab35555",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/index.js",
-      "sha256": "ae0add31171a4c59894e3fad316ac0cedc372143e14be4af61c1bf6aa8c79629",
+      "sha256": "852d5a5d6d45428701708ef83c2f55ab92d8ce9827df20d44183b8be2a8e8bda",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7210,7 +7210,7 @@
     },
     {
       "path": "packages/project-schema/src/manifest.js",
-      "sha256": "53791ece63c97df8e82d8a038d836ef158089f2cd3ffbafc0fbb7ca0087d12a1",
+      "sha256": "269bfdc57b77d6dd4242a7b6ab049cebfae8da5770b95f83de173d07a9414db1",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7280,7 +7280,7 @@
     },
     {
       "path": "packages/project-schema/src/studio-draft.js",
-      "sha256": "ea634d497bf3814d703a3dfdc8eb3b2404cb202c055fba70b29723945d8c9719",
+      "sha256": "f8789a9237a5f73608543f863c266f55c3629f910cee61e049b8401d19c69b70",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7301,35 +7301,35 @@
     },
     {
       "path": "packages/project-schema/src/validate.js",
-      "sha256": "a1e027b7dc4859d4fc30ea4efe79f39dbc36d1d09c98b8cacaaa88124f7cbec1",
+      "sha256": "a4affa742c1b05b7ba7bcba7fe198911e4ee27ebdeb1d4007bb28496928d1605",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/src/version.js",
-      "sha256": "cbb4b35b8aeb9d7963ae2ab3363ede2701d6d8915d6e60e45d94e58522a8bd85",
+      "sha256": "8c3cd34575a26acd2ca94e91165bb2ea0796bc93f0ed89708c609bfec9cb8cf8",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/src/vocabulary.js",
-      "sha256": "84f5aa7858020b9d628907b19b99e19693a170fb3b8ef365522644c94eb27613",
+      "sha256": "b97981924f12ec4e1b09094929067684dabe8dd4496698ff3d10ead5d14e69d3",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/test/run.mjs",
-      "sha256": "e8077c45809c5734a757fd1c36e85cc7a1aa3c783d2755d926e3663192430014",
+      "sha256": "89be8e2c4f344c1019125219877e851845e048a313fc3748011cd6fd7fc69dea",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/project-schema/types.d.ts",
-      "sha256": "3f9b134efc9532adcadda88254b0916eef1db75c16192851615f324ddf5d97dd",
+      "sha256": "2fd045f8555ca3f231fcba088b047fe8fd86af2db938a94b6b4fbeea1dc97f05",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7518,7 +7518,7 @@
     },
     {
       "path": "scripts/build-production-compat.mjs",
-      "sha256": "0f47e98ce2956d28f5bd1fdf1e501730c50ca3ee832dd56f5a51f94d6604b841",
+      "sha256": "a7414ea6aca0413b67c022160db69692fdd5db31b2c158b149e0f606ba50c6cf",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7574,7 +7574,7 @@
     },
     {
       "path": "scripts/check-schema-parity.mjs",
-      "sha256": "2d4e9c1508ad6aaac626aaec86e4678c91444557048d3b0b1c50aa2beb623b80",
+      "sha256": "cffa1b64cd2e548badde03f71707d673d0bc4b37067f9c83f049f22f8d9a23d9",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7588,7 +7588,7 @@
     },
     {
       "path": "scripts/check-templates.mjs",
-      "sha256": "e5330b0113a7440af28378cdc199b1e9cefb103e4e38876f25b054c545dc420f",
+      "sha256": "6f46d695266e2f7f7558d72f7d2dde37ad52f3511831c4e6cdd768897bda3811",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7616,7 +7616,7 @@
     },
     {
       "path": "scripts/lib/lifecycle.mjs",
-      "sha256": "7b5036ef9080c3699d9c4c6b2005ad99a149fa1b57b73b877670aca6c2284e76",
+      "sha256": "a5913c83637a80b693a9d945063ff7909125a7021e72c5395a856bdf54e61e57",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7637,7 +7637,7 @@
     },
     {
       "path": "scripts/test-readme-quickstart.mjs",
-      "sha256": "a1fe4194c48b8e1e4f9f421589e2f744b88dfc1db91182d50a69bc92ddab40af",
+      "sha256": "3a8e2fff2ff8c743f63c33885333bcdeb00577f34d05eeb16e1c37789d1a279b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
