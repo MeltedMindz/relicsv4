@@ -566,10 +566,12 @@ export const BURN_POLICY_IMMUTABILITY_ACK: string;
 export const RELICS_BURN_CONTRAST_COPY: string;
 export function burnPolicyAllowsBurning(policy: string): boolean;
 /** Anti-snipe strategies. NOT Sybil-resistant -- see ANTI_SNIPE_NOT_SYBIL_PROOF_COPY. */
-export type AntiSnipeStrategy = "INSTANT_V4" | "FIXED_PRICE_FAIR_LAUNCH" | "BONDING_CURVE_TO_V4" | "PROGRESSIVE_LIQUIDITY";
-export const ANTI_SNIPE_STRATEGIES: readonly AntiSnipeStrategy[];
-export const ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE: Readonly<Record<AntiSnipeStrategy, string | null>>;
-export const ANTI_SNIPE_STRATEGY_COPY: Readonly<Record<AntiSnipeStrategy, string>>;
+export type AntiSnipeWireValue = "UNSPECIFIED" | "NONE" | "PROTECTED_98_MINUTES";
+export type AntiSnipeElection = "NONE" | "PROTECTED_98_MINUTES";
+export const ANTI_SNIPE_WIRE_VALUES: readonly AntiSnipeWireValue[];
+export const ANTI_SNIPE_ELECTIONS: readonly AntiSnipeElection[];
+export const ANTI_SNIPE_MODE_TO_INDEX: Readonly<Record<AntiSnipeWireValue, number>>;
+export const ANTI_SNIPE_MODE_COPY: Readonly<Record<AntiSnipeWireValue, string>>;
 export const ANTI_SNIPE_NOT_SYBIL_PROOF_COPY: string;
 export const LAUNCH_MODES: readonly LaunchMode[];
 export const CURVE_PRESETS: readonly string[];

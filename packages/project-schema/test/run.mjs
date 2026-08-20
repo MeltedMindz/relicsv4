@@ -125,9 +125,10 @@ import {
   BURN_POLICY_IMMUTABILITY_ACK,
   RELICS_BURN_CONTRAST_COPY,
   burnPolicyAllowsBurning,
-  ANTI_SNIPE_STRATEGIES,
-  ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE,
-  ANTI_SNIPE_STRATEGY_COPY,
+  ANTI_SNIPE_WIRE_VALUES,
+  ANTI_SNIPE_ELECTIONS,
+  ANTI_SNIPE_MODE_TO_INDEX,
+  ANTI_SNIPE_MODE_COPY,
   ANTI_SNIPE_NOT_SYBIL_PROOF_COPY,
   LAUNCH_MODES,
   CURVE_PRESETS,
@@ -1886,28 +1887,52 @@ test("burn policy: the flagship contrast says RELICS does not burn", () => {
   assert(!/buy-and-burn/.test(c), "the RELICS mechanism is never buy-and-burn");
 });
 
-test("anti-snipe: the four strategies exist, and NONE of them is sold as Sybil-proof", () => {
+test("anti-snipe: the RC6 election is independent of launchMode and is never sold as Sybil-proof", () => {
   assert(
-    ANTI_SNIPE_STRATEGIES.join(",") === "INSTANT_V4,FIXED_PRICE_FAIR_LAUNCH,BONDING_CURVE_TO_V4,PROGRESSIVE_LIQUIDITY",
-    "the anti-snipe strategy set drifted",
+    ANTI_SNIPE_WIRE_VALUES.join(",") === "UNSPECIFIED,NONE,PROTECTED_98_MINUTES",
+    "the anti-snipe wire value set drifted",
   );
 
-  // Nothing was renamed out from under the published corpus: every strategy either maps onto an
-  // existing launch mode or declares that it has none yet.
-  for (const s of ANTI_SNIPE_STRATEGIES) {
-    const mapped = ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE[s];
-    assert(mapped === null || LAUNCH_MODES.includes(mapped), `${s} maps to ${mapped}, which is not a launch mode`);
+  // The indices are consensus values. Renumbering them silently re-elects every bundle in the
+  // corpus, so they are pinned literally rather than derived from the array.
+  assert(ANTI_SNIPE_MODE_TO_INDEX.UNSPECIFIED === 0, "UNSPECIFIED must be wire index 0");
+  assert(ANTI_SNIPE_MODE_TO_INDEX.NONE === 1, "NONE must be wire index 1");
+  assert(ANTI_SNIPE_MODE_TO_INDEX.PROTECTED_98_MINUTES === 2, "PROTECTED_98_MINUTES must be wire index 2");
+  for (const v of ANTI_SNIPE_WIRE_VALUES) {
+    assert(ANTI_SNIPE_MODE_TO_INDEX[v] === ANTI_SNIPE_WIRE_VALUES.indexOf(v), `${v} index disagrees with its position`);
   }
-  assert(ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE.PROGRESSIVE_LIQUIDITY === null, "PROGRESSIVE_LIQUIDITY has no launch mode yet and must say so");
 
-  // The claim that must never appear. A wallet cap limits an ADDRESS; an attacker splits across
-  // addresses for the cost of gas.
-  const forbidden = /sybil[- ]?(proof|resistant)|prevents? bots|stops? snipers|guarantees? fair|bot[- ]?proof|one person per/i;
-  for (const s of ANTI_SNIPE_STRATEGIES) {
-    const copy = ANTI_SNIPE_STRATEGY_COPY[s];
-    assert(typeof copy === "string" && copy.length > 0, `${s} has no copy`);
-    assert(!forbidden.test(copy), `${s} copy makes a Sybil-resistance claim: "${copy}"`);
+  // Zero is never a final election. A draft may carry UNSPECIFIED; an export may not, because
+  // defaulting it would invent an economic choice the creator never made.
+  assert(!ANTI_SNIPE_ELECTIONS.includes("UNSPECIFIED"), "UNSPECIFIED must not be electable in a final bundle");
+  assert(ANTI_SNIPE_ELECTIONS.join(",") === "NONE,PROTECTED_98_MINUTES", "the electable set drifted");
+
+  // INDEPENDENCE IS THE POINT OF RC6. The retired vocabulary mapped each anti-snipe posture onto a
+  // launch mode, which meant a creator could not elect protection without also changing how their
+  // launch sold. Assert the conflation is gone rather than trusting the comment that says so.
+  assert(
+    typeof ANTI_SNIPE_MODE_TO_INDEX === "object" && !("INSTANT_V4" in ANTI_SNIPE_MODE_TO_INDEX),
+    "an anti-snipe value is still keyed by launch mode",
+  );
+  for (const m of LAUNCH_MODES) {
+    assert(!ANTI_SNIPE_WIRE_VALUES.includes(m), `${m} is a launch mode and must not also be an anti-snipe value`);
   }
+
+  // The claim that must never appear. A fee ramp raises the cost of an early buy; it does not
+  // identify a buyer, and an attacker splits across addresses for the price of gas.
+  const forbidden = /sybil[- ]?(proof|resistant)|prevents? bots|stops? snipers|guarantees? fair|bot[- ]?proof|one person per/i;
+  for (const v of ANTI_SNIPE_WIRE_VALUES) {
+    const copy = ANTI_SNIPE_MODE_COPY[v];
+    assert(typeof copy === "string" && copy.length > 0, `${v} has no copy`);
+    assert(!forbidden.test(copy), `${v} copy makes a Sybil-resistance claim: "${copy}"`);
+  }
+
+  // The protected mode's copy must state the arithmetic, not an intention: 98 minutes is 5,880
+  // seconds and the sell side is never ramped.
+  assert(/5,880 seconds/.test(ANTI_SNIPE_MODE_COPY.PROTECTED_98_MINUTES), "the protected mode must state its exact duration");
+  assert(/99% to 1%/.test(ANTI_SNIPE_MODE_COPY.PROTECTED_98_MINUTES), "the protected mode must state the buy-fee range");
+  assert(/sell LP fee stays at 1%/.test(ANTI_SNIPE_MODE_COPY.PROTECTED_98_MINUTES), "the protected mode must say the sell fee is unramped");
+
   assert(/not Sybil-resistant/i.test(ANTI_SNIPE_NOT_SYBIL_PROOF_COPY), "the disclaimer must state that these are not Sybil-resistant");
   assert(/cost of gas/i.test(ANTI_SNIPE_NOT_SYBIL_PROOF_COPY), "the disclaimer must say why: splitting across addresses is cheap");
 });

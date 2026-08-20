@@ -8,6 +8,11 @@
  * added; bump the MINOR when a purely additive optional field appears. An importer accepts a
  * bundle whose MAJOR it knows and whose MINOR is <= its own.
  *
+ * 4.0.0 — every bundle carries the independent RC6 `market.antiSnipeMode` wire value. FINAL
+ * bundles must explicitly elect NONE or PROTECTED_98_MINUTES; UNSPECIFIED is draft-only. This is
+ * a MAJOR because the field is required and a 3.x bundle cannot prove which creator election was
+ * intended without inventing one.
+ *
  * 3.3.0 — reviewed protocol templates may bind a canonical economics artifact by hash. The
  * optional `protocolTemplate` block is validated as an immutable product integration; ordinary
  * creator projects retain the existing backing-model supply shape.
@@ -36,10 +41,13 @@
  * the work that matters: a 3.1.0 bundle declaring chain 56 is REFUSED by a 3.0.0 importer, because
  * that importer genuinely cannot launch it. A 3.0.0 bundle still imports here unchanged.
  */
-export const SCHEMA_VERSION = "3.3.0";
+export const SCHEMA_VERSION = "4.0.0";
 
 /**
  * Version of the creator kit (this repo's CLI + templates) that produced the bundle.
+ *
+ * 4.0.0 adds the explicit RC6 anti-snipe election and retires the launch-mode/anti-snipe
+ * vocabulary conflation.
  *
  * 3.11.0 adds reviewed protocol-template bindings and canonical economics materialization.
  *
@@ -71,7 +79,7 @@ export const SCHEMA_VERSION = "3.3.0";
  * bundle still cannot request enforcement — the manifest has no field for it — so nothing about
  * `.relics` import behaviour changes.
  */
-export const CREATOR_KIT_VERSION = "3.12.0";
+export const CREATOR_KIT_VERSION = "4.0.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
@@ -92,7 +100,7 @@ export const RUNTIME_VERSION = "relics-art-runtime/1";
  * That section is where the reconciliation belongs. Restating it here would put the same claim in
  * two places, and the copy in a code comment is the one nobody updates.
  */
-export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/g-1.2";
+export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/rc6";
 
 /**
  * Why 3.0.0 is a MAJOR and not a MINOR — recorded here because the temptation to add "just one
@@ -130,7 +138,7 @@ export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/g-1.2";
  * corpus this break strands.
  */
 export const SCHEMA_MAJOR_RATIONALE =
-  "3.0.0 requires a bundle to carry the exact art configuration its launch would use (artConfigFormat, the configuration bytes and their keccak256); a 2.x bundle states no configuration a Solidity runtime could render and must be re-exported after the creator supplies one.";
+  "4.0.0 requires a bundle to carry the creator's independent RC6 anti-snipe election. A 3.x bundle contains no antiSnipeMode, so accepting it for final launch would require inventing NONE or PROTECTED_98_MINUTES. Import it for review, make the election explicitly, and re-export.";
 
 /**
  * The message an importer should show for a bundle it cannot read. A bare "incompatible" tells a
@@ -142,6 +150,9 @@ export function explainIncompatibility(bundleSchemaVersion) {
   const i = parseSemver(SCHEMA_VERSION);
   if (!b) return `"${bundleSchemaVersion}" is not a MAJOR.MINOR.PATCH schema version.`;
   if (b.major < i.major) {
+    if (b.major === 3) {
+      return `This bundle was exported by creator kit schema ${bundleSchemaVersion}. It does not carry the independent RC6 anti-snipe election, so a final importer cannot safely infer NONE or PROTECTED_98_MINUTES from launchMode. Import it as a draft, choose antiSnipeMode explicitly, then re-export with creator kit ${CREATOR_KIT_VERSION}.`;
+    }
     if (b.major === 2) {
       return `This bundle was exported by creator kit schema ${bundleSchemaVersion}. It records which runtime renders the project, but not the art configuration that runtime is given — for a Solidity-SVG project schema 2 left \`artConfigHash\` null because no published parameter layout existed yet. ACV1 is that layout, and it needs values a schema 2 bundle does not contain: a market sensor and a response curve for every layer, a literal palette, and a background. They cannot be guessed from \`generator/params.json\` without inventing an artist's choices. Import it to recover everything that IS recoverable, supply the art configuration, then \`relics export\` with creator kit ${CREATOR_KIT_VERSION} and import the new file.`;
     }

@@ -280,7 +280,7 @@ export function burnPolicyAllowsBurning(policy) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// ANTI-SNIPE STRATEGY — what a launch actually does about being sniped at open.
+// ANTI-SNIPE MODE — the independent RC6 creator election for opening pool fees.
 //
 // NOT SYBIL-PROOF, AND THE COPY MUST NOT SAY IT IS. A wallet cap and progressive liquidity both
 // raise the cost and the clumsiness of taking an outsized share at open. Neither identifies a
@@ -289,42 +289,35 @@ export function burnPolicyAllowsBurning(policy) {
 // they shape the first minutes of the curve — and let a creator decide with that.
 // ---------------------------------------------------------------------------------------------
 
-export const ANTI_SNIPE_STRATEGIES = Object.freeze([
-  "INSTANT_V4",
-  "FIXED_PRICE_FAIR_LAUNCH",
-  "BONDING_CURVE_TO_V4",
-  "PROGRESSIVE_LIQUIDITY",
-]);
+/**
+ * The RC6 creator election, mirroring `AntiSnipeMode` in the contract index for index.
+ *
+ * INDEPENDENT OF `launchMode`. The retired `ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE` mapping conflated
+ * the two: it made the anti-snipe posture a restatement of the sale shape, so a creator could not
+ * elect protection without also changing how their launch sold. RC6 separates them — the election
+ * is its own LaunchParams field and every launch mode can carry either value.
+ *
+ * Zero is never a final creator election. UNSPECIFIED exists so a draft can be honest about not
+ * having chosen yet; an export that still carries it is refused rather than silently defaulted,
+ * because defaulting would invent an economic choice the creator never made.
+ */
+export const ANTI_SNIPE_WIRE_VALUES = Object.freeze(["UNSPECIFIED", "NONE", "PROTECTED_98_MINUTES"]);
+
+/** The two values a FINAL bundle may carry. UNSPECIFIED is draft-only and never exports. */
+export const ANTI_SNIPE_ELECTIONS = Object.freeze(["NONE", "PROTECTED_98_MINUTES"]);
+
+/** Wire indices. These are consensus values and cannot be renumbered. */
+export const ANTI_SNIPE_MODE_TO_INDEX = Object.freeze({ UNSPECIFIED: 0, NONE: 1, PROTECTED_98_MINUTES: 2 });
 
 /**
- * How each strategy relates to the `launchMode` a bundle already declares.
- *
- * NOTHING IS RENAMED. `LAUNCH_MODES` keeps its published values, because renaming an enum member
- * invalidates every bundle in the corpus and there is no migration that can recover a value the
- * old name no longer describes. `PROGRESSIVE_LIQUIDITY` is the one strategy with no existing
- * launch mode, so it maps to null until the launch mode that carries it ships.
+ * Exact RC6 behaviour, stated as fee arithmetic rather than intent. Neither value identifies a
+ * buyer or prevents one; see `ANTI_SNIPE_NOT_SYBIL_PROOF_COPY`.
  */
-export const ANTI_SNIPE_STRATEGY_TO_LAUNCH_MODE = Object.freeze({
-  INSTANT_V4: "INSTANT_V4",
-  FIXED_PRICE_FAIR_LAUNCH: "FIXED_PRICE_SALE_TO_V4",
-  BONDING_CURVE_TO_V4: "BONDING_CURVE_SALE_TO_V4",
-  PROGRESSIVE_LIQUIDITY: null,
-});
-
-/** Honest, per-strategy copy. Each says what the mechanism DOES; none claims it identifies anyone. */
-export const ANTI_SNIPE_STRATEGY_COPY = Object.freeze({
-  INSTANT_V4:
-    "The pool opens and trading begins immediately. Nothing constrains the first buy: whoever transacts first, at whatever size the pool allows, gets that fill.",
-  // NOT SELECTABLE. Kept in the vocabulary because the strategy names are a published list and the
-  // launch mode it maps to is a wire value that cannot be renumbered — but the copy has to say so,
-  // or a studio renders a card for a method the contract refuses. The clause that used to read as
-  // a caveat is in fact the disqualifying reason, and it now says which of the two it is.
-  FIXED_PRICE_FAIR_LAUNCH:
-    "NOT OFFERED. Everyone would buy at one published price until the sale closed, so being early would not get a better price — but nothing limits how much one buyer can take, so a single address can acquire the entire allocation in one transaction at the moment the sale opens. Its launch mode, FIXED_PRICE_SALE_TO_V4, is refused at validate and export here and refused by the deployed sale contract for every caller.",
-  BONDING_CURVE_TO_V4:
-    "Price rises along a published curve as the sale fills, so buying more costs more. Being first is still an advantage — it is a cheaper price, not an excluded one.",
-  PROGRESSIVE_LIQUIDITY:
-    "Liquidity is released in steps rather than all at once, so a single large buy at open moves price further and fills worse. It shapes the first minutes of the curve; it does not decide who is buying.",
+export const ANTI_SNIPE_MODE_COPY = Object.freeze({
+  UNSPECIFIED: "No creator election has been made. A final launch must choose NONE or PROTECTED_98_MINUTES.",
+  NONE: "The pool opens with a 1% buy LP fee and a 1% sell LP fee.",
+  PROTECTED_98_MINUTES:
+    "The buy LP fee falls linearly from 99% to 1% over exactly 5,880 seconds. The sell LP fee stays at 1%.",
 });
 
 /**
