@@ -119,11 +119,21 @@ const GATES = [
   },
   {
     gate: "kit:deployments:check",
-    sees: "the launchpad's own deployment packages, when they are present",
+    sees: "the launchpad's own chain profiles, when they are present",
     env: { RELICS_LAUNCHPAD_DIR: process.env.RELICS_LAUNCHPAD_DIR ?? "" },
     skipWhen: () => !process.env.RELICS_LAUNCHPAD_DIR,
-    mutate: (root) => edit(join(root, "packages/project-schema/src/deployments.js"), "export const RC6_DEPLOYMENTS = Object.freeze({\n  1: null,", "export const RC6_DEPLOYMENTS = Object.freeze({\n  1: { chainId: 1, label: \"Ethereum\", generation: \"RC6\", launchAccess: \"PUBLIC\", explorer: \"https://etherscan.io\", contracts: { launchpadFactory: \"0x1111111111111111111111111111111111111111\" } },"),
-    why: "an address is published for a generation that was never broadcast",
+    // THE MUTATION MOVED WITH THE FILE. It used to repopulate `1: null` -- a line that no longer
+    // exists now that chain 1 carries a real RC6 record, so the edit would have silently matched
+    // nothing and the gate would have "survived" a mutation that was never applied. It now
+    // REPLACES a published address with one that is not on any chain, which is the same defect in
+    // the world the file is actually in.
+    mutate: (root) =>
+      edit(
+        join(root, "packages/project-schema/src/deployments.js"),
+        'launchpadFactory: "0x25003C3EBC2036CfE9E4037d4e7E6F840a06522E",',
+        'launchpadFactory: "0x1111111111111111111111111111111111111111",',
+      ),
+    why: "a published factory address is not the one the chain profile carries",
   },
   {
     gate: "secrets:scan",

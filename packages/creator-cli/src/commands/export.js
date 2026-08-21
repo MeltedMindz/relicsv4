@@ -61,11 +61,12 @@ export function exportProject(root, options = {}) {
   // What a creator holds now, and what they do next. Three things and no more: the file, the digest
   // that identifies it, and the next step.
   //
-  // NO UPLOAD URL IS PRINTED. The public creator route is not confirmed open — `relics status`
-  // reports every generation and chain as closed to public creation — so printing an address here
-  // would be inventing a destination, which is the same failure as a placeholder contract address:
-  // copyable, plausible and wrong. The bundle is complete and portable either way; where it goes is
-  // the launchpad's announcement to make, not this command's guess.
+  // NO UPLOAD URL IS PRINTED, and that is not about launch access. Public creation is open on three
+  // chains; what this command still does not know is the URL of the creator app a given creator
+  // should upload to. Printing one here would be inventing a destination, which is the same failure
+  // as a placeholder contract address: copyable, plausible and wrong. The bundle is complete and
+  // portable either way; where it goes is the launchpad's announcement to make, not this command's
+  // guess. `relics status` answers the launch-access half, per chain, from the deployment records.
   console.log(green("  READY TO UPLOAD"));
   console.log(`    ${dim("bundle")}       ${bold(target)}`);
   console.log(`    ${dim("bundle hash")}  ${cyan(assembled.manifest.integrity.bundleHash)}`);

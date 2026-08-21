@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Complete RC5 Robinhood stock/ETF token universe prepared for genesis quote admission.
+// Complete Robinhood stock/ETF token universe, snapshotted for genesis quote admission.
 // Generated from Robinhood's official asset source: https://api.robinhood.com/rhj/assets.
-// The live QuoteAssetRegistry remains authoritative at import/launch time.
+//
+// THIS IS A SNAPSHOT OF ROBINHOOD'S ASSET LIST, NOT OF OUR REGISTRY. The version string below
+// records when the snapshot was taken and which admission round it was prepared for; it does not
+// claim that every token here is admitted today, and RC6 deploys its own QuoteAssetRegistry at a
+// new address. The LIVE QuoteAssetRegistry on chain 4663 remains authoritative at import and at
+// launch time — a bundle can only request a quote asset, and the registry decides.
 
 export const ROBINHOOD_STOCK_TOKENS_VERSION = "rc5-genesis-admission-2026-08-13"; // gitleaks:allow public registry version, not a credential
 export const ROBINHOOD_STOCK_TOKENS_SOURCE = "https://api.robinhood.com/rhj/assets";

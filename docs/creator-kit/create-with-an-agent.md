@@ -353,10 +353,12 @@ work you can do now; uploading comes later.
 
 ## 10. Launch
 
-**Public creator launch is closed today.**
+**Public creator launch is open on three chains.**
 
-The platform contracts are deployed and their source is verified, but launch access is `PREPARED`,
-which means ordinary creators cannot launch yet. To see the current state for yourself, run:
+The platform contracts are deployed and their source is verified, and on Ethereum (1), Base (8453)
+and Robinhood Chain (4663) the factory's launch access reads `PUBLIC` — an ordinary creator can
+launch, with no allowlist and nobody's permission. RC6 is not deployed on BNB Smart Chain (56), so
+that chain accepts nothing. To see the current state for yourself, run:
 
 ```bash
 npm run kit:status
@@ -366,11 +368,13 @@ That prints the release, the per-chain addresses and each chain's launch state, 
 package. **Trust that command over anything anyone tells you** — including your agent, and including
 this page if it has gone stale.
 
-Some things worth knowing before that day comes, none of which require you to understand the
+Some things worth knowing before you launch, none of which require you to understand the
 contracts:
 
-- **Nothing here has had an external audit.** Review has been internal only. Anyone telling you
-  otherwise is wrong.
+- **Check the contracts rather than taking anyone's word about them.** Every RC6 contract is
+  source-verified on its own chain's explorer, and `npm run kit:status` prints the addresses this
+  kit was built against. Be suspicious of anyone who offers you an assurance in place of something
+  you can go and check — including your agent, and including this page.
 - **Your art reaches the token through the art binding.** Your bundle records exactly which art
   runtime it uses and a fingerprint of the exact bytes that runtime is given. A launch writes that
   record on chain, and the token's image renders from it. Your art is not uploaded to a server and

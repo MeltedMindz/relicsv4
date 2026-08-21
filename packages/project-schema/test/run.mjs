@@ -608,11 +608,20 @@ test("an unknown generation REFUSES rather than falling back to the current one"
 
 test("the generation assertions FAIL under mutation", () => {
   // Each mutation is a plausible mistake. A survivor means the matching assertion is decorative.
+  //
+  // THE MUTATIONS ARE WRITTEN AGAINST THE LIVE GENERATION, NOT THE WITHDRAWN ONE. They used to
+  // spread `t.RC5[1]`, which was a populated record then and is `null` now — every one of them
+  // would still "be rejected", by a TypeError on `null.contracts` rather than by the assertion
+  // under test. A mutation that dies before it reaches the property it is probing proves nothing,
+  // and it reads exactly like one that works.
   const mutations = [
-    ["an RC5 address copied into the RC6 table", (t) => { t.RC6[1] = { ...t.RC5[1] }; }],
-    ["an RC6 record left with an RC5 generation label", (t) => { t.RC6[1] = { ...t.RC5[1], generation: "RC5" }; }],
+    ["an RC6 address copied into the superseded RC5 table", (t) => { t.RC5[1] = { ...t.RC6[1] }; }],
+    ["an RC5 record smuggled into the RC6 table under an RC5 label", (t) => { t.RC6[1] = { ...t.RC6[1], generation: "RC5" }; }],
     ["a chain quietly dropped from a generation", (t) => { delete t.RC6[56]; }],
-    ["a contract address replaced with a placeholder string", (t) => { t.RC5[1] = { ...t.RC5[1], contracts: { ...t.RC5[1].contracts, launchpadFactory: "TBD" } }; }],
+    ["a contract address replaced with a placeholder string", (t) => { t.RC6[1] = { ...t.RC6[1], contracts: { ...t.RC6[1].contracts, launchpadFactory: "TBD" } }; }],
+    // The withdrawal itself. RC5 is DEPLOYED, so the deployed/undeployed rule does not bite on it;
+    // only the publication rule does, and without this the addresses could quietly come back.
+    ["a withdrawn generation's address table repopulated", (t) => { t.RC5[4663] = { ...t.RC6[4663], generation: "RC5" }; }],
   ];
   for (const [name, mutate] of mutations) {
     const table = { RC5: { ...DEPLOYMENTS_BY_GENERATION.RC5 }, RC6: { ...DEPLOYMENTS_BY_GENERATION.RC6 } };
@@ -636,10 +645,15 @@ function assertGenerationTables(tables) {
   const chains = [...new Set(Object.values(tables).flatMap((t) => Object.keys(t).map(Number)))];
   for (const [generation, table] of Object.entries(tables)) {
     const deployed = PLATFORM_GENERATIONS[generation]?.status === "DEPLOYED";
+    const publishes = PLATFORM_GENERATIONS[generation]?.publishesAddresses === true;
     for (const chainId of chains) must(Object.hasOwn(table, chainId), `${generation} says nothing about chain ${chainId}`);
     for (const [chainId, entry] of Object.entries(table)) {
       if (entry === null) continue;
       must(deployed, `${generation} is not deployed, yet chain ${chainId} carries an address`);
+      // Withdrawal is a publication decision and is enforced HERE too, not only in the standalone
+      // test above: RC5 is DEPLOYED, so the rule on the line before cannot see a withdrawn
+      // generation's addresses coming back.
+      must(publishes, `${generation} publishes no addresses, yet chain ${chainId} carries one`);
       must(entry.generation === generation, `chain ${chainId} carries ${entry.generation} addresses inside the ${generation} table`);
       for (const [name, address] of Object.entries(entry.contracts)) must(ADDRESS_SHAPED.test(address), `${generation}/${chainId}/${name} is not an address`);
     }

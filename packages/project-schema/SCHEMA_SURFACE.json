@@ -4,7 +4,7 @@
   "version": "4.0.0",
   "packageVersion": "3.12.0",
   "creatorKitVersion": "4.0.0",
-  "surfaceSha256": "1762ed0eb8693ad8a15dca12093d289de606d8c1e05f8a1f6f2079f87e86adf6",
+  "surfaceSha256": "ecb3a28380416e4f566b8716d5f974316ec49803be373412ab527bed9d99ab27",
   "checks": [
     "ALLOWED_DEPENDENCIES",
     "ALLOWED_RUNTIME",
@@ -78,7 +78,7 @@
     },
     {
       "path": "src/deployments.js",
-      "sha256": "7364b2a305784f27f0f4f64db3f09036c9cf520c4395003d02e5c864c337db39"
+      "sha256": "e2beb0cd92f476dda542a38dc5823bc8873081a614c6fb94ccfa95be074918c2"
     },
     {
       "path": "src/economics.js",
@@ -98,7 +98,7 @@
     },
     {
       "path": "src/launch-protection.js",
-      "sha256": "ce9ad9aab5d8f4496ce9973a3cba5948ffe3e9d34f8a314e238791bd64c0f23d"
+      "sha256": "980f094da9e6908adc888d229f7edeeaa592939fc4ada0dc62e5a6f4c903fb02"
     },
     {
       "path": "src/limits.js",
@@ -130,7 +130,7 @@
     },
     {
       "path": "src/robinhood-stock-tokens.js",
-      "sha256": "f311dd60d2dece4fc32997c3ebb36bd6859ceac4bf35bb5cd63d3ab6f4265cbf"
+      "sha256": "784bc21887b350e71c980e1923656a5300956ff306b0ebaed2816912b266032a"
     },
     {
       "path": "src/secrets.js",
@@ -162,15 +162,15 @@
     },
     {
       "path": "src/version.js",
-      "sha256": "8c3cd34575a26acd2ca94e91165bb2ea0796bc93f0ed89708c609bfec9cb8cf8"
+      "sha256": "018be36a0f47f60b65d6d40053fbb3ac210cc221dab4d7877d548d13332fbf09"
     },
     {
       "path": "src/vocabulary.js",
-      "sha256": "b97981924f12ec4e1b09094929067684dabe8dd4496698ff3d10ead5d14e69d3"
+      "sha256": "2065ac835d5cf4c0b4354e1aeac4be06938d8ad1e197e4af2e48b7c345fc340a"
     },
     {
       "path": "types.d.ts",
-      "sha256": "2fd045f8555ca3f231fcba088b047fe8fd86af2db938a94b6b4fbeea1dc97f05"
+      "sha256": "0a63b3d6b7f36f4fc70157f834bb32ca9643383d0d60ea22630ff0dbbbfa3d9a"
     }
   ]
 }

@@ -51,9 +51,10 @@ export const SCHEMA_VERSION = "4.0.0";
  *
  * 3.11.0 adds reviewed protocol-template bindings and canonical economics materialization.
  *
- * 3.10.0 carried a kit-only live RC5 reference update: deployed platform addresses,
+ * 3.10.0 carried a kit-only live platform reference update: deployed platform addresses,
  * launch-access state, the complete Robinhood stock-token quote reference, and `relics status`.
- * The bundle schema stays 3.2.0 because no manifest field changes meaning.
+ * Those addresses were RC5's and have since been withdrawn in favour of RC6's; see
+ * `deployments.js`. The bundle schema stays 3.2.0 because no manifest field changes meaning.
  *
  * 3.9.0 carried a schema MINOR (3.2.0, `supply.burnPolicy`) AND a kit-only change.
  *
@@ -93,12 +94,11 @@ export const RUNTIME_VERSION = "relics-art-runtime/1";
  *
  * The two are genuinely different questions and this string only answers the first. What is
  * deployed, on which chains, under which generation, and whether any of them accepts a public
- * creator launch, is answered by `deployments.js` (read it, or run `relics status`) and reconciled
- * in prose in `docs/launchpad/08-status.md` — "the kit mirrors RC5; the product you will launch
- * through is RC6".
+ * creator launch, is answered by `deployments.js` (read it, or run `relics status`) and set out in
+ * prose in `docs/launchpad/08-status.md`.
  *
- * That section is where the reconciliation belongs. Restating it here would put the same claim in
- * two places, and the copy in a code comment is the one nobody updates.
+ * That section is where the deployment picture belongs. Restating it here would put the same claim
+ * in two places, and the copy in a code comment is the one nobody updates.
  */
 export const PROTOCOL_RELEASE_COMPATIBILITY = "v4-art-launchpad/rc6";
 

@@ -22,35 +22,37 @@
 //
 // READ THIS BEFORE PLANNING A LAUNCH DATE:
 //
-//   RC5  is DEPLOYED on Ethereum, Base and Robinhood Chain. Permissionless creation is NOT OPEN:
-//        every factory is in `PREPARED`, which refuses an ordinary `launch`. Opening public creation
-//        is a separate, ONE-WAY timelock operation that has not been scheduled.
+//   RC6  is the LIVE generation and PERMISSIONLESS CREATION IS OPEN. Its factory is at the same
+//        CREATE2 address on Ethereum (1), Base (8453) and Robinhood Chain (4663), and on all three
+//        `launchAccessState()` reads 1 (`PUBLIC`). `openPublicLaunches()` has been executed on each
+//        and is IRREVERSIBLE — there is no `closePublicLaunches` and no selector that writes the
+//        state again. An ordinary creator launch is ADMITTED on all three chains. It is NOT
+//        deployed on BNB Smart Chain (56), which is deferred.
 //
-//   RC6  is DEPLOYED on Robinhood Chain (4663) as of 2026-08-19, and its factory there is `PUBLIC`:
-//        that chain accepts ordinary creator launches. It is NOT deployed on Ethereum, Base or BNB
-//        Smart Chain, whose deployment packages remain unsigned and unbroadcast and whose
-//        deterministic addresses still move whenever the source tree moves.
+//   RC5  is SUPERSEDED. Its contracts still hold code on the three chains they were deployed to and
+//        still read `PREPARED`, so they never accepted a public launch and never will. This kit
+//        publishes none of their addresses: a superseded platform address in a creator kit is
+//        exactly the copyable-but-wrong contract the generational split exists to prevent.
 //
 // DEPLOYED AND PUBLISHED-HERE ARE TWO DIFFERENT FACTS, AND THIS FILE KEEPS THEM APART.
 //
 // Whether a chain accepts your launch is read from that chain's factory. Whether THIS KIT prints an
-// address for it is decided by the rule below — and today the two disagree for chain 4663. RC6 is
-// live and open there, and `RC6_DEPLOYMENTS[4663]` is still `null`, because the launchpad's own
-// deployment package for that chain has not been regenerated as signed+broadcast since the
-// broadcast, so `npm run kit:deployments:sync` has nothing to publish from. That is the rule
-// working, not the rule failing: the launch-access fact comes from the chain, the address does not
-// get invented to match it. Read the factory address off the chain's explorer until the sync
-// publishes one. `PLATFORM_GENERATIONS.RC6.chainLaunchAccess` carries the chain-read half.
+// address for it is a separate publication decision, carried by `publishesAddresses` and, per
+// generation, by `chainLaunchAccess`. The two were collapsed once and the kit reported a live,
+// publicly-open chain as "not deployed"; they do not share a field again.
 //
-// So today you can build, validate and export a real `.relics` bundle, and you can launch it on
-// Robinhood Chain — using an address this kit does not yet print.
+// THE RC6 ADDRESS ENTRIES ARE GENERATED, NEVER HAND-EDITED. Regenerate with
 //
-// THE RC6 ADDRESS ENTRIES ARE GENERATED, NEVER HAND-EDITED. When a generation is broadcast, run
+//     RELICS_LAUNCHPAD_DIR=… npm run kit:deployments:sync
 //
-//     npm run kit:deployments:sync
+// which reads the launchpad's own chain profiles and publishes an address only from a profile that
+// states the addresses were read back off the chain. `npm run kit:deployments:check` re-verifies it
+// in CI.
 //
-// which reads the launchpad's own deployment packages and refuses to publish an address from a
-// package that is not broadcast. `npm run kit:deployments:check` re-verifies it in CI.
+// THE MULTI-QUOTE LANE IS NOT PUBLISHED HERE. Robinhood Chain is the only chain with a second,
+// non-WETH quote lane, and its registry/kernel addresses are recorded upstream as a prose note
+// rather than a structured field. `factory.multiQuoteLane()` returns them on chain and is the
+// authority; this kit does not print an address it would have had to parse out of a sentence.
 
 /** @typedef {"PREPARED"|"PUBLIC"} LaunchAccess */
 
@@ -66,10 +68,10 @@ export const PLATFORM_GENERATION_IDS = Object.freeze(["RC5", "RC6"]);
 /**
  * WHAT EACH GENERATION IS, AND WHETHER IT EXISTS ON CHAIN.
  *
- * `publishesAddresses` is the field that keeps this honest. A generation whose packages are
- * deterministic but unbroadcast HAS addresses — they are computable, they are in the launchpad's
- * own packages, and they are wrong the moment the source tree moves. Publishing them in a creator
- * kit would hand a creator something copyable that will not be the contract they launch through.
+ * `publishesAddresses` is the field that keeps this honest, and it answers a PUBLICATION question,
+ * never a deployment one. A generation can be on chain and still print nothing here — RC5 is
+ * exactly that: superseded, still holding code, and deliberately unpublished, because a copyable
+ * address for a platform that will never accept a launch is worse than no address at all.
  */
 export const PLATFORM_GENERATIONS = Object.freeze({
   RC5: Object.freeze({
@@ -79,9 +81,23 @@ export const PLATFORM_GENERATIONS = Object.freeze({
     freezeCommit: "d68469c93f3972a78a42e23578fcf9e685a9274d",
     solidityTree: "e451884c71bc93de52a110bf37daa98b5d153a92",
     deployedAt: "2026-08-13",
-    externalAudit: "NOT_PERFORMED",
-    publishesAddresses: true,
-    summary: "Deployed and source-verified on Ethereum, Base and Robinhood Chain. Every factory is PREPARED, so public creator launches are closed.",
+    publishesAddresses: false,
+    supersededBy: "RC6",
+    /**
+     * RC5's factories were never opened. `PREPARED` is the zero value a freshly initialized factory
+     * is born in, and these three still read it — so an ordinary creator launch was refused for the
+     * whole life of the generation and is refused today.
+     */
+    chainLaunchAccess: Object.freeze({
+      1: /** @type {LaunchAccess} */ ("PREPARED"),
+      8453: /** @type {LaunchAccess} */ ("PREPARED"),
+      4663: /** @type {LaunchAccess} */ ("PREPARED"),
+      56: null,
+    }),
+    addressPublication:
+      "Withdrawn. RC5 is superseded by RC6 and this kit no longer prints its platform addresses. The contracts still hold code on Ethereum, Base and Robinhood Chain and still read PREPARED, so they refuse an ordinary launch; publishing them would hand a creator a contract they can reach and cannot use. Read them off a block explorer if you are auditing history.",
+    summary:
+      "Superseded by RC6. Its contracts remain on Ethereum, Base and Robinhood Chain and remain PREPARED, so they never accepted a public creator launch. No RC5 address is published in this kit.",
   }),
   RC6: Object.freeze({
     id: "RC6",
@@ -90,8 +106,8 @@ export const PLATFORM_GENERATIONS = Object.freeze({
     freezeCommit: "63b3a5bb3a2a8f3835e7f17be68ea88242555ab2",
     solidityTree: null,
     deployedAt: "2026-08-19",
-    externalAudit: "NOT_PERFORMED",
-    publishesAddresses: false,
+    publishesAddresses: true,
+    supersededBy: null,
     /**
      * WHAT EACH CHAIN'S FACTORY ANSWERS RIGHT NOW — read from the chain, not from a package.
      *
@@ -106,97 +122,51 @@ export const PLATFORM_GENERATIONS = Object.freeze({
      * sentence and they must not share a field.
      */
     chainLaunchAccess: Object.freeze({
-      1: null,
-      8453: null,
+      1: /** @type {LaunchAccess} */ ("PUBLIC"),
+      8453: /** @type {LaunchAccess} */ ("PUBLIC"),
       4663: /** @type {LaunchAccess} */ ("PUBLIC"),
       56: null,
     }),
     addressPublication:
-      "None yet. RC6 is live on Robinhood Chain, but the launchpad's deployment package for chain 4663 has not been regenerated as signed+broadcast since the broadcast, so `npm run kit:deployments:sync` has no broadcast package to publish from and this kit prints no RC6 address. Read the factory address from the chain's explorer meanwhile.",
+      "Published, from the launchpad's chain profiles, for every chain whose profile states the addresses were read back off the chain. Chain 56 is deferred and prints nothing.",
     summary:
-      "Deployed on Robinhood Chain (4663) on 2026-08-19 and open to public creator launches there. Not deployed on Ethereum, Base or BNB Smart Chain. This kit publishes no RC6 address yet — see addressPublication.",
+      "Live and open to permissionless creator launches on Ethereum (1), Base (8453) and Robinhood Chain (4663) — one factory address, the same on all three. Not deployed on BNB Smart Chain (56).",
   }),
 });
 
 /**
- * The RC5 release record. Kept as its own export because tools and docs already read it by name;
- * it is the same object as `PLATFORM_GENERATIONS.RC5`.
+ * The LIVE release record. Kept as its own export because tools and docs already read it by name;
+ * it is the same object as `PLATFORM_GENERATIONS.RC6`.
+ *
+ * It moved from RC5 to RC6 when RC6 went live. A name like this one is read as "the platform", so
+ * leaving it pinned to a superseded generation is how a caller ends up describing the wrong one
+ * while every individual field it prints is true.
  */
-export const PLATFORM_RELEASE = PLATFORM_GENERATIONS.RC5;
+export const PLATFORM_RELEASE = PLATFORM_GENERATIONS.RC6;
 
 /**
- * RC5 platform contracts per chain.
+ * RC5 platform contracts per chain — WITHDRAWN, every chain `null`.
  *
- * `null` for a chain means NOT DEPLOYED — not "unknown", and never a reason to substitute an
- * address from another chain. Chain 56 (BNB) is null for a stated reason: its buy-and-entomb half
- * has no egress route in this generation, so deploying it would strand funds. It is deferred rather
- * than shipped half-working, and it stays in the table as a null so `relics status` can say that in
- * words instead of leaving a creator to infer it from a missing row.
+ * `null` HERE MEANS "THIS KIT PUBLISHES NO ADDRESS". For chains 1, 8453 and 4663 the contracts do
+ * still exist: they hold code and they read `PREPARED`, which is the state a factory is born in and
+ * the state RC5 never left. That is precisely why the addresses came out. A creator who copies one
+ * reaches a real, source-verified contract that will refuse their launch forever, and nothing about
+ * the address looks wrong on the way there.
+ *
+ * Chain 56 (BNB) was never deployed at all in this generation: its buy-and-entomb half has no
+ * egress route, so it was deferred rather than shipped half-working. It stays in the table as a
+ * stated null so `relics status` can say that in words instead of leaving a creator to infer it
+ * from a missing row.
+ *
+ * `PLATFORM_GENERATIONS.RC5.chainLaunchAccess` is what still answers "is that chain open" for this
+ * generation, and it answers `PREPARED` on the three it was deployed to. Withdrawing an address is
+ * a publication decision; it does not erase the chain fact beside it.
  */
 export const RC5_DEPLOYMENTS = Object.freeze({
-  1: Object.freeze({
-    chainId: 1,
-    label: "Ethereum",
-    generation: "RC5",
-    launchAccess: /** @type {LaunchAccess} */ ("PREPARED"),
-    explorer: "https://etherscan.io",
-    contracts: Object.freeze({
-      launchpadFactory: "0xe887e4601fde28e1981142e715b4b2e9b4ab2319",
-      artStreamableFeesLocker: "0xfcc073d0e863dee90e9795f551f0748ceb6bfd8d",
-      projectRegistry: "0x277aaa0673fbfbdd182907af3491f8da8a0fdb84",
-      projectMetadataRegistry: "0xfba3d24cca78cc6e7a2aafb656d1239233c5a4c0",
-      projectRights: "0x431142516526f93221715aada5525f9882beeee8",
-      scriptStorage: "0xf0e549c64d786fb1fd4f659a01030d22b82e9212",
-      templateRegistry: "0x63abbb660d043f3f134f12c81a0ed3251101c941",
-      artRuntimeRegistry: "0x927ccc48ebbd6d2dd9cd6f8c4abaf6ae670a2818",
-      solidityGenerativeRuntimeV1: "0x3effc28b622b5368ef848c233df3baecedb82617",
-      protocolTimelock: "0xe7476fcca36933076af8af5c6693d8c2c2bc24cc",
-    }),
-  }),
-  8453: Object.freeze({
-    chainId: 8453,
-    label: "Base",
-    generation: "RC5",
-    launchAccess: /** @type {LaunchAccess} */ ("PREPARED"),
-    explorer: "https://basescan.org",
-    contracts: Object.freeze({
-      launchpadFactory: "0x62a6c28ce2622dcb2acf3ff89e6f9dae3d1d92c2",
-      artStreamableFeesLocker: "0xba2172316bbd48ad6b6d018c93b41da5f16e5f3b",
-      projectRegistry: "0x5df3bcd0bd2a74d00b4490e1c799a8d8d3947da9",
-      projectMetadataRegistry: "0xb2df764e3923dc225a4f4a4d8db8edb7defe2a5d",
-      projectRights: "0xc75e5d4abb60f75d59a0bd96e3ef4627d003eff4",
-      scriptStorage: "0x8f05f5480437a23b7e773af1c31e7d0a7aa9f0a8",
-      templateRegistry: "0xec1def5ac7582852bfc289171c640f56fe3291ea",
-      artRuntimeRegistry: "0x8afa6bdc3bb6f11d8654885b2b12b78e3da39849",
-      solidityGenerativeRuntimeV1: "0xeb96fcb36c4fa60e60bc13123d238d41b8daaa35",
-      protocolTimelock: "0x10bc62c7c9ccbf90c5965583c86987c1dc9eb918",
-    }),
-  }),
-  4663: Object.freeze({
-    chainId: 4663,
-    label: "Robinhood Chain",
-    generation: "RC5",
-    launchAccess: /** @type {LaunchAccess} */ ("PREPARED"),
-    explorer: "https://robinhoodchain.blockscout.com",
-    contracts: Object.freeze({
-      launchpadFactory: "0x7694f2b0db5c33df40c3a5fd5c41a16ff471afcf",
-      artStreamableFeesLocker: "0x9fb8f21253f33d978e974938a296b2f1a03e07d2",
-      projectRegistry: "0x2b73450dd74b06d0c45567847fcd1889c4663926",
-      projectMetadataRegistry: "0xb2df764e3923dc225a4f4a4d8db8edb7defe2a5d",
-      projectRights: "0x088e8c6da4296dc79bb25f9b89430da2b70f9a6d",
-      scriptStorage: "0x8468b289bc286ce319c43b512ee0bee0b265606d",
-      templateRegistry: "0xdb1f0a2d245658afa60ce43e93db962adcb9dfb0",
-      artRuntimeRegistry: "0xbb5721ff1c07c5a3d537a586e1ef3c8e0e615850",
-      solidityGenerativeRuntimeV1: "0x7e34f2aeed7c7ae2fb16a13bb3556f411725050b",
-      protocolTimelock: "0x4cd1999847ec56650735620d423d2686c37639c1",
-      // Robinhood is the ONLY chain with a second, non-WETH quote lane.
-      quoteAssetRegistry: "0x84c253821cf2a967ebe1840cc350b2d60b07d861",
-      multiQuoteEconomicKernel: "0x078f997f0b694b3bb4a807c4e7b65d519f073eee",
-      immutableLiquidityKernel: "0x82c43a8afd304732698f086fdbb6e62a0a6813cc",
-      robinhoodV4SwapRouter: "0x567ac7b2b70c8a134b7796816e0b465cc2791d16",
-    }),
-  }),
-  56: null, // BNB Smart Chain — deferred: no proven egress route for the buy-and-entomb half.
+  1: null, // superseded by RC6 — contracts remain on chain, PREPARED, and are not published here
+  8453: null, // superseded by RC6 — contracts remain on chain, PREPARED, and are not published here
+  4663: null, // superseded by RC6 — contracts remain on chain, PREPARED, and are not published here
+  56: null, // BNB Smart Chain — never deployed in this generation: no egress route for the buy-and-entomb half
 });
 
 /** Public proof that the RC5 canary metadata path is live for the published TEST-INSTANT canaries. */
@@ -251,29 +221,80 @@ export const RC5_CANARY_METADATA_PROOF = Object.freeze({
 });
 
 /**
- * RC6 platform contracts per chain — GENERATED, and currently `null` everywhere.
+ * RC6 platform contracts per chain — GENERATED. Do not hand-edit.
  *
- * `null` HERE MEANS "THIS KIT PUBLISHES NO ADDRESS", NOT "NOTHING IS DEPLOYED". For chains 1, 8453
- * and 56 both readings happen to be true. For chain 4663 only the first is: RC6 is live and open to
- * creators there, and the address is still absent from this table because the launchpad's own
- * deployment package for that chain has not been regenerated as signed+broadcast since the
- * broadcast. `PLATFORM_GENERATIONS.RC6.chainLaunchAccess` is the field that answers the other
- * question, and `launchAvailability()` reads it rather than inferring an answer from this table.
+ * `null` HERE MEANS "THIS KIT PUBLISHES NO ADDRESS", NOT "NOTHING IS DEPLOYED", and the two are
+ * still answered by different evidence. Today only chain 56 is null, and for it both readings are
+ * true. `PLATFORM_GENERATIONS.RC6.chainLaunchAccess` is the field that answers the access question,
+ * and `launchAvailability()` reads it rather than inferring an answer from this table.
  *
- * The launchpad's RC6 packages carry deterministic addresses for all four chains long before
- * anything exists at them, and those addresses are re-derived from the source tree — an in-flight
- * change to the factory moves every one of them, including all ten mined hook addresses. An address
- * a creator can copy but cannot use is worse than one they have to go and read off an explorer.
+ * ONE FACTORY ADDRESS, THREE CHAINS. `launchpadFactory` is the same CREATE2 address on Ethereum,
+ * Base and Robinhood Chain. That is not a copy-paste error in this file; it is what a deterministic
+ * deployment produces, and it is worth checking against a block explorer rather than assumed wrong.
+ * It is an ERC-1967 proxy: `launchpadFactoryImplementation` is what it currently points at, the
+ * PROXY is the stable address every launch is built against, and the implementation moves under it.
  *
- * `npm run kit:deployments:sync` fills this in from the launchpad's packages and REFUSES to write
- * an address from a package that is not broadcast, so the emptiness below cannot be filled by
- * mistake — only by a real broadcast.
+ * `RELICS_LAUNCHPAD_DIR=… npm run kit:deployments:sync` fills this in from the launchpad's chain
+ * profiles and publishes an address only from a profile that states the addresses were read back
+ * off the chain, so a row here cannot be filled in by mistake — only by a real, verified deployment.
  */
 export const RC6_DEPLOYMENTS = Object.freeze({
-  1: null, // not deployed — package is not broadcast (signed: false, broadcast: false)
-  56: null, // not deployed — package is PREPARED_UNSIGNED (signed: false, broadcast: false)
-  4663: null, // not deployed — package is PREPARED_UNSIGNED (signed: false, broadcast: false)
-  8453: null, // not deployed — package is not broadcast (signed: false, broadcast: false)
+  1: Object.freeze({
+    chainId: 1,
+    label: "Ethereum",
+    generation: "RC6",
+    launchAccess: /** @type {LaunchAccess} */ ("PUBLIC"),
+    explorer: "https://etherscan.io",
+    contracts: Object.freeze({
+      launchpadFactory: "0x25003C3EBC2036CfE9E4037d4e7E6F840a06522E",
+      launchpadFactoryImplementation: "0xFeeCB1F1e96328E270d67CeD79D4e3492894ac8c",
+      artStreamableFeesLocker: "0x895a416BCCdadDE85559806D44D20158E46c4294",
+      projectRegistry: "0x7EDb27147e4f12D8E4100E1681d2c873D4Bb60f3",
+      projectRights: "0xBae5e9Cc5BFEAF17aFAc5C75a3b32210eBC92fc2",
+      scriptStorage: "0x057135CbeB1b9689678900b89b13188EE3d9bDff",
+      templateRegistry: "0xb3F2EDaf7dF7d0A98E3F45A55EC7c20855c2E932",
+      feeAccounting: "0x9fB49C18361133dD57DD996ABa0cDEaa6c93ae00",
+      metadataResolver: "0x112D480aeD3f6F6761E8136F4372AEbd48455e1b",
+    }),
+  }),
+  56: null, // not deployed — chain profile says platformContracts.status is "PREPARED_NOT_DEPLOYED" (deployment package is PREPARED_UNSIGNED)
+  4663: Object.freeze({
+    chainId: 4663,
+    label: "Robinhood Chain",
+    generation: "RC6",
+    launchAccess: /** @type {LaunchAccess} */ ("PUBLIC"),
+    explorer: "https://robinhoodchain.blockscout.com",
+    contracts: Object.freeze({
+      launchpadFactory: "0x25003C3EBC2036CfE9E4037d4e7E6F840a06522E",
+      launchpadFactoryImplementation: "0xFeeCB1F1e96328E270d67CeD79D4e3492894ac8c",
+      artStreamableFeesLocker: "0xE043F620CBb582FD4C132e72fEaEd8E4EA47c7E4",
+      projectRegistry: "0x7EDb27147e4f12D8E4100E1681d2c873D4Bb60f3",
+      projectRights: "0xBae5e9Cc5BFEAF17aFAc5C75a3b32210eBC92fc2",
+      scriptStorage: "0x057135CbeB1b9689678900b89b13188EE3d9bDff",
+      templateRegistry: "0xb3F2EDaf7dF7d0A98E3F45A55EC7c20855c2E932",
+      feeAccounting: "0x0Be6edd65708022e661d8c5C002d50a99b38E1c5",
+      metadataResolver: "0x112D480aeD3f6F6761E8136F4372AEbd48455e1b",
+      swapRouter: "0x581c8EaeB2b051632d27Bb49157d6424C0D7eBF1",
+    }),
+  }),
+  8453: Object.freeze({
+    chainId: 8453,
+    label: "Base",
+    generation: "RC6",
+    launchAccess: /** @type {LaunchAccess} */ ("PUBLIC"),
+    explorer: "https://basescan.org",
+    contracts: Object.freeze({
+      launchpadFactory: "0x25003C3EBC2036CfE9E4037d4e7E6F840a06522E",
+      launchpadFactoryImplementation: "0xFeeCB1F1e96328E270d67CeD79D4e3492894ac8c",
+      artStreamableFeesLocker: "0xDacbcC9E63B22101890ead535b2038f714Fe47B8",
+      projectRegistry: "0x7EDb27147e4f12D8E4100E1681d2c873D4Bb60f3",
+      projectRights: "0xBae5e9Cc5BFEAF17aFAc5C75a3b32210eBC92fc2",
+      scriptStorage: "0x057135CbeB1b9689678900b89b13188EE3d9bDff",
+      templateRegistry: "0xb3F2EDaf7dF7d0A98E3F45A55EC7c20855c2E932",
+      feeAccounting: "0x8D23741ef600a426DBd44E507Bc377e7991A14f6",
+      metadataResolver: "0x112D480aeD3f6F6761E8136F4372AEbd48455e1b",
+    }),
+  }),
 });
 
 /** Every generation's per-chain deployment table, keyed by generation id. */
@@ -293,8 +314,8 @@ export const CURRENT_DEPLOYED_GENERATION = PLATFORM_GENERATION_IDS.filter((id) =
 
 /**
  * @deprecated Prefer `deploymentsFor(generation)`; this is the current DEPLOYED generation's table.
- * It is currently RC6's, which is every chain `null` — a table of published addresses, not of
- * deployments. Read `launchAccessFor(chainId)` for whether a chain is live.
+ * It is currently RC6's. It is a table of PUBLISHED ADDRESSES, not of deployments — read
+ * `launchAccessFor(chainId)` for whether a chain is live.
  */
 export const PLATFORM_DEPLOYMENTS = CURRENT_DEPLOYED_GENERATION ? DEPLOYMENTS_BY_GENERATION[CURRENT_DEPLOYED_GENERATION] : Object.freeze({});
 
@@ -405,8 +426,8 @@ export function acceptsPublicLaunches(chainId, generation = CURRENT_DEPLOYED_GEN
 
 /**
  * A one-line, honest status string for CLI output. Always names the generation, because "not
- * deployed" and "deployed but closed" are different sentences and a creator needs to know which
- * generation each one is about.
+ * deployed", "deployed but closed" and "superseded" are three different sentences and a creator
+ * needs to know which generation each one is about.
  * @param {number} chainId
  * @param {string} [generation]
  */
@@ -420,6 +441,11 @@ export function launchAvailability(chainId, generation = CURRENT_DEPLOYED_GENERA
   // Live. Say so, and say separately whether this kit prints the address — the reader is about to
   // go looking for one, and "no address here" is a different problem from "no factory there".
   const withheld = d === null ? ", address not published in this kit" : "";
+  // A SUPERSEDED GENERATION IS NEVER "not YET open". Its contracts are on chain and closed, and
+  // they will stay closed — the successor is where launches go. "Not yet" is a claim about the
+  // future, and making it about a generation nothing will reopen is the friendliest way to send a
+  // creator to wait for a state that will not arrive.
+  if (g.supersededBy) return `${g.id} superseded by ${g.supersededBy} — contracts remain on chain, closed to creator launches${withheld}`;
   if (access === "PUBLIC") return `${g.id} live — accepting creator launches${withheld}`;
   return `${g.id} contracts live, public creation not yet open${withheld}`;
 }

@@ -58,8 +58,16 @@ export function printStatus() {
     // generation that is live on one chain and published on none read as "0 chains".
     const liveCount = liveChainIds(generationId).length;
 
-    const badge = generation.status === "DEPLOYED" ? `${liveCount} chain${liveCount === 1 ? "" : "s"}` : "NOT DEPLOYED";
-    const heading_ = `  ${bold(`${generation.id}  ${generation.tag}`)}  ${generation.status === "DEPLOYED" ? dim(badge) : yellow(badge)}`;
+    // THREE BADGES, NOT TWO. "3 chains" beside a superseded generation reads as three chains you
+    // could launch on, which is the one thing it does not mean.
+    const badge =
+      generation.status !== "DEPLOYED"
+        ? "NOT DEPLOYED"
+        : generation.supersededBy
+          ? `SUPERSEDED BY ${generation.supersededBy}`
+          : `${liveCount} chain${liveCount === 1 ? "" : "s"}`;
+    const neutral = generation.status === "DEPLOYED" && !generation.supersededBy;
+    const heading_ = `  ${bold(`${generation.id}  ${generation.tag}`)}  ${neutral ? dim(badge) : yellow(badge)}`;
     console.log(heading_);
     if (generation.deployedAt) console.log(`  ${dim("deployed at")}    ${generation.deployedAt}`);
     if (generation.freezeCommit) console.log(`  ${dim("freeze commit")}  ${generation.freezeCommit}`);
@@ -92,6 +100,11 @@ export function printStatus() {
   if (anyOpen === 0) {
     console.log(yellow("  Public creator launches are closed on every generation and every chain."));
     console.log(dim("  You can build, validate and export .relics bundles today; do not broadcast a launch transaction yet."));
+  } else {
+    // THE OPEN CASE GETS ITS OWN SENTENCE, and it names the count rather than the chains. The rows
+    // above already name them, and a second hand-written list is the copy that goes stale first.
+    console.log(`  ${anyOpen} chain/generation pair${anyOpen === 1 ? "" : "s"} accept a permissionless creator launch right now.`);
+    console.log(dim("  Read launchAccessState() from the factory before you broadcast: this table is a record, the chain is the fact."));
   }
   const undeployed = PLATFORM_GENERATION_IDS.filter((id) => PLATFORM_GENERATIONS[id].status === "NOT_DEPLOYED");
   if (undeployed.length > 0) {
@@ -108,7 +121,13 @@ export function printStatus() {
     const g = PLATFORM_GENERATIONS[id];
     if (g.status !== "DEPLOYED" || g.publishesAddresses || !g.addressPublication) continue;
     console.log("");
-    console.log(yellow(`  ${g.id} is live and this kit publishes no ${g.id} address.`));
+    console.log(
+      yellow(
+        g.supersededBy
+          ? `  ${g.id} still holds code on chain and this kit publishes no ${g.id} address.`
+          : `  ${g.id} is live and this kit publishes no ${g.id} address.`,
+      ),
+    );
     console.log(dim(`  ${g.addressPublication}`));
   }
 

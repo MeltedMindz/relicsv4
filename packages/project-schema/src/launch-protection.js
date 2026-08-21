@@ -4,7 +4,8 @@
 // may select.
 //
 // WHY THIS FILE EXISTS AT ALL. This kit is documentation, and documentation about a moving protocol
-// goes stale silently. It went stale before: launchpad pages described the hook mask as `0x1440`
+// goes stale silently. It went stale before: launchpad pages described the hook mask as the retired
+// RC5 value `0x1440`
 // long after a second hook generation existed, and nothing failed — a reader had to notice. So the
 // numbers are declared ONCE, here, and `scripts/check-launch-protection.mjs` derives the sentences
 // the documentation must contain FROM these constants. Change a number and the derived sentence
@@ -108,35 +109,42 @@ export function pipsToPercentLabel(pips) {
 // ---------------------------------------------------------------------------------------------
 // HOOK GENERATIONS.
 //
-// `deployed` is the field that keeps this honest. RC5 is live on three chains and refuses ordinary
-// creator launches; RC6 is written and not deployed anywhere. A surface that shows RC6's mask
-// without its status is claiming a deployment that does not exist.
+// TWO FIELDS, TWO QUESTIONS, AND CONFLATING THEM IS THE FAILURE THIS BLOCK EXISTS TO PREVENT.
+// `deployed` asks whether hooks of that generation hold code anywhere — both generations do, and
+// RC5's canary hooks are still on chain. `current` asks which generation a launch made TODAY binds,
+// and exactly one generation may answer yes. Reading the second off the first is what left the kit
+// answering "the live mask" with RC5's `0x1440` for as long as any RC5 hook still existed.
 // ---------------------------------------------------------------------------------------------
 
-/** @typedef {{ mask: number, deployed: boolean, dynamicFee: boolean, callbacks: readonly string[], lpFeeModel: string }} HookGeneration */
+/** @typedef {{ mask: number, deployed: boolean, current: boolean, dynamicFee: boolean, callbacks: readonly string[], lpFeeModel: string }} HookGeneration */
 
 /** @type {Readonly<Record<string, HookGeneration>>} */
 export const HOOK_GENERATIONS = Object.freeze({
   RC5: Object.freeze({
-    mask: 0x1440,
+    mask: 0x1440, // the retired RC5 mask — superseded by RC6's 0x14C0, and never a current launch's
     deployed: true,
+    current: false,
     dynamicFee: false,
     callbacks: Object.freeze(["afterInitialize", "afterAddLiquidity", "afterSwap"]),
     lpFeeModel: "STATIC_POOL_FEE",
   }),
   RC6: Object.freeze({
     mask: 0x14c0,
-    deployed: false,
+    deployed: true,
+    current: true,
     dynamicFee: true,
     callbacks: Object.freeze(["afterInitialize", "afterAddLiquidity", "beforeSwap", "afterSwap"]),
     lpFeeModel: "DYNAMIC_LP_FEE_SET_IN_BEFORESWAP",
   }),
 });
 
-/** The generation a creator's launch uses today. */
-export const DEPLOYED_HOOK_GENERATION = "RC5";
+/**
+ * The generation a creator's launch uses today: RC6, live and open on Ethereum, Base and Robinhood
+ * Chain. DERIVED, not typed, so it cannot disagree with the `current` flags above.
+ */
+export const DEPLOYED_HOOK_GENERATION = Object.entries(HOOK_GENERATIONS).find(([, g]) => g.current)?.[0] ?? null;
 
-/** The generation that carries launch protection. Not deployed; see `HOOK_GENERATIONS.RC6`. */
+/** The generation that carries launch protection. It is also the current one; see `HOOK_GENERATIONS`. */
 export const LAUNCH_PROTECTION_HOOK_GENERATION = "RC6";
 
 /** @param {number} mask */
@@ -203,9 +211,8 @@ export const IMMUTABLE_LIQUIDITY_SCOPE =
 //
 // Each entry is the LIE, so a negation-aware scanner can look for it and so denying one stays
 // legal. Two families:
-//   * overreach  — claims wider than anything the code supports.
-//   * audit-status — banned in BOTH directions by owner directive. "Not audited" invites the
-//     reader to weigh a non-fact, and "audited" without a report is worse.
+//   * overreach    — claims wider than anything the code supports.
+//   * audit-status — banned in BOTH directions by owner directive; the list below says why.
 // ---------------------------------------------------------------------------------------------
 
 /**
@@ -233,6 +240,10 @@ export const OVERREACH_CLAIMS = Object.freeze([
 
 /**
  * AUDIT-STATUS phrases, banned in BOTH directions and NOT negation-suppressible.
+ *
+ * The owner directive bans both halves. The disclaiming half invites a reader to weigh a non-fact;
+ * the assuring half is worse, because an assurance with no named report behind it is simply false.
+ * Public copy points at SOURCE VERIFICATION instead, which is a thing a reader can go and check.
  *
  * "Not audited" is already the negative form, and writing "it is not true that this is unaudited"
  * is not a sentence anyone reaches for honestly. Suppressing on a preceding negator here would

@@ -6,10 +6,14 @@
 // have to execute or compile.
 
 /**
- * Chains the bundle format understands. RC5 platform contracts are deployed on 1 / 8453 / 4663
- * but remain PREPARED, so public creator launches are still closed. Chain 56 stays in the schema
- * vocabulary for compatibility with existing drafts and future deployment work, but this release
- * marks BNB Smart Chain as deferred in `deployments.js`.
+ * Chains the bundle format understands. RC6 platform contracts are deployed on 1 / 8453 / 4663 and
+ * all three read PUBLIC, so permissionless creator launches are open on every one of them. Chain 56
+ * stays in the schema vocabulary for compatibility with existing drafts and future deployment work,
+ * but this release marks BNB Smart Chain as deferred in `deployments.js`.
+ *
+ * SCHEMA-COMPATIBLE IS NOT DEPLOYED. A chain id being valid here says the bundle format can express
+ * a launch on it, and nothing at all about whether a factory exists there — `deployments.js` and
+ * `relics status` answer that, and chain 56 is exactly the case where the two answers differ.
  */
 export const SUPPORTED_CHAIN_IDS = Object.freeze([1, 8453, 4663, 56]);
 
@@ -78,7 +82,7 @@ export const CHAIN_PROFILES = Object.freeze({
   1: Object.freeze({ label: "Ethereum", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
   8453: Object.freeze({ label: "Base", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
   4663: Object.freeze({ label: "Robinhood Chain", nativeSymbol: "ETH", wrappedNativeSymbol: "WETH", canonicalQuoteSymbols: Object.freeze(["WETH"]), buybackRouteState: "IDENTITY_WETH", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL", "ENFORCED"]) }),
-  // BNB is schema-compatible but deferred in RC5. If it is deployed later, WBNB remains the native
+  // BNB is schema-compatible but deferred: RC6 is not deployed on it. If it is deployed later, WBNB remains the native
   // wrapped quote in the chain profile; widening beyond that should be a deliberate registry edit.
   56: Object.freeze({ label: "BNB Smart Chain", nativeSymbol: "BNB", wrappedNativeSymbol: "WBNB", canonicalQuoteSymbols: Object.freeze(["WBNB"]), buybackRouteState: "ROUTE_UNPROVEN", creatorEarningsModes: Object.freeze(["NONE", "OPTIONAL"]) }),
 });

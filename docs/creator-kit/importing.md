@@ -3,9 +3,9 @@
 What the RELICS Launchpad creator app — or any other importer — does with a `.relics` file, and
 what it must not do.
 
-Public creator launches are not open yet, and review to date is internal only. Importing a bundle
-fills in a draft; it does not deploy anything. Per-chain deployment and launch state is stated
-once, in [`../launchpad/08-status.md`](../launchpad/08-status.md).
+Importing a bundle fills in a draft; it does not deploy anything, on any chain, whatever that
+chain's launch state is. Per-chain deployment and launch state is stated once, in
+[`../launchpad/08-status.md`](../launchpad/08-status.md).
 
 ---
 

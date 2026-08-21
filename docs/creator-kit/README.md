@@ -19,7 +19,8 @@ config hash and component hashes the CLI printed, and the draft arrives filled i
 market mappings, metadata, earnings, supply, chains. Nothing is re-entered by hand.
 
 Nothing in this kit signs or broadcasts anything, and nothing in it contacts a network. It builds
-one `.relics` file. Public creator launches are not open yet; for the current per-chain deployment
+one `.relics` file. Public creator launches are open on Ethereum (1), Base (8453) and Robinhood
+Chain (4663), and RC6 is not deployed on BNB Smart Chain (56); for the current per-chain deployment
 state read [`../launchpad/08-status.md`](../launchpad/08-status.md) and
 [`../launchpad/10-deployments-and-quote-assets.md`](../launchpad/10-deployments-and-quote-assets.md),
 or run `npm run kit:status` for the record bundled with this commit.

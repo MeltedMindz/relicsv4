@@ -30,12 +30,13 @@
     "predecessorNote": "RC5 is the previous launchpad generation. Its deployed addresses, its 0x1440 hook mask and its post-launch metadata-bind step are HISTORICAL. Do not describe any of them as current behaviour."
   },
   "deployment": {
-    "status": "LIVE ON ROBINHOOD CHAIN",
-    "statusSentence": "RC6 is deployed on Robinhood Chain (4663) as of 2026-08-19, and its factory there is PUBLIC: that chain accepts ordinary creator launches. RC6 is NOT deployed on Ethereum, Base or BNB Smart Chain, and no date is set for any of them.",
-    "source": "chain 4663, read from LaunchpadFactoryV1.launchAccessState(); launchpad artifacts/rc6/robinhood-release-state.json -> ROBINHOOD_MAINNET_DEPLOYMENT (STATUS LIVE_AND_OPEN_TO_PUBLIC_CREATORS, deployed 2026-08-19, frozen source 63b3a5bb3a2a8f3835e7f17be68ea88242555ab2)",
-    "addressesPublishedHere": false,
-    "addressesPublishedHereReason": "RC6 is live on chain 4663 and this repository still publishes no RC6 address. The launchpad's own deployment package for that chain has not been regenerated as signed+broadcast since the broadcast, so `npm run kit:deployments:sync` -- the only sanctioned writer of the address table -- has no broadcast package to publish from and refuses. Read the addresses off robinhoodchain.blockscout.com meanwhile; every RC6 contract there is source-verified.",
-    "publicCreatorLaunchOpenChainIds": [4663],
+    "status": "LIVE AND OPEN ON THREE CHAINS",
+    "statusSentence": "RC6 is deployed and PUBLIC on Ethereum (1), Base (8453) and Robinhood Chain (4663): all three accept ordinary, permissionless creator launches. The factory is the same CREATE2 address on all three. RC6 is NOT deployed on BNB Smart Chain (56), which is deferred, and no date is set for it.",
+    "source": "Each chain's LaunchpadFactoryV1.launchAccessState(), read live 2026-08-21 and returning 1 (PUBLIC) on 1, 8453 and 4663; launchpad/config/chains/{1,8453,4663}.json platformContracts, each carrying its own $verifiedOnChain note; frozen source 63b3a5bb3a2a8f3835e7f17be68ea88242555ab2",
+    "addressesPublishedHere": true,
+    "addressesPublishedHereReason": "Published. packages/project-schema/src/deployments.js carries the RC6 platform addresses for chains 1, 8453 and 4663, written by `npm run kit:deployments:sync` -- still the only sanctioned writer -- from the launchpad's chain profiles, which publish an address only once it has been read back off the chain. Chain 56 prints nothing because nothing is deployed there. Every RC6 contract is source-verified on its chain's explorer.",
+    "firstPermissionlessLaunch": "Chain 4663, project 1 (\"666\"), token 0x0C3176ae00ddCDF61c6dC0126208920D6f2Ab9BB, launched by an ordinary EOA through launchWithQuote -- a real permissionless launch, not a deployer canary: the factory reports canariesUsed 0. totalLaunches() reads 1 on 4663 and 0 on 1 and 8453.",
+    "publicCreatorLaunchOpenChainIds": [1, 8453, 4663],
     "launchAccessStates": ["PREPARED", "PUBLIC"],
     "launchAccessSource": "launchpad/src/rc6/factory/LaunchpadFactoryV1.sol -> enum LaunchAccessState",
     "launchAccessNote": "A freshly initialized factory holds PREPARED, which is the zero value. It becomes PUBLIC exactly once, when the upgrade authority calls openPublicLaunches(). Nothing returns it to PREPARED."
@@ -162,8 +163,8 @@
       "explorer": "https://etherscan.io",
       "nativeCurrencySymbol": "ETH",
       "wrappedNativeSymbol": "WETH",
-      "rc6Status": "PREPARED_NOT_DEPLOYED",
-      "publicCreatorLaunch": "CLOSED",
+      "rc6Status": "DEPLOYED",
+      "publicCreatorLaunch": "OPEN",
       "defaultQuote": "WETH",
       "additionalQuoteSupport": "None. A non-WETH quote is refused by chain id, not by convention."
     },
@@ -174,8 +175,8 @@
       "explorer": "https://basescan.org",
       "nativeCurrencySymbol": "ETH",
       "wrappedNativeSymbol": "WETH",
-      "rc6Status": "PREPARED_NOT_DEPLOYED",
-      "publicCreatorLaunch": "CLOSED",
+      "rc6Status": "DEPLOYED",
+      "publicCreatorLaunch": "OPEN",
       "defaultQuote": "WETH",
       "additionalQuoteSupport": "None. A non-WETH quote is refused by chain id, not by convention."
     },
@@ -204,8 +205,8 @@
       "additionalQuoteSupport": "None. WBNB is not WETH; never print \"WETH\" or \"ETH\" on this chain."
     }
   ],
-  "chainsSource": "launchpad/config/chains/{1,8453,4663,56}.json; site/public/chain-manifest.json (generated); launchpad/deployments/*.json; scripts/launchpad/verify-bnb-opening-blocked.mjs",
-  "chainsNote": "Robinhood Chain is the only chain RC6 exists on, and it is open to ordinary creator launches. Ethereum, Base and BNB Smart Chain are configured in the bundle format and the chain profiles, and RC6 is not deployed on any of them; configured is not deployed, and no date is announced for any of the three. The chains now differ in launch state as well as in the quote leg, so read the row rather than assuming they match.",
+  "chainsSource": "launchpad/config/chains/{1,8453,4663,56}.json (platformContracts plus $verifiedOnChain); site/public/chain-manifest.json (generated); packages/project-schema/src/deployments.js (generated by scripts/sync-deployments.mjs); scripts/launchpad/verify-bnb-opening-blocked.mjs",
+  "chainsNote": "RC6 is live and open to ordinary creator launches on Ethereum (1), Base (8453) and Robinhood Chain (4663) -- one factory address, the same on all three, because the deployment is deterministic. BNB Smart Chain (56) is configured in the bundle format and the chain profiles and RC6 is not deployed on it; configured is not deployed, and no date is announced. The chains still differ in the quote leg -- Robinhood is the only multi-quote chain, and chain 56 settles in WBNB rather than WETH -- so read the row rather than assuming they match.",
   "multiQuoteChainId": 4663,
   "quoteAssetRegistryVersion": "quote-assets/2026-08-09.1",
   "creatorEarnings": {
@@ -259,7 +260,6 @@
     { "name": "ArtHookRc6", "scope": "per project", "upgradeable": false, "authority": "none", "note": "Direct CREATE2, no proxy, no admin. The launch-protection election is written once at bind and has no setter." },
     { "name": "ArtStreamableFeesLockerRc6", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "No proxy, no UUPS, no beacon, no implementation slot, no upgrade path." },
     { "name": "ImmutableLiquidityKernel", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Holds genesis liquidity principal. Deliberately the only non-upgradeable principal custodian in the system." },
-    { "name": "ImmutableEconomicKernel", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "The economic twin of the liquidity kernel." },
     { "name": "MetadataResolverRc6", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Content-addressed: a writer cannot choose the key, because the key is derived from the bytes being published." },
     { "name": "LaunchPolicyV1", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Validates launch params; no owner, no admin." },
     { "name": "LaunchPredictorV1", "scope": "protocol", "upgradeable": false, "authority": "none", "note": "Address prediction; no owner, no admin." },

@@ -33,8 +33,10 @@ Full statements and reasoning in [`AGENTS.md` §0](AGENTS.md) and [§9](AGENTS.m
 - Never invent a schema field, sensor, transform, destination, or runtime. They are closed sets.
 - Never bypass validation, hand-assemble a bundle, or edit one after export.
 - Never fabricate an address, a hash, or a chain status. Run `npm run kit:status` and quote it.
-  Public creator launch is closed; no chain is publicly open.
-- Never claim any review was an external audit. Review is internal only.
+  Public creator launch is OPEN on Ethereum (1), Base (8453) and Robinhood Chain (4663); RC6 is not
+  deployed on BNB Smart Chain (56). Read that state, never restate it from memory — it moves.
+- Never assert an audit status in either direction. Point a reader at source verification, which
+  they can go and check, and let it stand on its own.
 - Never write a secret. `npm run secrets:scan` before any commit.
 - Never commit or push unless asked. Never publish.
 

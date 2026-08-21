@@ -68,11 +68,11 @@ jobs:
         # nobody runs is a gate that is already stale.
         run: npm run export:manifest:check
 
-      - name: the kit publishes no address for a generation that is not deployed
-        # RC6 is not on any chain and its derived addresses move with the source tree, so a copyable
-        # RC6 address in a creator kit would be the contract a creator targets and never reaches.
-        # This half of the guard needs no launchpad checkout; `kit:deployments:check` compares the
-        # records against the launchpad's own packages and says plainly when it cannot run.
+      - name: every published address matches the chain profile it was generated from
+        # An address in a creator kit is a claim that this is the contract a bundle will be launched
+        # through, so it is generated and never typed: `kit:deployments:check` compares the records
+        # against the launchpad's own chain profiles, which publish an address only once it has been
+        # read back off the chain. It says plainly when it cannot run, rather than passing quietly.
         run: npm run kit:deployments:check
 
       - name: the schema cannot drift from the production importer

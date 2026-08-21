@@ -8,10 +8,10 @@ same component hashes the CLI printed at export time, because both sides run the
 `@relics/project-schema` (`packages/project-schema/`), a zero-dependency ES module package with
 no build step. There is no second handwritten schema anywhere.
 
-Public creator launches are not open yet. Nothing in this kit signs or broadcasts anything; it
-builds one file. Per-chain deployment and launch state is stated once, in
-[`../launchpad/08-status.md`](../launchpad/08-status.md) — not restated here, so it cannot go stale
-here.
+Nothing in this kit signs or broadcasts anything; it builds one file. Whether a given chain will
+accept a launch is a separate question, and per-chain deployment and launch state is stated once,
+in [`../launchpad/08-status.md`](../launchpad/08-status.md) — not restated here, so it cannot go
+stale here.
 
 New to the kit? Start at [Getting started](./getting-started.md).
 

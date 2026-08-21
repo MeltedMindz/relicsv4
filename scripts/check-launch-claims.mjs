@@ -10,7 +10,7 @@
 // WHY THIS EXISTS
 //
 // `npm run kit:status` printed "Public creator launches are closed on every generation and every
-// chain", while README.md and AGENTS.md both carried a table column headed **"Launchable today?"**
+// chain" -- true at the time -- while README.md and AGENTS.md both carried a table column headed **"Launchable today?"**
 // answering **yes** for one template — and README then said the opposite of its own table 170
 // lines further down. AGENTS.md instructed agents to run `kit:status` and never describe a chain
 // as publicly open, and then its own table did.
@@ -55,10 +55,10 @@ import { acceptsPublicLaunches, PLATFORM_GENERATION_IDS, SUPPORTED_CHAIN_IDS } f
  * disagreement in either direction stops the gate, because a pair closing is as much a change of
  * premise as a pair opening.
  */
-const REVIEWED_OPEN_PAIRS = 1;
-const REVIEWED_AT = "2026-08-19";
+const REVIEWED_OPEN_PAIRS = 3;
+const REVIEWED_AT = "2026-08-21";
 const REVIEWED_NOTE =
-  "RC6 went live on Robinhood Chain (4663) with launchAccess PUBLIC. Every launchability claim in README.md, AGENTS.md, docs/launchpad/** and docs/creator-kit/** was re-read and re-framed: launchability is a RUNTIME question (LAUNCHABLE_ART_RUNTIMES is SOLIDITY_SVG alone) crossed with a CHAIN question (`relics status`), and no surface may state either half as if it were both.";
+  "RC6 is PUBLIC on Ethereum (1), Base (8453) and Robinhood Chain (4663) -- launchAccessState() reads 1 on all three, read live 2026-08-21 -- and the kit now publishes their addresses. Every launchability claim in README.md, AGENTS.md, PUBLIC_EXPORT_ALLOWLIST.md, docs/launchpad/** and docs/creator-kit/** was re-read against that: the deployment tables, the status banners, the FAQ, the creator flow, the CLI status and export output, and the two hook generations. The framing is unchanged and still binds -- launchability is a RUNTIME question (LAUNCHABLE_ART_RUNTIMES is SOLIDITY_SVG alone) crossed with a CHAIN question (`relics status`), and no surface may state either half as if it were both -- and it matters MORE now, not less, because three of the four chains answer yes to the chain half.";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const JSON_OUT = process.argv.includes("--json");
@@ -217,9 +217,9 @@ if (JSON_OUT) {
 
 if (!pass) {
   console.error("");
-  console.error("A document answers 'launchable today' affirmatively while every chain is closed to");
-  console.error("public creator launch. Ask the narrower question the kit can answer honestly — which");
-  console.error("runtime a launch binds first — or delete the column. Do not soften the wording and");
-  console.error("keep the claim.");
+  console.error("A document answers 'launchable today' affirmatively, collapsing two independent yeses:");
+  console.error("a runtime the launchpad will bind (LAUNCHABLE_ART_RUNTIMES has one entry) and a chain");
+  console.error("whose factory is open. Ask the two questions separately — or delete the column. Do not");
+  console.error("soften the wording and keep the claim.");
   process.exit(1);
 }
