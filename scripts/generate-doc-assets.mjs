@@ -300,7 +300,7 @@ function renderProtectionSvg() {
   <rect class="bg" x="0" y="0" width="${W}" height="${H}"/>
   <rect class="panel" x="0.5" y="0.5" width="${W - 1}" height="${H - 1}"/>
   <text x="${M.left}" y="32" class="h1">LAUNCH PROTECTION — LP FEE BY SIDE</text>
-  <text x="${M.left}" y="50" class="h2">${esc(`${totalMinutes}-minute decay · anchored at pool initialization · no exemptions`)}</text>
+  <text x="${M.left}" y="50" class="h2">${esc(`Creator election · ${totalMinutes}-minute decay if taken · anchored at pool initialization · no exemptions`)}</text>
   <g>
     ${grid}
   </g>

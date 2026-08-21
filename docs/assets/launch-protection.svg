@@ -27,7 +27,7 @@
   <rect class="bg" x="0" y="0" width="880" height="470"/>
   <rect class="panel" x="0.5" y="0.5" width="879" height="469"/>
   <text x="74" y="32" class="h1">LAUNCH PROTECTION — LP FEE BY SIDE</text>
-  <text x="74" y="50" class="h2">98-minute decay · anchored at pool initialization · no exemptions</text>
+  <text x="74" y="50" class="h2">Creator election · 98-minute decay if taken · anchored at pool initialization · no exemptions</text>
   <g>
     <line x1="74" y1="378.0" x2="846.0" y2="378.0" class="grid"/><text x="62" y="382.0" class="tick" text-anchor="end">0%</text>
     <line x1="74" y1="314.2" x2="846.0" y2="314.2" class="grid"/><text x="62" y="318.2" class="tick" text-anchor="end">20%</text>

@@ -23,6 +23,13 @@ Machine-readable provenance, including the CREATE2 record and upstream revision 
 
 ## What the hook does
 
+> **This page is about the flagship art collection's hook, not the launchpad's.** The mask and the
+> observer description below are true of `RelicsV4Hook` and of nothing else. A project launched
+> through the RELICS Launchpad binds a per-project ArtHook of a later generation, on a different
+> mask, that sets a dynamic LP fee in `beforeSwap` — see
+> [`docs/launchpad/12-launch-protection.md`](../docs/launchpad/12-launch-protection.md). Carrying
+> either fact across to the other is the single easiest mistake to make here.
+
 `RelicsV4Hook` turns real market history into permanent on-chain state that the RELICS
 renderer reads as visual condition. It is an **observer**:
 

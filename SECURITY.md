@@ -6,16 +6,20 @@ without your own independent security, legal, and economic review.
 
 ## Scope and status
 
-This repository exists to teach patterns. The contracts compile, are tested, and illustrate
-sound techniques — but "tested" is not "audited." Treat every contract as a starting point to be
-reviewed, not a finished product.
+This repository exists to teach patterns. The contracts compile, are tested, and illustrate sound
+techniques. Testing is not review: a passing suite says the code does what its author expected, and
+says nothing about what an attacker expected. Treat every contract here as a starting point to be
+reviewed, not a finished product. What you can check yourself is the source — read it, and read the
+verified source of anything you deploy against on a block explorer.
 
 ## Reporting
 
 If you find a security issue in the starter itself, please open an issue **without** a working
 exploit against any live deployment, or contact the maintainers privately if the repository lists
-a contact. Because this is educational software with no production deployment, there is no bug
-bounty.
+a contact. The starter contracts in this repository are educational and are deployed nowhere, so
+there is no bug bounty for them. That is a statement about THIS code only: the platform addresses
+this kit publishes are live contracts on Ethereum, Base and Robinhood Chain, they are not part of
+the starter, and a finding against one of them belongs with the protocol, not here.
 
 ## Known risk areas (read these before forking)
 

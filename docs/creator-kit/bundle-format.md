@@ -176,17 +176,17 @@ an error, not a passthrough.
 
 ```jsonc
 {
-  "schemaVersion": "3.2.0",
-  "creatorKitVersion": "3.10.0",
+  "schemaVersion": "4.0.0",
+  "creatorKitVersion": "4.0.0",
   "runtimeVersion": "relics-art-runtime/1",
-  "protocolReleaseCompatibility": "v4-art-launchpad/g-1.2",
+  "protocolReleaseCompatibility": "v4-art-launchpad/rc6",
 
   "project":  { "name", "symbol", "description", "license", "website?", "twitterHandle?" },
   "supply":   { "totalSupplyWhole", "artworkSupply", "backingModel", "tokensPerArtwork?",
                "burnPolicy?" },
   "art":      { "runtime", "templateId", "entry", "seed", "scriptBytes", "traitDimensions?" },
-  "market":   { "startingPreset", "launchMode", "mappingCount", "sale?", "chainId?",
-                "quoteAsset?", "creatorLpFeeAssetMode?" },
+  "market":   { "startingPreset", "launchMode", "antiSnipeMode", "mappingCount", "sale?",
+                "chainId?", "quoteAsset?", "creatorLpFeeAssetMode?" },
   "earnings": { "mode", "creatorRecipient", "collaborators", "creatorAllocationBps?" },
   "chains":   { "requested": [1 | 8453 | 4663, …] },
   "media":    { "cover?": { "path", "sha256", "cid?" }, "files?": {} },
