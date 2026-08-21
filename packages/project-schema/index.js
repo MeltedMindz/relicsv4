@@ -174,13 +174,6 @@ export {
   isLaunchModeAvailable,
   IMMUTABLE_LIQUIDITY_CLAIM,
   IMMUTABLE_LIQUIDITY_SCOPE,
-  PROHIBITED_DOC_PHRASES,
-  OVERREACH_CLAIMS,
-  AUDIT_STATUS_PHRASES,
-  AUDIT_ADJECTIVAL_CLAIM_RE,
-  WRONG_DURATION_PHRASES,
-  OVERREACH_NEGATORS,
-  EVIDENCE_REQUIRED_PHRASES,
 } from "./src/launch-protection.js";
 
 export { canonicalJson, safeJsonParse, toPlain, CanonicalJsonError, JsonParseError } from "./src/canonical-json.js";

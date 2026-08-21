@@ -51,12 +51,6 @@ import {
   LAUNCH_MODE_UNAVAILABLE_REASON,
   IMMUTABLE_LIQUIDITY_CLAIM,
   IMMUTABLE_LIQUIDITY_SCOPE,
-  PROHIBITED_DOC_PHRASES,
-  OVERREACH_CLAIMS,
-  AUDIT_STATUS_PHRASES,
-  AUDIT_ADJECTIVAL_CLAIM_RE,
-  OVERREACH_NEGATORS,
-  EVIDENCE_REQUIRED_PHRASES,
   isLaunchModeAvailable,
   pipsToPercentLabel,
   maskLabel,
@@ -77,21 +71,136 @@ const FAQ_DOC = join("docs", "launchpad", "09-faq.md");
 
 const DECLARATION = join("packages", "project-schema", "src", "launch-protection.js");
 
+// ---------------------------------------------------------------------------------------------
+// THE PHRASE LISTS — the wording no public page may carry.
+//
+// THEY LIVE IN THE GATE, NOT IN THE DECLARATION, AND THAT PLACEMENT IS DELIBERATE. A blocklist has
+// to spell out every phrasing it rejects; `packages/project-schema/src/launch-protection.js` is
+// builder documentation that a reader takes claims FROM, and it is scanned as public copy by the
+// monorepo's own audit-language gate. Holding the lists there meant the package shipped, in plain
+// text, the exact sentences it exists to forbid — indistinguishable, to a scanner and to a skimming
+// reader, from asserting them. Here they are what they actually are: the input to a scan.
+//
+// Each entry is the LIE, so a negation-aware scanner can look for it and so denying one stays
+// legal. Three families, and they are NOT interchangeable — see each list for why.
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * OVERREACH claims. Each is a positive assertion wider than the code supports.
+ *
+ * Negation genuinely inverts every one of these — "these controls are not Sybil-resistant" is the
+ * honest sentence, not the banned one — so the scan suppresses a hit when a negator immediately
+ * precedes the phrase. That is safe HERE and would not be safe for the two lists below.
+ */
+const OVERREACH_CLAIMS = Object.freeze([
+  // The liquidity claim, in each of the unrestricted forms people reach for.
+  "nobody can rug",
+  "rug-proof",
+  "rugproof",
+  "cannot be rugged",
+  "risk-free",
+  "funds are safe",
+  // What a fee schedule accomplishes.
+  "guarantees fair distribution",
+  "prevents bots",
+  "sybil-resistant",
+  "sybil resistant",
+]);
+
+/**
+ * REVIEW-STATUS phrases, banned in BOTH directions and NOT negation-suppressible.
+ *
+ * The owner directive bans both halves. The disclaiming half invites a reader to weigh a non-fact;
+ * the assuring half is worse, because an assurance with no named report behind it is simply false.
+ * Public copy points at SOURCE VERIFICATION instead, which is a thing a reader can go and check.
+ *
+ * The negative forms below are ALREADY negations, and nobody writes an honest sentence by negating
+ * one again. Suppressing on a preceding negator here would reopen the exact hole the directive
+ * closes, so these are matched literally wherever they appear.
+ */
+const AUDIT_STATUS_PHRASES = Object.freeze([
+  "not audited",
+  "unaudited",
+  "audit waived",
+  "audit was waived",
+  "owner accepted risk",
+  "deployed under a waiver",
+  "no external audit",
+  "externally audited",
+  "certified secure",
+  "formally verified",
+]);
+
+/**
+ * REVIEW CLAIMS WRITTEN AS AN ADJECTIVE, which the literal list above cannot reach.
+ *
+ * Five of these were found in shipped Solidity while the blocklist matched none of them, because a
+ * literal list can only hold the noun phrases somebody already thought of. This is the shape
+ * instead: the participle immediately followed by anything that is not `by`.
+ *
+ * WHY IT IS NOT EVIDENCE-SUPPRESSIBLE. The `… by Firm, report at https://…` form is the evidenced
+ * one and is allowed — that is the `by` carve-out, and EVIDENCE_REQUIRED_PHRASES handles the
+ * page-level case. But the adjectival form on a page that happens to carry any link is a
+ * third-party assurance about a SPECIFIC COMPONENT, borrowing credibility from a link that is about
+ * something else. Removing the negative half from a repository while leaving the positive half in
+ * it is the worse of the two directions, so this half is matched as strictly as that one.
+ */
+const AUDIT_ADJECTIVAL_CLAIM_RE = /\baudited\s+(?!by\b)\S/i;
+
+/**
+ * The wrong name for the schedule. 99 − 1 = 98 points at one point per minute, so the window is 98
+ * minutes; the neighbouring round number belongs to a third-party router's schedule. Not
+ * negation-suppressible: there is no honest sentence about OUR schedule containing it.
+ */
+const WRONG_DURATION_PHRASES = Object.freeze(["99-minute", "99 minute"]);
+
+/** Every phrase no public page may carry, flat, in the order the scan applies them. */
+const PROHIBITED_DOC_PHRASES = Object.freeze([
+  ...OVERREACH_CLAIMS,
+  ...AUDIT_STATUS_PHRASES,
+  ...WRONG_DURATION_PHRASES,
+]);
+
+/** Negators that invert an {@link OVERREACH_CLAIMS} mention when they immediately precede it. */
+const OVERREACH_NEGATORS = Object.freeze(["not", "never", "no", "isn't", "aren't", "is not", "are not", "cannot be", "nor"]);
+
+/**
+ * Phrases permitted ONLY when the same page also carries matching evidence.
+ *
+ * The bare participle is not banned outright — it is banned unbacked. A page may use it if it names
+ * a report or a firm on the same page, which is exactly the evidence a reader would need anyway.
+ */
+const EVIDENCE_REQUIRED_PHRASES = Object.freeze({
+  audited: Object.freeze(["audit report", "audited by", "report:", "https://"]),
+});
+
 /**
  * THE BLOCKLIST EXEMPTION, and why it is a REGION rather than a file.
  *
- * Two files must contain the phrases they forbid: the declaration holds the lists, and this
- * checker holds the fixtures that prove it can catch them. Exempting either FILE would be the
- * loophole — the next edit could smuggle a real claim into prose, a doc comment or an error
- * message in the same file and nothing would fire.
+ * This file must contain the phrases it forbids: the lists above are the rules, and the fixtures
+ * further down prove the scan can catch them. Exempting the whole FILE would be the loophole — the
+ * next edit could smuggle a real claim into prose, a doc comment or an error message here and
+ * nothing would fire.
  *
  * So the exemption is by NAMED DECLARATION. For each file below, the bracket-matched extent of
  * each named top-level binding is permitted and every other line is scanned exactly as any other
  * file. A banned phrase one line outside the list still fails.
  */
 const BLOCKLIST_REGIONS = new Map([
-  [DECLARATION, ["OVERREACH_CLAIMS", "AUDIT_STATUS_PHRASES", "AUDIT_ADJECTIVAL_CLAIM_RE", "WRONG_DURATION_PHRASES", "PROHIBITED_DOC_PHRASES", "OVERREACH_NEGATORS", "EVIDENCE_REQUIRED_PHRASES"]],
-  [join("scripts", "check-launch-protection.mjs"), ["RULE_STATEMENT_CUES", "controls"]],
+  [
+    join("scripts", "check-launch-protection.mjs"),
+    [
+      "OVERREACH_CLAIMS",
+      "AUDIT_STATUS_PHRASES",
+      "AUDIT_ADJECTIVAL_CLAIM_RE",
+      "WRONG_DURATION_PHRASES",
+      "PROHIBITED_DOC_PHRASES",
+      "OVERREACH_NEGATORS",
+      "EVIDENCE_REQUIRED_PHRASES",
+      "RULE_STATEMENT_CUES",
+      "controls",
+    ],
+  ],
 ]);
 
 /**
@@ -306,21 +415,13 @@ const exportedNames = [...declSource.matchAll(/^export (?:const|function)\s+([A-
 const claimed = new Set(DERIVED_FACTS.flatMap((f) => f.claims));
 
 /**
- * Exports that carry no protocol fact of their own: label helpers, and the phrase lists that ARE
- * the rules this gate enforces. A phrase list is checked by being applied to every file, which is a
- * stronger test than requiring a page to quote it.
+ * Exports that carry no protocol fact of their own: the label helpers.
+ *
+ * The phrase lists used to be exempted here too. They are no longer exported by the declaration at
+ * all — they live in this file, above — so there is nothing to exempt: a phrase list is checked by
+ * being applied to every file, which is a stronger test than requiring a page to quote it.
  */
-const COVERAGE_EXEMPT = new Set([
-  "pipsToPercentLabel",
-  "maskLabel",
-  "PROHIBITED_DOC_PHRASES",
-  "OVERREACH_CLAIMS",
-  "AUDIT_STATUS_PHRASES",
-  "AUDIT_ADJECTIVAL_CLAIM_RE",
-  "WRONG_DURATION_PHRASES",
-  "OVERREACH_NEGATORS",
-  "EVIDENCE_REQUIRED_PHRASES",
-]);
+const COVERAGE_EXEMPT = new Set(["pipsToPercentLabel", "maskLabel"]);
 
 const uncovered = exportedNames.filter((n) => !claimed.has(n) && !COVERAGE_EXEMPT.has(n));
 for (const name of uncovered) {
@@ -579,16 +680,19 @@ if (CONTROLS) {
     { name: "adjectival-by-form", text: "audited by Example Labs, report at https://example.com", shouldCatch: (t) => AUDIT_ADJECTIVAL_CLAIM_RE.test(t), expectPass: true },
   ];
 
-  // THE EXEMPTION IS A REGION, NOT A FILE. Prove it on the declaration itself: a line inside the
-  // blocklist is permitted, and the SAME phrase one line outside it is not.
-  const declSourceForControls = readFileSync(join(ROOT, DECLARATION), "utf8");
-  const inList = blocklistRegionTest(declSourceForControls, BLOCKLIST_REGIONS.get(DECLARATION));
-  const declLines = declSourceForControls.split("\n");
-  // The needle is DERIVED from the imported list, so this line does not itself have to contain a
+  // THE EXEMPTION IS A REGION, NOT A FILE. Prove it on the only file that now claims one — this
+  // one: a line inside the blocklist is permitted, and a line outside it is not. Pointed here
+  // rather than at the declaration because the declaration no longer holds a phrase list at all,
+  // and a control aimed at a region that does not exist would pass by measuring nothing.
+  const gateRel = join("scripts", "check-launch-protection.mjs");
+  const gateSourceForControls = readFileSync(join(ROOT, gateRel), "utf8");
+  const inList = blocklistRegionTest(gateSourceForControls, BLOCKLIST_REGIONS.get(gateRel));
+  const gateLines = gateSourceForControls.split("\n");
+  // The needle is DERIVED from the list above, so this line does not itself have to contain a
   // banned phrase in order to look for one.
   const needle = JSON.stringify(AUDIT_STATUS_PHRASES[0]);
-  const listLine = declLines.findIndex((l) => l.trim().startsWith(needle)) + 1;
-  const proseLine = declLines.findIndex((l) => l.startsWith("// SPDX")) + 1;
+  const listLine = gateLines.findIndex((l) => l.trim().startsWith(needle)) + 1;
+  const proseLine = gateLines.findIndex((l) => l.startsWith("// SPDX")) + 1;
   const regionScoped = listLine > 0 && proseLine > 0 && inList(listLine) && !inList(proseLine);
   if (!regionScoped) console.error("  control NOT caught: the blocklist exemption is not region-scoped");
   let caught = 0;

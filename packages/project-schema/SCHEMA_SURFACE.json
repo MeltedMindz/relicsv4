@@ -4,7 +4,7 @@
   "version": "4.0.0",
   "packageVersion": "3.12.0",
   "creatorKitVersion": "4.0.0",
-  "surfaceSha256": "ecb3a28380416e4f566b8716d5f974316ec49803be373412ab527bed9d99ab27",
+  "surfaceSha256": "7a6a9c56b4c956dc996649baf55363b400964ccf7c5cde8b7a1517639632b835",
   "checks": [
     "ALLOWED_DEPENDENCIES",
     "ALLOWED_RUNTIME",
@@ -46,7 +46,7 @@
     },
     {
       "path": "index.js",
-      "sha256": "852d5a5d6d45428701708ef83c2f55ab92d8ce9827df20d44183b8be2a8e8bda"
+      "sha256": "6f7b2d8c761b7e5de22f57d2d5e3634b00c94ac0ae214cbe129e3a7b52322e11"
     },
     {
       "path": "package.json",
@@ -98,7 +98,7 @@
     },
     {
       "path": "src/launch-protection.js",
-      "sha256": "980f094da9e6908adc888d229f7edeeaa592939fc4ada0dc62e5a6f4c903fb02"
+      "sha256": "72cecbbafeed080e204952c812cf352c6fa49dc83e11ca32a3d0e13dc1deb9ff"
     },
     {
       "path": "src/limits.js",
