@@ -51,6 +51,7 @@ discoverability metadata is not. See [Token metadata](./token-metadata.md).
 | **[The `.relics` bundle format](./bundle-format.md)** | the container, the layout, the manifest, and every hash recipe |
 | **[Treating every bundle as hostile](./bundle-security.md)** | the threat model, the seven defence layers, and what is *not* defended |
 | **[Importing a bundle](./importing.md)** | the contract for the web importer, and the parity/hostile fixtures |
+| **[Requesting a custom art runtime](./requesting-an-art-runtime.md)** | the rare case the generic runtime cannot express, and how to ask |
 | **[Live deployments and quote assets](../launchpad/10-deployments-and-quote-assets.md)** | per-chain launch state and the quote-token reference |
 
 ## What lives where

@@ -176,7 +176,9 @@ installed, which is a visible and reviewable act rather than a parameter write.
 
 ## A bespoke runtime is an operator action, not a creator one
 
-If you still need one, understand who performs each step.
+If you still need one, understand who performs each step. The request process itself — what to
+build, how to open the pull request, what gets reviewed and what happens after approval — is
+[Requesting a custom art runtime](../creator-kit/requesting-an-art-runtime.md).
 
 **You implement all seven methods of `IArtRuntimeV1`:**
 
@@ -287,6 +289,7 @@ a configuration that cannot be drawn, because such a configuration cannot be lau
 
 ## Related
 
+- [Requesting a custom art runtime](../creator-kit/requesting-an-art-runtime.md) — the process, if you need your own
 - [03 — Art runtimes](03-art-runtimes.md) — choosing a runtime as a creator
 - [04 — Constraints that actually bite](04-constraints.md) — byte budgets and EIP-170
 - [07 — Integrating](07-integrating.md) — the SDK and ABI surface

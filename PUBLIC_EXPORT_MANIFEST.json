@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 1126,
+  "fileCount": 1128,
   "files": [
     {
       "path": ".env.example",
@@ -43,6 +43,13 @@
     {
       "path": ".github/PULL_REQUEST_TEMPLATE.md",
       "sha256": "e2813083604ad7ad63c84951c8daca38d39595f1e0adb7baee06bfd79b70a988",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE/art-runtime-request.md",
+      "sha256": "7750a4e5947b921a8ef8d8c03d1df84d7ae07729a0a236172c1ff70f3b618d68",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -490,7 +497,7 @@
     },
     {
       "path": "docs/README.md",
-      "sha256": "20b1cc70eaf203ed1f8eb3238f57bff44512537136b7820e1c59bb8343f83984",
+      "sha256": "07e0ce7eeecbd38aba038b87dd5470145db349959fa0111d2217937b15045d59",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -518,7 +525,7 @@
     },
     {
       "path": "docs/creator-kit/README.md",
-      "sha256": "3e6af254bd7d02e13d8141f98b49802b29e0d3ea6f5dce9d1389d2b2302eeab6",
+      "sha256": "e2a9341a5a107fc3c25f4dc8a0a472daafc6d7540508aaeaab714c5a79bda7f3",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -561,6 +568,13 @@
     {
       "path": "docs/creator-kit/importing.md",
       "sha256": "dd5f28e06e6d09fc142e01044fc1640b4863dc59028828e07ae8e0e0fed0efd3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/creator-kit/requesting-an-art-runtime.md",
+      "sha256": "6d48ce7ff34146f07f9d20b950b5668cea00791cf87e9d3837509b00e137a61f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -679,7 +693,7 @@
     },
     {
       "path": "docs/launchpad/15-art-runtimes.md",
-      "sha256": "580ec03ff5e6e6e7715398dd09b05adaf76cf6877b7636ca7c4d658c3ef9836c",
+      "sha256": "18a837213e3648ef0af0cca5f6bd602f9d0f8c3f758b2793ac91818c64f8f0f8",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

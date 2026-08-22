@@ -22,6 +22,7 @@ Write generative art, wire market signals to it, export one file.
 | [The `.relics` bundle format](creator-kit/bundle-format.md) | the container, the layout, every hash recipe |
 | [Treating every bundle as hostile](creator-kit/bundle-security.md) | the threat model, and what is *not* defended |
 | [Importing a bundle](creator-kit/importing.md) | for anyone writing an importer |
+| [Requesting a custom art runtime](creator-kit/requesting-an-art-runtime.md) | the rare case the generic runtime cannot express |
 
 ## The launchpad
 
