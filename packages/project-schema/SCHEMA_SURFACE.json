@@ -4,7 +4,7 @@
   "version": "4.0.0",
   "packageVersion": "3.12.0",
   "creatorKitVersion": "4.0.0",
-  "surfaceSha256": "7a6a9c56b4c956dc996649baf55363b400964ccf7c5cde8b7a1517639632b835",
+  "surfaceSha256": "86784028b5f2048307798af957317d3ec64a8f192ff214e6b1334bf4d91d5dc1",
   "checks": [
     "ALLOWED_DEPENDENCIES",
     "ALLOWED_RUNTIME",
@@ -82,7 +82,7 @@
     },
     {
       "path": "src/economics.js",
-      "sha256": "fa557c0224ea2516d6fb653d11edd6fbf05cf3b83df1caa6dfdcf04093b75a4e"
+      "sha256": "bbbb5cc1b6c6b0742e4aa834b806b32870fabcee7389f2a84be6bf9ac5446c4a"
     },
     {
       "path": "src/hashes.js",
