@@ -111,12 +111,26 @@ function printArtConfig(m) {
   console.log(bold("  art configuration"));
   row("  format", `${b.artConfigFormat} · ${b.artConfigBytes.toLocaleString()} bytes · runtime ${b.runtimeId} v${b.artRuntimeVersion}`);
   row("  config hash", cyan(`0x${b.artConfigHash}`));
+  // THE THREE FLAGS, PRINTED AS FLAGS. Authoring, preview and launch are separate capabilities and
+  // a single "launchable: yes/no" answers only the third while reading like a verdict on the
+  // project. Same vocabulary as `relics status`, derived from the same schema lists.
+  const launchable = isRuntimeLaunchable(b.runtime);
   row(
-    "  launchable",
-    isRuntimeLaunchable(b.runtime)
-      ? green("yes — the launchpad binds and renders this runtime")
-      : yellow(`not yet — ${b.runtime} is approved and previewable, but no launch will bind it`),
+    "  capability",
+    `RUNTIME_AUTHORING=${green("SUPPORTED")}  RUNTIME_PREVIEW=${green("SUPPORTED")}  RUNTIME_LAUNCH=${launchable ? green("SUPPORTED") : yellow("UNAVAILABLE")}`,
   );
+  if (!launchable) {
+    console.log(
+      yellow(
+        `    ${b.runtime} projects can be built, previewed and exported now, but this runtime is not yet available\n` +
+          "    for on-chain launch. Your project and artwork remain saved.",
+      ),
+    );
+  }
+  // Launch capability is also PER CHAIN, and this bundle names no chain. Saying so is the honest
+  // scope of the flag above: it reports what this RELEASE implements, not what a target chain has
+  // registered, and the launchpad resolves the second one live.
+  console.log(dim("    launch capability is additionally resolved per chain, live, against that chain's ArtRuntimeRegistry"));
 
   if (b.artConfigFormat !== "ACV1" || typeof b.artConfig !== "string") {
     console.log(dim("    the configuration is the generator entry file itself; see generator/generate.js"));
@@ -153,6 +167,17 @@ function describeBundleArtConfig(manifest) {
     runtimeId: b.runtimeId,
     runtimeVersion: b.artRuntimeVersion,
     launchable: isRuntimeLaunchable(b.runtime),
+    // THE SAME THREE FLAGS THE HUMAN OUTPUT PRINTS. `launchable` is kept for compatibility and is
+    // the same value as RUNTIME_LAUNCH; it is a narrower question than the one a caller usually
+    // means, which is why the other two are stated rather than left to be inferred from it.
+    capability: {
+      RUNTIME_AUTHORING: "SUPPORTED",
+      RUNTIME_PREVIEW: "SUPPORTED",
+      RUNTIME_LAUNCH: isRuntimeLaunchable(b.runtime) ? "SUPPORTED" : "UNAVAILABLE",
+      // This bundle names no chain, and registration is per chain. A cached per-chain answer here
+      // would be the exact false claim this field exists to avoid.
+      RUNTIME_LAUNCH_TARGET_CHAIN: "RESOLVED_LIVE_PER_CHAIN_AT_LAUNCH",
+    },
   };
   if (b.artConfigFormat !== "ACV1" || typeof b.artConfig !== "string") return { ...base, decoded: null };
   const bytes = hexBytes(b.artConfig);

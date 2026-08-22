@@ -15,7 +15,17 @@
 > fields — nothing else), the purity rule that makes reading any other contract impossible, and the
 > registration gate that accepts a runtime which then fails at first render on a live collection.
 
-You choose one of two runtimes at launch, as `LaunchParams.artMode`:
+> **THE JAVASCRIPT RUNTIME CANNOT BE LAUNCHED IN THIS RELEASE.** `ONCHAIN_JAVASCRIPT_V1` is a fully
+> supported AUTHORING runtime — you can build, preview, validate, export and re-import a JavaScript
+> project today — and it is not available for on-chain launch. Read every present-tense sentence
+> about the JavaScript lane below as a description of the FORMAT, not of a launch you can perform.
+> `ArtRuntimeRegistry.modeAvailable` is `pure` and admits `SOLIDITY_SVG_V1` alone, so no authority
+> can register a JavaScript runtime; `LaunchpadFactory.wireArt` and `ProjectCollection.bindArt`
+> refuse the mode independently. Your project and artwork remain saved.
+
+The format defines two runtimes, named in `LaunchParams.artMode`. **One of them, `SOLIDITY_SVG`,
+is launchable in this release.**
+
 
 ```solidity
 enum ArtMode { SOLIDITY_SVG, JAVASCRIPT }
@@ -77,7 +87,10 @@ brick a project that already launched.
 Choose this if you want the smallest surface, no off-chain renderer, and are happy working within
 a template's parameter space.
 
-## B. `JAVASCRIPT` — your own deterministic script, stored on chain
+## B. `JAVASCRIPT` — your own deterministic script (AUTHORING ONLY IN THIS RELEASE)
+
+> Everything in this section describes the FORMAT and the authoring tools, which work today. No
+> launch binds this runtime in this release — see the banner at the top of this page.
 
 You supply the script source as `artConfig` and set `artTemplateId` to `0` (anything else reverts
 `BadTemplate()`).
@@ -90,7 +103,8 @@ You supply the script source as `artConfig` and set `artTemplateId` to `0` (anyt
 - **The contract never executes JavaScript.** No `eval`, no on-chain interpreter, no p5 or three.js
   on chain. The render happens in a viewer.
 
-Choose this if you already write generative sketches and want full expressive control.
+Choose this if you already write generative sketches and want full expressive control — and note
+that you will be able to build, preview and export, but not launch, until the runtime is registered.
 
 ### The seed contract
 
@@ -130,7 +144,9 @@ calls. What it cannot catch: a script that is deterministic *given its inputs* a
 did not intend to be an input.
 
 So the residual risk is narrower than "nothing checks" and real: a non-deterministic script that
-slips through will launch cleanly and then render differently forever, with no way to fix it.
+slips through would render differently for every viewer, permanently, once this runtime becomes
+launchable. Determinism is a property of your generator, so it is worth getting right while you are
+writing it rather than after.
 
 A safe skeleton looks like this — one seeded PRNG, no ambient entropy, no network:
 

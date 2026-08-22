@@ -1,7 +1,11 @@
 # On-chain JavaScript
 
-The JAVASCRIPT art runtime stores your generator **with the project** and re-runs it on every
-read. That makes the script itself part of the artwork, and it makes size a design constraint
+> **This runtime cannot be launched in this release.** Build, preview, validate and export all work
+> with the full toolchain, and no launch will bind it yet. Run `relics status` for the capability
+> flags. Your project and artwork remain saved.
+
+The JAVASCRIPT art runtime is designed to store your generator **with the project** and re-run it on
+every read. That makes the script itself part of the artwork, and it makes size a design constraint
 rather than an afterthought.
 
 The public per-project script budget is **36,000 bytes**. `relics validate` prints the script

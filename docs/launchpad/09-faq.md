@@ -107,7 +107,9 @@ sell side is the base fee at every instant, and the buy side rests there too onc
 window has run out. Tick spacing is fixed at 60.
 
 **What happens if my JavaScript is not deterministic?**
-It launches successfully and then renders differently for every viewer, forever. Nothing validates
+Its art would render differently for every viewer, permanently. (The JavaScript runtime cannot be
+launched in this release at all — but determinism is a property of your generator, so fix it while
+you are writing it.) Nothing validates
 this — there is no linter and no banned-API list. See [03](03-art-runtimes.md).
 
 **How big can my script be?**

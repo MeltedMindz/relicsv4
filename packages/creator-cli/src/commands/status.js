@@ -13,6 +13,8 @@
 //      the way a checklist reports success because it found nothing to check.
 
 import {
+  APPROVED_ART_RUNTIMES,
+  ART_RUNTIME_IDS,
   CHAIN_LABELS,
   KNOWN_DEPLOYMENT_CHAIN_IDS,
   PLATFORM_GENERATIONS,
@@ -24,9 +26,10 @@ import {
   acceptsPublicLaunches,
   deploymentsFor,
   launchAvailability,
+  isRuntimeLaunchable,
   liveChainIds,
 } from "../schema.js";
-import { bold, cyan, dim, heading, yellow } from "../report.js";
+import { bold, cyan, dim, green, heading, yellow } from "../report.js";
 
 /** Display order. Any chain a generation names that is not listed here is appended, never dropped. */
 const PREFERRED_CHAIN_ORDER = [1, 8453, 4663, 56];
@@ -39,6 +42,53 @@ function chainOrder() {
 
 function chainLabel(chainId) {
   return `${CHAIN_LABELS[chainId] ?? `chain ${chainId}`} (${chainId})`;
+}
+
+/**
+ * WHAT EACH ART RUNTIME CAN AND CANNOT DO — authoring and launch, never one answer for both.
+ *
+ * A runtime the FORMAT accepts is not a runtime the PROTOCOL will bind, and the kit has to say so
+ * on its own status screen rather than only at the moment a bundle is inspected. A creator picking
+ * a template asks this question before they have a bundle to inspect.
+ *
+ * The three flags are printed as flags, in a fixed vocabulary, because they are read by people
+ * checking a claim as well as by people building a project:
+ *
+ *   RUNTIME_AUTHORING  can you write and export a project on it
+ *   RUNTIME_PREVIEW    can you see what it draws
+ *   RUNTIME_LAUNCH     will a launch bind and render it
+ *
+ * Every value is DERIVED from the schema's own lists. Nothing here is typed twice: gating a runtime
+ * off is still the one-line edit in `LAUNCHABLE_ART_RUNTIMES`, and this screen follows it.
+ */
+function printRuntimeCapability() {
+  console.log("");
+  heading("art runtimes");
+  console.log(dim("  Authoring and launch are separate questions. A runtime can be fully authorable and not yet launchable."));
+  console.log("");
+  const width = Math.max(...APPROVED_ART_RUNTIMES.map((r) => (ART_RUNTIME_IDS[r] ?? r).length));
+  for (const runtime of APPROVED_ART_RUNTIMES) {
+    const id = ART_RUNTIME_IDS[runtime] ?? runtime;
+    const launchable = isRuntimeLaunchable(runtime);
+    console.log(`  ${bold(id.padEnd(width))}  RUNTIME_AUTHORING=${green("SUPPORTED")}  RUNTIME_PREVIEW=${green("SUPPORTED")}  RUNTIME_LAUNCH=${launchable ? green("SUPPORTED") : yellow("UNAVAILABLE")}`);
+  }
+  console.log("");
+  const gated = APPROVED_ART_RUNTIMES.filter((r) => !isRuntimeLaunchable(r));
+  if (gated.length > 0) {
+    for (const runtime of gated) {
+      const id = ART_RUNTIME_IDS[runtime] ?? runtime;
+      console.log(yellow(`  ${id} projects can be built, previewed and exported now, but this runtime is not yet`));
+      console.log(yellow("  available for on-chain launch. Your project and artwork remain saved."));
+    }
+    console.log("");
+  }
+  // TARGET-CHAIN CAPABILITY. Registration is PER CHAIN, and this kit ships no per-chain runtime
+  // table on purpose: it would be a cached answer to a question whose only correct source is the
+  // chain. Say where to ask instead of guessing.
+  console.log(dim("  Launch capability is resolved PER CHAIN against that chain's ArtRuntimeRegistry at launch time."));
+  console.log(dim("  A runtime registered on one chain is not thereby registered on another, and this kit does not"));
+  console.log(dim("  cache that answer — the launchpad reads the registry live and refuses a runtime it cannot resolve."));
+  console.log(dim("  Custom runtimes are not permissionless: registration is an operator action, per chain."));
 }
 
 export function printStatus() {
@@ -130,6 +180,8 @@ export function printStatus() {
     );
     console.log(dim(`  ${g.addressPublication}`));
   }
+
+  printRuntimeCapability();
 
   console.log("");
   console.log(dim(`  Robinhood quote reference: ${ROBINHOOD_STOCK_TOKEN_COUNT} official stock/ETF tokens (${ROBINHOOD_STOCK_TOKENS_VERSION}).`));

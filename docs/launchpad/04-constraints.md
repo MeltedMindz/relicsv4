@@ -14,6 +14,10 @@ they stop people.
 
 ## 1. The script byte budget — 36,000 bytes
 
+> This constraint governs the JAVASCRIPT runtime, which **cannot be launched in this release**. It
+> is real and it is worth designing against, but it is not the thing that stops a JavaScript launch
+> today — the runtime being unregistered is.
+
 This is the constraint you will hit first and think about most.
 
 | Limit | Bytes | What it is |

@@ -12,8 +12,9 @@
 ## The one paragraph
 
 The RELICS Launchpad is a protocol for launching **generative art collections that own their own
-market**. You bring the art — either a registered Solidity-SVG template with your configuration, or
-a deterministic JavaScript script stored on chain — plus a handful of parameters. One transaction
+market**. You bring the art — a registered Solidity-SVG template with your configuration — plus a handful of
+parameters. (The format also defines a JavaScript runtime, which you can author and preview today
+and which cannot be launched in this release; see [03 — Art runtimes](03-art-runtimes.md).) One transaction
 deploys your ERC-20, your ERC-721 collection, a Uniswap v4 hook mined to a valid address, opens the
 canonical pool, mints the genesis liquidity, and publishes the project record. From then on, every
 swap in your pool writes market state, and `tokenURI` computes metadata and an SVG from chain state
