@@ -289,13 +289,22 @@ export const RETIRED_ALLOCATION_CLAIMS = Object.freeze([
   Object.freeze({
     id: "EFFECTIVE_6_25_PERCENT",
     counter: "ACTIVE_STALE_EFFECTIVE_6_25_PERCENT_CLAIMS",
-    pattern: "\\b6[.,]25\\s*%|\\b625\\b\\s*(?:bps|basis points)|relicsBuybackReserve\\s*:\\s*625\\b",
+    pattern:
+      // BOTH TOKENS, NOT JUST THE NUMBER. A bare `6.25%` is not an allocation claim: the studio's
+      // perceptual-hash threshold is "6.25% of bits differing" and has nothing to do with fees. The
+      // raw patterns in this register are documented to name both of their tokens, and this one
+      // named only the figure -- so it reported two art files and the gate stayed red on noise.
+      // Both orders, because a rule that only looks forward is defeated by word order.
+      "(?:\\b6[.,]25\\s*%[^.\\n]{0,60}(?:fee|fees|buyback|buy-and-entomb|entomb|platform|treasury|revenue|collected|allocat|creator|protocol))|(?:(?:fee|fees|buyback|buy-and-entomb|entomb|platform|treasury|revenue|collected|allocat|creator|protocol)[^.\\n]{0,60}\\b6[.,]25\\s*%)|\\b625\\b\\s*(?:bps|basis points)|relicsBuybackReserve\\s*:\\s*625\\b",
     description: "the retired 6.25%-of-collected-fees buyback figure (now 12.50%)",
   }),
   Object.freeze({
     id: "RETAINED_18_75_PERCENT",
     counter: "ACTIVE_STALE_RETAINED_18_75_PERCENT_CLAIMS",
-    pattern: "\\b18[.,]75\\s*%|\\b1875\\b\\s*(?:bps|basis points)|platformTreasury\\s*:\\s*1875\\b",
+    pattern:
+      // Same defect as EFFECTIVE_6_25_PERCENT above, fixed at the same time. It had not fired on
+      // an unrelated 18.75% yet; that is luck, not narrowness.
+      "(?:\\b18[.,]75\\s*%[^.\\n]{0,60}(?:fee|fees|buyback|buy-and-entomb|entomb|platform|treasury|revenue|collected|allocat|creator|protocol))|(?:(?:fee|fees|buyback|buy-and-entomb|entomb|platform|treasury|revenue|collected|allocat|creator|protocol)[^.\\n]{0,60}\\b18[.,]75\\s*%)|\\b1875\\b\\s*(?:bps|basis points)|platformTreasury\\s*:\\s*1875\\b",
     description: "the retired 18.75%-of-collected-fees retained figure (now 12.50%)",
   }),
   // ---- retired by the quote-denominated platform entitlement (2026-08-10) --------------------
