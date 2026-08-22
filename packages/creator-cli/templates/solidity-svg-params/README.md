@@ -19,7 +19,8 @@ step is what confirms a template exists before anything can be prepared.
 
 If you need behaviour the registered templates do not offer, the JAVASCRIPT runtime is the format's
 answer rather than custom Solidity — but it cannot be launched in this release, so treat it as
-somewhere to prototype, not somewhere to move a launch to. A one-click bundle has no field for contract code, no field for an address to
+somewhere to prototype, not somewhere to move a launch to.
+A one-click bundle has no field for contract code, no field for an address to
 call, and no file type that could carry either. Custom hooks go through a separate reviewed
 process.
 
