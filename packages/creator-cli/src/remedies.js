@@ -202,7 +202,7 @@ const BY_CODE = {
     run: "relics templates",
   },
   ART_RUNTIME_PREVIEW_ONLY: {
-    edit: "Nothing is wrong with this project. Its runtime is approved but the launchpad does not bind and render it yet, so it can be authored, previewed, validated and exported — not launched. Nothing about the bundle needs to change when that is enabled. `relics status` shows the current state.",
+    edit: "Nothing is wrong with this project. Its runtime is approved but no launch binds and renders it, so it can be authored, previewed, validated and exported — not launched. The refusal is structural: the registry's mode check is a pure function admitting the Solidity-SVG mode alone, so no operator can register this one. Nothing about the bundle would need to change if that ever moved. `relics status` shows the current state.",
     run: "relics status",
   },
   CHAIN_UNSUPPORTED: {

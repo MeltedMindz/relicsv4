@@ -85,9 +85,12 @@ has already reported it as a `HASH_INTEGRITY` failure. Do not import "with a war
 ## Publishing project metadata
 
 Imported media paths are not on-chain metadata yet. The app must normalize collection/profile
-media, pin or publish it to an allowed public URI (`ipfs://`, `https://` or `ar://`), verify the
-published bytes, and write the resulting URI into `ProjectMetadataRegistry` after the project
-record exists. Relative bundle paths and `data:` URIs must not be written as contract-level media.
+media, pin it, read the pinned bytes back by the content address the provider returned, re-hash
+them, and only then commit. **The URI it commits is a content address — an immutable `ipfs://`.**
+A plain `https://` URL is not canonical media: fetch it server-side if a creator supplies one, then
+pin an immutable copy and commit that. A pin receipt is not evidence that anyone can read the
+bytes, which is why the read-back is a separate step and its failure is a separate state. Relative
+bundle paths and `data:` URIs must not be written as contract-level media.
 
 Keep the two read paths separate in your UI:
 

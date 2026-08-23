@@ -1,8 +1,9 @@
 # On-chain JavaScript
 
 > **This runtime cannot be launched in this release.** Build, preview, validate and export all work
-> with the full toolchain, and no launch will bind it yet. Run `relics status` for the capability
-> flags. Your project and artwork remain saved.
+> with the full toolchain, and no launch binds it. The refusal is structural rather than scheduled:
+> the on-chain registry's mode check admits the Solidity-SVG mode alone. Run `relics status` for the
+> capability flags. Your project and artwork remain saved.
 
 The JAVASCRIPT art runtime is designed to store your generator **with the project** and re-run it on
 every read. That makes the script itself part of the artwork, and it makes size a design constraint

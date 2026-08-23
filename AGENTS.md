@@ -362,8 +362,10 @@ Accuracy rules. Each one is a false claim if you get it wrong.
 
 Also standing: never call locked LP "burned", "locked forever", "permanent", or say "fees route
 immutably" — describe custody by what the bytecode contains. No attack, brick, or fee-collection
-exploit mechanics anywhere. The RELICS art collection lives at `https://www.relics.wtf`; the creator
-app is not publicly hosted, so do not invent URLs.
+exploit mechanics anywhere. The RELICS art collection lives at `https://www.relics.wtf/`; the
+creator app is served from the same origin at `https://www.relics.wtf/create`, with `/launchpad`
+and `/projects` beside it. Those are the only launchpad URLs — do not invent others, and do not
+give a reader a URL for a route you have not confirmed exists.
 
 ---
 

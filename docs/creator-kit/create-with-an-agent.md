@@ -345,9 +345,10 @@ the way `validate` did, in its own sandbox.
 If the hashes it shows you do not match the ones from `inspect`, the file changed between here and
 there. Re-export rather than investigating.
 
-**The creator app is not publicly hosted yet.** There is no public URL to give you, and you should
-be suspicious of any site claiming to be it. Building and exporting your bundle is genuinely useful
-work you can do now; uploading comes later.
+**The creator app is at <https://www.relics.wtf/create>** — the *Import a .relics project* entry.
+That is the one address; be suspicious of any other site claiming to be it, and check the URL bar
+before you connect a wallet or upload a file. Everything up to that point — authoring, previewing,
+sweeping, validating, exporting — happens on your own machine with no network of any kind.
 
 ---
 

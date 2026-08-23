@@ -96,9 +96,12 @@ at prepare time.
 and hashable; they are not already public URLs.
 
 Before a launch writes project metadata, the importer must normalize the chosen collection image,
-publish it to an allowed public URI (`ipfs://`, `https://` or `ar://`), verify the bytes, and then
-write that URI through `ProjectMetadataRegistry`. Relative asset paths and `data:` URIs are
-therefore valid inside the bundle but invalid as contract-level media. The per-NFT artwork remains
+pin the exact bytes, read them back by the content address the pin provider returned, re-hash what
+comes back, and only then commit. **The committed URI is a content address — an immutable
+`ipfs://`.** A plain `https://` URL is not accepted as canonical media: a website can change or
+vanish and a launched collection's image must not, so an external URL is fetched server-side and an
+immutable copy is pinned instead. Relative asset paths and `data:` URIs are therefore valid inside
+the bundle but invalid as contract-level media. The per-NFT artwork remains
 separate: `tokenURI(id)` renders from the on-chain art binding, not from the collection image.
 
 ---
@@ -246,9 +249,11 @@ unknown-key check. This is the same REQUEST-never-APPROVAL rule the quote asset 
 ### Approved is not launchable
 
 `APPROVED_ART_RUNTIMES` is what the format accepts. `LAUNCHABLE_ART_RUNTIMES` is what the
-launchpad currently binds and renders. A runtime can be approved and not yet launchable; when it
-is, its templates still ship, still preview, still export — the kit marks them rather than
-deleting the work or implying they can be launched.
+launchpad binds and renders. A runtime can be approved and not launchable — and the JavaScript
+refusal is structural rather than a queue position: `ArtRuntimeRegistry.modeAvailable` is `pure`
+and admits `SOLIDITY_SVG_V1` alone, so no authority can register a JavaScript runtime. Its
+templates still ship, still preview, still export; the kit marks them rather than deleting the work
+or implying they can be launched.
 
 Launchability is deliberately **not** a manifest field. It is a property of the protocol on the day
 you ask, and folding it into the bundle hash would mean enabling a runtime invalidated every bundle

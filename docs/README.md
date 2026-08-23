@@ -40,6 +40,10 @@ Write generative art, wire market signals to it, export one file.
 | [09 — FAQ](launchpad/09-faq.md) | short answers to the questions people actually ask |
 | [10 — Deployments and quote assets](launchpad/10-deployments-and-quote-assets.md) | per-chain state and the quote-token reference |
 | [11 — Governance and upgradeability](launchpad/11-governance-and-upgradeability.md) | who can change what |
+| [12 — Launch protection](launchpad/12-launch-protection.md) | the election every launch makes, once and permanently |
+| [13 — Metadata and contractURI](launchpad/13-metadata-and-contracturi.md) | birth metadata, the two digests, and why a pin receipt is not evidence |
+| [14 — Glossary](launchpad/14-glossary.md) | the terms, defined once |
+| [15 — Art runtimes, in depth](launchpad/15-art-runtimes.md) | what a runtime is given, and what decides whether a launch can bind it |
 
 ---
 

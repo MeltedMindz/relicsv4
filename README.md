@@ -13,11 +13,13 @@ YOUR IDEA  +  YOUR ART  +  YOUR RULES   →   ONE .relics FILE   →   RELICS LA
 | | |
 | --- | --- |
 | 🤖 **[Create with an AI agent](docs/creator-kit/create-with-an-agent.md)** | Clone the repo, paste one prompt, describe your collection in plain language. The agent writes the generator and runs the checks. |
-| 🛠 **[Build it yourself](docs/creator-kit/getting-started.md)** | Six commands, no network, no wallet. Scaffold → preview → validate → export. |
+| 🛠 **[Build it yourself](docs/creator-kit/getting-started.md)** | Seven commands, no network, no wallet. Scaffold → preview → validate → export. |
 | 📖 **[See how it works](#what-a-relics-file-is)** | The bundle, the market-to-art model, and what a launch actually does. |
+| 🚀 **[Take the file to the launchpad](#take-it-to-the-launchpad)** | `https://www.relics.wtf/create` → *Import a .relics project*. Your wallet signs one transaction, at the end, and not before. |
 
-[![creator kit 3.12.0](https://img.shields.io/badge/creator%20kit-3.12.0-c9a227)](packages/creator-cli/)
-[![bundle schema 3.3.0](https://img.shields.io/badge/bundle%20schema-3.3.0-8a8681)](docs/creator-kit/bundle-format.md)
+[![creator kit 4.0.0](https://img.shields.io/badge/creator%20kit-4.0.0-c9a227)](packages/creator-cli/)
+[![bundle schema 4.0.0](https://img.shields.io/badge/bundle%20schema-4.0.0-8a8681)](docs/creator-kit/bundle-format.md)
+[![protocol v4-art-launchpad/rc6](https://img.shields.io/badge/protocol-v4--art--launchpad%2Frc6-8a8681)](docs/launchpad/08-status.md)
 [![creator-kit CI](https://github.com/MeltedMindz/relicsv4/actions/workflows/creator-kit.yml/badge.svg)](https://github.com/MeltedMindz/relicsv4/actions/workflows/creator-kit.yml)
 [![Node >= 20](https://img.shields.io/badge/node-%3E%3D20-8a8681)](package.json)
 [![MIT](https://img.shields.io/badge/license-MIT-8a8681)](LICENSE)
@@ -43,6 +45,7 @@ importer, and in ten years.*
 - [The one file you edit](#the-one-file-you-edit)
 - [The whole path, end to end](#the-whole-path-end-to-end)
 - [What a `.relics` file is](#what-a-relics-file-is)
+- [Take it to the launchpad](#take-it-to-the-launchpad)
 - [The starter templates](#the-starter-templates)
 - [Market history is the medium](#market-history-is-the-medium)
 - [Launch protection, chains and fees](#launch-protection-chains-and-fees)
@@ -94,7 +97,7 @@ Then open your agent in this directory and paste:
 
 ## Build it yourself
 
-Six commands. Everything below was run against this commit.
+Seven commands. Everything below was run against this commit.
 
 ```bash
 git clone https://github.com/MeltedMindz/relicsv4.git
@@ -128,10 +131,23 @@ npm run kit -- export my-project --output my-project.relics
 npm run kit -- inspect my-project.relics
 ```
 
-> **A fresh project fails validation on purpose.** Every template ships
-> `earnings.creatorRecipient: "0x1111…1111"`, and `validate` refuses it with
-> `EARNINGS_RECIPIENT_PLACEHOLDER`. Put your own address in `relics.config.json` before you export.
-> That gate is the only thing standing between a scaffolded template and a clean run.
+Four more exist and none of them is part of the loop: `doctor` checks that this machine can run
+the kit and contacts nothing; `status` prints the deployment record and which chains take a
+creator launch; `migrate` reopens a bundle from an older schema as a project you can finish; and
+`help <command>` prints every flag. `npm run kit -- --help` lists all eleven.
+
+> **A fresh project fails validation on purpose, and there are TWO refusals, not one.** Both are
+> decisions the kit will not make on your behalf, because both are written on chain and permanent:
+>
+> - `EARNINGS_RECIPIENT_PLACEHOLDER` — every template ships
+>   `earnings.creatorRecipient: "0x1111…1111"`. A launch with a placeholder here pays nobody.
+> - `MARKET_ANTI_SNIPE_UNSPECIFIED` — every template ships `market.antiSnipeMode: "UNSPECIFIED"`,
+>   which is a draft value. A final bundle must elect `NONE` or `PROTECTED_98_MINUTES` by name.
+>   Neither is a default and neither is required of you; see
+>   [Launch protection, chains and fees](#launch-protection-chains-and-fees).
+>
+> Fix both in `relics.config.json` and `validate` goes green. Nothing else stands between a
+> scaffolded template and a clean run.
 
 The CLI has **zero runtime dependencies** — plain ESM, no build step. `npm install` is for the demo
 web app and the test tooling; `npm run kit` works in a freshly cloned repo before it finishes.
@@ -188,7 +204,9 @@ One deterministic, uncompressed ZIP. Standard `unzip` reads it. It carries dual 
 **keccak-256** commitments over its own contents, so an importer re-derives every hash from the
 bytes you uploaded and can prove it is reading exactly what you exported.
 
-Here is a real bundle, exported from the `minimal` template — 16 entries, 18,283 bytes:
+Here is a real bundle, exported from the `minimal` template with `antiSnipeMode: "NONE"` —
+16 entries, 19,608 bytes. `npm run kit:readme` reproduces exactly this from the commands above,
+which is why the number is safe to print:
 
 ```
 my-project.relics
@@ -197,7 +215,7 @@ my-project.relics
 ├── market/mappings.json            37 B   ← YOU WROTE THIS   (sensor → transform → destination)
 ├── metadata/collection.json       241 B   ← YOU WROTE THIS   (name, description, cover)
 ├── assets/                                ← YOU WROTE THIS   (cover image, if any)
-├── README.md                    1,344 B   ← optional
+├── README.md                    2,643 B   ← optional
 ├── LICENSE                        435 B   ← optional
 │
 ├── previews/seed-1.svg            971 B   ⟵ GENERATED  written from the live render at export,
@@ -205,7 +223,7 @@ my-project.relics
 ├── previews/seed-3.svg            565 B   ⟵ GENERATED
 ├── …seeds 5, 8, 13, 21, 34                ⟵ GENERATED
 │
-├── relics.project.json          3,094 B   ⟵ GENERATED  the manifest
+├── relics.project.json          3,120 B   ⟵ GENERATED  the manifest
 └── checksums.json               1,808 B   ⟵ GENERATED  per-file digests + the bundle hash
 ```
 
@@ -223,31 +241,70 @@ renders every sampled seed twice and refuses a generator whose output moves betw
 
 ---
 
+## Take it to the launchpad
+
+The file is the handover. Open **<https://www.relics.wtf/create>**, choose **Import a .relics
+project**, and give it the file `relics export` wrote.
+
+What happens then, in order:
+
+1. **The bundle is inspected and re-hashed** from the bytes you uploaded. It is never executed in
+   the page. The bundle hash it shows you must equal the one `relics export` printed — if it does
+   not, the file changed after export and you should re-run the export rather than proceed.
+2. **It becomes a draft in the studio**, projected from your own manifest: your generator, your
+   traits, your market mappings, your supply and earnings. Drafts live in that browser only.
+3. **You pick the chain and the quote asset**, and every figure that depends on that choice is
+   recomputed in front of you. `relics status` prints which chains take a creator launch; the
+   studio re-reads the factory rather than trusting either that table or this page.
+4. **The collection media is pinned and read back** by the content address the pin provider
+   returned, re-hashed, and re-parsed before it is committed. A receipt is not evidence that
+   anybody can read the bytes.
+5. **You sign one transaction.** Token, collection, art runtime binding, birth metadata and the
+   Uniswap v4 pool are created together. There is no second transaction to bind metadata
+   afterwards and no pending state to come back to.
+
+Everything before step 5 is free, reversible and off chain. Nothing in this repository can sign,
+broadcast or reach a network on your behalf — the CLI has no wallet and no RPC in it at all.
+
+---
+
 ## The starter templates
 
 Five ship. All five scaffold, validate and export cleanly — that is checked in CI on every push
 (`npm run kit:templates`). The output below is verbatim from that check.
 
-| Template | Runtime | Market-responsive | Runtime the launchpad binds first |
+| Template | Runtime | Market-responsive | Runtime a launch can bind |
 | --- | --- | --- | --- |
 | `solidity-svg-params` | `SOLIDITY_SVG_V1` | yes | **yes** |
-| `market-responsive` | `ONCHAIN_JAVASCRIPT_V1` | yes — 4 mappings | not yet |
-| `minimal` | `ONCHAIN_JAVASCRIPT_V1` | no | not yet |
-| `onchain-js` | `ONCHAIN_JAVASCRIPT_V1` | no | not yet |
-| `static-art` | `ONCHAIN_JAVASCRIPT_V1` | no, by design | not yet |
+| `market-responsive` | `ONCHAIN_JAVASCRIPT_V1` | yes — 4 mappings | no |
+| `minimal` | `ONCHAIN_JAVASCRIPT_V1` | no | no |
+| `onchain-js` | `ONCHAIN_JAVASCRIPT_V1` | no | no |
+| `static-art` | `ONCHAIN_JAVASCRIPT_V1` | no, by design | no |
 
-**That last column is about the RUNTIME, not the chain.** Creator launches are open on Ethereum
-(1), Base (8453) and Robinhood Chain (4663), and RC6 is not deployed on BNB Smart Chain (56) — run
-`npm run kit:status` and read it rather than trusting this table. What the column asks is which
-runtime a launch will bind and render: that is `SOLIDITY_SVG`, and it is the only one, so the four
-JavaScript templates cannot be launched anywhere yet. They author, preview, validate and export
-exactly as well; they are behind it in the queue, not broken.
+**That last column is about the RUNTIME, not the chain, and the two are independent.** The chain
+half is a separate question with its own answer — run `npm run kit:status` and read it rather than
+trusting any table, including this one. The runtime half is what the column asks: which runtime a
+launch can bind and render. That is `SOLIDITY_SVG_V1`, and it is the only one, so the four
+JavaScript templates cannot be launched — on an open chain or any other.
+
+**The JavaScript refusal is structural, not a queue position.** `ArtRuntimeRegistryV1.modeAvailable`
+is a `pure` function that admits the Solidity-SVG mode alone, so registering a JavaScript runtime
+reverts `RuntimeModeNotAvailable` and no operator, no signer and no governance action can register
+one. This README does not know when that changes, so it does not say — and you should treat any
+sentence anywhere that implies a date as something nobody read off a chain.
+
+**None of that costs you your work, and the kit will never trade it away for you.** A JavaScript
+project authors, previews, sweeps, validates, exports and inspects exactly like a Solidity-SVG one,
+and the bundle you export stays valid — nothing about it has to change if the runtime is ever
+bound. The kit does not convert a JavaScript project to Solidity SVG, does not suggest switching
+runtime to unlock a launch, and does not delete a generator. Those are two different artworks, and
+which one you meant is not a question a validator gets to answer.
 
 **Approved and launchable are different questions, and the kit does not collapse them.** Both
 runtimes are approved: the format accepts them, they validate, they preview, they export. The
 JavaScript templates are marked "preview only" everywhere they appear — in `relics templates`, in
 `relics init`, in `relics validate` and in the CI table — rather than quietly presented as
-launchable. They are not being deleted for a release-schedule reason.
+launchable.
 
 - **`solidity-svg-params`** — configure a registered on-chain Solidity renderer by parameters, with
   a local preview of the same shapes.
@@ -322,11 +379,16 @@ published bounds, and warns when two mappings contest the same destination.
   binding — the runtime, the art configuration bytes and their hash — not from a file you uploaded.
   There is no IPFS pin to rot and no API to go down.
 - **`contractURI()`** is the collection profile: name, description, the cover image. That one *is*
-  published media, and the importer has to normalize it, publish it to an `ipfs://`, `https://` or
-  `ar://` URI, and verify the bytes before writing it on chain. Relative paths and `data:` URIs are
-  valid inside your bundle and invalid as contract-level media.
+  published media, so the importer normalizes it, pins the exact bytes, reads them back by the
+  content address the pin provider returned, re-hashes them, and only then commits. The committed
+  URI is a **content address** — an immutable `ipfs://`. A plain `https://` URL is not accepted as
+  canonical media: a website can change or vanish and a launched collection's image must not, so an
+  external URL is fetched server-side and an immutable copy is pinned instead. Relative paths and
+  `data:` URIs are valid inside your bundle and invalid as contract-level media.
 
-Keep the two separate in your head and the metadata story stops being confusing.
+Keep the two separate in your head and the metadata story stops being confusing. The full
+sequence — two digests, what each one commits to, and why a pin receipt is not evidence — is in
+**[13 — Metadata and contractURI](docs/launchpad/13-metadata-and-contracturi.md)**.
 
 ---
 
@@ -372,12 +434,18 @@ refused in two places, and the difference matters:
 The mode name itself stays in the format. Launch modes are an on-chain enum, and deleting a member
 renumbers the ones after it, which would silently change what an already-written bundle means.
 
-Separately, every launch elects launch protection once and permanently:
+Separately, every launch elects launch protection once and permanently. **It is an election, never
+a requirement** — the protocol does not impose a schedule on you and neither does this kit:
 
 - **`PROTECTED_98_MINUTES`** — the buy-side LP fee starts at 99% and decays to 1% over 98 minutes.
-  The sell side is 1% throughout. This is the studio default.
+  The sell side is 1% throughout. This is the studio default for a *draft*.
 - **`NONE`** — a flat 1% both ways from the first block. It takes an explicit acknowledgement, and
   it is never to be described as protected.
+
+**A draft may default; a final bundle may not.** `market.antiSnipeMode` scaffolds as `UNSPECIFIED`
+and `relics export` refuses to turn that into either answer — see
+[the two refusals](#build-it-yourself). The election is written on chain at launch and no selector
+changes it afterwards, which is exactly why a tool guessing on your behalf would be the wrong tool.
 
 There are no exemptions; the hook reads nothing about who is swapping. Protection makes immediate
 acquisition expensive and removes the block-one speed advantage. It does **not** guarantee equal
@@ -390,6 +458,15 @@ for the cost of gas. Full detail:
 
 Checkpoints, as text: 0 min 99% · 1 min 98% · 10 min 89% · 30 min 69% · 60 min 39% · 90 min 9% ·
 98 min and after, 1%. The sell side is 1% at every instant, in both modes.
+
+**Burn policy** is the third permanent choice, and it is about YOUR token, not $RELICS.
+`supply.burnPolicy` is `NONE` unless you say otherwise, and the other two — `HOLDER_BURN` and
+`HOLDER_AND_ALLOWANCE_BURN` — are written into the token at launch with no setter, no admin and no
+migration. Under a non-`NONE` policy your project's own `totalSupply` really does fall and a real
+`Transfer` to the zero address is emitted. That is a different thing from the buy-and-entomb
+allocation described above, which moves $RELICS to an address nobody can spend from and destroys
+nothing. `HOLDER_AND_ALLOWANCE_BURN` is listed last because it has the largest surface, not because
+it is better; nothing here recommends one.
 
 **[→ The launchpad guide](docs/launchpad/)**
 
@@ -410,7 +487,7 @@ and you are responsible for all of it.
 Requires Foundry as well as Node. Educational; not production-ready.
 
 **[→ Make it your own](docs/00-make-it-your-own.md)** ·
-**[→ All 18 numbered guides](docs/)**
+**[→ All 19 numbered guides](docs/)**
 
 ### Flagship reference
 
@@ -432,6 +509,13 @@ Chain (56), which is deferred, and no date is set for it. The RC6 addresses are 
 repository and printed by `npm run kit:status` — see
 [08 — Status](docs/launchpad/08-status.md). Note separately that every launchable template targets
 `SOLIDITY_SVG`, so a JavaScript-runtime bundle cannot be launched on any chain, open or not.
+
+**And the path has been walked by somebody who is not us.** A project called `666` was launched
+through the RC6 factory on Robinhood Chain from an ordinary wallet — not from the protocol Safe,
+not through the pre-public canary path, and with nobody's permission. That is one launch, not a
+track record, and it is offered here as evidence that the door opens rather than as a
+recommendation. The creator app is served from the same origin as the RELICS collection:
+**<https://www.relics.wtf/create>**.
 
 **Verify before you rely on any of this**, including on this README. This repository is educational
 software provided "as is", without warranty. It is not affiliated with or endorsed by Uniswap,
@@ -459,10 +543,13 @@ flagship/                  the deployed RELICS production hook + its offline CRE
 ## Checks you can run
 
 ```bash
-npm run kit:test        # schema, container, validator, sandbox, and every fixture
-npm run kit:templates   # every starter template scaffolds, validates and exports
-npm run kit:fixtures    # regenerate the fixtures — a diff means drift
-npm run kit:status      # the bundled deployment record and launch-access state
+npm run kit:test          # schema, container, validator, sandbox, and every fixture
+npm run kit:templates     # every starter template scaffolds, validates and exports
+npm run kit:readme        # the quickstart above, executed out of this file
+npm run kit:parity        # this schema is byte-identical to the one the importer runs
+npm run kit:launch-claims # no document answers a launchability question the protocol answers no
+npm run kit:fixtures      # regenerate the fixtures — a diff means drift
+npm run kit:status        # the bundled deployment record and launch-access state
 ```
 
 All of these run in CI on every push. See

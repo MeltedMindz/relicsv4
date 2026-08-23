@@ -50,11 +50,17 @@ whether that runtime is currently **launchable**.
 | `solidity-svg-params` | `SOLIDITY_SVG_V1` | you want the one runtime a launch currently binds |
 
 **Approved and launchable are not the same question.** Both runtimes are approved: the format
-accepts them, and all five templates validate, preview and export. Only `SOLIDITY_SVG` is currently
-*bound and rendered* by a deployed collection, so the four JavaScript templates are marked
-`preview only` in `relics templates`, in `relics init`, and in `relics validate`. They are real,
-valid projects that cannot be launched yet — not broken ones, and not launchable ones being
-described loosely.
+accepts them, and all five templates validate, preview and export. Only `SOLIDITY_SVG` is *bound
+and rendered* by a deployed collection, so the four JavaScript templates are marked `preview only`
+in `relics templates`, in `relics init`, and in `relics validate`. They are real, valid projects
+that cannot be launched — not broken ones, and not launchable ones being described loosely.
+
+The JavaScript refusal is **structural, not a schedule**: `ArtRuntimeRegistry.modeAvailable` is a
+`pure` function admitting the Solidity-SVG mode alone, so registering a JavaScript runtime reverts
+and no operator or governance action can register one. This document does not know when that
+changes, so it does not say. Nothing you write is wasted either way — a JavaScript project authors,
+previews, validates and exports exactly like a Solidity-SVG one, and the kit will never convert it,
+suggest switching runtime to unlock a launch, or delete a generator.
 
 ## 2. Scaffold
 

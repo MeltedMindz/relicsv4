@@ -12,8 +12,8 @@ driven by a Uniswap v4 pool.** Three contracts compose into a living collection.
                                  ▼
    ┌──────────────┐      ┌──────────────────┐      ┌────────────────────────┐
    │ Uniswap v4   │◀────▶│  ExampleV4Hook   │      │ ImmutablePositionLocker │
-   │ PoolManager  │ swaps│ observes swaps + │      │ locks LP principal,     │
-   │              │ adds │ liquidity, keeps │      │ forwards fees forever   │
+   │ PoolManager  │ swaps│ observes swaps + │      │ holds LP principal;     │
+   │              │ adds │ liquidity, keeps │      │ no withdraw selector    │
    └──────────────┘      │ compact "market  │      └────────────────────────┘
                          │  state"          │
                          └────────┬─────────┘

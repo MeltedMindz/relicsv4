@@ -135,8 +135,8 @@ export function initProject(target, options = {}) {
   console.log(yellow("  set earnings.creatorRecipient in relics.config.json before exporting — the placeholder address is not yours."));
   if (!template.launchable) {
     console.log("");
-    console.log(yellow(`  ${template.runtime} is an approved runtime that the launchpad does not bind and render yet.`));
-    console.log(dim("  Everything here works — authoring, preview, validate, export. Launching does not, until it is enabled."));
+    console.log(yellow(`  ${template.runtime} is an approved runtime that no launch binds and renders.`));
+    console.log(dim("  Everything here works — authoring, preview, validate, export. Launching does not, and the refusal is structural rather than scheduled."));
   }
   return 0;
 }

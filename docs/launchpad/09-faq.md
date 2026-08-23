@@ -155,9 +155,13 @@ The contract carries this warning on chain.
 No. Transfers to the zero address revert, and no burn function exists.
 
 **Is `relics.wtf` the launchpad?**
-No. `https://www.relics.wtf` is the RELICS art collection — a separate, already-live property. The
-creator app is not publicly hosted, and route paths in [05](05-creator-flow.md) are the app's own
-routes, not links.
+It is both, on one origin. `https://www.relics.wtf/` is the RELICS art collection — a separate,
+already-live property with its own contracts — and the launchpad is served from the same
+deployment under its own routes: `/launchpad` is its landing, `/create` is the creator entry,
+`/projects` is the launched-project index. The route paths quoted in
+[05](05-creator-flow.md) are those routes. They are two systems sharing an origin, not one system:
+launching here does not mint, wrap or entitle you to $RELICS, and holding $RELICS grants no
+launchpad privilege.
 
 **Where do I report a security issue?**
 [`SECURITY.md`](../../SECURITY.md). Do not open a public issue containing a working exploit path.
