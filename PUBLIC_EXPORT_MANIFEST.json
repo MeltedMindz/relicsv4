@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 1213,
+  "fileCount": 1214,
   "files": [
     {
       "path": ".env.example",
@@ -8184,6 +8184,13 @@
     {
       "path": "scripts/lib/lifecycle.mjs",
       "sha256": "a5913c83637a80b693a9d945063ff7909125a7021e72c5395a856bdf54e61e57",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "scripts/postinstall-build.mjs",
+      "sha256": "6829a18b21112ff3f40bf26be6f3953a7310cc7e0737ed94925a4c5ca1097117",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
