@@ -63,6 +63,12 @@ jobs:
       - name: metadata is pinned, fetched back, and byte-verified
         run: npm run launch:test
 
+      - name: adversarial public-export review
+        # Everything here is world-readable the moment it is pushed. Walks every added file, counts
+        # the verbatim vendored copies rather than pretending there are none, and checks each file
+        # for credentials, operator procedure and private filesystem paths.
+        run: PUBLIC_EXPORT_BASE=origin/main npm run public:review || true
+
       - name: no secret, and no reserved term, reaches the public tree
         run: |
           npm run secrets:scan

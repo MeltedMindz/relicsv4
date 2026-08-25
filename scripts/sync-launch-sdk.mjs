@@ -35,8 +35,17 @@ const ABI_DIR = join(SDK, "contracts-abi", "rc6");
 const VENDOR_JSON = join(SDK, "VENDOR.json");
 
 /** The canonical private tree. Maintainer-side only; absent on a public clone, and that is fine. */
-const CANONICAL_ROOT = process.env.RELICS_CANONICAL_ROOT ?? "/Users/melted/Documents/RELICS";
-const CANONICAL_SDK = join(CANONICAL_ROOT, "launchpad", "sdk");
+/**
+ * The canonical private tree. MAINTAINER-SIDE ONLY, and there is deliberately NO DEFAULT.
+ *
+ * This used to default to the maintainer's own absolute path, which published one person's machine
+ * layout into a world-readable repository for no benefit — a public clone cannot use that path and
+ * a maintainer already knows theirs. Set `RELICS_CANONICAL_ROOT` to run this gate; leaving it unset
+ * is the normal state for everyone who is not syncing the vendored SDK, and both entry points below
+ * treat "unset" as "not applicable" rather than as a failure.
+ */
+const CANONICAL_ROOT = process.env.RELICS_CANONICAL_ROOT ?? null;
+const CANONICAL_SDK = CANONICAL_ROOT ? join(CANONICAL_ROOT, "launchpad", "sdk") : null;
 
 /**
  * PUBLIC_SAFE deterministic launch semantics, vendored verbatim.
@@ -122,6 +131,10 @@ const IMPORT_REWRITES = [
  * that drifts from the private one fails the sync rather than shipping a launch built on it.
  */
 async function assertOneDeclaration() {
+  // Nothing to compare against on a public clone. `run()` reports the absent canonical tree
+  // properly a few lines later; this returning early is what lets it get there instead of
+  // throwing ERR_INVALID_ARG_TYPE on a null path.
+  if (!CANONICAL_ROOT) return;
   const publicSchema = await import(join(PUBLIC_ROOT, "packages", "project-schema", "index.js"));
   const canonicalProtection = await import(join(CANONICAL_ROOT, "launchpad", "packages", "launch-protection", "index.js"));
   const shared = ["DYNAMIC_FEE_FLAG", "ANTI_SNIPE_WINDOW_SECONDS", "ANTI_SNIPE_START_FEE_PIPS", "ANTI_SNIPE_END_FEE_PIPS", "SELL_FEE_PIPS", "PROTECTION_IS_MANDATORY"];
@@ -207,8 +220,8 @@ const mode = process.argv.includes("--sync") ? "sync" : process.argv.includes("-
 
 async function run() {
   await assertOneDeclaration();
-  if (!existsSync(CANONICAL_SDK)) {
-    console.error(`[launch-sdk-sync] canonical tree not present at ${CANONICAL_SDK}.`);
+  if (!CANONICAL_SDK || !existsSync(CANONICAL_SDK)) {
+    console.error(`[launch-sdk-sync] RELICS_CANONICAL_ROOT is ${CANONICAL_ROOT ? `set to ${CANONICAL_ROOT}, which has no launchpad/sdk` : "unset"}.`);
     console.error("[launch-sdk-sync] This gate is MAINTAINER-SIDE. A public clone does not need it:");
     console.error("[launch-sdk-sync] everything required to launch is committed under packages/launch-sdk.");
     process.exit(mode === "sync" ? 1 : 0);

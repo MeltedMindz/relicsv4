@@ -65,6 +65,9 @@
     "signer:mutate": "node packages/signer-protocol/test/mutate.mjs",
     "kit:offline": "node scripts/check-offline-mode.mjs",
     "agent:controls": "node scripts/check-autonomous-controls.mjs",
-    "agent:commands": "node scripts/check-agent-commands.mjs"
+    "agent:commands": "node scripts/check-agent-commands.mjs",
+    "e2e:autonomous": "node scripts/e2e-autonomous-launch.mjs",
+    "e2e:resume": "node scripts/e2e-crash-resume.mjs",
+    "public:review": "node scripts/public-export-review.mjs"
   }
 }

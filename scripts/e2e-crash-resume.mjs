@@ -53,7 +53,7 @@ const LAUNCH_SCRIPT = join(REPO_ROOT, "scripts", "e2e-autonomous-launch.mjs");
 
 /** A never-launched address, used only to give the negative control something absent to look for. */
 const NEVER_LAUNCHED = getAddress("0x00000000000000000000000000000000DeaDBeef");
-/** anvil default account #9 — TEST ONLY, public knowledge, never fund. Used here for its zero nonce. */
+/** anvil default account #9 — TEST ONLY, public knowledge, never fund. Used for its untouched nonce. */
 const UNUSED_ANVIL_ACCOUNT = getAddress("0xa0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
 class ProofFailure extends Error {}

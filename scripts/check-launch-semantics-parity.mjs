@@ -25,8 +25,17 @@ import { keccak256, encodeFunctionData, toFunctionSelector } from "viem";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_ROOT = join(HERE, "..");
 const SDK = join(PUBLIC_ROOT, "packages", "launch-sdk");
-const CANONICAL_ROOT = process.env.RELICS_CANONICAL_ROOT ?? "/Users/melted/Documents/RELICS";
-const CANONICAL_SDK = join(CANONICAL_ROOT, "launchpad", "sdk");
+/**
+ * The canonical private tree. MAINTAINER-SIDE ONLY, and there is deliberately NO DEFAULT.
+ *
+ * This used to default to the maintainer's own absolute path, which published one person's machine
+ * layout into a world-readable repository for no benefit — a public clone cannot use that path and
+ * a maintainer already knows theirs. Set `RELICS_CANONICAL_ROOT` to run this gate; leaving it unset
+ * is the normal state for everyone who is not syncing the vendored SDK, and both entry points below
+ * treat "unset" as "not applicable" rather than as a failure.
+ */
+const CANONICAL_ROOT = process.env.RELICS_CANONICAL_ROOT ?? null;
+const CANONICAL_SDK = CANONICAL_ROOT ? join(CANONICAL_ROOT, "launchpad", "sdk") : null;
 
 const CONTROLS = process.argv.includes("--controls");
 let failures = 0;
@@ -124,7 +133,7 @@ const abiSha = createHash("sha256").update(readFileSync(join(SDK, "contracts-abi
 abiSha === provenance.factoryAbiSha256 ? ok("factory ABI digest matches provenance") : fail("factory ABI digest drifted from provenance");
 
 // ---- 9. PRIVATE-SIDE COMPARISON (maintainer only) ----------------------------------------------
-if (existsSync(CANONICAL_SDK)) {
+if (CANONICAL_SDK && existsSync(CANONICAL_SDK)) {
   const canonAbi = loadAbi(join(CANONICAL_SDK, "contracts-abi", "rc6", "LaunchpadFactoryV1.json"));
   const canonComponents = launchParamsOf(canonAbi);
   const canonNames = canonComponents.map((c) => c.name);
@@ -137,7 +146,7 @@ if (existsSync(CANONICAL_SDK)) {
   const canonFields = [...canonFieldSrc.match(/RC6_LAUNCH_PARAMS_FIELDS = \[([\s\S]*?)\] as const/)[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
   JSON.stringify(canonFields) === JSON.stringify(publicFields) ? ok("PRIVATE↔PUBLIC generated field-order file identical") : fail("generated field-order files differ");
 } else {
-  console.log("  skip  private comparison (canonical tree absent — public clone)");
+  console.log("  skip  private comparison: RELICS_CANONICAL_ROOT is unset, which is the normal state for a public clone. The committed artifacts are self-sufficient; this arm is for a maintainer syncing them.");
 }
 
 // ---- 10. BUILDER OUTPUT for a canonical fixture -------------------------------------------------
@@ -157,7 +166,7 @@ const fixtureHash = keccak256(fixtureData);
 floor("fixtureCalldataBytes", (fixtureData.length - 2) / 2, 500);
 ok(`fixture calldata ${(fixtureData.length - 2) / 2} bytes, keccak ${fixtureHash.slice(0, 18)}…`);
 
-if (existsSync(CANONICAL_SDK)) {
+if (CANONICAL_SDK && existsSync(CANONICAL_SDK)) {
   const canonAbi = loadAbi(join(CANONICAL_SDK, "contracts-abi", "rc6", "LaunchpadFactoryV1.json"));
   const canonData = encodeFunctionData({ abi: canonAbi, functionName: "launch", args: [tupleObj] });
   canonData === fixtureData ? ok("PRIVATE↔PUBLIC fixture calldata byte-identical") : fail("fixture calldata DIFFERS between public and canonical ABI");

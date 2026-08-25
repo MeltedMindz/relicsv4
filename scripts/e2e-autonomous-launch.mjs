@@ -57,7 +57,7 @@ import {
   http,
   numberToHex,
 } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 
 import {
   ArtMode,
@@ -114,11 +114,36 @@ const RC6_HOOK_FLAGS = 0x14c0n;
 const ALL_HOOK_MASK = 0x3fffn;
 
 /**
- * TEST ONLY — anvil default account #0. PUBLIC KNOWLEDGE, printed in anvil's own banner, and the
- * first key any attacker sweeps. NEVER FUND THIS ADDRESS. It is here because a fork harness needs
- * a pre-funded account on a node whose entire state is discarded when the process exits.
+ * THIS REPOSITORY CONTAINS NO KEY MATERIAL, INCLUDING NONE OF ANVIL'S.
+ *
+ * The obvious thing to do here was anvil's default account — its key is in anvil's own startup
+ * banner, so writing it down leaks nothing. It was rejected for two reasons and both are better
+ * than the convenience:
+ *
+ *   1. It puts `0x` + 64 hex, or the twelve-word phrase it derives from, in a committed file. Those
+ *      are exactly the shapes `gitleaks` and `scripts/secret-scan.sh` refuse, and the fix would
+ *      have to be an allowlist. A path-scoped allowlist silences the WHOLE FILE — measured, in this
+ *      repository — so the exemption that made this line legal would also have hidden a real key
+ *      pasted anywhere else in this harness. A scanner taught to ignore a shape has been taught to
+ *      ignore it everywhere.
+ *   2. A published test key in a public repository gets copied. Not maliciously — by someone
+ *      adapting this harness who keeps the constant and points it at a chain that is not a fork.
+ *
+ * So the signing account is GENERATED PER RUN, exists only in this process, and is funded with
+ * `anvil_setBalance` on a node whose entire state is discarded when the process exits. Nothing is
+ * derivable from the repository, there is no constant to copy, and the signature path is still a
+ * REAL one — which `eth_sendTransaction` against an unlocked account would not have been, and
+ * exercising the signer boundary is half of what this harness is for.
+ *
+ * The consequence is that the launcher address differs every run, so the hook salt is re-mined and
+ * the predicted addresses differ between runs. That is correct rather than unfortunate: M-01 makes
+ * every salt launcher-namespaced, so a per-run launcher is a per-run address space, and a harness
+ * that produced the same addresses twice would be describing a launcher it no longer had.
  */
-const ANVIL_ACCOUNT_0_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+function freshSigningAccount() {
+  const privateKey = generatePrivateKey();
+  return { account: privateKeyToAccount(privateKey), privateKey };
+}
 
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
 
@@ -273,12 +298,12 @@ function publicClientFor(url) {
  * re-derived from the thing that actually distinguishes safe from unsafe here: whether the endpoint
  * this signer is bound to can PROVE it is a loopback anvil node, re-proved on every signature.
  */
-function createForkOnlySigner({ privateKey, rpcUrl, chainId }) {
+function createForkOnlySigner({ account, rpcUrl, chainId }) {
   const client = publicClientFor(rpcUrl);
   return {
     id: "fork-only:anvil",
     async getAddress() {
-      return privateKeyToAccount(privateKey).address;
+      return account.address;
     },
     async supportsChain(id) {
       if (id !== chainId) return false;
@@ -298,7 +323,6 @@ function createForkOnlySigner({ privateKey, rpcUrl, chainId }) {
       if (req.maxFeePerGas === undefined || req.maxPriorityFeePerGas === undefined) {
         throw new HarnessFailure("the signing request carries no fee cap; this signer will not price a transaction");
       }
-      const account = privateKeyToAccount(privateKey);
       const rawTransaction = await account.signTransaction({
         type: "eip1559",
         chainId: req.chainId,
@@ -485,16 +509,23 @@ export async function runAutonomousLaunch(options = {}) {
     process.env.ETHEREUM_RPC_URL = rpcUrl;
 
     /**
-     * anvil's default accounts CARRY REAL MAINNET STATE ON A FORK, and it broke this harness once.
+     * AN ADDRESS ON A FORK CARRIES REAL MAINNET STATE, AND IT BROKE THIS HARNESS ONCE.
      *
-     * Somebody has published EIP-7702 delegations for the well-known anvil addresses on Ethereum,
-     * so on a mainnet fork every one of them has `0xef0100…` code and behaves as a smart account.
-     * `ProjectRights` mints with `_safeMint`, the delegate's `onERC721Received` does something else
-     * entirely, and the whole launch reverted `TransferToNonERC721ReceiverImplementer()` — a
-     * failure with nothing to do with the launch. Clearing the delegation restores the accounts to
-     * the plain EOAs anvil intends them to be. It is a fork-only state edit and it is reported.
+     * The first version signed with anvil's default account #1 as the creator recipient, and the
+     * launch reverted `TransferToNonERC721ReceiverImplementer()` — a failure with nothing to do
+     * with the launch. Somebody has published EIP-7702 delegations for the well-known anvil
+     * addresses on Ethereum, so on a mainnet fork each of them holds `0xef0100…` code and behaves
+     * as a smart account; `ProjectRights` mints with `_safeMint`, and the delegate's
+     * `onERC721Received` did something else entirely.
+     *
+     * The signer is generated per run now, so it is codeless by construction. The recipient is a
+     * fixed address in the policy — it has to be, since the policy AUTHORIZES a specific one — so
+     * the check stays: any inherited code is cleared, and the clearing is reported rather than done
+     * quietly. On a clean address this is a no-op, which is the point: the harness does not depend
+     * on the upstream chain's opinion of an address it did not choose.
      */
-    const walletAccount = privateKeyToAccount(ANVIL_ACCOUNT_0_KEY);
+    const { account: walletAccount, privateKey: signingKey } = freshSigningAccount();
+    log(`signing as ${walletAccount.address} — generated for this run, held only in this process, funded only on the fork`);
     const policyRaw = JSON.parse(readFileSync(join(FIXTURE_DIR, "relics.agent.json"), "utf8"));
     for (const address of [walletAccount.address, getAddress(policyRaw.creatorRecipient)]) {
       const code = await client.getCode({ address });
@@ -851,7 +882,7 @@ export async function runAutonomousLaunch(options = {}) {
     phase("POLICY_APPROVED");
     const approvedBuild = { chainId: selectedChainId, factory, policyHash, launchPlanHash: prepared.prepareHash, bundleHash };
     signerServer = await startSignerServer({
-      adapter: createForkOnlySigner({ privateKey: ANVIL_ACCOUNT_0_KEY, rpcUrl, chainId: selectedChainId }),
+      adapter: createForkOnlySigner({ account: walletAccount, rpcUrl, chainId: selectedChainId }),
       policy,
       approvedBuild,
     });
@@ -867,7 +898,9 @@ export async function runAutonomousLaunch(options = {}) {
       new URL("../packages/signer-protocol/src/adapters/devKeystore.ts", import.meta.url).href
     );
     try {
-      await createDevKeystoreSigner({ privateKey: ANVIL_ACCOUNT_0_KEY }).sign(built.request);
+      // The raw key is materialised HERE, in a local, for exactly one call, and never written to
+      // a file, a receipt or a log line.
+      await createDevKeystoreSigner({ privateKey: signingKey }).sign(built.request);
       throw new HarnessFailure("the shipped dev keystore signed a chain-1 request. Its production-chain refusal has been weakened and that is a security regression, not a harness problem.");
     } catch (err) {
       if (err instanceof HarnessFailure) throw err;
@@ -1059,7 +1092,7 @@ export function printSummary(summary, write = (s) => process.stdout.write(`${s}\
   for (const [key, value] of Object.entries(summary)) write(`${key}=${value}`);
 }
 
-export { assertLocalAnvil, startAnvilFork, publicClientFor, anvilAvailable, forkRpcUrl, snapshotTree, HarnessSkip, HarnessFailure, RefusedToBroadcast, ANVIL_ACCOUNT_0_KEY, RC6_HOOK_FLAGS, ALL_HOOK_MASK, FIXTURE_DIR, REPO_ROOT };
+export { assertLocalAnvil, startAnvilFork, publicClientFor, anvilAvailable, forkRpcUrl, snapshotTree, HarnessSkip, HarnessFailure, RefusedToBroadcast, freshSigningAccount, RC6_HOOK_FLAGS, ALL_HOOK_MASK, FIXTURE_DIR, REPO_ROOT };
 
 // ------------------------------------------------------------------------------------------------
 // CLI
@@ -1104,7 +1137,10 @@ if (invokedDirectly) {
   }
   const result = await runAutonomousLaunch(options);
   printSummary(result.summary);
-  if (!options.workspace && !options.keepWorkspace && result.exitCode === 0 && !result.skipped) {
+  // A temp workspace is kept only when there is something in it worth reading: a failure to
+  // investigate, or an explicit request. A SKIPPED run produced nothing, so it leaves nothing.
+  const disposable = !options.workspace && !options.keepWorkspace;
+  if (disposable && (result.exitCode === 0 || result.skipped)) {
     rmSync(result.workspace, { recursive: true, force: true });
   } else if (existsSync(result.workspace) && statSync(result.workspace).isDirectory()) {
     process.stderr.write(`\nworkspace kept at ${result.workspace}\n`);
