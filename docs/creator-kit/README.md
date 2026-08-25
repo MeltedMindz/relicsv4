@@ -18,8 +18,11 @@ Import `my-project.relics` in the RELICS Launchpad creator app. It derives the s
 config hash and component hashes the CLI printed, and the draft arrives filled in — art, traits,
 market mappings, metadata, earnings, supply, chains. Nothing is re-entered by hand.
 
-Nothing in this kit signs or broadcasts anything, and nothing in it contacts a network. It builds
-one `.relics` file. Public creator launches are open on Ethereum (1), Base (8453) and Robinhood
+Every command above is offline: none of them signs, broadcasts or contacts a network, and together
+they build one `.relics` file. The chain-facing commands are a separate, opt-in group documented in
+[The autonomous launch agent](./autonomous-launch-agent.md); they refuse to act without an
+authorization file the creator writes, and they are loaded only when one of them is called.
+Public creator launches are open on Ethereum (1), Base (8453) and Robinhood
 Chain (4663), and RC6 is not deployed on BNB Smart Chain (56); for the current per-chain deployment
 state read [`../launchpad/08-status.md`](../launchpad/08-status.md) and
 [`../launchpad/10-deployments-and-quote-assets.md`](../launchpad/10-deployments-and-quote-assets.md),
@@ -47,6 +50,7 @@ discoverability metadata is not. See [Token metadata](./token-metadata.md).
 | --- | --- |
 | **[Getting started](./getting-started.md)** | fresh clone → exported bundle, step by step, with the failure modes |
 | **[Create with an agent](./create-with-an-agent.md)** | building a project with an AI agent, and what it may not decide for you |
+| **[The autonomous launch agent](./autonomous-launch-agent.md)** | the opt-in second path: the authorization file field by field, the signer boundary, the receipt chain, and a prompt you can paste |
 | **[The CLI](./cli.md)** | every command, every flag, and what each check means |
 | **[The `.relics` bundle format](./bundle-format.md)** | the container, the layout, the manifest, and every hash recipe |
 | **[Treating every bundle as hostile](./bundle-security.md)** | the threat model, the seven defence layers, and what is *not* defended |
@@ -60,6 +64,7 @@ discoverability metadata is not. See [Token metadata](./token-metadata.md).
 | --- | --- |
 | `packages/project-schema/` | `@relics/project-schema` — the ONE schema, container, validator and hash implementation. Zero dependencies, plain ESM, no build step. Both the CLI and the web importer use this exact code. |
 | `packages/creator-cli/` | the `relics` CLI and its starter templates |
+| `packages/launch-sdk/`, `packages/agent-flow/`, `packages/signer-protocol/` | the opt-in launch path: live chain capability, deterministic chain selection, the prepare/predict/simulate/build pipeline, the state machine and receipt chain, and the signer boundary |
 | `packages/project-schema/fixtures/parity/` | valid bundles plus `expected.json` — an importer must reproduce every value |
 | `packages/project-schema/fixtures/hostile/` | bundles that must be refused, plus the expected refusal for each |
 

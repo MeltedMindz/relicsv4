@@ -11,8 +11,19 @@ It works with any capable coding agent: Claude Code, Codex, Cursor, Copilot-styl
 anything else that can read files and run terminal commands in a folder on your machine. Nothing
 here is specific to one tool.
 
-**Everything happens on your computer.** The kit never signs a transaction, never broadcasts
-anything, and never contacts a network. It builds a file.
+**Everything on this page happens on your computer.** Following it, the agent never signs a
+transaction, never broadcasts anything, and never contacts a network. It builds a file, and you
+decide what to do with the file afterwards.
+
+> **There is a second path, and it is opt-in.** An agent that has been given a written
+> authorization can carry the project onto a chain as well — read the live chains, simulate the
+> exact transaction, get it signed by a signer that holds a key the agent never sees, broadcast it
+> and verify it. That needs a wallet, a pinning provider, a network, and four deliberate acts of
+> setup, and none of it happens by accident or by asking nicely.
+> **[→ The autonomous launch agent](./autonomous-launch-agent.md)**
+>
+> Everything on this page is the first two thirds of that path, unchanged. If you are not sure
+> which one you want, start here — the work is not wasted either way.
 
 ---
 
@@ -21,8 +32,8 @@ anything, and never contacts a network. It builds a file.
 Install [Node.js](https://nodejs.org/) 20 or newer, then:
 
 ```bash
-git clone https://github.com/OWNER/relics-v4-starter.git
-cd relics-v4-starter
+git clone https://github.com/MeltedMindz/relicsv4.git
+cd relicsv4
 npm install
 ```
 
@@ -164,7 +175,10 @@ If your agent starts asking you about hooks, pool fees, tick spacing, or Solidit
 into the wrong half of the repository. Point it back at `AGENTS.md` and tell it you want a
 `.relics` bundle from the creator kit.
 
-If it asks you for a private key or a seed phrase, **stop.** Nothing in this process ever needs one.
+**If it asks you for a private key or a seed phrase, stop.** Nothing in this process ever needs
+one — and that is true on the launch path too, not only here. An agent that launches for you hands
+a signing request to a separate signer process that holds the key; it never holds one itself, and
+there is no step anywhere in this repository where handing a key to a model is the intended answer.
 
 ---
 
@@ -350,6 +364,12 @@ That is the one address; be suspicious of any other site claiming to be it, and 
 before you connect a wallet or upload a file. Everything up to that point — authoring, previewing,
 sweeping, validating, exporting — happens on your own machine with no network of any kind.
 
+**Or skip the upload.** If you would rather your agent carried the file the rest of the way, that
+is the launch path: same file, same contracts, same five steps, and the difference is only where
+the key sits — in your browser wallet here, in a signer process there. Setting it up is four
+deliberate acts and none of them are defaults.
+**[→ The autonomous launch agent](./autonomous-launch-agent.md)**
+
 ---
 
 ## 10. Launch
@@ -414,6 +434,7 @@ part.
 
 | You want | Read |
 | --- | --- |
+| the agent to launch it too, not just build it | [`autonomous-launch-agent.md`](./autonomous-launch-agent.md) |
 | every command and flag | [`cli.md`](./cli.md) |
 | what is actually inside a `.relics` file | [`bundle-format.md`](./bundle-format.md) |
 | why a bundle is treated as hostile | [`bundle-security.md`](./bundle-security.md) |

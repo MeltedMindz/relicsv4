@@ -3,7 +3,11 @@
 The local half of the creator kit. It scaffolds a project, renders it deterministically, checks
 it against every rule the importer enforces, and writes one `.relics` bundle.
 
-Nothing in it signs a transaction, broadcasts anything, or contacts a network.
+**Every command on this page is offline.** None of them signs a transaction, broadcasts anything,
+or contacts a network. The CLI also carries an opt-in chain-facing group, `relics agent …`, which
+is loaded only when one of its subcommands is called and refuses to act without an authorization
+file the creator writes — that group is documented in
+**[The autonomous launch agent](./autonomous-launch-agent.md)**, not here.
 
 This is the reference. If you have not built a project yet, start at
 **[Getting started](./getting-started.md)** and come back here for the flags.

@@ -107,6 +107,39 @@ Then open your agent in this directory and paste:
 
 **[→ The full prompt, and what the agent may and may not decide for you](docs/creator-kit/create-with-an-agent.md)**
 
+That path stops at the file. If you want the agent to carry it onto a chain as well, read the next
+section.
+
+---
+
+## Launch with an AI agent
+
+The same agent, given a written authorization, can take the project the rest of the way: read the
+allowed chains live, pick one deterministically, publish and re-read the collection metadata,
+simulate the exact transaction, get it signed, broadcast it, and verify the result against chain
+state.
+
+**Four things have to be true first**, and one command tells you whether they are:
+
+```bash
+npm run kit -- agent doctor --workspace ../my-project --json
+```
+
+| | |
+| --- | --- |
+| **A policy** | `relics.agent.json` — the authorization boundary. Scaffolded by `npm run kit -- agent init`, it ships with `allowBroadcast: false`, and setting that to `true` is the moment you authorize a launch. Unknown fields in it are **refused**, not ignored: a misspelled ceiling that got dropped silently is an absent ceiling. |
+| **A signer** | A process that holds the key. **The agent never does.** It assembles a signing request and hands it over; the signer independently re-derives the chain, the target, the selector, the calldata hash, the three approval hashes — and the creator's recipient address, decoded out of the calldata rather than accepted alongside it. |
+| **A metadata provider** | Collection metadata is written at birth, in the same transaction that creates the collection, and no selector moves it afterwards. So it is pinned, fetched back by the address the provider returned, and re-hashed before anything is built. A pin receipt is not evidence anyone can read the bytes. |
+| **A credentialled RPC per chain** | A chain read through a public fallback endpoint returns `UNKNOWN`, and `UNKNOWN` fails admission — because a registry that could not be read has not said a runtime is absent, it has said nobody knows. |
+
+What the agent may decide, once you have written the policy: the chain within `allowedChains`, the
+quote asset within `allowedQuoteAssets`, the launch-protection election within
+`allowedAntiSnipeModes`, and every artistic choice. What it may never decide: your earnings
+recipient, `allowBroadcast`, or any ceiling. Those are yours, and a policy field an agent wrote on
+your behalf is not an authorization.
+
+**[→ The autonomous launch agent: the policy field by field, the signer, the receipt chain, and a prompt you can paste](docs/creator-kit/autonomous-launch-agent.md)**
+
 ---
 
 ## Build it yourself
@@ -149,6 +182,11 @@ Four more exist and none of them is part of the loop: `doctor` checks that this 
 the kit and contacts nothing; `status` prints the deployment record and which chains take a
 creator launch; `migrate` reopens a bundle from an older schema as a project you can finish; and
 `help <command>` prints every flag. `npm run kit -- --help` lists all eleven.
+
+Those eleven are the whole offline surface, and none of them reaches a network. The chain-facing
+commands live in their own group, `npm run kit -- agent …`, are loaded only when one is called, and
+refuse to do anything without the authorization file described in
+[Launch with an AI agent](#launch-with-an-ai-agent).
 
 > **A fresh project fails validation on purpose, and there are TWO refusals, not one.** Both are
 > decisions the kit will not make on your behalf, because both are written on chain and permanent:
@@ -202,13 +240,25 @@ flowchart TD
     H --> I["review the derived draft<br/>art, traits, supply, earnings"]
     I --> J["sign one transaction"]
 
+    G --> K["relics agent preflight<br/>live chain admission + scoring"]
+    K --> L["publish metadata<br/>pin, fetch back, re-hash"]
+    L --> M["simulate the exact transaction"]
+    M --> N["policy check against the FINAL calldata"]
+    N --> O["sign through the scoped signer<br/>the agent never holds a key"]
+    O --> P["broadcast, confirm, verify on chain"]
+
     style A fill:#1a1a1c,stroke:#c9a227,color:#e8e6e3
     style G fill:#1a1a1c,stroke:#c9a227,color:#e8e6e3
     style J fill:#1a1a1c,stroke:#c9a227,color:#e8e6e3
+    style P fill:#1a1a1c,stroke:#c9a227,color:#e8e6e3
 ```
 
-Every step through `relics export` works today, offline, with no wallet. The import and signing
-steps depend on the launchpad's current launch state — see [Status, honestly](#status-honestly).
+Two ways out of the same file. The left branch is you, in a browser, whenever you choose. The right
+branch is the launch agent, and it exists only when you have written the authorization file — see
+[Launch with an AI agent](#launch-with-an-ai-agent).
+
+Every step through `relics export` works today, offline, with no wallet. Both branches after it
+depend on the launchpad's current launch state — see [Status, honestly](#status-honestly).
 
 ---
 
@@ -277,8 +327,14 @@ What happens then, in order:
    Uniswap v4 pool are created together. There is no second transaction to bind metadata
    afterwards and no pending state to come back to.
 
-Everything before step 5 is free, reversible and off chain. Nothing in this repository can sign,
-broadcast or reach a network on your behalf — the CLI has no wallet and no RPC in it at all.
+Everything before step 5 is free, reversible and off chain.
+
+**This is not the only route, and it is the one where you hold the wallet.** The launch agent
+performs the same five steps from a terminal, against the same contracts, and the difference is
+where the key sits: here it is in your browser wallet and you approve the transaction yourself;
+there it is in a signer process the agent talks to but never holds, and your approval was the
+policy file you wrote before the run started. Neither route can begin without something you
+explicitly did — connecting a wallet, or setting `allowBroadcast: true`.
 
 ---
 
@@ -313,6 +369,12 @@ and the bundle you export stays valid — nothing about it has to change if the 
 bound. The kit does not convert a JavaScript project to Solidity SVG, does not suggest switching
 runtime to unlock a launch, and does not delete a generator. Those are two different artworks, and
 which one you meant is not a question a validator gets to answer.
+
+**The launch agent does not route around this either, and it is refused by evidence rather than by
+a rule it could be argued out of.** `relics.agent.json` names the runtimes a run may use, and a
+chain is admitted only after its own registry is read live and shows that runtime registered and
+active. A JavaScript project simply never reaches a preflight that passes. An agent that offers to
+switch your runtime so a launch can proceed is doing the one thing this repository tells it not to.
 
 **Approved and launchable are different questions, and the kit does not collapse them.** Both
 runtimes are approved: the format accepts them, they validate, they preview, they export. The
@@ -524,6 +586,14 @@ repository and printed by `npm run kit:status` — see
 [08 — Status](docs/launchpad/08-status.md). Note separately that every launchable template targets
 `SOLIDITY_SVG`, so a JavaScript-runtime bundle cannot be launched on any chain, open or not.
 
+**What the launch agent adds, honestly.** The chain-facing commands are real and they read real
+chains: `agent capabilities` and `agent preflight` return live evidence, and `agent doctor` will
+tell you before you start whether this machine is configured. What they cannot do is make the
+authorization for you. Nothing reaches a chain until you have written `relics.agent.json`, wired a
+signer that holds the key, configured a pinning provider, and set a credentialled RPC endpoint —
+four separate deliberate acts, none of them defaults. If you have not done all four, this
+repository is the offline kit and nothing in it can spend anything.
+
 **And the path has been walked by somebody who is not us.** A project called `666` was launched
 through the RC6 factory on Robinhood Chain from an ordinary wallet — not from the protocol Safe,
 not through the pre-public canary path, and with nobody's permission. That is one launch, not a
@@ -546,7 +616,13 @@ doing anything real.
 packages/project-schema/   the ONE schema, container, validator and hash implementation.
                            Zero dependencies. The CLI and the web importer run this exact code.
 packages/creator-cli/      the `relics` CLI and its five starter templates
-docs/creator-kit/          the kit: getting started, CLI, bundle format, security, importing
+packages/launch-sdk/       live chain capability, deterministic chain selection, the
+                           prepare/predict/simulate/build pipeline, the metadata birth pipeline
+packages/agent-flow/       the launch state machine, the hash-linked receipt chain, and the
+                           no-double-launch guard
+packages/signer-protocol/  the signer boundary: what a signer re-derives before it will sign
+docs/creator-kit/          the kit: getting started, CLI, bundle format, security, importing,
+                           and the autonomous launch agent
 docs/launchpad/            what the transaction you eventually sign actually does
 docs/00-…18-*.md           the fork-it-yourself starter template guides
 src/ script/ test/         the starter template's Solidity, tooling and tests

@@ -13,7 +13,7 @@
 // factory's own decoded result or the decoded revert; neither ever returns a plausible zero.
 // ================================================================================================
 import { encodeFunctionData, getAddress, keccak256, toFunctionSelector, BaseError, ContractFunctionRevertedError, type Abi, type Address, type Hex, type PublicClient } from "viem";
-import { FACTORY_ABI } from "./abi.js";
+import { FACTORY_ABI, rc6Abi } from "./abi.js";
 import { assertAbiMatchesLaunchParams } from "./vendor/launchCalldata.js";
 import { launchParamsAsTuple, type LaunchParams, type LaunchResult, type PoolKey } from "./vendor/types.js";
 import { buildLaunchParams, type CreatorInput } from "./vendor/params.js";
@@ -178,13 +178,100 @@ export async function simulate(client: PublicClient, req: { from: Address; to: A
   }
 }
 
+/**
+ * Every error the RC6 deployment can revert with, gathered from ALL committed artifacts.
+ *
+ * A LAUNCH REVERTS FROM MORE THAN ONE CONTRACT. Decoding against the factory's ABI alone reported
+ * "unknown error" for a revert that was actually `BadHookAddress()` raised by the ART HOOK — the
+ * single most likely first failure a creator will hit, because it is what an unmined hook salt
+ * produces. Naming the error is the difference between "mine a hook salt" and "something went
+ * wrong"; viem cannot decode what the ABI it is handed does not describe.
+ */
+function allRc6Errors(): Abi {
+  const names = ["LaunchpadFactoryV1", "ArtHookRc6", "ProjectCollectionV1", "ProjectTokenV1", "MetadataResolverRc6", "ProjectRegistryV1"];
+  const out: unknown[] = [];
+  for (const n of names) {
+    try {
+      for (const e of rc6Abi(n) as unknown as { type: string }[]) if (e.type === "error") out.push(e);
+    } catch {
+      // An artifact that is not committed contributes nothing; it must never make this throw.
+    }
+  }
+  return out as Abi;
+}
+
+let ERROR_ABI: Abi | null = null;
+
+/** Decode a raw revert selector against the whole RC6 error surface. */
+function decodeRawRevert(data: string): string | null {
+  if (!/^0x[0-9a-fA-F]{8}/.test(data)) return null;
+  ERROR_ABI ??= allRc6Errors();
+  const selector = data.slice(0, 10).toLowerCase();
+  for (const entry of ERROR_ABI as unknown as { type: string; name: string; inputs?: { type: string }[] }[]) {
+    if (entry.type !== "error") continue;
+    try {
+      // `toFunctionSelector` over the error's own ABI item. Hand-building the signature string and
+      // hashing it was the first attempt and it silently matched nothing — the same class of
+      // mistake as hand-building the launch signature, and it gets the same answer: ask viem.
+      if (toFunctionSelector({ ...(entry as object), type: "function" } as never).toLowerCase() === selector) {
+        return `${entry.name}${(entry.inputs ?? []).length ? "(…)" : "()"}`;
+      }
+    } catch {
+      /* an entry viem cannot turn into a selector simply does not match */
+    }
+  }
+  return null;
+}
+
+/**
+ * Walk an error chain for a raw revert payload.
+ *
+ * MEASURED, NOT GUESSED. viem nests the payload five levels deep for a `simulateContract` revert it
+ * cannot name: ContractFunctionExecutionError -> ContractFunctionRevertedError (`raw`) ->
+ * AbiErrorSignatureNotFoundError -> CallExecutionError -> ExecutionRevertedError ->
+ * RpcRequestError (`data`). Checking only the top level found nothing and every refusal read
+ * "unknown error", which is the least useful thing a launch can tell a creator.
+ */
+function rawRevertPayload(err: unknown): string | null {
+  let node: unknown = err;
+  for (let depth = 0; node && depth < 8; depth++) {
+    const n = node as { data?: unknown; raw?: unknown; cause?: unknown };
+    if (typeof n.raw === "string" && n.raw.startsWith("0x")) return n.raw;
+    if (typeof n.data === "string" && n.data.startsWith("0x")) return n.data;
+    node = n.cause;
+  }
+  return null;
+}
+
 export function decodeRevert(err: unknown): string {
   if (err instanceof BaseError) {
     const reverted = err.walk((e) => e instanceof ContractFunctionRevertedError);
     if (reverted instanceof ContractFunctionRevertedError) {
-      const name = reverted.data?.errorName ?? "unknown error";
-      const args = reverted.data?.args ?? [];
-      return args.length > 0 ? `${name}(${args.join(", ")})` : name;
+      const name = reverted.data?.errorName;
+      if (name) {
+        const args = reverted.data?.args ?? [];
+        return args.length > 0 ? `${name}(${args.join(", ")})` : name;
+      }
+      // NO EARLY RETURN OF "unknown error". This branch used to `?? "unknown error"` and return,
+      // which meant the raw-selector fallback below was unreachable for exactly the case it was
+      // written for: viem knows the call reverted but cannot NAME the error, because the error
+      // belongs to a different contract than the one whose ABI it was given. A launch reverts from
+      // the hook, the collection and the resolver as well as the factory.
+      const rawInner = rawRevertPayload(err);
+      if (typeof rawInner === "string") {
+        const named = decodeRawRevert(rawInner);
+        if (named) return named;
+        return `unnamed revert ${rawInner.slice(0, 10)} (not in any committed RC6 ABI)`;
+      }
+      return "reverted without a decodable reason";
+    }
+    // viem could not name it against the ABI it was given. Fall back to the RAW SELECTOR decoded
+    // over every RC6 contract's errors — this is where `BadHookAddress()` was hiding.
+    const raw = rawRevertPayload(err);
+    if (typeof raw === "string") {
+      const named = decodeRawRevert(raw);
+      if (named) return named;
+      return `${err.shortMessage ?? err.message} (raw revert ${raw.slice(0, 10)}, not in any committed RC6 ABI)`;
     }
     return err.shortMessage ?? err.message;
   }
