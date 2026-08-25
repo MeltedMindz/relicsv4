@@ -79,8 +79,19 @@ export const SCHEMA_VERSION = "4.0.0";
  * must name version 3 explicitly or be refused at the contract. A
  * bundle still cannot request enforcement — the manifest has no field for it — so nothing about
  * `.relics` import behaviour changes.
+ *
+ * 4.1.0 ADDS AUTONOMOUS LAUNCH AND CHANGES NO BUNDLE FIELD. `SCHEMA_VERSION` deliberately does not
+ * move: a `.relics` bundle written by 4.0.0 is byte-identical under 4.1.0, imports the same way,
+ * and hashes the same. What is new lives entirely OUTSIDE the bundle — `relics.agent.json` (an
+ * authorization boundary, never a project manifest), the `.relics-agent/` receipt chain, and a
+ * networked command group reached only through a dynamic import so the offline kit's module graph
+ * is unchanged. A creator who wants none of it runs exactly what they ran before, with no network.
+ *
+ * MINOR RATHER THAN MAJOR because nothing was removed or redefined. Every 4.0.0 command keeps its
+ * name, flags and behaviour, and `npm run kit:offline` proves the offline half by RUNNING it with
+ * outbound connections blocked rather than by asserting it in a comment like this one.
  */
-export const CREATOR_KIT_VERSION = "4.0.0";
+export const CREATOR_KIT_VERSION = "4.1.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the
