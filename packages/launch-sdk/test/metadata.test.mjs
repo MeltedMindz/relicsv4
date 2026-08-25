@@ -2,10 +2,11 @@
 // ================================================================================================
 // THE METADATA BIRTH PIPELINE, under adversarial providers.
 //
-//   node --import tsx --test packages/launch-sdk/test/metadata.test.mjs
+//   npm run build --workspace @relics/launch-sdk
+//   node --test packages/launch-sdk/test/metadata.test.mjs
 //
-// (`--import tsx` is needed because the SDK sources are TypeScript with `.js` specifiers, the same
-// arrangement `apps/web`'s unit suite runs under.)
+// It runs against `dist/`, not `src/`, on purpose: the artifact a creator installs is the compiled
+// package, and a suite that only ever exercised the sources would pass while a broken build shipped.
 //
 // EVERY TEST HERE IS A NEGATIVE CONTROL EXCEPT THE HAPPY PATH. That ordering is deliberate: the
 // value of this pipeline is entirely in what it REFUSES, and a suite that only proves a good
@@ -25,7 +26,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { keccak256, stringToBytes } from "viem";
-import { keccak256Utf8 } from "../../project-schema/index.js";
+import { keccak256Utf8 } from "@relics/project-schema";
 import {
   METADATA_DIGEST_EQUALITY_SATISFIABLE,
   canonicalMetadataBytes,

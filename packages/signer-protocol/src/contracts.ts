@@ -13,3 +13,8 @@
 // default arm does. One declaration, imported here, is what makes a refusal something an agent
 // can exhaustively handle rather than something it has to parse.
 export * from "../../launch-sdk/src/contracts.ts";
+
+// `SigningRequest` and `AgentPolicy` are written in viem's `Address` and `Hex`, so a consumer of
+// these contracts needs both names. Re-exported here rather than imported from viem at every use
+// site, so this file stays the one place the shared vocabulary is assembled.
+export type { Address, Hex } from "viem";

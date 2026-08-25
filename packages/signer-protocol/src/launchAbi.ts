@@ -142,7 +142,7 @@ export function decodeCreatorRecipient(data: Hex): Address {
   if (selector !== LAUNCH_SELECTOR.toLowerCase()) {
     throw new LaunchCalldataDecodeError(`calldata carries selector ${selector}, not ${LAUNCH_SELECTOR} (${LAUNCH_FUNCTION_NAME}); there is no LaunchParams to read`);
   }
-  let decoded: { readonly args?: readonly unknown[] };
+  let decoded: { readonly args?: readonly unknown[] | undefined };
   try {
     decoded = decodeFunctionData({ abi: LAUNCH_FACTORY_ABI, data });
   } catch (cause) {

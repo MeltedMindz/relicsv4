@@ -71,8 +71,16 @@ const provenance = {
   },
   launch: { signature: launchSignature, selector: launchSelector },
   factoryAbiSha256: sha256(readFileSync(join(ABI_DIR, "LaunchpadFactoryV1.json"))),
-  abis: Object.fromEntries(readdirSync(ABI_DIR).sort().map((n) => [n, sha256(readFileSync(join(ABI_DIR, n)))])),
-  vendoredSources: Object.fromEntries(Object.entries(vendor.sources).map(([k, v]) => [k, v.publicSha256])),
+  // ---- DIGESTS ARE RECORDS, NOT A FILENAME-KEYED MAP, AND THE REASON IS A SCANNER -------------
+  // As `{ "ProjectTokenV1.json": "<64 hex>" }` this artifact reads to gitleaks' `generic-api-key`
+  // rule as a token assignment, because the KEY contains "Token". The obvious response is an
+  // allowlist; the measured response is that an allowlist scoped by path silences the ENTIRE file
+  // (verified: a Pinata JWT and a raw private key pasted into this artifact both went undetected
+  // behind one). Rather than blind a scanner to make a false positive go away, the artifact stops
+  // being shaped like a credential: `file` and `sha256` are separate fields, so nothing here looks
+  // like `token: "<secret>"` and the rule stays in full force over this file.
+  abis: readdirSync(ABI_DIR).sort().map((n) => ({ file: n, sha256: sha256(readFileSync(join(ABI_DIR, n))) })),
+  vendoredSources: vendor.sources.map((v) => ({ file: v.file, sha256: v.publicSha256 })),
   publicSdkSourceGeneration: "1",
 };
 

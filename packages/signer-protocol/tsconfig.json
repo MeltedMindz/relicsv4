@@ -1,0 +1,23 @@
+{
+  "//": "Type-checking only. `noEmit` is what makes `allowImportingTsExtensions` legal, and the .ts specifiers are what let Node 22.6+ run these sources directly with no build step — the same property the rest of this repository has, where every package runs from source.",
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "isolatedModules": true
+  },
+  "include": ["src/**/*.ts"]
+}

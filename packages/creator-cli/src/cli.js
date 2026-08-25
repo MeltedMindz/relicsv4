@@ -32,6 +32,16 @@ const FLAGS = {
   "structural-only": "boolean",
   help: "boolean",
   version: "boolean",
+  // ---- MODE B (autonomous launch) flags. Present in the parser so an unknown flag is still
+  // refused rather than ignored, but every command that uses them lives behind the lazy import
+  // below and none of MODE A's commands reads one.
+  workspace: "string",
+  policy: "string",
+  brief: "string",
+  chain: "number",
+  signer: "string",
+  "dry-run": "boolean",
+  yes: "boolean",
 };
 
 export async function main(argv) {
@@ -119,6 +129,21 @@ async function dispatch(command, positional, flags, root) {
         return 1;
       }
       return inspectBundle(file, { json: flags.json, draft: flags.draft });
+    }
+
+    // ------------------------------------------------------------------------------------------
+    // MODE B — AUTONOMOUS LAUNCH. Everything network-facing lives behind this one lazy import.
+    //
+    // THE IMPORT IS DYNAMIC AND THAT IS LOAD-BEARING, NOT STYLE. `@relics/launch-sdk` pulls in
+    // viem and reads chain profiles; a static import at the top of this file would put a network
+    // stack into the module graph of `relics validate`, which is documented as offline and whose
+    // whole value is that a creator can run it on a machine with no RPC, no wallet and no
+    // internet. `scripts/check-offline-mode.mjs` asserts this by loading MODE A's graph and
+    // failing if the SDK appears in it — so the property is tested, not promised.
+    case "agent":
+    case "launch": {
+      const { runNetworkedCommand } = await import("./commands/agent.js");
+      return runNetworkedCommand(command, positional, flags);
     }
 
     default:

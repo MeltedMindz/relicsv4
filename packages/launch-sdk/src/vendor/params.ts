@@ -35,8 +35,8 @@ export interface CreatorInput {
   /**
    * Whole project tokens escrowed per artwork — "tokens required to awaken each NFT". Optional
    * here and ONLY here: omitting it means `1n`, full parity, which is what every RC6 launch did
-   * before the term was configurable. THE UNIT IS WHOLE TOKENS: 66,666 tokens per artwork is
-   * `66_666n`, never `66_666n * WHOLE_UNIT`.
+   * before the term was configurable. THE UNIT IS WHOLE TOKENS: 25,000 tokens per artwork is
+   * `25_000n`, never `25_000n * WHOLE_UNIT`.
    */
   backingUnitsPerArtwork?: bigint;
   startingPreset: StartingPresetValue;

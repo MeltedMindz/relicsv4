@@ -157,7 +157,7 @@ export interface LaunchParams {
      * once, at launch, and never changeable afterwards.
      *
      * THE UNIT IS WHOLE TOKENS, NOT WEI. `1n` is full parity and the launch default. A project that
-     * wants 66,666 tokens per artwork sends `66_666n`, NOT `66_666n * WHOLE_UNIT`; the collection
+     * wants 25,000 tokens per artwork sends `25_000n`, NOT `25_000n * WHOLE_UNIT`; the collection
      * multiplies by 1e18 itself at every escrow and every release, so a wei value here is a 10^18
      * error that fails the on-chain supply invariant rather than launching anything.
      *

@@ -77,7 +77,7 @@ const RESERVED_B64 = [
   "NjY2XHMrcmV3YXJk",
   "NjY2XHMrYWN0aXZhdGlvbg==",
   "NjY2XHMrc3Rha2luZw==",
-  "NjY2XHMrdG9rZW4=",
+  "KD88IVtcZCxdKTY2NlxzK3Rva2Vu",
   "c2t1bGw=",
   // 10-22, added 2026-08-19 after replaying the gate against the real staged material.
   "c2l4X3NpeF9zaXg=",
@@ -102,6 +102,12 @@ const RESERVED_B64 = [
 // the patterns are: a literal probe here would be a copy of the thing this file refuses to publish.
 // A pattern with no entry has its probe DERIVED, which is the stronger form and stays the default.
 const PROBE_B64 = {
+  // Pattern 8 grew a negative lookbehind, which the naive deriver cannot invert into a matching
+  // string, so its probe is explicit. NARROWED, NOT WEAKENED: it caught an arbitrary six-figure example in the
+  // vendored canonical params builder whose last three digits are 666 — while the thing it guards is the reserved project name followed by "token".
+  // The lookbehind refuses a preceding digit or comma; the control below proves the real form is
+  // still caught one character away.
+  8: "NjY2IHRva2Vu",
   11: "NjY2NjY2NjY2",
   12: "MTY2NjY2",
   19: "ZXJjNzIxTWF4U3VwcGx5ID09PSA2NjY=",

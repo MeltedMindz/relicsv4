@@ -16,6 +16,8 @@
     "viem": "^2.40.1"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:mutate": "node test/mutate.mjs",
+    "typecheck": "tsc -p ."
   }
 }

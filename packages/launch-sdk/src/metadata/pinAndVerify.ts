@@ -35,14 +35,19 @@
 // ONE KECCAK.
 // ------------------------------------------------------------------------------------------------
 //
-// `keccak256` is imported from viem and used in exactly one function in this package. It is never
-// reimplemented, and it agrees byte for byte with `keccak256Utf8` in `@relics/project-schema` —
+// THE RESOLVER DIGEST HAS EXACTLY ONE IMPLEMENTATION AND IT IS NOT IN THIS FILE. This module
+// delegates to the vendored `metadataDigestForUri`, which hashes with `keccak256Utf8` from
+// `@relics/project-schema` —
 // which is the function the vendored `metadataDigestForUri` builds `LaunchParams.metadataUriHash`
 // with. That agreement is asserted in the test suite on a real URI rather than assumed, because the
 // two values end up in the same transaction and a divergence would be discovered on chain.
 // ================================================================================================
 
-import { keccak256, stringToBytes, type Hex } from "viem";
+import { type Hex } from "viem";
+// The canonical resolver-digest implementation, vendored verbatim from the production SDK. It
+// hashes with `keccak256Utf8` from `@relics/project-schema` — the same function the rest of this
+// codebase commits with — and refuses anything but a canonical `ipfs://` URI.
+import { metadataDigestForUri } from "../vendor/types.js";
 import { canonicalMetadataBytes, contentSha256, inspectRetrievedDocument, isContentHash, REQUIRED_CONTRACT_URI_KEYS } from "./canonicalDocument.js";
 import { isCommittableMetadataUri } from "./commitment.js";
 import { MetadataRefusal, isMetadataRefusal, refusal, type MetadataRefusalResult } from "./errors.js";
@@ -68,7 +73,16 @@ export function resolverDigestForUri(uri: string): Hex {
         `A gateway URL hashes to a resolver key nothing is published under, so the collection would answer contractURI() with nothing.`,
     );
   }
-  return keccak256(stringToBytes(uri));
+  // DELEGATED TO THE VENDORED CANONICAL IMPLEMENTATION, not computed here.
+  //
+  // This line used to be `keccak256(stringToBytes(uri))` — viem's keccak over the same string,
+  // with a test asserting it agreed with the vendored `metadataDigestForUri`. It did agree. But
+  // this value becomes `LaunchParams.metadataUriHash` and is written into a collection that can
+  // never be edited, and "two implementations of a canonical hash, maintained by different code,
+  // with a test that they match" is precisely the arrangement that holds until the day it does
+  // not — and that day it is on chain forever. There is now one implementation and the test that
+  // they agree is a test that a delegation happened.
+  return metadataDigestForUri(uri) as Hex;
 }
 
 /** A proven metadata commitment: pinned, read back through a read path, re-hashed and re-parsed. */

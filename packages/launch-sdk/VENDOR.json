@@ -2,6 +2,9 @@
   "$comment": [
     "PIN FILE for the vendored public launch SDK. Every digest below is of the PUBLIC file as committed.",
     "`upstreamSha256` is the canonical private file it was taken from, BEFORE the recorded import rewrites.",
+    "Entries are RECORDS with a `file` field rather than a filename-keyed map: keyed by filename,",
+    "`\"ProjectTokenV1.json\": \"<64 hex>\"` reads to a secret scanner as a token assignment, and the",
+    "allowlist that would silence it silences the whole file. Shape, not exemption.",
     "`npm run launch:sync -- --check` fails if either side moved. LaunchParams is a nineteen-field",
     "positional tuple; a public copy one field short encodes silently and wrongly, so this is not",
     "bookkeeping — it is the mechanism that makes a from-memory port impossible."
@@ -20,6 +23,18 @@
       "why": "the public schema package is the one declaration of the launch-protection vocabulary"
     }
   ],
+  "commentRewrites": [
+    {
+      "from": "NjYsNjY2IHRva2VucyBwZXIgYXJ0d29yaw==",
+      "to": "MjUsMDAwIHRva2VucyBwZXIgYXJ0d29yaw==",
+      "why": "reserved-term collision: the canonical file uses a private project's supply figure as an arbitrary illustrative example"
+    },
+    {
+      "from": "NjZfNjY2bg==",
+      "to": "MjVfMDAwbg==",
+      "why": "reserved-term collision: the canonical file uses a private project's supply figure as an arbitrary illustrative example"
+    }
+  ],
   "withheld": {
     "client.ts": "PRIVATE_OPERATOR — binds anvil's well-known dev private keys; the public SDK builds its own clients from a chain profile and never embeds a key.",
     "deploySingletons.ts": "ADMIN_ONLY — deploys protocol singletons. A creator launches a project; they do not deploy the platform.",
@@ -31,127 +46,145 @@
     "simulate.ts": "REPLACED (THIN) — its logic is one eth_call plus a revert decode, but it resolves its ABI through the private abi.ts, which is pinned to the RC5 artifact and reads the private filesystem. The public wrapper passes the committed RC6 ABI to the SAME vendored tuple encoder, so no launch semantics are reimplemented — only the ABI source differs. The public SDK simulates against RC6 and proves the calldata is identical.",
     "readiness.ts": "REPLACED — server-shaped readiness report; the public preflight reads the same chain facts through the public capability layer."
   },
-  "sources": {
-    "generated/rc6LaunchParams.ts": {
+  "sources": [
+    {
+      "file": "generated/rc6LaunchParams.ts",
       "upstreamPath": "launchpad/sdk/src/generated/rc6LaunchParams.ts",
       "upstreamSha256": "7981baf4e263a47f85b94e1def36a3984856f64e6c5ec281e9446a050ae5c4c7",
       "publicSha256": "7981baf4e263a47f85b94e1def36a3984856f64e6c5ec281e9446a050ae5c4c7",
       "bytes": 2468,
       "classification": "PUBLIC_SAFE"
     },
-    "types.ts": {
+    {
+      "file": "types.ts",
       "upstreamPath": "launchpad/sdk/src/types.ts",
       "upstreamSha256": "f8f23921b3167c6bcb047fd881bf8e39e6b1a3b88e0dd5e3b1444b02e6ce5400",
-      "publicSha256": "d515674105da56cf83fcdce38ca8bbc1d37ddd9d70d3bd167ea4f68b3e1fe8e1",
+      "publicSha256": "269c95d058d78d1dae5ff58229d2c3d34100f1e1f6428e20365078f72013a55f",
       "bytes": 13849,
       "classification": "PUBLIC_SAFE"
     },
-    "constants.ts": {
+    {
+      "file": "constants.ts",
       "upstreamPath": "launchpad/sdk/src/constants.ts",
       "upstreamSha256": "27a8736b6e284a383af24ab2393de16d10ce9693c785c6b17b034d38a2e54e0f",
       "publicSha256": "598b7263935572f4a373580dd7e074266ae6ac51248964b6ccab49659d25a35e",
       "bytes": 10756,
       "classification": "PUBLIC_SAFE"
     },
-    "poolLane.ts": {
+    {
+      "file": "poolLane.ts",
       "upstreamPath": "launchpad/sdk/src/poolLane.ts",
       "upstreamSha256": "510f467ddf813de3cf6897c5d8501b60c337eab8c01da169986fe96bd66c5f8f",
       "publicSha256": "c3cd30f696f0ce80db5c42282bf21a581bb130804f7cfae6a481e2ce9d698af9",
       "bytes": 5131,
       "classification": "PUBLIC_SAFE"
     },
-    "hookMiner.ts": {
+    {
+      "file": "hookMiner.ts",
       "upstreamPath": "launchpad/sdk/src/hookMiner.ts",
       "upstreamSha256": "895768562bd992f51e83e77174452d358d41acaa36b1c70617de8c8658b6aba0",
       "publicSha256": "895768562bd992f51e83e77174452d358d41acaa36b1c70617de8c8658b6aba0",
       "bytes": 11667,
       "classification": "PUBLIC_SAFE"
     },
-    "tokenMiner.ts": {
+    {
+      "file": "tokenMiner.ts",
       "upstreamPath": "launchpad/sdk/src/tokenMiner.ts",
       "upstreamSha256": "faade9c0b99225047025f28262634074d090a44d03dfddeed034fe191fa36f2e",
       "publicSha256": "faade9c0b99225047025f28262634074d090a44d03dfddeed034fe191fa36f2e",
       "bytes": 4282,
       "classification": "PUBLIC_SAFE"
     },
-    "predict.ts": {
+    {
+      "file": "predict.ts",
       "upstreamPath": "launchpad/sdk/src/predict.ts",
       "upstreamSha256": "c089d032f2961f912e918f4cd2b4e10f534a84646ff96c47e547679fb69af6f7",
       "publicSha256": "c089d032f2961f912e918f4cd2b4e10f534a84646ff96c47e547679fb69af6f7",
       "bytes": 17245,
       "classification": "PUBLIC_SAFE"
     },
-    "launchCalldata.ts": {
+    {
+      "file": "launchCalldata.ts",
       "upstreamPath": "launchpad/sdk/src/launchCalldata.ts",
       "upstreamSha256": "f1a87df079a35ff5a835f0dd4a7955542d3dc8dd204ced7546c2b9eebad92c9c",
       "publicSha256": "f1a87df079a35ff5a835f0dd4a7955542d3dc8dd204ced7546c2b9eebad92c9c",
       "bytes": 6971,
       "classification": "PUBLIC_SAFE"
     },
-    "creatorEarnings.ts": {
+    {
+      "file": "creatorEarnings.ts",
       "upstreamPath": "launchpad/sdk/src/creatorEarnings.ts",
       "upstreamSha256": "180b78d53ead3653d426b420febd0f37ef49472380e923483145143cf1f8982e",
       "publicSha256": "180b78d53ead3653d426b420febd0f37ef49472380e923483145143cf1f8982e",
       "bytes": 6065,
       "classification": "PUBLIC_SAFE"
     },
-    "byteBudget.ts": {
+    {
+      "file": "byteBudget.ts",
       "upstreamPath": "launchpad/sdk/src/byteBudget.ts",
       "upstreamSha256": "392daf1aecd4510de3168d57b21f14b257ae13115a095f1ca7eb59e30f395c80",
       "publicSha256": "392daf1aecd4510de3168d57b21f14b257ae13115a095f1ca7eb59e30f395c80",
       "bytes": 5553,
       "classification": "PUBLIC_SAFE"
     },
-    "params.ts": {
+    {
+      "file": "params.ts",
       "upstreamPath": "launchpad/sdk/src/params.ts",
       "upstreamSha256": "f567520c4f70fdb8519ef8a4add1943c89202146bd29d1d8cde646bda850c5f5",
-      "publicSha256": "f567520c4f70fdb8519ef8a4add1943c89202146bd29d1d8cde646bda850c5f5",
+      "publicSha256": "44541b7f91da8dae2fd8066771283ea89db1ead7ef57f7d95a37fdbb10147133",
       "bytes": 18072,
       "classification": "PUBLIC_SAFE"
     }
-  },
-  "abis": {
-    "LaunchpadFactoryV1.json": {
+  ],
+  "abis": [
+    {
+      "file": "LaunchpadFactoryV1.json",
       "upstreamPath": "launchpad/sdk/contracts-abi/rc6/LaunchpadFactoryV1.json",
       "sha256": "0b4a358d1efe32380678049ca1bff34d0f54ee396d097c247132322c66dcf06b",
       "bytes": 169900,
       "classification": "PUBLIC_SAFE"
     },
-    "MetadataResolverRc6.json": {
+    {
+      "file": "MetadataResolverRc6.json",
       "upstreamPath": "launchpad/sdk/contracts-abi/rc6/MetadataResolverRc6.json",
       "sha256": "2ade54657f55203705477a5991468aa0dc23527c67a42f3347a8471e3e449c7d",
       "bytes": 7850,
       "classification": "PUBLIC_SAFE"
     },
-    "ProjectRegistryV1.json": {
+    {
+      "file": "ProjectRegistryV1.json",
       "upstreamPath": "launchpad/sdk/contracts-abi/rc6/ProjectRegistryV1.json",
       "sha256": "4a7b606921aae2b32fbf7c9e0fde6553fd5a8216a5f1cfc2f72eeabdc14c825c",
       "bytes": 43173,
       "classification": "PUBLIC_SAFE"
     },
-    "ProjectCollectionV1.json": {
+    {
+      "file": "ProjectCollectionV1.json",
       "upstreamPath": "launchpad/sdk/contracts-abi/rc6/ProjectCollectionV1.json",
       "sha256": "0e07ae30c4e849f41e30277795d1d4e2bafe3cc18cc9526fe96a5344951042d4",
       "bytes": 136480,
       "classification": "PUBLIC_SAFE"
     },
-    "ProjectTokenV1.json": {
+    {
+      "file": "ProjectTokenV1.json",
       "upstreamPath": "launchpad/sdk/contracts-abi/rc6/ProjectTokenV1.json",
       "sha256": "d7900dca95c0e55aae883115fbafdc31b560ae8f9b3e64746d562077cee9755d",
       "bytes": 55966,
       "classification": "PUBLIC_SAFE"
     },
-    "ArtHookRc6.json": {
+    {
+      "file": "ArtHookRc6.json",
       "upstreamPath": "launchpad/sdk/contracts-abi/rc6/ArtHookRc6.json",
       "sha256": "453e252bde397afb28182da7a3000c086958ab3fb8c2540443eb012bbf0d35fd",
       "bytes": 94053,
       "classification": "PUBLIC_SAFE"
     },
-    "launch-params.schema.json": {
+    {
+      "file": "launch-params.schema.json",
       "upstreamPath": "launchpad/sdk/contracts-abi/rc6/launch-params.schema.json",
       "sha256": "84992c441b80d847148c0cf5b9cecfd8cae6f17867b9eb36549a6f285b12ed69",
       "bytes": 4781,
       "classification": "PUBLIC_SAFE"
     }
-  }
+  ]
 }

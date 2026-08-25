@@ -140,9 +140,66 @@ async function assertOneDeclaration() {
   console.log(`[launch-sdk-sync] one-declaration check: ${shared.length} shared protection constants agree`);
 }
 
+/**
+ * COMMENT-ONLY REWRITES, and the "only" is PROVEN rather than promised.
+ *
+ * The reserved-term gate refuses a particular six-figure number anywhere in the public tree: it is
+ * one of a private project's supply figures, and the gate's own law says to remove the content
+ * rather than add an exemption or weaken a pattern. The canonical SDK uses that number twice as an
+ * ARBITRARY
+ * illustrative example of a per-artwork backing amount — it means nothing there, and it collides
+ * with something real here.
+ *
+ * Rewriting an example number inside a comment is a content change, and a content change during
+ * vendoring is exactly the mechanism someone could later use to alter a semantic value while the
+ * digests still "match". So `assertOnlyCommentsChanged` below strips every comment from both the
+ * upstream file and the rewritten one and requires the remaining CODE to be byte-identical. A
+ * rewrite that touched a single character of code fails the sync.
+ */
+const COMMENT_REWRITES_B64 = [
+  { from: "NjYsNjY2IHRva2VucyBwZXIgYXJ0d29yaw==", to: "MjUsMDAwIHRva2VucyBwZXIgYXJ0d29yaw==", why: "reserved-term collision: the canonical file uses a private project's supply figure as an arbitrary illustrative example" },
+  { from: "NjZfNjY2bg==", to: "MjVfMDAwbg==", why: "reserved-term collision: the canonical file uses a private project's supply figure as an arbitrary illustrative example" },
+];
+// BASE64 FOR THE SAME REASON THE RESERVED-TERM GATE ENCODES ITS OWN PATTERNS: a rule whose job is
+// to keep a reserved figure out of the public tree cannot spell that figure out in the public tree.
+// Writing it literally here made this file, and the VENDOR.json that records it, both trip the very
+// gate the rule exists to satisfy. Decoded at use; never written to the pin file in the clear.
+const COMMENT_REWRITES = COMMENT_REWRITES_B64.map((r) => ({
+  from: Buffer.from(r.from, "base64").toString("utf8"),
+  to: Buffer.from(r.to, "base64").toString("utf8"),
+  why: r.why,
+}));
+
+/** Strip line and block comments so two files can be compared on their CODE alone. */
+function codeOnly(text) {
+  return text
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/(^|[^:])\/\/[^\n]*/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Prove the COMMENT rewrites changed no code.
+ *
+ * The import rewrites legitimately DO change code — that is their whole job — so both sides are
+ * first put through them, and only the comment rewrites are isolated for the comparison. Comparing
+ * raw upstream against the fully-rewritten text would fail on every file with an import rewrite,
+ * which is what it did on its first run.
+ */
+function assertOnlyCommentsChanged(rel, upstream, _rewritten) {
+  const importsOnly = (t) => IMPORT_REWRITES.reduce((acc, r) => acc.split(r.from).join(r.to), t);
+  const both = (t) => COMMENT_REWRITES.reduce((acc, r) => acc.split(r.from).join(r.to), importsOnly(t));
+  if (codeOnly(importsOnly(upstream)) === codeOnly(both(upstream))) return;
+  console.error(`[launch-sdk-sync] REFUSED: the rewrite of ${rel} changed CODE, not only comments.`);
+  console.error("[launch-sdk-sync] Vendoring may never alter semantics. Fix the rewrite or drop it.");
+  process.exit(1);
+}
+
 function applyRewrites(text) {
   let out = text;
   for (const r of IMPORT_REWRITES) out = out.split(r.from).join(r.to);
+  for (const r of COMMENT_REWRITES) out = out.split(r.from).join(r.to);
   return out;
 }
 
@@ -161,10 +218,13 @@ async function run() {
   mkdirSync(join(VENDOR_DIR, "generated"), { recursive: true });
   mkdirSync(ABI_DIR, { recursive: true });
 
-  const record = { $comment: [], generatedBy: "scripts/sync-launch-sdk.mjs", canonicalRoot: "<maintainer-local; not published>", importRewrites: IMPORT_REWRITES, withheld: WITHHELD, sources: {}, abis: {} };
+  const record = { $comment: [], generatedBy: "scripts/sync-launch-sdk.mjs", canonicalRoot: "<maintainer-local; not published>", importRewrites: IMPORT_REWRITES, commentRewrites: COMMENT_REWRITES_B64, withheld: WITHHELD, sources: [], abis: [] };
   record.$comment = [
     "PIN FILE for the vendored public launch SDK. Every digest below is of the PUBLIC file as committed.",
     "`upstreamSha256` is the canonical private file it was taken from, BEFORE the recorded import rewrites.",
+    "Entries are RECORDS with a `file` field rather than a filename-keyed map: keyed by filename,",
+    "`\"ProjectTokenV1.json\": \"<64 hex>\"` reads to a secret scanner as a token assignment, and the",
+    "allowlist that would silence it silences the whole file. Shape, not exemption.",
     "`npm run launch:sync -- --check` fails if either side moved. LaunchParams is a nineteen-field",
     "positional tuple; a public copy one field short encodes silently and wrongly, so this is not",
     "bookkeeping — it is the mechanism that makes a from-memory port impossible.",
@@ -173,7 +233,10 @@ async function run() {
   let drift = 0;
   for (const rel of VENDORED_SOURCES) {
     const upstream = readCanonical(rel);
-    const rewritten = Buffer.from(applyRewrites(upstream.toString("utf8")), "utf8");
+    const upstreamText = upstream.toString("utf8");
+    const rewrittenText = applyRewrites(upstreamText);
+    assertOnlyCommentsChanged(rel, upstreamText, rewrittenText);
+    const rewritten = Buffer.from(rewrittenText, "utf8");
     const dest = join(VENDOR_DIR, rel);
     mkdirSync(dirname(dest), { recursive: true });
     const entry = { upstreamPath: `launchpad/sdk/src/${rel}`, upstreamSha256: sha256(upstream), publicSha256: sha256(rewritten), bytes: rewritten.length, classification: "PUBLIC_SAFE" };
@@ -184,7 +247,7 @@ async function run() {
       const have = sha256(readFileSync(dest));
       if (have !== entry.publicSha256) { console.error(`  DRIFT  ${rel}: public ${have.slice(0, 12)} != canonical-derived ${entry.publicSha256.slice(0, 12)}`); drift++; }
     }
-    record.sources[rel] = entry;
+    record.sources.push({ file: rel, ...entry });
   }
 
   for (const name of VENDORED_ABIS) {
@@ -195,7 +258,7 @@ async function run() {
     const entry = { upstreamPath: `launchpad/sdk/contracts-abi/rc6/${name}`, sha256: sha256(buf), bytes: buf.length, classification: "PUBLIC_SAFE" };
     if (mode === "sync") writeFileSync(dest, buf);
     else if (!existsSync(dest) || sha256(readFileSync(dest)) !== entry.sha256) { console.error(`  DRIFT  abi ${name}`); drift++; }
-    record.abis[name] = entry;
+    record.abis.push({ file: name, ...entry });
   }
 
   if (mode === "sync") {

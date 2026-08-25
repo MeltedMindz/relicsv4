@@ -71,7 +71,9 @@ for (const file of new Set(MUTATIONS.map((m) => m.file))) {
   copyFileSync(file, backup);
   backups.set(file, backup);
 }
+let backupsUsable = true;
 function restoreAll() {
+  if (!backupsUsable) return;
   for (const [file, backup] of backups) copyFileSync(backup, file);
 }
 process.on("exit", restoreAll);
@@ -119,6 +121,7 @@ for (const mutation of MUTATIONS) {
 }
 
 restoreAll();
+backupsUsable = false;
 rmSync(backupDir, { recursive: true, force: true });
 console.log(`\nMUTATIONS=${MUTATIONS.length} SURVIVED=${survived}`);
 process.exit(survived === 0 ? 0 : 1);

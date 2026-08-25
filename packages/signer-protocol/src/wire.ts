@@ -69,10 +69,6 @@ function requireUint(source: Record<string, unknown>, field: string): bigint {
   return BigInt(value);
 }
 
-function optionalUint(source: Record<string, unknown>, field: string): bigint | undefined {
-  return source[field] === undefined ? undefined : requireUint(source, field);
-}
-
 function requireInt(source: Record<string, unknown>, field: string): number {
   const value = source[field];
   if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) throw new WireFormatError(field, `expected a non-negative safe integer, got ${JSON.stringify(value)}`);
@@ -120,8 +116,8 @@ export function decodeSigningRequest(payload: unknown): SigningRequest {
     dataHash: requireHex(source, "dataHash"),
     selector: requireHex(source, "selector"),
     estimatedGas: requireUint(source, "estimatedGas"),
-    ...(source.maxFeePerGas === undefined ? {} : { maxFeePerGas: optionalUint(source, "maxFeePerGas") }),
-    ...(source.maxPriorityFeePerGas === undefined ? {} : { maxPriorityFeePerGas: optionalUint(source, "maxPriorityFeePerGas") }),
+    ...(source.maxFeePerGas === undefined ? {} : { maxFeePerGas: requireUint(source, "maxFeePerGas") }),
+    ...(source.maxPriorityFeePerGas === undefined ? {} : { maxPriorityFeePerGas: requireUint(source, "maxPriorityFeePerGas") }),
     ...(source.nonce === undefined ? {} : { nonce: requireInt(source, "nonce") }),
     launchPlanHash: requireHex(source, "launchPlanHash"),
     bundleHash: requireHex(source, "bundleHash"),
