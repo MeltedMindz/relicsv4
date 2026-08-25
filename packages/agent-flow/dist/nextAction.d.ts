@@ -1,4 +1,14 @@
 import type { LaunchState, NextActionResult } from "@relics/launch-sdk";
+/**
+ * EVERY COMMAND STRING RETURNED BY THIS MODULE MUST BE ONE THE CLI ANSWERS TO.
+ *
+ * This file's whole purpose is that an agent can follow `commands` literally without knowing
+ * anything about the repository. Two of them named subcommands that did not exist — `agent finalise`
+ * and `agent art-check` — so an agent doing exactly what it was told got `unknown subcommand` and
+ * exit 2. Prose cannot be checked; this list can, and `npm run agent:commands` derives the real
+ * surface from the CLI's own dispatcher and fails if anything here is not in it.
+ */
+export declare const NEXT_ACTION_SUBCOMMANDS: readonly ["init", "status", "doctor", "next", "capabilities", "chains", "quotes", "preflight", "plan", "metadata", "prepare", "predict", "simulate", "build", "policy-check", "broadcast", "confirm", "verify", "resume", "run", "provenance", "verify-receipts"];
 export interface FlowFacts {
     readonly state: LaunchState;
     readonly hasPolicy: boolean;

@@ -47,6 +47,11 @@ jobs:
         # the same treatment, or this gate is measuring nothing.
         run: npm run kit:offline
 
+      - name: every command the next-action contract names actually exists
+        # The whole point of the `commands` field is that an agent can follow it literally without
+        # knowing anything about this repository. Two next-actions named subcommands nobody wrote.
+        run: npm run agent:commands
+
       - name: the twenty-one adversarial controls
         run: npm run agent:controls
 

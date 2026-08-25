@@ -41,7 +41,6 @@ const FLAGS = {
   chain: "number",
   signer: "string",
   "dry-run": "boolean",
-  yes: "boolean",
 };
 
 export async function main(argv) {
@@ -275,8 +274,12 @@ ${bold("relics")} — the local creator kit for RELICS Launchpad projects
   ${dim(`schema ${SCHEMA_VERSION} · kit ${CREATOR_KIT_VERSION} · runtime ${RUNTIME_VERSION}`)}
   ${dim(`built against ${PROTOCOL_RELEASE_COMPATIBILITY}`)}
 
-  ${dim("relics help <command> for details. Nothing in this CLI signs, broadcasts, or")}
-  ${dim("contacts a network — it produces one file you import in the creator app.")}
+  ${dim("relics help <command> for details.")}
+  ${dim("")}
+  ${dim("Two modes. The commands above are OFFLINE: no network, no wallet, no signer, and")}
+  ${dim("they produce one .relics file you can import by hand. `relics agent ...` is the")}
+  ${dim("autonomous launch mode — it reads live chains and, if relics.agent.json authorises")}
+  ${dim("it, signs through a scoped signer and broadcasts. See docs/creator-kit/autonomous-launch-agent.md.")}
 `);
   return 0;
 }

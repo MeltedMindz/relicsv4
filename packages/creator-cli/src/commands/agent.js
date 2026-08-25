@@ -226,9 +226,15 @@ async function cmdNext(name, workspace, flags, json) {
   const receipts = listReceipts(workspace);
   const has = (phase) => receipts.some((r) => r.phase === phase);
 
+  // A POLICY THAT EXISTS BUT DOES NOT PARSE IS NOT AN ABSENT POLICY. `hasPolicy: policy.ok`
+  // reported "There is no relics.agent.json" while the file was sitting right there — a
+  // lowercase-checksum creatorRecipient is enough to trigger it — and sent the reader looking for a
+  // missing file instead of a wrong field. The two conditions get separate answers.
+  const policyFileExists = existsSync(resolve(flags.policy ?? join(workspace, "relics.agent.json")));
+
   const facts = {
     state: has("VERIFY") ? "VERIFIED" : has("BROADCAST") ? "BROADCAST" : has("BUILD") ? "BUILT" : has("SIMULATE") ? "SIMULATED" : has("METADATA") ? "METADATA_PUBLISHED" : has("PREFLIGHT") ? "CHAIN_SELECTED" : "BRIEF_RECEIVED",
-    hasPolicy: policy.ok,
+    hasPolicy: policyFileExists,
     policyProblems: policy.ok ? [] : policy.issues.map((i) => `${i.field}: ${i.detail}`),
     hasBrief: existsSync(join(workspace, "brief.md")),
     hasArt: existsSync(join(workspace, "generator")) || existsSync(join(workspace, "project.json")),

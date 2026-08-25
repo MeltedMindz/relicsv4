@@ -95,7 +95,7 @@ const { createLocalSidecarSigner } = await import(new URL("../packages/signer-pr
 // map rather than a shortcut taken here — noted so the next reader does not "tidy" this into a bare
 // specifier that does not resolve.
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const { createMemoryProvider, pinAndVerifyMetadataDocument, verifyMetadataCommitment } = await import(
+const { canonicalMetadataBytes, createMemoryProvider, pinAndVerifyMetadataDocument, verifyMetadataCommitment } = await import(
   new URL("../packages/launch-sdk/dist/metadata/index.js", import.meta.url).href
 );
 // The canonical CREATE2 salt composition the factory and the hook deployer apply, imported rather
@@ -131,6 +131,18 @@ class HarnessFailure extends Error {}
 
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const bigintJson = (_k, v) => (typeof v === "bigint" ? v.toString() : v);
+
+/**
+ * Write a receipt with every bigint already rendered as a decimal string.
+ *
+ * `@relics/agent-flow`'s `writeReceipt` hashes the body through `canonical()`, which HANDLES
+ * bigints, and then serialises the receipt with a bare `JSON.stringify`, which THROWS on one. So a
+ * body carrying a gas estimate hashes fine and cannot be written. Converting here keeps this
+ * harness off that edge; the asymmetry itself is a defect in that package, not in this file.
+ */
+function receipt(workspace, input) {
+  return writeReceipt(workspace, { ...input, body: JSON.parse(JSON.stringify(input.body, bigintJson)) });
+}
 
 // ------------------------------------------------------------------------------------------------
 // SAFETY
@@ -508,7 +520,7 @@ export async function runAutonomousLaunch(options = {}) {
     const policy = parsedPolicy.policy;
     const policyHash = parsedPolicy.policyHash;
     log(`policy ${policyHash} — goal ${policy.goal}, broadcast ${policy.allowBroadcast}, chains [${policy.allowedChains.join(", ")}]`);
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "BRIEF",
       chainId,
       policyHash,
@@ -552,14 +564,24 @@ export async function runAutonomousLaunch(options = {}) {
     config.earnings.creatorRecipient = policy.creatorRecipient;
     config.chains.requested = [...policy.allowedChains];
     writeFileSync(join(projectDir, "relics.config.json"), `${JSON.stringify(config, null, 2)}\n`);
+
+    // `metadata/collection.json` is a SECOND declaration of the project's identity and the kit
+    // refuses a disagreement (`METADATA_DISAGREES`) rather than picking one. Both are authored
+    // here, from the same brief, in one place — which is what keeps them from disagreeing.
+    const collectionPath = join(projectDir, "metadata", "collection.json");
+    const collection = JSON.parse(readFileSync(collectionPath, "utf8"));
+    collection.name = brief.name;
+    collection.symbol = brief.symbol;
+    collection.description = brief.description;
+    writeFileSync(collectionPath, `${JSON.stringify(collection, null, 2)}\n`);
     log(`authored ${artBytes.length} bytes of ACV1 — ${artConfigDoc.layers.length} layers, ${artConfigDoc.traits.length} traits, election ${election}`);
     runCli(["preview", projectDir], { log });
-    writeReceipt(workspace, { phase: "ART", chainId, policyHash, body: { acv1Bytes: artBytes.length, title: artConfigDoc.title, election } });
+    receipt(workspace, { phase: "ART", chainId, policyHash, body: { acv1Bytes: artBytes.length, title: artConfigDoc.title, election } });
 
     // ---- 5. VALIDATED --------------------------------------------------------------------------
     phase("VALIDATED");
     runCli(["validate", projectDir], { log });
-    writeReceipt(workspace, { phase: "VALIDATE", chainId, policyHash, body: { ok: true } });
+    receipt(workspace, { phase: "VALIDATE", chainId, policyHash, body: { ok: true } });
 
     // ---- 6. EXPORTED ---------------------------------------------------------------------------
     phase("EXPORTED");
@@ -602,7 +624,7 @@ export async function runAutonomousLaunch(options = {}) {
       }),
     );
 
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "EXPORT",
       chainId,
       policyHash,
@@ -637,7 +659,7 @@ export async function runAutonomousLaunch(options = {}) {
     const quote = selectQuote(inventory, policy.allowedQuoteAssets);
     if (!quote.quote) throw new HarnessFailure(`no quote asset: ${quote.reason}`);
     log(`  quote ${quote.quote.symbol} (${quote.quote.address}, ${quote.quote.decimals} decimals) — ${quote.reason}`);
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "PREFLIGHT",
       chainId: selectedChainId,
       policyHash,
@@ -652,26 +674,17 @@ export async function runAutonomousLaunch(options = {}) {
 
     // ---- 8. METADATA_PUBLISHED ------------------------------------------------------------------
     phase("METADATA_PUBLISHED");
-    const collectionMetadata = JSON.parse(new TextDecoder().decode(container.byPath.get("metadata/collection.json")));
-    // THE DOCUMENT IS ASSEMBLED FROM THE BUNDLE, and every key `contractURI` consumers read is
-    // present — including the empty ones. An absent key and an empty one are different documents
-    // to `inspectRetrievedDocument`, and it refuses the first.
-    const metadataDocument = {
-      name: collectionMetadata.name,
-      symbol: collectionMetadata.symbol,
-      description: collectionMetadata.description ?? "",
-      image: collectionMetadata.image ?? "",
-      banner_image: collectionMetadata.banner_image ?? "",
-      featured_image: collectionMetadata.featured_image ?? "",
-      external_link: collectionMetadata.external_link ?? "",
-      collaborators: manifest.earnings.collaborators ?? [],
-    };
+    const contractUriBytes = new Uint8Array(readFileSync(contractUriPath));
+    const contractUriSha256 = sha256(contractUriBytes);
     const provider = createMemoryProvider();
-    const pinned = await pinAndVerifyMetadataDocument({ provider, document: metadataDocument });
+    const pinned = await pinAndVerifyMetadataDocument({ provider, bytes: contractUriBytes, expectedContentHash: contractUriSha256 });
     if (pinned.kind !== "VERIFIED") {
       throw new HarnessFailure(`metadata was refused at stage ${pinned.stage}: ${pinned.code} — ${pinned.detail}`);
     }
-    log(`  pinned ${pinned.uri} (${pinned.byteLength} bytes), read back and re-hashed by "${pinned.verifiedBy}"`);
+    if (pinned.contentHashBinding !== "BUNDLE_COMMITTED") {
+      throw new HarnessFailure(`the content hash is ${pinned.contentHashBinding}; this harness supplies an independently-computed one and expects it to bind`);
+    }
+    log(`  pinned ${pinned.uri} (${pinned.byteLength} bytes), read back and re-hashed by "${pinned.verifiedBy}", binding ${pinned.contentHashBinding}`);
     if (!pinned.fetchBackVerified) throw new HarnessFailure("the metadata pin was not read back; `requireMetadataReadback` cannot be satisfied");
 
     // ROUTE E — the resolver publish is a SERVER transaction, not a creator signature. It is a real
@@ -689,7 +702,7 @@ export async function runAutonomousLaunch(options = {}) {
     }
     const resolvedUri = await client.readContract({ address: resolver, abi: METADATA_RESOLVER_ABI(), functionName: "uriOf", args: [pinned.resolverDigest] });
     if (resolvedUri !== pinned.uri) throw new HarnessFailure(`the resolver answers "${resolvedUri}" under this key, not "${pinned.uri}"`);
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "METADATA",
       chainId: selectedChainId,
       policyHash,
@@ -736,7 +749,7 @@ export async function runAutonomousLaunch(options = {}) {
     }
     if (!prepared) throw new HarnessFailure("no free tokenSalt found in 64 attempts");
     log(`  prepareHash ${prepared.prepareHash}`);
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "PREPARE",
       chainId: selectedChainId,
       policyHash,
@@ -775,7 +788,7 @@ export async function runAutonomousLaunch(options = {}) {
       }
       log(`  deterministic: factory.predict agrees with the off-chain CREATE2 derivation, mask 0x14C0`);
     }
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "PREDICT",
       chainId: selectedChainId,
       policyHash,
@@ -791,7 +804,7 @@ export async function runAutonomousLaunch(options = {}) {
     if (!simulated.ok) throw new HarnessFailure(`the launch reverts in simulation: ${simulated.revert}`);
     if (simulated.gasEstimate === null) throw new HarnessFailure("simulation produced no gas estimate; this harness will not guess one");
     log(`  simulation OK at block ${simulated.blockNumber}, gas ${simulated.gasEstimate}`);
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "SIMULATE",
       chainId: selectedChainId,
       policyHash,
@@ -825,7 +838,7 @@ export async function runAutonomousLaunch(options = {}) {
       policyHash,
     });
     log(`  buildHash ${built.buildHash}  selector ${built.request.selector}  gas ${gasLimit}`);
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "BUILD",
       chainId: selectedChainId,
       policyHash,
@@ -865,7 +878,7 @@ export async function runAutonomousLaunch(options = {}) {
       log("  control: the shipped dev keystore still refuses chain 1 (SIGNER_DOES_NOT_SUPPORT_CHAIN)");
     }
 
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "POLICY_CHECK",
       chainId: selectedChainId,
       policyHash,
@@ -884,7 +897,7 @@ export async function runAutonomousLaunch(options = {}) {
     }
     if (signed.kind !== "SIGNED") throw new HarnessFailure(`the signer returned ${signed.kind}; this harness broadcasts the bytes itself`);
     log(`  signed ${signed.rawTransaction.length / 2 - 1} bytes as ${signed.signerAddress}`);
-    writeReceipt(workspace, { phase: "SIGN", chainId: selectedChainId, policyHash, launchPlanHash: prepared.prepareHash, body: { signerAddress: signed.signerAddress, rawTransactionBytes: signed.rawTransaction.length / 2 - 1 } });
+    receipt(workspace, { phase: "SIGN", chainId: selectedChainId, policyHash, launchPlanHash: prepared.prepareHash, body: { signerAddress: signed.signerAddress, rawTransactionBytes: signed.rawTransaction.length / 2 - 1 } });
 
     // ---- 15. BROADCAST — INTENT FIRST, THEN BYTES ------------------------------------------------
     phase("BROADCAST");
@@ -916,7 +929,7 @@ export async function runAutonomousLaunch(options = {}) {
     recordIntentTxHash(workspace, txHash);
     summary.E2E_TX_HASH = txHash;
     log(`  broadcast ${txHash}`);
-    writeReceipt(workspace, { phase: "BROADCAST", chainId: selectedChainId, policyHash, launchPlanHash: prepared.prepareHash, body: { txHash } });
+    receipt(workspace, { phase: "BROADCAST", chainId: selectedChainId, policyHash, launchPlanHash: prepared.prepareHash, body: { txHash } });
 
     // ---- 16. CONFIRMED ---------------------------------------------------------------------------
     phase("CONFIRMED");
@@ -930,7 +943,7 @@ export async function runAutonomousLaunch(options = {}) {
     const confirmation = await waitForConfirmation(client, txHash, policy.requiredConfirmations, { timeoutMs: 120_000, pollMs: 500 });
     if (confirmation.state !== "CONFIRMED") throw new HarnessFailure(`the launch did not confirm: ${confirmation.state} — ${confirmation.detail}`);
     log(`  ${confirmation.detail}, gasUsed ${confirmation.gasUsed}`);
-    writeReceipt(workspace, { phase: "CONFIRM", chainId: selectedChainId, policyHash, launchPlanHash: prepared.prepareHash, body: { state: confirmation.state, blockNumber: confirmation.blockNumber, confirmations: confirmation.confirmations, gasUsed: confirmation.gasUsed } });
+    receipt(workspace, { phase: "CONFIRM", chainId: selectedChainId, policyHash, launchPlanHash: prepared.prepareHash, body: { state: confirmation.state, blockNumber: confirmation.blockNumber, confirmations: confirmation.confirmations, gasUsed: confirmation.gasUsed } });
 
     // ---- 17. VERIFIED — read back from chain, never from the plan --------------------------------
     phase("VERIFIED");
@@ -965,7 +978,7 @@ export async function runAutonomousLaunch(options = {}) {
         committedUri: pinned.uri,
         collectionContractUri: deployedUri,
         pinnedContentHash: pinned.contentSha256,
-        bundleMetadataHash: pinned.contentSha256,
+        bundleMetadataHash: contractUriSha256,
         launchMetadataUriHash: prepared.params.metadataUriHash,
         deployedMetadataUriHash: keccak256Utf8(deployedUri),
       },
@@ -974,7 +987,7 @@ export async function runAutonomousLaunch(options = {}) {
     summary.E2E_METADATA_COMMITMENT = commitment.ok ? "BOUND" : `UNBOUND(${commitment.problems.length})`;
     if (!commitment.ok) log(`  metadata commitment problems: ${commitment.problems.join("; ")}`);
 
-    writeReceipt(workspace, {
+    receipt(workspace, {
       phase: "VERIFY",
       chainId: selectedChainId,
       policyHash,

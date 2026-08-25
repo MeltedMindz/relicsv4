@@ -17,6 +17,25 @@
 // ================================================================================================
 import type { LaunchState, NextAction, NextActionResult } from "@relics/launch-sdk";
 
+/**
+ * EVERY COMMAND STRING RETURNED BY THIS MODULE MUST BE ONE THE CLI ANSWERS TO.
+ *
+ * This file's whole purpose is that an agent can follow `commands` literally without knowing
+ * anything about the repository. Two of them named subcommands that did not exist — `agent finalise`
+ * and `agent art-check` — so an agent doing exactly what it was told got `unknown subcommand` and
+ * exit 2. Prose cannot be checked; this list can, and `npm run agent:commands` derives the real
+ * surface from the CLI's own dispatcher and fails if anything here is not in it.
+ */
+export const NEXT_ACTION_SUBCOMMANDS = [
+  "init", "status", "doctor", "next", "capabilities", "chains", "quotes", "preflight", "plan",
+  "metadata", "prepare", "predict", "simulate", "build", "policy-check",
+  "broadcast", "confirm", "verify", "resume", "run", "provenance", "verify-receipts",
+  // `chains` and `plan` are ALIASES the dispatcher answers to (`chains` -> capabilities,
+  // `plan` -> preflight). They are declared because the gate compares this list against the
+  // dispatcher in BOTH directions: a command the CLI answers to that nothing here knows about is
+  // just as much a drift as the reverse.
+] as const;
+
 export interface FlowFacts {
   readonly state: LaunchState;
   readonly hasPolicy: boolean;
@@ -80,7 +99,7 @@ export function decideNextAction(f: FlowFacts): NextActionResult {
     return result(f.state, "COMPLETE", "COMPLETE", "The project is launched, confirmed and independently verified against chain state.", R);
   }
   if (f.verified && f.state === "VERIFIED") {
-    return result(f.state, "COMPLETE", "VERIFIED_AWAITING_FINALISE", "Verification passed. Write the final launch receipt.", { ...R, commands: ["npm run kit -- agent finalise --workspace <dir> --json"] });
+    return result(f.state, "COMPLETE", "VERIFIED", "Verification passed and `agent verify` has already written launch-result.json. There is nothing further to run.", { ...R, commands: [] });
   }
 
   // ---- anything already on chain is reconciled against chain, never re-derived -------------------
@@ -121,7 +140,7 @@ export function decideNextAction(f: FlowFacts): NextActionResult {
     return result(f.state, "WRITE_ART", "ART_ABSENT", "The project has no art configuration yet. Author it against a runtime that is currently LAUNCHABLE — the goal is a launch, so a preview-only runtime would be discovered as unusable only at the end.", { ...R, allowedMutations: ["generator/**", "project.json"], commands: ["npm run kit -- preview --seeds 8", "npm run kit -- agent status --workspace <dir> --json"] });
   }
   if (f.artProblems.length > 0) {
-    return result(f.state, "FIX_ART", "ART_QUALITY_GATE_FAILED", "The art was produced but did not pass the objective collection checks.", { ...R, errors: [...f.artProblems], allowedMutations: ["generator/**"], commands: ["npm run kit -- agent art-check --workspace <dir> --json"] });
+    return result(f.state, "FIX_ART", "ART_QUALITY_GATE_FAILED", "The art was produced but did not pass the objective collection checks.", { ...R, errors: [...f.artProblems], allowedMutations: ["generator/**"], commands: ["npm run kit -- preview --seeds 24", "npm run kit -- validate <dir>"] });
   }
   if (f.validationErrors.length > 0) {
     return result(f.state, "FIX_VALIDATION", "VALIDATION_ERRORS", "The project does not validate against the canonical schema. Never edit the schema to pass; edit the project.", { ...R, errors: [...f.validationErrors], allowedMutations: ["project.json", "generator/**", "metadata/**"] });

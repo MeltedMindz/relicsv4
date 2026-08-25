@@ -64,6 +64,7 @@
     "signer:test": "node --test packages/signer-protocol/test/*.test.mjs",
     "signer:mutate": "node packages/signer-protocol/test/mutate.mjs",
     "kit:offline": "node scripts/check-offline-mode.mjs",
-    "agent:controls": "node scripts/check-autonomous-controls.mjs"
+    "agent:controls": "node scripts/check-autonomous-controls.mjs",
+    "agent:commands": "node scripts/check-agent-commands.mjs"
   }
 }
