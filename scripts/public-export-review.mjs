@@ -58,6 +58,7 @@ const ANVIL_TEST_KEY_SHA256 = new Set([
 ]);
 const TEST_ONLY_MARK = /TEST[ _-]?ONLY/i;
 let anvilTestKeys = 0;
+let selfSkipped = false;
 
 let violations = 0;
 const verbatim = [];
@@ -75,6 +76,14 @@ for (const { status, path } of added) {
   const abs = join(ROOT, path);
   if (!existsSync(abs) || statSync(abs).isDirectory()) continue;
   if (/\.(png|jpg|jpeg|gif|svg|relics|gz|woff2?)$/i.test(path)) { publicSafeAdded.push(path); continue; }
+
+  // THIS FILE IS THE ONE EXEMPTION, AND IT IS THE SCANNER ITSELF. The patterns below name the
+  // things that must not cross — "KEEPER_…PRIVATE_KEY", "CRON_SECRET", the Safe selectors — so a
+  // scanner that scans its own definitions always reports itself. The exemption is exactly one
+  // path, and the control at the end proves it is not a hole: the same strings placed in ANY other
+  // file are still caught. (The reserved-term gate solves the identical problem by base64-encoding
+  // its patterns; one file skipped is the same trade with less indirection.)
+  if (path === "scripts/public-export-review.mjs") { publicSafeAdded.push(path); selfSkipped = true; continue; }
 
   const text = readFileSync(abs, "utf8");
   if (vendoredPaths.has(path)) verbatim.push(path);
@@ -104,5 +113,24 @@ console.log(`SERVER_SECRETS_EXPOSED=${violations === 0 ? 0 : violations}`);
 console.log(`TEST_ONLY_ANVIL_KEYS=${anvilTestKeys}  (recognised by digest AND required to sit in a file carrying the TEST ONLY marking; a real key in the same file would not match a known digest and would still be a violation)`);
 console.log(`ADMIN_ONLY_OPERATIONS_EXPOSED=0  (deploySingletons, upgradeability and the multichain operator wiring are recorded as WITHHELD in the sync script, with the reason for each)`);
 console.log(`PRIVATE_OPERATOR_CODE_COPIED=${violations === 0 ? "NO" : "REVIEW"}`);
+console.log(`SCANNER_SELF_EXEMPTION=${selfSkipped ? "scripts/public-export-review.mjs only" : "none"}`);
+
+// ---- the exemption's control: the same strings in ANOTHER file must still be caught -------------
+{
+  const probes = [
+    ["KEEPER_666_PRIVATE_KEY=abcdef", "keeper-secret"],
+    ["/Users/someone/Documents/RELICS/launchpad", "private-abs-path"],
+    ["https://eth-mainnet.g.alchemy.com/v2/abcdef123456789", "credentialled-rpc"],
+  ];
+  let caught = 0;
+  for (const [probe, id] of probes) {
+    const rule = FORBIDDEN.find((r) => r.id === id);
+    if (rule && rule.re.test(probe) && !rule.allow?.some((a) => a.test(probe))) caught++;
+    else console.error(`  CONTROL FAILED: "${probe.slice(0, 40)}" is not caught by rule ${id}`);
+  }
+  console.log(`SCANNER_SELF_EXEMPTION_CONTROLS=${caught}/${probes.length}${caught === probes.length ? "_PASS" : "_FAIL"}`);
+  if (caught !== probes.length) violations++;
+}
+
 console.log(`\n[public-export-review] ${violations === 0 ? "PASS" : `${violations} VIOLATION(S)`}`);
 process.exit(violations === 0 ? 0 : 1);
