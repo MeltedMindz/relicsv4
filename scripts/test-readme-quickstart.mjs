@@ -121,6 +121,29 @@ try {
       writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
     }
 
+    // ---- DIAGNOSTICS ANSWER; THEY DO NOT SUCCEED OR FAIL ----------------------------------------
+    //
+    // `agent doctor` reports whether THIS MACHINE is configured for an autonomous launch, and on a
+    // bare machine the honest answer is no — no signer, no pinning provider, no credentialled RPC.
+    // It exits non-zero to say so, which is the command working. Treating that as a broken
+    // quickstart would push whoever fixes it toward making doctor lie.
+    //
+    // What IS asserted is that it answered in the documented shape: a JSON envelope naming the
+    // things that are missing. A doctor that crashed, or printed prose, or reported a green machine
+    // that has none of the four preconditions, all still fail here.
+    if (verb === "agent" && args.includes("doctor")) {
+      const diagnostic = run(args, { expectFailure: true });
+      let envelope = null;
+      try { envelope = JSON.parse(diagnostic.out.slice(diagnostic.out.indexOf("{"))); } catch { /* handled below */ }
+      if (!envelope || envelope.schemaVersion !== 1 || !Array.isArray(envelope.result?.checks)) {
+        problems.push(`\`relics agent doctor\` did not answer in the documented JSON envelope:\n${diagnostic.out.slice(0, 300)}`);
+      } else if (envelope.success === true) {
+        problems.push("`relics agent doctor` reported this machine READY for an autonomous launch, on a machine with no signer, no pinning provider and no credentialled RPC. That is the one answer it must never give.");
+      }
+      ran.push({ command: command.join(" "), status: `answered: ${envelope?.result?.checks?.filter((c) => !c.ok).length ?? "?"} precondition(s) not met, as documented` });
+      continue;
+    }
+
     const result = run(args);
     ran.push({ command: command.join(" "), status: `ok (${result.out.split("\n").length} lines)` });
   }
