@@ -409,18 +409,39 @@ npm run kit -- agent quotes          --workspace <dir> --chain <id> --json   # l
 npm run kit -- agent preflight       --workspace <dir> --json   # admission + scoring       [reads a chain]
 npm run kit -- agent provenance      --json                     # which generation these types came from
 npm run kit -- agent verify-receipts --workspace <dir> --json   # prove the receipt chain is unedited
+
+# --- the write side. Each is independently runnable and each writes a receipt. ---
+npm run kit -- agent metadata        --workspace <dir> --json   # pin, fetch BACK, verify bytes  [writes to a provider]
+npm run kit -- agent prepare         --workspace <dir> --json   # build the canonical LaunchParams
+npm run kit -- agent predict         --workspace <dir> --signer <addr> --json  # the DEPLOYED factory's own answer [reads a chain]
+npm run kit -- agent simulate        --workspace <dir> --signer <addr> --json  # real eth_call of the exact tx     [reads a chain]
+npm run kit -- agent build           --workspace <dir> --json   # freeze the immutable SigningRequest
+npm run kit -- agent policy-check    --workspace <dir> --json   # recompute policy from the FINAL calldata
+npm run kit -- agent broadcast       --workspace <dir> --json   # sign through the scoped signer and send [WRITES A CHAIN]
+npm run kit -- agent confirm         --workspace <dir> --json   # wait for a receipt with status 1        [reads a chain]
+npm run kit -- agent verify          --workspace <dir> --json   # read the result back and compare        [reads a chain]
+npm run kit -- agent resume          --workspace <dir> --json   # reconcile local state against the CHAIN [reads a chain]
+npm run kit -- agent run             --workspace <dir> --json   # every phase above, in order, stopping at the first refusal
 ```
+
+`agent metadata` takes `--dry-run` to use the in-memory provider: the fetch-back and byte
+comparison really run, but nothing is pinned anywhere a third party can read. It is how you
+exercise the pipeline without publishing.
 
 `chains` is an alias for `capabilities`, `plan` is an alias for `preflight`, and the group answers
 to both `agent` and `launch`. Other flags the group reads: `--policy <path>` to point at a policy
 outside the workspace, `--signer <address>` for preflight (or `RELICS_SIGNER_ADDRESS`), and
 `--force` for `agent init`.
 
-**This release ships those nine and no more.** `next` may hand back a `commands` entry naming a
-phase command for the tail of the run; the implementations of those phases live in
-`@relics/launch-sdk`, `@relics/agent-flow` and `@relics/signer-protocol`. If you are an agent and
-`next` names something the CLI does not answer to, say so and stop — do not invent a subcommand
-name, and do not treat the gap as permission to hand-roll a transaction.
+**Every command `next` names is one the CLI answers to, and that is enforced rather than
+promised.** `npm run agent:commands` derives the real surface from the dispatcher and compares it
+against the next-action contract in both directions, so a `commands` entry naming a subcommand
+nobody wrote fails the build. It exists because two of them did: `agent finalise` and
+`agent art-check` were named by `next` and implemented nowhere, and an agent following `commands`
+literally — which is the entire point of that field — got `unknown subcommand` and exit 2.
+
+If you are an agent and `next` still names something the CLI does not answer to, say so and stop.
+Do not invent a subcommand name, and do not treat the gap as permission to hand-roll a transaction.
 
 ### `stdout` is the machine channel
 

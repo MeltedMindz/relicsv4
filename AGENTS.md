@@ -496,7 +496,7 @@ finish.
 ### The command surface
 
 The whole networked surface is `npm run kit -- agent <sub> --workspace <dir> --json`. There are
-nine subcommands and **you may not invent a tenth**:
+twenty subcommands (eighteen plus two aliases) and **you may not invent one that is not listed**:
 
 | Subcommand | What it does | Touches a chain? |
 | --- | --- | --- |
@@ -509,6 +509,17 @@ nine subcommands and **you may not invent a tenth**:
 | `preflight` | admission plus deterministic scoring across every allowed chain; writes a receipt | **yes, reads** |
 | `provenance` | which protocol generation this SDK's types were generated from. Carries no chain status by design | no |
 | `verify-receipts` | walk the hash-linked receipt chain and prove no link was edited | no |
+| `metadata` | pin the collection metadata, fetch it BACK, verify the bytes, record the commitment. `--dry-run` uses the in-memory provider | writes to a provider |
+| `prepare` | build the canonical 19-field `LaunchParams` and record its identity | no |
+| `predict` | ask the DEPLOYED factory where this launch's contracts will land. Needs `--signer`: prediction is namespaced by the SENDER, so there is no default that could be right | **yes, reads** |
+| `simulate` | a real `eth_call` dry-run of the EXACT transaction that will be signed | **yes, reads** |
+| `build` | freeze the transaction into an immutable `SigningRequest`; refuses if the bytes are not what was simulated | no |
+| `policy-check` | recompute every policy bound from the FINAL calldata, by decoding it — never from the earlier plan | no |
+| `broadcast` | sign through the scoped signer and send. Writes its intent BEFORE the bytes leave | **yes, WRITES** |
+| `confirm` | wait for a receipt with `status == 1` at the configured depth. A hash is not a launch | **yes, reads** |
+| `verify` | read the launched project back off the chain, compare with the prediction, write `launch-result.json` | **yes, reads** |
+| `resume` | reconcile local state against the CHAIN; asks four independent questions before any resend | **yes, reads** |
+| `run` | every phase in order, stopping at the first refusal. Calls the same functions, no second implementation | as above |
 
 `chains` is an alias for `capabilities` and `plan` is an alias for `preflight`. The group itself
 answers to both `agent` and `launch`.
