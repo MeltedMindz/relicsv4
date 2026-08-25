@@ -204,7 +204,7 @@ repository does not know when that changes, so it does not say — and neither s
 In **MODE B this is not advice, it is admission**: `relics.agent.json` names
 `allowedRuntimes`, `relics agent capabilities` reads the chain's registry for that runtime tag, and
 a chain that cannot prove the runtime is registered and active is not admitted. A JavaScript
-project simply never reaches a preflight that passes.
+project never reaches a preflight that passes at all.
 
 `relics templates` may also print a **reviewed protocol templates** section. Those are
 operator-registered economics bindings, not art scaffolds, and they are never `relics init` targets.

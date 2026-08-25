@@ -48,7 +48,7 @@ than discovering it after an hour of art iteration.
 | --- | --- | --- | --- |
 | 1 | **A policy** | `relics.agent.json` in the workspace | Nothing may be signed or sent. This is the authorization boundary; its absence is a refusal, not a default. |
 | 2 | **A signer** | `RELICS_SIGNER_URL`, pointing at a process that holds the key | There is nothing to hand a signing request to. The agent holds no key of its own, by design. |
-| 3 | **A metadata provider** | `PINATA_JWT`, or another adapter wired through `packages/launch-sdk/src/metadata/provider.ts` | Collection metadata is written at birth and no selector moves it afterwards, so it has to be pinned and read back before anything is built. |
+| 3 | **A metadata provider** | `PINATA_JWT`, or `RELICS_METADATA_PROVIDER` naming another adapter wired through `packages/launch-sdk/src/metadata/provider.ts` | Collection metadata is written at birth and no selector moves it afterwards, so it has to be pinned and read back before anything is built. |
 | 4 | **A credentialled RPC per chain** | `ETHEREUM_RPC_URL`, `BASE_RPC_URL`, `ROBINHOOD_RPC_URL` | No chain passes admission. See the note below — this one is not obvious. |
 
 Check all four at once, offline:

@@ -91,8 +91,35 @@ export async function runNetworkedCommand(group, positional, flags) {
       case "preflight": return await cmdPreflight(name, workspace, flags, json);
       case "provenance": return await cmdProvenance(name, json);
       case "verify-receipts": return await cmdVerifyReceipts(name, workspace, json);
+
+      // ---- the write side. Each needs a valid policy, so it is loaded once and passed down ----
+      case "metadata": case "prepare": case "predict": case "simulate":
+      case "build": case "policy-check": case "broadcast": case "confirm":
+      case "verify": case "resume": case "run": {
+        const policy = await loadPolicy(workspace, flags);
+        if (!policy.ok) {
+          emit(name, { success: false, errors: policy.issues.map((i) => `${i.field}: ${i.detail}`), nextActions: ["BLOCKED"] }, { json });
+          return EXIT.POLICY;
+        }
+        const ctx = { policy: policy.policy, policyHash: policy.policyHash };
+        const L = await import("./agent-launch.js");
+        switch (sub) {
+          case "metadata": return await L.cmdMetadata(name, workspace, flags, json, ctx);
+          case "prepare": return await L.cmdPrepare(name, workspace, flags, json, ctx);
+          case "predict": return await L.cmdPredict(name, workspace, flags, json, ctx);
+          case "simulate": return await L.cmdSimulate(name, workspace, flags, json, ctx);
+          case "build": return await L.cmdBuild(name, workspace, flags, json, ctx);
+          case "policy-check": return await L.cmdPolicyCheck(name, workspace, flags, json, ctx);
+          case "broadcast": return await L.cmdBroadcast(name, workspace, flags, json, ctx);
+          case "confirm": return await L.cmdConfirm(name, workspace, flags, json, ctx);
+          case "verify": return await L.cmdVerify(name, workspace, flags, json, ctx);
+          case "resume": return await L.cmdResume(name, workspace, flags, json, ctx);
+          case "run": return await cmdRun(name, workspace, flags, json, ctx, L);
+        }
+        return EXIT.USAGE;
+      }
       default:
-        emit(name, { success: false, errors: [`unknown subcommand "${sub}". Known: init, status, doctor, next, capabilities, quotes, preflight, provenance, verify-receipts`] }, { json });
+        emit(name, { success: false, errors: [`unknown subcommand "${sub}". Known: init, status, doctor, next, capabilities, quotes, preflight, metadata, prepare, predict, simulate, build, policy-check, broadcast, confirm, verify, resume, run, provenance, verify-receipts`] }, { json });
         return EXIT.USAGE;
     }
   } catch (err) {
@@ -308,4 +335,47 @@ async function cmdVerifyReceipts(name, workspace, json) {
   const chain = verifyReceiptChain(workspace);
   emit(name, { success: chain.intact, result: chain, errors: chain.intact ? [] : [chain.detail] }, { json });
   return chain.intact ? EXIT.OK : EXIT.REFUSED;
+}
+
+/**
+ * `run` — the orchestration engine an external coding agent drives.
+ *
+ * IT IS NOT AN LLM AND IT CONTAINS NO SECOND IMPLEMENTATION. Every step below calls the SAME
+ * exported function the standalone command calls, in order, and stops at the first one that
+ * refuses. When it stops for a creative reason it emits the machine-readable next action so the
+ * agent knows what to edit; when it stops for a blocker it says which.
+ *
+ * `run` IS RESUMABLE BY CONSTRUCTION, because each step reads what the previous one recorded on
+ * disk. Re-running it after a crash re-enters at the first incomplete phase — and the broadcast
+ * step asks the CHAIN, not the disk, whether it already sent.
+ */
+async function cmdRun(name, workspace, flags, json, ctx, L) {
+  const { decideNextAction, listReceipts } = await import("@relics/agent-flow");
+  const steps = [
+    ["PREFLIGHT", (n) => cmdPreflight(n, workspace, flags, json)],
+    ["METADATA", (n) => L.cmdMetadata(n, workspace, flags, json, ctx)],
+    ["PREPARE", (n) => L.cmdPrepare(n, workspace, flags, json, ctx)],
+    ["PREDICT", (n) => L.cmdPredict(n, workspace, flags, json, ctx)],
+    ["SIMULATE", (n) => L.cmdSimulate(n, workspace, flags, json, ctx)],
+    ["BUILD", (n) => L.cmdBuild(n, workspace, flags, json, ctx)],
+    ["POLICY_CHECK", (n) => L.cmdPolicyCheck(n, workspace, flags, json, ctx)],
+    ["BROADCAST", (n) => L.cmdBroadcast(n, workspace, flags, json, ctx)],
+    ["CONFIRM", (n) => L.cmdConfirm(n, workspace, flags, json, ctx)],
+    ["VERIFY", (n) => L.cmdVerify(n, workspace, flags, json, ctx)],
+  ];
+  const done = new Set(listReceipts(workspace).map((r) => r.phase));
+  const ran = [];
+  for (const [phase, fn] of steps) {
+    if (done.has(phase)) { ran.push({ phase, status: "ALREADY_DONE" }); continue; }
+    // BUILD_ONLY stops cleanly at BUILT with the transaction available for manual signing.
+    if (phase === "BROADCAST" && (ctx.policy.goal === "BUILD_ONLY" || !ctx.policy.allowBroadcast)) {
+      ran.push({ phase, status: "STOPPED_BY_POLICY", detail: "goal is BUILD_ONLY or allowBroadcast is false; the signing request is built and ready for manual signing" });
+      break;
+    }
+    const code = await fn(`agent ${phase.toLowerCase()}`);
+    ran.push({ phase, status: code === EXIT.OK ? "OK" : "STOPPED", exitCode: code });
+    if (code !== EXIT.OK) break;
+  }
+  // The last word is always the next action, so an agent driving `run` never has to infer it.
+  return ran[ran.length - 1]?.status === "OK" || ran.every((r) => r.status === "ALREADY_DONE") ? EXIT.OK : EXIT.BLOCKED;
 }

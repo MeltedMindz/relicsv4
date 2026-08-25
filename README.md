@@ -373,7 +373,7 @@ which one you meant is not a question a validator gets to answer.
 **The launch agent does not route around this either, and it is refused by evidence rather than by
 a rule it could be argued out of.** `relics.agent.json` names the runtimes a run may use, and a
 chain is admitted only after its own registry is read live and shows that runtime registered and
-active. A JavaScript project simply never reaches a preflight that passes. An agent that offers to
+active. A JavaScript project never reaches a preflight that passes at all. An agent that offers to
 switch your runtime so a launch can proceed is doing the one thing this repository tells it not to.
 
 **Approved and launchable are different questions, and the kit does not collapse them.** Both
