@@ -4,18 +4,28 @@
 signals to it, render a hundred seeds until you like them, and export a single `.relics` file that
 a launchpad can turn into a token, an NFT collection and a Uniswap v4 pool.**
 
-```
-YOUR IDEA  +  YOUR ART  +  YOUR RULES   →   ONE .relics FILE   →   RELICS LAUNCHPAD
-```
-
-### Start here
+### Two ways in. Pick one.
 
 | | |
 | --- | --- |
-| 🤖 **[Create with an AI agent](docs/creator-kit/create-with-an-agent.md)** | Clone the repo, paste one prompt, describe your collection in plain language. The agent writes the generator and runs the checks. |
-| 🛠 **[Build it yourself](docs/creator-kit/getting-started.md)** | Seven commands, no network, no wallet. Scaffold → preview → validate → export. |
-| 📖 **[See how it works](#what-a-relics-file-is)** | The bundle, the market-to-art model, and what a launch actually does. |
-| 🚀 **[Take the file to the launchpad](#take-it-to-the-launchpad)** | `https://www.relics.wtf/create` → *Import a .relics project*. Your wallet signs one transaction, at the end, and not before. |
+| 🤖 **AI AGENT — CREATE + LAUNCH**<br>[→ The autonomous launch agent](docs/creator-kit/autonomous-launch-agent.md) | You describe the collection and write one authorization file. A coding agent writes the art, runs every check, reads the live chains, simulates the exact transaction, hands it to a signer that holds a key the agent never sees, and takes it to `VERIFIED` on chain. **Needs a wallet, a pinning provider and a network**, and it does nothing until you turn it on. |
+| 🎨 **CREATOR KIT — OFFLINE**<br>[→ Getting started](docs/creator-kit/getting-started.md) | Seven commands, **no network, no wallet, no signer**. Scaffold → preview → validate → export. You end with one `.relics` file and you take it to the creator app yourself, whenever you want. You can do all of it on a plane. |
+
+The offline path is the default and the whole of it is real today. The launch path is the same
+authoring work with a chain-facing tail on the end — it adds steps, it removes none, and every
+safety rule from the offline path still holds inside it.
+
+```
+IDEA → ART → TEST → CONFIGURE → LIVE CHAIN PREFLIGHT → SIMULATE → POLICY → SIGN → BROADCAST → VERIFY
+└──────── CREATOR KIT — OFFLINE ────────┘└─────────── what the launch agent adds ──────────────┘
+                                        │
+                    or stop here, export one .relics file,
+                       and import it at relics.wtf/create
+```
+
+**[→ Create with an agent, in plain language](docs/creator-kit/create-with-an-agent.md)** ·
+**[→ See how it works](#what-a-relics-file-is)** ·
+**[→ Take the file to the launchpad yourself](#take-it-to-the-launchpad)**
 
 [![creator kit 4.0.0](https://img.shields.io/badge/creator%20kit-4.0.0-c9a227)](packages/creator-cli/)
 [![bundle schema 4.0.0](https://img.shields.io/badge/bundle%20schema-4.0.0-8a8681)](docs/creator-kit/bundle-format.md)
@@ -41,6 +51,7 @@ importer, and in ten years.*
 
 - [What you actually build](#what-you-actually-build)
 - [Create with an AI agent](#create-with-an-ai-agent)
+- [Launch with an AI agent](#launch-with-an-ai-agent)
 - [Build it yourself](#build-it-yourself)
 - [The one file you edit](#the-one-file-you-edit)
 - [The whole path, end to end](#the-whole-path-end-to-end)
@@ -66,10 +77,13 @@ A RELICS project is a directory on your machine. It holds:
 - **`relics.config.json`** — supply, earnings, chains, runtime.
 
 `relics export` packs all of it into one `.relics` file with hashes over its own contents. That
-file is what you hand the launchpad.
+file is what you hand the launchpad — by hand, or through the launch agent.
 
-Nothing in this kit signs a transaction, broadcasts anything, or contacts a network. You can do
-every step below on a plane.
+**Everything up to and including that file is offline.** Scaffolding, the studio, previews, seed
+sweeps, validation, export and inspection contact no network, need no wallet and hold no key. The
+only part of this repository that reaches a chain is the launch agent, it is off until you
+configure it, and it is documented separately in
+[The autonomous launch agent](docs/creator-kit/autonomous-launch-agent.md).
 
 ---
 

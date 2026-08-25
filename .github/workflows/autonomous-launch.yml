@@ -1,0 +1,65 @@
+name: autonomous-launch
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# NO SECRETS AND NO CHAIN ACCESS. Every job below is deterministic and offline: the parity gate
+# compares committed artifacts, the controls run against fixtures, and the offline gate deliberately
+# blocks outbound connections. The live-chain rehearsal is a MAINTAINER command (`agent
+# capabilities`, `agent preflight`) and is not run here, because a workflow that needs a credentialed
+# RPC to go green turns an unrelated outage into a red build and trains people to ignore it.
+permissions:
+  contents: read
+
+jobs:
+  launch-semantics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+
+      - name: build the public launch SDK and the orchestration layer
+        run: |
+          npm run launch:build
+          npx tsc -p packages/agent-flow/tsconfig.json
+
+      - name: LaunchParams is nineteen fields, in the canonical order, with the canonical selector
+        # The single most consequential invariant in this repository. ABI tuples encode
+        # POSITIONALLY, so a public copy one field short does not raise a decode error -- it shifts
+        # every dynamic offset after the gap and produces a well-formed, WRONG transaction. This
+        # runs the gate AND its five mutations, each of which must be caught.
+        run: npm run launch:parity:controls
+
+      - name: the generated provenance and schema declarations are not stale
+        run: |
+          npm run launch:provenance:check
+          node scripts/gen-schema-dts.mjs --check
+
+      - name: MODE A still runs with outbound connections blocked
+        # Proven by RUNNING the offline commands with connect() throwing at the socket prototype,
+        # not by grepping imports. Includes its own control: a networked command must NOT survive
+        # the same treatment, or this gate is measuring nothing.
+        run: npm run kit:offline
+
+      - name: the twenty-one adversarial controls
+        run: npm run agent:controls
+
+      - name: the signer refuses everything it should, proven by mutation
+        run: |
+          npm run signer:test
+          npm run signer:mutate
+
+      - name: metadata is pinned, fetched back, and byte-verified
+        run: npm run launch:test
+
+      - name: no secret, and no reserved term, reaches the public tree
+        run: |
+          npm run secrets:scan
+          npm run reserved:check
+          npm run reserved:controls
