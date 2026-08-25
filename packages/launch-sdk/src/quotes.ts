@@ -24,10 +24,26 @@ const ERC20_METADATA_ABI = [
   { type: "function", name: "decimals", stateMutability: "view", inputs: [], outputs: [{ type: "uint8" }] },
 ] as const;
 
+/**
+ * `QuoteAssetRegistryV1`'s read surface, taken from the deployed Solidity rather than guessed.
+ *
+ * THE FIRST VERSION OF THIS GUESSED `assetCount()`/`assetAt()` AND WAS WRONG. Those selectors
+ * revert on the deployed registry, so enumeration never ran — and the failure was SILENT in the
+ * worst possible way: the revert landed in `errors`, `complete` went false, and the selector still
+ * confidently returned the wrapped native. An unread registry produced a confident answer, which is
+ * the precise failure this whole module exists to prevent. Both halves are fixed: the right
+ * selectors, and a refusal below when the inventory is incomplete.
+ *
+ * `isSelectableForNewLaunch` IS A DIFFERENT QUESTION FROM `isAdmitted` AND IS THE ONE A LAUNCH
+ * NEEDS. An asset can be admitted to the registry — historically valid, existing pools quoted
+ * against it — while no longer being offered for NEW launches. Choosing on admission alone would
+ * build a launch the factory then refuses.
+ */
 const QUOTE_REGISTRY_ABI = [
-  { type: "function", name: "isAdmitted", stateMutability: "view", inputs: [{ name: "asset", type: "address" }], outputs: [{ type: "bool" }] },
-  { type: "function", name: "assetCount", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
-  { type: "function", name: "assetAt", stateMutability: "view", inputs: [{ name: "index", type: "uint256" }], outputs: [{ type: "address" }] },
+  { type: "function", name: "isAdmitted", stateMutability: "view", inputs: [{ name: "token", type: "address" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "isSelectableForNewLaunch", stateMutability: "view", inputs: [{ name: "token", type: "address" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "admittedCount", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "admittedAt", stateMutability: "view", inputs: [{ name: "i", type: "uint256" }], outputs: [{ type: "address" }] },
 ] as const;
 
 export interface QuoteCandidate {
@@ -96,18 +112,18 @@ export async function getQuoteAssets(client: PublicClient, factory: Address): Pr
   // ---- the multi-quote registry, when this chain has one --------------------------------------
   if (registry) {
     try {
-      const count = Number(await client.readContract({ address: registry, abi: QUOTE_REGISTRY_ABI, functionName: "assetCount" }));
+      const count = Number(await client.readContract({ address: registry, abi: QUOTE_REGISTRY_ABI, functionName: "admittedCount" }));
       for (let i = 0; i < count; i++) {
         try {
-          const asset = getAddress((await client.readContract({ address: registry, abi: QUOTE_REGISTRY_ABI, functionName: "assetAt", args: [BigInt(i)] })) as Address);
+          const asset = getAddress((await client.readContract({ address: registry, abi: QUOTE_REGISTRY_ABI, functionName: "admittedAt", args: [BigInt(i)] })) as Address);
           if (asset === wrappedNative) continue;
-          const admitted = (await client.readContract({ address: registry, abi: QUOTE_REGISTRY_ABI, functionName: "isAdmitted", args: [asset] })) as boolean;
+          const selectable = (await client.readContract({ address: registry, abi: QUOTE_REGISTRY_ABI, functionName: "isSelectableForNewLaunch", args: [asset] })) as boolean;
           const meta = await describeToken(client, asset, errors);
           candidates.push({
             chainId, symbol: meta.symbol, address: asset, decimals: meta.decimals,
-            admitted: !meta.read ? "UNKNOWN" : admitted ? "PROVEN" : "REFUTED",
+            admitted: !meta.read ? "UNKNOWN" : selectable ? "PROVEN" : "REFUTED",
             isWrappedNative: false,
-            detail: !meta.read ? "token metadata unreadable, so admission cannot be asserted" : admitted ? "admitted by the quote registry" : "the registry reports this asset is not admitted",
+            detail: !meta.read ? "token metadata unreadable, so selectability cannot be asserted" : selectable ? "selectable for a new launch by the quote registry" : "admitted to the registry but NOT selectable for a new launch",
           });
         } catch (err) {
           errors.push(`quote asset ${i} could not be read: ${err instanceof Error ? err.message : String(err)}`);
@@ -130,6 +146,18 @@ export async function getQuoteAssets(client: PublicClient, factory: Address): Pr
  * so it is taken only when the policy names it.
  */
 export function selectQuote(inventory: QuoteInventory, allowed: "AUTO" | readonly string[]): { quote: QuoteCandidate | null; reason: string } {
+  // AN INCOMPLETE INVENTORY REFUSES. This guard is here because its absence shipped: with the
+  // wrong enumeration selectors the registry read reverted, `complete` went false, and this
+  // function cheerfully returned the wrapped native anyway. The caller could not tell "this chain
+  // offers only WETH" from "we failed to ask what this chain offers", and those are the same
+  // sentence with opposite meanings. A quote is immutable for the life of a market, so guessing
+  // it is not a recoverable mistake.
+  if (!inventory.complete) {
+    return {
+      quote: null,
+      reason: `the quote inventory for chain ${inventory.chainId} is INCOMPLETE, so no quote may be selected from it: ${inventory.errors.join("; ") || "one or more reads failed"}. This is an unread registry, not an empty one — the remedy is to retry, never to fall back to the wrapped native.`,
+    };
+  }
   const usable = inventory.candidates.filter((c) => c.admitted === "PROVEN");
   if (usable.length === 0) {
     const unknowns = inventory.candidates.filter((c) => c.admitted === "UNKNOWN");

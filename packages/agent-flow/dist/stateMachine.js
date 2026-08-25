@@ -1,0 +1,85 @@
+export const STATE_ORDER = [
+    "BRIEF_RECEIVED", "PROJECT_SCAFFOLDED", "ART_AUTHORED", "ART_PROVEN", "PROJECT_CONFIGURED",
+    "VALIDATED", "EXPORTED", "CHAIN_SELECTED", "CHAIN_PREFLIGHT_PASSED", "METADATA_PUBLISHED",
+    "PREPARED", "PREDICTED", "SIMULATED", "BUILT", "POLICY_APPROVED", "SIGNED", "BROADCAST",
+    "CONFIRMED", "VERIFIED", "COMPLETE",
+];
+/**
+ * WHICH FACETS EACH STATE RESTS ON. If a facet changes, every state listing it — and everything
+ * after that state — is invalidated.
+ *
+ * `GAS` deserves a note because the brief asked for it explicitly. Gas parameters are NOT part of
+ * `LaunchParams`, so changing them does not change the calldata and does not invalidate PREPARED,
+ * PREDICTED or SIMULATED. They ARE part of the `SigningRequest`, and the signer enforces a gas
+ * ceiling over them, so they invalidate BUILT and everything after it. Getting this boundary wrong
+ * in either direction is expensive: too wide and every gas nudge re-pins metadata; too narrow and a
+ * transaction is signed with a gas limit nobody checked.
+ */
+const DEPENDS_ON = {
+    BRIEF_RECEIVED: [],
+    PROJECT_SCAFFOLDED: [],
+    ART_AUTHORED: ["ART"],
+    ART_PROVEN: ["ART"],
+    PROJECT_CONFIGURED: ["ART", "PROJECT_CONFIG"],
+    VALIDATED: ["ART", "PROJECT_CONFIG"],
+    EXPORTED: ["ART", "PROJECT_CONFIG", "BUNDLE"],
+    CHAIN_SELECTED: ["POLICY", "CHAIN"],
+    CHAIN_PREFLIGHT_PASSED: ["POLICY", "CHAIN", "SIGNER"],
+    METADATA_PUBLISHED: ["ART", "PROJECT_CONFIG", "BUNDLE", "METADATA"],
+    PREPARED: ["ART", "PROJECT_CONFIG", "BUNDLE", "METADATA", "CHAIN", "QUOTE", "POLICY"],
+    PREDICTED: ["ART", "PROJECT_CONFIG", "BUNDLE", "METADATA", "CHAIN", "QUOTE", "POLICY"],
+    SIMULATED: ["ART", "PROJECT_CONFIG", "BUNDLE", "METADATA", "CHAIN", "QUOTE", "POLICY", "SIGNER"],
+    BUILT: ["ART", "PROJECT_CONFIG", "BUNDLE", "METADATA", "CHAIN", "QUOTE", "POLICY", "SIGNER", "GAS"],
+    POLICY_APPROVED: ["ART", "PROJECT_CONFIG", "BUNDLE", "METADATA", "CHAIN", "QUOTE", "POLICY", "SIGNER", "GAS"],
+    SIGNED: ["ART", "PROJECT_CONFIG", "BUNDLE", "METADATA", "CHAIN", "QUOTE", "POLICY", "SIGNER", "GAS"],
+    // BROADCAST ONWARD DEPEND ON NOTHING LOCAL, AND THAT IS DELIBERATE. Once bytes are on a public
+    // network, no local edit can un-send them. Invalidating BROADCAST because a file changed would
+    // invite a resume to send a SECOND launch — the exact duplicate this system must never produce.
+    // What is on chain is settled by reading the chain, never by re-deriving it from local inputs.
+    BROADCAST: [],
+    CONFIRMED: [],
+    VERIFIED: [],
+    COMPLETE: [],
+};
+export function stateIndex(s) {
+    return STATE_ORDER.indexOf(s);
+}
+/** States invalidated by a change to `facet`, in order. */
+export function invalidatedBy(facet) {
+    const first = STATE_ORDER.findIndex((s) => DEPENDS_ON[s].includes(facet));
+    if (first === -1)
+        return [];
+    return STATE_ORDER.slice(first).filter((s) => DEPENDS_ON[s].length > 0 || stateIndex(s) < stateIndex("BROADCAST"));
+}
+/**
+ * The highest state still valid after `facet` changed.
+ *
+ * Never rolls back past BROADCAST: see the comment on BROADCAST above. If a run had already sent a
+ * transaction, a local edit rewinds the LOCAL work and leaves the on-chain fact where it is, for
+ * `resume` to reconcile against the chain.
+ */
+export function rewindFor(current, facet) {
+    if (stateIndex(current) >= stateIndex("BROADCAST"))
+        return current;
+    const invalid = invalidatedBy(facet);
+    if (invalid.length === 0)
+        return current;
+    const firstInvalid = stateIndex(invalid[0]);
+    if (stateIndex(current) < firstInvalid)
+        return current;
+    return STATE_ORDER[Math.max(0, firstInvalid - 1)];
+}
+/** Transitions are strictly one step forward along STATE_ORDER. No skipping, ever. */
+export function canTransition(from, to) {
+    const a = stateIndex(from);
+    const b = stateIndex(to);
+    if (b === a + 1)
+        return { allowed: true, reason: `${from} -> ${to}` };
+    if (b <= a)
+        return { allowed: false, reason: `${to} is not after ${from}; a state machine does not move backwards except by invalidation` };
+    const skipped = STATE_ORDER.slice(a + 1, b);
+    return {
+        allowed: false,
+        reason: `${from} -> ${to} would skip ${skipped.join(", ")}. Each of those is a proof the next step depends on; jumping VALIDATED -> BROADCAST is exactly the shortcut this refuses.`,
+    };
+}

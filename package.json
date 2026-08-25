@@ -52,6 +52,18 @@
     "kit:deployments:check": "node scripts/sync-deployments.mjs --check",
     "kit:deployments:sync": "node scripts/sync-deployments.mjs --sync",
     "export:manifest": "node scripts/gen-manifest.mjs",
-    "export:manifest:check": "node scripts/gen-manifest.mjs --check"
+    "export:manifest:check": "node scripts/gen-manifest.mjs --check",
+    "launch:sync": "node scripts/sync-launch-sdk.mjs",
+    "launch:parity": "node scripts/check-launch-semantics-parity.mjs",
+    "launch:parity:controls": "node scripts/check-launch-semantics-parity.mjs --controls",
+    "launch:provenance": "node scripts/gen-launch-provenance.mjs",
+    "launch:provenance:check": "node scripts/gen-launch-provenance.mjs --check",
+    "launch:dts": "node scripts/gen-schema-dts.mjs",
+    "launch:build": "tsc -p packages/launch-sdk/tsconfig.json",
+    "launch:test": "node --test packages/launch-sdk/test/*.test.mjs",
+    "signer:test": "node --test packages/signer-protocol/test/*.test.mjs",
+    "signer:mutate": "node packages/signer-protocol/test/mutate.mjs",
+    "kit:offline": "node scripts/check-offline-mode.mjs",
+    "agent:controls": "node scripts/check-autonomous-controls.mjs"
   }
 }
