@@ -8,7 +8,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./contracts-abi/*": "./contracts-abi/*"
+    "./contracts-abi/*": "./contracts-abi/*",
+    "./metadata": "./dist/metadata/index.js"
   },
   "files": [
     "dist",

@@ -55,7 +55,12 @@ async function requirePhase(workspace, phase, need, name, json) {
 
 /** Pin the collection metadata, fetch it BACK, verify the bytes, and record the commitment. */
 export async function cmdMetadata(name, workspace, flags, json, ctx) {
-  const { pinAndVerifyMetadata, memoryProvider, pinataProvider } = await import("@relics/launch-sdk/dist/metadata/index.js").catch(() => import("@relics/launch-sdk"));
+  // IMPORTED FROM THE PACKAGE ROOT, WITH THE NAMES THE MODULE ACTUALLY EXPORTS. This line used to
+  // reach a deep path that was not in the `exports` map at all, and its `.catch(() => …)` turned
+  // that into a SILENT fallback to the package root — which exported none of these names either.
+  // The visible symptom was "memoryProvider is not a function": a wrong-name error standing in for
+  // a wrong-module error. A catch that swallows a resolution failure hides the only useful signal.
+  const { pinAndVerifyMetadataDocument, createMemoryProvider, createPinataProvider } = await import("@relics/launch-sdk");
   const { writeReceipt } = await import("@relics/agent-flow");
 
   const docPath = join(workspace, "metadata", "collection.json");
@@ -69,14 +74,14 @@ export async function cmdMetadata(name, workspace, flags, json, ctx) {
   // fetch-back and byte comparison against a store that lives in this process — it proves the
   // pipeline without pinning anything to a network anyone else can see.
   const useMemory = Boolean(flags["dry-run"]) || !process.env.PINATA_JWT;
-  const provider = useMemory ? memoryProvider() : pinataProvider();
+  const provider = useMemory ? createMemoryProvider() : createPinataProvider();
   if (!useMemory && provider && provider.available === false) {
     emit(name, { success: false, errors: ["the configured pinning provider reports itself unavailable; check its credential is set in the environment (never in the project, the policy or a receipt)"] }, { json });
     return EXIT.BLOCKED;
   }
 
   try {
-    const verified = await pinAndVerifyMetadata({ document: doc, provider, filename: "collection.json" });
+    const verified = await pinAndVerifyMetadataDocument({ document: doc, provider, filename: "collection.json" });
     writeReceipt(workspace, { phase: "METADATA", body: { uri: verified.uri, cid: verified.cid, contentSha256: verified.contentSha256, resolverDigest: verified.resolverDigest, provider: provider.id, pinnedToNetwork: !useMemory } });
     emit(name, {
       success: true,
@@ -110,15 +115,42 @@ export async function cmdPrepare(name, workspace, flags, json, ctx) {
   }
   const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
 
+  // ---- MINE THE HOOK SALT. A ZERO SALT IS NOT A PLACEHOLDER -----------------------------------
+  // This used to pass `ZERO32` with a `--hookSalt` escape hatch the parser did not even accept, so
+  // every launch it prepared reverted `BadHookAddress` — the address a zero salt yields does not
+  // carry the required permission bits. Mining needs one input the public record lacks (the hook's
+  // init-code hash), and the factory returns it, so this is a live read plus local keccak.
+  const launcher = flags.signer ?? process.env.RELICS_SIGNER_ADDRESS;
+  if (!launcher) {
+    emit(name, { success: false, errors: ["prepare needs the LAUNCHER address (--signer or RELICS_SIGNER_ADDRESS). The factory re-hashes the hook salt against the sending address (M-01), so a salt mined for anyone else lands on an address that does not carry the hook mask and the launch reverts BadHookAddress."] }, { json });
+    return EXIT.BLOCKED;
+  }
+  const made = sdk.makeClient(profile);
+  if (!made) { emit(name, { success: false, errors: [`no RPC endpoint for chain ${chainId}`] }, { json }); return EXIT.UNKNOWN_CHAIN_STATE; }
+
+  let mined;
+  try {
+    const lane = await sdk.hookLaneFor(made.client, profile.contracts.launchpadFactory);
+    mined = await sdk.mineHookSalt({
+      deployer: lane.deployer, caller: profile.contracts.launchpadFactory, launcher, initCodeHash: lane.initCodeHash,
+      // Refuse an address that is already occupied: the hook's constructor args are constant per
+      // factory, so two launches mining from the same start would otherwise collide.
+      hasCode: async (a) => { const c = await made.client.getCode({ address: a }); return Boolean(c && c !== "0x"); },
+    });
+  } catch (err) {
+    emit(name, { success: false, errors: [`hook salt mining failed: ${err instanceof Error ? err.message : String(err)}`] }, { json });
+    return EXIT.REFUSED;
+  }
+
   try {
     const input = creatorInputFromConfig(cfg, meta.uri, ctx.policy, sdk);
-    const prepared = sdk.prepare(input, { tokenSalt: ZERO32, hookSalt: flags.hookSalt ?? ZERO32 }, chainId, profile.contracts.launchpadFactory);
+    const prepared = sdk.prepare(input, { tokenSalt: ZERO32, hookSalt: mined.salt }, chainId, profile.contracts.launchpadFactory);
     const { data, dataHash } = sdk.encodeLaunch(prepared.params);
     writeReceipt(workspace, {
       phase: "PREPARE", chainId, policyHash: ctx.policyHash,
-      body: { prepareHash: prepared.prepareHash, factory: prepared.factory, dataHash, calldataBytes: (data.length - 2) / 2, params: sdk.launchParamsAsTuple(prepared.params) },
+      body: { prepareHash: prepared.prepareHash, factory: prepared.factory, dataHash, calldataBytes: (data.length - 2) / 2, launcher, hook: { address: mined.hookAddress, salt: mined.salt, attempts: mined.attempts, flags: mined.flags, deployer: mined.deployer }, params: sdk.launchParamsAsTuple(prepared.params) },
     });
-    emit(name, { success: true, result: { chainId, prepareHash: prepared.prepareHash, dataHash, calldataBytes: (data.length - 2) / 2 }, nextActions: ["READY_FOR_SIMULATION"] }, { json });
+    emit(name, { success: true, result: { chainId, prepareHash: prepared.prepareHash, dataHash, calldataBytes: (data.length - 2) / 2, launcher, hookAddress: mined.hookAddress, hookSaltAttempts: mined.attempts, hookFlags: mined.flags }, nextActions: ["READY_FOR_SIMULATION"] }, { json });
     return EXIT.OK;
   } catch (err) {
     emit(name, { success: false, errors: [err instanceof Error ? err.message : String(err)], nextActions: ["FIX_VALIDATION"] }, { json });

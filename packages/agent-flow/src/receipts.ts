@@ -104,7 +104,12 @@ export function writeReceipt(workspace: string, input: ReceiptBody & { inputHash
   };
 
   const name = `${String(sequence).padStart(3, "0")}-${input.phase.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.json`;
-  writeFileSync(join(dir, name), `${JSON.stringify(receipt, null, 2)}\n`);
+  // SERIALISED THE SAME WAY IT IS HASHED. `canonical()` converts bigints and this write used a
+  // bare JSON.stringify, so a body carrying a gas estimate hashed fine and then THREW on the way to
+  // disk — a receipt that could be committed to but not recorded. The two paths now agree; the
+  // pretty-printing is separate from the canonicalisation on purpose, since a hash must not depend
+  // on whitespace.
+  writeFileSync(join(dir, name), `${JSON.stringify(receipt, (_k, v) => (typeof v === "bigint" ? v.toString() : v), 2)}\n`);
   return receipt;
 }
 

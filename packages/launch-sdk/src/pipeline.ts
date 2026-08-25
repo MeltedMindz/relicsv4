@@ -97,14 +97,32 @@ export async function predict(client: PublicClient, factory: Address, params: La
     args: [launchParamsAsTuple(params), launcher],
   })) as [Address, Address, Address, Hex];
 
+  // ---- THE INDEPENDENT CROSS-CHECK, ACTUALLY RUN ------------------------------------------------
+  //
+  // This block used to set `agreed: true` unconditionally inside a `try` that could not throw, with
+  // a comment claiming an unrun check must never read as a passed one — while doing exactly that.
+  // The hook IS derivable: `hookInitCodeHashes()` supplies the one input the public record lacks,
+  // and the two namespacing layers are vendored. So the hook address is now re-derived locally from
+  // the factory's own init-code hash and compared with what the contract returned.
+  //
+  // The TOKEN and COLLECTION are NOT derivable here — they need the component implementation
+  // addresses, which this public SDK genuinely does not carry — and that is reported as
+  // NOT_DERIVABLE rather than as agreement. A partial check that says which part it covered is
+  // worth something; one that claims to have covered everything is worth less than nothing.
   let offchainCrossCheck: PredictResult["offchainCrossCheck"] = null;
   try {
-    // The off-chain derivation needs the component implementations, which are a per-generation
-    // fact this public SDK does not carry. When they are unavailable the cross-check is reported
-    // as UNAVAILABLE rather than silently skipped — an unrun check must never read as a passed one.
-    offchainCrossCheck = { agreed: true, detail: "off-chain derivation not run: the component implementation addresses it needs are not part of the public record. The factory's own predict() is authoritative and was used." };
+    const { hookLaneFor, mineHookSalt } = await import("./hookSalt.js");
+    const lane = await hookLaneFor(client, factory);
+    const derived = await mineHookSalt({ deployer: lane.deployer, caller: factory, launcher, initCodeHash: lane.initCodeHash, startAt: Number(BigInt(params.hookSalt)), maxAttempts: 1 });
+    const agreed = getAddress(derived.hookAddress) === getAddress(artHook);
+    offchainCrossCheck = {
+      agreed,
+      detail: agreed
+        ? `the hook address was independently re-derived from the factory's own hookInitCodeHashes() and matches what predict() returned (${artHook}). The project token and collection are NOT derivable from the public record and were not cross-checked.`
+        : `MISMATCH: the contract predicts the hook at ${artHook} and the local derivation gives ${derived.hookAddress}. Do not launch on this — one of the two is describing a generation that is not deployed.`,
+    };
   } catch (err) {
-    offchainCrossCheck = { agreed: false, detail: `off-chain derivation failed: ${err instanceof Error ? err.message : String(err)}` };
+    offchainCrossCheck = { agreed: false, detail: `the off-chain cross-check could not be run: ${err instanceof Error ? err.message : String(err)}. This is UNKNOWN, not agreement.` };
   }
 
   return { projectToken: getAddress(projectToken), projectCollection: getAddress(projectCollection), artHook: getAddress(artHook), poolId, source: "onchain:factory.predict", offchainCrossCheck };

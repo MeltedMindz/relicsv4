@@ -40,6 +40,26 @@ const policy = parsed.policy;
  *  address's predicted set belongs to nobody and can never be launched by anyone else. */
 const LAUNCHER = "0x000000000000000000000000000000000000dEaD";
 
+/** The solidity-svg-params template's own configuration, encoded by the canonical ACV1 encoder. */
+const { encodeArtConfigV1Checked } = await import("@relics/project-schema/art-config");
+const { toHex } = await import("viem");
+// The encoder returns BYTES; `LaunchParams.artConfig` is `bytes` on the wire and viem wants hex.
+const ART_CONFIG = toHex(encodeArtConfigV1Checked({
+  version: 1, format: "ACV1", title: "Rehearsal", animate: true, background: 0,
+  palette: ["#0a0a0b", "#ded9d2", "#c9a227", "#b4532a"],
+  layers: [
+    { kind: "RINGS", sensor: "QUOTE_VOLUME", curve: "LOG2", palette: 2, amountMin: 3, amountMax: 18 },
+    { kind: "STRATA", sensor: "DRAWDOWN", curve: "EASE", palette: 1, amountMin: 0, amountMax: 14 },
+    { kind: "VEIL", sensor: "STRESS", curve: "LINEAR", palette: 3, amountMin: 1, amountMax: 1 },
+  ],
+  traits: [
+    { name: "Volume", source: "VOLUME_TIER", style: "WORD" },
+    { name: "Drawdown", source: "DRAWDOWN", style: "NUMBER" },
+    { name: "Swaps", source: "FRAGMENTATION", style: "NUMBER" },
+    { name: "Vein", source: "DNA_SLOT_0", style: "HEX" },
+  ],
+}));
+
 let failures = 0;
 const rows = [];
 
@@ -70,22 +90,27 @@ for (const chainId of CHAINS) {
     // A well-formed ipfs:// URI that is NOT published to the resolver. `prepare` only hashes the
     // string, so this is honest input; `simulate` is where the absence shows up, by design.
     metadataUri: "ipfs://bafkreicwcpyuqhcj5mtofwruwnn32vectrxbetjvvfgimbikqevxhzrqni",
-    art: { mode: sdk.ArtMode.SOLIDITY_SVG, artTemplateId: 1n, artConfig: "0x41435631" },
+    // REAL ACV1 BYTES from the kit's own launchable template, not a four-byte magic header. The
+    // stub was rejected by `ArtConfigRejected` — correctly, because it is not a configuration.
+    art: { mode: sdk.ArtMode.SOLIDITY_SVG, artTemplateId: 1n, artConfig: ART_CONFIG },
   };
-  // ---- MINE A REAL HOOK SALT. A ZERO SALT IS NOT A PLACEHOLDER --------------------------------
+  // ---- MINE A REAL HOOK SALT, AND USE REAL ART BYTES ------------------------------------------
   // The first version of this rehearsal passed `0x00…00` for both salts and every chain reverted
   // `BadHookAddress()` — which the decoder could not even name, because the hook's errors are not
   // in the factory's ABI. A zero hook salt is an ADDRESS THAT DOES NOT CARRY THE REQUIRED FLAG
   // BITS, so the launch is refused before it reaches any of the checks this rehearsal is trying to
   // exercise. Mining here makes the rehearsal reach the boundary it claims to reach.
-  let hookSalt = `0x${"00".repeat(32)}`;
-  let mined = null;
+  let hookSalt;
   try {
-    const hookInitCodeHashes = await client.readContract({ address: profile.contracts.launchpadFactory, abi: sdk.FACTORY_ABI(), functionName: "hookInitCodeHashes" });
-    row.hookInitCodeHash = String(Array.isArray(hookInitCodeHashes) ? hookInitCodeHashes[0] : hookInitCodeHashes).slice(0, 14) + "…";
-    mined = "read";
+    const lane = await sdk.hookLaneFor(client, profile.contracts.launchpadFactory);
+    const mined = await sdk.mineHookSalt({ deployer: lane.deployer, caller: profile.contracts.launchpadFactory, launcher: LAUNCHER, initCodeHash: lane.initCodeHash });
+    hookSalt = mined.salt;
+    row.hookInitCodeHash = lane.initCodeHash.slice(0, 14) + "…";
+    row.hookAddress = mined.hookAddress;
+    row.hookAttempts = mined.attempts;
   } catch (err) {
-    row.hookInitCodeHash = `unreadable: ${(err instanceof Error ? err.message : String(err)).slice(0, 40)}`;
+    row.hookInitCodeHash = `mining failed: ${(err instanceof Error ? err.message : String(err)).slice(0, 60)}`;
+    failures++; rows.push(row); continue;
   }
 
   let prepared;
@@ -119,6 +144,7 @@ for (const r of rows) {
   console.log(`  prepare         ${r.prepare}`);
   console.log(`  predict         ${r.predict}`);
   console.log(`  poolId          ${r.poolId ?? "-"}`);
+  console.log(`  hook            ${r.hookAddress ?? "-"} (mined in ${r.hookAttempts ?? "-"} attempts, initCodeHash ${r.hookInitCodeHash ?? "-"})`);
   console.log(`  calldata        ${r.calldataBytes ?? "-"} bytes, keccak ${r.dataHash ?? "-"}`);
   console.log(`  simulate        ${r.simulate}   (block ${r.simulateBlock ?? "-"})`);
 }
@@ -133,7 +159,10 @@ const predicted = rows.filter((r) => r.predict && !String(r.predict).startsWith(
 //   BadHookAddress      — no hook salt was mined; mining is a local computation, but binding the
 //                         mined address is part of the launch this rehearsal deliberately does not send.
 //   MetadataNotPublished — no URI was published to the resolver; publishing is a WRITE.
-const EXPECTED_BOUNDARIES = /BadHookAddress|MetadataNotPublished|SUCCEEDED/;
+// The boundary a no-WRITE rehearsal necessarily hits. Publishing a URI to the resolver is a write,
+// and it is the ONLY remaining thing between this and a launch — the hook salt is mined, the art
+// config is real, the params are canonical and the addresses agree with the contract.
+const EXPECTED_BOUNDARIES = /MetadataNotPublished|SUCCEEDED/;
 const unexpected = rows.filter((r) => r.simulate && !EXPECTED_BOUNDARIES.test(r.simulate));
 console.log(`\nPRODUCTION_READONLY_CHAINS=${predicted}/${CHAINS.length}`);
 console.log(`PRODUCTION_READONLY_BROADCASTS=0`);
