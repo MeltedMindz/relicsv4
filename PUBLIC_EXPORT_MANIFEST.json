@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 1252,
+  "fileCount": 1253,
   "files": [
     {
       "path": ".env.example",
@@ -6125,7 +6125,7 @@
     },
     {
       "path": "packages/agent-flow/dist/receipts.js",
-      "sha256": "1c7a45d133c4110aa57b979a791b0f6a645ca64acde1b049e68f3ca25035469b",
+      "sha256": "9e04994b551c396d9322b7fbe32e4f84c75f40a2bbbb7dff51b6b984658ae234",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6174,7 +6174,7 @@
     },
     {
       "path": "packages/agent-flow/src/receipts.ts",
-      "sha256": "8be7cb401959edcf2d9539afe11efc50c3954c0d0e74c3293fa76ad4ac51a060",
+      "sha256": "cdbabf144c64f1294b13677e9e9d2fb7763e1e2b058247380b28b087e7990310",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6216,7 +6216,7 @@
     },
     {
       "path": "packages/creator-cli/src/commands/agent-launch.js",
-      "sha256": "91da07207af8a2f1616097c0a6ac9330f91c5cb9df9fa58dedcc1088f4e865ae",
+      "sha256": "7f9ace087c938f6ccfd511f3b23a6d9daeac64422c8ae9c8d72dfeadb4c2e107",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7070,7 +7070,7 @@
     },
     {
       "path": "packages/launch-sdk/package.json",
-      "sha256": "296e2624d145d11addb1f4f379cf9de940e360e093c1d683f32d7e027b889a2f",
+      "sha256": "991735edba13a8e2795c3acf615db7465ab49ab1edf1fddf36ec1ebeabbe8bbf",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7118,8 +7118,15 @@
       "publicSafe": true
     },
     {
+      "path": "packages/launch-sdk/src/hookSalt.ts",
+      "sha256": "aa3a1280c7a7ff83071a6c4abb581bd068d324e8abde8f5e9027d5c7962a8cc8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "packages/launch-sdk/src/index.ts",
-      "sha256": "c100f62e130d47d63cb40b1128502bdc4d147d33181984c4b50cc27cc06e56c7",
+      "sha256": "f7d1ee2c7e8abb7fcc45dde4676652010bbc8caa39d1dd8f5ade5525647f4b4e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7189,7 +7196,7 @@
     },
     {
       "path": "packages/launch-sdk/src/pipeline.ts",
-      "sha256": "137e74233572d7bee0d2b25440c0e8167366410a96c0aeb3995a51431bc0dc06",
+      "sha256": "c5979c310eb8ea518a44cdd43915aae05d806f505de5355b969c282d95ece980",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8463,7 +8470,7 @@
     },
     {
       "path": "scripts/production-readonly-rehearsal.mjs",
-      "sha256": "974daf87cf1da848466086e81e73077cd02f07ddb0aa3c04af5728d4d15121f9",
+      "sha256": "7916d502a8e5b41018d2062884af13100c784dfaa1ecc00be270e4ebbe5709d3",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
