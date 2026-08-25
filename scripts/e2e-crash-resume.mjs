@@ -34,6 +34,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { getAddress, parseEventLogs } from "viem";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { FACTORY_ABI } from "@relics/launch-sdk";
 import { decideResend, listReceipts, readIntent, verifyReceiptChain } from "@relics/agent-flow";
 
@@ -53,8 +54,14 @@ const LAUNCH_SCRIPT = join(REPO_ROOT, "scripts", "e2e-autonomous-launch.mjs");
 
 /** A never-launched address, used only to give the negative control something absent to look for. */
 const NEVER_LAUNCHED = getAddress("0x00000000000000000000000000000000DeaDBeef");
-/** anvil default account #9 — TEST ONLY, public knowledge, never fund. Used for its untouched nonce. */
-const UNUSED_ANVIL_ACCOUNT = getAddress("0xa0Ee7A142d267C1f36714E4a8F75612F20a79720");
+/**
+ * An address that has never sent a transaction, for the negative control alone.
+ *
+ * GENERATED, not a named test account: the control needs a signer whose nonce has not moved, and
+ * naming an account with a published key would put one back in this repository for no gain. Nothing
+ * signs with it — only its (zero) nonce is read.
+ */
+const NEVER_SENT = privateKeyToAccount(generatePrivateKey()).address;
 
 class ProofFailure extends Error {}
 
@@ -189,8 +196,8 @@ async function main() {
     phase("NEGATIVE CONTROL");
     const controlIntent = {
       ...intent,
-      signer: UNUSED_ANVIL_ACCOUNT,
-      nonceAtIntent: await client.getTransactionCount({ address: UNUSED_ANVIL_ACCOUNT }),
+      signer: NEVER_SENT,
+      nonceAtIntent: await client.getTransactionCount({ address: NEVER_SENT }),
       totalLaunchesAtIntent: launchesAfter.toString(),
       predicted: { ...intent.predicted, projectToken: NEVER_LAUNCHED },
     };

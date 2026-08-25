@@ -27,7 +27,7 @@
   "chainSelection": "PREFERRED_ORDER",
   "allowedRuntimes": ["SOLIDITY_SVG_V1"],
   "allowedQuoteAssets": "AUTO",
-  "creatorRecipient": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "creatorRecipient": "0x000000000000000000000000000000000E2E7e57",
   "allowedAntiSnipeModes": ["NONE", "PROTECTED_98_MINUTES"],
   "antiSnipePreference": "AUTO",
   "maxRoyaltyBps": 500,
