@@ -27,9 +27,8 @@
     "upgradeability.ts": "ADMIN_ONLY — reads and describes upgrade authority surfaces that only the protocol Safe can exercise.",
     "localfork/": "UNRELATED — private fork fixtures.",
     "multichain/": "PRIVATE_OPERATOR — carries operator deployment wiring beyond what a creator needs.",
-    "abi.ts": "REPLACED — reads artifacts by filesystem path from the private tree. The public SDK loads its own committed contracts-abi/rc6 instead; same artifacts, public path.",
-    "params.ts": "REPLACED — imports the private launch-protection package and server-shaped creator input. The public SDK derives LaunchParams from the .relics bundle through the public project-schema instead, and proves byte parity against this file's output.",
-    "simulate.ts": "REPLACED — pinned to the RC5 factory artifact. The public SDK simulates against RC6 and proves the calldata is identical.",
+    "abi.ts": "REPLACED (THIN) — reads artifacts by filesystem path from the private tree and defaults to RC5. The public SDK loads its own committed contracts-abi/rc6 instead; same artifacts, public path.",
+    "simulate.ts": "REPLACED (THIN) — its logic is one eth_call plus a revert decode, but it resolves its ABI through the private abi.ts, which is pinned to the RC5 artifact and reads the private filesystem. The public wrapper passes the committed RC6 ABI to the SAME vendored tuple encoder, so no launch semantics are reimplemented — only the ABI source differs. The public SDK simulates against RC6 and proves the calldata is identical.",
     "readiness.ts": "REPLACED — server-shaped readiness report; the public preflight reads the same chain facts through the public capability layer."
   },
   "sources": {
@@ -101,6 +100,13 @@
       "upstreamSha256": "392daf1aecd4510de3168d57b21f14b257ae13115a095f1ca7eb59e30f395c80",
       "publicSha256": "392daf1aecd4510de3168d57b21f14b257ae13115a095f1ca7eb59e30f395c80",
       "bytes": 5553,
+      "classification": "PUBLIC_SAFE"
+    },
+    "params.ts": {
+      "upstreamPath": "launchpad/sdk/src/params.ts",
+      "upstreamSha256": "f567520c4f70fdb8519ef8a4add1943c89202146bd29d1d8cde646bda850c5f5",
+      "publicSha256": "f567520c4f70fdb8519ef8a4add1943c89202146bd29d1d8cde646bda850c5f5",
+      "bytes": 18072,
       "classification": "PUBLIC_SAFE"
     }
   },

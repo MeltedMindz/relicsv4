@@ -79,7 +79,8 @@
     "predict.ts": "c089d032f2961f912e918f4cd2b4e10f534a84646ff96c47e547679fb69af6f7",
     "launchCalldata.ts": "f1a87df079a35ff5a835f0dd4a7955542d3dc8dd204ced7546c2b9eebad92c9c",
     "creatorEarnings.ts": "180b78d53ead3653d426b420febd0f37ef49472380e923483145143cf1f8982e",
-    "byteBudget.ts": "392daf1aecd4510de3168d57b21f14b257ae13115a095f1ca7eb59e30f395c80"
+    "byteBudget.ts": "392daf1aecd4510de3168d57b21f14b257ae13115a095f1ca7eb59e30f395c80",
+    "params.ts": "f567520c4f70fdb8519ef8a4add1943c89202146bd29d1d8cde646bda850c5f5"
   },
   "publicSdkSourceGeneration": "1"
 }

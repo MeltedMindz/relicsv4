@@ -58,6 +58,15 @@ const VENDORED_SOURCES = [
   "launchCalldata.ts",
   "creatorEarnings.ts",
   "byteBudget.ts",
+  // ADDED after a second look. This was withheld on the belief that it imported the private
+  // launch-protection package and a server-shaped creator input; it imports neither. Its only
+  // dependencies are `constants.ts`, `types.ts` and `creatorEarnings.ts`, all vendored above. It is
+  // the canonical `CreatorInput -> LaunchParams` builder, including the three deliberate
+  // asymmetries a reimplementation would have got wrong: `burnPolicy` and `backingUnitsPerArtwork`
+  // default because NONE and full parity are real things a creator means by silence, and
+  // `antiSnipeMode` does NOT default because the on-chain zero is UNSPECIFIED and the factory
+  // refuses it. Reimplementing that from the comments would have been a second `prepare`.
+  "params.ts",
 ];
 
 /** Public ABI artifacts. These are published and source-verified on three block explorers. */
@@ -74,9 +83,8 @@ const WITHHELD = {
   "upgradeability.ts": "ADMIN_ONLY — reads and describes upgrade authority surfaces that only the protocol Safe can exercise.",
   "localfork/": "UNRELATED — private fork fixtures.",
   "multichain/": "PRIVATE_OPERATOR — carries operator deployment wiring beyond what a creator needs.",
-  "abi.ts": "REPLACED — reads artifacts by filesystem path from the private tree. The public SDK loads its own committed contracts-abi/rc6 instead; same artifacts, public path.",
-  "params.ts": "REPLACED — imports the private launch-protection package and server-shaped creator input. The public SDK derives LaunchParams from the .relics bundle through the public project-schema instead, and proves byte parity against this file's output.",
-  "simulate.ts": "REPLACED — pinned to the RC5 factory artifact. The public SDK simulates against RC6 and proves the calldata is identical.",
+  "abi.ts": "REPLACED (THIN) — reads artifacts by filesystem path from the private tree and defaults to RC5. The public SDK loads its own committed contracts-abi/rc6 instead; same artifacts, public path.",
+  "simulate.ts": "REPLACED (THIN) — its logic is one eth_call plus a revert decode, but it resolves its ABI through the private abi.ts, which is pinned to the RC5 artifact and reads the private filesystem. The public wrapper passes the committed RC6 ABI to the SAME vendored tuple encoder, so no launch semantics are reimplemented — only the ABI source differs. The public SDK simulates against RC6 and proves the calldata is identical.",
   "readiness.ts": "REPLACED — server-shaped readiness report; the public preflight reads the same chain facts through the public capability layer.",
 };
 

@@ -1,0 +1,21 @@
+{
+  "name": "@relics/signer-protocol",
+  "version": "0.1.0",
+  "description": "The signer boundary for autonomous launches: an agent hands a SigningRequest to a signer process and gets back a signed transaction or a typed refusal. The agent never holds a key.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22.6"
+  },
+  "dependencies": {
+    "@relics/project-schema": "3.12.0",
+    "viem": "^2.40.1"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}
