@@ -206,7 +206,19 @@ async function cmdDoctor(name, workspace, flags, json) {
     if (!profile) continue;
     const rpc = resolveRpc(profile);
     // THE VALUE IS NEVER PRINTED. `source` is what a reader needs and the URL may carry a credential.
-    add(`rpc.${id}`, rpc !== null, rpc === null ? `no endpoint: set ${profile.rpcEnvKey}` : rpc.source === "PUBLIC_FALLBACK" ? `using the PUBLIC fallback because ${profile.rpcEnvKey} is unset — rate-limited, and a partial read is an UNKNOWN rather than a refusal` : `configured via ${profile.rpcEnvKey}`);
+    // A PUBLIC FALLBACK IS NOT "ok" HERE, BECAUSE PREFLIGHT WILL REFUSE IT. `doctor` used to score
+    // it a pass, and then `preflight` rejected the same chain with `UNKNOWN:rpc.credentialled` —
+    // two commands giving opposite answers about one fact, which reads as a bug in whichever one
+    // the reader trusted less. They now agree: a chain without its own configured endpoint is not
+    // ready for an autonomous launch, and doctor is the command that is supposed to say so BEFORE
+    // any work is done.
+    const rpcReady = rpc !== null && rpc.source !== "PUBLIC_FALLBACK";
+    add(`rpc.${id}`, rpcReady,
+      rpc === null
+        ? `no endpoint: set ${profile.rpcEnvKey}`
+        : rpc.source === "PUBLIC_FALLBACK"
+          ? `only the PUBLIC fallback is available because ${profile.rpcEnvKey} is unset. Public endpoints rate-limit, and a partial read is an UNKNOWN rather than a refusal — so preflight will not admit this chain. Set ${profile.rpcEnvKey}.`
+          : `configured via ${profile.rpcEnvKey}`);
   }
 
   const signerUrl = process.env.RELICS_SIGNER_URL ?? null;
