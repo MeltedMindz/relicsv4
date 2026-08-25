@@ -1,0 +1,26 @@
+{
+  "name": "@relics/launch-sdk",
+  "version": "1.0.0",
+  "description": "Public chain-facing SDK for RELICS Launchpad RC6: live chain capability, quote selection, prepare/predict/simulate/build, policy checking and post-launch verification. The deterministic launch semantics are VENDORED from the canonical production implementation and digest-pinned; this package does not reimplement them.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./contracts-abi/*": "./contracts-abi/*"
+  },
+  "files": ["dist", "src", "contracts-abi", "VENDOR.json", "README.md"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@relics/project-schema": "3.12.0",
+    "viem": "^2.37.15"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

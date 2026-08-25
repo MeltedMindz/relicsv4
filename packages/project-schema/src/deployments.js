@@ -255,6 +255,15 @@ export const RC6_DEPLOYMENTS = Object.freeze({
       templateRegistry: "0xb3F2EDaf7dF7d0A98E3F45A55EC7c20855c2E932",
       feeAccounting: "0x9fB49C18361133dD57DD996ABa0cDEaa6c93ae00",
       metadataResolver: "0x112D480aeD3f6F6761E8136F4372AEbd48455e1b",
+      // READ BACK OFF THE CHAIN before it was published here, on all three chains, on 2026-08-25:
+      // 163 bytes of code (an ERC-1967 proxy), `runtimeCount()` answering 1 / 1 / 2, and id 1
+      // resolving to `SOLIDITY_SVG_V1` at 0x265eE6a0E321d8581B91a032CE43617Da591dAB4, mode 1,
+      // active, on every one. Same address on all three because the RC6 CREATE2 salt scheme carries
+      // no chain id. It is NOT reachable through `factory.wiring()` — `artLane()` was removed under
+      // EIP-170 — so a consumer that needs the registry needs it from a record, and this is that
+      // record. WHAT LIVES IN THE REGISTRY IS STILL A LIVE QUESTION: this line says where to look,
+      // never what is registered there.
+      artRuntimeRegistry: "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
     }),
   }),
   56: null, // not deployed — chain profile says platformContracts.status is "PREPARED_NOT_DEPLOYED" (deployment package is PREPARED_UNSIGNED)
@@ -274,6 +283,15 @@ export const RC6_DEPLOYMENTS = Object.freeze({
       templateRegistry: "0xb3F2EDaf7dF7d0A98E3F45A55EC7c20855c2E932",
       feeAccounting: "0x0Be6edd65708022e661d8c5C002d50a99b38E1c5",
       metadataResolver: "0x112D480aeD3f6F6761E8136F4372AEbd48455e1b",
+      // READ BACK OFF THE CHAIN before it was published here, on all three chains, on 2026-08-25:
+      // 163 bytes of code (an ERC-1967 proxy), `runtimeCount()` answering 1 / 1 / 2, and id 1
+      // resolving to `SOLIDITY_SVG_V1` at 0x265eE6a0E321d8581B91a032CE43617Da591dAB4, mode 1,
+      // active, on every one. Same address on all three because the RC6 CREATE2 salt scheme carries
+      // no chain id. It is NOT reachable through `factory.wiring()` — `artLane()` was removed under
+      // EIP-170 — so a consumer that needs the registry needs it from a record, and this is that
+      // record. WHAT LIVES IN THE REGISTRY IS STILL A LIVE QUESTION: this line says where to look,
+      // never what is registered there.
+      artRuntimeRegistry: "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
       swapRouter: "0x581c8EaeB2b051632d27Bb49157d6424C0D7eBF1",
     }),
   }),
@@ -293,6 +311,15 @@ export const RC6_DEPLOYMENTS = Object.freeze({
       templateRegistry: "0xb3F2EDaf7dF7d0A98E3F45A55EC7c20855c2E932",
       feeAccounting: "0x8D23741ef600a426DBd44E507Bc377e7991A14f6",
       metadataResolver: "0x112D480aeD3f6F6761E8136F4372AEbd48455e1b",
+      // READ BACK OFF THE CHAIN before it was published here, on all three chains, on 2026-08-25:
+      // 163 bytes of code (an ERC-1967 proxy), `runtimeCount()` answering 1 / 1 / 2, and id 1
+      // resolving to `SOLIDITY_SVG_V1` at 0x265eE6a0E321d8581B91a032CE43617Da591dAB4, mode 1,
+      // active, on every one. Same address on all three because the RC6 CREATE2 salt scheme carries
+      // no chain id. It is NOT reachable through `factory.wiring()` — `artLane()` was removed under
+      // EIP-170 — so a consumer that needs the registry needs it from a record, and this is that
+      // record. WHAT LIVES IN THE REGISTRY IS STILL A LIVE QUESTION: this line says where to look,
+      // never what is registered there.
+      artRuntimeRegistry: "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
     }),
   }),
 });

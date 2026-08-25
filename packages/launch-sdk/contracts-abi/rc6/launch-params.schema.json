@@ -1,0 +1,197 @@
+{
+  "note": "DERIVED from launchpad/out/LaunchpadFactoryV1.sol/LaunchpadFactoryV1.json by sdk/scripts/refresh-contracts-abi.mjs. The ORDER of `fields` is load-bearing: ABI tuple encoding is positional, so a reorder that keeps every name is still a different calldata layout.",
+  "generation": "RC6",
+  "contract": "LaunchpadFactoryV1",
+  "struct": "struct LaunchParams",
+  "fieldCount": 19,
+  "signature": "launch((string,string,uint256,uint256,uint8,bytes32,bytes32,uint8,uint256,bytes32,bytes,bytes,address,(address,uint16)[],uint8,uint8,bytes32,uint256,uint256))",
+  "fields": [
+    {
+      "index": 0,
+      "name": "name",
+      "type": "string",
+      "canonicalType": "string",
+      "internalType": "string"
+    },
+    {
+      "index": 1,
+      "name": "symbol",
+      "type": "string",
+      "canonicalType": "string",
+      "internalType": "string"
+    },
+    {
+      "index": 2,
+      "name": "totalSupply",
+      "type": "uint256",
+      "canonicalType": "uint256",
+      "internalType": "uint256"
+    },
+    {
+      "index": 3,
+      "name": "artworkBackingUnits",
+      "type": "uint256",
+      "canonicalType": "uint256",
+      "internalType": "uint256"
+    },
+    {
+      "index": 4,
+      "name": "startingPreset",
+      "type": "uint8",
+      "canonicalType": "uint8",
+      "internalType": "enum StartingPreset"
+    },
+    {
+      "index": 5,
+      "name": "tokenSalt",
+      "type": "bytes32",
+      "canonicalType": "bytes32",
+      "internalType": "bytes32"
+    },
+    {
+      "index": 6,
+      "name": "hookSalt",
+      "type": "bytes32",
+      "canonicalType": "bytes32",
+      "internalType": "bytes32"
+    },
+    {
+      "index": 7,
+      "name": "artMode",
+      "type": "uint8",
+      "canonicalType": "uint8",
+      "internalType": "enum ArtMode"
+    },
+    {
+      "index": 8,
+      "name": "artTemplateId",
+      "type": "uint256",
+      "canonicalType": "uint256",
+      "internalType": "uint256"
+    },
+    {
+      "index": 9,
+      "name": "artScriptHash",
+      "type": "bytes32",
+      "canonicalType": "bytes32",
+      "internalType": "bytes32"
+    },
+    {
+      "index": 10,
+      "name": "artConfig",
+      "type": "bytes",
+      "canonicalType": "bytes",
+      "internalType": "bytes"
+    },
+    {
+      "index": 11,
+      "name": "marketStateConfig",
+      "type": "bytes",
+      "canonicalType": "bytes",
+      "internalType": "bytes"
+    },
+    {
+      "index": 12,
+      "name": "creatorRecipient",
+      "type": "address",
+      "canonicalType": "address",
+      "internalType": "address"
+    },
+    {
+      "index": 13,
+      "name": "collaborators",
+      "type": "tuple[]",
+      "canonicalType": "(address,uint16)[]",
+      "internalType": "struct Collaborator[]"
+    },
+    {
+      "index": 14,
+      "name": "burnPolicy",
+      "type": "uint8",
+      "canonicalType": "uint8",
+      "internalType": "enum BurnPolicy"
+    },
+    {
+      "index": 15,
+      "name": "antiSnipeMode",
+      "type": "uint8",
+      "canonicalType": "uint8",
+      "internalType": "enum AntiSnipeMode"
+    },
+    {
+      "index": 16,
+      "name": "metadataUriHash",
+      "type": "bytes32",
+      "canonicalType": "bytes32",
+      "internalType": "bytes32"
+    },
+    {
+      "index": 17,
+      "name": "creatorEarnings",
+      "type": "uint256",
+      "canonicalType": "uint256",
+      "internalType": "uint256"
+    },
+    {
+      "index": 18,
+      "name": "backingUnitsPerArtwork",
+      "type": "uint256",
+      "canonicalType": "uint256",
+      "internalType": "uint256"
+    }
+  ],
+  "result": {
+    "struct": "struct LaunchResult",
+    "fields": [
+      {
+        "index": 0,
+        "name": "projectToken",
+        "type": "address",
+        "canonicalType": "address",
+        "internalType": "address"
+      },
+      {
+        "index": 1,
+        "name": "projectCollection",
+        "type": "address",
+        "canonicalType": "address",
+        "internalType": "address"
+      },
+      {
+        "index": 2,
+        "name": "artHook",
+        "type": "address",
+        "canonicalType": "address",
+        "internalType": "address"
+      },
+      {
+        "index": 3,
+        "name": "projectId",
+        "type": "uint256",
+        "canonicalType": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "index": 4,
+        "name": "poolKey",
+        "type": "tuple",
+        "canonicalType": "(address,address,uint24,int24,address)",
+        "internalType": "struct PoolKey"
+      },
+      {
+        "index": 5,
+        "name": "poolId",
+        "type": "bytes32",
+        "canonicalType": "bytes32",
+        "internalType": "PoolId"
+      },
+      {
+        "index": 6,
+        "name": "genesisLiquidity",
+        "type": "uint128",
+        "canonicalType": "uint128",
+        "internalType": "uint128"
+      }
+    ]
+  }
+}

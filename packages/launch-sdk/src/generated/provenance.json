@@ -1,0 +1,85 @@
+{
+  "$comment": [
+    "GENERATED — do not hand-edit. `npm run launch:provenance` regenerates it.",
+    "This records WHICH protocol generation the public SDK's types and encoder were generated from.",
+    "It carries NO chain status on purpose: whether a factory is deployed, whether launchAccess is",
+    "PUBLIC, and whether a runtime is registered are LIVE facts, read at the moment they are relied",
+    "on. A checked-in file asserting a chain is open is a stale doc enabling a launch."
+  ],
+  "protocolGeneration": "RC6",
+  "launchParams": {
+    "fieldCount": 19,
+    "fieldOrder": [
+      "name",
+      "symbol",
+      "totalSupply",
+      "artworkBackingUnits",
+      "startingPreset",
+      "tokenSalt",
+      "hookSalt",
+      "artMode",
+      "artTemplateId",
+      "artScriptHash",
+      "artConfig",
+      "marketStateConfig",
+      "creatorRecipient",
+      "collaborators",
+      "burnPolicy",
+      "antiSnipeMode",
+      "metadataUriHash",
+      "creatorEarnings",
+      "backingUnitsPerArtwork"
+    ],
+    "fieldTypes": [
+      "string",
+      "string",
+      "uint256",
+      "uint256",
+      "uint8",
+      "bytes32",
+      "bytes32",
+      "uint8",
+      "uint256",
+      "bytes32",
+      "bytes",
+      "bytes",
+      "address",
+      "(address,uint16)[]",
+      "uint8",
+      "uint8",
+      "bytes32",
+      "uint256",
+      "uint256"
+    ],
+    "tupleSignature": "(string,string,uint256,uint256,uint8,bytes32,bytes32,uint8,uint256,bytes32,bytes,bytes,address,(address,uint16)[],uint8,uint8,bytes32,uint256,uint256)",
+    "tupleSignatureSha256": "e88ce76cf02a2b8f71294fc768dc8fd0355807989bc3677bd5572b847303fc05",
+    "fieldOrderSha256": "c6c3a099c7d5fc031365110e7b7188d6bf924d4b80b6e0f221635e018071158c"
+  },
+  "launch": {
+    "signature": "launch((string,string,uint256,uint256,uint8,bytes32,bytes32,uint8,uint256,bytes32,bytes,bytes,address,(address,uint16)[],uint8,uint8,bytes32,uint256,uint256))",
+    "selector": "0x2d05a45d"
+  },
+  "factoryAbiSha256": "0b4a358d1efe32380678049ca1bff34d0f54ee396d097c247132322c66dcf06b",
+  "abis": {
+    "ArtHookRc6.json": "453e252bde397afb28182da7a3000c086958ab3fb8c2540443eb012bbf0d35fd",
+    "LaunchpadFactoryV1.json": "0b4a358d1efe32380678049ca1bff34d0f54ee396d097c247132322c66dcf06b",
+    "MetadataResolverRc6.json": "2ade54657f55203705477a5991468aa0dc23527c67a42f3347a8471e3e449c7d",
+    "ProjectCollectionV1.json": "0e07ae30c4e849f41e30277795d1d4e2bafe3cc18cc9526fe96a5344951042d4",
+    "ProjectRegistryV1.json": "4a7b606921aae2b32fbf7c9e0fde6553fd5a8216a5f1cfc2f72eeabdc14c825c",
+    "ProjectTokenV1.json": "d7900dca95c0e55aae883115fbafdc31b560ae8f9b3e64746d562077cee9755d",
+    "launch-params.schema.json": "84992c441b80d847148c0cf5b9cecfd8cae6f17867b9eb36549a6f285b12ed69"
+  },
+  "vendoredSources": {
+    "generated/rc6LaunchParams.ts": "7981baf4e263a47f85b94e1def36a3984856f64e6c5ec281e9446a050ae5c4c7",
+    "types.ts": "d515674105da56cf83fcdce38ca8bbc1d37ddd9d70d3bd167ea4f68b3e1fe8e1",
+    "constants.ts": "598b7263935572f4a373580dd7e074266ae6ac51248964b6ccab49659d25a35e",
+    "poolLane.ts": "c3cd30f696f0ce80db5c42282bf21a581bb130804f7cfae6a481e2ce9d698af9",
+    "hookMiner.ts": "895768562bd992f51e83e77174452d358d41acaa36b1c70617de8c8658b6aba0",
+    "tokenMiner.ts": "faade9c0b99225047025f28262634074d090a44d03dfddeed034fe191fa36f2e",
+    "predict.ts": "c089d032f2961f912e918f4cd2b4e10f534a84646ff96c47e547679fb69af6f7",
+    "launchCalldata.ts": "f1a87df079a35ff5a835f0dd4a7955542d3dc8dd204ced7546c2b9eebad92c9c",
+    "creatorEarnings.ts": "180b78d53ead3653d426b420febd0f37ef49472380e923483145143cf1f8982e",
+    "byteBudget.ts": "392daf1aecd4510de3168d57b21f14b257ae13115a095f1ca7eb59e30f395c80"
+  },
+  "publicSdkSourceGeneration": "1"
+}
