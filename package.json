@@ -69,6 +69,8 @@
     "e2e:autonomous": "node scripts/e2e-autonomous-launch.mjs",
     "e2e:resume": "node scripts/e2e-crash-resume.mjs",
     "public:review": "node scripts/public-export-review.mjs",
-    "public:freshclone": "node scripts/verify-fresh-clone.mjs"
+    "public:freshclone": "node scripts/verify-fresh-clone.mjs",
+    "build:packages": "tsc -p packages/launch-sdk/tsconfig.json && tsc -p packages/agent-flow/tsconfig.json",
+    "postinstall": "node scripts/postinstall-build.mjs"
   }
 }

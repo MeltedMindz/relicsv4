@@ -20,7 +20,7 @@
 //   node scripts/verify-gates-fail.mjs [--only <gate>]
 
 import { execFileSync } from "node:child_process";
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync, mkdirSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -28,8 +28,8 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
- * EVERY TRACKED FILE, copied into the scratch tree. `node_modules` is not, because no gate here
- * needs it.
+ * EVERY TRACKED FILE, copied into the scratch tree. `node_modules` is SYMLINKED beside it (see the
+ * note at the symlink itself — it used to be omitted, and a MODE B gate went red for want of it).
  *
  * A hand-written subset was tried first and it was wrong in the way that matters: three gates went
  * red BEFORE any mutation, because their real inputs — the whole repository for the economics scan,
@@ -205,6 +205,24 @@ for (const spec of GATES) {
     git("config", "maintenance.auto", "false");
     git("add", "-A");
     git("-c", "user.email=gate@selftest", "-c", "user.name=gate", "commit", "-q", "-m", "baseline");
+
+    // ---- node_modules, SYMLINKED --------------------------------------------------------------
+    //
+    // This used to say "`node_modules` is not [copied], because no gate here needs it", and that
+    // was true until MODE B existed. `kit:readme` now executes `relics agent doctor`, which
+    // dynamically imports `@relics/launch-sdk`, so without a module tree that gate went red BEFORE
+    // any mutation and scored INCONCLUSIVE — a gate red for a reason the harness caused, which is
+    // exactly the confusion this script exists to remove.
+    //
+    // Symlinked rather than copied: it is hundreds of megabytes, nothing here writes to it, and a
+    // copy would make this harness slower than the gates it is checking.
+    //
+    // AFTER the baseline commit, deliberately. Created before it, `git add -A` follows the link and
+    // the scratch repository ends up tracking a module tree — which then appears in the generated
+    // export manifest and makes `export:manifest:check` red before any mutation. Same class of
+    // harness-caused redness this block was added to fix, just moved one gate along.
+    if (existsSync(join(ROOT, "node_modules"))) symlinkSync(join(ROOT, "node_modules"), join(scratch, "node_modules"), "dir");
+
 
     // 1. GREEN FIRST. If the gate is red before the mutation, the run proves nothing about it.
     const before = runGate(scratch, spec);
