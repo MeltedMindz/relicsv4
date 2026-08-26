@@ -109,11 +109,18 @@ export function createLocalSidecarSigner(options: LocalSidecarOptions = {}): Sig
       return supported;
     },
 
-    async sign(req: SigningRequest): Promise<SignerResult> {
+    /**
+     * `simulation` is the proof that these exact bytes were dry-run successfully. The signer
+     * REQUIRES it and re-checks its `dataHash` against the request; omitting it is refused, not
+     * defaulted. It is a second argument rather than part of the request because it is evidence
+     * ABOUT the transaction produced by a different step, and the signer's whole job is to not take
+     * the orchestrator's word for anything.
+     */
+    async sign(req: SigningRequest, simulation?: unknown): Promise<SignerResult> {
       const { status, body } = await call("/sign", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(encodeSigningRequest(req)),
+        body: JSON.stringify({ request: encodeSigningRequest(req), simulation: simulation ?? null }),
       });
       // 403 IS THE REFUSAL CHANNEL. It arrives as the same typed `SignerRefusal` the in-process
       // guard produces, so a caller branches on `.code` without caring which side refused.

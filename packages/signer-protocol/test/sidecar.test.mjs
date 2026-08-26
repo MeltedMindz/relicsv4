@@ -30,12 +30,23 @@ import {
   erc20TransferCalldata,
   launchCalldata,
   signingRequest,
+  withTestAuthorization,
 } from "./helpers.mjs";
 
 let running;
 let client;
+let grant;
+
+/** The proof the signer now requires: a successful simulation OF THESE EXACT BYTES. */
+const simulationFor = (req) => ({ ok: true, dataHash: req.dataHash, chainId: req.chainId, blockNumber: "1" });
 
 before(async () => {
+  // THE SERVER REQUIRES A GRANT AND NEVER TAKES THE ESCAPE HATCH -- that is what it is for. So this
+  // suite supplies one the way a creator would, relocated into a temp RELICS_HOME so nothing here
+  // can touch a real wallet or a real authorization. A test that switched the requirement off
+  // instead would be testing a server nobody runs.
+  grant = withTestAuthorization();
+  await grant.install();
   running = await startSignerServer({
     adapter: createDevKeystoreSigner({ privateKey: ANVIL_ACCOUNT_ZERO }),
     policy: TEST_POLICY,
@@ -46,6 +57,7 @@ before(async () => {
 
 after(async () => {
   await running.close();
+  grant.restore();
 });
 
 test("the server binds loopback and reports the origin it actually got", () => {
@@ -60,24 +72,36 @@ test("GET /address and GET /supports-chain answer the two questions an adapter h
 
 test("a well-formed in-policy launch is signed across the wire", async () => {
   const request = signingRequest();
-  const result = await client.sign(request);
+  const result = await client.sign(request, simulationFor(request));
   assert.equal(result.kind, "SIGNED");
   const recovered = await recoverTransactionAddress({ serializedTransaction: result.rawTransaction });
   assert.equal(recovered.toLowerCase(), ANVIL_ACCOUNT_ZERO_ADDRESS.toLowerCase());
 });
 
 test("CONTROL: the SERVER applies the same guard — an out-of-policy request POSTed straight at the socket is refused", async () => {
+  // AN ERC-20 TRANSFER WEARING THE LAUNCH SELECTOR. It carries a valid simulation proof so it gets
+  // PAST the grant checks and reaches the shape guard this control is actually about; without the
+  // proof it would refuse for the right reason at the wrong step and prove nothing about selectors.
   const data = erc20TransferCalldata();
+  const arbitrary = signingRequest({ data, dataHash: keccak256(data), selector: LAUNCH_SELECTOR });
   await assert.rejects(
-    () => client.sign(signingRequest({ data, dataHash: keccak256(data), selector: LAUNCH_SELECTOR })),
+    () => client.sign(arbitrary, simulationFor(arbitrary)),
     (error) => error instanceof SignerRefusedError && error.code === "SELECTOR_NOT_ALLOWED",
   );
 
   // …and the raw HTTP answer is a 403 carrying the typed refusal, not a 500 and not a signature.
+  //
+  // TWO GUARDS REFUSE A REDIRECTED RECIPIENT AND THE SHAPE GUARD GETS THERE FIRST. The order is
+  // permission -> shape -> grant-calldata, so `RECIPIENT_NOT_POLICY_RECIPIENT` fires before the
+  // grant's `RECIPIENT_NOT_AUTHORIZED` ever runs. Both compare the recipient DECODED FROM THE
+  // BYTES against an authorized value, and the redundancy is deliberate: the shape guard checks it
+  // against the policy the build was approved under, the grant against what the human typed. A
+  // launch has to satisfy both.
+  const redirected = signingRequest({ data: launchCalldata(ATTACKER_RECIPIENT) });
   const response = await fetch(new URL("/sign", running.url), {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(encodeSigningRequest(signingRequest({ data: launchCalldata(ATTACKER_RECIPIENT) }))),
+    body: JSON.stringify({ request: encodeSigningRequest(redirected), simulation: simulationFor(redirected) }),
   });
   assert.equal(response.status, 403);
   assert.deepEqual(Object.keys(await response.clone().json()).sort(), ["code", "detail", "kind"]);

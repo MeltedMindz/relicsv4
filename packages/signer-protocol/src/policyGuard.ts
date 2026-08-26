@@ -57,6 +57,8 @@ export interface PolicyGuardInput {
   readonly approvedBuild: ApprovedBuild | null | undefined;
 }
 
+import { checkGrantPermission, checkGrantCalldata, type SimulationReceipt } from "./grantGuard.ts";
+
 function refuse(code: SignerRefusalCode, detail: string): SignerRefusal {
   return { kind: "REFUSED", code, detail };
 }
@@ -220,9 +222,37 @@ export interface ChainSupportProbe {
  * signer refuses every production chain by design (`adapters/devKeystore.ts`), and that refusal has
  * to reach the agent as a typed code rather than as a signature nobody expected.
  */
-export async function guardSigningRequest(input: PolicyGuardInput & { readonly signer: ChainSupportProbe }): Promise<PolicyVerdict> {
+export async function guardSigningRequest(
+  input: PolicyGuardInput & { readonly signer: ChainSupportProbe; readonly simulation?: SimulationReceipt | null; readonly requireGrant?: boolean },
+): Promise<PolicyVerdict> {
+  // ---- THE GRANT COMES FIRST -------------------------------------------------------------------
+  //
+  // Whether the creator still permits ANY launch is cheaper to answer than whether this particular
+  // transaction has the right shape, and a revoked or expired grant makes the shape irrelevant. It
+  // also means a spent authorization refuses before the signer decodes bytes it will never sign.
+  //
+  // `requireGrant` defaults to TRUE. It exists so the 4.1.0 unit tests — which predate the grant
+  // model and construct a request directly — can exercise the shape checks in isolation. Production
+  // never sets it: `signerServer` requires a grant unconditionally.
+  const grantRequired = input.requireGrant !== false;
+
+  // PHASE 1 — permission. No calldata is touched, so an expired or revoked grant refuses before the
+  // signer does any work on bytes it will never sign.
+  if (grantRequired) {
+    const permission = checkGrantPermission(input.simulation !== undefined ? { request: input.request, simulation: input.simulation } : { request: input.request });
+    if (permission.kind === "REFUSED") return { kind: "REFUSED", code: permission.code as unknown as SignerRefusalCode, detail: permission.detail };
+  }
+
+  // PHASE 2 — shape. Establishes that this is a launch() at the canonical factory before anything
+  // tries to read `LaunchParams` out of it.
   const staticVerdict = checkStaticPolicy(input);
   if (staticVerdict.kind !== "ALLOWED") return staticVerdict;
+
+  // PHASE 3 — the decoded fields against what the creator authorized.
+  if (grantRequired) {
+    const calldata = checkGrantCalldata({ request: input.request });
+    if (calldata.kind === "REFUSED") return { kind: "REFUSED", code: calldata.code as unknown as SignerRefusalCode, detail: calldata.detail };
+  }
 
   let supported: boolean;
   try {

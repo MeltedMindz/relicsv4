@@ -75,14 +75,14 @@ test("a mainnet request through the policy-bound signer comes back as a typed re
   // between this request and a signature is the adapter's own answer about the chain.
   const policy = { ...TEST_POLICY, allowedChains: [1] };
   const build = { ...APPROVED_BUILD, chainId: 1 };
-  const signer = createPolicyBoundSigner(devSigner(), policy, build);
+  const signer = createPolicyBoundSigner(devSigner(), policy, build, { requireGrant: false });
   const refused = await signer.trySign(signingRequest({ chainId: 1 }));
   assert.equal(refused.kind, "REFUSED");
   assert.equal(refused.code, "SIGNER_DOES_NOT_SUPPORT_CHAIN");
 });
 
 test("a well-formed in-policy launch is SIGNED, and the signature is over the bytes that were checked", async () => {
-  const signer = createPolicyBoundSigner(devSigner(), TEST_POLICY, APPROVED_BUILD);
+  const signer = createPolicyBoundSigner(devSigner(), TEST_POLICY, APPROVED_BUILD, { requireGrant: false });
   const request = signingRequest();
   const result = await signer.sign(request);
 

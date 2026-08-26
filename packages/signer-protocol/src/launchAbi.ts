@@ -105,6 +105,35 @@ function assertLaunchParamsShape(abi: Abi): readonly AbiComponent[] {
 
 const LAUNCH_PARAMS_COMPONENTS = assertLaunchParamsShape(LAUNCH_FACTORY_ABI);
 
+/**
+ * THE WHOLE DECODED STRUCT, for the checks that need more than the recipient.
+ *
+ * 4.1.0 decoded exactly one field because that was the only one policy bounded. A grant now bounds
+ * the runtime, the anti-snipe election and the royalty too, and every one of those must be read out
+ * of the BYTES for the same reason the recipient is: an auxiliary JSON field beside the calldata is
+ * a claim, and the calldata is the transaction.
+ */
+export function decodeLaunchParamsFromCalldata(data: Hex): Record<string, unknown> {
+  const { args } = decodeFunctionData({ abi: LAUNCH_FACTORY_ABI, data });
+  const params = (args as readonly unknown[])[0] as Record<string, unknown> | undefined;
+  if (!params || typeof params !== "object") {
+    throw new LaunchCalldataDecodeError("launch() calldata decoded but carried no LaunchParams struct");
+  }
+  // THE FIELD COUNT IS A CHECK, NOT A FORMALITY. A tuple that decoded with the wrong arity means
+  // the ABI and the bytes disagree, and a positional tuple that disagrees is a different transaction.
+  const present = RC6_LAUNCH_PARAMS_FIELDS.filter((f) => params[f] !== undefined);
+  if (present.length !== RC6_LAUNCH_PARAMS_FIELDS.length) {
+    throw new LaunchCalldataDecodeError(
+      `LaunchParams decoded with ${present.length} of ${RC6_LAUNCH_PARAMS_FIELDS.length} fields present. ` +
+        "A short positional tuple is not a partial transaction; it is a different one.",
+    );
+  }
+  return params;
+}
+
+/** How many fields the struct must have. Read from the SDK's generated list, never typed here. */
+export const LAUNCH_PARAMS_FIELD_COUNT = RC6_LAUNCH_PARAMS_FIELDS.length;
+
 /** Index of `creatorRecipient` in the struct, taken from the SDK's declaration rather than typed. */
 export const CREATOR_RECIPIENT_FIELD_INDEX = RC6_LAUNCH_PARAMS_FIELDS.indexOf("creatorRecipient");
 

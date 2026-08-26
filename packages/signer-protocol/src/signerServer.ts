@@ -25,7 +25,7 @@ import type { AddressInfo } from "node:net";
 import { createPolicyBoundSigner, SignerRefusedError, SignerTransportError, type SignerAdapter } from "./index.ts";
 import type { AgentPolicy, SignerRefusal } from "./contracts.ts";
 import type { ApprovedBuild } from "./policyGuard.ts";
-import { WireFormatError, decodeSigningRequest } from "./wire.ts";
+import { WireFormatError, decodeSigningRequest, decodeSimulationReceipt } from "./wire.ts";
 
 export interface SignerServerOptions {
   /** The thing that actually holds a key. Wrapped in the policy guard before it is ever called. */
@@ -101,8 +101,16 @@ export function createSignerServer(options: SignerServerOptions): Server {
       if (req.method !== "POST") return sendJson(res, 405, { error: "METHOD_NOT_ALLOWED", detail: "/sign takes POST" });
 
       let request;
+      let simulation = null;
       try {
-        request = decodeSigningRequest(JSON.parse(await readBody(req, limit)));
+        const body = JSON.parse(await readBody(req, limit));
+        // TWO SHAPES ACCEPTED, and the older one is not a loophole. `{request, simulation}` is the
+        // 4.2 form; a bare request is the 4.1.0 form, and it still decodes — it simply arrives with
+        // no simulation, which the grant guard refuses. Rejecting it at the parser instead would
+        // report a MALFORMED body for a request that is perfectly well formed and merely unproven.
+        const envelope = body && typeof body === "object" && "request" in body ? body : { request: body, simulation: null };
+        request = decodeSigningRequest(envelope.request);
+        simulation = decodeSimulationReceipt(envelope.simulation);
       } catch (cause) {
         // A BODY THAT DOES NOT PARSE IS NOT A REFUSAL, and it does not get a refusal code. An agent
         // that saw `REFUSED` here would report to a creator that their launch was declined, when
@@ -111,7 +119,7 @@ export function createSignerServer(options: SignerServerOptions): Server {
         return sendJson(res, 400, { error: "MALFORMED_SIGNING_REQUEST", detail });
       }
 
-      const outcome = await guarded.trySign(request);
+      const outcome = await guarded.trySign(request, simulation);
       if (outcome.kind === "REFUSED") return sendJson(res, 403, outcome satisfies SignerRefusal);
       return sendJson(res, 200, outcome);
     }

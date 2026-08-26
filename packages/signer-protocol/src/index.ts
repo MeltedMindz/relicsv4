@@ -21,8 +21,11 @@
 // ================================================================================================
 import type { Address, AgentPolicy, SignerRefusal, SignerRefusalCode, SignerResult, SigningRequest } from "./contracts.ts";
 import { guardSigningRequest, type ApprovedBuild, type PolicyVerdict } from "./policyGuard.ts";
+import type { SimulationReceipt } from "./grantGuard.ts";
 
 export * from "./contracts.ts";
+export { checkGrantPermission, checkGrantCalldata, type GrantVerdict, type GrantRefusalCode, type SimulationReceipt } from "./grantGuard.ts";
+export { checkAuthorization, readAuthorization, writeAuthorization, revokeAuthorization, consumeAuthorization, authorizationFingerprint, relicsHome, authorizationPath, type Authorization, type AuthorizationPreset, type AuthorizationMode } from "./authorization.ts";
 export { checkStaticPolicy, guardSigningRequest, type ApprovedBuild, type ChainSupportProbe, type PolicyGuardInput, type PolicyVerdict } from "./policyGuard.ts";
 export { ALLOWED_SELECTORS, LAUNCH_FACTORY_ABI, LAUNCH_FUNCTION_NAME, LAUNCH_SELECTOR, LaunchAbiShapeError, LaunchCalldataDecodeError, decodeCreatorRecipient } from "./launchAbi.ts";
 export { WireFormatError, decodeSignerRefusal, decodeSignerResult, decodeSigningRequest, encodeSigningRequest, type WireSigningRequest } from "./wire.ts";
@@ -86,9 +89,9 @@ export interface PolicyBoundSigner extends SignerAdapter {
   /** The build this signer is bound to, or `null` — in which case every `sign` refuses. */
   readonly approvedBuild: ApprovedBuild | null;
   /** `sign`, without the throw: the refusal comes back as a value an agent can branch on. */
-  trySign(req: SigningRequest): Promise<SignerResult | SignerRefusal>;
+  trySign(req: SigningRequest, simulation?: SimulationReceipt | null): Promise<SignerResult | SignerRefusal>;
   /** The verdict alone, with nothing signed. For preflights and for explaining a refusal. */
-  check(req: SigningRequest): Promise<PolicyVerdict>;
+  check(req: SigningRequest, simulation?: SimulationReceipt | null): Promise<PolicyVerdict>;
 }
 
 /**
@@ -103,19 +106,43 @@ export interface PolicyBoundSigner extends SignerAdapter {
  * omit it and get a signer that checks the chain, the target and the ceilings while silently
  * skipping the three hashes and signing a build nobody approved.
  */
-export function createPolicyBoundSigner(adapter: SignerAdapter, policy: AgentPolicy, approvedBuild: ApprovedBuild | null): PolicyBoundSigner {
-  const check = (req: SigningRequest): Promise<PolicyVerdict> =>
+export interface PolicyBoundSignerOptions {
+  /**
+   * Require a live authorization GRANT (not expired, not revoked, not spent) before signing.
+   *
+   * DEFAULTS TO TRUE, and production never sets it. It exists so the shape tests -- which predate
+   * the grant model and assert only that a malformed transaction is refused -- can run without a
+   * fixture grant that has nothing to do with what they assert. A default of false would mean a
+   * caller who forgot the option got a signer that checks the calldata and ignores whether the
+   * human still permits a launch at all.
+   */
+  readonly requireGrant?: boolean;
+  /** The simulation receipt for THESE bytes. Required by the grant guard; see grantGuard.ts. */
+  readonly simulation?: SimulationReceipt | null;
+}
+
+export function createPolicyBoundSigner(
+  adapter: SignerAdapter,
+  policy: AgentPolicy,
+  approvedBuild: ApprovedBuild | null,
+  options?: PolicyBoundSignerOptions,
+): PolicyBoundSigner {
+  const check = (req: SigningRequest, simulation?: SimulationReceipt | null): Promise<PolicyVerdict> =>
     guardSigningRequest({
       request: req,
       policy,
       approvedBuild,
+      requireGrant: options?.requireGrant !== false,
+      ...(simulation !== undefined ? { simulation } : options?.simulation !== undefined ? { simulation: options.simulation } : {}),
       // Bound rather than passed as the adapter itself: the guard is given the one capability it
       // needs and no way to reach `sign`.
       signer: { supportsChain: (chainId: number) => adapter.supportsChain(chainId) },
     });
 
-  const trySign = async (req: SigningRequest): Promise<SignerResult | SignerRefusal> => {
-    const verdict = await check(req);
+  // The simulation proof travels WITH the call rather than being baked into the signer at
+  // construction: one signer serves many requests, and each one must show its own evidence.
+  const trySign = async (req: SigningRequest, simulation?: SimulationReceipt | null): Promise<SignerResult | SignerRefusal> => {
+    const verdict = await check(req, simulation);
     if (verdict.kind !== "ALLOWED") return verdict;
     return adapter.sign(req);
   };

@@ -1,4 +1,16 @@
 // SPDX-License-Identifier: MIT
+//
+// `requireGrant: false` ON EVERY CALL BELOW IS DELIBERATE AND NARROW.
+//
+// These tests predate the 4.2 authorization grant and they check one thing: does the guard refuse a
+// transaction whose SHAPE is wrong. A grant is a fact about a human's permission, not about calldata,
+// and requiring one here would make every shape assertion depend on a fixture that has nothing to do
+// with what is being asserted.
+//
+// The default is TRUE, and `grantGuard.test.mjs` proves it: a request with no authorization on disk
+// is refused when the flag is omitted. Turning the check off here does not turn it off anywhere a
+// transaction is actually signed -- `signerServer` never passes the flag.
+
 // ================================================================================================
 // NEGATIVE CONTROLS for the policy guard.
 //
@@ -37,7 +49,7 @@ import {
  */
 async function control(code, overrides, { policy = TEST_POLICY, approvedBuild = APPROVED_BUILD } = {}) {
   const { calls, adapter } = recordingAdapter();
-  const signer = createPolicyBoundSigner(adapter, policy, approvedBuild);
+  const signer = createPolicyBoundSigner(adapter, policy, approvedBuild, { requireGrant: false });
 
   const baseline = await signer.trySign(signingRequest());
   assert.equal(baseline.kind, "SIGNED", "the unmodified in-policy launch must be accepted, or this control proves nothing");
@@ -139,7 +151,7 @@ test("CONTROL: an approved build for a different chain is refused TARGET_NOT_CAN
   // apart. The build's own chain is what settles it.
   const policy = { ...TEST_POLICY, allowedChains: [31337, 31338] };
   const { calls, adapter } = recordingAdapter(undefined, [31337, 31338]);
-  const signer = createPolicyBoundSigner(adapter, policy, APPROVED_BUILD);
+  const signer = createPolicyBoundSigner(adapter, policy, APPROVED_BUILD, { requireGrant: false });
   const refused = await signer.trySign(signingRequest({ chainId: 31338 }));
   assert.equal(refused.kind, "REFUSED");
   assert.equal(refused.code, "TARGET_NOT_CANONICAL_FACTORY");
@@ -148,7 +160,7 @@ test("CONTROL: an approved build for a different chain is refused TARGET_NOT_CAN
 
 test("CONTROL: no approved build at all is refused NO_APPROVED_BUILD", async () => {
   const { calls, adapter } = recordingAdapter();
-  const signer = createPolicyBoundSigner(adapter, TEST_POLICY, null);
+  const signer = createPolicyBoundSigner(adapter, TEST_POLICY, null, { requireGrant: false });
   const refused = await signer.trySign(signingRequest());
   assert.equal(refused.kind, "REFUSED");
   assert.equal(refused.code, "NO_APPROVED_BUILD");
@@ -156,13 +168,13 @@ test("CONTROL: no approved build at all is refused NO_APPROVED_BUILD", async () 
 
   // And the same request IS accepted once a build is bound — so the refusal is about the absence,
   // not about the request.
-  const bound = createPolicyBoundSigner(adapter, TEST_POLICY, APPROVED_BUILD);
+  const bound = createPolicyBoundSigner(adapter, TEST_POLICY, APPROVED_BUILD, { requireGrant: false });
   assert.equal((await bound.trySign(signingRequest())).kind, "SIGNED");
 });
 
 test("CONTROL: a signer that does not support the chain is refused SIGNER_DOES_NOT_SUPPORT_CHAIN", async () => {
   const { calls, adapter } = recordingAdapter(undefined, []);
-  const signer = createPolicyBoundSigner(adapter, TEST_POLICY, APPROVED_BUILD);
+  const signer = createPolicyBoundSigner(adapter, TEST_POLICY, APPROVED_BUILD, { requireGrant: false });
   const refused = await signer.trySign(signingRequest());
   assert.equal(refused.kind, "REFUSED");
   assert.equal(refused.code, "SIGNER_DOES_NOT_SUPPORT_CHAIN");
@@ -172,7 +184,7 @@ test("CONTROL: a signer that does not support the chain is refused SIGNER_DOES_N
 test("a signer whose supportsChain THROWS is refused, never assumed", async () => {
   const { calls, adapter } = recordingAdapter();
   const failing = { ...adapter, supportsChain: async () => { throw new Error("socket closed"); } };
-  const signer = createPolicyBoundSigner(failing, TEST_POLICY, APPROVED_BUILD);
+  const signer = createPolicyBoundSigner(failing, TEST_POLICY, APPROVED_BUILD, { requireGrant: false });
   const refused = await signer.trySign(signingRequest());
   assert.equal(refused.kind, "REFUSED");
   assert.equal(refused.code, "SIGNER_DOES_NOT_SUPPORT_CHAIN");
@@ -187,7 +199,7 @@ test("checkStaticPolicy is total and synchronous: the same verdicts without a si
 
 test("a well-formed in-policy launch is ALLOWED and reaches the signer exactly once", async () => {
   const { calls, adapter } = recordingAdapter();
-  const signer = createPolicyBoundSigner(adapter, TEST_POLICY, APPROVED_BUILD);
+  const signer = createPolicyBoundSigner(adapter, TEST_POLICY, APPROVED_BUILD, { requireGrant: false });
   const request = signingRequest();
   const result = await signer.sign(request);
   assert.equal(result.kind, "SIGNED");

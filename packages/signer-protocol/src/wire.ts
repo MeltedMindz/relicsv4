@@ -127,6 +127,25 @@ export function decodeSigningRequest(payload: unknown): SigningRequest {
 }
 
 /** A signer's answer, validated on arrival. A client that trusts a response shape has no boundary. */
+/**
+ * The simulation proof that must accompany a signing request.
+ *
+ * A SIBLING OF THE REQUEST, NOT A FIELD OF IT. The `SigningRequest` is the transaction; this is
+ * evidence ABOUT the transaction, produced by a different step, and keeping them separate is what
+ * lets the signer say "the simulation you showed me was of different bytes" rather than having to
+ * trust a self-describing object. Every field is re-checked against the request by the grant guard.
+ */
+export function decodeSimulationReceipt(payload: unknown): { ok: boolean; dataHash: `0x${string}`; chainId: number; blockNumber: string } | null {
+  if (payload === undefined || payload === null) return null;
+  if (typeof payload !== "object") throw new WireFormatError("simulation", "must be an object when present");
+  const p = payload as Record<string, unknown>;
+  if (typeof p.ok !== "boolean") throw new WireFormatError("simulation.ok", "must be a boolean");
+  if (typeof p.dataHash !== "string" || !/^0x[0-9a-fA-F]{64}$/.test(p.dataHash)) throw new WireFormatError("simulation.dataHash", "must be a 32-byte hex digest");
+  if (typeof p.chainId !== "number" || !Number.isInteger(p.chainId)) throw new WireFormatError("simulation.chainId", "must be an integer");
+  if (typeof p.blockNumber !== "string") throw new WireFormatError("simulation.blockNumber", "must be a decimal string: a block height above 2^53 is representable and a JSON number is not");
+  return { ok: p.ok, dataHash: p.dataHash as `0x${string}`, chainId: p.chainId, blockNumber: p.blockNumber };
+}
+
 export function decodeSignerResult(payload: unknown): SignerResult {
   const source = requireObject(payload, "result");
   const signerAddress = requireHex(source, "signerAddress");

@@ -74,7 +74,10 @@ export function launchParams(creatorRecipient = CREATOR_RECIPIENT) {
     startingPreset: 0,
     tokenSalt: keccak256(toHex("token-salt")),
     hookSalt: keccak256(toHex("hook-salt")),
-    artMode: 1,
+    // artMode 0 = SOLIDITY_SVG_V1, the only runtime any chain binds today and the only one the
+    // test authorization allows. It was 1 (JavaScript) when the fixture only had to be well-formed
+    // bytes; the grant guard reads this field, so it now has to be a runtime a creator would allow.
+    artMode: 0,
     artTemplateId: 1n,
     artScriptHash: keccak256(ART_CONFIG),
     artConfig: ART_CONFIG,
@@ -155,3 +158,49 @@ export function recordingAdapter(address = ANVIL_ACCOUNT_ZERO_ADDRESS, chains = 
 }
 
 export { LAUNCH_SELECTOR };
+
+// ------------------------------------------------------------------------------------------------
+// A TEMPORARY AUTHORIZATION GRANT, for the tests that exercise the SERVER.
+//
+// `signerServer` requires a live grant and never takes the `requireGrant` escape hatch — that is
+// the point of it. So a test that drives the server over a socket has to supply one, exactly as a
+// creator would, rather than switching the requirement off. `RELICS_HOME` relocates the whole
+// signer state directory into a temp dir, so nothing here touches a real creator's wallet or grant.
+// ------------------------------------------------------------------------------------------------
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+export function withTestAuthorization(overrides = {}) {
+  const home = mkdtempSync(join(tmpdir(), "relics-auth-"));
+  const previous = process.env.RELICS_HOME;
+  process.env.RELICS_HOME = home;
+  const auth = {
+    version: 1, preset: "SAFE_AUTONOMOUS", mode: "SINGLE_LAUNCH",
+    grantedAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 3600_000).toISOString(),
+    launchesAllowed: 1, launchesUsed: 0, revokedAt: null,
+    signerAddress: ANVIL_ACCOUNT_ZERO_ADDRESS,
+    creatorRecipient: CREATOR_RECIPIENT,
+    allowedChains: [TEST_CHAIN_ID], allowedRuntimes: ["SOLIDITY_SVG_V1"],
+    allowedQuoteAssets: "AUTO", allowedAntiSnipeModes: ["NONE", "PROTECTED_98_MINUTES"],
+    maxRoyaltyBps: 500,
+    maxTotalGasCostWei: (10n ** 18n).toString(),
+    maxNativeSpendWei: "0",
+    allowBroadcast: true, policyHash: POLICY_HASH, consumedLaunchPlanHashes: [],
+    ...overrides,
+  };
+  return {
+    auth,
+    async install() {
+      const { writeAuthorization } = await import("../src/authorization.ts");
+      writeAuthorization(auth);
+      return auth;
+    },
+    restore() {
+      if (previous === undefined) delete process.env.RELICS_HOME;
+      else process.env.RELICS_HOME = previous;
+      rmSync(home, { recursive: true, force: true });
+    },
+  };
+}
