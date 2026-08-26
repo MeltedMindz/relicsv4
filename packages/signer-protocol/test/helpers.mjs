@@ -92,6 +92,14 @@ export function launchParams(creatorRecipient = CREATOR_RECIPIENT) {
   };
 }
 
+/**
+ * The same params with individual fields overridden — for the attack controls that need to change
+ * one thing inside the struct (a royalty, a runtime, an election) rather than the recipient.
+ */
+export function launchParamsWith(overrides = {}) {
+  return { ...launchParams(), ...overrides };
+}
+
 /** `launch(LaunchParams)` calldata, encoded against the committed RC6 ABI. */
 export function launchCalldata(creatorRecipient = CREATOR_RECIPIENT) {
   return encodeFunctionData({ abi: LAUNCH_FACTORY_ABI, functionName: "launch", args: [launchParams(creatorRecipient)] });
