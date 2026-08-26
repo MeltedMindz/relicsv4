@@ -3,8 +3,8 @@
   "package": "@relics/project-schema",
   "version": "4.0.0",
   "packageVersion": "3.13.0",
-  "creatorKitVersion": "4.1.0",
-  "surfaceSha256": "fd11d1057492224630d64b8de150615d4b42b189bdfbfe1a050c6ad8d6208f0e",
+  "creatorKitVersion": "4.2.0",
+  "surfaceSha256": "f6dece5324873d14672336d168ae4d05e63cc7f6490a4080f36050990d633bbf",
   "checks": [
     "ALLOWED_DEPENDENCIES",
     "ALLOWED_RUNTIME",
@@ -162,7 +162,7 @@
     },
     {
       "path": "src/version.js",
-      "sha256": "44fd478885533a3013b83c6c646556e3ae5c4d496ca6acc97ac43ecc494722d3"
+      "sha256": "d51faad94ddb2325dde7263756cabbefd7958c9b17b41a65b87c61828398436c"
     },
     {
       "path": "src/vocabulary.js",

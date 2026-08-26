@@ -72,3 +72,6 @@ export {
 export { createMemoryProvider, computeRawCidV1, IPFS_CHUNK_SIZE, type MemoryProvider } from "./adapters/memoryProvider.js";
 export { createPinataProvider, type PinataProviderOptions } from "./adapters/pinataProvider.js";
 export { createHttpGatewayProvider, type HttpGatewayProviderOptions } from "./adapters/httpGatewayProvider.js";
+
+// The ERC-20 token's own metadata — the half a launch does not write. See tokenMetadata.ts.
+export * from "./tokenMetadata.js";

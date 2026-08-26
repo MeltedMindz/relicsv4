@@ -87,11 +87,18 @@ export const SCHEMA_VERSION = "4.0.0";
  * networked command group reached only through a dynamic import so the offline kit's module graph
  * is unchanged. A creator who wants none of it runs exactly what they ran before, with no network.
  *
+ * 4.2.0 MAKES THE SAFE PATH THE EASY PATH, and again changes no bundle field. `agent setup` is a
+ * one-time human wizard; the signer gained an authorization GRANT it holds itself (single-use by
+ * default, expiring, revocable) and a real encrypted keystore; and the ERC-20's own metadata -- the
+ * half a launch does not write -- is now assembled, pinned and handed over as two transactions only
+ * the ProjectRights owner can send. `SCHEMA_VERSION` still does not move: a 4.0.0 bundle is
+ * byte-identical under 4.2.0.
+ *
  * MINOR RATHER THAN MAJOR because nothing was removed or redefined. Every 4.0.0 command keeps its
  * name, flags and behaviour, and `npm run kit:offline` proves the offline half by RUNNING it with
  * outbound connections blocked rather than by asserting it in a comment like this one.
  */
-export const CREATOR_KIT_VERSION = "4.1.0";
+export const CREATOR_KIT_VERSION = "4.2.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the

@@ -14,6 +14,8 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
+import { bold, cyan, dim } from "../report.js";
+import { explainCode } from "./agent-remedies.js";
 
 /** Documented, stable exit codes. An agent branches on these without reading any text. */
 export const EXIT = { OK: 0, REFUSED: 1, USAGE: 2, UNKNOWN_CHAIN_STATE: 3, POLICY: 4, SIGNER_REFUSED: 5, BLOCKED: 6 };
@@ -78,8 +80,52 @@ export async function runNetworkedCommand(group, positional, flags) {
   const workspace = workspaceOf(flags, rest);
   const name = `${group} ${sub}`;
 
+  // HANDLED BEFORE THE SWITCH, AND THAT PLACEMENT IS LOAD-BEARING.
+  //
+  // `scripts/check-agent-commands.mjs` derives the real subcommand surface from every switch label
+  // in this file and requires each one to be declared as a next action. (It derives that by reading
+  // the source text, so this comment deliberately does not spell the label pattern out — a comment
+  // that names its own gate's pattern gets counted by it, which is exactly what happened here.)
+  // Neither of these is a next
+  // action — one is help, the other exists only to say the command lives somewhere else — so
+  // putting them in the switch would force two lies into that declaration to keep the gate green.
+  if (sub === "help") return printAgentHelp(rest[0]);
+  if (sub === "wallet") {
+    // A HUMAN-ONLY COMMAND MUST NOT BE REACHABLE FROM THE MACHINE NAMESPACE. Not because the wallet
+    // commands would misbehave — each refuses on its own with no terminal attached — but because
+    // `relics agent …` is the list an agent is told to work from, and a step it cannot perform
+    // appearing there is an invitation to try it, fail, and report the failure as a blocker of the
+    // whole run. Naming the real command is the fix.
+    const which = rest[0] ?? "status";
+    emit(name, {
+      success: false,
+      errors: [`\`relics agent wallet\` does not exist, and not by omission: wallet commands need a human at a terminal, so they are deliberately outside the agent namespace. The command is \`npm run kit -- wallet ${which}\`, and the creator must run it themselves — there is no flag, file or environment variable that supplies the passphrase.`],
+      nextActions: ["BLOCKED"],
+    }, { json });
+    return EXIT.USAGE;
+  }
+
   try {
     switch (sub) {
+      // ---- THE HUMAN ENTRY POINTS -------------------------------------------------------------
+      //
+      // `setup` and `revoke` are conversations with a person and refuse without a terminal; `ready`
+      // is the one screen that says whether this machine can launch and, for everything it cannot
+      // do, WHO has to do it. They live here rather than under `wallet` because they are about the
+      // agent's authority, not about a key — but note what is NOT here: no wallet subcommand is
+      // reachable from this namespace. See the `wallet` case below.
+      case "setup": {
+        const { agentSetup } = await import("./agent-setup.js");
+        return await agentSetup(workspace, flags);
+      }
+      case "ready": {
+        const { agentReady } = await import("./agent-ready.js");
+        return await agentReady(workspace, flags);
+      }
+      case "revoke": {
+        const { agentRevoke } = await import("./agent-setup.js");
+        return await agentRevoke(flags);
+      }
       case "init": return await cmdInit(name, workspace, flags, json);
       case "status": return await cmdStatus(name, workspace, flags, json);
       case "doctor": return await cmdDoctor(name, workspace, flags, json);
@@ -95,7 +141,7 @@ export async function runNetworkedCommand(group, positional, flags) {
       // ---- the write side. Each needs a valid policy, so it is loaded once and passed down ----
       case "metadata": case "prepare": case "predict": case "simulate":
       case "build": case "policy-check": case "broadcast": case "confirm":
-      case "verify": case "resume": case "run": {
+      case "verify": case "resume": case "run": case "token-metadata": {
         const policy = await loadPolicy(workspace, flags);
         if (!policy.ok) {
           emit(name, { success: false, errors: policy.issues.map((i) => `${i.field}: ${i.detail}`), nextActions: ["BLOCKED"] }, { json });
@@ -113,13 +159,14 @@ export async function runNetworkedCommand(group, positional, flags) {
           case "broadcast": return await L.cmdBroadcast(name, workspace, flags, json, ctx);
           case "confirm": return await L.cmdConfirm(name, workspace, flags, json, ctx);
           case "verify": return await L.cmdVerify(name, workspace, flags, json, ctx);
+          case "token-metadata": return await L.cmdTokenMetadata(name, workspace, flags, json, ctx);
           case "resume": return await L.cmdResume(name, workspace, flags, json, ctx);
           case "run": return await cmdRun(name, workspace, flags, json, ctx, L);
         }
         return EXIT.USAGE;
       }
       default:
-        emit(name, { success: false, errors: [`unknown subcommand "${sub}". Known: init, status, doctor, next, capabilities, quotes, preflight, metadata, prepare, predict, simulate, build, policy-check, broadcast, confirm, verify, resume, run, provenance, verify-receipts`] }, { json });
+        emit(name, { success: false, errors: [`unknown subcommand "${sub}".\n  First time?    agent setup\n  Where am I?    agent ready\n  Creating?      agent run --workspace <dir> --json\n  Everything:    init, status, doctor, next, capabilities, quotes, preflight, metadata, prepare, predict, simulate, build, policy-check, broadcast, confirm, verify, resume, run, provenance, verify-receipts, revoke`] }, { json });
         return EXIT.USAGE;
     }
   } catch (err) {
@@ -222,8 +269,11 @@ async function cmdDoctor(name, workspace, flags, json) {
   }
 
   const signerUrl = process.env.RELICS_SIGNER_URL ?? null;
-  add("signer.configured", Boolean(signerUrl), signerUrl ? "RELICS_SIGNER_URL is set" : "no RELICS_SIGNER_URL. The agent never holds a key; it needs a signer process to hand a SigningRequest to.");
-  add("metadata.provider", Boolean(process.env.PINATA_JWT), process.env.PINATA_JWT ? "a pinning provider is configured" : "no PINATA_JWT. Metadata is written at birth and cannot be changed afterwards, so it must be pinned and read back before the launch is built.");
+  // A BARE CODE IS NOT A DIAGNOSIS. Both of these used to state a fact and stop, and the reader —
+  // person or agent — was left to work out whose problem it was. `explainCode` attaches the owner
+  // and the exact command, from the one remedy table.
+  add("signer.configured", Boolean(signerUrl), signerUrl ? "RELICS_SIGNER_URL is set" : explainCode("SIGNER_NOT_CONFIGURED", "no RELICS_SIGNER_URL. The agent never holds a key; it hands a SigningRequest to a process that does."));
+  add("metadata.provider", Boolean(process.env.PINATA_JWT), process.env.PINATA_JWT ? "a pinning provider is configured" : explainCode("NO_METADATA_PROVIDER", "no PINATA_JWT."));
 
   const ok = checks.every((c) => c.ok);
   emit(name, { success: ok, result: { checks }, errors: checks.filter((c) => !c.ok).map((c) => `${c.id}: ${c.detail}`) }, { json });
@@ -396,4 +446,71 @@ async function cmdRun(name, workspace, flags, json, ctx, L) {
   }
   // The last word is always the next action, so an agent driving `run` never has to infer it.
   return ran[ran.length - 1]?.status === "OK" || ran.every((r) => r.status === "ALREADY_DONE") ? EXIT.OK : EXIT.BLOCKED;
+}
+
+// ------------------------------------------------------------------------------------------------
+// HELP
+// ------------------------------------------------------------------------------------------------
+
+/**
+ * `relics agent --help`.
+ *
+ * LEADS WITH THE THREE QUESTIONS PEOPLE ACTUALLY ARRIVE WITH, in the order they arrive in. The
+ * previous surface opened with an alphabetical list of twenty-two subcommands, which is a correct
+ * answer to "what exists" and no answer at all to "what do I type". A first-time creator was
+ * expected to infer that `init` scaffolds a policy file they must then hand-edit, and an agent was
+ * expected to infer which of the twenty-two it may run — both inferred wrong, repeatedly.
+ *
+ * The advanced list is kept, below, because the individually-runnable phases are the point of the
+ * design and hiding them would make the pipeline look like a black box.
+ */
+export function printAgentHelp(topic) {
+  const w = process.stderr;
+  if (topic && topic !== "agent") {
+    w.write(`\nrelics agent ${topic}\n\n  See \`npm run kit -- agent --help\` for the full list.\n\n`);
+    return EXIT.OK;
+  }
+  w.write(`
+${bold("relics agent")} — create and launch a project with an AI agent
+
+  ${bold("FIRST TIME?")}
+      ${cyan("npm run kit -- agent setup")}
+      ${dim("One wizard, run by a person: launch wallet, where your earnings go, which chains,")}
+      ${dim("and how much you authorize. Nothing is saved until you read a summary and type a")}
+      ${dim("phrase. This is the only step an AI agent cannot do for you, and it is deliberate.")}
+
+  ${bold("READY?")}
+      ${cyan("npm run kit -- agent ready")}
+      ${dim("One screen: wallet, earnings, chains, metadata, endpoints, authorization. Anything")}
+      ${dim("outstanding says WHO fixes it — you, the agent, a service, or the chain — and the")}
+      ${dim("exact command. Add --json for the machine form.")}
+
+  ${bold("AGENT CREATING?")}
+      ${cyan("npm run kit -- agent run --workspace <dir> --json")}
+      ${dim("Runs the whole pipeline in order and stops at the first thing that needs a decision.")}
+      ${dim("Resumable: re-running re-enters at the first incomplete phase, and anything that")}
+      ${dim("touched a chain asks the CHAIN whether it already happened.")}
+
+  ${bold("CHANGED YOUR MIND?")}
+      ${cyan("npm run kit -- agent revoke")}
+      ${dim("Ends the authorization. Your wallet and its gas are untouched — revoking authority")}
+      ${dim("does not touch a key.")}
+
+  ${dim("──────────────────────────────────────────────────────────────────────")}
+  ${bold("Advanced")} ${dim("— every phase is independently runnable and writes a receipt")}
+
+    ${dim("read-only")}   status · doctor · next · capabilities · quotes · preflight
+                  provenance · verify-receipts
+    ${dim("write side")}  init · metadata · prepare · predict · simulate · build
+                  policy-check · broadcast · confirm · verify · resume · run
+
+  ${bold("Your wallet")} ${dim("is not under this namespace, on purpose:")}
+    ${cyan("npm run kit -- wallet <create|unlock|lock|status|backup|list>")}
+    ${dim("Those need a human at a terminal. An agent listing `relics agent …` should never")}
+    ${dim("find a step it cannot perform and report the failure as a blocker.")}
+
+  ${dim("Exit codes: 0 ok · 1 refused · 2 usage · 3 unknown chain state · 4 policy · 5 signer refused · 6 blocked")}
+
+`);
+  return EXIT.OK;
 }

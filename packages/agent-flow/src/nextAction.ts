@@ -29,7 +29,13 @@ import type { LaunchState, NextAction, NextActionResult } from "@relics/launch-s
 export const NEXT_ACTION_SUBCOMMANDS = [
   "init", "status", "doctor", "next", "capabilities", "chains", "quotes", "preflight", "plan",
   "metadata", "prepare", "predict", "simulate", "build", "policy-check",
-  "broadcast", "confirm", "verify", "resume", "run", "provenance", "verify-receipts",
+  "broadcast", "confirm", "verify", "token-metadata", "resume", "run", "provenance", "verify-receipts",
+  // THE HUMAN ENTRY POINTS. `setup` and `revoke` need a person at a terminal and `ready` is the
+  // one screen that says whether this machine can launch — all three are legitimate things to
+  // send a reader to, and `setup` in particular is the correct next action for every refusal that
+  // comes down to "nobody has authorized this". They are declared here because the gate compares
+  // this list against the dispatcher in BOTH directions.
+  "setup", "ready", "revoke",
   // `chains` and `plan` are ALIASES the dispatcher answers to (`chains` -> capabilities,
   // `plan` -> preflight). They are declared because the gate compares this list against the
   // dispatcher in BOTH directions: a command the CLI answers to that nothing here knows about is

@@ -14,6 +14,7 @@
 // ================================================================================================
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { explainCode } from "./agent-remedies.js";
 
 export const EXIT = { OK: 0, REFUSED: 1, USAGE: 2, UNKNOWN_CHAIN_STATE: 3, POLICY: 4, SIGNER_REFUSED: 5, BLOCKED: 6 };
 
@@ -92,7 +93,7 @@ export async function cmdMetadata(name, workspace, flags, json, ctx) {
     return EXIT.OK;
   } catch (err) {
     const code = err && typeof err === "object" && "code" in err ? String(err.code) : "METADATA_REFUSED";
-    emit(name, { success: false, errors: [`${code}: ${err instanceof Error ? err.message : String(err)}`], nextActions: ["FIX_VALIDATION"] }, { json });
+    emit(name, { success: false, errors: [explainCode(code, err instanceof Error ? err.message : String(err))], nextActions: ["FIX_VALIDATION"] }, { json });
     return EXIT.REFUSED;
   }
 }
@@ -370,7 +371,7 @@ export async function cmdBroadcast(name, workspace, flags, json, ctx) {
   }
 
   const signerUrl = process.env.RELICS_SIGNER_URL;
-  if (!signerUrl) { emit(name, { success: false, errors: ["no RELICS_SIGNER_URL. The agent never holds a key; it needs a signer process to hand the SigningRequest to."] }, { json }); return EXIT.BLOCKED; }
+  if (!signerUrl) { emit(name, { success: false, errors: [explainCode("SIGNER_NOT_CONFIGURED", "no RELICS_SIGNER_URL. The agent never holds a key; it hands the SigningRequest to a process that does.")] }, { json }); return EXIT.BLOCKED; }
 
   const { createLocalSidecarSigner } = await import("@relics/signer-protocol").catch(() => ({}));
   if (!createLocalSidecarSigner) { emit(name, { success: false, errors: ["the signer protocol package could not be loaded"] }, { json }); return EXIT.BLOCKED; }
@@ -403,7 +404,11 @@ export async function cmdBroadcast(name, workspace, flags, json, ctx) {
   } catch (err) {
     const refusal = err && typeof err === "object" && "refusal" in err ? err.refusal : null;
     if (refusal) {
-      emit(name, { success: false, result: { refusal }, errors: [`the signer REFUSED: ${refusal.code} — ${refusal.detail}`], nextActions: ["BLOCKED"] }, { json });
+      // THE CODE STAYS, AND SO DOES THE ADVICE. A refusal reaches a person at the moment their
+      // launch stopped and reaches an agent at the moment it is deciding what to try next; a bare
+      // code answers neither, and the most available guess for "the signer will not sign" is to
+      // offer a key. The remedy names the owner instead.
+      emit(name, { success: false, result: { refusal }, errors: [`the signer REFUSED — ${explainCode(refusal.code, refusal.detail)}`], nextActions: ["BLOCKED"] }, { json });
       return EXIT.SIGNER_REFUSED;
     }
     // The intent is on disk and a send MAY have left. Never retry here.
@@ -463,6 +468,17 @@ export async function cmdVerify(name, workspace, flags, json, ctx) {
   flow.writeReceipt(workspace, { phase: "VERIFY", chainId, addresses: Object.fromEntries(Object.entries(v.observed).filter(([, x]) => typeof x === "string")), body: { verified: v.verified, predictionMatch: v.predictionMatch, findings: v.findings, observed: { ...v.observed, projectId: v.observed.projectId === null ? null : String(v.observed.projectId) } } });
 
   const links = sdk.explorerLinks(profile.explorer, { txHash: conf.txHash, token: v.observed.projectToken, collection: v.observed.projectCollection });
+
+  // ---- THE TOKEN'S OWN METADATA, READ AND REPORTED ---------------------------------------------
+  // A launch can verify perfectly and still leave the ERC-20 unnamed on every DEX, because the
+  // collection's contractURI is birth data and the TOKEN's is not. Reporting COMPLETE without
+  // saying so would be true about the launch and misleading about the project. This does NOT block
+  // completion — the launch really did succeed — it is surfaced as the creator-owned step it is.
+  let tokenMetadata = { state: "UNKNOWN", detail: "not read" };
+  if (v.observed.projectToken) {
+    tokenMetadata = await sdk.readTokenMetadataState(made.client, v.observed.projectToken, sdk.PROJECT_TOKEN_ABI());
+  }
+
   const ok = v.verified === "PROVEN";
   if (ok) {
     writeFileSync(join(workspace, "launch-result.json"), `${JSON.stringify({
@@ -470,6 +486,14 @@ export async function cmdVerify(name, workspace, flags, json, ctx) {
       projectId: v.observed.projectId === null ? null : String(v.observed.projectId),
       token: v.observed.projectToken, collection: v.observed.projectCollection, artHook: v.observed.artHook, pool: v.observed.poolId,
       runtime: "SOLIDITY_SVG_V1", quote: pre.selectedQuote ?? null,
+      tokenMetadata: {
+        state: tokenMetadata.state,
+        contractURI: tokenMetadata.contractURI ?? null,
+        detail: tokenMetadata.detail,
+        // Named as an owner so an agent does not go round the loop trying to fix it itself.
+        owner: tokenMetadata.state === "PUBLISHED" ? null : "CREATOR_ACTION_REQUIRED",
+        command: tokenMetadata.state === "PUBLISHED" ? null : "npm run kit -- agent token-metadata --workspace <dir> --json",
+      },
       bundleHash: build.request.bundleHash, metadataUri: meta?.uri ?? null, metadataHash: economics.metadataUriHash,
       launchPlanHash: build.request.launchPlanHash, policyHash: build.request.policyHash,
       verification: { predictionMatch: v.predictionMatch, runtimeMatch: true, metadataMatch: v.findings.some((f) => f.id === "collection.contractURI" && f.evidence === "PROVEN"), economicsMatch: true },
@@ -478,9 +502,14 @@ export async function cmdVerify(name, workspace, flags, json, ctx) {
   }
   emit(name, {
     success: ok,
-    result: { verified: v.verified, predictionMatch: v.predictionMatch, observed: { ...v.observed, projectId: v.observed.projectId === null ? null : String(v.observed.projectId) }, findings: v.findings, links, resultFile: ok ? "launch-result.json" : null },
+    result: { verified: v.verified, predictionMatch: v.predictionMatch, tokenMetadata, observed: { ...v.observed, projectId: v.observed.projectId === null ? null : String(v.observed.projectId) }, findings: v.findings, links, resultFile: ok ? "launch-result.json" : null },
     errors: v.findings.filter((f) => f.evidence === "REFUTED").map((f) => `${f.id}: ${f.detail}`),
-    warnings: v.findings.filter((f) => f.evidence === "UNKNOWN").map((f) => `${f.id}: ${f.detail}`),
+    warnings: [
+      ...v.findings.filter((f) => f.evidence === "UNKNOWN").map((f) => `${f.id}: ${f.detail}`),
+      ...(tokenMetadata.state === "PUBLISHED"
+        ? []
+        : [`THE ERC-20's OWN METADATA IS NOT PUBLISHED: ${tokenMetadata.detail} The launch is complete and correct; this is a separate, creator-owned step, because both transactions require the ProjectRights owner. Run \`agent token-metadata\` to assemble the document and get the two transactions to sign.`]),
+    ],
     nextActions: [ok ? "COMPLETE" : "BLOCKED"],
   }, { json });
   return ok ? EXIT.OK : EXIT.REFUSED;
@@ -516,4 +545,100 @@ export async function cmdResume(name, workspace, flags, json, ctx) {
     nextActions: [decision.verdict === "ALREADY_LAUNCHED" ? "WAIT_CONFIRMATION" : decision.verdict === "SAFE_TO_SEND" ? "READY_FOR_BROADCAST" : "BLOCKED"],
   }, { json });
   return decision.verdict === "UNKNOWN_DO_NOT_SEND" ? EXIT.BLOCKED : EXIT.OK;
+}
+
+/**
+ * `agent token-metadata` — the ERC-20's own metadata, which the launch does not write.
+ *
+ * WHY THIS IS A SEPARATE COMMAND AND NOT PART OF `run`. The collection's `contractURI` is BIRTH
+ * data: it rides inside the launch transaction and is complete on receipt. The token's is not.
+ * `ProjectTokenV1.initialize` takes no URI, and `contractURI()` resolves through a registry the
+ * token must be bound to afterwards — by two transactions that BOTH require
+ * `msg.sender == ProjectRights.ownerOf(projectId)`.
+ *
+ * The rights NFT goes to `creatorRecipient`, which the wallet model says is a COLD wallet. So the
+ * launch signer structurally cannot send them, and widening it to cover two more selectors would
+ * trade the property that makes the whole model defensible for a convenience. This command does
+ * everything up to that line and hands over the rest.
+ *
+ * Measured on the one real RC6 permissionless launch: `contractURI()` empty, `metadataRegistry`
+ * zero. A token in that state shows up on a DEX as an unnamed address with a grey circle.
+ */
+export async function cmdTokenMetadata(name, workspace, flags, json, ctx) {
+  const sdk = await import("@relics/launch-sdk");
+  const { writeReceipt } = await import("@relics/agent-flow");
+
+  const verified = await phaseBody(workspace, "VERIFY");
+  const pre = await phaseBody(workspace, "PREFLIGHT");
+  if (!verified || !pre) {
+    emit(name, { success: false, errors: ["token metadata is a POST-LAUNCH step and needs a verified launch. Run `relics agent run` to completion first — there is no token address to describe until one exists, and a token-list entry with a placeholder address is worse than none: it is copyable, it looks correct, and lists get mirrored faster than they get corrected."], nextActions: ["BLOCKED"] }, { json });
+    return EXIT.BLOCKED;
+  }
+
+  const chainId = pre.selected.chainId;
+  const profile = sdk.getChainProfile(chainId);
+  const token = verified.observed?.projectToken;
+  const projectId = verified.observed?.projectId;
+  if (!token || !projectId) {
+    emit(name, { success: false, errors: ["the verification receipt carries no project token or project id, so there is nothing to describe"] }, { json });
+    return EXIT.BLOCKED;
+  }
+
+  const cfgPath = join(workspace, "relics.config.json");
+  const cfg = existsSync(cfgPath) ? JSON.parse(readFileSync(cfgPath, "utf8")) : {};
+  const meta = (await phaseBody(workspace, "METADATA")) ?? {};
+
+  // ---- 1. read what the chain says RIGHT NOW ---------------------------------------------------
+  const made = sdk.makeClient(profile);
+  if (!made) { emit(name, { success: false, errors: [`no RPC endpoint for chain ${chainId}`] }, { json }); return EXIT.UNKNOWN_CHAIN_STATE; }
+  const state = await sdk.readTokenMetadataState(made.client, token, sdk.PROJECT_TOKEN_ABI());
+
+  // ---- 2. assemble and pin the ERC-1046 document -------------------------------------------------
+  let published = null;
+  const providerAvailable = Boolean(process.env.PINATA_JWT) || Boolean(flags["dry-run"]);
+  if (providerAvailable) {
+    const doc = sdk.buildTokenMetadataDocument({
+      name: cfg.project?.name ?? verified.observed?.name ?? "Project",
+      symbol: cfg.project?.symbol ?? "TOKEN",
+      description: cfg.project?.description ?? cfg.metadata?.description ?? "",
+      // The collection's already-pinned image is reused deliberately: a second, different logo is a
+      // second thing to keep in sync, and nothing about the token needs a different picture.
+      image: cfg.metadata?.image ?? meta.imageUri ?? meta.uri,
+      externalUrl: cfg.project?.website,
+      chainId,
+      totalSupplyWei: BigInt(cfg.supply?.totalTokens ?? 0) * 10n ** 18n,
+      burnable: (cfg.token?.burnPolicy ?? "NONE") !== "NONE",
+      socials: cfg.project?.x ? { x: cfg.project.x } : undefined,
+    });
+    const provider = flags["dry-run"] || !process.env.PINATA_JWT ? sdk.createMemoryProvider() : sdk.createPinataProvider();
+    published = await sdk.pinTokenMetadata(doc, provider);
+    published.tokenListEntry = sdk.buildTokenListEntry(doc, token, chainId);
+  }
+
+  // ---- 3. the two transactions only the rights owner can send -------------------------------------
+  const registry = profile.contracts.projectMetadataRegistry ?? profile.contracts.metadataRegistry ?? null;
+  const transactions = registry
+    ? sdk.buildRightsOwnerMetadataTransactions({
+        chainId, projectId: BigInt(projectId), projectToken: token, metadataRegistry: registry,
+        rightsOwner: ctx.policy.creatorRecipient,
+        website: cfg.project?.website ?? "", xLink: cfg.project?.x ?? "",
+      })
+    : [];
+
+  const body = { chainId, token, projectId: String(projectId), onChainState: state, published, transactions, registry };
+  writeReceipt(workspace, { phase: "TOKEN_METADATA", chainId, addresses: { projectToken: token }, body });
+
+  emit(name, {
+    success: true,
+    result: body,
+    warnings: [
+      state.state === "PUBLISHED"
+        ? "the token already reports a contractURI; nothing further is required"
+        : `THE AGENT CANNOT COMPLETE THIS STEP. Both transactions require msg.sender == ProjectRights.ownerOf(${projectId}), which is ${ctx.policy.creatorRecipient} — the creator's own wallet, not the launch signer. That is deliberate: the ability to change a token's public identity forever stays with the creator.`,
+      ...(registry ? [] : [`no metadata registry address is recorded for chain ${chainId}; the two transactions cannot be built`]),
+      ...(providerAvailable ? [] : ["no metadata provider is configured, so the ERC-1046 document was assembled but not pinned"]),
+    ],
+    nextActions: ["CREATOR_ACTION_REQUIRED"],
+  }, { json });
+  return EXIT.OK;
 }
