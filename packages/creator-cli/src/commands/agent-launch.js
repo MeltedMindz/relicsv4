@@ -14,6 +14,7 @@
 // ================================================================================================
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { scrub } from "../scrub.js";
 import { explainCode } from "./agent-remedies.js";
 
 export const EXIT = { OK: 0, REFUSED: 1, USAGE: 2, UNKNOWN_CHAIN_STATE: 3, POLICY: 4, SIGNER_REFUSED: 5, BLOCKED: 6 };
@@ -25,7 +26,10 @@ export function envelope(command, { success, result = null, warnings = [], error
 }
 
 export function emit(command, payload, { json }) {
-  const env = envelope(command, payload);
+  // See the note beside `emit` in agent.js: one exit, one scrub. A credentialled RPC endpoint
+  // reaches this envelope only ever by accident — through a transport error that quotes its own
+  // request URL — which is precisely why it has to be caught here rather than at each source.
+  const env = scrub(envelope(command, payload));
   if (json) process.stdout.write(`${JSON.stringify(env, bigintSafe, 2)}\n`);
   else {
     for (const e of env.errors) process.stderr.write(`error: ${e}\n`);

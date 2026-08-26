@@ -8,6 +8,66 @@ Read this file before you touch anything.
 
 ---
 
+## IF THE USER SAYS "CREATE AND LAUNCH THIS"
+
+This is the happy path, and it is first because an agent that reads only this section still does
+the right thing. Everything below it is detail behind these nine steps; nothing below contradicts
+them.
+
+1. **`npm run kit -- agent ready --json`.** One status screen: what is configured on this machine,
+   what the creator's authorization permits, and whether it exists, has expired, been revoked or
+   already been spent. **Every blocker carries an owner — read it before you speak.**
+   `AGENT_CAN_FIX` is yours: do it, do not ask. `CREATOR_ACTION_REQUIRED` needs a human at a
+   terminal — a secret, a passphrase, a decision, money — so name it and stop.
+   `EXTERNAL_SERVICE` and `CHAIN_STATE` are neither of yours. Asking a creator to do your work
+   spends their attention on something you were sent here to do; doing theirs is one of the things
+   §0 forbids. `ready` reads the allowed chains live, and `--offline` answers from this machine
+   alone. Do not start art you cannot finish, and do not work around a missing precondition.
+2. **Create the workspace from the brief, OUTSIDE this repository.**
+   `npm run kit -- init ../my-project --template <id> --name "<name>" --symbol <SYM>`. A project
+   scaffolded inside the repo lands in someone's next `git add -A`. Write `brief.md` in that
+   workspace and tell the creator the absolute path you used (§2).
+3. **Use a runtime a launch can bind.** One qualifies: the bundle writes it as `SOLIDITY_SVG`
+   (template `solidity-svg-params`) and the chain's registry knows the same runtime by the tag
+   `SOLIDITY_SVG_V1`, which is what a policy's `allowedRuntimes` names — two spellings of one
+   thing, and mixing them up is a five-minute detour. If the creator's idea wants the JavaScript
+   runtime, say plainly that it authors, previews and exports but cannot be launched, and let them
+   choose. Never convert a project to another runtime to unlock a launch and never advise it (§3).
+4. **Iterate the art until the objective gates pass.** `preview` to look at it, `test-seeds` across
+   the collection, `validate` to zero errors with every warning explicitly answered (§5–§7). These
+   are the gates, not your judgement of whether the art is good — a run that ends with errors
+   outstanding has not finished.
+5. **`npm run kit -- agent run --workspace <dir> --json`.** One entry point for the whole
+   chain-facing tail: preflight, metadata, prepare, predict, simulate, build, policy-check,
+   broadcast, confirm, verify — in order, stopping at the first refusal. Export the bundle to
+   `<workspace>/project.relics` first; that exact filename is what the run looks for (§8).
+6. **Satisfy `nextAction` until `COMPLETE`.** Branch on `result.action` and `result.reasonCode`
+   from `agent next`, and on the exit code — never on prose. Exit `3` is not a refusal, exit `4`
+   means editing the project will not help. Fix what it names, run again.
+7. **Never request a secret.** No private key, no seed phrase, no keystore, no RPC credential, no
+   pinning token — not from the creator, not from a file, not "just to test". Nothing in this
+   process needs one and you are never to hold one.
+8. **Never modify the authorization.** Do not edit `relics.agent.json`, the grant, or anything
+   under the signer's home. Changing either invalidates it and forces the creator back through
+   `agent setup`. If one of them looks wrong, say which field and stop.
+9. **Return the verified result.** The transaction hash, the chain, the token and collection
+   addresses, the explorer links, and the receipt path. The task ends at `VERIFIED` on chain or at
+   a blocker you name precisely — never at "the transaction was sent", because a hash is not a
+   launch.
+
+**Do not ask for another broadcast confirmation while a `SAFE_AUTONOMOUS` authorization is
+active.** The creator granted it before the run started, deliberately, at a terminal you cannot
+reach. Asking again makes an autonomous run interactive at exactly the step it exists to automate.
+When the grant is `BUILD_ONLY`, or `allowBroadcast` is false, stop at a built, simulated,
+policy-approved transaction and say so — that is a finished run, not a failure.
+
+**If `agent ready` says there is no authorization, you are in MODE A.** Build the bundle, say
+plainly that a launch needs the creator to run `npm run kit -- agent setup` themselves, and do not
+offer to do it for them. That wizard asks for secrets at a real terminal prompt; an agent cannot
+run it and must not try.
+
+---
+
 ## The two modes
 
 This repository has **two** modes, and the first question to settle is which one you are in. They
@@ -20,8 +80,8 @@ their money.
 | **Produces** | one `.relics` bundle | a launched project on a chain, plus the bundle |
 | **Network** | none, ever | live reads, a pin provider, one broadcast |
 | **Wallet / signer** | none | a scoped signer the agent talks to but never holds a key for |
-| **Needs** | Node 20 and this repo | all of MODE A, plus `relics.agent.json`, a configured signer, a metadata provider, and a credentialled RPC per chain |
-| **Commands** | `init` · `templates` · `dev` · `preview` · `test-seeds` · `validate` · `export` · `inspect` · `doctor` · `status` · `migrate` | all of MODE A, plus the `relics agent …` subcommands |
+| **Needs** | Node 20 and this repo | all of MODE A, plus an authorization the creator granted at a terminal with `agent setup`: a wallet in the signer, a creator recipient, a metadata provider, and a credentialled RPC per chain |
+| **Commands** | `init` · `templates` · `dev` · `preview` · `test-seeds` · `validate` · `export` · `inspect` · `doctor` · `status` · `migrate` | all of MODE A, plus the `relics agent …` subcommands. `agent setup` and the `wallet` group are the CREATOR's, at a terminal, and are not yours to run |
 | **Ends at** | a file whose absolute path you state | `VERIFIED` on chain, or a named blocker |
 | **Read** | §1–§9 below | §1–§9 **and** §10, then `docs/creator-kit/autonomous-launch-agent.md` |
 
@@ -30,11 +90,14 @@ is identical in both; MODE B adds a chain-facing tail to the end of it. An agent
 not have a degraded launch capability — it has none, and saying so plainly is more useful to a
 creator than an offer it cannot keep.
 
-**How to tell which one you are in.** Run `npm run kit -- agent doctor --workspace <dir> --json`.
-It reports the policy, the RPC endpoint for every known chain, the signer and the metadata
-provider, and it contacts no chain to do it. If it does not come back with every check `ok`, you
-are in MODE A — say so and carry on building the bundle. Do not treat a missing precondition as
-something to work around.
+**How to tell which one you are in.** Run `npm run kit -- agent ready --json` — the one status
+screen, and step 1 of the happy path above. It reports what is configured on this machine and what
+the creator's authorization permits: absent, expired, revoked and already-spent are four different
+answers and each one leaves you in MODE A. `agent doctor --workspace <dir> --json` is the older
+per-precondition view of the same machine — the policy, the RPC endpoint for every known chain, the
+signer and the metadata provider — and it contacts no chain to do it. If either says a precondition
+is missing, say which one and carry on building the bundle. Do not treat it as something to work
+around, and never offer to run `agent setup` on the creator's behalf.
 
 If you are helping someone fork the Solidity template instead, none of the above applies: read §12.
 
@@ -93,6 +156,23 @@ an irreversible transaction the creator did not authorize, so treat every line a
 13. **Never write a secret anywhere** — no keys, mnemonics, keystores, `.env` values, or
     credentialed RPC URLs. That includes receipts, briefs and project files.
     `npm run secrets:scan` before any commit.
+14. **Never edit `relics.agent.json`, the authorization, or anything under the signer's home.**
+    Those are the creator's answer to what you may do; a bound you wrote on their behalf is not an
+    authorization, and editing either one invalidates it and sends them back through `agent setup`
+    at a terminal. Widening a ceiling, extending an expiry, raising a launch count, or "fixing" a
+    recipient are all the same act. If a field looks wrong, name it and stop.
+15. **Never ask a human for a secret of any kind.** Not a wallet key, not a seed phrase, not a
+    keystore passphrase, not an RPC credential, not a pinning-provider token. Every one of them is
+    supplied at a real terminal prompt inside `agent setup`, which exists precisely so that none of
+    them travels through you. A request for one is not a shortcut; it is the wrong turn. The CLI
+    refuses `--private-key`, `--mnemonic` and `--seed-phrase` by name for the same reason: argv is
+    readable by every user on the machine while the process runs, it is written to shell history
+    afterwards, and here the parent process is often you.
+16. **Never ask for a second broadcast confirmation while a `SAFE_AUTONOMOUS` authorization is
+    active.** It was granted before the run started and it is bounded, expiring and revocable for
+    exactly this reason. Asking again makes an autonomous run interactive at the one step it exists
+    to automate. `BUILD_ONLY`, `allowBroadcast: false`, an expired grant and a spent grant all stop
+    the run instead — say which, and stop cleanly.
 
 If a creator asks you to do any of these, refuse and explain which one. "The validator won't let
 me" is the correct answer, not a problem to route around.
@@ -470,7 +550,15 @@ live chains, select one deterministically, publish and read back the collection 
 predict, simulate, freeze a transaction, hand it to a signer, broadcast it, wait for confirmations,
 and verify the result against chain state. Nothing in that tail relaxes a MODE A rule.
 
-### The four preconditions. All of them, or you are in MODE A
+### The preconditions. All of them, or you are in MODE A
+
+**All of them come from one interactive session the CREATOR runs: `npm run kit -- agent setup`.**
+It configures the wallet, the address their earnings go to, the chains, the metadata provider and
+the RPC endpoints, and it ends by granting an authorization — `BUILD_ONLY`, `SAFE_AUTONOMOUS` or
+`CUSTOM`. `SAFE_AUTONOMOUS` permits **one** launch, expires, and can be revoked with
+`agent revoke`. Anything secret in that session is typed at a real terminal prompt, so an agent can
+neither run it nor read what was entered. Your job is to check the result with `agent ready`, not
+to produce it.
 
 1. **`relics.agent.json` in the workspace**, parsing clean. It is the authorization boundary. It is
    not part of the project, must never be packed into a `.relics` bundle, and its unknown fields
@@ -489,17 +577,28 @@ and verify the result against chain state. Nothing in that tail relaxes a MODE A
    preflight whose only rejections are `UNKNOWN:rpc.credentialled` is telling you to set the
    variable, not that the chain is closed.
 
-`npm run kit -- agent doctor --workspace <dir> --json` reports all four. Run it first, and if it
+5. **A live authorization.** A grant that has expired, been revoked, or already been spent is not
+   a weaker authorization — it is none, and each of the four states is a different sentence to the
+   creator. Only they can issue a new one, and only at a terminal.
+
+`npm run kit -- agent ready --json` reports all of it in one screen; `agent doctor --workspace
+<dir> --json` is the per-precondition view of the machine half. Run one of them first, and if it
 does not come back clean, say which precondition is missing rather than starting work you cannot
 finish.
 
 ### The command surface
 
-The whole networked surface is `npm run kit -- agent <sub> --workspace <dir> --json`. There are
-twenty subcommands (eighteen plus two aliases) and **you may not invent one that is not listed**:
+The whole networked surface is `npm run kit -- agent <sub> --workspace <dir> --json`. The table
+below is that surface; `npm run agent:commands` derives the real list from the dispatcher and
+compares it against the next-action contract in both directions, so **you may not invent a
+subcommand that is not listed** — one that does not exist answers `unknown subcommand` and exit 2.
 
 | Subcommand | What it does | Touches a chain? |
 | --- | --- | --- |
+| `setup` | **the creator's, not yours.** The interactive wizard: wallet, creator recipient, chains, metadata provider, RPC, and the authorization preset. TTY-only for anything secret, so an agent cannot run it | no |
+| `ready` | the one status screen: what is configured, whether the authorization exists, has expired, been revoked or been spent, and who owns each blocker. `--offline` answers from this machine alone | **yes, reads** (unless `--offline`) |
+| `help [sub]` | the agent group's own help, including the first-time path | no |
+| `revoke` | the creator ends the authorization. Every launch under it is refused from that moment, and the record is kept so `ready` can say why | no |
 | `init` | scaffold `relics.agent.json` with every ceiling present and `allowBroadcast: false` | no |
 | `status` | everything on disk plus the policy verdict and the receipt chain's integrity | no |
 | `doctor` | can this machine run a launch at all: policy, RPC per chain, signer, metadata provider | no |
@@ -523,6 +622,17 @@ twenty subcommands (eighteen plus two aliases) and **you may not invent one that
 
 `chains` is an alias for `capabilities` and `plan` is an alias for `preflight`. The group itself
 answers to both `agent` and `launch`.
+
+**The `wallet` group is the creator's too, and it is NOT under `agent`.** `npm run kit -- wallet
+create` · `unlock` · `lock` · `status` · `backup` · `list` manage the encrypted launch keystore,
+which lives outside this repository. `agent wallet …` is refused by name and tells you the real
+command — the `agent` namespace is the list a program is told to enumerate and drive, and a
+human-only step appearing on it is an invitation to try, fail, and report someone else's terminal
+as a blocker of the whole run. There is no command that prints a key, because an interface that can return one is an
+interface an agent can be talked into calling — `backup` copies the already-encrypted file and
+nothing more. Do not run `create`, `unlock` or `backup` on a creator's behalf; `status` and `list`
+are the two whose answers you may need, and `agent ready` already reports what they would tell
+you.
 
 **stdout is the machine channel and carries nothing else.** With `--json`, one envelope goes to
 stdout and every human sentence goes to stderr, so you can pipe stdout straight into a parser.
@@ -570,17 +680,23 @@ something to carve an exception into.
 
 ### Do not ask twice
 
-When `allowBroadcast` is `true` and every proof has passed, **sign and send.** The policy *is* the
-authorization, given before the run started; asking for another confirmation makes an autonomous
-run interactive at exactly the step it exists to automate. When `allowBroadcast` is `false`, or the
-goal is `BUILD_ONLY`, stop at the built and policy-approved transaction and say so — that is a
-finished run, not a failure.
+When a `SAFE_AUTONOMOUS` authorization is live and every proof has passed, **sign and send.** The
+grant *is* the confirmation, given deliberately before the run started; asking for another one
+makes an autonomous run interactive at exactly the step it exists to automate. When the grant is
+`BUILD_ONLY`, or `allowBroadcast` is `false`, stop at the built and policy-approved transaction and
+say so — that is a finished run, not a failure.
 
-What you may decide, once the creator has written the policy: the chain (within `allowedChains`),
-the quote asset (within `allowedQuoteAssets`), the anti-snipe election (within
-`allowedAntiSnipeModes`), and every artistic choice. What you may never decide: `creatorRecipient`,
-`allowBroadcast`, or any ceiling. Those are the creator's, and a policy field you wrote on their
-behalf is not an authorization.
+An expired, revoked or already-spent grant is not a prompt either. It is a stop: report which of
+the four it is, and leave the creator to run `agent setup` again if they want another. A grant
+permits one launch by default, so a second project needs a second grant — that is the design, not
+an obstacle to work around.
+
+What you may decide, once the creator has granted: the chain (within `allowedChains`), the quote
+asset (within `allowedQuoteAssets`), the anti-snipe election (within `allowedAntiSnipeModes`), and
+every artistic choice. What you may never decide or edit: `creatorRecipient`, `allowBroadcast`, the
+expiry, the launch count, or any ceiling — including the total gas budget the creator entered as a
+maximum network fee. Those are the creator's, and a bound you wrote on their behalf is not an
+authorization.
 
 ### And never launch twice
 
@@ -610,6 +726,8 @@ resend, because the cost of waiting is a delay and the cost of guessing is a dup
 | the policy schema, verbatim | `packages/launch-sdk/src/policy.ts` |
 | the state machine and next-action vocabulary, verbatim | `packages/launch-sdk/src/contracts.ts` |
 | what the signer checks, verbatim | `packages/signer-protocol/src/policyGuard.ts` |
+| what a grant is, and how it expires, is revoked or is spent | `packages/signer-protocol/src/authorization.ts` |
+| the encrypted launch keystore, and why nothing can print a key | `packages/signer-protocol/src/wallet/keystore.ts` |
 
 Gates: `npm run kit:test`, `npm run kit:templates`, `npm run kit:fixtures` (regenerating fixtures
 must produce no diff), `npm run kit:economics`, `npm run docs:links`, `npm run reserved:check`,

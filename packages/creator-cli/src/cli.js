@@ -12,7 +12,8 @@ import { inspectBundle } from "./commands/inspect.js";
 import { migrateBundle } from "./commands/migrate.js";
 import { printStatus } from "./commands/status.js";
 import { doctor } from "./commands/doctor.js";
-import { bold, dim, printFatal, red } from "./report.js";
+import { walletCommand } from "./commands/wallet.js";
+import { bold, cyan, dim, printFatal, red } from "./report.js";
 
 const FLAGS = {
   template: "string",
@@ -41,7 +42,32 @@ const FLAGS = {
   chain: "number",
   signer: "string",
   "dry-run": "boolean",
+  // `agent ready` reads live chains by default. --offline says "answer from this machine alone",
+  // and the difference is visible in the output: an unread chain reports UNKNOWN, never MISSING.
+  offline: "boolean",
 };
+
+/**
+ * FLAGS THAT ARE REFUSED BY NAME, EVERYWHERE, WITH A REASON.
+ *
+ * These are not misspellings and they are not unsupported — they are things this CLI will never
+ * accept, and "unknown option --private-key" reads as "wrong spelling" and invites the creator (or
+ * the agent) to look for the right one. There isn't one. Refusing by name is the only way to say
+ * that, and the value is dropped on the floor here rather than parsed into `flags`, so it never
+ * exists in this process even long enough to be printed by an error handler.
+ *
+ * WHY IT MATTERS MORE THAN IT LOOKS. A key passed as an argument is in the shell history file, in
+ * `ps` output for every user on the machine, in the parent process's memory, and — when the parent
+ * is an AI agent — in a transcript that may be uploaded. None of that is undone by the command
+ * succeeding.
+ */
+const REFUSED_FLAGS = {
+  "private-key": "A private key must never be passed as a command-line argument. It lands in your shell history, in `ps` output that every user on this machine can read, and in the memory of whatever started this command — which, in this kit, is often an AI agent whose transcript you do not control.",
+  mnemonic: "A mnemonic must never be passed as a command-line argument, for the same reason a private key must not: argv is world-readable while the process runs and is written to your shell history afterwards.",
+  "seed-phrase": "A seed phrase must never be passed as a command-line argument. Anything that can read `ps` can read it, and your shell has already saved it.",
+};
+
+const REFUSAL_ADVICE = "  Import an existing key interactively instead — it is read from /dev/tty with the echo off,\n  so it never enters argv, your environment, your history, or the standard input of this\n  process:\n\n      npm run kit -- wallet create      (make a new gas-only launch wallet)\n      npm run kit -- agent setup        (the full one-time setup, including import)";
 
 export async function main(argv) {
   const { command, positional, flags, errors } = parse(argv);
@@ -53,6 +79,14 @@ export async function main(argv) {
     console.log(`relics ${CREATOR_KIT_VERSION}  (schema ${SCHEMA_VERSION}, runtime ${RUNTIME_VERSION}, ${PROTOCOL_RELEASE_COMPATIBILITY})`);
     return 0;
   }
+  // `relics agent --help` MUST NOT fall through to the global usage. It did, and the result was
+  // that the one surface with a first-time path printed the offline command list instead — the
+  // creator asking for help about the agent was shown everything except the agent.
+  if (flags.help && (command === "agent" || command === "launch")) {
+    const { printAgentHelp } = await import("./commands/agent.js");
+    return printAgentHelp(positional[0]);
+  }
+  if (flags.help && command === "wallet") return usage("wallet");
   if (!command || flags.help || command === "help") return usage(command === "help" ? positional[0] : undefined);
 
   const root = positional[0] ?? ".";
@@ -130,6 +164,11 @@ async function dispatch(command, positional, flags, root) {
       return inspectBundle(file, { json: flags.json, draft: flags.draft });
     }
 
+    // THE HUMAN SURFACE. Not under `agent` on purpose: `agent` is the namespace a program is told
+    // to enumerate and drive, and a human-only step listed there is a step an agent will try.
+    case "wallet":
+      return walletCommand(positional, flags);
+
     // ------------------------------------------------------------------------------------------
     // MODE B — AUTONOMOUS LAUNCH. Everything network-facing lives behind this one lazy import.
     //
@@ -166,6 +205,12 @@ function parse(argv) {
     if (token.startsWith("--")) {
       const [rawName, inlineValue] = splitOnce(token.slice(2), "=");
       const name = rawName;
+      if (REFUSED_FLAGS[name]) {
+        // Consume the value so it is never mistaken for a positional argument, and never store it.
+        if (inlineValue === undefined && argv[i + 1] !== undefined && !argv[i + 1].startsWith("--")) i++;
+        errors.push(`--${name} is refused.\n\n  ${REFUSED_FLAGS[name]}\n\n${REFUSAL_ADVICE}\n`);
+        continue;
+      }
       const kind = FLAGS[name];
       if (!kind) {
         errors.push(`unknown option --${name}`);
@@ -236,6 +281,21 @@ const HELP = {
   inspect: `relics inspect <file${BUNDLE_EXTENSION}> [--json] [--draft]
   Read a bundle and print what it declares, including its decoded art configuration. The
   generator is never executed.`,
+  wallet: `relics wallet <create|unlock|lock|status|backup|list>
+
+  Your launch wallet: a hot key on this machine whose only job is paying gas for a launch.
+
+  create   Make one. A human must run this: the passphrase is read from your terminal with the
+           echo off, never from standard input, an argument or an environment variable.
+  unlock   Prove your passphrase opens the keystore, and show what you are authorized to do.
+  lock     Forget that record.
+  status   Whether a wallet exists, whether it is protected, whether it was unlocked.
+  list     The wallets on this machine, by address.
+  backup   Copy the ENCRYPTED keystore to a path you name. Refused under --json, refused when
+           nothing is attached to a terminal, and it asks you to type a phrase first.
+
+  There is no command here that prints a private key, and there is no flag that adds one.
+  --private-key, --mnemonic and --seed-phrase are refused by name wherever they appear.`,
   migrate: `relics migrate <file${BUNDLE_EXTENSION}> [--out directory]
   Open a bundle from an older schema into a project directory you can finish.
 
@@ -270,11 +330,15 @@ ${bold("relics")} — the local creator kit for RELICS Launchpad projects
   ${bold("relics export")} [dir] --output x${BUNDLE_EXTENSION}   validate, then write the bundle
   ${bold("relics inspect")} <file${BUNDLE_EXTENSION}>          read a bundle without running it
   ${bold("relics migrate")} <file${BUNDLE_EXTENSION}>          open an older bundle as a draft to finish
+  ${bold("relics wallet")} <create|unlock|…>        your launch wallet (human only)
 
   ${dim(`schema ${SCHEMA_VERSION} · kit ${CREATOR_KIT_VERSION} · runtime ${RUNTIME_VERSION}`)}
   ${dim(`built against ${PROTOCOL_RELEASE_COMPATIBILITY}`)}
 
   ${dim("relics help <command> for details.")}
+  ${dim("")}
+  ${bold("First time?")} ${cyan("npm run kit -- agent setup")} ${dim("— one wizard: wallet, earnings, authorization.")}
+  ${bold("Where do I stand?")} ${cyan("npm run kit -- agent ready")}
   ${dim("")}
   ${dim("Two modes. The commands above are OFFLINE: no network, no wallet, no signer, and")}
   ${dim("they produce one .relics file you can import by hand. `relics agent ...` is the")}

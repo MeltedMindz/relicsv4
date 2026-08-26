@@ -13,6 +13,7 @@
 // ================================================================================================
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { scrub } from "../scrub.js";
 import { createHash } from "node:crypto";
 import { bold, cyan, dim } from "../report.js";
 import { explainCode } from "./agent-remedies.js";
@@ -28,7 +29,14 @@ function envelope(command, { success, result = null, warnings = [], errors = [],
 }
 
 function emit(command, payload, { json }) {
-  const env = envelope(command, payload);
+  // THE LAST GATE BEFORE ANYTHING LEAVES THIS PROCESS, AND THE ONLY ONE.
+  //
+  // Every command emits through here, so the scrub cannot be forgotten by a command written later —
+  // which matters because the leak this closes was not written by anyone. A failed chain read
+  // produced a viem transport error, that error quoted the credentialled request URL, and it rode
+  // out inside a `Finding.detail` that nothing had any reason to suspect. Scrubbing at the source
+  // of each message would mean auditing every source forever; scrubbing at the exit is one place.
+  const env = scrub(envelope(command, payload));
   if (json) {
     // STDOUT IS THE MACHINE CHANNEL AND CARRIES NOTHING ELSE.
     process.stdout.write(`${JSON.stringify(env, (_k, v) => (typeof v === "bigint" ? v.toString() : v), 2)}\n`);
