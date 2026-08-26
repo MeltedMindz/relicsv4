@@ -24,6 +24,13 @@ import { existsSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+// TEST ONLY — the value passed to --private-key below is deliberately NOT key-shaped.
+//
+// This suite proves the CLI refuses the flag BY NAME, and that refusal fires before any value is
+// parsed, so the probe never needs to look like a private key. It used to be 64 hex characters,
+// which the public-export review correctly flagged: a 64-hex literal in a file with no TEST ONLY
+// marking is indistinguishable from a real key, and "it is only a test fixture" is exactly what
+// someone would say about a real one.
 import test from "node:test";
 
 import {
@@ -130,7 +137,7 @@ test("wallet create and wallet unlock refuse without a terminal too", () => {
 // ------------------------------------------------------------------------------------------------
 
 const SECRET_FLAGS = [
-  ["--private-key", "0x1111111111111111111111111111111111111111111111111111111111111111"],
+  ["--private-key", "0xNOTAKEYNOTAKEYNOTAKEYNOTAKEYNOTAKEYNOTAKEYNOTAKEYNOTAKEYNOTAKEYN"],
   ["--mnemonic", "test test test test test test test test test test test junk"],
   ["--seed-phrase", "test test test test test test test test test test test junk"],
 ];

@@ -6769,7 +6769,7 @@
     },
     {
       "path": "packages/creator-cli/test/human-setup.test.mjs",
-      "sha256": "17ebdc32c48d03569291439df59c4a04d839576177e041824176f519404058c2",
+      "sha256": "e6b0ae6205e8e4423e0511c1ee674cb44ad18342884817918187764452d19ba9",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
