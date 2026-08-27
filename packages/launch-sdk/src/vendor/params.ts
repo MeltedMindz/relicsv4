@@ -4,6 +4,7 @@
 // final authority (see readiness.ts, which simulates the real call).
 import { keccak256, type Address, type Hex } from "viem";
 import { WHOLE_UNIT, MAX_COLLABORATORS } from "./constants.js";
+import { LIMITS } from "@relics/project-schema";
 import {
   AntiSnipeMode,
   ArtMode,
@@ -103,8 +104,84 @@ export class LaunchParamsValidationError extends Error {}
 
 /** Client-side mirror of LaunchpadFactory._validate (excluding template-registry state, which
  * requires a live read — see readiness.ts). */
+/**
+ * THE COLLECTION IDENTITY IS THE SECOND UNBOUNDED INPUT TO THE SAME RENDER, and until this check
+ * existed only the first one was bounded.
+ *
+ * Every art runtime bounds its ART CONFIG against `PORTABLE_ETH_CALL_GAS_BUDGET = 10,000,000`, and
+ * `npm run launchpad:rendbudget` proves it for every runtime on disk. `TokenIdentityV1` carries two
+ * further creator-authored strings into the SAME document — `collectionName`, which the metadata
+ * JSON emits TWICE, and `collectionSymbol` — and nothing on chain bounds either. Measured through
+ * `test/rc6/runtimes/IdentityLengthGas.t.sol`, one fresh call frame per point: the name costs
+ * ~1,034 gas per byte (~1,556 when every byte escapes) and the symbol ~518. Against the dearest
+ * max-legal configuration the release admits, `tokenUriV1` stops fitting the budget at a name of
+ * 630 escaped or 948 plain characters.
+ *
+ * A collection whose `tokenURI` exceeds what an indexer will execute renders as nothing, on every
+ * marketplace, PERMANENTLY: the art binding is one-shot and there is no transaction that repairs
+ * it. It harms only that creator's own collection, so it is a footgun rather than an attack — but
+ * a silent, irreversible one, and an autonomous agent generating launch parameters is exactly the
+ * caller that finds it.
+ *
+ * THE NUMBER IS NOT INVENTED HERE. `@relics/project-schema` already declares `maxNameLength: 64`
+ * and `maxSymbolLength: 11`, so every bundle-borne launch has always been bounded; the gap was the
+ * DIRECT-CONTRACT path, which skips the bundle and is the path an agent takes. This makes the two
+ * agree rather than adding a third opinion. At 64 characters — up to 256 UTF-8 bytes, because
+ * `AppendBuffer.appendJson` passes every byte above 0x7F through unescaped — the whole identity
+ * costs 272,754 gas against the 820,265 the tightest runtime leaves.
+ *
+ * LENGTH ONLY, DELIBERATELY. The schema also constrains the symbol's CHARACTER SET; that is a
+ * format rule, not a gas rule, and imposing it here would refuse launches the chain accepts and
+ * that already exist. Characters, not bytes, for the same reason: it is the unit the schema bounds,
+ * and the byte worst case it implies is measured and fits.
+ */
+/**
+ * The two bounds, READ from `@relics/project-schema` rather than restated, with a refusal instead
+ * of a fallback. A default here would be a second declaration wearing a helpful face: it would
+ * survive the schema losing the key and would then bound the direct-contract path to a number no
+ * bundle is held to.
+ */
+function schemaIdentityLimit(key: "maxNameLength" | "maxSymbolLength"): number {
+  const declared = (LIMITS as Record<string, unknown>)[key];
+  if (typeof declared !== "number" || !Number.isInteger(declared) || declared < 1) {
+    throw new Error(
+      `@relics/project-schema declares no usable LIMITS.${key}, so the collection-identity bound has no source. ` +
+        "Refusing rather than substituting a number the bundle format is not held to.",
+    );
+  }
+  return declared;
+}
+
+/** Longest `collectionName` a launch may carry, in characters. */
+export const MAX_COLLECTION_NAME_CHARS = schemaIdentityLimit("maxNameLength");
+/** Longest `collectionSymbol` a launch may carry, in characters. */
+export const MAX_COLLECTION_SYMBOL_CHARS = schemaIdentityLimit("maxSymbolLength");
+
+export function identityLengthProblems(name: string, symbol: string): string[] {
+  const problems: string[] = [];
+  if (typeof name !== "string" || name.length === 0) {
+    problems.push("name is missing — the collection name is written into tokenURI at birth and has no later transaction");
+  } else if (name.length > MAX_COLLECTION_NAME_CHARS) {
+    problems.push(
+      `name is ${name.length} characters, over the ${MAX_COLLECTION_NAME_CHARS}-character bound: it is emitted TWICE into every ` +
+        "tokenURI document, so an over-long name can push the render past what an indexer will execute — permanently, " +
+        "because the art binding is one-shot",
+    );
+  }
+  if (typeof symbol !== "string" || symbol.length === 0) {
+    problems.push("symbol is missing — the collection symbol is written into tokenURI at birth and has no later transaction");
+  } else if (symbol.length > MAX_COLLECTION_SYMBOL_CHARS) {
+    problems.push(
+      `symbol is ${symbol.length} characters, over the ${MAX_COLLECTION_SYMBOL_CHARS}-character bound: it is emitted into every ` +
+        "tokenURI document and spends the same render budget the art config is held to",
+    );
+  }
+  return problems;
+}
+
 export function validateCreatorInput(input: CreatorInput): string[] {
   const problems: string[] = [];
+  problems.push(...identityLengthProblems(input.name, input.symbol));
   if (input.creatorRecipient === "0x0000000000000000000000000000000000000000") problems.push("creatorRecipient is the zero address");
   if (input.totalSupplyWhole <= 0n) problems.push("totalSupply must be > 0");
   // On-chain check is `artworkBackingUnits * WHOLE_UNIT > totalSupply` where totalSupply is
@@ -267,6 +344,7 @@ export interface LaunchParamsValidation {
  */
 export function validateLaunchParams(params: LaunchParams, opts?: { scriptByteLimit?: number; templateIsActive?: boolean }): LaunchParamsValidation {
   const problems: string[] = [];
+  problems.push(...identityLengthProblems(params.name, params.symbol));
   if (params.creatorRecipient === "0x0000000000000000000000000000000000000000") {
     problems.push("creatorRecipient is the zero address");
   }

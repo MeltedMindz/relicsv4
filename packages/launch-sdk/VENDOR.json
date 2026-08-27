@@ -130,9 +130,9 @@
     {
       "file": "params.ts",
       "upstreamPath": "launchpad/sdk/src/params.ts",
-      "upstreamSha256": "f567520c4f70fdb8519ef8a4add1943c89202146bd29d1d8cde646bda850c5f5",
-      "publicSha256": "44541b7f91da8dae2fd8066771283ea89db1ead7ef57f7d95a37fdbb10147133",
-      "bytes": 18072,
+      "upstreamSha256": "d0d41ada1d848aed1e3060caba4a7064a91a65310702f79cdc11d24b80b60fee",
+      "publicSha256": "0bb7818b7dd86aa04b74b6a535d1447af407dd1e5afdb8b58472845f135f51d1",
+      "bytes": 22805,
       "classification": "PUBLIC_SAFE"
     }
   ],

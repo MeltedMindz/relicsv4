@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT
 // ================================================================================================
-// THE TWENTY ADVERSARIAL CONTROLS for the autonomous launch flow.
+// THE ADVERSARIAL CONTROLS for the autonomous launch flow. The count is REPORTED, not asserted
+// in prose: it was written out as "twenty" and was stale the first time a control was added. A
+// floor of 20 is enforced below; the number that ran is printed.
 //
 // Each one MUTATES the exact thing it is about and REQUIRES a refusal. A control that passes
 // because some unrelated older guard happened to catch it proves nothing about the guard it names,
@@ -76,7 +78,7 @@ const PARAMS = {
 };
 const CALLDATA = sdk.encodeLaunch(PARAMS).data;
 
-console.log("\n=== the twenty adversarial controls ===\n");
+console.log("\n=== the adversarial controls ===\n");
 
 // ---- delegated suites (each must actually RUN) ---------------------------------------------------
 function runSuite(label, argv) {
@@ -221,10 +223,53 @@ control("an incomplete quote inventory refuses instead of falling back to the wr
   return chosen.quote === null ? true : `an unread registry still selected ${chosen.quote.symbol}`;
 });
 
+// ---- the collection identity, which is the SECOND unbounded input to the render ---------------------
+//
+// Every art runtime bounds its ART CONFIG against a portable eth_call gas budget. `collectionName`
+// (emitted TWICE into every tokenURI document) and `collectionSymbol` are bounded by no contract at
+// all, and cost ~1,034 and ~518 gas per byte: a long enough name pushes `tokenURI` past what an
+// indexer will execute, PERMANENTLY, because the art binding is one-shot. A `.relics` bundle has
+// always been bounded by the schema's own maxNameLength/maxSymbolLength. This is the DIRECT path —
+// the one an autonomous agent takes — being held to the same number.
+//
+// BOTH DIRECTIONS ARE ASSERTED. A control that only proves 65 is refused is also satisfied by a
+// builder that refuses everything, which would be a worse bug than the one being fixed.
+const IDENTITY_INPUT = {
+  name: "Control Fixture", symbol: "CTL", totalSupplyWhole: 1_000_000n, artworkBackingUnits: 10_000n,
+  startingPreset: 1, creatorRecipient: POLICY.creatorRecipient,
+  art: { mode: 0, artTemplateId: 1n, artConfig: "0xdeadbeef" },
+  antiSnipeMode: 2, metadataUri: "ipfs://bafkreicwcpyuqhcj5mtofwruwnn32vectrxbetjvvfgimbikqevxhzrqni",
+};
+const IDENTITY_SALTS = { tokenSalt: `0x${"11".repeat(32)}`, hookSalt: `0x${"22".repeat(32)}` };
+function buildsWithIdentity(patch) {
+  try {
+    sdk.buildLaunchParams({ ...IDENTITY_INPUT, ...patch }, IDENTITY_SALTS);
+    return null;
+  } catch (err) {
+    return err instanceof Error ? err.message : String(err);
+  }
+}
+control("a collection name over the schema's bound is refused before params exist", () => {
+  const atBound = buildsWithIdentity({ name: "A".repeat(64) });
+  if (atBound !== null) return `a name AT the bound was refused, so the check is a blanket refusal: ${atBound}`;
+  const over = buildsWithIdentity({ name: "A".repeat(65) });
+  return over !== null && over.includes("64-character bound")
+    ? true
+    : "a 65-character name built launch params; it would have reached tokenURI, twice, forever";
+});
+control("a collection symbol over the schema's bound is refused before params exist", () => {
+  const atBound = buildsWithIdentity({ symbol: "A".repeat(11) });
+  if (atBound !== null) return `a symbol AT the bound was refused, so the check is a blanket refusal: ${atBound}`;
+  const over = buildsWithIdentity({ symbol: "A".repeat(12) });
+  return over !== null && over.includes("11-character bound")
+    ? true
+    : "a 12-character symbol built launch params";
+});
+
 // ---- report ------------------------------------------------------------------------------------------
 const passed = results.filter((r) => r.pass).length;
 if (results.length < 20) {
-  console.error(`\n  INPUT FLOOR: only ${results.length} controls ran; this gate is specified to run 20`);
+  console.error(`\n  INPUT FLOOR: only ${results.length} controls ran; this gate is specified to run at least 20`);
 }
 console.log(`\nAUTONOMOUS_AGENT_NEGATIVE_CONTROLS=${passed}/${results.length}${passed === results.length && results.length >= 20 ? "_PASS" : "_FAIL"}`);
 process.exit(passed === results.length && results.length >= 20 ? 0 : 1);
