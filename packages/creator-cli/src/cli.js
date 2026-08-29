@@ -29,6 +29,11 @@ const FLAGS = {
   force: "boolean",
   json: "boolean",
   draft: "boolean",
+  // THE ADVANCED TIER FLAG. `relics templates` shows SHIP art templates only; this reveals the
+  // EXPERIMENTAL and HELD tiers WITH their measured weakness attached. It is a human affordance and
+  // deliberately reaches no agent path: an autonomous selection has no flag, no override and no way
+  // to express the request. REJECTED is not revealed by it either.
+  experimental: "boolean",
   "in-process": "boolean",
   "structural-only": "boolean",
   help: "boolean",
@@ -116,7 +121,7 @@ async function dispatch(command, positional, flags, root) {
       return initProject(positional[0], { template: flags.template, name: flags.name, symbol: flags.symbol, force: flags.force });
 
     case "templates":
-      return printTemplates();
+      return printTemplates({ experimental: flags.experimental });
 
     case "status":
       return printStatus();
@@ -256,8 +261,14 @@ function splitOnce(value, separator) {
 const HELP = {
   init: `relics init <directory> [--template <id>] [--name <name>] [--symbol <SYMBOL>] [--force]
   Scaffold a project from a starter template. \`relics templates\` lists them.`,
-  templates: `relics templates
-  List the starter templates and the art runtime each one uses.`,
+  templates: `relics templates [--experimental]
+  Two lists. The STARTER TEMPLATES are project scaffolds \`relics init\` can copy. The WAVE-1 ART
+  TEMPLATES are configuration presets for the on-chain art runtimes, shown with the market signals
+  each one actually moves — measured, not merely accepted by the schema.
+  Only templates that passed blind visual review as SHIP are listed. --experimental additionally
+  shows the EXPERIMENTAL and HELD tiers with their measured weakness; neither is offered as a
+  starting point, and the tier review REJECTED is never listed.
+  Whether an art runtime is registered on your chain is a live read, not a line in this kit.`,
   status: `relics status
   Show the platform deployment addresses BY GENERATION and whether public creator launches are
   open. A generation that is not deployed prints a row saying so rather than being omitted.`,
@@ -320,7 +331,7 @@ function usage(topic) {
 ${bold("relics")} — the local creator kit for RELICS Launchpad projects
 
   ${bold("relics init")} <dir> [--template <id>]   scaffold a project
-  ${bold("relics templates")}                      list the starter templates
+  ${bold("relics templates")} [--experimental]     starter scaffolds + the Wave-1 art catalog
   ${bold("relics status")}                         deployment addresses, by generation
   ${bold("relics doctor")}                         check this machine can run the kit (offline)
   ${bold("relics dev")} [dir]                      local studio on 127.0.0.1

@@ -10,8 +10,25 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { bold, cyan, dim, green, red, yellow, heading } from "../report.js";
 import { ART_RUNTIME_IDS, LAUNCHABLE_ART_RUNTIMES, reviewedProtocolTemplateIds } from "../schema.js";
+import {
+  ADVANCED_FLAG_STATUSES,
+  describeUnshippedTemplate,
+  humanCatalog,
+  latestVerdict,
+  templateStatus,
+} from "../../../template-catalog/src/index.js";
 
 const TEMPLATES_DIR = fileURLToPath(new URL("../../templates/", import.meta.url));
+
+/**
+ * The scaffold `relics init` uses when the creator names none.
+ *
+ * A NAMED CONSTANT, not a literal buried in `initProject`. A default is a decision, and a decision
+ * that only exists as a string inside a function cannot be found by anyone asking what it is. It is
+ * also the one place a non-SHIP art template could reach a creator without being asked for, which
+ * is why the art catalog is a separate list that `init` refuses outright (see `catalogRefusal`).
+ */
+export const DEFAULT_TEMPLATE_ID = "minimal";
 
 /**
  * Every shipped template, with the runtime it targets and whether that runtime can currently be
@@ -52,8 +69,82 @@ export function listReviewedProtocolTemplates() {
   return reviewedProtocolTemplateIds().map((id) => ({ id }));
 }
 
-export function printTemplates() {
-  heading("templates");
+/**
+ * Why an ART CATALOG id is not an `init` target, said precisely rather than as "unknown template".
+ *
+ * The two lists are different kinds of thing and the error has to say which one you reached. A
+ * starter template is a project directory; a Wave-1 art template is a configuration preset for a
+ * runtime, and there is no scaffold to copy. Answering "unknown template" would send a creator —
+ * or an agent — looking for a typo that is not there.
+ *
+ * A NON-SHIP id gets a different sentence again, because the honest answer to "can I start from
+ * `PIXEL_GRID_V1/ossuary`?" is not "that does not exist", it is "review held it, and here is what
+ * it would take to change that".
+ *
+ * @returns {string|null} the refusal, or null when this is not a catalog id at all
+ */
+export function catalogRefusal(templateId) {
+  if (!/^[A-Z][A-Z0-9_]+\/[a-z][a-z0-9-]*$/.test(String(templateId ?? ""))) return null;
+  const status = templateStatus(templateId);
+  if (status === "UNREVIEWED") return `"${templateId}" is not a starter template and is not in the Wave-1 art catalog either. \`relics templates\` lists both.`;
+  if (status === "SHIP") {
+    return `"${templateId}" is a Wave-1 ART template — a configuration preset for an art runtime, not a project scaffold. \`relics init\` copies scaffolds; run \`relics templates\` to see the art catalog and what each preset binds.`;
+  }
+  return `"${templateId}" is a Wave-1 art template with review status ${status}, so it is not offered as a starting point. Promotion to SHIP takes a contained fix, a config inside the runtime's final bounds, a regenerated sheet, and a NEW blind review returning SHIP — never maintainer judgement. \`relics templates --experimental\` shows it with its measured weakness.`;
+}
+
+/**
+ * The Wave-1 ART TEMPLATE CATALOG — a second, separate list.
+ *
+ * NOTHING HERE SAYS A RUNTIME CAN BE LAUNCHED, and the omission is the point. These four runtimes
+ * are not registered on any chain this build knows about, whether that is still true tomorrow is a
+ * per-chain fact, and the only thing that answers it is a live read of `ArtRuntimeRegistryV1`. The
+ * CLI points at that read rather than printing an answer it would have to keep up to date.
+ */
+function printArtCatalog({ experimental = false } = {}) {
+  const entries = humanCatalog({ advanced: experimental });
+  const shipped = entries.filter((e) => e.review.status === "SHIP");
+
+  console.log("");
+  heading("art templates (Wave 1)");
+  console.log(dim("  Configuration presets for the on-chain art runtimes. Not `relics init` targets."));
+  console.log(dim("  A preset is a STARTING POINT: change anything the runtime's validator accepts."));
+  console.log("");
+
+  for (const e of shipped) {
+    console.log(`  ${bold(e.id.padEnd(34))} ${e.summary}`);
+    const effective = e.signals.effective.map((b) => `${b.sensor}/${b.curve}`).join(", ") || "none";
+    console.log(`  ${" ".repeat(34)} ${dim(`runtime ${e.runtime.id} · config schema v${e.runtime.configSchemaVersion} · market-responsive ${e.marketResponsive ? "yes" : "no"}`)}`);
+    console.log(`  ${" ".repeat(34)} ${dim(`effective signals (measured): ${effective}`)}`);
+    if (e.signals.ineffective.length > 0) {
+      console.log(`  ${" ".repeat(34)} ${yellow(`bound but measured DEAD: ${e.signals.ineffective.map((b) => `${b.sensor}/${b.curve}`).join(", ")}`)}`);
+    }
+  }
+
+  const others = entries.filter((e) => e.review.status !== "SHIP");
+  if (experimental) {
+    console.log("");
+    console.log(dim(`  ${ADVANCED_FLAG_STATUSES.join(" and ")} — shown because --experimental was passed. NOT offered as starting points.`));
+    for (const e of others) {
+      const w = e.weakestMeasuredStatePairing;
+      console.log(`  ${bold(e.id.padEnd(34))} ${yellow(e.review.status)}`);
+      if (w) console.log(`  ${" ".repeat(34)} ${dim(`weakest measured state pairing: ${w.states} at dE ${w.deltaE} (floor ${w.floorDeltaE})`)}`);
+    }
+    console.log("");
+    console.log(dim("  Review REJECTED the remainder of the wave. Those are not listed here and are not offered."));
+  } else if (others.length === 0) {
+    console.log("");
+    console.log(dim(`  ${ADVANCED_FLAG_STATUSES.join(" and ")} templates exist and are hidden. \`relics templates --experimental\` shows them with their measured weakness.`));
+  }
+
+  console.log("");
+  console.log(dim("  WHETHER THESE RUNTIMES ARE REGISTERED ON YOUR CHAIN IS A LIVE READ, not a line in this kit."));
+  console.log(dim("  `relics agent ready --chain <id>` asks the chain. An unread registry answers UNKNOWN, never \"no\"."));
+  return 0;
+}
+
+export function printTemplates(options = {}) {
+  heading("starter templates");
   for (const template of listTemplates()) {
     console.log(`  ${bold(template.id.padEnd(22))} ${template.summary}`);
     const runtime = `runtime ${template.runtimeId}`;
@@ -75,6 +166,7 @@ export function printTemplates() {
   }
   console.log("");
   console.log(dim("  relics init <directory> --template <id>"));
+  printArtCatalog({ experimental: options.experimental === true });
   return 0;
 }
 
@@ -84,9 +176,14 @@ export function printTemplates() {
  */
 export function initProject(target, options = {}) {
   const templates = listTemplates();
-  const templateId = options.template ?? "minimal";
+  const templateId = options.template ?? DEFAULT_TEMPLATE_ID;
   const template = templates.find((t) => t.id === templateId);
   if (!template) {
+    const refusal = catalogRefusal(templateId);
+    if (refusal) {
+      console.log(red(`  ${refusal}`));
+      return 1;
+    }
     console.log(red(`  unknown template "${templateId}"`));
     printTemplates();
     return 1;
