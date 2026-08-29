@@ -564,20 +564,28 @@ reviewer read contact sheets as images, never opened a source file, and judged t
 do twelve tokens read as twelve different works at thumbnail size, and does the work visibly change
 between a quiet market, a wounded one and a healed one. Seven passed the first review. Five of those
 seven were then repaired and sent back through a **second blind review**, by a reviewer who had seen
-neither the first verdicts nor the source — and four of the five came back lower. **Three ship.**
-`relics templates` shows those three and nothing else.
+neither the first verdicts nor the source — and four of the five came back lower. A sixth, `idol`,
+was repaired later the same day and went through a **third** blind review, which held it. **Two
+ship.** `relics templates` shows those two and nothing else.
 
 | Template | Runtime | Config schema | Market-responsive | What it is |
 |---|---|---|---|---|
 | `GEOMETRIC_RECURSION_V1/compass` | GEOMETRIC_RECURSION_V1 | v2 | yes | rings of rings, coloured by level |
 | `VECTOR_COMPOSITION_V1/alluvium` | VECTOR_COMPOSITION_V1 | v1 | yes | sediment: the market writes the strata |
-| `PIXEL_GRID_V1/idol` | PIXEL_GRID_V1 | v1 | yes | a mirrored bronze artifact that swells and corrodes |
 
-**Wave 1 is three runtimes, and it was four.** `CELLULAR_SYSTEM_V1` left on 2026-08-29: a runtime
-enters a wave only with at least one blind-reviewed SHIP template, its last candidate was rejected
-on seed diversity, and it therefore has none. That is the rule applied, not a judgement about the
-engine — it renders, it validates, and its reviewed templates are still in the ledger with their
-verdicts. Nothing about it is deleted; it is simply not offered.
+**Wave 1 is two runtimes, and it was four.** `CELLULAR_SYSTEM_V1` and `PIXEL_GRID_V1` both left on
+2026-08-29, by the same rule and not by a judgement: a runtime enters a wave only with at least one
+blind-reviewed SHIP template. Cellular's last candidate was rejected on seed diversity; Pixel's only
+SHIP template, `idol`, was held on the blind review of its repaired frame. Both engines render, both
+validate, and both still carry reviewed templates in the ledger with their verdicts. Nothing about
+either is deleted; they are simply not offered.
+
+`idol` is worth naming because it is stuck rather than unlucky. Before the repair it failed a
+structural check — a layer that drew nothing at any market state. After the repair it failed blind
+review for the opposite kind of reason: the frame it draws is topologically identical on every seed,
+so twelve tokens that read as twelve different works in a quiet market collapse toward one picture
+in a healed one. Both honest paths end at the same verdict, which makes it a template-curation
+problem for a later wave rather than a defect in the runtime.
 
 **The config schema version is not the runtime version, and the two disagree here.** Every one of
 these runtimes is at runtime version 1, while GEOMETRIC_RECURSION is at *config* version 2 — a byte
@@ -607,16 +615,18 @@ Three runtimes independently shipped a field wired to a sensor that reads the sa
 market state — legal, wired, and visually inert — so each descriptor publishes which of its bindings
 actually move, measured against a committed census rather than taken from the schema.
 
-The consequence is visible in the catalog. `idol` binds six sensors and one of them, `EPOCH`, moves
-at most 125 per mille across the review fixtures, so it is published as **bound but measured dead**.
-And the curve decides as much as the sensor: `RECOVERY` under `LOG2` separates a quiet market from a
-wounded one while the same sensor under `LINEAR` does not, because `LOG2` lifts its quiet-market
-reading from 10 to 562 — a fact about the curve that no amount of reading the sensor's name would
-give you.
+The consequence is visible in the catalog. Both templates that ship publish an empty `ineffective`
+list — every sensor they bind actually moves — and that is a measured result rather than a claim,
+because the same classifier that produced it refuses other bindings by name. `EPOCH` under `LINEAR`
+moves at most 125 per mille across the review fixtures, so a template binding it would be published
+as **bound but measured dead**; `idol` was that template until it was held. And the curve decides as
+much as the sensor: `RECOVERY` under `LOG2` separates a quiet market from a wounded one while the
+same sensor under `LINEAR` does not, because `LOG2` lifts its quiet-market reading from 10 to 562 —
+a fact about the curve that no amount of reading the sensor's name would give you.
 
 ### The tiers below SHIP are kept, and hidden
 
-Five presets were reviewed "ship with caveat" and eight were held. They are not deleted, and they
+Five presets were reviewed "ship with caveat" and nine were held. They are not deleted, and they
 are not shown by default:
 
 ```bash
@@ -634,13 +644,14 @@ contact sheet, and a **new blind review** returning SHIP — and the status mode
 missing any one of them, refuses a re-labelled copy of the old review by document digest, and
 refuses any method that is not blind.
 
-**The rule runs in the other direction too, and it has been used.** A DOWNGRADE owes none of those
-four artifacts: the artifacts exist so a template cannot be talked up without a new blind verdict,
-and being talked down by one is the mechanism working. On 2026-08-29 the second blind review moved
-four of the five repaired presets down, and the catalog followed with no argument. A status is not a
+**The rule runs in the other direction too, and it has been used twice.** A DOWNGRADE owes none of
+those four artifacts: the artifacts exist so a template cannot be talked up without a new blind
+verdict, and being talked down by one is the mechanism working. On 2026-08-29 the second blind review
+moved four of the five repaired presets down, and a third review held a fifth — taking a whole
+runtime out of the wave with it. The catalog followed both times with no argument. A status is not a
 field anyone edits — it is read out of an append-only ledger, latest record first.
 
-### An autonomous agent may only ever choose from the three
+### An autonomous agent may only ever choose from the two
 
 The selection pipeline is `brief -> live runtime availability -> SHIP catalog -> capability filter ->
 semantic match -> select`, and the order is the mechanism rather than a description of it. The

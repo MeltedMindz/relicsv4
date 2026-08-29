@@ -25,6 +25,7 @@ import {
   EFFECTIVE_SIGNAL_FLOOR_PER_MILLE,
   FIXTURE_FAMILY,
   VISUAL_SENSORS,
+  classifyBindings,
   isEffective,
   movement,
   readSensorMovement,
@@ -34,12 +35,12 @@ import {
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 test("there is one descriptor per SHIP template and no others", () => {
-  assert.equal(TEMPLATE_DESCRIPTORS.length, 3);
+  assert.equal(TEMPLATE_DESCRIPTORS.length, 2);
   assert.deepEqual(TEMPLATE_DESCRIPTORS.map((d) => d.id).sort(), [...templatesWithStatus("SHIP")].sort());
 });
 
 test("no descriptor belongs to a runtime that LEFT Wave 1, and the departure is recorded", () => {
-  assert.deepEqual(Object.keys(RUNTIMES_LEFT_WAVE1), ["CELLULAR_SYSTEM_V1"]);
+  assert.deepEqual(Object.keys(RUNTIMES_LEFT_WAVE1).sort(), ["CELLULAR_SYSTEM_V1", "PIXEL_GRID_V1"]);
   for (const [id, record] of Object.entries(RUNTIMES_LEFT_WAVE1)) {
     assert.equal(RUNTIMES[id], undefined, `${id} is both a Wave-1 runtime and a departed one`);
     assert.match(record.reason, /ZERO_SHIP_TEMPLATES/);
@@ -53,7 +54,8 @@ test("no descriptor belongs to a runtime that LEFT Wave 1, and the departure is 
 test("the package publishes a sheet FILE for SHIP templates and for nobody else", () => {
   const published = new Set(readdirSync(join(PKG, "sheets")).filter((f) => f.endsWith(".png")));
   const expected = new Set(TEMPLATE_DESCRIPTORS.flatMap((d) => Object.values(d.sheets).map((s) => s.name)));
-  assert.ok(expected.size >= 6, `only ${expected.size} sheets expected; that floor would pass on nothing`);
+  assert.ok(expected.size >= 4, `only ${expected.size} sheets expected; that floor would pass on nothing`);
+  assert.equal(expected.size, TEMPLATE_DESCRIPTORS.length * 2, "two sheets per SHIP template, derived rather than typed");
   assert.deepEqual([...published].sort(), [...expected].sort(),
     "a picture of a template an agent may not select is still a picture of it; removing the descriptor and leaving the sheet publishes the temptation the descriptor rule exists to remove");
 });
@@ -80,10 +82,9 @@ test("every descriptor carries the fields a creator and an agent were promised",
   }
 });
 
-test("the config schema versions are the ones the runtimes actually require — 2, 1, 1", () => {
+test("the config schema versions are the ones the runtimes actually require — 2, 1", () => {
   assert.equal(RUNTIMES.GEOMETRIC_RECURSION_V1.configSchemaVersion, 2);
   assert.equal(RUNTIMES.VECTOR_COMPOSITION_V1.configSchemaVersion, 1);
-  assert.equal(RUNTIMES.PIXEL_GRID_V1.configSchemaVersion, 1);
   // The config version is NOT the runtime version, and assuming it is produces ERR_VERSION.
   for (const r of Object.values(RUNTIMES)) assert.equal(r.runtimeVersion, 1);
   assert.notEqual(RUNTIMES.GEOMETRIC_RECURSION_V1.configSchemaVersion, RUNTIMES.GEOMETRIC_RECURSION_V1.runtimeVersion);
@@ -154,12 +155,23 @@ test("effectiveness is decided by the measurement, and it disagrees with the sch
   assert.ok(deadUnderLinear.length >= 4, `expected several dead sensors, got ${deadUnderLinear.join(", ")}`);
 });
 
-test("idol's EPOCH binding is published as INEFFECTIVE, with its measured reason", () => {
-  const idol = describeTemplate("PIXEL_GRID_V1/idol");
-  const epoch = idol.signals.ineffective.find((b) => b.sensor === "EPOCH");
-  assert.ok(epoch, "idol's EPOCH binding was published as effective");
+test("a bound-but-dead sensor is published as INEFFECTIVE, with its measured reason", () => {
+  // This was stated about `idol`, whose EPOCH binding moved at most 125 per mille. idol was held on
+  // 2026-08-29 and has no descriptor any more, so the claim is made where it was ever load-bearing:
+  // on the CLASSIFIER, against the same measured row. Every descriptor's `signals.ineffective` comes
+  // out of this function, so a template binding EPOCH under LINEAR would publish it as dead today.
+  const { effective, ineffective } = classifyBindings([
+    { sensor: "EPOCH", curve: "LINEAR", drives: "SLAB density — the body mass" },
+    { sensor: "RECOVERY", curve: "LOG2", drives: "CONTRACT — the self-similarity ratio" },
+  ]);
+  const epoch = ineffective.find((b) => b.sensor === "EPOCH");
+  assert.ok(epoch, "an EPOCH/LINEAR binding was classified as effective");
   assert.match(epoch.reason, /moves at most 125 per mille/);
-  assert.ok(idol.signals.bound.some((b) => b.sensor === "EPOCH"), "the binding is still published as bound");
+  assert.equal(epoch.drives, "SLAB density — the body mass", "the refusal drops what the binding drives");
+  assert.deepEqual(effective.map((b) => b.sensor), ["RECOVERY"]);
+
+  // And the published catalog agrees: no SHIP descriptor carries a dead binding today.
+  for (const full of describeAll()) assert.deepEqual(full.signals.ineffective, [], full.id);
 });
 
 test("the curve, not the sensor, decides whether a binding separates neutral from stress", () => {
@@ -201,7 +213,8 @@ test("every published contact sheet exists and matches its digest", () => {
       checked++;
     }
   }
-  assert.equal(checked, 6, "expected two sheets for each of three templates");
+  assert.equal(checked, TEMPLATE_DESCRIPTORS.length * 2, "expected two sheets for each SHIP template");
+  assert.ok(checked >= 4, "a sheet check that checked nothing is not a sheet check");
 });
 
 test("an unshipped template is revealed without a starting point", () => {
@@ -219,5 +232,14 @@ test("an unshipped template is revealed without a starting point", () => {
   for (const id of templatesWithStatus("REJECTED")) {
     assert.equal(describeUnshippedTemplate(id).promotion.possible, false);
   }
-  assert.equal(describeUnshippedTemplate("PIXEL_GRID_V1/idol"), null, "a SHIP template must not come back as an unshipped record");
+  for (const id of templatesWithStatus("SHIP")) {
+    assert.equal(describeUnshippedTemplate(id), null, `${id} is SHIP and must not come back as an unshipped record`);
+  }
+  // idol is the reverse case and the reason this test moved: it WAS SHIP, it is HELD now, and it
+  // must come back as an unshipped record with no starting point in it.
+  const idol = describeUnshippedTemplate("PIXEL_GRID_V1/idol");
+  assert.equal(idol.review.status, "HELD");
+  assert.equal(idol.offeredAsAStartingPoint, false);
+  assert.equal(idol.config, undefined);
+  assert.equal(idol.sheets, undefined);
 });

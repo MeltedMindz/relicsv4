@@ -53,9 +53,10 @@ const REJECTED = () => templatesWithStatus("REJECTED")[0];
  * The four ways an agent could reach a template, asked of EVERY member of a tier.
  *
  * Asking about one member proves the tier is refused only if that member is representative, and the
- * tiers moved on 2026-08-29 — `reliquary` joined EXPERIMENTAL, `cairn` and `dendron` joined HELD,
- * `crux` joined REJECTED — so the member `[0]` returns today is not the member it returned before.
- * A guard evaluated against a moving sample is a guard evaluated against luck.
+ * tiers moved twice on 2026-08-29 — `reliquary` joined EXPERIMENTAL, `cairn` and `dendron` joined
+ * HELD, `crux` joined REJECTED, and then `idol` joined HELD too — so the member `[0]` returns today
+ * is not the member it returned before. A guard evaluated against a moving sample is a guard
+ * evaluated against luck.
  */
 function refuseEveryMemberOf(status) {
   const members = templatesWithStatus(status);
@@ -88,12 +89,23 @@ test("AUTONOMOUS_AGENT_CAN_SELECT_CAVEAT_TEMPLATE=NO", () => {
 
 test("AUTONOMOUS_AGENT_CAN_SELECT_HELD_TEMPLATE=NO", () => {
   const id = HELD();
-  assert.equal(refuseEveryMemberOf("HELD"), 8);
+  assert.equal(refuseEveryMemberOf("HELD"), 9);
   assert.ok(!AUTONOMOUS_SELECTABLE_STATUSES.includes("HELD"));
 
   const out = selectForAutonomousAgent({ brief: "a centred disc whose crust is stripped bare under stress and regrown in recovery", registrySnapshot: allActiveSnapshot() });
   assert.notEqual(out.selected, id);
   assert.ok(out.selected === null || isAutonomouslySelectable(out.selected));
+
+  // THE BRIEF idol WOULD HAVE WON. It was SHIP until the blind review of its repaired frame held it
+  // on 2026-08-29, and its brief tags are still the best words in the wave for this sentence. A
+  // matcher that could still see it would rank it first, which is exactly the failure the filter
+  // exists to prevent — so this is asserted on the words that used to select it, not on new ones.
+  const pixelBrief = selectForAutonomousAgent({
+    brief: "a mirrored low-resolution pixel idol, a bronze corroded totem figure at 16x16",
+    registrySnapshot: allActiveSnapshot(),
+  });
+  assert.notEqual(pixelBrief.selected, "PIXEL_GRID_V1/idol");
+  assert.ok(pixelBrief.selected === null || isAutonomouslySelectable(pixelBrief.selected));
 });
 
 test("AUTONOMOUS_AGENT_CAN_SELECT_REJECTED_TEMPLATE=NO", () => {
@@ -128,7 +140,7 @@ test("the final selection assertion refuses every tier below SHIP", () => {
 
 test("the pool is SHIP and only SHIP, and every member has a descriptor", () => {
   const pool = shipCatalog();
-  assert.equal(pool.length, 3);
+  assert.equal(pool.length, 2);
   for (const id of pool) {
     assert.equal(templateStatus(id), "SHIP");
     assert.ok(describeTemplate(id), `${id} has no descriptor`);
@@ -138,6 +150,7 @@ test("the pool is SHIP and only SHIP, and every member has a descriptor", () => 
 
 test("a runtime that LEFT Wave 1 is not in the availability question, and owns no SHIP template", () => {
   const live = runtimeAvailability(allActiveSnapshot());
+  assert.ok(Object.keys(RUNTIMES_LEFT_WAVE1).length >= 2, "this loop would be near-vacuous with fewer");
   for (const departed of Object.keys(RUNTIMES_LEFT_WAVE1)) {
     assert.equal(RUNTIMES[departed], undefined, `${departed} is still listed as a Wave-1 runtime`);
     assert.equal(live[departed], undefined, `${departed} was given a live availability answer`);
@@ -158,13 +171,13 @@ test("the filter runs BEFORE the match, and the declared pipeline says so", () =
 
 test("the advanced flag reveals EXPERIMENTAL and HELD, and never as a starting point", () => {
   const plain = humanCatalog();
-  assert.equal(plain.length, 3);
+  assert.equal(plain.length, 2);
   for (const e of plain) assert.equal(e.review.status, "SHIP");
 
   const advanced = humanCatalog({ advanced: true });
   assert.ok(advanced.length > plain.length);
   const extra = advanced.filter((e) => e.review.status !== "SHIP");
-  assert.equal(extra.length, 13); // 5 EXPERIMENTAL + 8 HELD
+  assert.equal(extra.length, 14); // 5 EXPERIMENTAL + 9 HELD
   for (const e of extra) {
     assert.equal(e.offeredAsAStartingPoint, false);
     assert.equal(e.config, undefined, `${e.id} was revealed with a config; that is a starting point`);
@@ -198,7 +211,7 @@ test("an unread registry is UNKNOWN and refuses a selection; it is never NOT_REG
   }
 });
 
-test("today's real answer: none of the three runtimes is registered on a chain that reads empty", () => {
+test("today's real answer: neither Wave-1 runtime is registered on a chain that reads empty", () => {
   const empty = { entries: new Map(), complete: true, declaredCount: 0, failedReads: [], errors: [] };
   const live = runtimeAvailability(empty);
   for (const id of Object.keys(RUNTIMES)) assert.equal(live[id].state, "NOT_REGISTERED");
@@ -231,7 +244,7 @@ test("an INACTIVE or UNKNOWN runtime removes its templates from the pool", () =>
   assert.equal(live.GEOMETRIC_RECURSION_V1.state, "INACTIVE");
 
   const { kept, dropped } = capabilityFilter(shipCatalog(), live);
-  assert.equal(kept.length, 2);
+  assert.equal(kept.length, 1);
   assert.equal(dropped.length, 1);
   for (const d of dropped) assert.equal(d.runtimeId, "GEOMETRIC_RECURSION_V1");
 
@@ -249,7 +262,6 @@ test("a brief selects on meaning, from the SHIP pool", () => {
   const cases = [
     ["concentric rings, a navigational instrument, radial and nested", "GEOMETRIC_RECURSION_V1/compass"],
     ["layered sediment and geological strata, horizontal banding", "VECTOR_COMPOSITION_V1/alluvium"],
-    ["low-resolution pixel creatures, bronze and corroded", "PIXEL_GRID_V1/idol"],
   ];
   for (const [brief, expected] of cases) {
     const out = selectForAutonomousAgent({ brief, registrySnapshot: snap });

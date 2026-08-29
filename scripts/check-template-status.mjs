@@ -120,11 +120,12 @@ function walk(dir, out) {
 /**
  * THE SCAN COVERS THE RUNTIMES THAT LEFT THE WAVE TOO, and that is not tidiness.
  *
- * `CELLULAR_SYSTEM_V1` left Wave 1 on 2026-08-29 with zero SHIP templates. Its NAME is still in
- * this repository's prose, in the review ledger and in every reader's memory, so a sentence saying
- * it is registered or launchable is MORE likely now than it was while it shipped — and it would be
- * a claim about a runtime nobody may launch at all. Deriving the scan from `RUNTIMES` alone would
- * have retired that check on the day it started mattering most.
+ * `CELLULAR_SYSTEM_V1` and `PIXEL_GRID_V1` both left Wave 1 on 2026-08-29 with zero SHIP templates.
+ * Their NAMES are still in this repository's prose, in the review ledger and in every reader's
+ * memory, so a sentence saying one of them is registered or launchable is MORE likely now than it
+ * was while they shipped — and it would be a claim about a runtime nobody may launch at all.
+ * Deriving the scan from `RUNTIMES` alone would have retired that check on the day it started
+ * mattering most, and it would have retired it TWICE in one day.
  */
 const RUNTIME_IDS = [...Object.keys(RUNTIMES), ...Object.keys(RUNTIMES_LEFT_WAVE1)];
 
@@ -213,7 +214,7 @@ if (CONTROLS) {
   console.log("  input floors");
   const floorCases = [
     ["templates classified", allTemplateIds().length, 30],
-    ["descriptors", TEMPLATE_DESCRIPTORS.length, 3],
+    ["descriptors", TEMPLATE_DESCRIPTORS.length, 2],
     ["census curve rows", readSensorMovement().curveRows, 36],
     ["public files scanned", walk(join(ROOT, "packages/template-catalog/src"), []).length, 4],
   ];
@@ -251,15 +252,28 @@ if (excluded !== SCAN_EXCLUDE.size) {
 }
 const census = readSensorMovement();
 
+// THREE OF THESE FLOORS MOVED DOWN ON 2026-08-29, AND THE REASON IS NOT "TO GO GREEN".
+// A floor answers one question — did this gate examine anything at all — and it must never be
+// lowered to accommodate a failure. What moved here is the CATALOG: `PIXEL_GRID_V1` left the wave
+// when the blind review of its repaired `idol` returned HOLD, taking the wave from three runtimes,
+// three descriptors and six sheets to two, two and four. A floor of 3 descriptors would now be a
+// floor asserting a fact that stopped being true, which fails a correct catalog and teaches the
+// next reader to edit the number rather than the catalog.
+//
+// The floors are therefore kept as ABSOLUTE, NON-ZERO minima ("this gate saw something"), and the
+// question they used to answer by accident — "does the catalog still have the size it should" — is
+// answered below by DERIVATION instead: `c.SHIP.length !== TEMPLATE_DESCRIPTORS.length` fails, and
+// a runtime with no SHIP template fails. Those move with the catalog and cannot be satisfied by a
+// smaller number.
 floor("templates classified", ids.length, 30);
-floor("descriptors", TEMPLATE_DESCRIPTORS.length, 3);
-floor("review ledger records", REVIEW_LEDGER.length, 2);
+floor("descriptors", TEMPLATE_DESCRIPTORS.length, 2);
+floor("review ledger records", REVIEW_LEDGER.length, 3);
 floor("census fixture rows", census.familyRows, 27);
 floor("census curve rows", census.curveRows, 36);
 floor("perceptual census templates", Object.keys(readStateDistinction().census).length, 30);
-floor("published sheets", TEMPLATE_DESCRIPTORS.reduce((n, d) => n + Object.keys(d.sheets).length, 0), 6);
+floor("published sheets", TEMPLATE_DESCRIPTORS.reduce((n, d) => n + Object.keys(d.sheets).length, 0), 4);
 floor("public files scanned", files.length, 50);
-floor("runtimes described", Object.keys(RUNTIMES).length, 3);
+floor("runtimes described", Object.keys(RUNTIMES).length, 2);
 floor("runtime names scanned for a launchability claim", RUNTIME_IDS.length, 4);
 
 // ------------------------------------------------------------------------------------------------
@@ -340,7 +354,7 @@ for (const d of TEMPLATE_DESCRIPTORS) {
     sheetsChecked++;
   }
 }
-floor("sheet digests verified", sheetsChecked, 6);
+floor("sheet digests verified", sheetsChecked, 4);
 
 for (const full of describeAll()) {
   for (const p of assertNoLaunchabilityClaim(full)) fail(`${full.id}: ${p}`);

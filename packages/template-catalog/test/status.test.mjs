@@ -29,11 +29,11 @@ test("the ledger is well-formed", () => {
   assert.deepEqual(validateLedger(), []);
 });
 
-test("the Wave-1 classification is 3 / 5 / 8 / 19, and the tiers partition the whole wave", () => {
+test("the Wave-1 classification is 2 / 5 / 9 / 19, and the tiers partition the whole wave", () => {
   const c = classification();
-  assert.equal(c.SHIP.length, 3);
+  assert.equal(c.SHIP.length, 2);
   assert.equal(c.EXPERIMENTAL.length, 5);
-  assert.equal(c.HELD.length, 8);
+  assert.equal(c.HELD.length, 9);
   assert.equal(c.REJECTED.length, 19);
   assert.equal(allTemplateIds().length, 35);
   assert.equal(TEMPLATE_STATUSES.reduce((n, s) => n + c[s].length, 0), 35);
@@ -42,52 +42,86 @@ test("the Wave-1 classification is 3 / 5 / 8 / 19, and the tiers partition the w
   for (const s of TEMPLATE_STATUSES) for (const id of c[s]) { assert.ok(!seen.has(id), `${id} is in two tiers`); seen.add(id); }
 });
 
-test("the final SHIP set is exactly the three the blind reviews left standing", () => {
+test("the final SHIP set is exactly the two the blind reviews left standing", () => {
   assert.deepEqual([...templatesWithStatus("SHIP")].sort(), [
     "GEOMETRIC_RECURSION_V1/compass",
-    "PIXEL_GRID_V1/idol",
     "VECTOR_COMPOSITION_V1/alluvium",
   ]);
 });
 
-test("CELLULAR_SYSTEM_V1 has ZERO SHIP templates, and its templates are still classified", () => {
-  const mine = allTemplateIds().filter((id) => id.startsWith("CELLULAR_SYSTEM_V1/"));
-  assert.ok(mine.length >= 4, `only ${mine.length} cellular templates in the ledger`);
-  assert.deepEqual(mine.filter((id) => templateStatus(id) === "SHIP"), []);
-  // Departure is not deletion. Every one of them still carries a verdict.
-  for (const id of mine) assert.notEqual(templateStatus(id), "UNREVIEWED", id);
+test("both departed runtimes have ZERO SHIP templates, and their templates are still classified", () => {
+  // Asked of BOTH, not of the one that left first. CELLULAR left on a REJECT and PIXEL on a HOLD,
+  // which are different verdicts reaching the same rule, and a test written against one of them
+  // would pass while the other quietly kept a SHIP template.
+  for (const runtimeId of ["CELLULAR_SYSTEM_V1", "PIXEL_GRID_V1"]) {
+    const mine = allTemplateIds().filter((id) => id.startsWith(`${runtimeId}/`));
+    assert.ok(mine.length >= 4, `only ${mine.length} ${runtimeId} templates in the ledger`);
+    assert.deepEqual(mine.filter((id) => templateStatus(id) === "SHIP"), [], runtimeId);
+    // Departure is not deletion. Every one of them still carries a verdict.
+    for (const id of mine) assert.notEqual(templateStatus(id), "UNREVIEWED", id);
+  }
 });
 
-test("the final review DOWNGRADED four and promoted none, and needed no promotion evidence to do it", () => {
-  const final = REVIEW_LEDGER.at(-1);
-  assert.equal(final.reviewId, "WAVE1-FINAL-BLIND-2026-08-29");
-  assert.equal(final.method, "BLIND_VISUAL");
-  assert.equal(final.promotionEvidence, null, "a record that promotes nothing must not carry promotion evidence");
-
-  const before = REVIEW_LEDGER.slice(0, -1);
+test("NO RECORD AFTER THE FIRST EVER UPGRADED ANYTHING, and the downgrades owed no evidence", () => {
+  // Asked of EVERY later record rather than of the last one. The last record is a moving target —
+  // it has been three different records in two days — and a check written against `at(-1)` stops
+  // looking at the ones underneath it the moment a new one lands.
   let downgrades = 0;
-  for (const [id, entry] of Object.entries(final.verdicts)) {
-    const prior = latestVerdict(id, before);
-    assert.ok(prior, `${id} appears in the final review with no earlier verdict to move from`);
-    const moved = REVIEW_VERDICTS.indexOf(entry.verdict) - REVIEW_VERDICTS.indexOf(prior.verdict);
-    assert.ok(moved >= 0, `${id} was UPGRADED by a record carrying no promotion evidence`);
-    if (moved > 0) downgrades++;
+  for (const [i, record] of REVIEW_LEDGER.entries()) {
+    if (i === 0) continue;
+    assert.equal(record.method, "BLIND_VISUAL", record.reviewId);
+    assert.equal(record.promotionEvidence, null, `${record.reviewId} carries promotion evidence but promotes nothing`);
+    const before = REVIEW_LEDGER.slice(0, i);
+    for (const [id, entry] of Object.entries(record.verdicts)) {
+      const prior = latestVerdict(id, before);
+      assert.ok(prior, `${record.reviewId}/${id} has no earlier verdict to move from`);
+      const moved = REVIEW_VERDICTS.indexOf(entry.verdict) - REVIEW_VERDICTS.indexOf(prior.verdict);
+      assert.ok(moved >= 0, `${id} was UPGRADED by a record carrying no promotion evidence`);
+      if (moved > 0) downgrades++;
+    }
   }
-  assert.equal(downgrades, 4);
+  // Four in the second review, and idol in the third.
+  assert.equal(downgrades, 5);
   // And the ledger accepts it: a downgrade owes nothing, which is the whole asymmetry.
   assert.deepEqual(validateLedger(), []);
 });
 
-test("the two templates the repairs did not touch were NOT re-reviewed, and say so", () => {
-  const final = REVIEW_LEDGER.at(-1);
-  for (const id of ["VECTOR_COMPOSITION_V1/alluvium", "PIXEL_GRID_V1/idol"]) {
-    assert.equal(final.verdicts[id], undefined, `${id} carries a verdict from a review that did not look at it`);
-    assert.equal(templateStatus(id), "SHIP");
-    // Their standing verdict comes from the FIRST review, and latestVerdict walks back to it.
-    assert.equal(latestVerdict(id).reviewId, REVIEW_LEDGER[0].reviewId);
+test("idol's HOLD is the LATEST word on it, and it took PIXEL_GRID_V1 out of the wave with it", () => {
+  const idol = "PIXEL_GRID_V1/idol";
+  const record = REVIEW_LEDGER.find((r) => r.reviewId === "IDOL-FRAME-REPAIR-BLIND-2026-08-29");
+  assert.ok(record, "the idol frame-repair review is not in the ledger");
+  assert.equal(record.subjects, 1);
+  assert.equal(record.verdicts[idol].verdict, "HOLD");
+  // Its blind code is B-01 — and so is a DIFFERENT template's, in a different set.
+  assert.equal(record.verdicts[idol].blindCode, "B-01");
+  assert.equal(record.verdicts[idol].blindCodeSource, "CONTENT_HASH");
+  assert.equal(
+    REVIEW_LEDGER.find((r) => r.reviewId === "WAVE1-FINAL-BLIND-2026-08-29").verdicts["GEOMETRIC_RECURSION_V1/cairn"].blindCode,
+    "B-01",
+    "the code collision this test exists to document has gone; a code is only meaningful beside its reviewId",
+  );
+
+  // The first review said SHIP about it. The latest one wins, and it is not a promotion.
+  assert.equal(REVIEW_LEDGER[0].verdicts[idol].verdict, "SHIP");
+  assert.equal(latestVerdict(idol).reviewId, record.reviewId);
+  assert.equal(templateStatus(idol), "HELD");
+  assert.ok(!templatesWithStatus("SHIP").some((id) => id.startsWith("PIXEL_GRID_V1/")));
+});
+
+test("a template no later review looked at keeps the verdict of the one that did", () => {
+  // `alluvium` is the only SHIP template no re-review ever saw. Its render inputs were shown to be
+  // unmoved, so no new verdict was claimed and none was invented; `latestVerdict` walks back.
+  const alluvium = "VECTOR_COMPOSITION_V1/alluvium";
+  for (const record of REVIEW_LEDGER.slice(1)) {
+    assert.equal(record.verdicts[alluvium], undefined, `${record.reviewId} carries a verdict for a template it did not look at`);
   }
-  // compass was re-reviewed, and its standing verdict is the SECOND one.
-  assert.equal(latestVerdict("GEOMETRIC_RECURSION_V1/compass").reviewId, final.reviewId);
+  assert.equal(templateStatus(alluvium), "SHIP");
+  assert.equal(latestVerdict(alluvium).reviewId, REVIEW_LEDGER[0].reviewId);
+
+  // compass WAS re-reviewed, and its standing verdict is the second record's.
+  assert.equal(latestVerdict("GEOMETRIC_RECURSION_V1/compass").reviewId, "WAVE1-FINAL-BLIND-2026-08-29");
+  // idol was re-reviewed later still, and its standing verdict is the third record's.
+  assert.equal(latestVerdict("PIXEL_GRID_V1/idol").reviewId, "IDOL-FRAME-REPAIR-BLIND-2026-08-29");
 });
 
 test("EXPERIMENTAL and HELD are KEPT, never deleted", () => {
@@ -109,6 +143,7 @@ test("EXPERIMENTAL and HELD are KEPT, never deleted", () => {
     "GEOMETRIC_RECURSION_V1/lacuna",
     "PARTICLE_FLOW_V1/anvil",
     "PIXEL_GRID_V1/beacon",
+    "PIXEL_GRID_V1/idol",
     "PIXEL_GRID_V1/ossuary",
     "TOPOGRAPHY_FIELD_V1/faultline",
   ]);

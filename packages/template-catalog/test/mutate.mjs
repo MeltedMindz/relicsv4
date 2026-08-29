@@ -119,8 +119,8 @@ const MUTATIONS = [
     file: SRC("status.js"),
     edits: [['  SHIP_WITH_CAVEAT: "EXPERIMENTAL",', '  SHIP_WITH_CAVEAT: "SHIP",']],
     mustFail: [
-      "the Wave-1 classification is 3 / 5 / 8 / 19, and the tiers partition the whole wave",
-      "the final SHIP set is exactly the three the blind reviews left standing",
+      "the Wave-1 classification is 2 / 5 / 9 / 19, and the tiers partition the whole wave",
+      "the final SHIP set is exactly the two the blind reviews left standing",
     ],
   },
   {
@@ -152,7 +152,7 @@ const MUTATIONS = [
     file: SRC("signals.js"),
     edits: [["export const EFFECTIVE_SIGNAL_FLOOR_PER_MILLE = 200;", "export const EFFECTIVE_SIGNAL_FLOOR_PER_MILLE = 1;"]],
     mustFail: [
-      "idol's EPOCH binding is published as INEFFECTIVE, with its measured reason",
+      "a bound-but-dead sensor is published as INEFFECTIVE, with its measured reason",
       "the four measured-dead readings the census names really are refused",
     ],
   },
@@ -196,7 +196,7 @@ const MUTATIONS = [
       '    runtimeTagPreimage: "V4ART.RUNTIME.GEOMETRIC_RECURSION_V1",\n    configMagic: "GRV1",\n    configSchemaVersion: 2,',
       '    runtimeTagPreimage: "V4ART.RUNTIME.GEOMETRIC_RECURSION_V1",\n    configMagic: "GRV1",\n    configSchemaVersion: 1,',
     ]],
-    mustFail: ["the config schema versions are the ones the runtimes actually require — 2, 1, 1"],
+    mustFail: ["the config schema versions are the ones the runtimes actually require — 2, 1"],
   },
   {
     id: "M20 a published sheet digest no longer describes the published file",
@@ -226,6 +226,55 @@ const MUTATIONS = [
     ],
   },
   {
+    // THE SECOND DEPARTURE, re-listed. CELLULAR left on a REJECT and PIXEL on a HOLD; M21 breaks the
+    // first and this breaks the second, because a guard written for one departure is a guard that
+    // has never been shown to see the other. Re-listing PIXEL is the one edit that would make its
+    // departure look like a formatting choice: the tier counts do not move, `idol` is still HELD,
+    // and the wave silently grows a runtime whose every template an agent may not select.
+    id: "M23 the SECOND runtime that left Wave 1 is quietly listed again",
+    file: SRC("descriptors.js"),
+    edits: [[
+      "export const RUNTIMES_LEFT_WAVE1 = Object.freeze({\n  CELLULAR_SYSTEM_V1: Object.freeze({",
+      "export const RUNTIMES = Object.freeze({ ...RUNTIMES_WAVE1, PIXEL_GRID_V1: Object.freeze({ id: \"PIXEL_GRID_V1\", runtimeVersion: 1, artRuntimeMode: 1, artRuntimeModeName: \"SOLIDITY_SVG_V1\", runtimeTagPreimage: \"V4ART.RUNTIME.PIXEL_GRID_V1\", configMagic: \"PGV1\", configSchemaVersion: 1, summary: \"restored\" }) });\nexport const RUNTIMES_LEFT_WAVE1 = Object.freeze({\n  CELLULAR_SYSTEM_V1: Object.freeze({",
+    ], [
+      "export const RUNTIMES = Object.freeze({\n  GEOMETRIC_RECURSION_V1:",
+      "const RUNTIMES_WAVE1 = Object.freeze({\n  GEOMETRIC_RECURSION_V1:",
+    ]],
+    mustFail: [
+      "no descriptor belongs to a runtime that LEFT Wave 1, and the departure is recorded",
+      "a runtime that LEFT Wave 1 is not in the availability question, and owns no SHIP template",
+    ],
+  },
+  {
+    // A DEPARTURE DELETED RATHER THAN RECORDED. Nothing about the wave changes — two runtimes, two
+    // SHIP templates, the same tiers — except that the reason a runtime is missing stops being
+    // written down anywhere, which is the exact failure `RUNTIMES_LEFT_WAVE1` exists to prevent.
+    id: "M24 a departure is deleted instead of recorded",
+    file: SRC("descriptors.js"),
+    edits: [[
+      "  PIXEL_GRID_V1: Object.freeze({\n    id: \"PIXEL_GRID_V1\",\n    runtimeTagPreimage: \"V4ART.RUNTIME.PIXEL_GRID_V1\",\n    leftAt: \"2026-08-29\",",
+      "  PIXEL_GRID_V1_REMOVED: Object.freeze({\n    id: \"PIXEL_GRID_V1_REMOVED\",\n    runtimeTagPreimage: \"V4ART.RUNTIME.PIXEL_GRID_V1\",\n    leftAt: \"2026-08-29\",",
+    ]],
+    mustFail: ["no descriptor belongs to a runtime that LEFT Wave 1, and the departure is recorded"],
+  },
+  {
+    // THE LATEST VERDICT ON idol, DROPPED. Removing the third ledger record restores idol to SHIP
+    // and PIXEL_GRID_V1 to the wave without editing a status, a tier or a descriptor — the ledger
+    // simply stops carrying the review that held it.
+    id: "M25 the idol frame-repair verdict is dropped from the ledger",
+    file: SRC("status.js"),
+    edits: [[
+      '    verdicts: Object.freeze({\n      "PIXEL_GRID_V1/idol": { verdict: "HOLD", blindCode: "B-01", blindCodeSource: "CONTENT_HASH" },\n    }),',
+      "    verdicts: Object.freeze({}),",
+    ]],
+    mustFail: [
+      "idol's HOLD is the LATEST word on it, and it took PIXEL_GRID_V1 out of the wave with it",
+      "the Wave-1 classification is 2 / 5 / 9 / 19, and the tiers partition the whole wave",
+      "the final SHIP set is exactly the two the blind reviews left standing",
+      "there is one descriptor per SHIP template and no others",
+    ],
+  },
+  {
     // THE APPEND-ONLY DIRECTION. Read the ledger forwards and the FIRST verdict wins, which
     // silently restores the seven-template SHIP set the second blind review took apart. Nothing
     // about the file looks wrong afterwards: every record is still present and still well formed.
@@ -236,9 +285,9 @@ const MUTATIONS = [
       "  for (let i = 0; i < ledger.length; i++) {",
     ]],
     mustFail: [
-      "the Wave-1 classification is 3 / 5 / 8 / 19, and the tiers partition the whole wave",
-      "the final SHIP set is exactly the three the blind reviews left standing",
-      "the two templates the repairs did not touch were NOT re-reviewed, and say so",
+      "the Wave-1 classification is 2 / 5 / 9 / 19, and the tiers partition the whole wave",
+      "the final SHIP set is exactly the two the blind reviews left standing",
+      "a template no later review looked at keeps the verdict of the one that did",
       "there is one descriptor per SHIP template and no others",
     ],
   },

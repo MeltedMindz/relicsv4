@@ -25,7 +25,7 @@
 // ------------------------------------------------------------------------------------------------
 // TWO THINGS THIS FILE MAY NEVER CARRY, AND WHY
 // ------------------------------------------------------------------------------------------------
-// 1. **NO LAUNCHABILITY.** None of these four runtimes is registered on any chain today, and
+// 1. **NO LAUNCHABILITY.** None of the Wave-1 runtimes is registered on any chain today, and
 //    whether one is registered TOMORROW is a per-chain fact that changes without this file
 //    changing. `assertNoLaunchabilityClaim` refuses any key that would answer it. The live answer
 //    comes from `getChainCapability` reading `ArtRuntimeRegistryV1`, on the day you ask.
@@ -66,12 +66,14 @@ import {
 export const DESCRIPTOR_SCHEMA_VERSION = "1.0.0";
 
 /**
- * The runtimes Wave 1 ships. THREE, not four.
+ * The runtimes Wave 1 ships. TWO. It was four, then three, and it is two.
  *
- * `CELLULAR_SYSTEM_V1` LEFT WAVE 1 on 2026-08-29 and is recorded in `RUNTIMES_LEFT_WAVE1` below
- * rather than deleted. A runtime enters a wave only with at least one blind-reviewed SHIP template;
- * cellular's last candidate was rejected by the final blind review, so it has none and the rule
- * removes it. The rule is what removed it — no judgement about the runtime was made or is implied.
+ * TWO RUNTIMES HAVE LEFT, both recorded in `RUNTIMES_LEFT_WAVE1` below rather than deleted, and
+ * both removed by the same rule: a runtime enters a wave only with at least one blind-reviewed SHIP
+ * template. `CELLULAR_SYSTEM_V1` left on 2026-08-29 when its last candidate was rejected;
+ * `PIXEL_GRID_V1` left the same day when its last candidate — `idol`, its only SHIP template — was
+ * held by the blind review of its repaired frame. The rule is what removed them. No judgement about
+ * either engine was made or is implied, and neither runtime's source was ever in question.
  *
  * `configSchemaVersion` is the version byte the runtime's own config parser REQUIRES, read from the
  * frozen Solidity. It is NOT the runtime version and the two disagree: GEOMETRIC_RECURSION and
@@ -101,16 +103,6 @@ export const RUNTIMES = Object.freeze({
     configSchemaVersion: 1,
     summary: "Layered vector fields: layouts of primitives composed into one plate.",
   }),
-  PIXEL_GRID_V1: Object.freeze({
-    id: "PIXEL_GRID_V1",
-    runtimeVersion: 1,
-    artRuntimeMode: 1,
-    artRuntimeModeName: "SOLIDITY_SVG_V1",
-    runtimeTagPreimage: "V4ART.RUNTIME.PIXEL_GRID_V1",
-    configMagic: "PGV1",
-    configSchemaVersion: 1,
-    summary: "A symmetric pixel grid built from stacked layers, painted at low resolution.",
-  }),
 });
 
 /**
@@ -121,9 +113,9 @@ export const RUNTIMES = Object.freeze({
  * though it had never gone, and it keeps its name in the launchability scan — a runtime nobody may
  * launch is exactly the name a stale sentence would claim is live.
  *
- * A DEPARTURE IS NOT A VERDICT ON THE ENGINE. `CELLULAR_SYSTEM_V1` renders, validates, stays inside
- * its cost budget and still carries reviewed templates in the ledger. What it does not carry is a
- * SHIP one, and the wave rule is about that and only that.
+ * A DEPARTURE IS NOT A VERDICT ON THE ENGINE. Both of these render, validate, stay inside their cost
+ * budgets and still carry reviewed templates in the ledger. What neither carries is a SHIP one, and
+ * the wave rule is about that and only that.
  */
 export const RUNTIMES_LEFT_WAVE1 = Object.freeze({
   CELLULAR_SYSTEM_V1: Object.freeze({
@@ -134,6 +126,20 @@ export const RUNTIMES_LEFT_WAVE1 = Object.freeze({
       "ZERO_SHIP_TEMPLATES — its last SHIP candidate was returned REJECT by the final blind review " +
       "(WAVE1-FINAL-BLIND-2026-08-29), on total seed-diversity failure. A runtime enters a wave only " +
       "with at least one blind-reviewed SHIP template.",
+    reviewedTemplatesStillInTheLedger: true,
+  }),
+  PIXEL_GRID_V1: Object.freeze({
+    id: "PIXEL_GRID_V1",
+    runtimeTagPreimage: "V4ART.RUNTIME.PIXEL_GRID_V1",
+    leftAt: "2026-08-29",
+    reason:
+      "ZERO_SHIP_TEMPLATES — its only SHIP template, `idol`, was returned HOLD by the blind review " +
+      "of its repaired frame (IDOL-FRAME-REPAIR-BLIND-2026-08-29). A runtime enters a wave only " +
+      "with at least one blind-reviewed SHIP template. The template is stuck rather than unlucky: " +
+      "pre-repair it failed the structural role gate with a layer that drew nothing at any market " +
+      "state, and post-repair it fails blind review with a frame topologically identical on every " +
+      "seed, so both honest paths end at HOLD. That is a template-curation problem for a later " +
+      "wave. The RUNTIME's source was never in question.",
     reviewedTemplatesStillInTheLedger: true,
   }),
 });
@@ -168,18 +174,19 @@ const MUTATION = Object.freeze({
 export const RENDER_COMMITMENT_ALGORITHM = "sha256-of-sorted-name-space-sha256-lines-joined-by-newline";
 
 /**
- * The three Wave-1 SHIP templates.
+ * The two Wave-1 SHIP templates.
  *
  * Note the descriptors exist ONLY for SHIP. That is not an omission: a descriptor is the artifact
  * an agent matches against, and publishing one for a template an agent may never select would be
  * publishing a temptation. The non-SHIP tiers are fully enumerated in the review ledger, with their
  * verdicts, which is what makes the classification checkable without making it selectable.
  *
- * FOUR DESCRIPTORS WERE REMOVED HERE ON 2026-08-29 and none of them was deleted from the record.
+ * FIVE DESCRIPTORS WERE REMOVED HERE ON 2026-08-29 and none of them was deleted from the record.
  * `dendron`, `cairn`, `reliquary` and `crux` were repaired, re-reviewed blind, and came back HOLD,
- * HOLD, SHIP_WITH_CAVEAT and REJECT. Their verdicts are in the ledger and `describeUnshippedTemplate`
- * still answers for them; what they lost is the descriptor, because the descriptor IS the starting
- * point and a template an agent may not select must not have one.
+ * HOLD, SHIP_WITH_CAVEAT and REJECT; `idol` was repaired later the same day and came back HOLD.
+ * Their verdicts are in the ledger and `describeUnshippedTemplate` still answers for them; what they
+ * lost is the descriptor, because the descriptor IS the starting point and a template an agent may
+ * not select must not have one.
  */
 export const TEMPLATE_DESCRIPTORS = Object.freeze([
   Object.freeze({
@@ -244,43 +251,6 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       states: Object.freeze({ name: "VECTOR_COMPOSITION_V1--alluvium--STATES.png", bytes: 228448, sha256: "507d5367520c0c93604eccbb49ea8bcc7c5b2e056593f76cb1d71391df7f33b8" }),
     }),
     renderCommitment: Object.freeze({ algorithm: RENDER_COMMITMENT_ALGORITHM, renders: 36, digest: "ce4498023fec823aba26a8900ad8191c80ccb08610db24ca4242c5a88ebc8ba3" }),
-    mutation: MUTATION,
-  }),
-
-  Object.freeze({
-    id: "PIXEL_GRID_V1/idol",
-    name: "idol",
-    runtimeId: "PIXEL_GRID_V1",
-    title: "Idol",
-    summary: "A mirrored bronze artifact that swells and corrodes: a 16x16 figure whose body, radiance and frame each answer a different market condition, and whose erosion layer eats it under drawdown.",
-    brief: Object.freeze({
-      tags: Object.freeze(["pixel", "figure", "idol", "totem", "creature", "bronze", "corrosion", "mirrored", "low-resolution", "symmetric", "artifact"]),
-      useCases: Object.freeze([
-        "a collection of distinct figures rather than variations on one composition",
-        "a brief asking for a pixel or low-resolution register",
-        "a project that wants the market state to be readable without being explained",
-      ]),
-      notFor: Object.freeze(["a brief asking for smooth vector geometry", "a brief that needs a large, detailed, high-resolution plate"]),
-    }),
-    config: Object.freeze({ bytes: 142, keccak256: "8f69813d9aeccee91b206adae31d6f7e143949a6c792f502257bf50170451e87" }),
-    bindings: Object.freeze([
-      Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "FIELD density — the ground the figure stands on" }),
-      Object.freeze({ sensor: "EPOCH", curve: "LINEAR", drives: "SLAB density — the body mass" }),
-      Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "MOTIF density — the DNA-chosen interior marking" }),
-      Object.freeze({ sensor: "RECOVERY", curve: "LINEAR", drives: "RAY density — the radiance" }),
-      Object.freeze({ sensor: "STRESS", curve: "LINEAR", drives: "FRAME density — the enclosing border" }),
-      Object.freeze({ sensor: "DRAWDOWN", curve: "EASE", drives: "EROSION — dilation that eats the figure, empty at rest" }),
-    ]),
-    traits: Object.freeze([
-      Object.freeze({ name: "Corrosion", source: "DRAWDOWN", style: "WORD" }),
-      Object.freeze({ name: "Radiance", source: "RECOVERY", style: "WORD" }),
-      Object.freeze({ name: "Family", source: "DNA", style: "HEX" }),
-    ]),
-    sheets: Object.freeze({
-      seedGrid120: Object.freeze({ name: "PIXEL_GRID_V1--idol--SEEDS-thumb120.png", bytes: 3076, sha256: "a2080f1051be2d4ac8e0b8f2bbcb98c2b91c5665d19e23a4048ee7909aef0f03" }),
-      states: Object.freeze({ name: "PIXEL_GRID_V1--idol--STATES.png", bytes: 4599, sha256: "bb05dda7c818184bb823aca24f21988ddd5d360f970ae1afccee008c486fa85a" }),
-    }),
-    renderCommitment: Object.freeze({ algorithm: RENDER_COMMITMENT_ALGORITHM, renders: 36, digest: "d062ef4f6ea997a18231c6bacc5929e2b3dd6f1f964db34f84c2acab14b25d27" }),
     mutation: MUTATION,
   }),
 
@@ -369,8 +339,16 @@ export function describeAll() {
  *
  * The weakness it reports is MEASURED, not transcribed. The review's prose is an internal record
  * and stays there; what a creator gets is the template's own weakest state pairing out of the
- * perceptual census, against the census's own floor — which is the same defect the review named, in
- * a form anyone can re-derive.
+ * perceptual census, against the census's own floor — a fact about pixels that anyone can
+ * re-derive.
+ *
+ * IT IS NOT ALWAYS THE DEFECT THE REVIEW NAMED, and pretending otherwise would be the drift this
+ * package exists to stop. `PIXEL_GRID_V1/idol` is the case: every one of its state pairings clears
+ * the perceptual floor comfortably, and it is HELD anyway, because what the blind reviewer refused
+ * was SEED diversity at browse size — a frame topologically identical on every seed — which this
+ * census does not measure. So read this field as "the weakest pairing the census measured", never
+ * as "why it was held". The two axes were kept apart by the review on purpose and are kept apart
+ * here for the same reason.
  */
 export function describeUnshippedTemplate(templateId) {
   const status = templateStatus(templateId);

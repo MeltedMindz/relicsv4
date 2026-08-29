@@ -207,10 +207,11 @@ export const REVIEW_LEDGER = Object.freeze([
   // makes the standing verdict traceable to the review that actually saw today's compass.
   //
   // The two templates the repairs did not touch — `VECTOR_COMPOSITION_V1/alluvium` and
-  // `PIXEL_GRID_V1/idol` — are deliberately ABSENT. Their render inputs were shown to be unmoved,
-  // so no new review was run on them and none is claimed; `latestVerdict` walks back to the record
-  // above for both. An absent row is "not re-reviewed"; a row restating the old verdict under a new
-  // review id would be a review nobody ran.
+  // `PIXEL_GRID_V1/idol` — are deliberately ABSENT from THIS record. Their render inputs were shown
+  // to be unmoved, so no new review was run on them here and none is claimed; `latestVerdict` walks
+  // back to the record above for both. An absent row is "not re-reviewed"; a row restating the old
+  // verdict under a new review id would be a review nobody ran. (`idol` did move later, and the
+  // record BELOW is the review that saw it. `alluvium`'s standing verdict is still the first one.)
   //
   // BLIND CODES ARE RECOVERED BY CONTENT HASH, not from the set's own manifest. Each B-code's
   // `SEEDS-thumb120.png` and `STATES.png` were hashed and matched against the sheets rendered from
@@ -231,6 +232,53 @@ export const REVIEW_LEDGER = Object.freeze([
       "GEOMETRIC_RECURSION_V1/cairn": { verdict: "HOLD", blindCode: "B-01", blindCodeSource: "CONTENT_HASH" },
       "GEOMETRIC_RECURSION_V1/dendron": { verdict: "HOLD", blindCode: "B-03", blindCodeSource: "CONTENT_HASH" },
       "CELLULAR_SYSTEM_V1/crux": { verdict: "REJECT", blindCode: "B-05", blindCodeSource: "CONTENT_HASH" },
+    }),
+  }),
+
+  // ----------------------------------------------------------------------------------------------
+  // THE IDOL FRAME REPAIR. One template, one candidate, one verdict — and it takes the last SHIP
+  // template of a whole runtime with it.
+  //
+  // `PIXEL_GRID_V1/idol` was the one template the record above deliberately did NOT re-review: its
+  // render inputs were unmoved at the time, so no verdict was claimed for it. It moved afterwards.
+  // The frame layer was repaired, the sheets were rendered again from the repaired configuration,
+  // and a third blind reviewer — who saw neither of the two reviews above, no source, no manifest
+  // and no name — returned HOLD on the repaired art.
+  //
+  // AGAIN, A DOWNGRADE OWES NOTHING. SHIP -> HOLD is the mechanism working, so `promotionEvidence`
+  // is null and `validateLedger` does not ask for it. Nothing here is talked up.
+  //
+  // WHY THE TEMPLATE IS STUCK RATHER THAN UNLUCKY, recorded because both halves are needed to see
+  // it: PRE-repair, idol failed the structural role gate — a layer that drew nothing at any market
+  // state. POST-repair, it fails blind review — a frame topologically identical on every seed, so
+  // the seed diversity that passes in a quiet market is spent by stress and erased by recovery.
+  // Both honest paths end at HOLD. That is a template-curation problem for a later wave, and it is
+  // NOT a finding about `PIXEL_GRID_V1` itself: the runtime's source was never in question, it
+  // renders, it validates, and it stays inside its cost budget.
+  //
+  // AND ONE FACT FOR THE ARCHIVE, because a reviewer asked it and it has an answer. The reviewer
+  // could not tell from the sheets whether the coarse block mosaic was the art or an artifact of
+  // how the contact sheets were produced, and said the deciding finding would weaken if the shipped
+  // art were finer. It is not finer: idol's art is natively a 16x16 grid (`viewBox="0 0 16 16"`),
+  // so the mosaic IS the medium. That confirms the deciding finding rather than weakening it —
+  // surround texture has no finer register to survive into at 120px.
+  //
+  // `B-01` HERE IS NOT `B-01` ABOVE. Blind codes are per SET, assigned fresh each time, so this
+  // one is a different set's first item and resolves to `PIXEL_GRID_V1/idol` while the record above
+  // resolves its own `B-01` to `GEOMETRIC_RECURSION_V1/cairn`. A code is only meaningful beside its
+  // `reviewId`, which is why every recovery record is keyed by set.
+  Object.freeze({
+    reviewId: "IDOL-FRAME-REPAIR-BLIND-2026-08-29",
+    method: "BLIND_VISUAL",
+    date: "2026-08-29",
+    subjects: 1,
+    /** sha256 of `IDOL_FRAME_REPAIR_REVIEW.md`. The document is an internal record and is not published here. */
+    documentSha256: "ba0e3ccbf321ac2a7d21eb5297a311e3a0af437ad5641f113d6045e27f9f54da",
+    frozenAt: "e3b07afe022f3746223dc6028c3dcb8691d9ea75",
+    /** A hold is not a promotion. */
+    promotionEvidence: null,
+    verdicts: Object.freeze({
+      "PIXEL_GRID_V1/idol": { verdict: "HOLD", blindCode: "B-01", blindCodeSource: "CONTENT_HASH" },
     }),
   }),
 ]);
