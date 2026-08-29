@@ -8519,7 +8519,7 @@
     },
     {
       "path": "scripts/test-readme-quickstart.mjs",
-      "sha256": "3550ed64ca9ab4a6a6446def6ea50b5b941d2ba5dfbfd95841373fa790a38a04",
+      "sha256": "711f1b347737d87ec163847b9e608364ebb846d80a67ff4102c68f54811cec4e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

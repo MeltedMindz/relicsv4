@@ -94,6 +94,22 @@ try {
       continue;
     }
 
+    // `agent select-template` is documented in the art-catalog section, not in the quickstart, and
+    // it is NAMED here rather than silently dropped for two reasons that both matter:
+    //
+    //   * it reads a chain. Running it inside an offline quickstart harness would make this gate
+    //     depend on an RPC endpoint, and a gate that fails on a rate limit teaches people to ignore
+    //     it.
+    //   * the outcome it is documented as producing today is a REFUSAL (`NO_ACTIVE_RUNTIME`,
+    //     because none of the four art runtimes is registered anywhere). Asserting a refusal here
+    //     would make this harness the thing that has to be updated on the day registration lands,
+    //     which is the wrong place for that alarm — the private repository's gate reads the
+    //     registries and owns it.
+    if (verb === "agent") {
+      ran.push({ command: command.join(" "), status: "skipped — reads a chain; the art-catalog section, not the quickstart" });
+      continue;
+    }
+
     // THE README'S OWN CLAIM, TESTED, AT THE POINT THE READER MEETS IT.
     //
     // The quickstart says in bold that a fresh project FAILS on the placeholder recipient. The
