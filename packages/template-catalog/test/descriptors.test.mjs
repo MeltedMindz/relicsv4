@@ -78,6 +78,13 @@ test("no descriptor claims a runtime is registered, active, deployed or launchab
     }
   }
   for (const r of Object.values(RUNTIMES)) assert.deepEqual(assertNoLaunchabilityClaim(r), [], r.id);
+
+  // POSITIVE CONTROL. Without this the test proves only that today's descriptors happen to be
+  // clean, which a guard that returns nothing at all also satisfies.
+  for (const planted of [{ launchable: true }, { registered: true }, { chainIds: [1] }, { address: "0x00" }, { codeHash: "0x00" }]) {
+    assert.equal(assertNoLaunchabilityClaim(planted).length, 1, `the guard did not catch ${JSON.stringify(planted)}`);
+  }
+  assert.deepEqual(assertNoLaunchabilityClaim({ id: "X", summary: "a thing" }), []);
 });
 
 test("no subjective numeric quality score is published anywhere", () => {

@@ -210,6 +210,20 @@ export function semanticMatch(candidateIds, brief) {
 }
 
 /**
+ * The last thing every autonomous selection passes through.
+ *
+ * A backstop: it fires only if the pool filter and the matcher's own refusal have both been
+ * weakened. It is exported so it can be broken on its own and shown to turn a named test red, which
+ * an unreachable inline `if` cannot be.
+ */
+export function assertAutonomousSelection(templateId) {
+  if (!isAutonomouslySelectable(templateId)) {
+    throw new Error(`selectForAutonomousAgent produced a ${templateStatus(templateId)} template (${templateId}). This is a bug in the filter, not a permitted outcome.`);
+  }
+  return templateId;
+}
+
+/**
  * THE AUTONOMOUS PATH, end to end. Stages 2 through 6.
  *
  * TAKES NO TIER ARGUMENT AND HAS NO OVERRIDE. An autonomous agent cannot ask for an EXPERIMENTAL,
@@ -247,13 +261,11 @@ export function selectForAutonomousAgent({ brief, registrySnapshot = null, avail
     });
   }
 
-  // THIRD GUARD. Belt, braces, and a third thing: if either of the first two is ever weakened by an
-  // edit that looks harmless, this one still refuses and a named test still goes red.
-  if (!isAutonomouslySelectable(best.id)) {
-    throw new Error(`selectForAutonomousAgent produced a ${templateStatus(best.id)} template (${best.id}). This is a bug in the filter, not a permitted outcome.`);
-  }
-
-  return Object.freeze({ ...base, selected: best.id, considered: ranked, reason: `MATCHED — ${best.matched.join(", ") || "brief terms"}` });
+  // THIRD GUARD, and it is a NAMED, EXPORTED function rather than an inline `if` on purpose.
+  // An inline check here would be unreachable while the two in front of it hold, and an unreachable
+  // guard cannot be broken by a mutation and shown to turn a test red — which makes it decorative,
+  // whatever it says. As its own function it is exercised directly.
+  return Object.freeze({ ...base, selected: assertAutonomousSelection(best.id), considered: ranked, reason: `MATCHED — ${best.matched.join(", ") || "brief terms"}` });
 }
 
 /**

@@ -7,6 +7,7 @@ import test from "node:test";
 
 import {
   SELECTION_PIPELINE,
+  assertAutonomousSelection,
   capabilityFilter,
   humanCatalog,
   runtimeAvailability,
@@ -104,6 +105,16 @@ test("AUTONOMOUS_AGENT_CAN_SELECT_REJECTED_TEMPLATE=NO", () => {
 // ------------------------------------------------------------------------------------------------
 // The pool, the order, and the two questions kept apart
 // ------------------------------------------------------------------------------------------------
+
+test("the final selection assertion refuses every tier below SHIP", () => {
+  // The backstop, exercised directly. It only fires when the pool filter and the matcher's own
+  // refusal have both been weakened, so the only way to show it works is to call it.
+  for (const id of [CAVEAT(), HELD(), REJECTED()]) {
+    assert.throws(() => assertAutonomousSelection(id), /is a bug in the filter, not a permitted outcome/, id);
+  }
+  assert.throws(() => assertAutonomousSelection("GEOMETRIC_RECURSION_V1/nosuchtemplate"), /bug in the filter/);
+  for (const id of shipCatalog()) assert.equal(assertAutonomousSelection(id), id);
+});
 
 test("the pool is SHIP and only SHIP, and every member has a descriptor", () => {
   const pool = shipCatalog();
