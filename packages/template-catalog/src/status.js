@@ -190,6 +190,49 @@ export const REVIEW_LEDGER = Object.freeze([
       "TYPOGRAPHIC_GLYPH_V1/specimen": { verdict: "REJECT", blindCode: null, blindCodeSource: null },
     }),
   }),
+
+  // ----------------------------------------------------------------------------------------------
+  // THE FINAL WAVE-1 REVIEW. Five templates were REPAIRED after the review above, and a second
+  // blind reviewer — who saw none of the first review and none of the source — looked at the
+  // repaired renders. Four of the five moved DOWN.
+  //
+  // A DOWNGRADE NEEDS NO PROMOTION EVIDENCE, and that asymmetry is the point of the four artifacts
+  // rather than an omission in them: the artifacts exist to stop a template being talked UP without
+  // a new blind verdict. Being talked DOWN by one is the mechanism working. `promotionEvidence` is
+  // therefore null here and `validateLedger` never asks for it, because no verdict in this record
+  // improves on the one before it.
+  //
+  // `GEOMETRIC_RECURSION_V1/compass` appears with SHIP -> SHIP. That is not a promotion and not a
+  // no-op: it is the second blind verdict on a DIFFERENT configuration, and recording it is what
+  // makes the standing verdict traceable to the review that actually saw today's compass.
+  //
+  // The two templates the repairs did not touch — `VECTOR_COMPOSITION_V1/alluvium` and
+  // `PIXEL_GRID_V1/idol` — are deliberately ABSENT. Their render inputs were shown to be unmoved,
+  // so no new review was run on them and none is claimed; `latestVerdict` walks back to the record
+  // above for both. An absent row is "not re-reviewed"; a row restating the old verdict under a new
+  // review id would be a review nobody ran.
+  //
+  // BLIND CODES ARE RECOVERED BY CONTENT HASH, not from the set's own manifest. Each B-code's
+  // `SEEDS-thumb120.png` and `STATES.png` were hashed and matched against the sheets rendered from
+  // each candidate's post-repair configuration; every code matched exactly one template.
+  Object.freeze({
+    reviewId: "WAVE1-FINAL-BLIND-2026-08-29",
+    method: "BLIND_VISUAL",
+    date: "2026-08-29",
+    subjects: 5,
+    /** sha256 of `WAVE1_FINAL_BLIND_REVIEW.md`. The document is an internal record and is not published here. */
+    documentSha256: "2017f70d10676b93aad6ed69e383c4b128ee1fa8ccfbaed06596b5724c44c4b3",
+    frozenAt: "91f7061af1f94435d41ababdf0cd4ca9632aa76a",
+    /** Nothing here is a promotion. Every verdict is a hold, a downgrade, or a restatement. */
+    promotionEvidence: null,
+    verdicts: Object.freeze({
+      "GEOMETRIC_RECURSION_V1/compass": { verdict: "SHIP", blindCode: "B-04", blindCodeSource: "CONTENT_HASH" },
+      "VECTOR_COMPOSITION_V1/reliquary": { verdict: "SHIP_WITH_CAVEAT", blindCode: "B-02", blindCodeSource: "CONTENT_HASH" },
+      "GEOMETRIC_RECURSION_V1/cairn": { verdict: "HOLD", blindCode: "B-01", blindCodeSource: "CONTENT_HASH" },
+      "GEOMETRIC_RECURSION_V1/dendron": { verdict: "HOLD", blindCode: "B-03", blindCodeSource: "CONTENT_HASH" },
+      "CELLULAR_SYSTEM_V1/crux": { verdict: "REJECT", blindCode: "B-05", blindCodeSource: "CONTENT_HASH" },
+    }),
+  }),
 ]);
 
 /**

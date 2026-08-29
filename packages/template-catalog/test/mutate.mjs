@@ -119,8 +119,8 @@ const MUTATIONS = [
     file: SRC("status.js"),
     edits: [['  SHIP_WITH_CAVEAT: "EXPERIMENTAL",', '  SHIP_WITH_CAVEAT: "SHIP",']],
     mustFail: [
-      "the Wave-1 classification is 7 / 4 / 6 / 18, and the tiers partition the whole wave",
-      "the frozen SHIP set is exactly the seven the owner decided",
+      "the Wave-1 classification is 3 / 5 / 8 / 19, and the tiers partition the whole wave",
+      "the final SHIP set is exactly the three the blind reviews left standing",
     ],
   },
   {
@@ -196,16 +196,51 @@ const MUTATIONS = [
       '    runtimeTagPreimage: "V4ART.RUNTIME.GEOMETRIC_RECURSION_V1",\n    configMagic: "GRV1",\n    configSchemaVersion: 2,',
       '    runtimeTagPreimage: "V4ART.RUNTIME.GEOMETRIC_RECURSION_V1",\n    configMagic: "GRV1",\n    configSchemaVersion: 1,',
     ]],
-    mustFail: ["the config schema versions are the ones the runtimes actually require — 2, 1, 1, 2"],
+    mustFail: ["the config schema versions are the ones the runtimes actually require — 2, 1, 1"],
   },
   {
     id: "M20 a published sheet digest no longer describes the published file",
     file: SRC("descriptors.js"),
     edits: [[
-      'sha256: "ef3d4d3f603fb30945eb7b62afc14f0cfbd674b30112638e41ec93161774d5b2"',
+      'sha256: "e8c4ab76a83d8b12eb17ef7dea9903ca0a60b9308cd97899d50570f80146d379"',
       'sha256: "0000000000000000000000000000000000000000000000000000000000000000"',
     ]],
     mustFail: ["every published contact sheet exists and matches its digest"],
+  },
+  {
+    // A runtime whose last SHIP candidate was rejected is out of the wave. Putting it back is the
+    // single edit that would make the departure look like a formatting choice, so it is the one
+    // this has to catch — the tier counts do not move and nothing else goes red on its own.
+    id: "M21 a runtime that left Wave 1 is quietly listed again",
+    file: SRC("descriptors.js"),
+    edits: [[
+      "export const RUNTIMES_LEFT_WAVE1 = Object.freeze({\n  CELLULAR_SYSTEM_V1: Object.freeze({\n    id: \"CELLULAR_SYSTEM_V1\",",
+      "export const RUNTIMES = Object.freeze({ ...RUNTIMES_WAVE1, CELLULAR_SYSTEM_V1: Object.freeze({ id: \"CELLULAR_SYSTEM_V1\", runtimeVersion: 1, artRuntimeMode: 1, artRuntimeModeName: \"SOLIDITY_SVG_V1\", runtimeTagPreimage: \"V4ART.RUNTIME.CELLULAR_SYSTEM_V1\", configMagic: \"CSV1\", configSchemaVersion: 2, summary: \"restored\" }) });\nexport const RUNTIMES_LEFT_WAVE1 = Object.freeze({\n  CELLULAR_SYSTEM_V1: Object.freeze({\n    id: \"CELLULAR_SYSTEM_V1\",",
+    ], [
+      "export const RUNTIMES = Object.freeze({\n  GEOMETRIC_RECURSION_V1:",
+      "const RUNTIMES_WAVE1 = Object.freeze({\n  GEOMETRIC_RECURSION_V1:",
+    ]],
+    mustFail: [
+      "no descriptor belongs to a runtime that LEFT Wave 1, and the departure is recorded",
+      "a runtime that LEFT Wave 1 is not in the availability question, and owns no SHIP template",
+    ],
+  },
+  {
+    // THE APPEND-ONLY DIRECTION. Read the ledger forwards and the FIRST verdict wins, which
+    // silently restores the seven-template SHIP set the second blind review took apart. Nothing
+    // about the file looks wrong afterwards: every record is still present and still well formed.
+    id: "M22 the ledger is read forwards, so the oldest verdict stands",
+    file: SRC("status.js"),
+    edits: [[
+      "  for (let i = ledger.length - 1; i >= 0; i--) {",
+      "  for (let i = 0; i < ledger.length; i++) {",
+    ]],
+    mustFail: [
+      "the Wave-1 classification is 3 / 5 / 8 / 19, and the tiers partition the whole wave",
+      "the final SHIP set is exactly the three the blind reviews left standing",
+      "the two templates the repairs did not touch were NOT re-reviewed, and say so",
+      "there is one descriptor per SHIP template and no others",
+    ],
   },
 ];
 

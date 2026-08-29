@@ -66,7 +66,12 @@ import {
 export const DESCRIPTOR_SCHEMA_VERSION = "1.0.0";
 
 /**
- * The four runtimes this wave's templates belong to.
+ * The runtimes Wave 1 ships. THREE, not four.
+ *
+ * `CELLULAR_SYSTEM_V1` LEFT WAVE 1 on 2026-08-29 and is recorded in `RUNTIMES_LEFT_WAVE1` below
+ * rather than deleted. A runtime enters a wave only with at least one blind-reviewed SHIP template;
+ * cellular's last candidate was rejected by the final blind review, so it has none and the rule
+ * removes it. The rule is what removed it — no judgement about the runtime was made or is implied.
  *
  * `configSchemaVersion` is the version byte the runtime's own config parser REQUIRES, read from the
  * frozen Solidity. It is NOT the runtime version and the two disagree: GEOMETRIC_RECURSION and
@@ -106,19 +111,34 @@ export const RUNTIMES = Object.freeze({
     configSchemaVersion: 1,
     summary: "A symmetric pixel grid built from stacked layers, painted at low resolution.",
   }),
+});
+
+/**
+ * Runtimes that were in Wave 1 and are not any more, with the reason. RECORDED, NEVER DELETED.
+ *
+ * Same law as `REJECTED` in the status model: "the remainder left" is only a checkable statement if
+ * the remainder is written down. It also stops a departed runtime being quietly re-listed later as
+ * though it had never gone, and it keeps its name in the launchability scan — a runtime nobody may
+ * launch is exactly the name a stale sentence would claim is live.
+ *
+ * A DEPARTURE IS NOT A VERDICT ON THE ENGINE. `CELLULAR_SYSTEM_V1` renders, validates, stays inside
+ * its cost budget and still carries reviewed templates in the ledger. What it does not carry is a
+ * SHIP one, and the wave rule is about that and only that.
+ */
+export const RUNTIMES_LEFT_WAVE1 = Object.freeze({
   CELLULAR_SYSTEM_V1: Object.freeze({
     id: "CELLULAR_SYSTEM_V1",
-    runtimeVersion: 1,
-    artRuntimeMode: 1,
-    artRuntimeModeName: "SOLIDITY_SVG_V1",
     runtimeTagPreimage: "V4ART.RUNTIME.CELLULAR_SYSTEM_V1",
-    configMagic: "CSV1",
-    configSchemaVersion: 2,
-    summary: "A cellular automaton grown from a seed figure for a bounded number of generations.",
+    leftAt: "2026-08-29",
+    reason:
+      "ZERO_SHIP_TEMPLATES — its last SHIP candidate was returned REJECT by the final blind review " +
+      "(WAVE1-FINAL-BLIND-2026-08-29), on total seed-diversity failure. A runtime enters a wave only " +
+      "with at least one blind-reviewed SHIP template.",
+    reviewedTemplatesStillInTheLedger: true,
   }),
 });
 
-/** Every visual sensor a config may bind, plus the one that is trait-only. Same for all four. */
+/** Every visual sensor a config may bind, plus the one that is trait-only. Same for all three. */
 const SUPPORTED_SIGNALS = Object.freeze({
   visual: VISUAL_SENSORS,
   traitOnly: TRAIT_ONLY_SENSORS,
@@ -134,46 +154,34 @@ const MUTATION = Object.freeze({
 });
 
 /**
- * The seven Wave-1 SHIP templates.
+ * THE RENDER COMMITMENT ALGORITHM, STATED SO IT CAN BE RE-DERIVED.
+ *
+ * Over the thirty-six documents a template's contact sheets were built from — twelve seeds x three
+ * market states, as the runtime wrote them, base64 data URIs and all — sorted by filename:
+ *
+ *     sha256( join("\n", [ `${filename} ${sha256(bytes)}` ]) )
+ *
+ * It was previously published as the bare word "sha256-of-name-and-content-pairs", which named a
+ * family of formulas rather than one, and no consumer could reproduce it. A commitment nobody can
+ * recompute is a number, not a commitment.
+ */
+export const RENDER_COMMITMENT_ALGORITHM = "sha256-of-sorted-name-space-sha256-lines-joined-by-newline";
+
+/**
+ * The three Wave-1 SHIP templates.
  *
  * Note the descriptors exist ONLY for SHIP. That is not an omission: a descriptor is the artifact
  * an agent matches against, and publishing one for a template an agent may never select would be
  * publishing a temptation. The non-SHIP tiers are fully enumerated in the review ledger, with their
  * verdicts, which is what makes the classification checkable without making it selectable.
+ *
+ * FOUR DESCRIPTORS WERE REMOVED HERE ON 2026-08-29 and none of them was deleted from the record.
+ * `dendron`, `cairn`, `reliquary` and `crux` were repaired, re-reviewed blind, and came back HOLD,
+ * HOLD, SHIP_WITH_CAVEAT and REJECT. Their verdicts are in the ledger and `describeUnshippedTemplate`
+ * still answers for them; what they lost is the descriptor, because the descriptor IS the starting
+ * point and a template an agent may not select must not have one.
  */
 export const TEMPLATE_DESCRIPTORS = Object.freeze([
-  Object.freeze({
-    id: "GEOMETRIC_RECURSION_V1/dendron",
-    name: "dendron",
-    runtimeId: "GEOMETRIC_RECURSION_V1",
-    title: "Dendron",
-    summary: "A growth whose extent reads the healing: the canopy fills the frame as the market recovers and pulls back to a dense knot while the wound is open.",
-    brief: Object.freeze({
-      tags: Object.freeze(["growth", "organic", "branching", "tree", "botanical", "dendritic", "canopy", "recursive", "sparse-to-dense", "green", "bone", "rust"]),
-      useCases: Object.freeze([
-        "a collection about growth, healing or accumulation over time",
-        "a brief asking for organic or botanical forms rather than hard geometry",
-        "a project that wants recovery to be the visually loudest market state",
-      ]),
-      notFor: Object.freeze(["a brief asking for a rigid instrument, grid or diagram", "a brief that wants the stressed state to be the dramatic one"]),
-    }),
-    config: Object.freeze({ bytes: 92, keccak256: "9163732a2d8560fa97741c5db2ef185c6fcf440e7e1600c398d399671933198f" }),
-    bindings: Object.freeze([
-      Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "SPREAD — the root figure's half-extent, scaling every level at once" }),
-      Object.freeze({ sensor: "STRESS", curve: "LINEAR", drives: "DEPTH — an added generation of triangular understorey, kept after the wound closes" }),
-    ]),
-    traits: Object.freeze([
-      Object.freeze({ name: "Canopy", source: "RECOVERY", style: "WORD" }),
-      Object.freeze({ name: "Understorey", source: "STRESS", style: "WORD" }),
-    ]),
-    sheets: Object.freeze({
-      seedGrid120: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--dendron--SEEDS-thumb120.png", bytes: 160531, sha256: "ef3d4d3f603fb30945eb7b62afc14f0cfbd674b30112638e41ec93161774d5b2" }),
-      states: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--dendron--STATES.png", bytes: 331785, sha256: "96fa87ef46d29db16a737a4f3e87df3fd17121f68f285565811d1578f38532e0" }),
-    }),
-    renderCommitment: Object.freeze({ algorithm: "sha256-of-name-and-content-pairs", renders: 36, digest: "3380f6465fec0bd6e2390e13133312f0a2b04598435f11f751d7c990fecc36ec" }),
-    mutation: MUTATION,
-  }),
-
   Object.freeze({
     id: "GEOMETRIC_RECURSION_V1/compass",
     name: "compass",
@@ -189,7 +197,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       ]),
       notFor: Object.freeze(["a brief asking for organic or irregular silhouettes", "a brief that needs every token to have a different overall shape"]),
     }),
-    config: Object.freeze({ bytes: 100, keccak256: "fb6876c47ce6dc3688d433c5ad1dbdb949404168656c3b4d691f287591a9dd14" }),
+    config: Object.freeze({ bytes: 100, keccak256: "a8d87edbd9687ad7db49ddc51a60cd99a80f69bcd8f6fe7e41a6d52ef3c704f6" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "CONTRACT — the self-similarity ratio of every level" }),
       Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "DEPTH — how many generations are drawn, 1..4" }),
@@ -199,79 +207,10 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       Object.freeze({ name: "Compression", source: "DRAWDOWN", style: "WORD" }),
     ]),
     sheets: Object.freeze({
-      seedGrid120: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--compass--SEEDS-thumb120.png", bytes: 209592, sha256: "d4e77ad1bd69fae7fe38d57adf03ca7f7ca16a559b7d5645f18f5b642be31375" }),
-      states: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--compass--STATES.png", bytes: 584904, sha256: "9fb7a310179b6114dff33e5aaa04f11b1565cce413576a9e0d1908b88688004e" }),
+      seedGrid120: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--compass--SEEDS-thumb120.png", bytes: 274696, sha256: "e8c4ab76a83d8b12eb17ef7dea9903ca0a60b9308cd97899d50570f80146d379" }),
+      states: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--compass--STATES.png", bytes: 955518, sha256: "7c6023f99efb10c7f630b2cbafc8645ee167dba2710617b47915b92f74c5b300" }),
     }),
-    renderCommitment: Object.freeze({ algorithm: "sha256-of-name-and-content-pairs", renders: 36, digest: "2ed027b93d25418b52b232123628a5aa31a89b22f78cc29824984707bc453e55" }),
-    mutation: MUTATION,
-  }),
-
-  Object.freeze({
-    id: "GEOMETRIC_RECURSION_V1/cairn",
-    name: "cairn",
-    runtimeId: "GEOMETRIC_RECURSION_V1",
-    title: "Cairn",
-    summary: "A partitioned plane: drawdown adds courses of subdivision and recovery settles how tightly each course sits inside the last.",
-    brief: Object.freeze({
-      tags: Object.freeze(["partition", "subdivision", "stacked", "stone", "mineral", "architectural", "lattice", "monolithic", "geometric", "constructed"]),
-      useCases: Object.freeze([
-        "a collection with a built, stacked or architectural register",
-        "a brief asking for a wide range from minimal emblem to dense all-over lattice",
-        "a project that wants stress to strip the work to a single clean figure",
-      ]),
-      notFor: Object.freeze(["a brief asking for figurative or creature-like subjects", "a brief that wants soft or organic edges"]),
-    }),
-    config: Object.freeze({ bytes: 97, keccak256: "5ad921c96339051ac380a44352161fb85e11a706a3b8de1ee2e1728a1037df92" }),
-    bindings: Object.freeze([
-      Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "DEPTH — courses of subdivision, 1..4" }),
-      Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "CONTRACT — how tightly each course sits inside its parent" }),
-    ]),
-    traits: Object.freeze([
-      Object.freeze({ name: "Courses", source: "DRAWDOWN", style: "NUMBER" }),
-      Object.freeze({ name: "Settling", source: "RECOVERY", style: "WORD" }),
-      Object.freeze({ name: "Quarry", source: "DNA", style: "HEX" }),
-    ]),
-    sheets: Object.freeze({
-      seedGrid120: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--cairn--SEEDS-thumb120.png", bytes: 158705, sha256: "6693c02dec428d91a793253877f0c2651abb011385e4311b62539125a9ebad55" }),
-      states: Object.freeze({ name: "GEOMETRIC_RECURSION_V1--cairn--STATES.png", bytes: 594144, sha256: "481e0802a0459e9d41db59b07d6dd2aa4a92932f829a0f2956d095fe2421842f" }),
-    }),
-    renderCommitment: Object.freeze({ algorithm: "sha256-of-name-and-content-pairs", renders: 36, digest: "d3f0e187f9a3d9a92a18df0c9dc66cfac88a22865c453f451233a93bce28ce89" }),
-    mutation: MUTATION,
-  }),
-
-  Object.freeze({
-    id: "VECTOR_COMPOSITION_V1/reliquary",
-    name: "reliquary",
-    runtimeId: "VECTOR_COMPOSITION_V1",
-    title: "Reliquary",
-    summary: "A burial object on a ground that fractures: five composed fields, where drawdown breaks the plane and recovery repopulates it with orbits and marks.",
-    brief: Object.freeze({
-      tags: Object.freeze(["reliquary", "artifact", "burial", "sacred", "vessel", "ritual", "archaeological", "ornament", "fracture", "gold", "teal", "terracotta"]),
-      useCases: Object.freeze([
-        "a collection in a sacred, archaeological or votive register",
-        "a brief asking for a central object held in a composed frame",
-        "a project that wants stress to strip each work to its bare armature",
-      ]),
-      notFor: Object.freeze(["a brief asking for a flat pattern or wallpaper", "a brief that wants a purely mechanical or industrial register"]),
-    }),
-    config: Object.freeze({ bytes: 128, keccak256: "0c759fcd9bc647ace31b9f06fb0b91fcf153a4d0ef0edb4e88ba38876a5d3027" }),
-    bindings: Object.freeze([
-      Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "DEPTH — subdivision level of the ground plane" }),
-      Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "DEPTH — the orbit ring count" }),
-      Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "COUNT — scattered marks, 14..32" }),
-      Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "COUNT — burst rays, 7..22" }),
-      Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "SYMMETRY — replication order, none / quad / six-fold" }),
-    ]),
-    traits: Object.freeze([
-      Object.freeze({ name: "Fracture", source: "DRAWDOWN", style: "WORD" }),
-      Object.freeze({ name: "Orbits", source: "RECOVERY", style: "NUMBER" }),
-      Object.freeze({ name: "Vein", source: "DNA", style: "HEX" }),
-    ]),
-    sheets: Object.freeze({
-      seedGrid120: Object.freeze({ name: "VECTOR_COMPOSITION_V1--reliquary--SEEDS-thumb120.png", bytes: 115315, sha256: "8e2483fde1d3f440084596158c2508cfdbe0750994a34b4a6c0b3ed90ed2cc69" }),
-      states: Object.freeze({ name: "VECTOR_COMPOSITION_V1--reliquary--STATES.png", bytes: 250448, sha256: "b492108ab71445f63b416057471c2c09883a7be1778d34010d769fa72523994c" }),
-    }),
-    renderCommitment: Object.freeze({ algorithm: "sha256-of-name-and-content-pairs", renders: 36, digest: "ab01c66533e06c46dbe9126625f1c6c48e69b89685105eb7b6db168f3ae073a6" }),
+    renderCommitment: Object.freeze({ algorithm: RENDER_COMMITMENT_ALGORITHM, renders: 36, digest: "d23de7c0d2e040d4469434276f9ccb408db83417f4c92e7c60a4f9b34db768b9" }),
     mutation: MUTATION,
   }),
 
@@ -304,7 +243,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       seedGrid120: Object.freeze({ name: "VECTOR_COMPOSITION_V1--alluvium--SEEDS-thumb120.png", bytes: 118451, sha256: "3370542986ac6e979af7dc5aa4dce70013be6c245e5ced03e94516e629d3407d" }),
       states: Object.freeze({ name: "VECTOR_COMPOSITION_V1--alluvium--STATES.png", bytes: 228448, sha256: "507d5367520c0c93604eccbb49ea8bcc7c5b2e056593f76cb1d71391df7f33b8" }),
     }),
-    renderCommitment: Object.freeze({ algorithm: "sha256-of-name-and-content-pairs", renders: 36, digest: "d754d0fb19de6731660b5db2f23d919f21354d36c300849664679015262c32cf" }),
+    renderCommitment: Object.freeze({ algorithm: RENDER_COMMITMENT_ALGORITHM, renders: 36, digest: "ce4498023fec823aba26a8900ad8191c80ccb08610db24ca4242c5a88ebc8ba3" }),
     mutation: MUTATION,
   }),
 
@@ -341,43 +280,10 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       seedGrid120: Object.freeze({ name: "PIXEL_GRID_V1--idol--SEEDS-thumb120.png", bytes: 3076, sha256: "a2080f1051be2d4ac8e0b8f2bbcb98c2b91c5665d19e23a4048ee7909aef0f03" }),
       states: Object.freeze({ name: "PIXEL_GRID_V1--idol--STATES.png", bytes: 4599, sha256: "bb05dda7c818184bb823aca24f21988ddd5d360f970ae1afccee008c486fa85a" }),
     }),
-    renderCommitment: Object.freeze({ algorithm: "sha256-of-name-and-content-pairs", renders: 36, digest: "ebbd63f4758be89afe24fa652a83dc15301701f9d220858b35b79a23d15b7fcf" }),
+    renderCommitment: Object.freeze({ algorithm: RENDER_COMMITMENT_ALGORITHM, renders: 36, digest: "d062ef4f6ea997a18231c6bacc5929e2b3dd6f1f964db34f84c2acab14b25d27" }),
     mutation: MUTATION,
   }),
 
-  Object.freeze({
-    id: "CELLULAR_SYSTEM_V1/crux",
-    name: "crux",
-    runtimeId: "CELLULAR_SYSTEM_V1",
-    title: "Crux",
-    summary: "A cross that fills: a cruciform seed grown under a birth rule the market shifts, so the figure sits open in a void under stress and closes into a solid emblem as the market heals.",
-    brief: Object.freeze({
-      tags: Object.freeze(["cross", "cruciform", "emblem", "cellular", "automaton", "growth", "symmetric", "sacral", "figure-in-void", "high-contrast"]),
-      useCases: Object.freeze([
-        "a collection built on one strong central emblem",
-        "a brief asking for the most dramatic and most legible state change in the wave",
-        "a project that wants the work to read at any size, including a marketplace grid",
-      ]),
-      notFor: Object.freeze([
-        "a brief that needs twelve unrelated silhouettes — every token here shares the cruciform grammar",
-        "a brief where the neutral-to-recovery difference must carry the collection: measured, it is this template's weakest pairing",
-      ]),
-    }),
-    config: Object.freeze({ bytes: 73, keccak256: "e7c3ecaaa8f33c832abd136c646fe751e83fda90318671e975332be68dade01b" }),
-    bindings: Object.freeze([
-      Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "BIRTH_SHIFT — the automaton's birth threshold, and through it how far the cross fills" }),
-    ]),
-    traits: Object.freeze([
-      Object.freeze({ name: "Arms", source: "DNA", style: "HEX" }),
-      Object.freeze({ name: "Fill", source: "RECOVERY", style: "NUMBER" }),
-    ]),
-    sheets: Object.freeze({
-      seedGrid120: Object.freeze({ name: "CELLULAR_SYSTEM_V1--crux--SEEDS-thumb120.png", bytes: 1557, sha256: "a40631b4021d98bca02d37bd494017c88be0a57068032e8e8da08f25a942a9f0" }),
-      states: Object.freeze({ name: "CELLULAR_SYSTEM_V1--crux--STATES.png", bytes: 3334, sha256: "c3caed63a21242b8ad6770e07eba9ef12b74f0f93acddb70adbeb3e4c2ebb4e8" }),
-    }),
-    renderCommitment: Object.freeze({ algorithm: "sha256-of-name-and-content-pairs", renders: 36, digest: "b01b021832f05c1b0fad04e6e805907563b65fb351324c83f9a6d2714d49b246" }),
-    mutation: MUTATION,
-  }),
 ]);
 
 /** Descriptor by template id, or null. Never throws. */

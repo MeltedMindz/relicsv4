@@ -7,9 +7,12 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { readdirSync } from "node:fs";
+
 import {
   DESCRIPTOR_SCHEMA_VERSION,
   RUNTIMES,
+  RUNTIMES_LEFT_WAVE1,
   TEMPLATE_DESCRIPTORS,
   assertNoQualityScore,
   describeAll,
@@ -31,8 +34,28 @@ import {
 const PKG = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 test("there is one descriptor per SHIP template and no others", () => {
-  assert.equal(TEMPLATE_DESCRIPTORS.length, 7);
+  assert.equal(TEMPLATE_DESCRIPTORS.length, 3);
   assert.deepEqual(TEMPLATE_DESCRIPTORS.map((d) => d.id).sort(), [...templatesWithStatus("SHIP")].sort());
+});
+
+test("no descriptor belongs to a runtime that LEFT Wave 1, and the departure is recorded", () => {
+  assert.deepEqual(Object.keys(RUNTIMES_LEFT_WAVE1), ["CELLULAR_SYSTEM_V1"]);
+  for (const [id, record] of Object.entries(RUNTIMES_LEFT_WAVE1)) {
+    assert.equal(RUNTIMES[id], undefined, `${id} is both a Wave-1 runtime and a departed one`);
+    assert.match(record.reason, /ZERO_SHIP_TEMPLATES/);
+    assert.ok(record.leftAt);
+    // A departure record is not a launchability claim either.
+    assert.deepEqual(assertNoLaunchabilityClaim(record), []);
+  }
+  for (const d of TEMPLATE_DESCRIPTORS) assert.ok(RUNTIMES[d.runtimeId], `${d.id} names ${d.runtimeId}, which is not a Wave-1 runtime`);
+});
+
+test("the package publishes a sheet FILE for SHIP templates and for nobody else", () => {
+  const published = new Set(readdirSync(join(PKG, "sheets")).filter((f) => f.endsWith(".png")));
+  const expected = new Set(TEMPLATE_DESCRIPTORS.flatMap((d) => Object.values(d.sheets).map((s) => s.name)));
+  assert.ok(expected.size >= 6, `only ${expected.size} sheets expected; that floor would pass on nothing`);
+  assert.deepEqual([...published].sort(), [...expected].sort(),
+    "a picture of a template an agent may not select is still a picture of it; removing the descriptor and leaving the sheet publishes the temptation the descriptor rule exists to remove");
 });
 
 test("every descriptor is well-formed", () => {
@@ -57,9 +80,8 @@ test("every descriptor carries the fields a creator and an agent were promised",
   }
 });
 
-test("the config schema versions are the ones the runtimes actually require — 2, 1, 1, 2", () => {
+test("the config schema versions are the ones the runtimes actually require — 2, 1, 1", () => {
   assert.equal(RUNTIMES.GEOMETRIC_RECURSION_V1.configSchemaVersion, 2);
-  assert.equal(RUNTIMES.CELLULAR_SYSTEM_V1.configSchemaVersion, 2);
   assert.equal(RUNTIMES.VECTOR_COMPOSITION_V1.configSchemaVersion, 1);
   assert.equal(RUNTIMES.PIXEL_GRID_V1.configSchemaVersion, 1);
   // The config version is NOT the runtime version, and assuming it is produces ERR_VERSION.
@@ -140,15 +162,18 @@ test("idol's EPOCH binding is published as INEFFECTIVE, with its measured reason
   assert.ok(idol.signals.bound.some((b) => b.sensor === "EPOCH"), "the binding is still published as bound");
 });
 
-test("crux binds one sensor and is still responsive — because of the curve, measured", () => {
-  const crux = describeTemplate("CELLULAR_SYSTEM_V1/crux");
-  assert.equal(crux.signals.bound.length, 1);
-  assert.equal(crux.signals.bound[0].sensor, "RECOVERY");
-  assert.equal(crux.signals.bound[0].curve, "LOG2");
-  assert.equal(crux.marketResponsive, true);
-  for (const pair of ["ns", "nr", "sr"]) assert.equal(crux.marketResponse.configMovement.pairs[pair].separated, true);
-  // Under LINEAR the same single binding would NOT separate neutral from stress.
+test("the curve, not the sensor, decides whether a binding separates neutral from stress", () => {
+  // This was published as a fact about `crux`, which the final blind review rejected and which
+  // therefore has no descriptor any more. The MEASUREMENT it rested on is unchanged and is the
+  // part that was ever load-bearing: RECOVERY under LOG2 separates neutral from stress and the
+  // same sensor under LINEAR does not, so a template binding one sensor can still be responsive.
+  assert.ok(movement("RECOVERY", "LOG2").ns >= EFFECTIVE_SIGNAL_FLOOR_PER_MILLE);
   assert.ok(movement("RECOVERY", "LINEAR").ns < EFFECTIVE_SIGNAL_FLOOR_PER_MILLE);
+  assert.equal(describeTemplate("CELLULAR_SYSTEM_V1/crux"), null, "a REJECTED template still has a descriptor");
+  // compass carries that same binding, and every one of its state pairings separates.
+  const compass = describeTemplate("GEOMETRIC_RECURSION_V1/compass");
+  assert.ok(compass.signals.bound.some((b) => b.sensor === "RECOVERY" && b.curve === "LOG2"));
+  for (const pair of ["ns", "nr", "sr"]) assert.equal(compass.marketResponse.configMovement.pairs[pair].separated, true);
 });
 
 test("market-responsive is measured twice, by two methods, and both must agree", () => {
@@ -176,7 +201,7 @@ test("every published contact sheet exists and matches its digest", () => {
       checked++;
     }
   }
-  assert.equal(checked, 14, "expected two sheets for each of seven templates");
+  assert.equal(checked, 6, "expected two sheets for each of three templates");
 });
 
 test("an unshipped template is revealed without a starting point", () => {

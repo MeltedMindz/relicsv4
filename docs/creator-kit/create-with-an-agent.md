@@ -213,8 +213,9 @@ today**:
 ### The Wave-1 art templates are a different list, and your agent does not pick from it by hand
 
 Separate from the five scaffolds above there is a catalog of **art templates** — configuration
-presets for on-chain art runtimes. Thirty-five went through a blind visual review and seven passed.
-`npm run kit -- templates` shows the seven.
+presets for on-chain art runtimes. Thirty-five went through a blind visual review; seven passed, five
+of those were repaired and re-reviewed blind, and three ship. `npm run kit -- templates` shows the
+three.
 
 **Your agent must not choose one of these by reading descriptions.** The presets that did not clear
 review describe themselves as well as the ones that did — their weaknesses are things like "recovery

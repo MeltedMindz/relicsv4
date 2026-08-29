@@ -22,10 +22,10 @@
       "ink": 0.358
     },
     "CELLULAR_SYSTEM_V1/crux": {
-      "ns": 20.137,
-      "nr": 4.726,
-      "sr": 24.862,
-      "ink": 0.616
+      "ns": 18.153,
+      "nr": 17.447,
+      "sr": 26.157,
+      "ink": 0.583
     },
     "CELLULAR_SYSTEM_V1/varve": {
       "ns": 10.079,
@@ -34,22 +34,22 @@
       "ink": 0.465
     },
     "GEOMETRIC_RECURSION_V1/cairn": {
-      "ns": 9.83,
-      "nr": 10.987,
-      "sr": 16.474,
-      "ink": 0.404
+      "ns": 12.699,
+      "nr": 14.724,
+      "sr": 20.977,
+      "ink": 0.49
     },
     "GEOMETRIC_RECURSION_V1/compass": {
-      "ns": 6.699,
-      "nr": 9.415,
-      "sr": 10.087,
-      "ink": 0.37
+      "ns": 11.566,
+      "nr": 14.927,
+      "sr": 18.607,
+      "ink": 0.495
     },
     "GEOMETRIC_RECURSION_V1/dendron": {
-      "ns": 9.081,
-      "nr": 10.236,
-      "sr": 10.741,
-      "ink": 0.332
+      "ns": 10.379,
+      "nr": 11.866,
+      "sr": 12.464,
+      "ink": 0.35
     },
     "GEOMETRIC_RECURSION_V1/lacuna": {
       "ns": 4.694,
@@ -208,10 +208,10 @@
       "ink": 0.231
     },
     "VECTOR_COMPOSITION_V1/reliquary": {
-      "ns": 11.33,
-      "nr": 4.866,
-      "sr": 12.263,
-      "ink": 0.362
+      "ns": 12.445,
+      "nr": 9.682,
+      "sr": 10.079,
+      "ink": 0.342
     },
     "VECTOR_COMPOSITION_V1/tessera": {
       "ns": 9.317,

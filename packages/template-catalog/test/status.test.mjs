@@ -18,6 +18,7 @@ import {
   isAdvancedVisible,
   isDefaultVisible,
   isVisibleToHuman,
+  latestVerdict,
   proposePromotion,
   templateStatus,
   templatesWithStatus,
@@ -28,12 +29,12 @@ test("the ledger is well-formed", () => {
   assert.deepEqual(validateLedger(), []);
 });
 
-test("the Wave-1 classification is 7 / 4 / 6 / 18, and the tiers partition the whole wave", () => {
+test("the Wave-1 classification is 3 / 5 / 8 / 19, and the tiers partition the whole wave", () => {
   const c = classification();
-  assert.equal(c.SHIP.length, 7);
-  assert.equal(c.EXPERIMENTAL.length, 4);
-  assert.equal(c.HELD.length, 6);
-  assert.equal(c.REJECTED.length, 18);
+  assert.equal(c.SHIP.length, 3);
+  assert.equal(c.EXPERIMENTAL.length, 5);
+  assert.equal(c.HELD.length, 8);
+  assert.equal(c.REJECTED.length, 19);
   assert.equal(allTemplateIds().length, 35);
   assert.equal(TEMPLATE_STATUSES.reduce((n, s) => n + c[s].length, 0), 35);
   // No template appears in two tiers.
@@ -41,16 +42,52 @@ test("the Wave-1 classification is 7 / 4 / 6 / 18, and the tiers partition the w
   for (const s of TEMPLATE_STATUSES) for (const id of c[s]) { assert.ok(!seen.has(id), `${id} is in two tiers`); seen.add(id); }
 });
 
-test("the frozen SHIP set is exactly the seven the owner decided", () => {
+test("the final SHIP set is exactly the three the blind reviews left standing", () => {
   assert.deepEqual([...templatesWithStatus("SHIP")].sort(), [
-    "CELLULAR_SYSTEM_V1/crux",
-    "GEOMETRIC_RECURSION_V1/cairn",
     "GEOMETRIC_RECURSION_V1/compass",
-    "GEOMETRIC_RECURSION_V1/dendron",
     "PIXEL_GRID_V1/idol",
     "VECTOR_COMPOSITION_V1/alluvium",
-    "VECTOR_COMPOSITION_V1/reliquary",
   ]);
+});
+
+test("CELLULAR_SYSTEM_V1 has ZERO SHIP templates, and its templates are still classified", () => {
+  const mine = allTemplateIds().filter((id) => id.startsWith("CELLULAR_SYSTEM_V1/"));
+  assert.ok(mine.length >= 4, `only ${mine.length} cellular templates in the ledger`);
+  assert.deepEqual(mine.filter((id) => templateStatus(id) === "SHIP"), []);
+  // Departure is not deletion. Every one of them still carries a verdict.
+  for (const id of mine) assert.notEqual(templateStatus(id), "UNREVIEWED", id);
+});
+
+test("the final review DOWNGRADED four and promoted none, and needed no promotion evidence to do it", () => {
+  const final = REVIEW_LEDGER.at(-1);
+  assert.equal(final.reviewId, "WAVE1-FINAL-BLIND-2026-08-29");
+  assert.equal(final.method, "BLIND_VISUAL");
+  assert.equal(final.promotionEvidence, null, "a record that promotes nothing must not carry promotion evidence");
+
+  const before = REVIEW_LEDGER.slice(0, -1);
+  let downgrades = 0;
+  for (const [id, entry] of Object.entries(final.verdicts)) {
+    const prior = latestVerdict(id, before);
+    assert.ok(prior, `${id} appears in the final review with no earlier verdict to move from`);
+    const moved = REVIEW_VERDICTS.indexOf(entry.verdict) - REVIEW_VERDICTS.indexOf(prior.verdict);
+    assert.ok(moved >= 0, `${id} was UPGRADED by a record carrying no promotion evidence`);
+    if (moved > 0) downgrades++;
+  }
+  assert.equal(downgrades, 4);
+  // And the ledger accepts it: a downgrade owes nothing, which is the whole asymmetry.
+  assert.deepEqual(validateLedger(), []);
+});
+
+test("the two templates the repairs did not touch were NOT re-reviewed, and say so", () => {
+  const final = REVIEW_LEDGER.at(-1);
+  for (const id of ["VECTOR_COMPOSITION_V1/alluvium", "PIXEL_GRID_V1/idol"]) {
+    assert.equal(final.verdicts[id], undefined, `${id} carries a verdict from a review that did not look at it`);
+    assert.equal(templateStatus(id), "SHIP");
+    // Their standing verdict comes from the FIRST review, and latestVerdict walks back to it.
+    assert.equal(latestVerdict(id).reviewId, REVIEW_LEDGER[0].reviewId);
+  }
+  // compass was re-reviewed, and its standing verdict is the SECOND one.
+  assert.equal(latestVerdict("GEOMETRIC_RECURSION_V1/compass").reviewId, final.reviewId);
 });
 
 test("EXPERIMENTAL and HELD are KEPT, never deleted", () => {
@@ -62,10 +99,13 @@ test("EXPERIMENTAL and HELD are KEPT, never deleted", () => {
     "CELLULAR_SYSTEM_V1/aureole",
     "PIXEL_GRID_V1/sigil",
     "VECTOR_COMPOSITION_V1/armillary",
+    "VECTOR_COMPOSITION_V1/reliquary",
     "VECTOR_COMPOSITION_V1/tessera",
   ]);
   assert.deepEqual([...templatesWithStatus("HELD")].sort(), [
     "CELLULAR_SYSTEM_V1/accretion",
+    "GEOMETRIC_RECURSION_V1/cairn",
+    "GEOMETRIC_RECURSION_V1/dendron",
     "GEOMETRIC_RECURSION_V1/lacuna",
     "PARTICLE_FLOW_V1/anvil",
     "PIXEL_GRID_V1/beacon",

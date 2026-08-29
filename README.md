@@ -562,27 +562,31 @@ reads to draw a token — and there is no scaffold to copy, so they are not `ini
 Thirty-five presets were built across eight runtimes and put through a **blind visual review**: the
 reviewer read contact sheets as images, never opened a source file, and judged two axes separately —
 do twelve tokens read as twelve different works at thumbnail size, and does the work visibly change
-between a quiet market, a wounded one and a healed one. Seven passed. `relics templates` shows those
-seven and nothing else.
+between a quiet market, a wounded one and a healed one. Seven passed the first review. Five of those
+seven were then repaired and sent back through a **second blind review**, by a reviewer who had seen
+neither the first verdicts nor the source — and four of the five came back lower. **Three ship.**
+`relics templates` shows those three and nothing else.
 
 | Template | Runtime | Config schema | Market-responsive | What it is |
 |---|---|---|---|---|
-| `GEOMETRIC_RECURSION_V1/dendron` | GEOMETRIC_RECURSION_V1 | v2 | yes | a growth whose extent reads the healing |
 | `GEOMETRIC_RECURSION_V1/compass` | GEOMETRIC_RECURSION_V1 | v2 | yes | rings of rings, coloured by level |
-| `GEOMETRIC_RECURSION_V1/cairn` | GEOMETRIC_RECURSION_V1 | v2 | yes | a partitioned plane, course on course |
-| `VECTOR_COMPOSITION_V1/reliquary` | VECTOR_COMPOSITION_V1 | v1 | yes | a burial object on a ground that fractures |
 | `VECTOR_COMPOSITION_V1/alluvium` | VECTOR_COMPOSITION_V1 | v1 | yes | sediment: the market writes the strata |
 | `PIXEL_GRID_V1/idol` | PIXEL_GRID_V1 | v1 | yes | a mirrored bronze artifact that swells and corrodes |
-| `CELLULAR_SYSTEM_V1/crux` | CELLULAR_SYSTEM_V1 | v2 | yes | a cross that fills |
+
+**Wave 1 is three runtimes, and it was four.** `CELLULAR_SYSTEM_V1` left on 2026-08-29: a runtime
+enters a wave only with at least one blind-reviewed SHIP template, its last candidate was rejected
+on seed diversity, and it therefore has none. That is the rule applied, not a judgement about the
+engine — it renders, it validates, and its reviewed templates are still in the ledger with their
+verdicts. Nothing about it is deleted; it is simply not offered.
 
 **The config schema version is not the runtime version, and the two disagree here.** Every one of
-these runtimes is at runtime version 1, while GEOMETRIC_RECURSION and CELLULAR are at *config*
-version 2 — both had a byte change meaning underneath them. A config written at the version the
-runtime reports is rejected by the parser, so read it from the table, not from the runtime.
+these runtimes is at runtime version 1, while GEOMETRIC_RECURSION is at *config* version 2 — a byte
+changed meaning underneath it. A config written at the version the runtime reports is rejected by
+the parser, so read it from the table, not from the runtime.
 
 ### Whether you can launch one is a live read, and the answer today is no
 
-**None of these four art runtimes is registered on any chain.** That is not a permanent fact and it
+**None of these art runtimes is registered on any chain.** That is not a permanent fact and it
 is not a fact this kit stores: registration is per runtime, per chain, and the only thing that
 answers it is a live read of `ArtRuntimeRegistryV1` at the moment you ask.
 
@@ -605,14 +609,15 @@ actually move, measured against a committed census rather than taken from the sc
 
 The consequence is visible in the catalog. `idol` binds six sensors and one of them, `EPOCH`, moves
 at most 125 per mille across the review fixtures, so it is published as **bound but measured dead**.
-`crux` binds a single sensor and is still responsive across all three states, because the `LOG2`
-curve lifts `RECOVERY`'s quiet-market reading from 10 to 562 — a fact about the curve that no amount
-of reading the sensor's name would give you.
+And the curve decides as much as the sensor: `RECOVERY` under `LOG2` separates a quiet market from a
+wounded one while the same sensor under `LINEAR` does not, because `LOG2` lifts its quiet-market
+reading from 10 to 562 — a fact about the curve that no amount of reading the sensor's name would
+give you.
 
 ### The tiers below SHIP are kept, and hidden
 
-Four presets were reviewed "ship with caveat" and six were held. They are not deleted, and they are
-not shown by default:
+Five presets were reviewed "ship with caveat" and eight were held. They are not deleted, and they
+are not shown by default:
 
 ```bash
 npm run kit -- templates --experimental
@@ -629,7 +634,13 @@ contact sheet, and a **new blind review** returning SHIP — and the status mode
 missing any one of them, refuses a re-labelled copy of the old review by document digest, and
 refuses any method that is not blind.
 
-### An autonomous agent may only ever choose from the seven
+**The rule runs in the other direction too, and it has been used.** A DOWNGRADE owes none of those
+four artifacts: the artifacts exist so a template cannot be talked up without a new blind verdict,
+and being talked down by one is the mechanism working. On 2026-08-29 the second blind review moved
+four of the five repaired presets down, and the catalog followed with no argument. A status is not a
+field anyone edits — it is read out of an append-only ledger, latest record first.
+
+### An autonomous agent may only ever choose from the three
 
 The selection pipeline is `brief -> live runtime availability -> SHIP catalog -> capability filter ->
 semantic match -> select`, and the order is the mechanism rather than a description of it. The

@@ -21,7 +21,7 @@ import {
   templateStatus,
   templatesWithStatus,
 } from "../src/status.js";
-import { RUNTIMES, describeTemplate } from "../src/descriptors.js";
+import { RUNTIMES, RUNTIMES_LEFT_WAVE1, describeTemplate } from "../src/descriptors.js";
 import { keccak256Utf8 } from "../src/keccak.js";
 
 /** A registry snapshot in which every Wave-1 runtime is registered and active. */
@@ -49,22 +49,38 @@ const CAVEAT = () => templatesWithStatus("EXPERIMENTAL")[0];
 const HELD = () => templatesWithStatus("HELD")[0];
 const REJECTED = () => templatesWithStatus("REJECTED")[0];
 
+/**
+ * The four ways an agent could reach a template, asked of EVERY member of a tier.
+ *
+ * Asking about one member proves the tier is refused only if that member is representative, and the
+ * tiers moved on 2026-08-29 — `reliquary` joined EXPERIMENTAL, `cairn` and `dendron` joined HELD,
+ * `crux` joined REJECTED — so the member `[0]` returns today is not the member it returned before.
+ * A guard evaluated against a moving sample is a guard evaluated against luck.
+ */
+function refuseEveryMemberOf(status) {
+  const members = templatesWithStatus(status);
+  assert.ok(members.length > 0, `no ${status} templates to refuse; this assertion would be vacuous`);
+  const pool = shipCatalog();
+  for (const id of members) {
+    assert.equal(templateStatus(id), status);
+    assert.ok(!pool.includes(id), `${id} reached the SHIP pool`);
+    assert.equal(isAutonomouslySelectable(id), false, id);
+    assert.throws(() => semanticMatch([id], "anything at all"), new RegExp(`refused a ${status} template`), id);
+    assert.throws(() => assertAutonomousSelection(id), /bug in the filter/, id);
+  }
+  return members.length;
+}
+
 // ------------------------------------------------------------------------------------------------
 // THE THREE NAMED RESULTS
 // ------------------------------------------------------------------------------------------------
 
 test("AUTONOMOUS_AGENT_CAN_SELECT_CAVEAT_TEMPLATE=NO", () => {
   const id = CAVEAT();
-  assert.equal(templateStatus(id), "EXPERIMENTAL");
-
-  // 1. it is not in the pool the matcher is ever handed
-  assert.ok(!shipCatalog().includes(id), `${id} reached the SHIP pool`);
-  // 2. the predicate refuses it
-  assert.equal(isAutonomouslySelectable(id), false);
+  // 1-4, asked of every EXPERIMENTAL template: the pool, the predicate, the matcher, the backstop.
+  assert.equal(refuseEveryMemberOf("EXPERIMENTAL"), 5);
   assert.ok(!AUTONOMOUS_SELECTABLE_STATUSES.includes("EXPERIMENTAL"));
-  // 3. injecting it into the matcher directly is refused, not scored
-  assert.throws(() => semanticMatch([id], "a pixel sigil, mirrored, symmetric"), /refused a EXPERIMENTAL template/);
-  // 4. and a brief written to describe it exactly still cannot select it
+  // and a brief written to describe one of them exactly still cannot select it
   const out = selectForAutonomousAgent({ brief: "a mirrored low-resolution pixel sigil with a corroded bronze figure", registrySnapshot: allActiveSnapshot() });
   assert.ok(out.selected === null || isAutonomouslySelectable(out.selected), `selected ${out.selected}`);
   assert.notEqual(out.selected, id);
@@ -72,12 +88,8 @@ test("AUTONOMOUS_AGENT_CAN_SELECT_CAVEAT_TEMPLATE=NO", () => {
 
 test("AUTONOMOUS_AGENT_CAN_SELECT_HELD_TEMPLATE=NO", () => {
   const id = HELD();
-  assert.equal(templateStatus(id), "HELD");
-
-  assert.ok(!shipCatalog().includes(id), `${id} reached the SHIP pool`);
-  assert.equal(isAutonomouslySelectable(id), false);
+  assert.equal(refuseEveryMemberOf("HELD"), 8);
   assert.ok(!AUTONOMOUS_SELECTABLE_STATUSES.includes("HELD"));
-  assert.throws(() => semanticMatch([id], "a centred disc with a responsive crust"), /refused a HELD template/);
 
   const out = selectForAutonomousAgent({ brief: "a centred disc whose crust is stripped bare under stress and regrown in recovery", registrySnapshot: allActiveSnapshot() });
   assert.notEqual(out.selected, id);
@@ -86,17 +98,15 @@ test("AUTONOMOUS_AGENT_CAN_SELECT_HELD_TEMPLATE=NO", () => {
 
 test("AUTONOMOUS_AGENT_CAN_SELECT_REJECTED_TEMPLATE=NO", () => {
   const id = REJECTED();
-  assert.equal(templateStatus(id), "REJECTED");
-
-  assert.ok(!shipCatalog().includes(id), `${id} reached the SHIP pool`);
-  assert.equal(isAutonomouslySelectable(id), false);
+  assert.equal(refuseEveryMemberOf("REJECTED"), 19);
   assert.ok(!AUTONOMOUS_SELECTABLE_STATUSES.includes("REJECTED"));
-  assert.throws(() => semanticMatch([id], "anything at all"), /refused a REJECTED template/);
 
   // A rejected template is also invisible to a HUMAN, flag or no flag. This is the one tier the
-  // advanced flag does not reveal.
-  const advanced = humanCatalog({ advanced: true }).map((e) => e.id);
-  assert.ok(!advanced.includes(id), `${id} was revealed by the advanced flag`);
+  // advanced flag does not reveal — asked of every one of them.
+  const advanced = new Set(humanCatalog({ advanced: true }).map((e) => e.id));
+  for (const rejected of templatesWithStatus("REJECTED")) {
+    assert.ok(!advanced.has(rejected), `${rejected} was revealed by the advanced flag`);
+  }
 
   const out = selectForAutonomousAgent({ brief: "a camouflage swatch of fine dither", registrySnapshot: allActiveSnapshot() });
   assert.notEqual(out.selected, id);
@@ -118,12 +128,23 @@ test("the final selection assertion refuses every tier below SHIP", () => {
 
 test("the pool is SHIP and only SHIP, and every member has a descriptor", () => {
   const pool = shipCatalog();
-  assert.equal(pool.length, 7);
+  assert.equal(pool.length, 3);
   for (const id of pool) {
     assert.equal(templateStatus(id), "SHIP");
     assert.ok(describeTemplate(id), `${id} has no descriptor`);
   }
   assert.deepEqual([...pool].sort(), [...templatesWithStatus("SHIP")].sort());
+});
+
+test("a runtime that LEFT Wave 1 is not in the availability question, and owns no SHIP template", () => {
+  const live = runtimeAvailability(allActiveSnapshot());
+  for (const departed of Object.keys(RUNTIMES_LEFT_WAVE1)) {
+    assert.equal(RUNTIMES[departed], undefined, `${departed} is still listed as a Wave-1 runtime`);
+    assert.equal(live[departed], undefined, `${departed} was given a live availability answer`);
+    // Even with every runtime reported ACTIVE, nothing of its is reachable.
+    for (const id of shipCatalog()) assert.notEqual(id.split("/")[0], departed);
+    for (const id of templatesWithStatus("SHIP")) assert.notEqual(id.split("/")[0], departed);
+  }
 });
 
 test("the filter runs BEFORE the match, and the declared pipeline says so", () => {
@@ -137,13 +158,13 @@ test("the filter runs BEFORE the match, and the declared pipeline says so", () =
 
 test("the advanced flag reveals EXPERIMENTAL and HELD, and never as a starting point", () => {
   const plain = humanCatalog();
-  assert.equal(plain.length, 7);
+  assert.equal(plain.length, 3);
   for (const e of plain) assert.equal(e.review.status, "SHIP");
 
   const advanced = humanCatalog({ advanced: true });
   assert.ok(advanced.length > plain.length);
   const extra = advanced.filter((e) => e.review.status !== "SHIP");
-  assert.equal(extra.length, 10); // 4 EXPERIMENTAL + 6 HELD
+  assert.equal(extra.length, 13); // 5 EXPERIMENTAL + 8 HELD
   for (const e of extra) {
     assert.equal(e.offeredAsAStartingPoint, false);
     assert.equal(e.config, undefined, `${e.id} was revealed with a config; that is a starting point`);
@@ -171,17 +192,17 @@ test("an unread registry is UNKNOWN and refuses a selection; it is never NOT_REG
     for (const id of Object.keys(RUNTIMES)) {
       assert.equal(live[id].state, "UNKNOWN", `${id} reported ${live[id].state} for an unread registry`);
     }
-    const out = selectForAutonomousAgent({ brief: "a growth", registrySnapshot: snapshot });
+    const out = selectForAutonomousAgent({ brief: "an instrument", registrySnapshot: snapshot });
     assert.equal(out.selected, null);
     assert.match(out.reason, /NO_ACTIVE_RUNTIME/);
   }
 });
 
-test("today's real answer: none of the four runtimes is registered on a chain that reads empty", () => {
+test("today's real answer: none of the three runtimes is registered on a chain that reads empty", () => {
   const empty = { entries: new Map(), complete: true, declaredCount: 0, failedReads: [], errors: [] };
   const live = runtimeAvailability(empty);
   for (const id of Object.keys(RUNTIMES)) assert.equal(live[id].state, "NOT_REGISTERED");
-  const out = selectForAutonomousAgent({ brief: "a growth whose extent reads the healing", registrySnapshot: empty });
+  const out = selectForAutonomousAgent({ brief: "rings of rings, coloured by level", registrySnapshot: empty });
   assert.equal(out.selected, null);
 });
 
@@ -210,8 +231,8 @@ test("an INACTIVE or UNKNOWN runtime removes its templates from the pool", () =>
   assert.equal(live.GEOMETRIC_RECURSION_V1.state, "INACTIVE");
 
   const { kept, dropped } = capabilityFilter(shipCatalog(), live);
-  assert.equal(kept.length, 4);
-  assert.equal(dropped.length, 3);
+  assert.equal(kept.length, 2);
+  assert.equal(dropped.length, 1);
   for (const d of dropped) assert.equal(d.runtimeId, "GEOMETRIC_RECURSION_V1");
 
   const unknown = capabilityFilter(shipCatalog(), {});
@@ -226,7 +247,7 @@ test("an INACTIVE or UNKNOWN runtime removes its templates from the pool", () =>
 test("a brief selects on meaning, from the SHIP pool", () => {
   const snap = allActiveSnapshot();
   const cases = [
-    ["a collection about organic growth, branching and healing", "GEOMETRIC_RECURSION_V1/dendron"],
+    ["concentric rings, a navigational instrument, radial and nested", "GEOMETRIC_RECURSION_V1/compass"],
     ["layered sediment and geological strata, horizontal banding", "VECTOR_COMPOSITION_V1/alluvium"],
     ["low-resolution pixel creatures, bronze and corroded", "PIXEL_GRID_V1/idol"],
   ];
@@ -245,7 +266,7 @@ test("no match is a refusal, not a fallback to whatever ranked least badly", () 
 test("THE TEMPLATE IS A STARTING POINT: nothing here bounds the config that follows", () => {
   // The selection result carries no config, no similarity budget and no drift bound, and every
   // descriptor says the preset may be changed as far as the runtime's validator allows.
-  const out = selectForAutonomousAgent({ brief: "organic branching growth", registrySnapshot: allActiveSnapshot() });
+  const out = selectForAutonomousAgent({ brief: "concentric radial rings", registrySnapshot: allActiveSnapshot() });
   assert.equal(out.config, undefined);
   assert.equal(out.mustResemble, undefined);
   assert.equal(out.allowedDrift, undefined);
@@ -259,7 +280,7 @@ test("THE TEMPLATE IS A STARTING POINT: nothing here bounds the config that foll
 });
 
 test("the match score is a match score, never persisted as a quality score", () => {
-  const ranked = semanticMatch(shipCatalog(), "organic branching growth");
+  const ranked = semanticMatch(shipCatalog(), "concentric radial rings");
   assert.ok(ranked.every((r) => typeof r.score === "number"));
   for (const d of humanCatalog()) {
     assert.equal(d.score, undefined);

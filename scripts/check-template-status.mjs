@@ -37,6 +37,7 @@ import {
   PROMOTION_REQUIREMENTS,
   REVIEW_LEDGER,
   RUNTIMES,
+  RUNTIMES_LEFT_WAVE1,
   TEMPLATE_DESCRIPTORS,
   TEMPLATE_STATUSES,
   allTemplateIds,
@@ -116,7 +117,16 @@ function walk(dir, out) {
   return out;
 }
 
-const RUNTIME_IDS = Object.keys(RUNTIMES);
+/**
+ * THE SCAN COVERS THE RUNTIMES THAT LEFT THE WAVE TOO, and that is not tidiness.
+ *
+ * `CELLULAR_SYSTEM_V1` left Wave 1 on 2026-08-29 with zero SHIP templates. Its NAME is still in
+ * this repository's prose, in the review ledger and in every reader's memory, so a sentence saying
+ * it is registered or launchable is MORE likely now than it was while it shipped — and it would be
+ * a claim about a runtime nobody may launch at all. Deriving the scan from `RUNTIMES` alone would
+ * have retired that check on the day it started mattering most.
+ */
+const RUNTIME_IDS = [...Object.keys(RUNTIMES), ...Object.keys(RUNTIMES_LEFT_WAVE1)];
 
 /**
  * A LAUNCHABILITY CLAIM, matched by SHAPE rather than by a list of sentences.
@@ -203,7 +213,7 @@ if (CONTROLS) {
   console.log("  input floors");
   const floorCases = [
     ["templates classified", allTemplateIds().length, 30],
-    ["descriptors", TEMPLATE_DESCRIPTORS.length, 7],
+    ["descriptors", TEMPLATE_DESCRIPTORS.length, 3],
     ["census curve rows", readSensorMovement().curveRows, 36],
     ["public files scanned", walk(join(ROOT, "packages/template-catalog/src"), []).length, 4],
   ];
@@ -242,14 +252,15 @@ if (excluded !== SCAN_EXCLUDE.size) {
 const census = readSensorMovement();
 
 floor("templates classified", ids.length, 30);
-floor("descriptors", TEMPLATE_DESCRIPTORS.length, 7);
-floor("review ledger records", REVIEW_LEDGER.length, 1);
+floor("descriptors", TEMPLATE_DESCRIPTORS.length, 3);
+floor("review ledger records", REVIEW_LEDGER.length, 2);
 floor("census fixture rows", census.familyRows, 27);
 floor("census curve rows", census.curveRows, 36);
 floor("perceptual census templates", Object.keys(readStateDistinction().census).length, 30);
-floor("published sheets", TEMPLATE_DESCRIPTORS.reduce((n, d) => n + Object.keys(d.sheets).length, 0), 14);
+floor("published sheets", TEMPLATE_DESCRIPTORS.reduce((n, d) => n + Object.keys(d.sheets).length, 0), 6);
 floor("public files scanned", files.length, 50);
-floor("runtimes described", Object.keys(RUNTIMES).length, 4);
+floor("runtimes described", Object.keys(RUNTIMES).length, 3);
+floor("runtime names scanned for a launchability claim", RUNTIME_IDS.length, 4);
 
 // ------------------------------------------------------------------------------------------------
 // 2. the model
@@ -262,6 +273,22 @@ const partition = TEMPLATE_STATUSES.reduce((n, s) => n + c[s].length, 0);
 if (partition !== ids.length) fail(`the four tiers cover ${partition} templates but the wave has ${ids.length}. "The remainder is rejected" is only checkable if the remainder is written down.`);
 if (c.SHIP.length !== TEMPLATE_DESCRIPTORS.length) fail(`${c.SHIP.length} templates are SHIP but ${TEMPLATE_DESCRIPTORS.length} descriptors are published`);
 for (const d of TEMPLATE_DESCRIPTORS) if (templateStatus(d.id) !== "SHIP") fail(`${d.id} has a published descriptor but status ${templateStatus(d.id)}`);
+
+// A RUNTIME IS IN THE WAVE ONLY IF IT HAS A SHIP TEMPLATE, and the two directions are both errors.
+for (const runtimeId of Object.keys(RUNTIMES)) {
+  const shipped = c.SHIP.filter((id) => id.startsWith(`${runtimeId}/`));
+  if (shipped.length === 0) {
+    fail(`${runtimeId} is listed as a Wave-1 runtime and has no SHIP template. A runtime enters a wave only with at least one; record it in RUNTIMES_LEFT_WAVE1 with its reason rather than leaving it here.`);
+  }
+}
+for (const [runtimeId, record] of Object.entries(RUNTIMES_LEFT_WAVE1)) {
+  if (RUNTIMES[runtimeId]) fail(`${runtimeId} is both a Wave-1 runtime and a departed one`);
+  const shipped = c.SHIP.filter((id) => id.startsWith(`${runtimeId}/`));
+  if (shipped.length > 0) fail(`${runtimeId} left Wave 1 but still owns SHIP template(s): ${shipped.join(", ")}`);
+  if (typeof record.reason !== "string" || record.reason.length < 20) fail(`${runtimeId} left Wave 1 with no stated reason`);
+  const classified = allTemplateIds().filter((id) => id.startsWith(`${runtimeId}/`));
+  if (classified.length === 0) fail(`${runtimeId} left Wave 1 and its templates left the ledger with it; a departure is recorded, never deleted`);
+}
 
 // A promotion by maintainer judgement must be refused, here, at gate time.
 try {
@@ -313,7 +340,7 @@ for (const d of TEMPLATE_DESCRIPTORS) {
     sheetsChecked++;
   }
 }
-floor("sheet digests verified", sheetsChecked, 14);
+floor("sheet digests verified", sheetsChecked, 6);
 
 for (const full of describeAll()) {
   for (const p of assertNoLaunchabilityClaim(full)) fail(`${full.id}: ${p}`);
@@ -355,6 +382,8 @@ for (const claim of claims) fail(`LAUNCHABILITY CLAIM: ${claim}`);
 // ------------------------------------------------------------------------------------------------
 const summary = {
   WAVE1_TEMPLATES_CLASSIFIED: ids.length,
+  WAVE1_RUNTIMES: Object.keys(RUNTIMES).join(","),
+  RUNTIMES_LEFT_WAVE1: Object.keys(RUNTIMES_LEFT_WAVE1).join(",") || "none",
   WAVE1_SHIP: c.SHIP.length,
   WAVE1_EXPERIMENTAL: c.EXPERIMENTAL.length,
   WAVE1_HELD: c.HELD.length,
