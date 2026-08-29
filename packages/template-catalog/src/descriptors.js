@@ -12,6 +12,10 @@
 //     encoder produces and their keccak256 · every sensor the template binds, with its curve and
 //     the visual field it drives · the contact sheets · brief and use-case tags
 //
+// EVERY DIGEST HERE IS BARE HEX, WITH NO `0x`. That is not a style choice: `0x` followed by 64 hex
+// characters is the literal shape of a raw private key, and the repository's secret scanner refuses
+// it on sight. A config hash written the other way is a gate failure on every push, forever.
+//
 // DERIVED (never written here — computed, so it cannot go stale independently):
 //
 //     review status          <- `status.js`, out of the review ledger
@@ -153,7 +157,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       ]),
       notFor: Object.freeze(["a brief asking for a rigid instrument, grid or diagram", "a brief that wants the stressed state to be the dramatic one"]),
     }),
-    config: Object.freeze({ bytes: 92, keccak256: "0x9163732a2d8560fa97741c5db2ef185c6fcf440e7e1600c398d399671933198f" }),
+    config: Object.freeze({ bytes: 92, keccak256: "9163732a2d8560fa97741c5db2ef185c6fcf440e7e1600c398d399671933198f" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "SPREAD — the root figure's half-extent, scaling every level at once" }),
       Object.freeze({ sensor: "STRESS", curve: "LINEAR", drives: "DEPTH — an added generation of triangular understorey, kept after the wound closes" }),
@@ -185,7 +189,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       ]),
       notFor: Object.freeze(["a brief asking for organic or irregular silhouettes", "a brief that needs every token to have a different overall shape"]),
     }),
-    config: Object.freeze({ bytes: 100, keccak256: "0xfb6876c47ce6dc3688d433c5ad1dbdb949404168656c3b4d691f287591a9dd14" }),
+    config: Object.freeze({ bytes: 100, keccak256: "fb6876c47ce6dc3688d433c5ad1dbdb949404168656c3b4d691f287591a9dd14" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "CONTRACT — the self-similarity ratio of every level" }),
       Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "DEPTH — how many generations are drawn, 1..4" }),
@@ -217,7 +221,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       ]),
       notFor: Object.freeze(["a brief asking for figurative or creature-like subjects", "a brief that wants soft or organic edges"]),
     }),
-    config: Object.freeze({ bytes: 97, keccak256: "0x5ad921c96339051ac380a44352161fb85e11a706a3b8de1ee2e1728a1037df92" }),
+    config: Object.freeze({ bytes: 97, keccak256: "5ad921c96339051ac380a44352161fb85e11a706a3b8de1ee2e1728a1037df92" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "DEPTH — courses of subdivision, 1..4" }),
       Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "CONTRACT — how tightly each course sits inside its parent" }),
@@ -250,7 +254,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       ]),
       notFor: Object.freeze(["a brief asking for a flat pattern or wallpaper", "a brief that wants a purely mechanical or industrial register"]),
     }),
-    config: Object.freeze({ bytes: 128, keccak256: "0x0c759fcd9bc647ace31b9f06fb0b91fcf153a4d0ef0edb4e88ba38876a5d3027" }),
+    config: Object.freeze({ bytes: 128, keccak256: "0c759fcd9bc647ace31b9f06fb0b91fcf153a4d0ef0edb4e88ba38876a5d3027" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "DEPTH — subdivision level of the ground plane" }),
       Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "DEPTH — the orbit ring count" }),
@@ -286,7 +290,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       ]),
       notFor: Object.freeze(["a brief asking for a centred emblem or badge", "a brief that needs radial symmetry"]),
     }),
-    config: Object.freeze({ bytes: 92, keccak256: "0x3ef8c0e97af9d9db4ec2c4441a4e2cfef572dfad9230910fc900124155c0c322" }),
+    config: Object.freeze({ bytes: 92, keccak256: "3ef8c0e97af9d9db4ec2c4441a4e2cfef572dfad9230910fc900124155c0c322" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "COUNT — stacked beds, 8..34" }),
       Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "COUNT — ruled lines through the field, 9..28" }),
@@ -319,7 +323,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
       ]),
       notFor: Object.freeze(["a brief asking for smooth vector geometry", "a brief that needs a large, detailed, high-resolution plate"]),
     }),
-    config: Object.freeze({ bytes: 142, keccak256: "0x8f69813d9aeccee91b206adae31d6f7e143949a6c792f502257bf50170451e87" }),
+    config: Object.freeze({ bytes: 142, keccak256: "8f69813d9aeccee91b206adae31d6f7e143949a6c792f502257bf50170451e87" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "DRAWDOWN", curve: "LINEAR", drives: "FIELD density — the ground the figure stands on" }),
       Object.freeze({ sensor: "EPOCH", curve: "LINEAR", drives: "SLAB density — the body mass" }),
@@ -359,7 +363,7 @@ export const TEMPLATE_DESCRIPTORS = Object.freeze([
         "a brief where the neutral-to-recovery difference must carry the collection: measured, it is this template's weakest pairing",
       ]),
     }),
-    config: Object.freeze({ bytes: 73, keccak256: "0xe7c3ecaaa8f33c832abd136c646fe751e83fda90318671e975332be68dade01b" }),
+    config: Object.freeze({ bytes: 73, keccak256: "e7c3ecaaa8f33c832abd136c646fe751e83fda90318671e975332be68dade01b" }),
     bindings: Object.freeze([
       Object.freeze({ sensor: "RECOVERY", curve: "LOG2", drives: "BIRTH_SHIFT — the automaton's birth threshold, and through it how far the cross fills" }),
     ]),
@@ -536,7 +540,7 @@ export function validateDescriptor(d) {
     if (d?.[k] === undefined || d?.[k] === null) problems.push(`${d?.id ?? "?"}: missing required field ${k}`);
   }
   if (!RUNTIMES[d?.runtimeId]) problems.push(`${d?.id}: runtimeId ${JSON.stringify(d?.runtimeId)} is not one of ${Object.keys(RUNTIMES).join(", ")}`);
-  if (!/^0x[0-9a-f]{64}$/.test(d?.config?.keccak256 ?? "")) problems.push(`${d?.id}: config.keccak256 must be 0x + 64 lowercase hex — the keccak of the bytes the frozen encoder produces`);
+  if (!/^[0-9a-f]{64}$/.test(d?.config?.keccak256 ?? "")) problems.push(`${d?.id}: config.keccak256 must be 64 lowercase hex characters, BARE — the keccak of the bytes the frozen encoder produces`);
   if (!Number.isInteger(d?.config?.bytes) || d.config.bytes < 1) problems.push(`${d?.id}: config.bytes must be a positive integer`);
   if (!Array.isArray(d?.bindings) || d.bindings.length === 0) problems.push(`${d?.id}: a descriptor with no bindings describes a template the market cannot move`);
   for (const b of d?.bindings ?? []) {

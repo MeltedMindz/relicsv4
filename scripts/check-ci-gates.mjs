@@ -84,6 +84,12 @@ const REQUIRED_GATES = [
   // the command a document points at is unproven.
   { id: "KIT_STATUS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:status" },
   // The meta-gate: it proves every other gate can fail. It ran nowhere.
+  { id: "TEMPLATE_CATALOG_TESTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatecatalog" },
+  // THE MUTATION RUN, not merely the test run. The three AUTONOMOUS_AGENT_CAN_SELECT_* results are
+  // claims about guards, and a guard that has never been watched failing is a claim about nothing.
+  { id: "TEMPLATE_CATALOG_MUTATE", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatecatalog:mutate" },
+  { id: "TEMPLATE_STATUS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus" },
+  { id: "TEMPLATE_STATUS_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus:controls" },
   { id: "KIT_GATES_SELFTEST", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:gates:selftest" },
   { id: "LAUNCH_CLAIMS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:launch-claims" },
   { id: "TRAIT_DISCLOSURE", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:traits" },

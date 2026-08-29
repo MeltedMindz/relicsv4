@@ -52,7 +52,7 @@ test("every descriptor carries the fields a creator and an agent were promised",
     assert.ok(full.signals.supported.visual.length === 9);
     assert.ok(full.signals.bound.length >= 1);
     assert.ok(full.sheets.seedGrid120.sha256 && full.sheets.states.sha256);
-    assert.match(full.config.keccak256, /^0x[0-9a-f]{64}$/);
+    assert.match(full.config.keccak256, /^[0-9a-f]{64}$/, "digests are BARE hex: 0x + 64 hex is the raw private-key shape the secret scanner refuses");
     assert.ok(["SHIP", "EXPERIMENTAL", "HELD", "REJECTED"].includes(full.review.status));
   }
 });

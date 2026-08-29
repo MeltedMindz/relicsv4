@@ -129,6 +129,17 @@ jobs:
           npm run kit:launch-claims:controls
           npm run kit:launch-claims
 
+      - name: the Wave-1 art template catalog, and the tier an agent may select
+        # THE THREE RESULTS THE RELEASE REPORTS. Every non-SHIP template is asked, four ways each,
+        # whether an autonomous agent can reach it. The mutation run is the evidence that those
+        # refusals are load-bearing: a guard never shown to fail is not evidence, and this project
+        # has already shipped a control suite that scored itself by counting comments.
+        run: |
+          npm run kit:templatecatalog
+          npm run kit:templatecatalog:mutate
+          npm run kit:templatestatus:controls
+          npm run kit:templatestatus
+
       - name: no gate passes on zero input
         # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
         # is the only evidence that the rest of this file means anything. It existed, it worked,
