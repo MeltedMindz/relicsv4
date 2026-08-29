@@ -163,6 +163,10 @@ export type LaunchState = (typeof LAUNCH_STATES)[number];
 
 /** The CLOSED set of things an external coding agent can be told to do next. */
 export const NEXT_ACTIONS = [
+  // SELECT_TEMPLATE comes BEFORE WRITE_ART, and the order in this list is the order of the work.
+  // An agent that authors first and picks a starting point afterwards has not used the filter at
+  // all; it has written art and then gone looking for a label to put on it.
+  "SELECT_TEMPLATE",
   "WRITE_ART",
   "FIX_ART",
   "FIX_VALIDATION",

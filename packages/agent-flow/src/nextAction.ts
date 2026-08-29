@@ -28,6 +28,11 @@ import type { LaunchState, NextAction, NextActionResult } from "@relics/launch-s
  */
 export const NEXT_ACTION_SUBCOMMANDS = [
   "init", "status", "doctor", "next", "capabilities", "chains", "quotes", "preflight", "plan",
+  // THE TEMPLATE SELECTION STAGE. It reads the runtime registry live, builds its pool from the
+  // SHIP tier alone, and only then matches the brief. It exists as a COMMAND rather than as advice
+  // in prose because an agent that is told to "pick a suitable template" picks on prose, and the
+  // templates that did not clear review describe themselves as well as the ones that did.
+  "select-template",
   "metadata", "prepare", "predict", "simulate", "build", "policy-check",
   "broadcast", "confirm", "verify", "token-metadata", "resume", "run", "provenance", "verify-receipts",
   // THE HUMAN ENTRY POINTS. `setup` and `revoke` need a person at a terminal and `ready` is the
@@ -47,6 +52,15 @@ export interface FlowFacts {
   readonly hasPolicy: boolean;
   readonly policyProblems: readonly string[];
   readonly hasBrief: boolean;
+  /**
+   * The Wave-1 art template this run started from, if the run uses the art catalog at all.
+   *
+   * THREE VALUES, NOT TWO. `undefined` means the catalog does not apply to this run — the project
+   * is authored against a runtime the catalog does not cover, which is every run today. `null`
+   * means it DOES apply and nothing has been selected yet. A string is the selection. Collapsing
+   * the first two would make every existing flow report a missing step it never had.
+   */
+  readonly templateSelected?: string | null;
   readonly hasArt: boolean;
   readonly artProblems: readonly string[];
   readonly validationErrors: readonly string[];
@@ -141,6 +155,9 @@ export function decideNextAction(f: FlowFacts): NextActionResult {
   // ---- creative work ------------------------------------------------------------------------------
   if (!f.hasBrief) {
     return result(f.state, "BLOCKED", "NO_BRIEF", "There is no brief to work from.", { ...R, requiredInputs: ["brief.md"] });
+  }
+  if (f.templateSelected === null) {
+    return result(f.state, "SELECT_TEMPLATE", "NO_TEMPLATE_SELECTED", "There is a brief but no starting template. Select one BEFORE authoring: the selector reads the runtime registry live, keeps only templates that passed blind visual review as SHIP, drops the ones whose runtime is not ACTIVE on this chain, and matches the brief against what is left. Do not pick a template by reading descriptions — the templates that did not clear review describe themselves as well as the ones that did.", { ...R, commands: ["npm run kit -- agent select-template --workspace <dir> --chain <id> --json"] });
   }
   if (!f.hasArt) {
     return result(f.state, "WRITE_ART", "ART_ABSENT", "The project has no art configuration yet. Author it against a runtime that is currently LAUNCHABLE — the goal is a launch, so a preview-only runtime would be discovered as unusable only at the end.", { ...R, allowedMutations: ["generator/**", "project.json"], commands: ["npm run kit -- preview --seeds 8", "npm run kit -- agent status --workspace <dir> --json"] });

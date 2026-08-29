@@ -143,6 +143,7 @@ export async function runNetworkedCommand(group, positional, flags) {
       case "quotes": return await cmdQuotes(name, workspace, flags, json);
       case "plan":
       case "preflight": return await cmdPreflight(name, workspace, flags, json);
+      case "select-template": return await cmdSelectTemplate(name, workspace, flags, json);
       case "provenance": return await cmdProvenance(name, json);
       case "verify-receipts": return await cmdVerifyReceipts(name, workspace, json);
 
@@ -174,7 +175,7 @@ export async function runNetworkedCommand(group, positional, flags) {
         return EXIT.USAGE;
       }
       default:
-        emit(name, { success: false, errors: [`unknown subcommand "${sub}".\n  First time?    agent setup\n  Where am I?    agent ready\n  Creating?      agent run --workspace <dir> --json\n  Everything:    init, status, doctor, next, capabilities, quotes, preflight, metadata, prepare, predict, simulate, build, policy-check, broadcast, confirm, verify, resume, run, provenance, verify-receipts, revoke`] }, { json });
+        emit(name, { success: false, errors: [`unknown subcommand "${sub}".\n  First time?    agent setup\n  Where am I?    agent ready\n  Creating?      agent run --workspace <dir> --json\n  Everything:    init, status, doctor, next, capabilities, quotes, preflight, select-template, metadata, prepare, predict, simulate, build, policy-check, broadcast, confirm, verify, resume, run, provenance, verify-receipts, revoke`] }, { json });
         return EXIT.USAGE;
     }
   } catch (err) {
@@ -334,6 +335,93 @@ async function cmdNext(name, workspace, flags, json) {
   const decision = decideNextAction(facts);
   emit(name, { success: decision.action !== "BLOCKED", result: decision, errors: decision.errors, warnings: decision.warnings, nextActions: [decision.action] }, { json });
   return decision.action === "BLOCKED" ? EXIT.BLOCKED : EXIT.OK;
+}
+
+/**
+ * THE TEMPLATE SELECTION STAGE — filter first, match second.
+ *
+ * Reads the runtime registry LIVE on the target chain, builds the pool from the SHIP tier alone,
+ * drops every template whose runtime is not ACTIVE there, and only then scores what survives
+ * against the brief. It cannot return an EXPERIMENTAL, HELD or REJECTED template: there is no flag,
+ * no argument and no policy field that expresses the request.
+ *
+ * ON A CHAIN THAT COULD NOT BE READ IT REFUSES AND SAYS SO. An unread registry is UNKNOWN, never
+ * "no runtime here", so the refusal names a retry rather than a fact.
+ *
+ * The result is a STARTING POINT. Nothing downstream compares the creator's finished config against
+ * the preset, and nothing here should start.
+ */
+async function cmdSelectTemplate(name, workspace, flags, json) {
+  const { selectForAutonomousAgent, SELECTION_PIPELINE, describeTemplate } = await import("../../../template-catalog/src/index.js");
+  const { getChainCapability } = await import("@relics/launch-sdk");
+  const policy = await loadPolicy(workspace, flags);
+
+  const brief = await readBriefText(workspace, flags);
+  if (!brief) {
+    emit(name, { success: false, errors: ["no brief to match against. Pass --brief <file>, or put brief.md in the workspace."], nextActions: ["BLOCKED"] }, { json });
+    return EXIT.BLOCKED;
+  }
+
+  const chainId = Number(flags.chain ?? (policy.ok ? policy.policy.allowedChains[0] : 1));
+  let registrySnapshot = null;
+  const warnings = [];
+  if (flags.offline) {
+    warnings.push("--offline: the runtime registry was not read, so every runtime is UNKNOWN and no template can be selected. That is a refusal to guess, not a finding about the chain.");
+  } else {
+    const capability = await getChainCapability(chainId);
+    registrySnapshot = capability.registry;
+    if (!registrySnapshot || registrySnapshot.complete !== true) {
+      warnings.push(`the runtime registry on chain ${chainId} could not be read completely; every runtime is UNKNOWN, which is not the same as absent`);
+    }
+  }
+
+  const outcome = selectForAutonomousAgent({ brief, registrySnapshot });
+  const chosen = outcome.selected ? describeTemplate(outcome.selected) : null;
+
+  emit(name, {
+    success: outcome.selected !== null,
+    result: {
+      chainId,
+      pipeline: SELECTION_PIPELINE.map((s) => s.stage),
+      poolSize: outcome.poolSize,
+      availability: outcome.availability,
+      selected: outcome.selected,
+      reason: outcome.reason,
+      considered: outcome.considered,
+      droppedByCapabilityFilter: outcome.dropped,
+      template: chosen && {
+        id: chosen.id,
+        runtime: chosen.runtime.id,
+        configSchemaVersion: chosen.runtime.configSchemaVersion,
+        configKeccak256: chosen.config.keccak256,
+        marketResponsive: chosen.marketResponsive,
+        effectiveSignals: chosen.signals.effective.map((b) => `${b.sensor}/${b.curve}`),
+        reviewStatus: chosen.review.status,
+        startingPoint: chosen.mutation,
+      },
+    },
+    errors: outcome.selected ? [] : [outcome.reason],
+    warnings,
+    nextActions: outcome.selected ? ["WRITE_ART"] : ["BLOCKED"],
+  }, { json });
+  return outcome.selected ? EXIT.OK : EXIT.BLOCKED;
+}
+
+/** The brief, from --brief or the workspace. Never invented, never defaulted to a sample. */
+async function readBriefText(workspace, flags) {
+  const { readFileSync, existsSync } = await import("node:fs");
+  const { join, resolve } = await import("node:path");
+  const candidates = [];
+  if (flags.brief) candidates.push(resolve(String(flags.brief)));
+  if (workspace) candidates.push(join(workspace, "brief.md"), join(workspace, "BRIEF.md"));
+  for (const c of candidates) {
+    try {
+      if (existsSync(c)) return readFileSync(c, "utf8");
+    } catch {
+      // an unreadable candidate is not a brief; fall through to the next
+    }
+  }
+  return null;
 }
 
 /** Live capability for every allowed chain. Reads only. */
