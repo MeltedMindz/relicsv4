@@ -207,6 +207,7 @@ no network at all — you can do all of it on a plane.
 - [What a `.relics` file is](#what-a-relics-file-is)
 - [Take it to the launchpad](#take-it-to-the-launchpad)
 - [The starter templates](#the-starter-templates)
+- [The Wave-1 art templates](#the-wave-1-art-templates)
 - [Market history is the medium](#market-history-is-the-medium)
 - [Launch protection, chains and fees](#launch-protection-chains-and-fees)
 - [Advanced paths](#advanced-paths)
@@ -549,6 +550,98 @@ launchable.
 There is no p5-style template, because p5 is not an approved runtime and the schema refuses a
 bundle that names one. Shipping a template that could not export would be a worse answer than
 shipping none.
+
+---
+
+## The Wave-1 art templates
+
+A second, separate list. The starter templates above are project directories `relics init` copies.
+These are **configuration presets for on-chain art runtimes** — a set of parameters an art runtime
+reads to draw a token — and there is no scaffold to copy, so they are not `init` targets.
+
+Thirty-five presets were built across eight runtimes and put through a **blind visual review**: the
+reviewer read contact sheets as images, never opened a source file, and judged two axes separately —
+do twelve tokens read as twelve different works at thumbnail size, and does the work visibly change
+between a quiet market, a wounded one and a healed one. Seven passed. `relics templates` shows those
+seven and nothing else.
+
+| Template | Runtime | Config schema | Market-responsive | What it is |
+|---|---|---|---|---|
+| `GEOMETRIC_RECURSION_V1/dendron` | GEOMETRIC_RECURSION_V1 | v2 | yes | a growth whose extent reads the healing |
+| `GEOMETRIC_RECURSION_V1/compass` | GEOMETRIC_RECURSION_V1 | v2 | yes | rings of rings, coloured by level |
+| `GEOMETRIC_RECURSION_V1/cairn` | GEOMETRIC_RECURSION_V1 | v2 | yes | a partitioned plane, course on course |
+| `VECTOR_COMPOSITION_V1/reliquary` | VECTOR_COMPOSITION_V1 | v1 | yes | a burial object on a ground that fractures |
+| `VECTOR_COMPOSITION_V1/alluvium` | VECTOR_COMPOSITION_V1 | v1 | yes | sediment: the market writes the strata |
+| `PIXEL_GRID_V1/idol` | PIXEL_GRID_V1 | v1 | yes | a mirrored bronze artifact that swells and corrodes |
+| `CELLULAR_SYSTEM_V1/crux` | CELLULAR_SYSTEM_V1 | v2 | yes | a cross that fills |
+
+**The config schema version is not the runtime version, and the two disagree here.** Every one of
+these runtimes is at runtime version 1, while GEOMETRIC_RECURSION and CELLULAR are at *config*
+version 2 — both had a byte change meaning underneath them. A config written at the version the
+runtime reports is rejected by the parser, so read it from the table, not from the runtime.
+
+### Whether you can launch one is a live read, and the answer today is no
+
+**None of these four art runtimes is registered on any chain.** That is not a permanent fact and it
+is not a fact this kit stores: registration is per runtime, per chain, and the only thing that
+answers it is a live read of `ArtRuntimeRegistryV1` at the moment you ask.
+
+```bash
+npm run kit -- agent select-template --workspace <dir> --chain 1 --json
+```
+
+That command reads the registry and reports one of `ACTIVE`, `INACTIVE`, `NOT_REGISTERED` or
+`UNKNOWN` per runtime. **`UNKNOWN` is not a soft no** — a registry that could not be read does not
+prove a runtime is absent, it proves nobody successfully asked, and only one of those is a reason to
+retry. When these runtimes are registered, a fresh read makes them selectable. There is no flag in
+this repository to flip and no checked-in status to update.
+
+### Effective market signals are the measured ones
+
+Every one of these runtimes accepts all nine market sensors. **Acceptance is not effectiveness.**
+Three runtimes independently shipped a field wired to a sensor that reads the same value in every
+market state — legal, wired, and visually inert — so each descriptor publishes which of its bindings
+actually move, measured against a committed census rather than taken from the schema.
+
+The consequence is visible in the catalog. `idol` binds six sensors and one of them, `EPOCH`, moves
+at most 125 per mille across the review fixtures, so it is published as **bound but measured dead**.
+`crux` binds a single sensor and is still responsive across all three states, because the `LOG2`
+curve lifts `RECOVERY`'s quiet-market reading from 10 to 562 — a fact about the curve that no amount
+of reading the sensor's name would give you.
+
+### The tiers below SHIP are kept, and hidden
+
+Four presets were reviewed "ship with caveat" and six were held. They are not deleted, and they are
+not shown by default:
+
+```bash
+npm run kit -- templates --experimental
+```
+
+That lists them with their **measured** weakness — each one's weakest state pairing out of the
+perceptual census, against the census floor — rather than a paragraph of review prose. Neither tier
+is offered as a starting point, and the tier the review rejected is not listed at all: a flag that
+reveals everything reveals nothing.
+
+**A held or caveated template is never promoted by someone looking at it again.** Promotion takes
+four things — a contained fix, a config still inside the runtime's final bounds, a regenerated
+contact sheet, and a **new blind review** returning SHIP — and the status model refuses a promotion
+missing any one of them, refuses a re-labelled copy of the old review by document digest, and
+refuses any method that is not blind.
+
+### An autonomous agent may only ever choose from the seven
+
+The selection pipeline is `brief -> live runtime availability -> SHIP catalog -> capability filter ->
+semantic match -> select`, and the order is the mechanism rather than a description of it. The
+presets that did not clear review are not bad at describing themselves — their weaknesses are
+exactly the kind prose cannot carry, like "recovery duplicates stress" or "every token is a centred
+disc" — so a matcher scoring words against words would rank several of them first. The pool is
+therefore built before any matching happens, and the matcher refuses a template it is handed
+directly. `--experimental` is a human affordance and reaches no agent path.
+
+**The preset is a starting point, not a cage.** Once one is chosen, change anything the runtime's
+validator accepts — palette, geometry, counts, sensors, curves, traits. Nothing in this kit compares
+your finished configuration against the preset it began as, and nothing should.
 
 ---
 

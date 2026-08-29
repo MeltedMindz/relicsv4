@@ -86,8 +86,12 @@ Now do this, in order:
 
 1. Ask me only the questions you genuinely cannot decide yourself. Do not
    interview me.
-2. Pick the template that best fits my idea and tell me why — including whether
-   its art runtime can be launched today or is preview-only.
+2. Pick the starter template that best fits my idea and tell me why — including
+   whether its art runtime can be launched today or is preview-only. If you are
+   choosing from the Wave-1 ART catalog instead, do not pick by reading
+   descriptions: run `npm run kit -- agent select-template --chain <id> --json`
+   and use what it returns. It reads the runtime registry live and only ever
+   offers templates that passed blind visual review.
 3. Scaffold the project and shape it to my idea: the generator, the traits, the
    market mappings, and the collection metadata.
 4. Iterate on the art until it matches what I described. Show me previews as
@@ -205,6 +209,33 @@ today**:
 | `static-art` | art fixed forever at mint | preview only |
 | `onchain-js` | very tight, compact generators | preview only |
 | `solidity-svg-params` | configuring a built-in on-chain renderer | **yes** |
+
+### The Wave-1 art templates are a different list, and your agent does not pick from it by hand
+
+Separate from the five scaffolds above there is a catalog of **art templates** — configuration
+presets for on-chain art runtimes. Thirty-five went through a blind visual review and seven passed.
+`npm run kit -- templates` shows the seven.
+
+**Your agent must not choose one of these by reading descriptions.** The presets that did not clear
+review describe themselves as well as the ones that did — their weaknesses are things like "recovery
+duplicates stress" or "every token is a centred disc", which no summary carries. So the choice runs
+through a command that filters before it matches:
+
+```bash
+npm run kit -- agent select-template --workspace <dir> --chain <id> --json
+```
+
+It reads the runtime registry live, keeps only the reviewed-SHIP tier, drops anything whose runtime
+is not `ACTIVE` on that chain, and only then scores what is left against your brief. There is no
+flag that widens it. `templates --experimental` shows the tiers below SHIP to a *person*, with their
+measured weakness attached; it reaches no agent path.
+
+**None of those four art runtimes is registered on any chain today**, so the command currently
+returns `NO_ACTIVE_RUNTIME` and selects nothing. That is a live reading rather than a line in a
+file, and it will change on its own when registration happens.
+
+Once a preset is chosen it is a **starting point**. Change anything the runtime's validator accepts.
+Nothing compares your finished art to the preset it started from.
 
 **"Preview only" is not a bug and not a trap.** Those four use the JavaScript art runtime, which the
 format accepts and the launchpad does not bind and render *yet*. You can design, preview, validate

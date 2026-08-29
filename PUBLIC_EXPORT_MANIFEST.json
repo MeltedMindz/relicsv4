@@ -168,7 +168,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "c607abb3efba8080e29f1b5551359309d925096414c00271a63dcb6532884c6d",
+      "sha256": "141ef1969bd618c12a2484be400e600ec6d48d3a4de6f3e091e3d8e1ab810c1a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -567,7 +567,7 @@
     },
     {
       "path": "docs/creator-kit/create-with-an-agent.md",
-      "sha256": "50a00f6233361893ec235dad9e62f60598ebf1aa2f654364db4b327680fd3578",
+      "sha256": "da40a8c1d3cc1e40fb03f7af193e8bcc35e821cc607b55aea88fea3dfaeda7b9",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
