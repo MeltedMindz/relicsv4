@@ -1,0 +1,223 @@
+{
+  "$comment": "Perceptual state-distinction census. Mean CIE76 dE per pixel between two market states of the same seed, rendered at 120px in CIE L*a*b* with a 3x3 box blur, averaged over twelve seeds. Regenerated ONLY by --record. A pairing below PERCEPTUAL_STATE_DELTA_FLOOR is a state the market presents and does not ship.",
+  "floor": 3.8,
+  "groundTruth": {
+    "deadMax": 3.576,
+    "strongMin": 3.998,
+    "overlap": 0
+  },
+  "templates": 35,
+  "deadStatePairings": 28,
+  "census": {
+    "CELLULAR_SYSTEM_V1/accretion": {
+      "ns": 5.058,
+      "nr": 6.255,
+      "sr": 8.551,
+      "ink": 0.261
+    },
+    "CELLULAR_SYSTEM_V1/aureole": {
+      "ns": 6.945,
+      "nr": 7.89,
+      "sr": 14.8,
+      "ink": 0.358
+    },
+    "CELLULAR_SYSTEM_V1/crux": {
+      "ns": 20.137,
+      "nr": 4.726,
+      "sr": 24.862,
+      "ink": 0.616
+    },
+    "CELLULAR_SYSTEM_V1/varve": {
+      "ns": 10.079,
+      "nr": 7.514,
+      "sr": 17.593,
+      "ink": 0.465
+    },
+    "GEOMETRIC_RECURSION_V1/cairn": {
+      "ns": 9.83,
+      "nr": 10.987,
+      "sr": 16.474,
+      "ink": 0.404
+    },
+    "GEOMETRIC_RECURSION_V1/compass": {
+      "ns": 6.699,
+      "nr": 9.415,
+      "sr": 10.087,
+      "ink": 0.37
+    },
+    "GEOMETRIC_RECURSION_V1/dendron": {
+      "ns": 9.081,
+      "nr": 10.236,
+      "sr": 10.741,
+      "ink": 0.332
+    },
+    "GEOMETRIC_RECURSION_V1/lacuna": {
+      "ns": 4.694,
+      "nr": 3.856,
+      "sr": 4.941,
+      "ink": 0.399
+    },
+    "GRAPH_NETWORK_V1/orrery": {
+      "ns": 4.618,
+      "nr": 5.245,
+      "sr": 6.467,
+      "ink": 0.19
+    },
+    "GRAPH_NETWORK_V1/phyllotaxis": {
+      "ns": 3.868,
+      "nr": 4.16,
+      "sr": 5.463,
+      "ink": 0.205
+    },
+    "GRAPH_NETWORK_V1/reliquiae": {
+      "ns": 3.147,
+      "nr": 3.854,
+      "sr": 4.74,
+      "ink": 0.114
+    },
+    "GRAPH_NETWORK_V1/starchart": {
+      "ns": 1.84,
+      "nr": 1.32,
+      "sr": 2.089,
+      "ink": 0.061
+    },
+    "GRAPH_NETWORK_V1/thread": {
+      "ns": 2.855,
+      "nr": 3.281,
+      "sr": 3.434,
+      "ink": 0.13
+    },
+    "PARTICLE_FLOW_V1/anvil": {
+      "ns": 7.001,
+      "nr": 7.304,
+      "sr": 3.998,
+      "ink": 0.249
+    },
+    "PARTICLE_FLOW_V1/siltbloom": {
+      "ns": 1.428,
+      "nr": 3.069,
+      "sr": 3.187,
+      "ink": 0.103
+    },
+    "PARTICLE_FLOW_V1/strata": {
+      "ns": 2.625,
+      "nr": 2.954,
+      "sr": 1.145,
+      "ink": 0.108
+    },
+    "PARTICLE_FLOW_V1/thurible": {
+      "ns": 9.044,
+      "nr": 8.417,
+      "sr": 4.154,
+      "ink": 0.302
+    },
+    "PIXEL_GRID_V1/beacon": {
+      "ns": 15.596,
+      "nr": 13.825,
+      "sr": 4.194,
+      "ink": 0.532
+    },
+    "PIXEL_GRID_V1/idol": {
+      "ns": 10.561,
+      "nr": 6.094,
+      "sr": 8.112,
+      "ink": 0.371
+    },
+    "PIXEL_GRID_V1/ossuary": {
+      "ns": 7.536,
+      "nr": 8.872,
+      "sr": 8.107,
+      "ink": 0.336
+    },
+    "PIXEL_GRID_V1/patina": {
+      "ns": 4.675,
+      "nr": 6.372,
+      "sr": 8.252,
+      "ink": 0.397
+    },
+    "PIXEL_GRID_V1/sigil": {
+      "ns": 14.219,
+      "nr": 11.946,
+      "sr": 7.545,
+      "ink": 0.484
+    },
+    "TOPOGRAPHY_FIELD_V1/archipelago": {
+      "ns": 4.174,
+      "nr": 6.723,
+      "sr": 5.799,
+      "ink": 0.295
+    },
+    "TOPOGRAPHY_FIELD_V1/cordillera": {
+      "ns": 4.926,
+      "nr": 4.029,
+      "sr": 4.821,
+      "ink": 0.457
+    },
+    "TOPOGRAPHY_FIELD_V1/faultline": {
+      "ns": 8.72,
+      "nr": 6.307,
+      "sr": 13.425,
+      "ink": 0.603
+    },
+    "TOPOGRAPHY_FIELD_V1/soundings": {
+      "ns": 3.373,
+      "nr": 4.777,
+      "sr": 4.662,
+      "ink": 0.351
+    },
+    "TYPOGRAPHIC_GLYPH_V1/cartouche": {
+      "ns": 2.265,
+      "nr": 2.011,
+      "sr": 2.807,
+      "ink": 0.047
+    },
+    "TYPOGRAPHIC_GLYPH_V1/ledger": {
+      "ns": 1.801,
+      "nr": 1.607,
+      "sr": 2.968,
+      "ink": 0.087
+    },
+    "TYPOGRAPHIC_GLYPH_V1/sigil": {
+      "ns": 1.456,
+      "nr": 1.748,
+      "sr": 3.105,
+      "ink": 0.077
+    },
+    "TYPOGRAPHIC_GLYPH_V1/specimen": {
+      "ns": 1.83,
+      "nr": 2.219,
+      "sr": 3.807,
+      "ink": 0.104
+    },
+    "TYPOGRAPHIC_GLYPH_V1/stele": {
+      "ns": 1.059,
+      "nr": 1.177,
+      "sr": 1.876,
+      "ink": 0.072
+    },
+    "VECTOR_COMPOSITION_V1/alluvium": {
+      "ns": 12.159,
+      "nr": 9.937,
+      "sr": 11.113,
+      "ink": 0.385
+    },
+    "VECTOR_COMPOSITION_V1/armillary": {
+      "ns": 10.138,
+      "nr": 8.288,
+      "sr": 6.597,
+      "ink": 0.231
+    },
+    "VECTOR_COMPOSITION_V1/reliquary": {
+      "ns": 11.33,
+      "nr": 4.866,
+      "sr": 12.263,
+      "ink": 0.362
+    },
+    "VECTOR_COMPOSITION_V1/tessera": {
+      "ns": 9.317,
+      "nr": 9.263,
+      "sr": 4.235,
+      "ink": 0.367
+    }
+  }
+}

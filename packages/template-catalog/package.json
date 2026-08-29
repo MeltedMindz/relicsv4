@@ -1,0 +1,19 @@
+{
+  "name": "@relics/template-catalog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Wave-1 art template catalog: the four-state review status model, the published creator descriptors, and the selection filter an autonomous agent runs before it matches anything. Carries no chain fact and cannot make a runtime launchable.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./status": "./src/status.js",
+    "./signals": "./src/signals.js",
+    "./descriptors": "./src/descriptors.js",
+    "./select": "./src/select.js"
+  },
+  "files": ["src", "measurements", "sheets", "README.md"],
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test test/*.test.mjs" }
+}
