@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 1245,
+  "fileCount": 1250,
   "files": [
     {
       "path": ".env.example",
@@ -168,7 +168,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "9f90ab7941efbc921f12c26c920fd9b7e5c4e40451458ca019ec8a2ebb0c00e2",
+      "sha256": "53fad47c73551ae4cb3c3fbeb142983c4d43b96cfd31b9fa4e74a69d54639a2d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -511,7 +511,7 @@
     },
     {
       "path": "docs/assets/hero.svg",
-      "sha256": "84e2e28f6e85e2a013a0f9d8690387fb7fdc693bdadbc263ff94a79e58d76e7a",
+      "sha256": "7053101a7eb10caf237bb72b28c0ce4e70d447bcaff5b65fd5920ca97c66f1cc",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -526,6 +526,41 @@
     {
       "path": "docs/assets/market-as-medium.svg",
       "sha256": "a09688f2576730c231abbb639468ae70b207affe20852d194659919bd09bc7d9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/assets/onchain/GEOMETRIC_RECURSION_V1--compass--seed175-recovery.svg",
+      "sha256": "1e118a2e9c9c5d0ec7800abf72a3b9c26e7c8e215ff6995d2c597b4ad81b922a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/assets/onchain/GEOMETRIC_RECURSION_V1--compass--seed175-stress.svg",
+      "sha256": "f2bdf8958f0ea3801b63a3c4b48357fbf11746a528ae4130cfd3874d501f103d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/assets/onchain/VECTOR_COMPOSITION_V1--alluvium--seed360-recovery.svg",
+      "sha256": "13418763116efc0a39e9acbd8fd24a79f00468b247edf3b3190cace7702c4e93",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/assets/onchain/VECTOR_COMPOSITION_V1--alluvium--seed397-neutral.svg",
+      "sha256": "0656f7bcd8e8c914210764126820fa8b146cfdec6b9aea70558907786a035be7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "docs/assets/onchain/provenance.json",
+      "sha256": "652ed96473a560a0dfeb9b069fc9cf1b77bf690b4a1b60e90ee68f9610240559",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8393,7 +8428,7 @@
     },
     {
       "path": "scripts/generate-doc-assets.mjs",
-      "sha256": "812ddddb7f9b7f5985c8027d53ea3066ab03bd94a778e1f24603b19790e38d6d",
+      "sha256": "1ea2b5fd6a66a52f15741c0e19f885f81f19338edea9f76ca4ef4d095c60ed2d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

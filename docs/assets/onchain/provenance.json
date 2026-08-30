@@ -1,0 +1,163 @@
+{
+  "$comment": "PROVENANCE FOR docs/assets/onchain/*.svg. Every file here is the SVG a deployed art-runtime contract returned to an eth_call. None was produced by a local generator, and none was drawn by hand. renderV1 returns a data: URI; imageSha256 is the sha256 of that returned string and svgSha256 is the sha256 of the base64-decoded document stored beside this file.",
+  "source": "eth_call IArtRuntimeV1.renderV1",
+  "artRuntimeRegistry": "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
+  "readAt": "2026-08-30T01:30:54.533Z",
+  "chains": [
+    {
+      "chainId": 1,
+      "name": "ethereum",
+      "blockNumber": 25864809
+    },
+    {
+      "chainId": 8453,
+      "name": "base",
+      "blockNumber": 50632061
+    },
+    {
+      "chainId": 4663,
+      "name": "robinhood",
+      "blockNumber": 49619410
+    }
+  ],
+  "crossChainParity": "BYTE_IDENTICAL",
+  "crossChainParityNote": "The three chains returned byte-identical documents for all 72 renders; re-derived when this record was written by comparing chain-8453 and chain-4663 against chain-1.",
+  "runtimes": {
+    "GEOMETRIC_RECURSION_V1": {
+      "registryId": 3,
+      "address": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+      "runtimeTag": "0x8a7b667883325fa9c8f65a1e3081339b1948d2431e8991c12ff6f74d7231acd1",
+      "template": "compass",
+      "templateId": "GEOMETRIC_RECURSION_V1/compass",
+      "configCommitment": "0xa8d87edbd9687ad7db49ddc51a60cd99a80f69bcd8f6fe7e41a6d52ef3c704f6",
+      "renderCount": 36,
+      "renders": {
+        "seed101-neutral.svg": "baee5eac2d0c0d543e19427b22bcd3e47b6629df90824e1175bba7371d28001c",
+        "seed101-stress.svg": "06cf82ee76882bf8bb45f6c513e43481d79b8e16f4b96e4a0682e331d41bf1e5",
+        "seed101-recovery.svg": "f0f0e6a92bc0ea4824fff525ce9e137a96e3413435420ec444a63b513cb0f890",
+        "seed138-neutral.svg": "c2ac1f41ebb1bd8f6dbd90d85559b43db6ca6bdecc83dd07fca401cd0ef333e1",
+        "seed138-stress.svg": "d49a4791331b0728d4ce60fbe2c8192b9527ddfcb5c2c8af33af22a06c6763bd",
+        "seed138-recovery.svg": "c08ad7168f4216e5174d2e643a0f44215b470fcefc6896a2e1918b0b2a4928d1",
+        "seed175-neutral.svg": "c78a25ab906da26c61236430ed16ebf836c450a3c4e11867a9174add671f5812",
+        "seed175-stress.svg": "17b22b0ee10c1cb0dd1284f7b517804fe20ae1fa72a281d13e6d933b0b80923f",
+        "seed175-recovery.svg": "ecc6423519c7c86b24d9f56812962d6dfa4b8a065586b93a4a70e081d120307e",
+        "seed212-neutral.svg": "08bd63f05e20ce7ad750b4dd19ae3d4342e08927752b76e8491bff634254f9a2",
+        "seed212-stress.svg": "7d2e076dc9e1355fca0b6390425ced6db3ec891bd80aeb59afff918557c01ba1",
+        "seed212-recovery.svg": "66f76cd81036a5520eff5f2c157b806dd4dbe3ff9c4ac0b0f6ebced52024f9f5",
+        "seed249-neutral.svg": "6051543ce9acb1cedc26eeff6adf52382486845d939c534177d7218d74a17b68",
+        "seed249-stress.svg": "d61190168ca21d961e71bec486be4ba79d93d85ff8883c27167b1db7ecae5f3a",
+        "seed249-recovery.svg": "829f0819a2ac0b56ba8c6faeb342c54577ed45755b750fc71275af72e1c8fe00",
+        "seed286-neutral.svg": "39546aa1f3ad157a1ce72c8bbbc5fc09ae2b1876250cb4dedda42cd4d21609b9",
+        "seed286-stress.svg": "07b74f9ec02087bc5ec5b3e9e396a239beed8ef0601cbecfeff92eb1adef3331",
+        "seed286-recovery.svg": "6c8c5231276b3e80d4f64feb2e1f6e7db21f6810187c2ececceb5e9961bafc00",
+        "seed323-neutral.svg": "7b568967d96bdfe7663faea507b44f66c38f40a22d8893a8067bd9d97bd635a7",
+        "seed323-stress.svg": "fe8eaa353ca446859af91f44ac870dad90bbeb05ef95d27882098e976b25ed43",
+        "seed323-recovery.svg": "e1319b657f67da74d42a963ff988b6eb1db04cc46f3c2631b823b06105fddfdc",
+        "seed360-neutral.svg": "e3d068326af5d5b18ff63da9003d1bfcabae3d935100520a3a8c7d463bb581ff",
+        "seed360-stress.svg": "190c6edfabd0b2240bf45fc9a1a427c167a9b9767ed2851c3de2ea2b595db560",
+        "seed360-recovery.svg": "36ff26f2fa66a61840dad6e21b72e991df409fc8a80da9b6795c1a5d17d202cf",
+        "seed397-neutral.svg": "78e08d495d5dc7bbbb511a416acd27dc06168e3baded6f3fce8f35910b4ea7c4",
+        "seed397-stress.svg": "6d469e55cb29f76f9550986844e20df833e7900f4d8aa184281a20acf6018044",
+        "seed397-recovery.svg": "a950ef81cb009e0003c38216ff6fc8d4dd80e8f864cdae08994f5e1a7b93ca90",
+        "seed434-neutral.svg": "629127ac1d17cc2d811edb318d8acfdc861805b83c60ad7caf918b0aca83a6a0",
+        "seed434-stress.svg": "6adbf05b46048196db95db90f7958a50d785c0dfad9d058d1a93741184ff457a",
+        "seed434-recovery.svg": "179e409714d0993a5bbc7048f9e29a12b2bf63c949d8080f4ecc07e89252f561",
+        "seed471-neutral.svg": "8817d370d908312aa7c3587cee2d507ae331bb74ea136a6aa5ed3855f694183e",
+        "seed471-stress.svg": "378a8d4832a7e4cfb77fea9c2f9040f377c6288afa4cabdad73c888aebaa9442",
+        "seed471-recovery.svg": "64999f632108adb46cb3727645c2c539585faf37095966a947f6db379ea6cf37",
+        "seed508-neutral.svg": "37a5b7a64337e32a681d76b30474bc9865f898d2e02697912e2ba9145feb8414",
+        "seed508-stress.svg": "65d26aeab5ee434dd67017e6709a7c944a4de3407d00ffd9950dcdb7e11e3a93",
+        "seed508-recovery.svg": "a33f1f672433720df484a2814955fee8b6047dd8d6b04970da509e517bb9efe0"
+      }
+    },
+    "VECTOR_COMPOSITION_V1": {
+      "registryId": 4,
+      "address": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+      "runtimeTag": "0x6912590039f1b39df2fe4b55e09b578b1e6b3b8e964d3f0c58c5d02cdefbc2ce",
+      "template": "alluvium",
+      "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+      "configCommitment": "0x3ef8c0e97af9d9db4ec2c4441a4e2cfef572dfad9230910fc900124155c0c322",
+      "renderCount": 36,
+      "renders": {
+        "seed101-neutral.svg": "071180cd6d31a1620c566010d10aa972a8f677021b28b425dfc3caf76566ac16",
+        "seed101-stress.svg": "db47d5de35e5355c2b478fd191ad2a221fcf1a15df90346ec676531e484b42d5",
+        "seed101-recovery.svg": "868aa817b9b28775080bad21c6d891c830cc639e928438bae6b6626980d2598c",
+        "seed138-neutral.svg": "0334b0e811f0917f5a26faaaf6defb1dcb87053a78c87208e9135db011533783",
+        "seed138-stress.svg": "deb50d0614b9293c14e0e5762807e54d3205631882b305432b4529faf03f54e7",
+        "seed138-recovery.svg": "4915a186083dd614d7b8752d4097c80ff7888cc3f7c1bdc1b86292a34ae2509b",
+        "seed175-neutral.svg": "1214e9cf84104a4e1ecc3e37d1163232512cdb34f14a82fde8b6700cdbbba24f",
+        "seed175-stress.svg": "fd51296e2336d0d7bc26fbb4485f7c67212d410fbe3e3395733269545601eaaf",
+        "seed175-recovery.svg": "ed7337c9ee4f594cfdcab5551aa2881515a49edcdf4ac7d69e6c37dec00bfc81",
+        "seed212-neutral.svg": "63a79afc08811f12cf7d59aee87de6d7aadb4de3ece7504273d62ed58bfa2499",
+        "seed212-stress.svg": "0054e425b81ff42835972486b5c4ee939acf0ee3b57c328157dd1adbc06c2542",
+        "seed212-recovery.svg": "dc53ea9294d16a61c893772e401a2f0d9401ea6141d138d9ec7296a7fa58e9ed",
+        "seed249-neutral.svg": "fbde8fbc769279e23e97bf3e00688c0f56fea9e3eb56f9f9a0302726ddf7621f",
+        "seed249-stress.svg": "6628cbdaa8d941a29d50c193c138473a9105f7e722ef514f4b238dc43a3b4d28",
+        "seed249-recovery.svg": "d1ba38dd05376cfad4225cf81011b26b4ad8d253b7deed65e742b231c65a9870",
+        "seed286-neutral.svg": "0bb6cbb2f81331489fe8b7983bcf3647c72bfbd83edbf9bbfaeacf3d434455f2",
+        "seed286-stress.svg": "14e363bababdd5c8c6a1e866e012b2296669c104635a377589953154754951c7",
+        "seed286-recovery.svg": "b691d904f90fa9e0a5144b5b5588c69f741270dd84e24b6f8ca2cad173015f54",
+        "seed323-neutral.svg": "7ac716339a27b0aed4e0b78d2529af5758fed6e7a069aa1b4937ff4b5d4a2fca",
+        "seed323-stress.svg": "48a0aa06fe6ea54a6f015d10f5d2bc6741cdeb002ba8476ef8aa21f09cd0071a",
+        "seed323-recovery.svg": "71940c860641bc638a3a2331f394dc5d336afefab39f81af57840aca048d5e93",
+        "seed360-neutral.svg": "bf595690fb2c7e0f245bcdc622be422b950b35af7bf42c0307b7c3c2d96ca639",
+        "seed360-stress.svg": "1c6c4e9ed0be01a1e0c2e4a0e8253be508d34e40b62b17375371ad8d8ae6ee0a",
+        "seed360-recovery.svg": "602aab59dcd49b9ccfae36b0c8e5816d45295e91bdfa3646c81e64a21261c8b0",
+        "seed397-neutral.svg": "d21c12b87cf70234087d86ddfca9a24aa12a524b6d262c420d64429def9248d3",
+        "seed397-stress.svg": "dda071c3fb24e940d1173679f2f1f34b196907fe920c6fa0d8761c23ab1f31b6",
+        "seed397-recovery.svg": "7e4af426c07b8631bc8f2dacc8beaea7e5b6cf7207562bf120688e1bcc1bfa13",
+        "seed434-neutral.svg": "f5c8b7ebddfa6e0f010fea5b18a6ac5e9cd208dacdb2cd827b8df86a20ad2b39",
+        "seed434-stress.svg": "f93909068918a24b8389d40625f2218d0f4ea421ccc2382964dcf0bd4ce27ca1",
+        "seed434-recovery.svg": "cc8bc54d21a1579db43d45ce5cce66b4b0c175ca7c856e786caf289cd5b3025e",
+        "seed471-neutral.svg": "73d6799a13d0cb3e5cc74365e6c773792f1c60d127dc50cc145015ffaecec047",
+        "seed471-stress.svg": "7e8fece4d74cf772591e80ccedcc18a799feec825b84f11011a3a90a0300e07c",
+        "seed471-recovery.svg": "f14e6ae7fc116a9a55eafec0d8818202c386752390c644286a272869f6285bba",
+        "seed508-neutral.svg": "85f299fe9397932539d583bdcdcc01e0bfff3c16bfae14bc3d2ae523c5ac65e8",
+        "seed508-stress.svg": "8cfe8ed1ab3a15e2ac7d26b37e20377ada0e99020314d45176f5721aa4a1140a",
+        "seed508-recovery.svg": "7f7dc9415c158e04efc913383f3d0e3d164c77f319bbda1cb1a3ab04b077f217"
+      }
+    }
+  },
+  "tiles": [
+    {
+      "file": "GEOMETRIC_RECURSION_V1--compass--seed175-stress.svg",
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "template": "compass",
+      "seed": 175,
+      "state": "stress",
+      "bytes": 4321,
+      "svgSha256": "f2bdf8958f0ea3801b63a3c4b48357fbf11746a528ae4130cfd3874d501f103d",
+      "imageSha256": "17b22b0ee10c1cb0dd1284f7b517804fe20ae1fa72a281d13e6d933b0b80923f"
+    },
+    {
+      "file": "GEOMETRIC_RECURSION_V1--compass--seed175-recovery.svg",
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "template": "compass",
+      "seed": 175,
+      "state": "recovery",
+      "bytes": 3969,
+      "svgSha256": "1e118a2e9c9c5d0ec7800abf72a3b9c26e7c8e215ff6995d2c597b4ad81b922a",
+      "imageSha256": "ecc6423519c7c86b24d9f56812962d6dfa4b8a065586b93a4a70e081d120307e"
+    },
+    {
+      "file": "VECTOR_COMPOSITION_V1--alluvium--seed360-recovery.svg",
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "template": "alluvium",
+      "seed": 360,
+      "state": "recovery",
+      "bytes": 3945,
+      "svgSha256": "13418763116efc0a39e9acbd8fd24a79f00468b247edf3b3190cace7702c4e93",
+      "imageSha256": "602aab59dcd49b9ccfae36b0c8e5816d45295e91bdfa3646c81e64a21261c8b0"
+    },
+    {
+      "file": "VECTOR_COMPOSITION_V1--alluvium--seed397-neutral.svg",
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "template": "alluvium",
+      "seed": 397,
+      "state": "neutral",
+      "bytes": 3523,
+      "svgSha256": "0656f7bcd8e8c914210764126820fa8b146cfdec6b9aea70558907786a035be7",
+      "imageSha256": "d21c12b87cf70234087d86ddfca9a24aa12a524b6d262c420d64429def9248d3"
+    }
+  ]
+}

@@ -47,14 +47,16 @@
 // will prefer them automatically and the JSON declaration becomes a fallback. The named exports it
 // looks for are listed in PROTECTION_EXPORT_CONTRACT below.
 
+import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSync } from "node:fs";
 import { dirname, join, relative, extname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { NOMINAL_ALLOCATION_PERCENT, PLATFORM_SUBDIVISION_PROSE } from "../packages/project-schema/index.js";
+import { MARKET_STATES, TEMPLATE_DESCRIPTORS } from "../packages/template-catalog/src/index.js";
 import { readConfig, readProjectFiles, generatorSources } from "../packages/creator-cli/src/project.js";
 import { createVmModule } from "../packages/creator-cli/src/sandbox.js";
-import { buildRenderContext, deriveTraits } from "../packages/creator-cli/src/schema.js";
+import { buildRenderContext } from "../packages/creator-cli/src/schema.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const FACTS_PATH = join(ROOT, "docs", "launchpad", "protocol-facts.json");
@@ -531,45 +533,170 @@ const BLOCKS = {
 };
 
 // ---------------------------------------------------------------------------------------------
-// THE HERO CONTACT SHEET — REAL KIT OUTPUT, NOT AN ILLUSTRATION
+// THE HERO CONTACT SHEET — WHAT THE DEPLOYED CONTRACT DRAWS
 // ---------------------------------------------------------------------------------------------
+
+/**
+ * WHERE THE HERO TILES COME FROM, AND WHY THE SENTENCE UNDER THEM CHANGED.
+ *
+ * Until 2026-08-30 this sheet was four renders produced HERE, by running the kit's own generator
+ * sandbox on four starter templates, and the caption said so: "every image above came out of
+ * `relics preview`". That was true of those tiles. It is not true of these, so it left with them.
+ *
+ * These four are `eth_call` returns. `renderV1` was called on the two Wave-1 art runtimes at their
+ * registered addresses, and the documents in `docs/assets/onchain/` are the base64-decoded bodies
+ * of what came back — from a contract, not from a generator, and not from anybody's hand. The
+ * claim under the picture is therefore a stronger one than the claim it replaced, and it is a
+ * different claim, which is the whole reason the wording could not be left alone.
+ *
+ * THE CLAIM IS CHECKABLE WITHOUT A NETWORK, WHICH IS WHY IT IS WORTH MAKING.
+ * {@link verifyRenderCommitments} re-derives, per runtime, the `renderCommitment` digest that
+ * `packages/template-catalog/src/descriptors.js` ALREADY publishes — over all 36 recorded returns,
+ * by the algorithm that descriptor names — and throws if it disagrees. The hero is pinned to a
+ * number this repository committed to before these pictures were chosen, so a tile quietly swapped
+ * for something prettier that the contract does not draw stops the build instead of shipping.
+ *
+ * WHAT THIS DOES NOT PROVE, said plainly because a generated asset is exactly where an overclaim
+ * would survive: a digest re-derived from a recorded read is evidence that the record is internally
+ * consistent with the catalog, not a fresh read of the chain. The live read is `npm run kit:status`
+ * and the recorded one is `docs/assets/onchain/provenance.json`, with its block numbers.
+ */
+const ONCHAIN_DIR = join(ASSETS_DIR, "onchain");
 
 /**
  * The four tiles, and why these four.
  *
- * One render from each of four DIFFERENT shipped templates rather than four seeds of one, because
- * the thing a reader is deciding is which template to start from. Four seeds of `minimal` would
- * show that the seed changes the image — true, and not the question anybody arrives with.
+ * Two runtimes, three of the three market states, and three seeds — because the reader is deciding
+ * what this system can look like, and four studies of one silhouette would answer a question
+ * nobody arrives with.
  *
- * `static-art` is deliberately absent: it is the template whose whole point is that it does not
- * vary, so a contact sheet is the one place it says the least.
+ * THE FIRST TWO ARE THE SAME SEED. `compass` seed 175 under STRESS and under RECOVERY is one
+ * identity in two market conditions: the same rosette, first cut back to its bones and then
+ * overgrown. Spending two of four slots on one seed is deliberate — it is the only arrangement in
+ * which a still image can show that the market is the medium rather than asserting it in a caption.
  */
-const HERO_TILES = [
-  { template: "minimal", seed: "1" },
-  { template: "solidity-svg-params", seed: "2" },
-  { template: "onchain-js", seed: "3" },
-  { template: "market-responsive", seed: "4" },
+const HERO_TILE_FILES = [
+  "GEOMETRIC_RECURSION_V1--compass--seed175-stress.svg",
+  "GEOMETRIC_RECURSION_V1--compass--seed175-recovery.svg",
+  "VECTOR_COMPOSITION_V1--alluvium--seed360-recovery.svg",
+  "VECTOR_COMPOSITION_V1--alluvium--seed397-neutral.svg",
 ];
 
+/** Read the provenance record, refusing anything it cannot check rather than assuming it. */
+function loadOnchainProvenance() {
+  const path = join(ONCHAIN_DIR, "provenance.json");
+  if (!existsSync(path)) throw new Error(`${relative(ROOT, path)} is missing; the hero cannot be generated from a record that is not there`);
+  const record = JSON.parse(readFileSync(path, "utf8"));
+  if (!Array.isArray(record.tiles) || record.tiles.length < HERO_TILE_FILES.length) {
+    throw new Error(`provenance.json records ${record.tiles?.length ?? 0} tile(s); the hero needs ${HERO_TILE_FILES.length}`);
+  }
+  if (!Array.isArray(record.chains) || record.chains.length < 1) throw new Error("provenance.json records no chain");
+  for (const t of record.tiles) {
+    if (!MARKET_STATES.includes(t.state)) {
+      throw new Error(`provenance.json tile ${t.file} names market state "${t.state}", which is not one of ${MARKET_STATES.join(", ")}`);
+    }
+  }
+  return record;
+}
+
 /**
- * Render one tile THROUGH THE KIT, not beside it.
+ * RE-DERIVE THE PUBLISHED RENDER COMMITMENT FROM THE RECORDED RETURNS.
  *
- * This is the creator CLI's own `previewProject` path, minus the file writing: the same
- * `readProjectFiles`, the same `generatorSources`, the same `createVmModule` sandbox and the same
- * `buildRenderContext`. That is what makes the claim under the picture checkable — the bytes here
- * are the bytes `relics preview <template> --seeds N` writes, and
- * `packages/creator-cli/templates/<t>/previews/seed-N.svg` is a third copy of them.
- *
- * If a template's generator ever stops being deterministic, this throws during generation rather
- * than quietly producing a different hero.
+ * The algorithm is not invented here; it is the string the descriptor publishes beside the digest,
+ * `sha256-of-sorted-name-space-sha256-lines-joined-by-newline`, and this is the reading of it:
+ * one `<name> <sha256>` line per render, sorted by line, joined with newlines, hashed once. The
+ * hashes are of what `renderV1` RETURNED — the `data:` URI string — not of the decoded document,
+ * which is why the record carries both.
  */
-function renderTile({ template, seed }) {
+function verifyRenderCommitments(record) {
+  const checked = [];
+  for (const descriptor of TEMPLATE_DESCRIPTORS) {
+    const runtime = record.runtimes?.[descriptor.runtimeId];
+    if (!runtime) throw new Error(`provenance.json has no record for ${descriptor.runtimeId}, which the catalog publishes a render commitment for`);
+    if (descriptor.renderCommitment.algorithm !== "sha256-of-sorted-name-space-sha256-lines-joined-by-newline") {
+      throw new Error(`${descriptor.id}: render commitment algorithm changed to "${descriptor.renderCommitment.algorithm}"; this re-derivation no longer applies and must be rewritten, not skipped`);
+    }
+    // The renders must have been made from the CONFIG THE CATALOG PUBLISHES. Without this, a set of
+    // 36 renders could reproduce its own digest perfectly while depicting a different template.
+    const declaredConfig = `0x${descriptor.config.keccak256}`.toLowerCase();
+    if ((runtime.configCommitment ?? "").toLowerCase() !== declaredConfig) {
+      throw new Error(
+        `${descriptor.id}: the recorded returns were rendered from config ${runtime.configCommitment}, and the catalog ` +
+          `publishes ${declaredConfig}. These are renders of a different configuration.`,
+      );
+    }
+    const entries = Object.entries(runtime.renders ?? {});
+    if (entries.length !== descriptor.renderCommitment.renders) {
+      throw new Error(`${descriptor.id}: the catalog commits to ${descriptor.renderCommitment.renders} renders, the record carries ${entries.length}`);
+    }
+    const digest = createHash("sha256")
+      .update(entries.map(([name, sha]) => `${name} ${sha}`).sort().join("\n"))
+      .digest("hex");
+    if (digest !== descriptor.renderCommitment.digest) {
+      throw new Error(
+        `${descriptor.id}: the ${entries.length} recorded on-chain returns hash to ${digest}, and the catalog publishes ` +
+          `${descriptor.renderCommitment.digest}. The pictures and the commitment describe different renders; do not ` +
+          `regenerate the hero until they do not.`,
+      );
+    }
+    checked.push({ templateId: descriptor.id, renders: entries.length, digest });
+  }
+  if (checked.length < 2) throw new Error(`only ${checked.length} render commitment(s) re-derived; the catalog ships two`);
+  return checked;
+}
+
+/**
+ * Make one render's internal ids unique so four of them can share a document.
+ *
+ * Every render defines `id="G"` for its own background gradient. Nested unchanged, all four tiles
+ * would resolve `url(#G)` to the FIRST one in document order and three quarters of the sheet would
+ * silently wear the wrong ground. Nothing else about the render is touched.
+ */
+function namespaceIds(svg, prefix) {
+  const ids = [...new Set([...svg.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]))];
+  let out = svg;
+  for (const id of ids) {
+    const q = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    out = out
+      .replace(new RegExp(`\\bid="${q}"`, "g"), `id="${prefix}${id}"`)
+      .replace(new RegExp(`url\\(#${q}\\)`, "g"), `url(#${prefix}${id})`)
+      .replace(new RegExp(`href="#${q}"`, "g"), `href="#${prefix}${id}"`);
+  }
+  return out;
+}
+
+/** Load one committed on-chain render and prove it is the file the record describes. */
+function loadOnchainTile(record, file, index) {
+  const entry = record.tiles.find((t) => t.file === file);
+  if (!entry) throw new Error(`provenance.json does not describe ${file}`);
+  const path = join(ONCHAIN_DIR, file);
+  if (!existsSync(path)) throw new Error(`${relative(ROOT, path)} is missing`);
+  const bytes = readFileSync(path);
+  const sha = createHash("sha256").update(bytes).digest("hex");
+  if (sha !== entry.svgSha256) {
+    throw new Error(`${file} hashes to ${sha}; provenance.json records ${entry.svgSha256}. The file and its provenance disagree.`);
+  }
+  const svg = bytes.toString("utf8");
+  if (!svg.startsWith("<svg")) {
+    throw new Error(`${file} does not start with <svg. renderV1 returns a data: URI and this file must be the DECODED document, not the base64 text.`);
+  }
+  return { ...entry, svg: namespaceIds(svg, `t${index}-`) };
+}
+
+/**
+ * Render one starter template through the kit's own sandbox, twice, and refuse to differ.
+ *
+ * THIS NO LONGER DRAWS ANYTHING. It stayed when the hero stopped being made of starter previews,
+ * because it was the only place in the repository that executed a shipped generator twice and
+ * compared the bytes — and deleting a check along with the picture that happened to use it is how
+ * coverage disappears without anybody deciding to drop it.
+ */
+function assertTemplateDeterminism({ template, seed }) {
   const root = join(ROOT, "packages", "creator-cli", "templates", template);
   const config = readConfig(root);
   const files = readProjectFiles(root, { includePreviews: false });
   const mod = createVmModule(generatorSources(files));
   const decode = (p) => (files.has(p) ? new TextDecoder().decode(files.get(p)) : null);
-  const traitSchemaRaw = decode("traits/schema.json");
   const marketRaw = decode("market/mappings.json");
   const manifest = {
     project: config.project ?? {},
@@ -578,12 +705,18 @@ function renderTile({ template, seed }) {
   };
   const marketDocument = marketRaw ? JSON.parse(marketRaw) : null;
   const svg = mod.render(buildRenderContext({ manifest, marketDocument, seed }));
-  // Determinism, asserted where it is cheap: the same context twice must produce the same bytes.
   const again = mod.render(buildRenderContext({ manifest, marketDocument, seed }));
   if (svg !== again) throw new Error(`template ${template} rendered differently twice for seed ${seed}`);
-  const traits = traitSchemaRaw ? deriveTraits(JSON.parse(traitSchemaRaw), seed) : [];
-  return { template, seed, svg, traits, bytes: svg.length };
+  return { template, seed, bytes: svg.length };
 }
+
+/** The templates whose generators are executed twice on every generation run. */
+const DETERMINISM_TILES = [
+  { template: "minimal", seed: "1" },
+  { template: "solidity-svg-params", seed: "2" },
+  { template: "onchain-js", seed: "3" },
+  { template: "market-responsive", seed: "4" },
+];
 
 /** Strip the outer `<svg …>` wrapper so the render can be nested with our own geometry. */
 function innerOf(svg) {
@@ -598,25 +731,28 @@ function viewBoxOf(svg) {
 }
 
 /**
- * The hero: four real renders, side by side, each captioned with its template, its seed and the
- * traits the kit derived for that seed.
+ * The hero: four contract returns, side by side, each captioned with the template it was rendered
+ * from, the runtime that drew it, its seed and the market state it was rendered under.
  *
- * THE CAPTION IS TWO UNRELATED FACTS SIDE BY SIDE, and the description has to say so. A tile's
- * image comes off `context.random`; its labels come off `<seed>:trait:<dimension>`. Printing them
- * together is useful and would be a lie by juxtaposition without the disclosure in `<desc>`.
+ * NO TRAIT LABEL APPEARS HERE, and the description still carries the trait disclosure. A caption
+ * that pairs an image with labels drawn off a different stream is a lie by juxtaposition, and the
+ * cheapest way to stop making it was to stop printing them; the disclosure stays because a reader
+ * who meets trait labels anywhere else in the kit needs it, and because a screen-reader user gets
+ * the description and nothing else.
  *
  * Same panel discipline as the fee chart — its own ground, its own accessible name and
  * description, no external reference, no embedded font — for the same reason: GitHub serves this
- * through an `<img>`, so it cannot borrow the README's colours.
+ * through an `<img>`, so it cannot borrow the README's colours and cannot fetch anything.
  */
-function renderHeroSvg(tiles) {
+function renderHeroSvg(tiles, record) {
   const W = 1200;
   const TILE = 252;
   const GAP = 24;
   const LEFT = 60;
   const TOP = 108;
-  const captionLines = 2 + Math.max(...tiles.map((t) => t.traits.length));
-  const H = TOP + TILE + 26 + captionLines * 17 + 66;
+  const CAPTION_LINES = 3;
+  const H = TOP + TILE + 26 + CAPTION_LINES * 17 + 66;
+  const chainList = record.chains.map((c) => c.chainId).join(" · ");
 
   const cells = tiles
     .map((t, i) => {
@@ -625,11 +761,9 @@ function renderHeroSvg(tiles) {
       let cy = TOP + TILE + 28;
       cap.push(`<text x="${x}" y="${cy}" class="tileName">${esc(t.template)}</text>`);
       cy += 18;
-      cap.push(`<text x="${x}" y="${cy}" class="tileMeta">${esc(`seed ${t.seed} · ${t.bytes.toLocaleString("en-US")} B`)}</text>`);
-      for (const tr of t.traits) {
-        cy += 17;
-        cap.push(`<text x="${x}" y="${cy}" class="tileTrait">${esc(`${tr.name}: ${tr.value}`)}</text>`);
-      }
+      cap.push(`<text x="${x}" y="${cy}" class="tileMeta">${esc(t.runtimeId)}</text>`);
+      cy += 17;
+      cap.push(`<text x="${x}" y="${cy}" class="tileTrait">${esc(`seed ${t.seed} · market: ${t.state}`)}</text>`);
       return (
         `<rect x="${x - 1}" y="${TOP - 1}" width="${TILE + 2}" height="${TILE + 2}" class="tileEdge"/>` +
         `<svg x="${x}" y="${TOP}" width="${TILE}" height="${TILE}" viewBox="${viewBoxOf(t.svg)}" preserveAspectRatio="xMidYMid meet">${innerOf(t.svg)}</svg>` +
@@ -639,21 +773,22 @@ function renderHeroSvg(tiles) {
     .join("\n  ");
 
   const desc =
-    `A contact sheet of four deterministic renders from the shipped starter templates, left to right: ` +
-    tiles
-      .map(
-        (t) =>
-          `${t.template}, seed ${t.seed}${t.traits.length ? ` (${t.traits.map((x) => `${x.name}: ${x.value}`).join(", ")})` : ""}`,
-      )
-      .join("; ") +
-    `. Every image came out of the creator kit's own preview command — this file is generated by running the kit's ` +
-    `generator sandbox on the templates in this repository, so each tile is byte-identical to the preview the ` +
-    `kit writes for the same template and seed. The trait labels in each caption are metadata: they are drawn from ` +
-    `their own seeded stream, independently of the image above them, so a label names the token rather than ` +
-    `describing what it looks like.`;
+    `A contact sheet of four renders returned by the deployed RELICS art runtimes, left to right: ` +
+    tiles.map((t) => `${t.template} on ${t.runtimeId}, seed ${t.seed}, market state ${t.state}`).join("; ") +
+    `. The first two are the same seed of the same template under two different market states, so ` +
+    `one identity is shown twice: cut back under stress, overgrown under recovery. None of these ` +
+    `images was drawn by this repository. Each is the SVG a deployed contract returned to an ` +
+    `eth_call of renderV1, decoded from the data URI it came back in, and the same call returned ` +
+    `byte-identical documents on chains ${chainList}. No caption here carries a trait label. Where ` +
+    `a template does ship trait dimensions, their labels are drawn from their own seeded stream, ` +
+    `independently of the image, so a label names the token rather than describing what it looks like.`;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-labelledby="hero-title hero-desc" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
-  <title id="hero-title">Four deterministic renders from the shipped RELICS starter templates</title>
+  // `xmlns:xlink` is declared HERE because it has to be. The compass renders repeat their rings
+  // with `<use xlink:href="#r0">`, and the declaration that made that legal lived on each render's
+  // own root `<svg>` — the element `innerOf` throws away. Without it on this root the whole file is
+  // an XML parse error, not a wrong-looking picture: renderers refuse it and GitHub shows nothing.
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-labelledby="hero-title hero-desc" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+  <title id="hero-title">Four renders returned by the deployed RELICS art runtimes</title>
   <desc id="hero-desc">${esc(desc)}</desc>
   <style>
     .bg{fill:#0b0e13}
@@ -671,12 +806,12 @@ function renderHeroSvg(tiles) {
   <rect class="bg" x="0" y="0" width="${W}" height="${H}"/>
   <rect class="panel" x="0.5" y="0.5" width="${W - 1}" height="${H - 1}"/>
   <text x="${LEFT}" y="52" class="h1">RELICS CREATOR KIT</text>
-  <text x="${LEFT}" y="76" class="h2">FOUR DETERMINISTIC RENDERS FROM THE SHIPPED STARTER TEMPLATES</text>
+  <text x="${LEFT}" y="76" class="h2">FOUR RENDERS RETURNED BY THE DEPLOYED ART RUNTIMES</text>
   <line class="rule" x1="${LEFT}" y1="${TOP - 20}" x2="${W - LEFT}" y2="${TOP - 20}"/>
   ${cells}
   <line class="rule" x1="${LEFT}" y1="${H - 46}" x2="${W - LEFT}" y2="${H - 46}"/>
-  <text x="${LEFT}" y="${H - 24}" class="foot">Every image above came out of \`relics preview\`.</text>
-  <text x="${W - LEFT}" y="${H - 24}" class="footDim" text-anchor="end">same seed, same bytes, every time</text>
+  <text x="${LEFT}" y="${H - 24}" class="foot">Not drawn here. Returned by \`eth_call\` to renderV1 on the deployed runtime.</text>
+  <text x="${W - LEFT}" y="${H - 24}" class="footDim" text-anchor="end">chains ${esc(chainList)} · byte-identical</text>
 </svg>
 `;
 }
@@ -727,10 +862,19 @@ function applyBlocks(text, relPath) {
 
 // --- assets ---
 mkdirSync(ASSETS_DIR, { recursive: true });
-const HERO_RENDERS = HERO_TILES.map(renderTile);
+// The hero is assembled from committed contract returns, and every step of that is checked before
+// a byte is written: the record must describe the files, the files must hash to what it says, and
+// the 72 recorded returns must still reproduce the two render commitments the catalog publishes.
+// Any of those throws rather than producing a different hero.
+const ONCHAIN = loadOnchainProvenance();
+const RENDER_COMMITMENTS = verifyRenderCommitments(ONCHAIN);
+const HERO_RENDERS = HERO_TILE_FILES.map((file, i) => loadOnchainTile(ONCHAIN, file, i));
+// Not a picture any more — see the note on the function. Still executed on every run.
+const DETERMINISM = DETERMINISM_TILES.map(assertTemplateDeterminism);
+
 const assetTargets = [
   { path: join(ASSETS_DIR, "launch-protection.svg"), content: renderProtectionSvg() },
-  { path: join(ASSETS_DIR, "hero.svg"), content: renderHeroSvg(HERO_RENDERS) },
+  { path: join(ASSETS_DIR, "hero.svg"), content: renderHeroSvg(HERO_RENDERS, ONCHAIN) },
 ];
 
 // `market-as-medium.svg` is the one CONCEPTUAL asset, and it is hand-authored on purpose: it draws
@@ -777,6 +921,8 @@ if (JSON_OUT) {
   console.log(JSON.stringify({ ok, check: CHECK, ...results }, null, 2));
 } else {
   console.log(`doc assets — constants from ${P.provenance}`);
+  for (const c of RENDER_COMMITMENTS) console.log(`  RENDER_COMMITMENT_REDERIVED  ${c.templateId}  ${c.renders} on-chain returns  ${c.digest.slice(0, 16)}…`);
+  console.log(`  TEMPLATE_DETERMINISM  ${DETERMINISM.length} shipped generator(s) rendered twice, byte-identical`);
   if (results.unknownBlocks.length) {
     console.log("\nUNKNOWN OR UNTERMINATED BLOCKS:");
     for (const b of results.unknownBlocks) console.log(`  ${b.file}: generated:${b.id}${b.reason ? ` (${b.reason})` : ""}`);

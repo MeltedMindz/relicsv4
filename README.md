@@ -12,15 +12,24 @@ Steps 1 and 2 are yours and you do them once, at a terminal. Step 3 is one paste
 agent, on one command. Nothing in this repository reaches a chain until a person has finished
 step 2.
 
-![Four deterministic renders from the shipped starter templates, arranged left to right. Each is a
-dark square: concentric pale rings around a lit core; a fractured line lattice with two bright
-accent scars cutting across it; a dense field of short strokes; a single geometric form with a halo.
-Each caption pairs a seed number with the trait labels the kit derived for it — labels are metadata,
-drawn from their own seeded stream, so they name the token rather than describe the
-image.](docs/assets/hero.svg)
+![Four renders returned by the deployed RELICS art runtimes, arranged left to right. First, compass
+on GEOMETRIC_RECURSION_V1 at seed 175 under market stress: a gold and teal rosette of nested squares
+on near-black, ringed by scattered debris. Second, the same template and the same seed 175 under
+recovery: the identical rosette, now overgrown by a dense thicket of rust and bone-white line work
+that fills the frame. Third, alluvium on VECTOR_COMPOSITION_V1 at seed 360 under recovery: a swept
+crescent fan of pale beams over buried ochre strata, hooked through with red arcs. Fourth, alluvium
+at seed 397 under a neutral market: wide horizontal beds of ochre, bone and slate stacked edge to
+edge, with a ring of red nodules at the centre. Each caption names the template, the runtime, the
+seed and the market state.](docs/assets/hero.svg)
 
-*Every image above came out of `relics preview`. Same seed, same picture — on your laptop, in the
-importer, and in ten years.*
+*Nothing in this repository drew those four. Each is the SVG a deployed contract handed back to an
+`eth_call` — `renderV1` on `GEOMETRIC_RECURSION_V1` and `VECTOR_COMPOSITION_V1`, which returned
+byte-identical documents on Ethereum, Base and Robinhood Chain. The first two are one seed under two
+market states: same identity, cut back under stress and overgrown under recovery. That difference is
+the product. Provenance for every tile — address, registry id, block, seed, state and digest — is in
+[`docs/assets/onchain/provenance.json`](docs/assets/onchain/provenance.json), and the 72 returns
+behind them re-derive the render commitments the
+[template catalog](packages/template-catalog/src/descriptors.js) already publishes.*
 
 ---
 
