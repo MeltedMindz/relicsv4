@@ -276,6 +276,14 @@ The trade-off is real and your agent should state it plainly: **JavaScript is fa
 
 This is your actual job, and nobody else can do it.
 
+> **Your agent should have looked at it before you do.** On the launch path (the opt-in second
+> path, below) the agent is required to render the work, hand the pictures to a *different* agent
+> that did not make them, and act on what comes back — and it cannot launch until that reviewer
+> accepts them. You do not run any of that and you never see its machinery; it is simply why what
+> reaches you should not be the first thing that compiled. If it refuses, your agent should tell
+> you plainly that the work did not come out right and what it would change — not quote you a code.
+> **[→ The visual review, in detail](./autonomous-launch-agent.md)**
+
 Ask your agent to run:
 
 ```bash
@@ -333,6 +341,12 @@ npm run kit -- test-seeds ../my-project --count 100
 That renders 100 pieces and reports how many were blank, how many were identical, and how often
 trait combinations repeat. It is how you catch a collection that looks great at seed 1 and collapses
 into the same image everywhere else.
+
+**None of it says the art is any good.** A collection can pass every check on this page — no blanks,
+no duplicates, real variety, a mapping that plainly moves — and still be the wrong thing for what
+you asked for. That is not a gap in the checks; it is what checks are. It is why the launch path
+makes a second agent look at the pictures against your brief, and why "it validates" is never the
+answer to "is this right".
 
 ---
 

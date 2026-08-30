@@ -142,6 +142,12 @@ export const LAUNCH_STATES = [
   "PROJECT_SCAFFOLDED",
   "ART_AUTHORED",
   "ART_PROVEN",
+  // ART_ACCEPTED IS A SEPARATE STATE FROM ART_PROVEN AND THE DISTINCTION IS THE WHOLE POINT.
+  // `ART_PROVEN` is what a machine can settle: legal, deterministic, in budget, byte-distinct
+  // across market states. A configuration can be all of that and draw the wrong thing — one did,
+  // and it reached a launch flow because proven was being read as accepted. `ART_ACCEPTED` means
+  // a reviewer that was NOT the author looked at rendered images and said so.
+  "ART_ACCEPTED",
   "PROJECT_CONFIGURED",
   "VALIDATED",
   "EXPORTED",
@@ -168,6 +174,10 @@ export const NEXT_ACTIONS = [
   // all; it has written art and then gone looking for a label to put on it.
   "SELECT_TEMPLATE",
   "WRITE_ART",
+  // REVIEW_ART is an instruction to a DIFFERENT agent than the one that wrote the art. It is in
+  // this vocabulary rather than left as prose because the author must be able to hand the work
+  // over without deciding for itself whether it is any good.
+  "REVIEW_ART",
   "FIX_ART",
   "FIX_VALIDATION",
   "CONFIGURE_PROJECT",

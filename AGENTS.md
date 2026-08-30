@@ -11,7 +11,7 @@ Read this file before you touch anything.
 ## IF THE USER SAYS "CREATE AND LAUNCH THIS"
 
 This is the happy path, and it is first because an agent that reads only this section still does
-the right thing. Everything below it is detail behind these nine steps; nothing below contradicts
+the right thing. Everything below it is detail behind these ten steps; nothing below contradicts
 them.
 
 1. **`npm run kit -- agent ready --json`.** One status screen: what is configured on this machine,
@@ -37,20 +37,29 @@ them.
    the collection, `validate` to zero errors with every warning explicitly answered (§5–§7). These
    are the gates, not your judgement of whether the art is good — a run that ends with errors
    outstanding has not finished.
-5. **`npm run kit -- agent run --workspace <dir> --json`.** One entry point for the whole
+5. **Get the art LOOKED AT, by someone who is not you.** **The first legal configuration is not
+   launch-ready art.** A configuration can be legal, deterministic, inside its render budget and
+   byte-distinct across every market state and still draw the wrong thing — that has happened here
+   and nothing caught it, because nothing looked. `npm run kit -- agent art-review --workspace
+   <dir> --chain <id> --json` renders the work through the deployed runtime, rasterises contact
+   sheets and thumbnail sheets, and writes a review packet. **Hand the packet to a separate
+   reviewer and do not tell it what you think of the work** — the packet already contains its
+   instructions. When the reviewer sends the work back, apply the critique and run the command
+   again. See §9a.
+6. **`npm run kit -- agent run --workspace <dir> --json`.** One entry point for the whole
    chain-facing tail: preflight, metadata, prepare, predict, simulate, build, policy-check,
    broadcast, confirm, verify — in order, stopping at the first refusal. Export the bundle to
    `<workspace>/project.relics` first; that exact filename is what the run looks for (§8).
-6. **Satisfy `nextAction` until `COMPLETE`.** Branch on `result.action` and `result.reasonCode`
+7. **Satisfy `nextAction` until `COMPLETE`.** Branch on `result.action` and `result.reasonCode`
    from `agent next`, and on the exit code — never on prose. Exit `3` is not a refusal, exit `4`
    means editing the project will not help. Fix what it names, run again.
-7. **Never request a secret.** No private key, no seed phrase, no keystore, no RPC credential, no
+8. **Never request a secret.** No private key, no seed phrase, no keystore, no RPC credential, no
    pinning token — not from the creator, not from a file, not "just to test". Nothing in this
    process needs one and you are never to hold one.
-8. **Never modify the authorization.** Do not edit `relics.agent.json`, the grant, or anything
+9. **Never modify the authorization.** Do not edit `relics.agent.json`, the grant, or anything
    under the signer's home. Changing either invalidates it and forces the creator back through
    `agent setup`. If one of them looks wrong, say which field and stop.
-9. **Return the verified result.** The transaction hash, the chain, the token and collection
+10. **Return the verified result.** The transaction hash, the chain, the token and collection
    addresses, the explorer links, and the receipt path. The task ends at `VERIFIED` on chain or at
    a blocker you name precisely — never at "the transaction was sent", because a hash is not a
    launch.
@@ -536,6 +545,126 @@ give a reader a URL for a route you have not confirmed exists.
 
 ---
 
+## 9a. THE VISUAL REVIEW LOOP — the art has to be looked at, and not by you
+
+**The first legal configuration is not launch-ready art.** Say it to yourself before every launch,
+because everything about a legal configuration argues the opposite: it validates, it renders on
+every seed, it stays inside the render budget, its market states are byte-distinct, and each of
+those is a real check that really passed. None of them is a statement about what the picture
+depicts. A variant that read as industrial crates and scaffolding full of confetti, against a brief
+asking for botanical work, went through every one of them — because nothing looked.
+
+The order is not `CREATE → VALIDATE → LAUNCH`. It is:
+
+```
+BRIEF → SELECT RUNTIME/TEMPLATE → CREATE CONFIG → RENDER → VISUAL REVIEW
+      → CRITIQUE → MODIFY → RENDER AGAIN → OBJECTIVE TESTS
+      → VISUAL ACCEPTANCE → VALIDATE → LAUNCH FLOW
+```
+
+### What the creator sees
+
+Nothing of this. They describe a project, the agent makes it, the agent launches it. The review is
+how the middle step earns the word "makes"; it is not a form for them to fill in, a queue for them
+to approve, or a reason to ask them anything. If the loop refuses, tell them plainly that the work
+did not come out right and what you would change — not that a gate returned a code.
+
+### The configuration this loop reviews
+
+`art.json`, in the workspace, beside `brief.md`. It is the creator configuration in symbolic form —
+runtime, palette, the structural records, the sensor bindings, the traits, the title — and the
+runtime's own encoder turns it into the exact bytes the launch commits to. Scaffold one from a
+template preset:
+
+```
+npm run kit -- agent art-review --workspace <dir> --scaffold GEOMETRIC_RECURSION_V1 \
+  --template GEOMETRIC_RECURSION_V1/compass
+```
+
+**The preset is a starting point and not a cage.** Change anything the runtime's validator accepts;
+nothing anywhere compares your finished configuration against the preset it began as. A collection
+that is the preset with two numbers moved is not a collection, and a reviewer will say so.
+
+### Running a round
+
+```
+npm run kit -- agent art-review --workspace <dir> --chain <id> --json
+```
+
+It asks the deployed runtime whether the bytes are legal, renders twelve seeds across three market
+states through `eth_call`, rasterises them, and writes a packet at
+`.relics-agent/art-review/round-N/packet/`. Then it stops and answers `AWAITING_VISUAL_REVIEW`.
+It does not wait, because the reviewer is a different process — and that is the point.
+
+### Handing it over
+
+Start a **separate agent** with a fresh context. Give it the packet path and this instruction, and
+nothing else:
+
+> Read `reviewer-prompt.md` in `<packet path>` and follow it exactly. Open every PNG in `images/`
+> and look at it. Write your verdict to `verdict.json` in the same directory.
+
+**Do not tell it what you think of the work.** Not that you are pleased with it, not that you
+addressed the last critique, not that it is close. The packet is built by a redactor that already
+refuses to carry your opinion, and defeating it by putting the opinion in the prompt instead
+defeats the whole arrangement. A labelled review in this project rated two runtimes highly and a
+blind pass over the same material then rejected their templates five for five; the labels were not
+lies, they were context, and context was enough.
+
+The reviewer judges nine things: **brief fidelity** (a gate), composition, coherence as a
+collection, palette intent, seed variation without losing identity, thumbnail survival, market
+response where claimed, token identity across states, and visual artifacts.
+
+**Brief fidelity is a gate and technical legality cannot overrule it.** Brief says botanical and it
+reads industrial: FAIL. Brief says monumental and sparse and it is confetti-dense: FAIL. Brief
+claims it fractures under drawdown and the state change is invisible: FAIL. A `FAIL` there forbids
+`SHIP`, and the verdict schema will not let a reviewer express the contradiction.
+
+### Acting on the critique
+
+Run the command again. It records the verdict and answers `REVISE_REQUESTED` with the critique
+attached — each item names an axis, what was seen, and what to do about it with a direction and a
+magnitude. Apply it to `art.json` and run again; the next call renders the changed configuration
+and asks for a fresh judgement.
+
+**The ceiling is four judgements** — one first look and three deliberate corrections. Rendering
+again before any verdict has been recorded does not spend one; what is bounded is how many times a
+reviewer is asked. At the ceiling the loop answers `ART_QUALITY_NOT_ACCEPTABLE` and **nothing will
+be launched.** That is a normal outcome and a correct one: a critique still unresolved after three
+deliberate corrections is usually a brief the chosen template cannot depict, and more rounds would
+launder that rather than fix it. Choose a different template, or take the brief back to the creator.
+
+### Acceptance
+
+A `SHIP` verdict runs the objective battery — legality, determinism, a hundred-seed sweep, blank
+detection, byte and perceptual duplicates, seed diversity at browse size, the exact state-identity
+gate, perceptual separation between market states, a structural role for every declared record, and
+the render cost. **Both have to pass.** A reviewer cannot see a field that draws nothing on any
+seed, and a battery cannot see that the work is wrong for the brief; neither overrules the other.
+
+On acceptance the loop writes `.relics-agent/receipts/art-review.json` — the brief digest, the
+runtime, the iteration count, every render artifact's digest, the verdict and critique history, the
+objective results, and the accepted configuration hash — and appends an `ART_REVIEW` receipt to the
+hash-linked chain.
+
+**That acceptance is void the moment the configuration, the brief or the runtime changes.** Not
+stale — void. A reviewer looked at pictures produced by particular bytes; different bytes draw
+different pictures, and a receipt that survived the change would be asserting something nobody
+checked. Change one per cent of one field and the review runs again.
+
+### It cannot be skipped
+
+`agent run` runs `ART_REVIEW` before `METADATA`, and `metadata`, `prepare`, `predict`, `simulate`,
+`build`, `policy-check` and `broadcast` each refuse without a live acceptance. **There is no
+`--skip-art-review`, under any spelling, and there will not be one** — `npm run kit:artreview`
+scans for its reintroduction as a shape rather than as a string. A creator at their own terminal who
+wants to launch art nobody reviewed still can: `goal: "BUILD_ONLY"` builds the transaction and they
+sign it themselves. What is refused is an agent doing that on their behalf, which is the case where
+nobody is looking by construction.
+
+
+---
+
 # MODE B — the autonomous launch
 
 ## 10. When the creator has authorized a launch
@@ -606,6 +735,7 @@ subcommand that is not listed** — one that does not exist answers `unknown sub
 | `capabilities` | live per-chain evidence: factory code, `launchAccess()`, the runtime registry | **yes, reads** |
 | `quotes` | live quote-asset inventory for one chain, and which one the policy selects | **yes, reads** |
 | `preflight` | admission plus deterministic scoring across every allowed chain; writes a receipt | **yes, reads** |
+| `art-review` | render the configuration through the deployed runtime, rasterise the sheets, write a packet for a reviewer that is NOT you, read its verdict back, and accept or refuse. `--scaffold <RUNTIME>` writes a starting `art.json`. **Required before metadata; there is no skip flag** (§9a) | **yes, reads** |
 | `provenance` | which protocol generation this SDK's types were generated from. Carries no chain status by design | no |
 | `verify-receipts` | walk the hash-linked receipt chain and prove no link was edited | no |
 | `metadata` | pin the collection metadata, fetch it BACK, verify the bytes, record the commitment. `--dry-run` uses the in-memory provider | writes to a provider |

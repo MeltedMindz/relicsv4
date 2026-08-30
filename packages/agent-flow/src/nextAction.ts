@@ -33,6 +33,10 @@ export const NEXT_ACTION_SUBCOMMANDS = [
   // in prose because an agent that is told to "pick a suitable template" picks on prose, and the
   // templates that did not clear review describe themselves as well as the ones that did.
   "select-template",
+  // THE VISUAL REVIEW STAGE. A command rather than advice, for the same reason `select-template`
+  // is one: an agent told in prose to "check the art looks right" checks it against its own
+  // intention, which is the one opinion that cannot be evidence here.
+  "art-review",
   "metadata", "prepare", "predict", "simulate", "build", "policy-check",
   "broadcast", "confirm", "verify", "token-metadata", "resume", "run", "provenance", "verify-receipts",
   // THE HUMAN ENTRY POINTS. `setup` and `revoke` need a person at a terminal and `ready` is the
@@ -63,6 +67,19 @@ export interface FlowFacts {
   readonly templateSelected?: string | null;
   readonly hasArt: boolean;
   readonly artProblems: readonly string[];
+  /**
+   * Whether a reviewer that was not the author has accepted the RENDERED IMAGES.
+   *
+   * FOUR VALUES AND NOT TWO, because every collapse of them is a hole or a nuisance:
+   *   `undefined`               the loop does not apply to this run at all (no Wave-1 runtime).
+   *   `"AWAITING"`              rendered and packaged; a reviewer has not judged yet.
+   *   `"REVISE"`                judged and sent back, with a critique to act on.
+   *   `"ACCEPTED"`              accepted, against THESE bytes and THIS brief.
+   *   `"REFUSED"`               the iteration ceiling was spent without acceptance. Terminal.
+   *   `"NOT_REVIEWED"`          applies, and nothing has been rendered or judged.
+   */
+  readonly artAccepted?: "AWAITING" | "REVISE" | "ACCEPTED" | "REFUSED" | "NOT_REVIEWED";
+  readonly artCritique?: readonly unknown[];
   readonly validationErrors: readonly string[];
   readonly hasBundle: boolean;
   readonly chainSelected: number | null;
@@ -164,6 +181,25 @@ export function decideNextAction(f: FlowFacts): NextActionResult {
   }
   if (f.artProblems.length > 0) {
     return result(f.state, "FIX_ART", "ART_QUALITY_GATE_FAILED", "The art was produced but did not pass the objective collection checks.", { ...R, errors: [...f.artProblems], allowedMutations: ["generator/**"], commands: ["npm run kit -- preview --seeds 24", "npm run kit -- validate <dir>"] });
+  }
+
+  // ---- the visual review ---------------------------------------------------------------------------
+  //
+  // BEFORE VALIDATION, BEFORE EXPORT, BEFORE THE CHAIN. The objective checks above and the schema
+  // check below are both things a machine settles, and a configuration passes both while drawing
+  // something the brief never asked for. That is not hypothetical: it is what shipped past every
+  // gate this repository had, and it is why "legal" stopped being the last word on art.
+  if (f.artAccepted === "REFUSED") {
+    return result(f.state, "BLOCKED", "ART_QUALITY_NOT_ACCEPTABLE", "The iteration ceiling was spent and the reviewer did not accept the work. This is a refusal and it is a normal outcome: a critique still unresolved after three deliberate corrections is usually a brief the chosen template cannot depict. Nothing will be launched.", { ...R, errors: ["ART_QUALITY_NOT_ACCEPTABLE"], allowedMutations: ["brief.md", "art.json"] });
+  }
+  if (f.artAccepted === "AWAITING") {
+    return result(f.state, "REVIEW_ART", "AWAITING_VISUAL_REVIEW", "The configuration is rendered and a review packet is written. A reviewer that is NOT the author must open the images and judge them: brief fidelity, composition, coherence as a collection, palette, seed variation, thumbnail survival, market response, token identity across states, artifacts. Do not review your own work, and do not tell the reviewer what you think of it.", { ...R, commands: ["npm run kit -- agent art-review --workspace <dir> --chain <id> --json"] });
+  }
+  if (f.artAccepted === "REVISE") {
+    return result(f.state, "FIX_ART", "VISUAL_REVISION_REQUESTED", "The reviewer looked at the images and sent them back with a critique. Apply it to art.json and run the review again; the critique names an axis, what was seen, and what to change.", { ...R, errors: f.artCritique ? f.artCritique.map((c) => JSON.stringify(c)) : [], allowedMutations: ["art.json"], commands: ["npm run kit -- agent art-review --workspace <dir> --chain <id> --json"] });
+  }
+  if (f.artAccepted === "NOT_REVIEWED") {
+    return result(f.state, "REVIEW_ART", "ART_NOT_REVIEWED", "The art configuration has never been rendered and looked at. The first legal configuration is not launch-ready art: legality is a statement about whether the runtime will draw it, not about whether it draws what was asked for.", { ...R, commands: ["npm run kit -- agent art-review --workspace <dir> --chain <id> --json"] });
   }
   if (f.validationErrors.length > 0) {
     return result(f.state, "FIX_VALIDATION", "VALIDATION_ERRORS", "The project does not validate against the canonical schema. Never edit the schema to pass; edit the project.", { ...R, errors: [...f.validationErrors], allowedMutations: ["project.json", "generator/**", "metadata/**"] });

@@ -1,0 +1,19 @@
+{
+  "name": "@relics/art-review",
+  "version": "1.0.0",
+  "description": "The visual review loop: render a creator configuration through the deployed art runtime, rasterise what it drew, put the IMAGES in front of a reviewer that is not the author, and refuse a launch until a human-legible verdict says the pictures are the work the brief asked for.",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./codec": "./src/codec/index.js"
+  },
+  "files": ["src"],
+  "dependencies": {
+    "viem": "^2.37.15"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.35.3"
+  }
+}

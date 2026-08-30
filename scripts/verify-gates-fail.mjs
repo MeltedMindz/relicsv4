@@ -65,6 +65,23 @@ const GATES = [
     why: "BNB's settlement symbol silently becomes WETH",
   },
   {
+    gate: "kit:artreview",
+    sees: "the review engine, the packet redactor, and the guard on every launch-proving command",
+    // THE ONE MUTATION THAT MATTERS: take the art gate off the first launch-proving command. The
+    // guarded set is DERIVED from `cmdRun`'s own step table, so this is not a mutation the gate has
+    // been told to look for — it is the gate re-deriving what must be guarded and finding a hole.
+    // The guard line is identical in seven places and `edit` replaces the first, which is enough:
+    // the gate requires ALL of them, so one removal is a failure. It is deliberately not the whole
+    // file's worth, because a mutation that breaks everything proves less than one that breaks one
+    // thing the gate claims to notice.
+    mutate: (root) => edit(
+      join(root, "packages/creator-cli/src/commands/agent-launch.js"),
+      "  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;\n",
+      "",
+    ),
+    why: "a launch-proving command runs without a visual acceptance, which is the whole defect this loop exists to close",
+  },
+  {
     gate: "kit:templates",
     sees: "every shipped starter template, exported for real",
     mutate: (root) => edit(join(root, "packages/creator-cli/templates/minimal/relics.config.json"), '"backingModel": "FULL_PARITY"', '"backingModel": "PARTIAL_PARITY"'),

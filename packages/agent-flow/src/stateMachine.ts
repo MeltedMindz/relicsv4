@@ -16,14 +16,14 @@
 import type { LaunchState } from "@relics/launch-sdk";
 
 export const STATE_ORDER: readonly LaunchState[] = [
-  "BRIEF_RECEIVED", "PROJECT_SCAFFOLDED", "ART_AUTHORED", "ART_PROVEN", "PROJECT_CONFIGURED",
+  "BRIEF_RECEIVED", "PROJECT_SCAFFOLDED", "ART_AUTHORED", "ART_PROVEN", "ART_ACCEPTED", "PROJECT_CONFIGURED",
   "VALIDATED", "EXPORTED", "CHAIN_SELECTED", "CHAIN_PREFLIGHT_PASSED", "METADATA_PUBLISHED",
   "PREPARED", "PREDICTED", "SIMULATED", "BUILT", "POLICY_APPROVED", "SIGNED", "BROADCAST",
   "CONFIRMED", "VERIFIED", "COMPLETE",
 ];
 
 /** The inputs whose change can invalidate a state. */
-export type Facet = "ART" | "PROJECT_CONFIG" | "BUNDLE" | "POLICY" | "CHAIN" | "QUOTE" | "METADATA" | "GAS" | "SIGNER";
+export type Facet = "ART" | "BRIEF" | "PROJECT_CONFIG" | "BUNDLE" | "POLICY" | "CHAIN" | "QUOTE" | "METADATA" | "GAS" | "SIGNER";
 
 /**
  * WHICH FACETS EACH STATE RESTS ON. If a facet changes, every state listing it — and everything
@@ -41,6 +41,12 @@ const DEPENDS_ON: Record<LaunchState, readonly Facet[]> = {
   PROJECT_SCAFFOLDED: [],
   ART_AUTHORED: ["ART"],
   ART_PROVEN: ["ART"],
+  // ART_ACCEPTED RESTS ON THE ART AND ON THE BRIEF, and the brief is why it needs its own facet.
+  // Brief fidelity is a GATE in the visual review — the work has to read as the thing that was
+  // asked for — so a changed brief invalidates the acceptance exactly as a changed configuration
+  // does. Without `BRIEF` here, retargeting the brief after acceptance would leave a green receipt
+  // asserting fidelity to a document nobody reviewed against.
+  ART_ACCEPTED: ["ART", "BRIEF"],
   PROJECT_CONFIGURED: ["ART", "PROJECT_CONFIG"],
   VALIDATED: ["ART", "PROJECT_CONFIG"],
   EXPORTED: ["ART", "PROJECT_CONFIG", "BUNDLE"],

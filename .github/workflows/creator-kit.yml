@@ -151,6 +151,14 @@ jobs:
           npm run kit:selectorblind:controls
           npm run kit:selectorblind
 
+      - name: The visual review loop, and the guard that makes it unskippable
+        # The first legal configuration is not launch-ready art. Controls first, then the gate:
+        # a controls failure must not be able to hide what the scan would have found.
+        run: |
+          npm run kit:artreview:controls
+          npm run kit:artreview
+          npm run kit:artreview:test
+
       - name: no gate passes on zero input
         # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
         # is the only evidence that the rest of this file means anything. It existed, it worked,

@@ -144,6 +144,15 @@ export async function runNetworkedCommand(group, positional, flags) {
       case "plan":
       case "preflight": return await cmdPreflight(name, workspace, flags, json);
       case "select-template": return await cmdSelectTemplate(name, workspace, flags, json);
+      // THE VISUAL REVIEW LOOP. It is on the READ side because it signs nothing and sends nothing:
+      // it renders through a deployed runtime with `eth_call`, writes sheets, and reads back a
+      // verdict a DIFFERENT agent wrote. It is not optional for a launch — `run` runs it before
+      // METADATA and every launch-proving command refuses without its receipt — but it needs no
+      // authorization of its own, because looking at pictures costs nobody anything.
+      case "art-review": {
+        const { cmdArtReview } = await import("./agent-art.js");
+        return await cmdArtReview(name, workspace, flags, json, { emit, EXIT });
+      }
       case "provenance": return await cmdProvenance(name, json);
       case "verify-receipts": return await cmdVerifyReceipts(name, workspace, json);
 
@@ -303,13 +312,21 @@ async function cmdNext(name, workspace, flags, json) {
   // missing file instead of a wrong field. The two conditions get separate answers.
   const policyFileExists = existsSync(resolve(flags.policy ?? join(workspace, "relics.agent.json")));
 
+  const { artReviewState } = await import("./agent-art.js");
+  const art = await artReviewState(workspace);
+
   const facts = {
-    state: has("VERIFY") ? "VERIFIED" : has("BROADCAST") ? "BROADCAST" : has("BUILD") ? "BUILT" : has("SIMULATE") ? "SIMULATED" : has("METADATA") ? "METADATA_PUBLISHED" : has("PREFLIGHT") ? "CHAIN_SELECTED" : "BRIEF_RECEIVED",
+    state: has("VERIFY") ? "VERIFIED" : has("BROADCAST") ? "BROADCAST" : has("BUILD") ? "BUILT" : has("SIMULATE") ? "SIMULATED" : has("METADATA") ? "METADATA_PUBLISHED" : has("ART_REVIEW") ? "ART_ACCEPTED" : has("PREFLIGHT") ? "CHAIN_SELECTED" : "BRIEF_RECEIVED",
     hasPolicy: policyFileExists,
     policyProblems: policy.ok ? [] : policy.issues.map((i) => `${i.field}: ${i.detail}`),
     hasBrief: existsSync(join(workspace, "brief.md")),
-    hasArt: existsSync(join(workspace, "generator")) || existsSync(join(workspace, "project.json")),
+    hasArt: existsSync(join(workspace, "generator")) || existsSync(join(workspace, "project.json")) || existsSync(join(workspace, "art.json")),
     artProblems: [],
+    // THE VISUAL REVIEW'S OWN STATE, read off disk. `undefined` here means the loop does not apply
+    // to this run, which is not the same thing as a step that was skipped — see `artReviewState`.
+    artAccepted: art.state,
+    artCritique: art.critique,
+    templateSelected: has("TEMPLATE_SELECTED") ? (receipts.find((r) => r.phase === "TEMPLATE_SELECTED")?.body?.templateId ?? null) : undefined,
     validationErrors: [],
     hasBundle: existsSync(join(workspace, "project.relics")),
     chainSelected: null,
@@ -377,6 +394,20 @@ async function cmdSelectTemplate(name, workspace, flags, json) {
 
   const outcome = selectForAutonomousAgent({ brief, registrySnapshot });
   const chosen = outcome.selected ? describeTemplate(outcome.selected) : null;
+
+  // A SELECTION IS RECORDED IN THE RECEIPT CHAIN, and that record is what makes the visual review
+  // unskippable. Without it, whether a run is subject to the review would be decided by whether an
+  // `art.json` happens to exist — a file the authoring agent creates, so a file it can decline to
+  // create. With it, a run that chose a Wave-1 template and then has nothing to review is refused
+  // by `requireArtAccepted` rather than waved past.
+  if (outcome.selected) {
+    const { writeReceipt } = await import("@relics/agent-flow");
+    writeReceipt(workspace, {
+      phase: "TEMPLATE_SELECTED",
+      chainId,
+      body: { templateId: outcome.selected, runtimeId: chosen?.runtime.id ?? null, reason: outcome.reason, poolSize: outcome.poolSize },
+    });
+  }
 
   emit(name, {
     success: outcome.selected !== null,
@@ -515,8 +546,18 @@ async function cmdVerifyReceipts(name, workspace, json) {
  */
 async function cmdRun(name, workspace, flags, json, ctx, L) {
   const { decideNextAction, listReceipts } = await import("@relics/agent-flow");
+  const { cmdArtReview } = await import("./agent-art.js");
   const steps = [
     ["PREFLIGHT", (n) => cmdPreflight(n, workspace, flags, json)],
+    // ART_REVIEW SITS BEFORE METADATA AND THAT POSITION IS THE POINT.
+    //
+    // Metadata is written at birth and cannot be changed afterwards, so once it is pinned the
+    // configuration it describes is effectively settled; a review after that step is a review of
+    // something already committed to. Putting it here also means an agent that would have spent
+    // an hour pinning, preparing, predicting and simulating finds out FIRST that the pictures are
+    // wrong. There is no flag that skips it and no goal that exempts it: `BUILD_ONLY` stops the
+    // run later, at BROADCAST, not here.
+    ["ART_REVIEW", (n) => cmdArtReview(n, workspace, flags, json, { emit, EXIT })],
     ["METADATA", (n) => L.cmdMetadata(n, workspace, flags, json, ctx)],
     ["PREPARE", (n) => L.cmdPrepare(n, workspace, flags, json, ctx)],
     ["PREDICT", (n) => L.cmdPredict(n, workspace, flags, json, ctx)],

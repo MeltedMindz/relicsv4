@@ -40,6 +40,15 @@ inventory with per-file hashes and verdicts is `PUBLIC_EXPORT_MANIFEST.json`.
     published set is the CURRENT generation only — RC5's platform addresses have been withdrawn,
     because that generation is superseded and its factories still read `PREPARED`, so a copyable
     address for a platform that will never accept a launch is worse than no address at all.
+5b. **Visual review evidence** (`packages/art-review/evidence/**`) — the record of the loop's own
+    runs: the briefs verbatim, the creator configuration BYTES for each run, the render commitments,
+    and the per-round verdicts and critiques in the reviewers' own words. It exists so the claim
+    that this loop produces distinct collections and refuses work is re-derivable rather than
+    asserted: `npm run kit:artreview` decodes every recorded configuration, compares it against the
+    template preset it started from and against the other runs, and re-hashes every brief. It holds
+    **no images** — hashes and paths only — and it names no chain fact beyond the public runtime
+    registry already exported under 5a. The briefs and configurations are original to this
+    repository and were written for these runs.
 6. **Configuration** (`foundry.toml`, `remappings.txt`, `package.json`, `apps/web/*` config,
    `.github/**`, `.gitignore`, `.gitleaks.toml`, `*.example`) — standard tooling config with no
    secrets.

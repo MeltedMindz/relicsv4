@@ -82,12 +82,19 @@ first.
 ### The shape of a run
 
 ```
-IDEA → ART → TEST → CONFIGURE → LIVE CHAIN PREFLIGHT → SIMULATE → POLICY → SIGN → BROADCAST → VERIFY
-└────────────── MODE A: offline, no wallet ─────────────┘└────────── MODE B adds this ───────────┘
+IDEA → ART → TEST → CONFIGURE → LIVE CHAIN PREFLIGHT → VISUAL REVIEW → SIMULATE → POLICY → SIGN → BROADCAST → VERIFY
+└────────────── MODE A: offline, no wallet ─────────────┘└──────────────────── MODE B adds this ────────────────────┘
 ```
 
 Everything left of the preflight is identical in both modes and runs on a machine with no network.
 Everything right of it is a live read, a pin, one signature and one transaction.
+
+**The visual review is not a formality between the preflight and the pin.** It is the step that
+stops the run from being `CREATE → VALIDATE → LAUNCH`. `TEST` above settles what a machine can
+settle — the configuration is legal, deterministic, in budget, byte-distinct across market states —
+and every one of those is also true of a configuration that draws the wrong thing. One did: a
+variant that read as industrial crates and scaffolding full of confetti, against a brief asking for
+botanical work, cleared every gate this repository had, because nothing looked. See §6a.
 
 ---
 
@@ -462,16 +469,22 @@ Branch on `action` and `reasonCode`. `reason` is for a human reading a transcrip
 
 ### The states
 
-`BRIEF_RECEIVED` → `PROJECT_SCAFFOLDED` → `ART_AUTHORED` → `ART_PROVEN` → `PROJECT_CONFIGURED` →
+`BRIEF_RECEIVED` → `PROJECT_SCAFFOLDED` → `ART_AUTHORED` → `ART_PROVEN` → `ART_ACCEPTED` →
+`PROJECT_CONFIGURED` →
 `VALIDATED` → `EXPORTED` → `CHAIN_SELECTED` → `CHAIN_PREFLIGHT_PASSED` → `METADATA_PUBLISHED` →
 `PREPARED` → `PREDICTED` → `SIMULATED` → `BUILT` → `POLICY_APPROVED` → `SIGNED` → `BROADCAST` →
 `CONFIRMED` → `VERIFIED` → `COMPLETE`
 
+**`ART_PROVEN` and `ART_ACCEPTED` are different states and the difference is the point.** Proven is
+what a machine settles. Accepted means a reviewer that was not the author looked at rendered images
+and said so. A configuration reaching `ART_PROVEN` and being read as accepted is exactly the defect
+§6a exists to close.
+
 ### The actions
 
-A closed set of seventeen:
+A closed set of nineteen:
 
-`WRITE_ART` · `FIX_ART` · `FIX_VALIDATION` · `CONFIGURE_PROJECT` · `CONFIGURE_PROVIDER` ·
+`SELECT_TEMPLATE` · `WRITE_ART` · `REVIEW_ART` · `FIX_ART` · `FIX_VALIDATION` · `CONFIGURE_PROJECT` · `CONFIGURE_PROVIDER` ·
 `CONFIGURE_SIGNER` · `FUND_SIGNER` · `READY_FOR_PREFLIGHT` · `READY_FOR_METADATA` ·
 `READY_FOR_PREPARE` · `READY_FOR_SIMULATION` · `READY_FOR_BUILD` · `READY_FOR_BROADCAST` ·
 `WAIT_CONFIRMATION` · `VERIFY` · `COMPLETE` · `BLOCKED`
@@ -490,6 +503,11 @@ hour and only then be told it could never have launched.
 
 Change the art and `VALIDATED` and everything after it is void. Change the quote and `PREPARED`
 onward is void. A stale green receipt is worse than a missing one, because a resume trusts it.
+
+**`ART_ACCEPTED` rests on the art AND on the brief**, which is why `BRIEF` is a facet of its own.
+Brief fidelity is a gate in the visual review, so a changed brief invalidates the acceptance exactly
+as a changed configuration does. Without that, retargeting the brief after acceptance would leave a
+green receipt asserting fidelity to a document nobody reviewed against.
 
 Gas is the boundary worth knowing: gas parameters are not part of the launch parameters, so
 changing them does **not** invalidate `PREPARED`, `PREDICTED` or `SIMULATED` — but they **are** part
@@ -525,6 +543,8 @@ npm run kit -- agent next            --workspace <dir> --json   # what do I do n
 npm run kit -- agent capabilities    --workspace <dir> --json   # live per-chain evidence   [reads a chain]
 npm run kit -- agent quotes          --workspace <dir> --chain <id> --json   # live quote inventory [reads a chain]
 npm run kit -- agent preflight       --workspace <dir> --json   # admission + scoring       [reads a chain]
+npm run kit -- agent art-review      --workspace <dir> --chain <id> --json   # render, sheet, package, judge  [reads a chain]
+npm run kit -- agent art-review      --workspace <dir> --scaffold <RUNTIME>  # write a starting art.json
 npm run kit -- agent provenance      --json                     # which generation these types came from
 npm run kit -- agent verify-receipts --workspace <dir> --json   # prove the receipt chain is unedited
 
@@ -613,6 +633,141 @@ choice can be re-derived by somebody who was not there.
   returns a full record with the zero address and `exists: false`. Treating a successful *call* as
   a successful *resolution* is the bug, so a non-zero address holding code, active, and matching
   the required tag is what counts as registered.
+
+---
+
+## 6a. The visual review — the art gets looked at, and not by the thing that made it
+
+### The defect this closes
+
+The autonomous agent used to produce a configuration that was legal, deterministic, inside its
+render budget and byte-distinct across every market state — and proceed. Each of those is a real
+check that really passed, and none of them is a statement about what the picture depicts.
+
+The pattern is older than one bad variant. Four separate times in this program a number was computed
+correctly and the conclusion drawn from it was wrong: an occupancy bitmap that ranked seed diversity
+backwards, a template mean of 4.85 that hid two structurally dead fields, byte-distinct renders that
+turned out to be visually identical, and a pixelwise delta-E that ranked a rejected template above
+three shipped ones. Every time, a person looking at a contact sheet was right in seconds. **Numeric
+evidence said fine, visual review said bad, and visual review was right every time.**
+
+### The loop
+
+```
+BRIEF → SELECT RUNTIME/TEMPLATE → CREATE CONFIG → RENDER → VISUAL REVIEW
+      → CRITIQUE → MODIFY → RENDER AGAIN → OBJECTIVE TESTS
+      → VISUAL ACCEPTANCE → VALIDATE → LAUNCH FLOW
+```
+
+### What gets reviewed, and where it comes from
+
+`art.json` in the workspace: the creator configuration in symbolic form, which the runtime's own
+encoder turns into the exact bytes a launch commits to. `--scaffold <RUNTIME>` writes one from a
+template preset, and the preset is a starting point rather than a cage — nothing anywhere compares
+a finished configuration against the preset it began as.
+
+Each round renders **twelve seeds across three market states** through `eth_call` to the deployed
+runtime, and rasterises:
+
+| artifact | what only it can answer |
+| --- | --- |
+| `singles/*.png` at 512px | detail, clipping, collisions |
+| `contact.png` at 256px | composition and palette across the collection |
+| `contact-thumb.png` at **120px** | thumbnail survival and seed diversity |
+| `states.png` at 256px | does the market change the work |
+| `states-thumb.png` at **120px**, one row per state | market response at the size it is actually seen |
+
+**The 120px sheets are not previews of the large ones.** Every verdict in this program was decided
+at that size. A frame that reads as varied at 512px and as one repeated stamp at 120px fails there
+and nowhere else, and that failure removed a runtime from Wave 1.
+
+### The reviewer is a different process
+
+The command renders, writes a packet at `.relics-agent/art-review/round-N/packet/`, and stops with
+`AWAITING_VISUAL_REVIEW`. It does not wait. A separate agent reads `reviewer-prompt.md`, opens the
+images, and writes `verdict.json`.
+
+**The packet is built by a redactor**, and what it refuses to carry is the point:
+
+- **no author claims.** Not a change log, not an intent statement, not "this addresses the
+  critique". The reviewer finds out whether the critique was addressed by looking at the new
+  pictures against its own earlier words.
+- **no scores before the first judgement.** The objective battery's results are withheld until a
+  verdict exists for round 1, and the withholding is a function that refuses rather than a
+  convention somebody remembers.
+- **no parameters.** No configuration, no byte diff, no trait table, no SVG source. A reviewer given
+  parameters reviews parameters.
+
+The reviewer's OWN prior critique **is** carried, from round two on, because without it a reviewer
+cannot check whether its own work order was carried out.
+
+A labelled review in this program rated two runtimes highly and a blind pass over the same material
+then rejected their templates five for five. The labels were not lies. They were context, and
+context was enough.
+
+### The rubric, and the one axis that is a gate
+
+Brief fidelity · composition · coherence as a collection · palette intent · seed variation without
+losing identity · thumbnail survival · market response where claimed · token identity across states ·
+visual artifacts.
+
+**Brief fidelity is a gate and technical legality cannot overrule it.** A `FAIL` there forbids
+`SHIP`, and the verdict schema will not let a reviewer express the contradiction — there is no
+`override`, no `waiver`, no `shipAnyway` field to reach for.
+
+### Critique has to be executable
+
+Every critique item names an axis, records what was seen, and gives an instruction with a direction
+and either a magnitude or a named thing in the picture. *"No focal hierarchy; peripheral blocks
+overwhelm the central form. Cut peripheral density by about 40%, narrow the palette contrast, raise
+the central recursion scale."* "Not good enough" is refused by the schema, and so is "make it
+better" — a destination is not a work order.
+
+### Four judgements, then a refusal
+
+One first look and three deliberate corrections. Re-rendering before any verdict is recorded does
+not spend one; what is bounded is how many times a reviewer is asked.
+
+At the ceiling the loop answers **`ART_QUALITY_NOT_ACCEPTABLE`** and nothing is launched. That is a
+normal outcome and a correct one: a critique still unresolved after three deliberate corrections is
+usually a brief the chosen template cannot depict, and further rounds launder that rather than fix
+it.
+
+### Acceptance, and what voids it
+
+A `SHIP` verdict runs the objective battery — legality against the deployed validator, determinism,
+a hundred-seed sweep, blank detection, byte and perceptual duplicates, seed diversity at browse size,
+the exact state-identity gate, perceptual separation between market states, a structural role for
+every declared record, and the render cost against the portable budget. **Both have to pass.** A
+reviewer cannot see a field that draws nothing on any seed; a battery cannot see that the work is
+wrong for the brief.
+
+The acceptance is written to `.relics-agent/receipts/art-review.json` and appended to the
+hash-linked receipt chain as an `ART_REVIEW` phase.
+
+**It is void the moment the accepted configuration, the brief, the runtime or the runtime's address
+changes.** Not stale — void. Change one per cent of one field and the review runs again. The
+binding is the full configuration bytes including the opaque appendix, which is stricter than
+"render-affecting" on purpose: the appendix changes no pixel and it IS inside `artConfigHash`, which
+is what the launch commits to and what is immutable afterwards.
+
+### It cannot be skipped
+
+`agent run` runs `ART_REVIEW` before `METADATA` — metadata is written at birth and cannot be changed
+afterwards, so a review after it is a review of something already committed to. `metadata`,
+`prepare`, `predict`, `simulate`, `build`, `policy-check` and `broadcast` each call the gate as
+their first statement and return on its answer.
+
+**There is no `--skip-art-review`, under any spelling, and there will not be one.** A creator at
+their own terminal who wants to launch art nobody reviewed still can: `goal: "BUILD_ONLY"` builds
+the transaction and they sign it themselves and own that decision. What is refused is an agent doing
+it on their behalf, which is the case where nobody is looking by construction.
+
+Gate: `npm run kit:artreview` (+ `:controls`, + `:test`). Required results:
+`AUTONOMOUS_VISUAL_REVIEW_RENDERED_IMAGES=YES` · `BRIEF_FIDELITY_GATE=ENABLED` ·
+`ART_AUTHOR_REVIEWER_SEPARATED=YES` · `ART_ACCEPTANCE_INVALIDATED_BY_CONFIG_CHANGE=YES` ·
+`FIRST_LEGAL_CONFIG_ACCEPTED_WITHOUT_REVIEW=0` · `AUTONOMOUS_TEMPLATE_DERIVATIVE_COLLAPSE=NO` ·
+`ART_REVIEW_SKIP_FLAGS=0`.
 
 ---
 

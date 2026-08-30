@@ -50,6 +50,18 @@ const FLAGS = {
   // `agent ready` reads live chains by default. --offline says "answer from this machine alone",
   // and the difference is visible in the output: an unread chain reports UNKNOWN, never MISSING.
   offline: "boolean",
+  // ---- `agent art-review` ------------------------------------------------------------------------
+  // `--scaffold <RUNTIME>` writes a starting `art.json`; `--ceiling` may LOWER the number of
+  // judgements a run may spend and is bounded so it cannot raise it; `--rpc` and `--concurrency`
+  // are operational. THERE IS DELIBERATELY NO `--skip-art-review` AND THERE NEVER WILL BE. It
+  // would be the one flag that turns the whole loop back into `CREATE -> VALIDATE -> LAUNCH`, and
+  // a gate with a documented bypass is a gate that is bypassed. `scripts/check-art-review.mjs`
+  // scans for its reintroduction under any spelling.
+  scaffold: "string",
+  runtime: "string",
+  ceiling: "number",
+  rpc: "string",
+  concurrency: "number",
 };
 
 /**

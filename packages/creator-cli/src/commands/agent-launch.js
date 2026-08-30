@@ -56,10 +56,46 @@ async function requirePhase(workspace, phase, need, name, json) {
   return body;
 }
 
+
+/**
+ * THE ART GATE. The first statement of every launch-proving command, and RETURNED ON.
+ *
+ * `ART_ACCEPTED` before metadata, prepare, predict, simulate, build or broadcast. The reason it is
+ * a call in each of them rather than one check in `run` is that each of these commands is
+ * independently runnable BY DESIGN — an agent is invited to drive them one at a time — so a gate
+ * that lived only in the orchestrator would be a gate with six doors around it.
+ *
+ * NO ESCAPE HATCH. There is no `--skip-art-review`, no policy field, no environment variable and
+ * no goal that exempts an autonomous run. A creator at a terminal who wants to launch art nobody
+ * reviewed still can: `goal: "BUILD_ONLY"` builds the transaction and they sign it themselves and
+ * own that. What is refused is an AGENT doing it for them, which is the case where nobody is
+ * looking by construction.
+ *
+ * IT STANDS ASIDE WHERE IT DOES NOT APPLY, and says so in the record rather than passing silently.
+ * See `artReviewApplies` — three answers, not two.
+ */
+async function requireArtGate(name, workspace, json, ctx) {
+  const { requireArtAccepted } = await import("./agent-art.js");
+  const gate = await requireArtAccepted(workspace, { goal: ctx?.policy?.goal });
+  if (gate.ok) return true;
+  emit(name, {
+    success: false,
+    result: { artGate: gate.reasonCode, invalidatedBy: gate.invalidatedBy ?? [] },
+    errors: [
+      `${gate.reasonCode}: ${gate.detail}`,
+      "The first legal configuration is not launch-ready art. A configuration can be legal, deterministic, inside its gas budget and byte-distinct across every market state and still draw the wrong thing — that has happened here, and nothing caught it because nothing looked.",
+      `Run: ${gate.remedy}`,
+    ],
+    nextActions: ["REVIEW_ART"],
+  }, { json });
+  return false;
+}
+
 // ------------------------------------------------------------------------------------------------
 
 /** Pin the collection metadata, fetch it BACK, verify the bytes, and record the commitment. */
 export async function cmdMetadata(name, workspace, flags, json, ctx) {
+  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;
   // IMPORTED FROM THE PACKAGE ROOT, WITH THE NAMES THE MODULE ACTUALLY EXPORTS. This line used to
   // reach a deep path that was not in the `exports` map at all, and its `.catch(() => …)` turned
   // that into a SILENT fallback to the package root — which exported none of these names either.
@@ -104,6 +140,7 @@ export async function cmdMetadata(name, workspace, flags, json, ctx) {
 
 /** Build the canonical LaunchParams and record its identity. */
 export async function cmdPrepare(name, workspace, flags, json, ctx) {
+  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;
   const sdk = await import("@relics/launch-sdk");
   const { writeReceipt } = await import("@relics/agent-flow");
   const meta = await requirePhase(workspace, "METADATA", "no verified metadata commitment", name, json);
@@ -198,6 +235,7 @@ function creatorInputFromConfig(cfg, metadataUri, policy, sdk) {
 
 /** Ask the DEPLOYED factory where this launch's contracts will land. */
 export async function cmdPredict(name, workspace, flags, json, ctx) {
+  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;
   const sdk = await import("@relics/launch-sdk");
   const { writeReceipt } = await import("@relics/agent-flow");
   const prep = await requirePhase(workspace, "PREPARE", "nothing has been prepared", name, json);
@@ -239,6 +277,7 @@ function revive(tuple) {
 
 /** A real eth_call dry-run of the EXACT transaction that will be signed. */
 export async function cmdSimulate(name, workspace, flags, json, ctx) {
+  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;
   const sdk = await import("@relics/launch-sdk");
   const { writeReceipt } = await import("@relics/agent-flow");
   const prep = await requirePhase(workspace, "PREPARE", "nothing has been prepared", name, json);
@@ -269,6 +308,7 @@ export async function cmdSimulate(name, workspace, flags, json, ctx) {
 
 /** Freeze the transaction into an immutable signing request. */
 export async function cmdBuild(name, workspace, flags, json, ctx) {
+  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;
   const sdk = await import("@relics/launch-sdk");
   const { writeReceipt } = await import("@relics/agent-flow");
   const sim = await requirePhase(workspace, "SIMULATE", "nothing has been simulated", name, json);
@@ -310,6 +350,7 @@ function bundleHashOf(workspace) {
 
 /** Recompute policy against the FINAL calldata — never against the earlier plan. */
 export async function cmdPolicyCheck(name, workspace, flags, json, ctx) {
+  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;
   const sdk = await import("@relics/launch-sdk");
   const { writeReceipt } = await import("@relics/agent-flow");
   const build = await requirePhase(workspace, "BUILD", "nothing has been built", name, json);
@@ -339,6 +380,7 @@ export async function cmdPolicyCheck(name, workspace, flags, json, ctx) {
  * independent re-checks, not a yes/no nobody is awake to answer.
  */
 export async function cmdBroadcast(name, workspace, flags, json, ctx) {
+  if (!(await requireArtGate(name, workspace, json, ctx))) return EXIT.BLOCKED;
   const sdk = await import("@relics/launch-sdk");
   const flow = await import("@relics/agent-flow");
   const build = await requirePhase(workspace, "BUILD", "nothing has been built", name, json);
