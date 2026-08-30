@@ -64,6 +64,36 @@ export const SELECTION_PIPELINE = Object.freeze([
 export const RUNTIME_AVAILABILITY_STATES = Object.freeze(["ACTIVE", "INACTIVE", "NOT_REGISTERED", "UNKNOWN"]);
 
 /**
+ * Compare a bytes32 by VALUE, not by spelling. `0x`-prefixed and bare hex are the same 32 bytes.
+ *
+ * THE DEFECT THIS CLOSES, MEASURED ON A LIVE CHAIN (2026-08-29). The two halves of the tag
+ * comparison were produced by different code and spelled the same value differently:
+ *
+ *   * `keccak256Utf8(...)` returns 64 BARE hex characters — no `0x`.
+ *   * a registry entry's `tag` arrives from `readRegistrySnapshot`, which passes viem's decoded
+ *     `bytes32` straight through, and viem returns it `0x`-PREFIXED.
+ *
+ * So the comparison was `"0x8a7b…" !== "8a7b…"` and could never be true — `runtimeAvailability`
+ * answered `NOT_REGISTERED` for EVERY runtime, on EVERY chain, no matter what the registry held.
+ * That is the exact "fabricated fact" `keccak.js` warns about in its own header, and it was
+ * invisible until a runtime was first registered: before Wave 1, `NOT_REGISTERED` was also the
+ * correct answer, so a wrong mechanism and a right answer agreed. GEOMETRIC_RECURSION_V1 (id 3) and
+ * VECTOR_COMPOSITION_V1 (id 4) were registered and active on chains 1, 8453 and 4663 that day, and
+ * the selector still reported both absent and declined every brief with `NO_ACTIVE_RUNTIME`.
+ *
+ * The unit suite did not catch it because its fixture built entries with `keccak256Utf8` too, so it
+ * compared bare against bare and proved the function consistent with itself rather than with the
+ * chain. `runtimeAvailabilityAcceptsBothTagSpellings` in the test suite is what now holds this.
+ *
+ * NOT A WEAKENING. All 64 hex digits must still match exactly; only the prefix and case are
+ * normalised. A value that is not 32 bytes of hex normalises to something no tag can equal.
+ */
+function normalizeBytes32(value) {
+  const hex = String(value ?? "").trim().toLowerCase().replace(/^0x/, "");
+  return /^[0-9a-f]{64}$/.test(hex) ? hex : `INVALID_BYTES32:${hex}`;
+}
+
+/**
  * Turn a live registry snapshot into a per-runtime availability answer.
  *
  * THREE RULES, EACH OF WHICH HAS BEEN GOT WRONG BEFORE IN THIS PROJECT:
@@ -95,12 +125,12 @@ export function runtimeAvailability(snapshot) {
   const entries = snapshot.entries instanceof Map ? [...snapshot.entries.values()] : Array.isArray(snapshot.entries) ? snapshot.entries : [];
   const out = {};
   for (const id of ids) {
-    const expectedTag = keccak256Utf8(RUNTIMES[id].runtimeTagPreimage).toLowerCase();
+    const expectedTag = normalizeBytes32(keccak256Utf8(RUNTIMES[id].runtimeTagPreimage));
     const match = entries.find((e) => {
       if (!e || e.exists !== true) return false;
       if (!e.runtime || /^0x0{40}$/i.test(e.runtime)) return false;
       if (String(e.label) !== id) return false;
-      if (String(e.tag ?? "").toLowerCase() !== expectedTag) return false;
+      if (normalizeBytes32(e.tag) !== expectedTag) return false;
       return Number(e.mode) === RUNTIMES[id].artRuntimeMode;
     });
     if (!match) {

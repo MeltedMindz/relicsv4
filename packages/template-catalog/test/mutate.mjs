@@ -109,10 +109,26 @@ const MUTATIONS = [
     id: "M09 runtime identity is matched on the label alone",
     file: SRC("select.js"),
     edits: [[
-      '      if (String(e.tag ?? "").toLowerCase() !== expectedTag) return false;\n      return Number(e.mode) === RUNTIMES[id].artRuntimeMode;',
+      "      if (normalizeBytes32(e.tag) !== expectedTag) return false;\n      return Number(e.mode) === RUNTIMES[id].artRuntimeMode;",
       "      return true;",
     ]],
-    mustFail: ["identity is label AND tag AND mode; a lookalike entry is not the runtime"],
+    mustFail: [
+      "identity is label AND tag AND mode; a lookalike entry is not the runtime",
+      "runtimeAvailabilityAcceptsBothTagSpellings — 0x-prefixed and bare are the same 32 bytes",
+    ],
+  },
+  {
+    // THE BUG THIS PINS SHIPPED. `keccak256Utf8` returns BARE hex and viem returns `0x`-prefixed, so
+    // a raw string compare answered NOT_REGISTERED for every runtime on every chain — while the old
+    // fixture, which built tags with `keccak256Utf8` too, stayed green. Re-breaking normalisation
+    // must go red, and it must go red against a fixture in the shape the CHAIN emits.
+    id: "M26 the tag comparison stops normalising, so 0x-prefixed and bare stop being equal",
+    file: SRC("select.js"),
+    edits: [[
+      "  const hex = String(value ?? \"\").trim().toLowerCase().replace(/^0x/, \"\");",
+      '  const hex = String(value ?? "").trim().toLowerCase();',
+    ]],
+    mustFail: ["runtimeAvailabilityAcceptsBothTagSpellings — 0x-prefixed and bare are the same 32 bytes"],
   },
   {
     id: "M10 SHIP WITH CAVEAT maps to SHIP",

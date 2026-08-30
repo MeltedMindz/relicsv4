@@ -24,8 +24,18 @@ import {
 import { RUNTIMES, RUNTIMES_LEFT_WAVE1, describeTemplate } from "../src/descriptors.js";
 import { keccak256Utf8 } from "../src/keccak.js";
 
-/** A registry snapshot in which every Wave-1 runtime is registered and active. */
-function allActiveSnapshot() {
+/**
+ * A registry snapshot in which every Wave-1 runtime is registered and active.
+ *
+ * `tag` IS `0x`-PREFIXED BECAUSE THAT IS WHAT THE CHAIN GIVES US. `readRegistrySnapshot` passes
+ * viem's decoded `bytes32` straight through and viem prefixes it. This fixture used to call
+ * `keccak256Utf8` directly, which returns BARE hex, so it compared the selector's own output
+ * against itself and every ACTIVE assertion in this file passed on a spelling production never
+ * sends. Meanwhile the real selector answered NOT_REGISTERED for runtimes that were registered and
+ * active on all three chains. Build fixtures in the shape the PRODUCER emits, not the shape the
+ * consumer happens to compute.
+ */
+function allActiveSnapshot({ tagPrefix = "0x" } = {}) {
   const entries = new Map();
   let id = 1;
   for (const r of Object.values(RUNTIMES)) {
@@ -33,7 +43,7 @@ function allActiveSnapshot() {
       id,
       runtime: `0x${String(id).padStart(40, "1")}`,
       codeHash: `0x${"aa".repeat(32)}`,
-      tag: keccak256Utf8(r.runtimeTagPreimage),
+      tag: `${tagPrefix}${keccak256Utf8(r.runtimeTagPreimage)}`,
       version: r.runtimeVersion,
       mode: r.artRuntimeMode,
       active: true,
@@ -219,9 +229,34 @@ test("today's real answer: neither Wave-1 runtime is registered on a chain that 
   assert.equal(out.selected, null);
 });
 
+test("runtimeAvailabilityAcceptsBothTagSpellings — 0x-prefixed and bare are the same 32 bytes", () => {
+  // THE REGRESSION THIS PINS. A bytes32 has one value and two spellings. `keccak256Utf8` emits bare
+  // hex; viem — and therefore `readRegistrySnapshot`, and therefore production — emits `0x`-prefixed.
+  // Comparing the two as strings made every runtime read NOT_REGISTERED on every chain, and the old
+  // fixture hid it by generating the bare spelling the comparison happened to expect.
+  for (const tagPrefix of ["0x", "", "0X"]) {
+    const live = runtimeAvailability(allActiveSnapshot({ tagPrefix }));
+    for (const id of Object.keys(RUNTIMES)) {
+      assert.equal(live[id].state, "ACTIVE", `tag spelled with prefix ${JSON.stringify(tagPrefix)} must resolve ${id} to ACTIVE`);
+    }
+  }
+  // ...and normalisation must not become a way for a WRONG value to pass in either spelling.
+  for (const badTag of [`0x${"11".repeat(32)}`, "11".repeat(32), "0xdeadbeef", "", "not-hex"]) {
+    const snap = allActiveSnapshot();
+    const first = [...snap.entries.keys()][0];
+    const label = snap.entries.get(first).label;
+    snap.entries.set(first, { ...snap.entries.get(first), tag: badTag });
+    assert.equal(runtimeAvailability(snap)[label].state, "NOT_REGISTERED", `tag ${JSON.stringify(badTag)} must not identify ${label}`);
+  }
+});
+
 test("identity is label AND tag AND mode; a lookalike entry is not the runtime", () => {
   const good = allActiveSnapshot();
   const first = [...good.entries.keys()][0];
+
+  // Baseline: the unmutated entry really does resolve, so each mutation below is shown to be what
+  // flips it. Without this the whole test passes even if NOTHING can ever be ACTIVE.
+  assert.equal(runtimeAvailability(good)[good.entries.get(first).label].state, "ACTIVE");
 
   const wrongTag = { ...good, entries: new Map(good.entries) };
   wrongTag.entries.set(first, { ...wrongTag.entries.get(first), tag: `0x${"11".repeat(32)}` });
