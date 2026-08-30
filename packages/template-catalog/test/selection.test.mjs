@@ -335,3 +335,150 @@ test("the match score is a match score, never persisted as a quality score", () 
     assert.equal(d.rating, undefined);
   }
 });
+
+// ------------------------------------------------------------------------------------------------
+// THE ONTOLOGY, JUDGED BY OUTCOME
+// ------------------------------------------------------------------------------------------------
+//
+// THE DEFECT THESE PIN, MEASURED END TO END (2026-08-30). Every corpus the matcher read — tags,
+// use-cases, refusals, prose — was summed into ONE bag-of-words score, and the RUNTIME's own account
+// of what it draws was not read at all. Two failures came out of that single design, and only the
+// first is a missing field:
+//
+//   1. A brief could name the MEDIUM exactly and reach nothing. "recursive" appears nowhere but in
+//      GEOMETRIC_RECURSION_V1's own summary, so the brief below scored `compass` at ZERO.
+//   2. A MARKET word and a MEDIUM word competed on the same axis. The brief was answered with a
+//      SEDIMENT template, which won on the single word "recovery" — a market term that happens to
+//      sit in that template's summary sentence. With two runtimes in the wave that decided roughly
+//      half of every autonomous selection.
+//
+// Fixing only (1) would have made this brief come out right and left the mechanism wrong: the next
+// market word would have won the next brief. These tests are written from OUTCOMES so they can be
+// run against the old scorer directly; the axis receipts are proved in `ontology.test.mjs`.
+//
+// The suite of the day stayed green throughout, because every fixture brief in it echoed a
+// template's own tags.
+
+test("A_BRIEF_THAT_NAMES_THE_MEDIUM_REACHES_ITS_RUNTIME", () => {
+  const snap = allActiveSnapshot();
+
+  // THE PRODUCTION BRIEF, VERBATIM.
+  const brief = "recursive architectural botanical forms changing during recovery";
+  const out = selectForAutonomousAgent({ brief, registrySnapshot: snap });
+  assert.equal(out.selected, "GEOMETRIC_RECURSION_V1/compass", `"${brief}" selected ${out.selected}`);
+
+  // AND IT MUST WIN, NOT TIE. Ranking first on the alphabetical tiebreak would be luck: rename
+  // either runtime and the answer flips. The margin has to come from the score.
+  const compass = out.considered.find((r) => r.id === "GEOMETRIC_RECURSION_V1/compass");
+  const alluvium = out.considered.find((r) => r.id === "VECTOR_COMPOSITION_V1/alluvium");
+  assert.ok(compass.score > alluvium.score, `compass ${compass.score} did not beat alluvium ${alluvium.score}`);
+
+  // A SECOND MEDIUM BRIEF, IN THE OTHER DIRECTION, so this is not one sentence's luck. And a THIRD
+  // that names the medium in a different inflection from the one the runtime published — the engine
+  // says "geometry" and the creator says "geometric", which is the ordinary way people write.
+  assert.equal(
+    selectForAutonomousAgent({ brief: "primitives composed onto a flat plate in layered fields", registrySnapshot: snap }).selected,
+    "VECTOR_COMPOSITION_V1/alluvium",
+  );
+  assert.equal(
+    selectForAutonomousAgent({ brief: "geometric systems that become denser as trading volume rises", registrySnapshot: snap }).selected,
+    "GEOMETRIC_RECURSION_V1/compass",
+  );
+});
+
+test("MARKET_LANGUAGE_NEVER_DECIDES_AN_ARTISTIC_QUESTION", () => {
+  const snap = allActiveSnapshot();
+
+  // Every template in this wave responds to the market, so market words distinguish none of them.
+  // Here the ONLY template binding STRESS is alluvium, and the brief asks for stress — while every
+  // artistic word in it belongs to compass. The market must lose that argument.
+  const out = selectForAutonomousAgent({
+    brief: "a nested concentric radial instrument, precise and cartographic, that densifies under stress",
+    registrySnapshot: snap,
+  });
+  assert.equal(out.selected, "GEOMETRIC_RECURSION_V1/compass", `selected ${out.selected}`);
+
+  // And the mirror: the artistic words belong to alluvium while the market word "drawdown" is the
+  // one compass's own use-case is written about.
+  const mirror = selectForAutonomousAgent({
+    brief: "geological strata and horizontal banding, deposited in beds, cut back by drawdown",
+    registrySnapshot: snap,
+  });
+  assert.equal(mirror.selected, "VECTOR_COMPOSITION_V1/alluvium", `selected ${mirror.selected}`);
+});
+
+test("THE_RUNTIME_NAME_IS_NOT_A_MATCHABLE_KEYWORD", () => {
+  const snap = allActiveSnapshot();
+
+  // THE OTHER HALF OF THE SAME E2E, AND THE MORE IMPORTANT HALF. The selector went AGAINST a
+  // keyword here and was right to: the brief says "vector composition", and the answer is the
+  // engine whose name contains neither word.
+  //
+  // Bringing the runtime into the corpus is exactly the change that could break this, and breaking
+  // it would trade one defect for a worse one: routing a brief to an engine because of what the
+  // engine is CALLED is name-matching wearing a semantic coat, and the wrong answer looks right.
+  const brief = "large abstract vector composition fractured by drawdown";
+  const out = selectForAutonomousAgent({ brief, registrySnapshot: snap });
+  assert.equal(out.selected, "GEOMETRIC_RECURSION_V1/compass", `"${brief}" selected ${out.selected}`);
+
+  const compass = out.considered.find((r) => r.id === "GEOMETRIC_RECURSION_V1/compass");
+  const alluvium = out.considered.find((r) => r.id === "VECTOR_COMPOSITION_V1/alluvium");
+  assert.ok(compass.score > alluvium.score, `compass ${compass.score} did not beat alluvium ${alluvium.score}`);
+
+  // DERIVED, NEVER HAND-LISTED, AND NARROWER THAN IT FIRST LOOKS.
+  //
+  // WHAT THIS DOES **NOT** CLAIM: that a brief containing a runtime's name can never reach that
+  // runtime. That claim is unachievable and it is also wrong — GEOMETRIC_RECURSION_V1 describes
+  // itself as "recursive geometry", so refusing every word morphologically near its label would
+  // empty its corpus and restore the defect the test above pins. Runtime names are EVIDENCE, not
+  // commands, and "geometric" is answered by the description word "geometry" on the merits.
+  //
+  // WHAT IT DOES CLAIM: the LABEL ITSELF is not evidence. The words to test are therefore derived —
+  // the tokens where a runtime's label and its own self-description COLLIDE, which is where a
+  // matcher would otherwise start routing by name without anyone noticing. In this wave that is
+  // "vector", which VECTOR_COMPOSITION_V1 restates verbatim in its own summary. On its own it must
+  // move nothing.
+  const collisions = [];
+  for (const [runtimeId, runtime] of Object.entries(RUNTIMES)) {
+    const summaryWords = new Set(runtime.summary.toLowerCase().split(/[^a-z0-9-]+/));
+    for (const nameWord of runtimeId.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2)) {
+      if (!summaryWords.has(nameWord)) continue;
+      collisions.push(`${runtimeId}:${nameWord}`);
+      const ranked = semanticMatch(shipCatalog(), nameWord);
+      const own = ranked.find((r) => r.id.split("/")[0] === runtimeId);
+      const other = ranked.find((r) => r.id.split("/")[0] !== runtimeId);
+      assert.ok(
+        own.score <= other.score,
+        `the label word "${nameWord}" put its own runtime ahead on its own: ${own.id} ${own.score} vs ${other.id} ${other.score}`,
+      );
+    }
+  }
+  assert.ok(collisions.length > 0, "no runtime restates its own label in its summary, so this loop proved nothing");
+});
+
+test("A_BRIEF_THAT_NAMES_NEITHER_MEDIUM_STILL_DECLINES", () => {
+  const snap = allActiveSnapshot();
+  // A WIDER CORPUS IS A WIDER CHANCE OF A WEAK ACCIDENTAL HIT, and a weak pick is worse than a
+  // refusal: the agent can ask again, and cannot un-launch. Each of these is a different way to
+  // arrive at nothing — a medium nobody in the wave draws, pure noise, a brief that describes only
+  // market behaviour (true of every template here, so it chooses between none of them), and a brief
+  // whose perfect match is a template the blind review HELD.
+  for (const brief of [
+    "a typographic wordmark collection in a monospaced grotesque",
+    "zzzz qqqq wwww",
+    "a cellular automaton spreading across a pixel lattice, one generation per block",
+    "forms that change during recovery",
+    "a mirrored low-resolution pixel idol: a corroded bronze totem figure, sixteen by sixteen, stripped bare under stress and regrown in recovery",
+    // AND THE SPELLING-COINCIDENCE WITNESS. "flowering" and "spring" both contain the letters of
+    // "rings", and one of the SHIP templates publishes "rings" as a tag. A matcher that treats a
+    // word found anywhere inside another as a relation hands this meadow to an orrery — which is
+    // not a hypothetical: matching "during" to "rings" is exactly how an earlier build answered two
+    // briefs it should have refused. English inflection is suffixal, so a related word is a PREFIX;
+    // anything else inside a word is a coincidence of spelling.
+    "a flowering spring meadow in soft light",
+  ]) {
+    const out = selectForAutonomousAgent({ brief, registrySnapshot: snap });
+    assert.equal(out.selected, null, `"${brief}" selected ${out.selected}`);
+    assert.match(out.reason, /NO_SEMANTIC_MATCH/);
+  }
+});

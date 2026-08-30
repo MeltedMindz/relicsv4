@@ -307,13 +307,123 @@ const MUTATIONS = [
       "there is one descriptor per SHIP template and no others",
     ],
   },
+  {
+    // THE MISSING FIELD, RE-INTRODUCED. Before 2026-08-30 the matcher read four corpora and every
+    // one of them belonged to the TEMPLATE; the RUNTIME's own account of the medium it draws was
+    // never read. A brief naming the medium ("recursive") reached nothing. Deleting the seed is
+    // invisible in review: the matcher still matches, still ranks, still refuses a non-SHIP
+    // template, and still returns a plausible answer.
+    id: "M27 the runtime's own medium is dropped from the corpora",
+    file: SRC("select.js"),
+    edits: [['  for (const t of runtimeMediumTerms(d.runtime)) put("MEDIUM", t, "runtime");\n', ""]],
+    mustFail: [
+      "A_BRIEF_THAT_NAMES_THE_MEDIUM_REACHES_ITS_RUNTIME",
+      "THE_RUNTIME_IS_SCORED_AS_THE_MEDIUM_AND_THE_TEMPLATE_AS_THE_COMPOSITION",
+    ],
+  },
+  {
+    // THE LABEL, BACK IN THE CORPUS. This is the worse defect that the fix for the first one
+    // invites: the brief "large abstract vector composition fractured by drawdown" stops resolving
+    // on its own words and starts resolving on the string VECTOR_COMPOSITION_V1, reversing an
+    // answer an end-to-end run got right. Name matching is harder to see than the miss it replaces,
+    // because the wrong answer looks like a good one.
+    id: "M28 a runtime's own label goes back into its medium corpus",
+    file: SRC("select.js"),
+    edits: [["distinctTerms(runtime?.summary).filter((t) => !nameTokens.has(t))", "distinctTerms(runtime?.summary)"]],
+    mustFail: ["THE_LABEL_IS_NOT_IN_THE_CORPUS", "THE_RUNTIME_NAME_IS_NOT_A_MATCHABLE_KEYWORD"],
+  },
+  {
+    // THE ONTOLOGY COLLAPSED BACK INTO ONE BAG. This is the original defect's actual shape: a
+    // MARKET word and a MEDIUM word competing on one axis, so market terminology can outrank the
+    // medium a creator named. It is one word of a frozen array.
+    id: "M29 market is folded back into the axes that rank",
+    file: SRC("select.js"),
+    edits: [[
+      'export const ARTISTIC_AXES = Object.freeze(["MEDIUM", "MOTIF", "AESTHETIC"]);',
+      'export const ARTISTIC_AXES = Object.freeze(["MEDIUM", "MOTIF", "AESTHETIC", "MARKET"]);',
+    ]],
+    mustFail: ["MARKET_IS_A_SEPARATE_AXIS_AND_NEVER_RANKS"],
+  },
+  {
+    // "MARKET REFINES, IT DOES NOT DOMINATE" IS A PROPERTY OF THE COMPARISON, NOT OF A WEIGHT.
+    // Swapping the two clauses is the smallest possible edit that makes market decide, and it
+    // leaves every weight, every corpus and every receipt field exactly as they were.
+    id: "M30 the comparison puts market ahead of artistic",
+    file: SRC("select.js"),
+    edits: [[
+      "sort((a, b) => b.artistic - a.artistic || b.market - a.market || (a.id < b.id ? -1 : 1))",
+      "sort((a, b) => b.market - a.market || b.artistic - a.artistic || (a.id < b.id ? -1 : 1))",
+    ]],
+    mustFail: ["MARKET_LANGUAGE_NEVER_DECIDES_AN_ARTISTIC_QUESTION", "MARKET_IS_A_SEPARATE_AXIS_AND_NEVER_RANKS"],
+  },
+  {
+    // A WIDER CORPUS IS A WIDER CHANCE OF A WEAK ACCIDENTAL HIT, so the refusal matters more after
+    // the axes were added than before. Zero artistic evidence means no SHIP template answers the
+    // brief; it must stay a refusal rather than becoming a pick of whatever ranked least badly,
+    // because the agent can ask again and cannot un-launch.
+    id: "M31 a brief with no artistic evidence is answered instead of refused",
+    file: SRC("select.js"),
+    edits: [["  if (!best || best.artistic <= 0) {", "  if (!best || best.artistic < 0) {"]],
+    mustFail: [
+      "A_BRIEF_THAT_NAMES_NEITHER_MEDIUM_STILL_DECLINES",
+      "no match is a refusal, not a fallback to whatever ranked least badly",
+    ],
+  },
+  {
+    // THE TEMPLATE'S PROSE SUMMARY, BACK IN THE SCORED CORPORA. That prose is where the original
+    // defect lived: "recovery" reached the score because it happened to sit in a sentence about
+    // sediment. Note what this mutation does NOT do — it does not resurrect the original wrong
+    // answer, because "recovery" is now classified as market language wherever it is read from.
+    // That is the ontology doing the work, and it is why the summary rule needs its own guard.
+    id: "M32 the template's prose summary is scored again",
+    file: SRC("select.js"),
+    edits: [[
+      '[["tag", d.brief.tags], ["title", [d.title]], ["useCase", d.brief.useCases]]',
+      '[["tag", d.brief.tags], ["title", [d.title]], ["useCase", d.brief.useCases], ["summary", [d.summary]]]',
+    ]],
+    mustFail: ["THE_RUNTIME_IS_SCORED_AS_THE_MEDIUM_AND_THE_TEMPLATE_AS_THE_COMPOSITION"],
+  },
+  {
+    // THE SUBSTRING BUG, RESTORED. Plain containment matches "during" to "rings" — "during" has
+    // "ring" inside it — and that one accident handed briefs to the wrong template with a straight
+    // face, including a brief that should have been refused. It was found by the first blind run
+    // and by nothing else; it is invisible in the diff and invisible in review.
+    id: "M33 word matching goes back to substring instead of prefix",
+    file: SRC("select.js"),
+    edits: [["(sa.startsWith(sb) || sb.startsWith(sa))", "(sa.includes(sb) || sb.includes(sa))"]],
+    mustFail: ["A_BRIEF_THAT_NAMES_NEITHER_MEDIUM_STILL_DECLINES"],
+  },
+  {
+    // THE MORPHOLOGICAL SIDE DOOR. At a shared prefix of six, "composition" reaches "composed" —
+    // and "composition" is half of a runtime's own NAME, so the label walks back in through
+    // inflection while the explicit label filter still reads as intact. The threshold is part of
+    // the anti-name rule, not a tuning knob.
+    id: "M34 the shared-prefix threshold drops from seven to six",
+    file: SRC("select.js"),
+    edits: [["  return sharedPrefix(sa, sb) >= 7;", "  return sharedPrefix(sa, sb) >= 6;"]],
+    mustFail: ["THE_RUNTIME_NAME_IS_NOT_A_MATCHABLE_KEYWORD"],
+  },
+  {
+    // THE AESTHETIC AXIS, QUIETLY KILLED. Removing the same-vocabulary clause does not break a
+    // single outcome in the blind corpus — it just stops "precise" ever reaching the tag
+    // "precision", so an entire axis scores zero everywhere and reads as dead code that nobody can
+    // distinguish from an axis this catalog cannot exercise. That is exactly what an independent
+    // reviewer flagged when it WAS dead.
+    id: "M35 the same-vocabulary synonym clause is removed and an axis goes dark",
+    file: SRC("select.js"),
+    edits: [[
+      '  return axis !== "MOTIF" && axis === axisOf(b) && sharedPrefix(singular(a), singular(b)) >= 5;',
+      "  return false;",
+    ]],
+    mustFail: ["EVERY_CANDIDATE_COMES_BACK_WITH_A_READABLE_RECEIPT"],
+  },
 ];
 
 // ------------------------------------------------------------------------------------------------
 
 function runSuite() {
   try {
-    const out = execFileSync(process.execPath, ["--test", "--test-reporter=tap", "test/selection.test.mjs", "test/status.test.mjs", "test/descriptors.test.mjs"], {
+    const out = execFileSync(process.execPath, ["--test", "--test-reporter=tap", "test/selection.test.mjs", "test/ontology.test.mjs", "test/status.test.mjs", "test/descriptors.test.mjs"], {
       cwd: PKG,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],

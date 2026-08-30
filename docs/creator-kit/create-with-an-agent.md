@@ -231,6 +231,27 @@ is not `ACTIVE` on that chain, and only then scores what is left against your br
 flag that widens it. `templates --experimental` shows the tiers below SHIP to a *person*, with their
 measured weakness attached; it reaches no agent path.
 
+**What "scores" means, because it is not one number.** A brief says four different kinds of thing
+and they are kept apart. The MEDIUM — "recursive", "layered vector primitives" — is what the engine
+draws, and it lives in the *runtime's* own description rather than in any template's. The MOTIF is
+what the picture depicts. The AESTHETIC is how it feels. The MARKET behaviour — "fractures under
+drawdown" — is how it moves, and **every** template in the wave responds to the market, so those
+words distinguish none of them. Ranking is on medium + motif + aesthetic; market language only
+breaks ties between candidates that are already artistically level, and a brief that names nothing
+but market behaviour is declined rather than answered with a coin toss.
+
+Every candidate comes back with a receipt: the per-axis totals, and for each one the word in your
+brief, the word in the catalog that answered it, and where that catalog word came from — a curated
+tag, a use-case sentence, the engine's own description, or a bound sensor. Read it. A pick resting
+on one word from a prose sentence is a much weaker pick than one resting on four tags, and the
+receipt is what lets you see the difference instead of trusting the rank. If the chosen starting
+point does not bind a market sensor your brief asked for, the reason says so — sensors are among the
+things you may change, and nobody changes what nobody mentioned.
+
+A runtime's own NAME is not a routing word. Nothing maps a string to an engine; a brief that says
+only "vector" reaches nothing, while "layered", "fields", "primitives" and "plate" reach the engine
+that draws them.
+
 **Both Wave-1 art runtimes were registered on 2026-08-29 and are active on Ethereum, Base and
 Robinhood Chain**, so the command now returns a selection on those chains instead of
 `NO_ACTIVE_RUNTIME`. Nothing in this kit was edited to make that happen — it is a live reading, and

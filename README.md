@@ -681,6 +681,29 @@ disc" — so a matcher scoring words against words would rank several of them fi
 therefore built before any matching happens, and the matcher refuses a template it is handed
 directly. `--experimental` is a human affordance and reaches no agent path.
 
+**A brief says four different kinds of thing, and they are not summed.** The MEDIUM ("recursive",
+"layered vector primitives") is what the engine draws and lives in the *runtime's* own summary. The
+MOTIF ("rings", "sediment", "a monument") is what the picture depicts. The AESTHETIC ("sparse",
+"monumental") is how it feels. The MARKET behaviour ("fractures under drawdown") is how it moves —
+and every template in the wave responds to the market, so it distinguishes none of them.
+
+They used to land in one bag-of-words score, and the consequence was measured end to end: the brief
+*"recursive architectural botanical forms changing during recovery"* was answered with a **sediment**
+template, because the market word "recovery" happened to sit in that template's summary sentence
+while the runtime's own description — the only place the word "recursive" appears at all — was never
+read. Ranking is now on medium + motif + aesthetic; market only breaks ties between artistically
+level candidates, by ordering rather than by a small weight, because a weight can be edited to
+dominate. A template's prose summary is not scored at all: tags, use cases and bound sensors are the
+curated matching surface, and a summary is an explanation full of words nobody meant as evidence.
+
+**Runtime names are evidence, not commands.** No rule anywhere maps a word to an engine; the only
+path from a brief to a pick is scoring, and a runtime's own identifier tokens are not in its corpus.
+So "vector" on its own reaches nothing, while "layered", "fields", "primitives" and "plate" all reach
+the engine that draws them. Every candidate comes back with a receipt — the per-axis totals and the
+brief word and catalog word behind each one — because a pick nobody can read is a pick nobody can
+overrule. A brief that names no medium, motif or aesthetic is refused rather than answered with
+whatever ranked least badly.
+
 **The preset is a starting point, not a cage.** Once one is chosen, change anything the runtime's
 validator accepts — palette, geometry, counts, sensors, curves, traits. Nothing in this kit compares
 your finished configuration against the preset it began as, and nothing should.

@@ -140,6 +140,17 @@ jobs:
           npm run kit:templatestatus:controls
           npm run kit:templatestatus
 
+      - name: the frozen blind corpus, and the structural results a pick must satisfy
+        # The briefs were written and committed BEFORE the scorer that answers them existed, and
+        # they record no expected answer -- the picks are judged by an independent reviewer, not by
+        # this gate. What CI enforces is the half that is fact rather than judgement: the runtime's
+        # own account of the medium reaches the score, a template's prose summary does not, market
+        # language never ranks, no runtime is reachable by its own label, and neither a non-SHIP
+        # template nor an inactive runtime can ever be the answer.
+        run: |
+          npm run kit:selectorblind:controls
+          npm run kit:selectorblind
+
       - name: no gate passes on zero input
         # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
         # is the only evidence that the rest of this file means anything. It existed, it worked,

@@ -151,6 +151,21 @@ const GATES = [
     mutate: (root) => append(join(root, "README.md"), "\nan untracked change\n"),
     why: "a tracked file changes without the manifest being regenerated",
   },
+  {
+    gate: "kit:selectorblind",
+    sees: "the frozen blind brief corpus, and the structural results every pick must satisfy",
+    // THE CORPUS IS THE INPUT NOTHING ELSE READS, so shrinking it is the mutation that is invisible
+    // to every other gate. A blind corpus that quietly loses cases still reports PASS on the ones
+    // that are left, which is the failure mode an input floor exists for: a selector "judged
+    // against ten briefs" and actually judged against nine is a claim nobody can see is false.
+    mutate: (root) => {
+      const file = join(root, "packages/template-catalog/test/fixtures/blind-briefs.json");
+      const corpus = JSON.parse(readFileSync(file, "utf8"));
+      corpus.briefs = corpus.briefs.slice(0, corpus.briefs.length - 1);
+      writeFileSync(file, `${JSON.stringify(corpus, null, 2)}\n`);
+    },
+    why: "a brief goes missing from the frozen corpus and the run reports success on what is left",
+  },
 ];
 
 /**
