@@ -8043,7 +8043,7 @@
     },
     {
       "path": "packages/template-catalog/src/select.js",
-      "sha256": "6719e8801caa1eb7b8cb3716aca71234781987ca7b85d4cffd86d72333d15a0b",
+      "sha256": "08a871115a2b40a18cd7d65a08029b7b2f623c4d3ee3a0bdf380a4c8fd5d53e4",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

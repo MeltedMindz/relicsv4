@@ -359,6 +359,11 @@ export const VOCABULARY = Object.freeze({
     "tessellated", "composition", "primitive", "silhouette", "plate", "field",
     "horizontal", "vertical", "diagonal", "spiral", "branching",
     "mesh", "wireframe", "isometric", "perspective", "resolution", "halftone", "dither", "line",
+    // "level on level" is GEOMETRIC_RECURSION_V1's own phrase for what it draws, and until this was
+    // added the word reached nothing: the runtime summary feeds the MEDIUM corpus, so a summary word
+    // that classifies as MOTIF is consulted on an axis it is not in. Found by probing each runtime's
+    // own vocabulary against itself rather than by a brief, which is the only way a dead word shows.
+    "level", "levels", "nesting", "iteration", "iterative", "generation", "generations",
     "generative", "procedural", "depth", "scale", "proportion", "figure-ground",
   ]),
   AESTHETIC: Object.freeze([
