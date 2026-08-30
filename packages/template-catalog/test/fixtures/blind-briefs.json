@@ -1,0 +1,32 @@
+{
+  "$comment": [
+    "THE BLIND CORPUS. Frozen BEFORE the scorer that answers it was written, and committed on its own",
+    "so the order is checkable in git rather than asserted here.",
+    "",
+    "IT RECORDS NO EXPECTED ANSWER, AND THAT IS THE POINT. A corpus carrying the outcome its author",
+    "wanted is a restatement of the scorer, not a test of it: tuning until the expectations go green",
+    "proves the tuning terminated. Every brief therefore carries `expected: null`. The picks are judged",
+    "GOOD / DEFENSIBLE / WRONG by a reviewer who did not write the scorer, who is not told what any",
+    "outcome should be, and who is told that DECLINING is one of the outcomes available to it.",
+    "",
+    "`ambiguous: true` marks the briefs whose medium genuinely fits both engines. There is no unique",
+    "right answer there and demanding one would be demanding luck; DEFENSIBLE is a pass.",
+    "",
+    "`availability` names the capability context each brief is asked in, because three of these are",
+    "about the HARD filter rather than about matching: a perfect match that did not clear review, a",
+    "perfect match on a runtime this chain does not carry, and a medium no engine in the wave draws."
+  ],
+  "frozenAt": "2026-08-30",
+  "briefs": [
+    { "id": "B01", "text": "Recursive architectural flowers, sparse and monumental, opening during recovery.", "availability": "ALL_ACTIVE", "ambiguous": false, "expected": null },
+    { "id": "B02", "text": "A giant abstract vector monument made of flowing sediment layers, breaking during drawdowns.", "availability": "ALL_ACTIVE", "ambiguous": false, "expected": null },
+    { "id": "B03", "text": "Geometric systems that become denser as trading volume rises.", "availability": "ALL_ACTIVE", "ambiguous": false, "expected": null },
+    { "id": "B04", "text": "Recursive vector lattice with an architectural rhythm.", "availability": "ALL_ACTIVE", "ambiguous": true, "expected": null },
+    { "id": "B05", "text": "Forms that change during recovery.", "availability": "ALL_ACTIVE", "ambiguous": true, "expected": null },
+    { "id": "B06", "text": "A minimal monumental structure with no strong medium preference.", "availability": "ALL_ACTIVE", "ambiguous": true, "expected": null },
+    { "id": "B07", "text": "A mirrored low-resolution pixel idol: a corroded bronze totem figure, sixteen by sixteen, stripped bare under stress and regrown in recovery.", "availability": "ALL_ACTIVE", "ambiguous": false, "expected": null, "note": "the perfect semantic match for this brief is a template the blind review HELD" },
+    { "id": "B08", "text": "Recursive self-similar geometry, rings inside rings, cut back by drawdown.", "availability": "GEOMETRIC_RECURSION_V1_INACTIVE", "ambiguous": false, "expected": null, "note": "the best semantic runtime for this brief is registered but not active on this chain" },
+    { "id": "B09", "text": "A cellular automaton spreading across a pixel lattice, one generation per block.", "availability": "ALL_ACTIVE", "ambiguous": false, "expected": null, "note": "the medium this brief names is drawn by no runtime in Wave 1" },
+    { "id": "B10", "text": "A nested concentric radial instrument, precise and cartographic, that densifies under stress.", "availability": "ALL_ACTIVE", "ambiguous": false, "expected": null, "note": "medium and motif point one way; the only template binding STRESS is the other one" }
+  ]
+}
