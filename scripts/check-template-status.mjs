@@ -152,22 +152,116 @@ const CLAIM_SHAPES = [
   { id: "noun-phrase", re: /\b(launchable|registered|deployed|live)\s+(runtime|art\s+runtime|template)\b/i },
 ];
 
+/**
+ * WHICH RUNTIMES MAY BE CALLED LAUNCHABLE, AND WHICH MAY NEVER BE. DERIVED, NOT LISTED.
+ *
+ * Until 2026-08-29 the answer was "none", and this gate could treat all four names alike. On that
+ * day the owner registered the two Wave-1 runtimes on Ethereum, Base and Robinhood — read live at
+ * ArtRuntimeRegistryV1 0xCB19507D713DfC4cD212BDc545480e1549A9F231, ids 3 and 4, active on all three
+ * — so a sentence saying `GEOMETRIC_RECURSION_V1` can be launched became TRUE, and a gate that kept
+ * refusing it would have forced the kit to keep publishing a claim the chain contradicts.
+ *
+ * The two sets come from the catalog and are never typed here:
+ *
+ *   RUNTIMES            shipped Wave 1. Deployed and registered. May be described as launchable.
+ *   RUNTIMES_LEFT_WAVE1 left the wave with ZERO SHIP templates. Never deployed, never registered;
+ *                       registry ids 5 and 6 are deliberately empty. May NEVER be called launchable.
+ *
+ * WHAT THIS GATE DOES NOT CLAIM TO PROVE. It is a prose scanner, so it cannot verify that a runtime
+ * is registered on the particular chain a sentence names — registration is per runtime per chain and
+ * only a live read answers it. It enforces the half a scanner CAN enforce: no public surface may say
+ * a runtime that was never deployed is launchable. The live read owns the rest, which is the whole
+ * point of there being no checked-in status to flip.
+ */
+const LAUNCHABILITY_CLAIMABLE = Object.keys(RUNTIMES);
+const LAUNCHABILITY_FORBIDDEN = Object.keys(RUNTIMES_LEFT_WAVE1);
+
+/**
+ * Attribute a claim to the runtime it is ABOUT, so one sentence can say both things.
+ *
+ * "GEOMETRIC_RECURSION_V1 is launchable; PIXEL_GRID_V1 is not" is now an ordinary and correct
+ * sentence, and a line-level test that only asked "does this line name a forbidden runtime?" would
+ * refuse it. The subject of a claim is the runtime id nearest to it — the last one before the
+ * matched span, or the first one after it when the claim leads.
+ */
+function claimSubject(line, matchIndex) {
+  let best = null;
+  for (const id of RUNTIME_IDS) {
+    let at = line.indexOf(id);
+    while (at !== -1) {
+      const distance = at <= matchIndex ? matchIndex - at : (at - matchIndex) + line.length;
+      if (best === null || distance < best.distance) best = { id, distance };
+      at = line.indexOf(id, at + 1);
+    }
+  }
+  return best?.id ?? null;
+}
+
+/**
+ * ELLIPSIS — a claim whose subject is carried over instead of restated.
+ *
+ * "GEOMETRIC_RECURSION_V1 is registered, and so is PIXEL_GRID_V1" asserts registration of BOTH, but
+ * the second half contains no claim word at all: the verb is elided. Subject attribution reads it as
+ * a sentence about the runtime that IS registered and lets it through, which makes it the cheapest
+ * way to smuggle the one claim this gate exists to refuse.
+ *
+ * NARROW BY CONSTRUCTION, AND DELIBERATELY SO. This matches the coordination forms English actually
+ * uses for that ellipsis and nothing else. It is a patch on a known limit of shape matching, not
+ * general anaphora coverage — a scanner cannot resolve "it is too" three sentences later, and
+ * pretending otherwise would be worse than the gap. What it does guarantee is that the short,
+ * obvious rewrite of a caught sentence is also caught.
+ */
+const ELLIPSIS_SHAPES = (id) => [
+  new RegExp(String.raw`\b(?:and|,)\s*(?:so\s+)?(?:is|are|does|do|was|were)\s+(?:the\s+)?${id}\b`, "i"),
+  new RegExp(String.raw`\bas\s+(?:is|are)\s+(?:the\s+)?${id}\b`, "i"),
+  new RegExp(String.raw`\b(?:along\s+with|as\s+well\s+as|together\s+with)\s+(?:the\s+)?${id}\b`, "i"),
+  new RegExp(String.raw`\b${id}\b\s*(?:,\s*)?(?:too|as\s+well|also)\b`, "i"),
+];
+
 function claimsLaunchability(line) {
   const lower = line.toLowerCase();
   if (!RUNTIME_IDS.some((id) => line.includes(id))) return null;
+
+  // Does the line make ANY positive, unnegated claim? Needed before the ellipsis test, because an
+  // elided verb has to be carried over from somewhere.
+  let positiveClaimAt = null;
   for (const shape of CLAIM_SHAPES) {
-    const m = shape.re.exec(line);
-    if (!m) continue;
-    // TWO WINDOWS, AND MISSING THE SECOND ONE IS WHY THIS FAILED FIRST TIME.
-    //
-    // A negator is not only in front of the claim; it is very often INSIDE it. The verb shape
-    // allows up to two filler words between "is" and "registered" precisely so it catches "is
-    // now registered" -- and that same filler swallows the "not" in "is not registered", which
-    // then never reaches a window that only looked at what came before "is". Both the preceding
-    // clause and the matched span have to be checked, and the matched span is the load-bearing one.
-    const before = lower.slice(0, m.index);
-    if (NEGATORS.test(before) || NEGATORS.test(m[0])) continue;
-    return shape.id;
+    for (const m of line.matchAll(new RegExp(shape.re.source, `${shape.re.flags.replace("g", "")}g`))) {
+      if (NEGATORS.test(lower.slice(0, m.index)) || NEGATORS.test(m[0])) continue;
+      positiveClaimAt = m.index;
+      break;
+    }
+    if (positiveClaimAt !== null) break;
+  }
+  if (positiveClaimAt !== null) {
+    for (const id of LAUNCHABILITY_FORBIDDEN) {
+      if (ELLIPSIS_SHAPES(id).some((re) => re.test(line))) {
+        return `ellipsis (the claim is carried over onto ${id}, which left Wave 1 and is registered on no chain)`;
+      }
+    }
+  }
+
+  for (const shape of CLAIM_SHAPES) {
+    // EVERY MATCH, NOT THE FIRST. `exec` returns one match, so a line making two claims was judged
+    // entirely on the first — and the first is the one an author would make true on purpose. This
+    // is the same defect that made a servergate mutation score a free pass for want of a `/g`.
+    const globalRe = new RegExp(shape.re.source, `${shape.re.flags.replace("g", "")}g`);
+    for (const m of line.matchAll(globalRe)) {
+      // TWO WINDOWS, AND MISSING THE SECOND ONE IS WHY THIS FAILED FIRST TIME.
+      //
+      // A negator is not only in front of the claim; it is very often INSIDE it. The verb shape
+      // allows up to two filler words between "is" and "registered" precisely so it catches "is
+      // now registered" -- and that same filler swallows the "not" in "is not registered", which
+      // then never reaches a window that only looked at what came before "is". Both the preceding
+      // clause and the matched span have to be checked, and the matched span is the load-bearing one.
+      const before = lower.slice(0, m.index);
+      if (NEGATORS.test(before) || NEGATORS.test(m[0])) continue;
+      // THE CLAIM IS ONLY A PROBLEM IF ITS SUBJECT IS A RUNTIME NOBODY MAY LAUNCH. A claim about a
+      // registered Wave-1 runtime is a true sentence and this gate must not refuse it.
+      const subject = claimSubject(line, m.index);
+      if (subject === null || !LAUNCHABILITY_FORBIDDEN.includes(subject)) continue;
+      return `${shape.id} (about ${subject}, which left Wave 1 and is registered on no chain)`;
+    }
   }
   return null;
 }
@@ -176,19 +270,31 @@ function claimsLaunchability(line) {
 // CONTROLS — the gate's own proof that it can catch and that it does not over-catch.
 // ------------------------------------------------------------------------------------------------
 const MUST_CATCH = [
-  "GEOMETRIC_RECURSION_V1 is launchable today.",
+  // EVERY ONE OF THESE IS ABOUT A RUNTIME THAT LEFT WAVE 1 AND WAS NEVER DEPLOYED. These are the
+  // claims that stayed false on 2026-08-29 while the other two became true, and they are the reason
+  // this gate was re-scoped rather than relaxed.
   "The PIXEL_GRID_V1 runtime is registered on Ethereum, Base and Robinhood.",
   "CELLULAR_SYSTEM_V1 is now live and you can start a collection on it.",
-  "Launch with VECTOR_COMPOSITION_V1 on any supported chain.",
-  "Pick the launchable runtime GEOMETRIC_RECURSION_V1 and go.",
+  "Launch with PIXEL_GRID_V1 on any supported chain.",
+  "Pick the launchable runtime CELLULAR_SYSTEM_V1 and go.",
   "PIXEL_GRID_V1 is already deployed.",
+  "CELLULAR_SYSTEM_V1 is active at registry id 5.",
+  // Attribution must survive a mixed sentence in the ORDER THAT HIDES IT: the true half first.
+  "GEOMETRIC_RECURSION_V1 is registered, and so is PIXEL_GRID_V1.",
 ];
 const MUST_ALLOW = [
-  "GEOMETRIC_RECURSION_V1 is not registered on any chain today.",
+  // ---- TRUE SINCE 2026-08-29. Registered at ids 3 and 4, active on chains 1, 8453 and 4663. ----
+  "GEOMETRIC_RECURSION_V1 is launchable today.",
+  "Launch with VECTOR_COMPOSITION_V1 on any supported chain.",
+  "Pick the launchable runtime GEOMETRIC_RECURSION_V1 and go.",
+  "VECTOR_COMPOSITION_V1 is registered and active.",
+  // A sentence may say both things at once, and the subject of each claim is what decides.
+  "GEOMETRIC_RECURSION_V1 is launchable; PIXEL_GRID_V1 is not.",
+  // ---- STILL LEGAL, AND STILL THE ONLY HONEST FORM FOR A DEPARTED RUNTIME. ----
   "Whether PIXEL_GRID_V1 is registered on your chain is a live read.",
   "CELLULAR_SYSTEM_V1 cannot be launched until it is registered.",
-  "Once VECTOR_COMPOSITION_V1 is registered, a fresh live read makes it selectable with no flag to flip.",
-  "An unread registry reports UNKNOWN; it never reports that GEOMETRIC_RECURSION_V1 is registered.",
+  "Once CELLULAR_SYSTEM_V1 is registered, a fresh live read makes it selectable with no flag to flip.",
+  "An unread registry reports UNKNOWN; it never reports that PIXEL_GRID_V1 is registered.",
   "No public surface here says PIXEL_GRID_V1 is launchable.",
   "The dendron preset binds RECOVERY under LOG2; the runtime it belongs to is GEOMETRIC_RECURSION_V1.",
   "If CELLULAR_SYSTEM_V1 is registered later, nothing in this kit has to change.",

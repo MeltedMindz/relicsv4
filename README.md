@@ -592,11 +592,16 @@ these runtimes is at runtime version 1, while GEOMETRIC_RECURSION is at *config*
 changed meaning underneath it. A config written at the version the runtime reports is rejected by
 the parser, so read it from the table, not from the runtime.
 
-### Whether you can launch one is a live read, and the answer today is no
+### Whether you can launch one is a live read, and it is still a live read
 
-**None of these art runtimes is registered on any chain.** That is not a permanent fact and it
-is not a fact this kit stores: registration is per runtime, per chain, and the only thing that
-answers it is a live read of `ArtRuntimeRegistryV1` at the moment you ask.
+Both Wave-1 runtimes were registered on 2026-08-29 and are **active on Ethereum, Base and Robinhood
+Chain** — `GEOMETRIC_RECURSION_V1` at registry id 3, `VECTOR_COMPOSITION_V1` at id 4, the same
+address on each chain. So the answer today is yes, on those three chains.
+
+**That is a reading, not a fact this kit stores, and it is why the sentence above names a date.**
+Registration is per runtime, per chain. Nothing in this repository was edited to make those runtimes
+selectable and there is no flag here to flip — a fresh read of `ArtRuntimeRegistryV1` is what changed
+its mind. Ask it yourself rather than trusting this paragraph:
 
 ```bash
 npm run kit -- agent select-template --workspace <dir> --chain 1 --json
@@ -605,8 +610,14 @@ npm run kit -- agent select-template --workspace <dir> --chain 1 --json
 That command reads the registry and reports one of `ACTIVE`, `INACTIVE`, `NOT_REGISTERED` or
 `UNKNOWN` per runtime. **`UNKNOWN` is not a soft no** — a registry that could not be read does not
 prove a runtime is absent, it proves nobody successfully asked, and only one of those is a reason to
-retry. When these runtimes are registered, a fresh read makes them selectable. There is no flag in
-this repository to flip and no checked-in status to update.
+retry.
+
+**Neither runtime that left Wave 1 is registered on any chain**, so `CELLULAR_SYSTEM_V1` and
+`PIXEL_GRID_V1` are not launchable anywhere. Registry ids 5 and 6 were deliberately left empty for
+them, so the survivors did not have to be renumbered if they ever return.
+
+The JavaScript runtime is a separate question with a separate answer, and that answer is still no
+for a structural reason rather than a scheduling one — see *Approved is not launchable* above.
 
 ### Effective market signals are the measured ones
 

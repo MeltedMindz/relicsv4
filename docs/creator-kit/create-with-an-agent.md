@@ -231,9 +231,12 @@ is not `ACTIVE` on that chain, and only then scores what is left against your br
 flag that widens it. `templates --experimental` shows the tiers below SHIP to a *person*, with their
 measured weakness attached; it reaches no agent path.
 
-**None of those four art runtimes is registered on any chain today**, so the command currently
-returns `NO_ACTIVE_RUNTIME` and selects nothing. That is a live reading rather than a line in a
-file, and it will change on its own when registration happens.
+**Both Wave-1 art runtimes were registered on 2026-08-29 and are active on Ethereum, Base and
+Robinhood Chain**, so the command now returns a selection on those chains instead of
+`NO_ACTIVE_RUNTIME`. Nothing in this kit was edited to make that happen — it is a live reading, and
+it changed on its own when registration landed. On a chain that carries neither runtime the same
+command still declines, and `CELLULAR_SYSTEM_V1` and `PIXEL_GRID_V1`, which left Wave 1, are
+registered on no chain at all.
 
 Once a preset is chosen it is a **starting point**. Change anything the runtime's validator accepts.
 Nothing compares your finished art to the preset it started from.

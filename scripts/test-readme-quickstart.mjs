@@ -100,11 +100,12 @@ try {
     //   * it reads a chain. Running it inside an offline quickstart harness would make this gate
     //     depend on an RPC endpoint, and a gate that fails on a rate limit teaches people to ignore
     //     it.
-    //   * the outcome it is documented as producing today is a REFUSAL (`NO_ACTIVE_RUNTIME`,
-    //     because none of the four art runtimes is registered anywhere). Asserting a refusal here
-    //     would make this harness the thing that has to be updated on the day registration lands,
-    //     which is the wrong place for that alarm — the private repository's gate reads the
-    //     registries and owns it.
+    //   * its outcome depends on what the registry holds on the day it runs, and that moved on
+    //     2026-08-29 when the two Wave-1 runtimes were registered: the documented result went from a
+    //     refusal (`NO_ACTIVE_RUNTIME`) to a selection, with no edit here. Asserting either one would
+    //     make this harness the thing that has to be updated whenever registration moves, which is
+    //     the wrong place for that alarm — the private repository's gate reads the registries and
+    //     owns it.
     if (verb === "agent") {
       ran.push({ command: command.join(" "), status: "skipped — reads a chain; the art-catalog section, not the quickstart" });
       continue;

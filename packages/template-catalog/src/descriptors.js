@@ -25,10 +25,12 @@
 // ------------------------------------------------------------------------------------------------
 // TWO THINGS THIS FILE MAY NEVER CARRY, AND WHY
 // ------------------------------------------------------------------------------------------------
-// 1. **NO LAUNCHABILITY.** None of the Wave-1 runtimes is registered on any chain today, and
-//    whether one is registered TOMORROW is a per-chain fact that changes without this file
-//    changing. `assertNoLaunchabilityClaim` refuses any key that would answer it. The live answer
-//    comes from `getChainCapability` reading `ArtRuntimeRegistryV1`, on the day you ask.
+// 1. **NO LAUNCHABILITY.** Which runtimes a chain carries is a per-chain fact that changes
+//    without this file changing, and on 2026-08-29 it did: both Wave-1 runtimes were registered and
+//    went active on three chains while every byte here stayed put. That is the rule working, not an
+//    omission to repair — `assertNoLaunchabilityClaim` still refuses any key that would answer the
+//    question, precisely so this file cannot go stale against the chain. The live answer comes from
+//    `getChainCapability` reading `ArtRuntimeRegistryV1`, on the day you ask.
 //
 // 2. **NO QUALITY SCORE.** No number, no rank, no stars, no grade — here or on chain.
 //    `assertNoQualityScore` refuses them by key name. The review that produced these verdicts kept

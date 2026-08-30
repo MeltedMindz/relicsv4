@@ -96,10 +96,12 @@ export function catalogRefusal(templateId) {
 /**
  * The Wave-1 ART TEMPLATE CATALOG — a second, separate list.
  *
- * NOTHING HERE SAYS A RUNTIME CAN BE LAUNCHED, and the omission is the point. These four runtimes
- * are not registered on any chain this build knows about, whether that is still true tomorrow is a
- * per-chain fact, and the only thing that answers it is a live read of `ArtRuntimeRegistryV1`. The
- * CLI points at that read rather than printing an answer it would have to keep up to date.
+ * NOTHING HERE SAYS A RUNTIME CAN BE LAUNCHED, and the omission is the point. Which runtimes a
+ * chain carries is a per-chain fact that changes without this file changing — it changed on
+ * 2026-08-29, when the two Wave-1 runtimes were registered — and the only thing that answers it is a
+ * live read of `ArtRuntimeRegistryV1`. The CLI points at that read rather than printing an answer it
+ * would have to keep up to date. That is why this comment names no runtime as launchable even now
+ * that two of them are: a list here would be a second answer to a question the chain already owns.
  */
 function printArtCatalog({ experimental = false } = {}) {
   const entries = humanCatalog({ advanced: experimental });
