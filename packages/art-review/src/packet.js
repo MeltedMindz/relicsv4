@@ -282,14 +282,28 @@ export function objectiveDisclosureAllowed(roundsDir) {
  * accepted and "make the composition better" must still be refused — because a verb list that only
  * grows is a verb list on its way to accepting anything.
  */
-const ACTION_VERBS = /\b(?:cut|raise|lower|narrow|widen|reduce|increase|remove|add|replace|shift|tighten|loosen|darken|lighten|slow|speed|swap|set|drop|restrict|extend|separate|merge|rotate|scale|centre|center|thin|thicken|desaturate|saturate|re-?bind|re-?order|hold|keep|preserve|fix|snap|forbid|resolve|cap|delete|enforce|require|retire|demote|promote|move|verify|anchor|clamp|offset|align|invert|break|bound|limit|constrain|split|pin|target|clip|inset|crop|vary|stop|disable|introduce|convert|redraw|rebuild|weight|space|stagger|quantise|quantize|protect|re-?test|restore|ensure|maintain|lock|assign|allocate|distribute|sample|reserve|tie|bind|place|seat|carry|apply|exclude|include|admit|refuse|prefer|favour|favor)\b/i;
+const ACTION_VERBS = /\b(?:cut|raise|lower|narrow|widen|reduce|increase|remove|add|replace|shift|tighten|loosen|darken|lighten|slow|speed|swap|set|drop|restrict|extend|separate|merge|rotate|scale|centre|center|thin|thicken|desaturate|saturate|re-?bind|re-?order|hold|keep|preserve|fix|snap|forbid|resolve|cap|delete|enforce|require|retire|demote|promote|move|verify|anchor|clamp|offset|align|invert|break|bound|limit|constrain|split|pin|target|clip|inset|crop|vary|stop|disable|introduce|convert|redraw|rebuild|weight|space|stagger|quantise|quantize|protect|re-?test|restore|ensure|maintain|lock|assign|allocate|distribute|sample|reserve|tie|bind|place|seat|carry|apply|exclude|include|admit|refuse|prefer|favour|favor|draw|render|re-?render|re-?draw|insert|join|fill|emit|plot|colour|color|shade|taper|ramp|nest|stack|bleed|mask|re-?verify|re-?colour|re-?color)\b/i;
+
+/**
+ * A DECLARED MAGNITUDE IS AN INSTRUCTION WHATEVER VERB INTRODUCES IT.
+ *
+ * The verb list above was widened three times, each time by a real critique it had refused, and a
+ * list that only grows is a list on its way to accepting anything. This is the structural half:
+ * "at 0.12-0.18 of the outer radius", "by about 40%", "2.5px at 512", "6:1 or wider", "within 5
+ * degrees" are unambiguously work orders however they are phrased, so an action carrying one
+ * satisfies the rule without needing its verb enumerated. It closes the class rather than chasing
+ * the next verb.
+ */
+const MAGNITUDE = /\d+(?:\.\d+)?\s*(?:%|px|pt|deg|degrees?|:\s*\d|x\b)|\b\d+(?:\.\d+)?\s*(?:-|–|to)\s*\d+(?:\.\d+)?\b|\b0\.\d+\b/;
 
 /**
  * A destination is not a work order.
  *
  * "Make it better" fails the verb test already. "Make the composition better" does not — it names
- * a noun — so a quality adjective with no measurable move behind it is refused explicitly. A
- * number rescues it, because "raise contrast about 30%" is a move whatever adjective sits beside it.
+ * a noun — so a quality adjective is refused unless there is an actual OPERATION beside it. The
+ * test is the verb and not a number, because "improve the palette by 100%" carries a magnitude and
+ * still says nothing about what to do; "cut peripheral density by 40% so it reads stronger" carries
+ * the same adjective and is executable, and the difference between them is `cut`.
  */
 const VAGUE_DESTINATION = /\b(?:better|nicer|prettier|good|great|stronger|striking|beautiful|improve|improved|enhance|polish|more\s+interesting|more\s+appealing)\b/i;
 /**
@@ -343,10 +357,11 @@ export function validateVerdict(v, { round } = {}) {
     if (!RUBRIC_AXIS_IDS.includes(c?.axis)) p.push(`${at}.axis must be a rubric axis`);
     if (typeof c?.observation !== "string" || c.observation.trim().length < 20) p.push(`${at}.observation must record what was actually seen`);
     const action = typeof c?.action === "string" ? c.action : "";
+    const hasVerb = ACTION_VERBS.test(action);
     if (action.trim().length < 15) p.push(`${at}.action is too short to execute`);
-    else if (!ACTION_VERBS.test(action)) p.push(`${at}.action does not tell the author what to DO — it needs a verb like cut, raise, narrow, replace, remove`);
+    else if (!hasVerb && !MAGNITUDE.test(action)) p.push(`${at}.action does not tell the author what to DO — it needs an operation (cut, raise, narrow, replace, draw, remove) or a declared magnitude`);
     else if (!/\d/.test(action) && !CONFIG_NOUNS.test(action)) p.push(`${at}.action gives no magnitude and names nothing to change; "improve it" is not a work order`);
-    else if (VAGUE_DESTINATION.test(action) && !/\d/.test(action)) p.push(`${at}.action names a destination rather than a move. "Better" is where to arrive; the author needs what to do and by how much.`);
+    else if (VAGUE_DESTINATION.test(action) && !hasVerb) p.push(`${at}.action names a destination rather than a move. "Better" is where to arrive; the author needs what to do.`);
   }
   return p;
 }

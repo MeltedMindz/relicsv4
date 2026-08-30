@@ -56,6 +56,17 @@ const JSON_OUT = process.argv.includes("--json");
 
 const problems = [];
 const fail = (m) => problems.push(m);
+
+/**
+ * Failures that belong to a NAMED claim, so the summary reports the claim rather than inferring it.
+ *
+ * The summary used to derive `ART_AUTHOR_REVIEWER_SEPARATED` by matching substrings against the
+ * failure text, which makes a headline result depend on the wording of a message — reword the
+ * message and the headline silently flips. Each claim now has its own bucket and a failure is
+ * recorded against it explicitly.
+ */
+const claims = { separation: [], images: [], gate: [], guard: [], derivative: [] };
+const failClaim = (claim, m) => { claims[claim].push(m); fail(m); };
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
 
 /**
@@ -250,6 +261,7 @@ if (CONTROLS) {
     "Move the variation from hue into structure: vary row pitch 3-8px, dropout band count 0-4, and horizontal shear magnitude",
     "Preserve the neutral silhouette's bounding box and centroid exactly through all three states and express stress only as subtractive fracture",
     "Re-test this axis after the arc-removal mechanic is restored, and protect three named carriers through every stress frame: 138's dashed brass ring, 212's nested hexagon chain, 175's ring of 12 pale nodes",
+    "Draw the innermost generation as a scaled copy of generation 1 at 0.12-0.18 of the outer radius, centred on the frame centroid, in the six seeds whose centres are currently void",
   ];
   for (const action of REAL_ACTIONS_MUST_ALLOW) {
     const r = validateVerdict({
@@ -264,6 +276,9 @@ if (CONTROLS) {
   for (const [label, action] of [
     ["a bare destination", "Make the composition better and more striking overall"],
     ["a polish instruction", "Improve the palette and polish the whole thing until it reads nicely"],
+    // A MAGNITUDE DOES NOT RESCUE A DESTINATION. This is what the previous rule got wrong in the
+    // other direction: it let any digit through, so "improve it by 100%" scored as a work order.
+    ["a destination wearing a number", "Improve the palette by about 30% and make the whole thing stronger"],
   ]) {
     const r = validateVerdict({
       schemaVersion: 1, round: 1, verdict: "REVISE", reviewerId: "control",
@@ -303,7 +318,7 @@ if (CONTROLS) {
     if (!zeroWouldTrip) fail(`${label}: the floor does not refuse zero input`);
   }
 
-  const total = MUST_CATCH_LEAK.length + MUST_CATCH_SKIP.length + 5 + 3;
+  const total = MUST_CATCH_LEAK.length + MUST_CATCH_SKIP.length + 6 + 3;
   // MUST_CATCH_LEAK and MUST_CATCH_SKIP are counted from their own arrays, so adding a control
   // moves this number on its own rather than requiring someone to remember to.
   console.log("");
@@ -368,7 +383,7 @@ if (!gateHeld) fail("a SHIP verdict over a FAILED brief fidelity was not refused
 // 4. THE AUTHOR CANNOT APPROVE ITS OWN WORK
 // ================================================================================================
 for (const forbidden of ["authorNotes", "authorClaims", "changeLog", "intent", "selfAssessment", "config", "configBytes", "artConfig", "objective", "measurements", "traits"]) {
-  if (PACKET_ALLOWED_KEYS.includes(forbidden)) fail(`the packet whitelist admits ${forbidden}, which is either the author's opinion or a parameter. A reviewer given parameters reviews parameters.`);
+  if (PACKET_ALLOWED_KEYS.includes(forbidden)) failClaim("separation", `the packet whitelist admits ${forbidden}, which is either the author's opinion or a parameter. A reviewer given parameters reviews parameters.`);
 }
 floor("packet whitelist keys", PACKET_ALLOWED_KEYS.length, 6);
 floor("packet scan-policy entries", Object.keys(PACKET_SCAN_POLICY).length, 3);
@@ -381,11 +396,11 @@ for (const [file, cls] of Object.entries(PACKET_SCAN_POLICY)) {
 if (PACKET_SCAN_POLICY["REVIEW_REQUEST.json"]) fail("REVIEW_REQUEST.json has been given a relaxed scan class. It is the file the builder composes and the only one an author claim could enter through.");
 
 const disclosureBlocked = objectiveDisclosureAllowed(join(ROOT, "packages", "art-review", "src"));
-if (disclosureBlocked.allowed) fail("objectiveDisclosureAllowed said yes for a directory with no round-1 verdict in it. Scores are withheld until the first unanchored judgement.");
+if (disclosureBlocked.allowed) failClaim("separation", "objectiveDisclosureAllowed said yes for a directory with no round-1 verdict in it. Scores are withheld until the first unanchored judgement.");
 
-if (!/priorCritique/.test(packetSrc)) fail("the packet carries no prior critique, so a reviewer cannot check whether its own work order was carried out");
-if (!/verdict\.template\.json/.test(packetSrc)) fail("the packet ships no blank verdict template, so the shape is the author's to describe");
-if (!/reviewer-prompt\.md/.test(packetSrc)) fail("the packet ships no generated reviewer prompt. If the prompt is the author's to compose, the separation is a rule the author enforces on itself.");
+if (!/priorCritique/.test(packetSrc)) failClaim("separation", "the packet carries no prior critique, so a reviewer cannot check whether its own work order was carried out");
+if (!/verdict\.template\.json/.test(packetSrc)) failClaim("separation", "the packet ships no blank verdict template, so the shape is the author's to describe");
+if (!/reviewer-prompt\.md/.test(packetSrc)) failClaim("separation", "the packet ships no generated reviewer prompt. If the prompt is the author's to compose, the separation is a rule the author enforces on itself.");
 
 // ================================================================================================
 // 5. AN ACCEPTANCE IS VOID WHEN THE CONFIGURATION MOVES — PROVED BY MUTATION
@@ -591,7 +606,7 @@ if (!existsSync(EVIDENCE)) {
     const decoded = decodeConfig(r.runtimeId, r.configBytes);
     const d = distance(decoded, presetConfig(r.runtimeId));
     minFromPreset = Math.min(minFromPreset, d);
-    if (d < 8) fail(`${r.id} differs from its template preset in only ${d} leaf value(s). That is polishing the preset, not authoring against a brief.`);
+    if (d < 8) failClaim("derivative", `${r.id} differs from its template preset in only ${d} leaf value(s). That is polishing the preset, not authoring against a brief.`);
     if (!perRuntime.has(r.runtimeId)) perRuntime.set(r.runtimeId, []);
     perRuntime.get(r.runtimeId).push({ id: r.id, decoded });
   }
@@ -602,7 +617,7 @@ if (!existsSync(EVIDENCE)) {
       for (let j = i + 1; j < group.length; j++) {
         const d = distance(group[i].decoded, group[j].decoded);
         minBetween = Math.min(minBetween, d);
-        if (d < 8) fail(`${group[i].id} and ${group[j].id} on ${runtimeId} differ in only ${d} leaf value(s); they are one collection with two names`);
+        if (d < 8) failClaim("derivative", `${group[i].id} and ${group[j].id} on ${runtimeId} differ in only ${d} leaf value(s); they are one collection with two names`);
       }
     }
   }
@@ -641,14 +656,14 @@ if (!existsSync(EVIDENCE)) {
 const summary = {
   AUTONOMOUS_VISUAL_REVIEW_RENDERED_IMAGES: thumbSheets >= 2 && /rasterize/.test(raster) ? "YES" : "NO",
   BRIEF_FIDELITY_GATE: gateHeld ? "ENABLED" : "DISABLED",
-  ART_AUTHOR_REVIEWER_SEPARATED: problems.some((p) => p.includes("whitelist") || p.includes("withheld") || p.includes("prompt")) ? "NO" : "YES",
+  ART_AUTHOR_REVIEWER_SEPARATED: claims.separation.length === 0 ? "YES" : "NO",
   ART_ACCEPTANCE_INVALIDATED_BY_CONFIG_CHANGE: mutations.every(([, ok]) => ok) ? "YES" : "NO",
   ART_ACCEPTANCE_MUTATIONS_CAUGHT: `${mutations.filter(([, ok]) => ok).length}/${mutations.length}`,
   FIRST_LEGAL_CONFIG_ACCEPTED_WITHOUT_REVIEW: unguarded.length,
   GUARDED_LAUNCH_COMMANDS: mustGuard.length,
   ART_REVIEW_SKIP_FLAGS: skips.length,
   ART_REVIEW_ITERATION_CEILING: ITERATION_CEILING,
-  AUTONOMOUS_TEMPLATE_DERIVATIVE_COLLAPSE: problems.some((p) => p.includes("polishing the preset") || p.includes("one collection with two names")) ? "YES" : "NO",
+  AUTONOMOUS_TEMPLATE_DERIVATIVE_COLLAPSE: claims.derivative.length === 0 ? "NO" : "YES",
   RECORDED_LOOP_RUNS: derivative.runs,
   RECORDED_JUDGEMENTS: derivative.judgements ?? 0,
   DISTINCT_REVIEWERS: derivative.distinctReviewers ?? 0,

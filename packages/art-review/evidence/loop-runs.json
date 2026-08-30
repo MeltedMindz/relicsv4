@@ -8,9 +8,18 @@
     "nobody opens. The render commitment is sha256 over sorted `<name> <sha256(bytes)>` lines, the",
     "same algorithm the template catalog publishes, so a reader with the chain can recompute it.",
     "A REFUSAL IS A RESULT. Runs that ended ART_QUALITY_NOT_ACCEPTABLE are kept, not deleted: a loop",
-    "that has never refused anything has not been shown to be able to."
+    "that has never refused anything has not been shown to be able to.",
+    "",
+    "WHAT THIS RECORD DOES NOT YET CONTAIN, stated here rather than left for a reader to notice:",
+    "NO RUN HAS BEEN ACCEPTED. Across these briefs every first legal configuration was refused on",
+    "brief fidelity, and three runs spent all four judgements without reaching SHIP. The acceptance",
+    "path — the objective battery, the receipt, and the invalidation that voids it — is therefore",
+    "proved by `packages/art-review/test/loop.test.mjs` and by the mutation section of",
+    "`scripts/check-art-review.mjs`, not by a live run in this record. That is a real limit on what",
+    "these runs evidence, and inventing an acceptance to close it would be the exact substitution",
+    "this loop exists to prevent."
   ],
-  "generatedAt": "2026-08-30T16:58:49.011Z",
+  "generatedAt": "2026-08-30T17:17:20.154Z",
   "chainId": 1,
   "runtimeRegistry": "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
   "iterationCeiling": 4,
@@ -1113,10 +1122,10 @@
       "templateId": "GEOMETRIC_RECURSION_V1/compass",
       "brief": "briefs/compass-resonance.md",
       "briefSha256": "db2ce94fd52efa76b8303bdf112dcf9212c4bc88fd61cadca768cf1583a7a3d4",
-      "configBytes": "0x475256310202020005060f1424c8703cdfe3e898a3b4e8bf4a1b2440021a13010301020303033616077001000814040200010303032e0b0751050002064c6576656c730200074f70656e696e670301095265736f6e616e6365ff",
-      "configHash": "0x1375c95b25e016846f9f131f659cf0bb6efe84ef3890813a82e3fc6893f8e718",
-      "outcome": "IN_PROGRESS",
-      "judgements": 2,
+      "configBytes": "0x475256310202020005060f1424c8703cdfe3e898a3b4e8bf4a2f3a5c021e13010301020404032e1607700100081403020001040402220b0751050002064c6576656c730200074f70656e696e670301095265736f6e616e6365ff",
+      "configHash": "0xfe675fcbffe49b1eb1314d1b16c07ff0b697ac503337168dce298d683d22c2f7",
+      "outcome": "ART_QUALITY_NOT_ACCEPTABLE",
+      "judgements": 4,
       "iterationCeiling": 4,
       "rounds": [
         {
@@ -1269,20 +1278,280 @@
         {
           "round": 3,
           "configHash": "0x1375c95b25e016846f9f131f659cf0bb6efe84ef3890813a82e3fc6893f8e718",
-          "reviewerId": null,
-          "verdict": null,
-          "judgedAt": null,
-          "axes": null,
-          "critique": [],
+          "reviewerId": "blind-reviewer-resonance-r3",
+          "verdict": "REVISE",
+          "judgedAt": "2026-08-30T17:03:41Z",
+          "axes": {
+            "briefFidelity": "WEAK",
+            "composition": "WEAK",
+            "collectionCoherence": "PASS",
+            "palette": "WEAK",
+            "seedVariation": "WEAK",
+            "thumbnailSurvival": "WEAK",
+            "marketResponse": "PASS",
+            "tokenIdentity": "PASS",
+            "artifacts": "FAIL"
+          },
+          "critique": [
+            {
+              "axis": "briefFidelity",
+              "observation": "The gate now passes, and it did not before. The opaque plate is gone, generation 1 is a stroked ring, and the interior is drawn rather than implied: 175 reads as a copper 12-point star polygon carrying a ring of pewter squares carrying gold specks; 434 is a six-point star whose every triangle is packed with smaller triangles; 249 is three white triangles each built of three smaller white-and-gold triangles; 471 is an 8-fold pewter circle rosette with gold rings tracking its arcs. That is the briefed subject. What is still undelivered is the brief's own sentence about WHERE the repeat lands: 'what you see at the outside is what you see at the centre, smaller'. In 175, 138, 508, 249, 101 and 286 the centre is a dark void and every generation sits on an annulus, so the recursion runs outward into a rim rather than inward to a smaller copy of itself. 286 is the outright failure — a gold hoop at r=0.45 of the tile, a compact copper flower at r=0.15, and nothing whatsoever between them in any of its three states.",
+              "action": "Draw the innermost generation as a scaled copy of generation 1 at 0.12-0.18 of the outer radius, centred on the frame centroid, in the 6 seeds whose centres are currently void (175, 138, 508, 249, 101, 286) — the same base polygon, not a dot cluster and not a hole. For 286 specifically, insert the missing generation 2 at roughly 0.28 of the outer radius so the hoop and the flower are joined by one intermediate level instead of 30% of the tile being empty indigo."
+            },
+            {
+              "axis": "artifacts",
+              "observation": "This axis has not moved in three rounds and it is now the loudest defect. (1) The dark navy soft ellipses carrying triplets of copper dots are still present, straddling the gold ring at roughly 10, 3, 5 and 8 o'clock in all three states of 175 — on the otherwise clean 175 stress frame they are the only thing in the picture that reads as dirt on the lens — and the same navy smears sit on the figure in 138 at 10-11 and 4 o'clock, in 249 at 10 and 3 o'clock, and across the top-left of 508 in neutral, stress and recovery. (2) Frame clipping is uncontrolled on 4 of 12 seeds: 101's right-hand lobe is sliced flat by the right edge in neutral AND recovery; 360's pewter circle clusters are cut by the right edge in all three states and off the bottom in recovery; 508's copper ring confetti is cut at the left edge and top-left in all three states; 249's copper rings are cut at the right edge. (3) In 323 the pewter circles in the upper-left quadrant overlap into mush with no countable figure under them.",
+              "action": "Delete the dark navy ellipse layer outright across all 12 seeds — it is the round-1 grey slab and the round-2 navy lobe in a third colour. Clamp every drawn element, confetti and satellite ornament included, to 0.92 of the half-frame in all three states and re-render 101, 249, 360 and 508 until zero elements touch the viewBox edge. Cap overlapping pewter circles in 323 at 3 deep per pixel or drop their count by about 35% so the upper-left quadrant reads as circles rather than fog."
+            },
+            {
+              "axis": "composition",
+              "observation": "Focal hierarchy is still inverted on half the sheet, which is the third round this has been true. In 138, 508, 101, 286 and 249 the geometric centre of the frame is the emptiest, darkest region and every stroke of interest is on the outer annulus — 138 has a dark hole across the middle 35% of its disc with all its squares, diamonds and triangles on the ring. Where a centre exists it works: 434's copper dot cluster, 212's copper dot core and 471's dark eye all hold the middle. Radial centring is also still broken on 360, 397, 101 and 249 — 360's two concentric rings are offset right of the tile centroid with the copper dot core sitting right of centre and the pewter clusters weighted to 11, 7 and 3 o'clock only, so there is no rotational read at all; 397's pewter square cluster hangs to the lower-left inside a centred gold ring.",
+              "action": "Move the highest-contrast mark of each tile to the innermost 2 generations and raise centre-versus-ground contrast by about 30% in 138, 508, 101, 286 and 249; drop outer-annulus element density by about 40% in the same five. Re-centre 360, 397, 101 and 249 on the frame centroid and force the outermost generation to full rotational symmetry at the seed's own arm count so no seed keeps a one-sided ring."
+            },
+            {
+              "axis": "palette",
+              "observation": "The indigo ground is right and it carries the drawing without competing. Copper and pewter are both present and both doing structural work, and the round-2 violet is gone. But the brief's 'one accent that appears rarely' is not rare: gold is the outermost ring in 11 of 12 tiles and is the brightest, most saturated mark in every single frame — in 101 and 286 the gold hoop is the largest and loudest object in the picture and the actual figure is a footnote to it. Depth-by-level is delivered in only about 5 of 12: 471 steps copper ring, gold ring, pewter rosette, dark core cleanly, and 175 steps gold, copper, pewter — but then puts gold back at the innermost level so the ramp is not monotonic, and in 323 and 360 pewter and gold appear at the same radius so colour carries no depth information at all. Copper and gold are also adjacent in hue, so at 120px they fuse into a single warm band and pewter alone carries the contrast.",
+              "action": "Demote gold from the outermost ring: make generation 1 copper in all 12 seeds and cap gold at 8% of drawn element count per tile, reserved for the innermost 1-2 generations only. Make the level ramp monotonic — copper at generation 1 through pewter at generation 4 with at least a 15% lightness gap between adjacent stops — and stop assigning colour by shape class in 323 and 360, where pewter and gold currently share a radius."
+            },
+            {
+              "axis": "thumbnailSurvival",
+              "observation": "Judged on contact-thumb.png and states-thumb.png alone: all 12 tiles now hold a readable silhouette against the indigo, which is real and should be protected. But the twelve resolve to about eight appearances, not twelve — 212, 323 and 471 are three dense circle rosettes that separate only on close inspection, and 138 and 508 are two dense annuli with copper confetti. More seriously, the SUBJECT does not survive: at 120px I can count 2-3 generations in 175, 434, 471, 249 and 212 and no generations at all in the other seven. 286 at 120px is a plain gold hoop with a speck; 397 is a hoop with an unresolved grey smudge to the lower-left; 101 is a hoop with three blobs; 323, 360 and 508 collapse into dense fog where the levels are present but not countable.",
+              "action": "Raise minimum stroke width to about 2.5px at 512 (0.6px at 120) and force every generation to hold a 20% value gap against whatever sits directly behind it, then gate on all 12 thumbs showing at least 3 countable generations before judging anything else. Separate 212, 323 and 471 at browse size by giving them three different arm counts (5, 8 and 12) and three different innermost forms."
+            },
+            {
+              "axis": "seedVariation",
+              "observation": "Genuinely improved and the round-2 hexagon monoculture is gone. 175 (octagonal star of squares), 434 (six-point star of nested triangles), 249 (three lobed triangles on a ring), 286 (hoop plus flower), 397 (ring plus pewter squares), 138 (square-and-diamond annulus) and 508 (hexagram of triangles) are recognisably different works rather than one work rotated, and branching now varies across 3-fold (101, 249), 5-fold (212), 6-fold (434, 508), 8-fold (471) and 12-fold (286). The remaining problem is the circle family: 101, 212, 323, 360 and 471 are all circle-of-circles constructions, 5 of 12, and at browse size 212/323/471 are one appearance at three densities. The brief also names hexagonal explicitly and no seed has a plain hexagonal base — the hex geometry only survives as the hexagram interiors of 434 and 508.",
+              "action": "Retire 2 of the 5 circle bases — convert 323 to a hexagonal base and 360 to a diamond base — so no more than 3 of 12 seeds share a base figure, and give the remaining circle seeds (212, 471, 101) three distinct arm counts so they separate at 120px."
+            },
+            {
+              "axis": "marketResponse",
+              "observation": "This is the strongest axis and the round-2 defect is largely closed. On states-thumb.png the progression stress < neutral < recovery is legible at 120px on 11 of 12 seeds, and it is the change the brief claimed: drawdown removes generations and the figure thins, recovery adds them and the figure fills. 101 stress is a bare gold ring with two vestigial lobes against a neutral with three and a recovery with three large fractal lobes plus gold rings. 175 stress drops to a clean copper star and one pewter ring; 175 recovery fills to a near-solid pewter-and-gold core. 508 and 397, both static in round 2, now move — 508 stress reduces to a clean hexagram and recovery fills the disc. The one failure is 286: its gold hoop is identical in all three states and the only change happens inside the flower that occupies 30% of the tile diameter, so at 120px its three frames are indistinguishable.",
+              "action": "Preserve the current stress-removes-generations / recovery-adds-generations rule exactly as it stands. Re-render 286 so its drawdown and recovery act on the outer generations as well as the core — drop 2 full generations under stress and add 2 under recovery — and verify its three thumbs differ at 120px before shipping."
+            },
+            {
+              "axis": "tokenIdentity",
+              "observation": "Holds on all 12 columns of states-thumb.png. Every stress and recovery frame is recognisably the same token as its neutral frame: base figure, arm count, orientation and colour assignment all survive the transition. 175's three states are unambiguously one object at three densities; 508 thins from a filled star to a clean hexagram and back without becoming a different object; 434's star keeps its six arms in all three. No new shape class appears in any stress frame and no solid accent fill is introduced under drawdown, which was the round-1 defect.",
+              "action": "Keep the existing ban on new shape classes and on solid accent fills in the stress state while executing every other change here, and re-verify it on 286 after its state range is widened."
+            },
+            {
+              "axis": "collectionCoherence",
+              "observation": "This is now genuinely fixed and it is the clearest win of the round. On contact.png the twelve read as one project, and for the first time the thing binding them is the RULE rather than a failing plate: the shared copper-pewter-gold level language and the shared decreasing-scale repeat hold 175, 434, 471, 212, 249 and 323 together even where their base figures are a square star, a triangle star, a circle rosette and a triangle triad. Cover the gold outer ring with a thumb and the family still reads, which was not true in round 1 (the pewter panel) or round 2 (the gold plate).",
+              "action": "Protect this when demoting gold off the outer ring in the palette fix: re-render contact.png with generation 1 recoloured copper and confirm the twelve still read as one family before restoring any gold, so the coherence is not accidentally re-attached to the ring."
+            }
+          ],
           "renderCommitment": {
             "algorithm": "sha256-of-sorted-name-space-sha256-lines-joined-by-newline",
             "renders": 36,
             "digest": "c449e75b4451bb33ee916b59b313ed4a8822b377f0d1faff3e929327da2554a6"
           },
           "packet": ".relics-agent/art-review/round-3/packet"
+        },
+        {
+          "round": 4,
+          "configHash": "0xfe675fcbffe49b1eb1314d1b16c07ff0b697ac503337168dce298d683d22c2f7",
+          "reviewerId": "blind-reviewer-resonance-r4",
+          "verdict": "REVISE",
+          "judgedAt": "2026-08-30T17:14:15Z",
+          "axes": {
+            "briefFidelity": "WEAK",
+            "composition": "WEAK",
+            "collectionCoherence": "PASS",
+            "palette": "WEAK",
+            "seedVariation": "PASS",
+            "thumbnailSurvival": "WEAK",
+            "marketResponse": "PASS",
+            "tokenIdentity": "PASS",
+            "artifacts": "FAIL"
+          },
+          "critique": [
+            {
+              "axis": "briefFidelity",
+              "observation": "The gate holds, but not comfortably. The nesting is real and it is the subject: 212 is a hexagon of hexagons five levels deep, 434 is a six-point star whose every triangle is packed with smaller triangles, 471 is a copper ring carrying ten pewter circles each carrying smaller circles, 175 is a copper 12-point star carrying pewter squares carrying squares. That is the briefed figure and it reads as a stamped seal on eleven tiles. One tile is not the briefed object at all: 360 is an off-centre copper circle with three irregularly-spaced clusters of overlapping pewter circles and a pair of gold rings sitting up and right of centre — it has no centre, no rotational read, and at 120px it reads as overlapping soap bubbles, not a rosette, emblem or seal.",
+              "action": "Rebuild seed 360 on a diamond or square base with 4-fold rotational placement, its centroid on the frame centroid, replacing the current free-scatter circle placement; verify at 120px that its neutral tile has a single identifiable centre before anything else on this seed is judged."
+            },
+            {
+              "axis": "briefFidelity",
+              "observation": "Two of the brief's six clauses are still undelivered after three rounds of being raised. 'One accent that appears rarely': gold is six large rings ringing the perimeter of 508, five ringing 138, eight ringing 175, and roughly sixty specks sprayed through 323 recovery — on those four tiles it is the most repeated and most saturated element, not the rare one. 'Colour should step outward level by level so depth reads as colour': there is no level-to-colour mapping anywhere. In 471 gold ringlets appear at every radius from the central eye to the rim; in 323 gold specks sit at all levels at once; in 175 gold is at the outermost satellites and again in the interior. Depth is carried entirely by scale and density; colour carries none of it.",
+              "action": "Bind hue to generation index: copper at generation 1, pewter at generations 2-3, gold at generation 4 only, with a minimum 15% lightness step between adjacent generations, and cap gold at 8% of drawn element count per tile. Delete the perimeter gold satellite ring from 508, 138 and 175 — that is 6, 5 and 8 elements respectively — since gold at generation 1 is the exact inversion of the ramp the brief asks for."
+            },
+            {
+              "axis": "artifacts",
+              "observation": "Frame clipping is the single loudest defect on the sheet and it is unchanged from rounds 1, 2 and 3. On 508 all six large gold satellite rings cross the viewBox — two cut flat by the top edge, two by the bottom, one each by the left and right — in neutral, stress AND recovery, and at 120px this is the first thing the eye lands on. On 360 the pewter circle cluster at 3 o'clock is sliced by the right edge in all three states, the 7-8 o'clock cluster runs off the bottom-left in neutral and recovery, and the copper ring itself crosses the top edge in stress and recovery. On 249 the copper triangle's right vertex is cut by the right edge in all three states. On 323 recovery the pewter foam bleeds past the left, right and bottom edges.",
+              "action": "Clamp every drawn element — base polygon, satellite rings, confetti — to 0.92 of the half-frame in all three states, then re-render 508, 360, 249 and 323 and confirm zero pixels of any element touch the viewBox border. This is the fourth round this instruction has been issued for 508 specifically."
+            },
+            {
+              "axis": "artifacts",
+              "observation": "The off-pattern dark satellite layer survives in a fourth colour. On 138 roughly ten dark navy soft-edged circles carrying copper dot triplets sit scattered outside the wreath at 1, 2, 4, 5, 7, 8, 9 and 10 o'clock — irregularly spaced, unrelated to the tile's 5-fold gold ring placement, and reading as stains on the ground rather than ornament. On 101 a single dull olive-khaki circle sits at 9 o'clock outside the copper hexagon with no counterpart at 1 or 5 o'clock, so it breaks the tile's 3-fold symmetry and reads as a stray mark. The fix already exists in the packet: on 175 the same satellites were placed on-pattern at 8-fold and now read correctly as ornament.",
+              "action": "Apply 175's treatment to the remaining seeds — snap every satellite ornament to the seed's own arm count (3-fold on 101, 5-fold on 138) and place it on the outermost generation's radius — or delete the layer outright on 138 and 101. Remove the single olive-khaki circle at 9 o'clock in 101, which appears in all three states."
+            },
+            {
+              "axis": "composition",
+              "observation": "Focal hierarchy is still inverted on half the sheet, the third round running. The geometric centre is the emptiest, darkest region in 101 (an empty dark interior filling roughly 40% of the tile inside the copper hexagon, with all incident on the hexagon's three outward lobes), 249 (empty centre, all three white triangles on the ring), 138 (a lumpy dark void about 30% of the tile diameter), 508 (a dark hexagonal void about 25% of the disc) and 286 (a 35%-of-tile empty annulus between a pewter hoop at r≈0.42 and a copper flower at r≈0.18, with literally nothing between them in any state). Where a centre exists it works and proves the point: 471's gold-rimmed dark eye and 175's clean 8-point star negative both hold the middle.",
+              "action": "Draw the innermost generation as a scaled copy of generation 1 at 0.12-0.18 of the outer radius on 101, 249, 138 and 508, and insert the missing intermediate generation at r≈0.28 on 286; drop outer-annulus element count by about 40% on the same five so the new centre is the strongest mark rather than a competitor."
+            },
+            {
+              "axis": "composition",
+              "observation": "Radial centring is broken on five tiles. 360's copper ring is displaced up and right so its top and right arcs leave the tile while the bottom-left quadrant is bare indigo. 249's copper triangle is shifted right until its right vertex clips. 397's mass sits visibly low and left of its own pewter hoop in neutral and recovery — the gold centre ring is left of the hoop's centre while the pewter squares pile to the right — although 397 stress is correctly centred and is the cleanest frame of that column. 138's dark central void sits above and right of the tile centroid. 212 is offset right and down inside its frame.",
+              "action": "Re-centre 360, 249, 397 neutral, 397 recovery, 138 and 212 on the frame centroid, and force the outermost generation's element placement to full rotational symmetry at each seed's own arm count so no seed keeps a one-sided ring — 249 currently has three white triangles but only two gold rings, at 9 and 3 o'clock."
+            },
+            {
+              "axis": "marketResponse",
+              "observation": "This is the strongest axis and it is the brief's own claim delivered. On states-thumb.png the progression stress < neutral < recovery is legible at 120px on eleven of twelve columns, and it is thinning and filling rather than substitution: 175 drops to a clean copper star with one pewter ring under stress and fills to a near-solid pewter-and-gold core in recovery; 323 stress reduces to a bare copper hexagon with six small circle clusters and recovery packs it to a full foam; 508 opens to a clean hexagram and back; 101 goes three lobes, two lobes, three large lobes with gold. The one failure is 286, which is exactly the seed named for this in round 3 and was not touched: its pewter hoop is pixel-identical in all three states and its copper flower is the same diameter in all three, the only difference being a little gold inside the flower in recovery. At 120px 286's three tiles are one picture.",
+              "action": "Re-render 286 so drawdown and recovery act on the outer generations as well as the core: drop 2 full generations under stress and add 2 under recovery, moving the pewter hoop radius as well, and verify the three 120px thumbs differ before shipping. Preserve the existing stress-removes-generations rule on the other eleven seeds exactly as it stands."
+            },
+            {
+              "axis": "thumbnailSurvival",
+              "observation": "Every one of the twelve now holds a readable silhouette against the indigo, which is real and should be protected. But the SUBJECT does not survive: at 120px I can count three or more generations only in 175, 434, 471 and 508 stress. In 323 recovery and 471 recovery the pewter circles overlap into an uncountable foam where the levels are present but not separable; in 212 the centre resolves to an unformed yellow smudge; 286 is a hoop with a dot; 101 and 249 read as one outline plus three lobes; 360 has no countable figure at all. That is four of twelve where the brief's subject is visible at browse size.",
+              "action": "Raise minimum stroke width to about 2.5px at 512 (0.6px at 120) and force every generation to hold a 20% value gap against whatever sits directly behind it; cap overlapping pewter circles at 3 deep per pixel in 323 recovery and 471 recovery, or cut their count by about 35%. Gate on all twelve neutral thumbs showing at least 3 countable generations."
+            },
+            {
+              "axis": "palette",
+              "observation": "The indigo ground is the best decision in the packet — a soft radial gradient that lifts the figure without competing, and it carries every tile. Copper and pewter are both present and both structural, and the round-2 violet is gone. The problem is that copper and gold are adjacent in hue and at 120px they fuse into one warm band: on 138, 508 and 175 the copper base polygon and the gold satellite rings read as a single orange-yellow mass and pewter alone carries the contrast, so the three-metal palette resolves to two.",
+              "action": "Widen the copper-to-gold separation by pushing gold about 20% lighter and about 15% less saturated toward a pale brass, or by moving copper toward a deeper red-brown, and confirm at 120px on 138 and 508 that copper and gold read as two distinct materials rather than one band."
+            },
+            {
+              "axis": "collectionCoherence",
+              "observation": "This holds and it is the clearest win in the packet. On contact.png the twelve read as one project and the thing binding them is the RULE, not a plate: the shared indigo ground, the copper stroked generation-1 outline, the pewter interior and the shared decreasing-scale repeat hold 175, 434, 471, 212, 323 and 249 together even though their base figures are a star polygon, a hexagram, a circle rosette, a hexagon lattice, a hexagon field and a triangle. Cover the gold with a thumb and the family still reads. The one member that falls out is 360, which shares the palette but none of the geometry.",
+              "action": "Protect this when executing the palette ramp: after recolouring by generation, re-render contact.png and confirm the twelve still read as one family before restoring any gold. Bring 360 back into the family by giving it the same generation-1 stroked outline treatment the other eleven have."
+            },
+            {
+              "axis": "seedVariation",
+              "observation": "Twelve genuinely different figures at 512px — hexagon lattice (212), hexagon field (323), hexagon with outward lobes (101), square wreath (138), star polygon (175), hexagram of triangles (434, 508), triangle triad (249), circle rosette (471), hoop and flower (286), circle with square satellites (397) — and branching varies across 3-fold (101, 249), 5-fold (138), 6-fold (434, 508), 8-fold (175, 397) and 12-fold (286). At 120px they resolve to roughly nine or ten appearances, not twelve: 175, 138 and 471 all read as dense warm-and-white rosettes with dark centres and separate only on close inspection, and the circle family is still four of twelve (286, 360, 397, 471) against the three asked for last round.",
+              "action": "Separate 175, 138 and 471 at browse size by giving them three different centre treatments — 471 already has the gold eye, so give 175 a pewter core and 138 a copper core rather than the dark void both currently carry — and convert one of 286 or 397 off the circle base to a diamond so no more than three of twelve share a base figure."
+            },
+            {
+              "axis": "tokenIdentity",
+              "observation": "Holds on all twelve columns of states-thumb.png. Every stress and recovery frame is recognisably the same token as its neutral: base figure, arm count, orientation and colour assignment all survive. 175's three states are unambiguously one object at three densities; 508 thins from a packed star to a clean hexagram and back without becoming a different object; 434 keeps its six arms and its centre motif in all three; 101 keeps its copper hexagon and its 3-fold lobe positions while losing one lobe under stress. No new shape class appears in any stress frame and no solid accent fill is introduced under drawdown.",
+              "action": "Keep the existing ban on new shape classes and on solid accent fills in the stress state while executing every other change here, and re-verify identity on 286 and 360 after their state range and geometry are rebuilt."
+            },
+            {
+              "axis": "composition",
+              "observation": "Two centre marks are unresolved rather than drawn. 212's centre is a solid gold scribble roughly 0.13 of the tile wide with no legible form — a mush of overlapping strokes that at 120px reads as a paint blot or a compression artifact, and it is the highest-saturation object in a tile whose whole merit is a clean five-deep hexagon lattice. 434's centre is two gold rings side by side in a horizontal pair, a 2-fold motif dropped into a 6-fold emblem, and it is the brightest mark in the frame; it breaks the star's rotational symmetry and it is not a scaled copy of anything else in the tile.",
+              "action": "Replace 212's gold centre blob with a stroked hexagon at 0.15 of the outer radius — the same base polygon as its outer generation — at the same gold, and replace 434's horizontal ring pair with a single centred hexagram at 0.15 of the outer radius so the centre restates the figure's own 6-fold rule instead of contradicting it."
+            }
+          ],
+          "renderCommitment": {
+            "algorithm": "sha256-of-sorted-name-space-sha256-lines-joined-by-newline",
+            "renders": 36,
+            "digest": "1cddd35c11c61024b77f49cf5b8f8c16e172239877670cf6917c0c962ad3aede"
+          },
+          "packet": ".relics-agent/art-review/round-4/packet"
         }
       ],
-      "objective": null,
+      "objective": {
+        "pass": true,
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true,
+            "measured": {
+              "code": 0
+            }
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true,
+            "measured": {
+              "rendered": 36
+            }
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true,
+            "measured": {
+              "cells": 3
+            }
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true,
+            "measured": {
+              "seeds": 100,
+              "failures": 0
+            }
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true,
+            "measured": {
+              "distinct": 100,
+              "of": 100
+            }
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true,
+            "measured": {
+              "minPairDeltaE": 5.511,
+              "pairs": 120
+            }
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true,
+            "measured": {
+              "meanDeltaE": 16.05,
+              "minDeltaE": 5.511
+            }
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true,
+            "measured": {
+              "minInk": 0.1639,
+              "meanInk": 0.3502
+            }
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true,
+            "measured": {
+              "pairings": 36,
+              "identical": 0
+            }
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true,
+            "measured": {
+              "ns": 4.783,
+              "nr": 5.54,
+              "sr": 7.586,
+              "weakestPairing": "ns"
+            }
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true,
+            "measured": {
+              "units": 2,
+              "findings": [
+                {
+                  "unit": 0,
+                  "measured": 13.104,
+                  "detail": "draws"
+                },
+                {
+                  "unit": 1,
+                  "measured": 3.007,
+                  "detail": "draws"
+                }
+              ]
+            }
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true,
+            "measured": {
+              "worstGas": 6202584,
+              "cell": {
+                "seed": 101,
+                "state": "stress"
+              }
+            }
+          }
+        ]
+      },
       "acceptedConfigHash": null
     },
     {

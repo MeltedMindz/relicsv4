@@ -652,6 +652,18 @@ stale — void. A reviewer looked at pictures produced by particular bytes; diff
 different pictures, and a receipt that survived the change would be asserting something nobody
 checked. Change one per cent of one field and the review runs again.
 
+### What this loop has actually produced
+
+`packages/art-review/evidence/loop-runs.json` holds seven briefs across both live runtimes, judged
+by 24 independent reviewers against the runtimes deployed on Ethereum mainnet. **Not one first
+legal configuration was the finished work** — brief fidelity failed in 22 of 24 judgements — and
+three runs spent all four judgements and were refused. Twice the objective battery passed
+completely and the reviewer refused the work anyway.
+
+**No run has been accepted in that record yet**, so the acceptance path is proved by the package's
+tests and by the gate's mutation section rather than by a live run. Read that as a limit on the
+evidence, not as a claim that the path is untested.
+
 ### It cannot be skipped
 
 `agent run` runs `ART_REVIEW` before `METADATA`, and `metadata`, `prepare`, `predict`, `simulate`,

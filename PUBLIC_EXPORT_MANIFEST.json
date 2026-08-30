@@ -119,7 +119,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "0fc254203e9a924c2d52ee0dd6bf2aeee7ecd7931078d1f80765a4b264740559",
+      "sha256": "3e4264291e1590bcc687f147fb4d69ef1ab38da6cd4d41659401bce3b8af0917",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -574,7 +574,7 @@
     },
     {
       "path": "docs/creator-kit/autonomous-launch-agent.md",
-      "sha256": "f6fe0469a306eb45964128cbfdad252201238a63add596d45dc7543ed8ebbc5f",
+      "sha256": "ab90f808c4104cb5e19a6efed79ae69fc867f0d0a55306e9c86240e624dce31e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6209,7 +6209,7 @@
     },
     {
       "path": "packages/art-review/evidence/loop-runs.json",
-      "sha256": "a1c65274835a9fc997a336fbae57965f4473f09bb79faff39fd65121caaa11d6",
+      "sha256": "ecadc809148b644543c2a13cdaafcd310ec101af71b266902cb076ab46a8bd2c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6286,7 +6286,7 @@
     },
     {
       "path": "packages/art-review/src/packet.js",
-      "sha256": "bcef91d6b1bfeb714efcc977d1c06b7147612708f0d15da0d482621c65049712",
+      "sha256": "e3e2bd7d6f1ba1879488ffe02174c9c0db876c88d5a6b955e4b299dd7cffaece",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8484,7 +8484,7 @@
     },
     {
       "path": "scripts/build-art-review-evidence.mjs",
-      "sha256": "52cb9e2ae34c0612c57ad9dd600e5454aa09c7f18f417400c689190541545fe7",
+      "sha256": "b6e6ac2681c37b2a6c154ba57dac783bb61d5c5dce5a36fcddbc83706e9d88e9",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8512,7 +8512,7 @@
     },
     {
       "path": "scripts/check-art-review.mjs",
-      "sha256": "6d28ea4b454bd0977e0f9bd5c547dfde4e87ea33b1660eb471ab6a712d0e8fec",
+      "sha256": "fe7091f1e5e5c3badaf19a0cde1d4932eff59c7e8089f726b9a501b27f5cbeb6",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

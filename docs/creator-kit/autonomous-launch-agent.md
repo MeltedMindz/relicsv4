@@ -763,6 +763,22 @@ their own terminal who wants to launch art nobody reviewed still can: `goal: "BU
 the transaction and they sign it themselves and own that decision. What is refused is an agent doing
 it on their behalf, which is the case where nobody is looking by construction.
 
+### What the loop has actually done, and what it has not
+
+`packages/art-review/evidence/loop-runs.json` records seven briefs across both live runtimes, run
+against the runtimes deployed on Ethereum mainnet, and judged by **24 independent reviewers** —
+one per round, none of them the author, none of them told what the author thought.
+
+**`FIRST_ROUND_SHIP_VERDICTS=0`.** Not one first legal configuration was the finished work. Brief
+fidelity failed in 22 of 24 judgements. Three runs spent all four judgements and were refused.
+Twice the objective battery passed completely and the reviewer refused the work anyway, which is
+the whole argument stated as a measurement rather than as a claim.
+
+**No run has been accepted yet.** The acceptance path — the battery, the receipt, and the
+invalidation that voids it — is proved by `packages/art-review/test/loop.test.mjs` and by the
+mutation section of the gate, not by a live run in that record. It is a real limit on what these
+runs evidence, and it is written down rather than closed by inventing an acceptance.
+
 Gate: `npm run kit:artreview` (+ `:controls`, + `:test`). Required results:
 `AUTONOMOUS_VISUAL_REVIEW_RENDERED_IMAGES=YES` · `BRIEF_FIDELITY_GATE=ENABLED` ·
 `ART_AUTHOR_REVIEWER_SEPARATED=YES` · `ART_ACCEPTANCE_INVALIDATED_BY_CONFIG_CHANGE=YES` ·
