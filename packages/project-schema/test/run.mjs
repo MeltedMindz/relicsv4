@@ -162,6 +162,20 @@ import {
   liveChainIds,
   acceptsPublicLaunches,
 } from "../index.js";
+import {
+  ART_SELECTOR_RUNTIME_ID_SHIFT,
+  ART_SELECTOR_TEMPLATE_ID_MASK,
+  ART_SELECTOR_MAX_RUNTIME_ID,
+  ART_SELECTOR_MAX_TEMPLATE_ID,
+  ART_RUNTIME_REGISTERED_TOPIC0,
+  encodeArtSelector,
+  decodeArtSelector,
+  validateArtSelector,
+  isRuntimeElection,
+  discoverRegisteredRuntimeIds,
+  runtimeIdFromRegisteredLog,
+  runtimeRecordNamesARuntime,
+} from "../index.js";
 import { createVmModule, renderSeedsIsolated, makeReplayEvaluator, toRunnableScript } from "../../creator-cli/src/sandbox.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -2112,6 +2126,121 @@ test("a fresh JavaScript scaffold has templateId null, and that is correct", () 
   const parity = JSON.parse(readFileSync(join(FIXTURES, "parity/expected.json"), "utf8"));
   const js = parity.bundles.find((b) => b.manifest?.art?.runtime === "JAVASCRIPT");
   if (js) assert(js.manifest.art.templateId === null, "a JavaScript scaffold gained a fabricated templateId");
+});
+
+// ---------------------------------------------------------------- the art selector word
+//
+// `LaunchParams.artTemplateId` is `artRuntimeId << 224 | templateId`, written into a project's
+// IMMUTABLE art binding. The expectations below come from `fixtures/art-selector/vectors.json`,
+// emitted by the launchpad's `ArtSelectorParity.t.sol` from the DEPLOYED `ArtSelectorLib`; the
+// Solidity suite re-derives the same file. Neither side consumes the other's output, because a
+// round trip through our own decoder proves only that we are self-consistent — the property a
+// wrong implementation also has.
+
+const ART_SELECTOR_CORPUS_RAW = readFileSync(join(FIXTURES, "art-selector/vectors.json"), "utf8");
+const ART_SELECTOR_CORPUS = JSON.parse(ART_SELECTOR_CORPUS_RAW);
+
+test("the art selector corpus is large enough, and carries no lossy JSON number", () => {
+  assert(ART_SELECTOR_CORPUS.vectorCount > 40, `only ${ART_SELECTOR_CORPUS.vectorCount} vectors`);
+  assert(ART_SELECTOR_CORPUS.vectors.length === ART_SELECTOR_CORPUS.vectorCount, "the corpus miscounts itself");
+  // Emitted as JSON numbers, 2^224 comes back from JSON.parse as 2.695994666715064e+67 — silently.
+  // Every wide value is a string, and this is what stops a tidy-up from unquoting them.
+  assert(!/:\s*-?\d{16,}/.test(ART_SELECTOR_CORPUS_RAW), "a >=16-digit JSON number will be rounded by any parser");
+});
+
+test("the art selector agrees with the deployed library on every vector", () => {
+  let encoded = 0;
+  let decoded = 0;
+  let refused = 0;
+  for (const v of ART_SELECTOR_CORPUS.vectors) {
+    if (v.kind === "encode") {
+      const expected = BigInt(v.selectorHex);
+      assert(BigInt(v.selectorDecimal) === expected, `${v.name}: the corpus's two spellings disagree`);
+      assert(encodeArtSelector(v.artRuntimeId, v.templateId) === expected, `${v.name}: encode`);
+      const parts = decodeArtSelector(expected);
+      assert(parts.artRuntimeId === v.decodedRuntimeId, `${v.name}: runtime half`);
+      assert(parts.templateId === BigInt(v.decodedTemplateId), `${v.name}: template half`);
+      encoded++;
+    } else if (v.kind === "decode") {
+      const selector = BigInt(v.selectorHex);
+      assert(BigInt(v.selectorDecimal) === selector, `${v.name}: the corpus's two spellings disagree`);
+      const parts = decodeArtSelector(selector);
+      assert(parts.artRuntimeId === v.decodedRuntimeId, `${v.name}: runtime half`);
+      assert(parts.templateId === BigInt(v.decodedTemplateId), `${v.name}: template half`);
+      decoded++;
+    } else {
+      const input =
+        v.code === "SELECTOR_OVERFLOW" ? v.selectorDecimal : { artRuntimeId: v.artRuntimeId ?? 0, templateId: v.templateId ?? "0" };
+      const verdict = validateArtSelector(input);
+      assert(verdict.ok === false, `${v.name}: validate accepted a vector recorded as refused`);
+      assert(verdict.code === v.code, `${v.name}: refused as ${verdict.code}, corpus says ${v.code}`);
+      refused++;
+    }
+  }
+  // PER-KIND FLOORS. An aggregate cannot see a whole category that vanished.
+  assert(encoded > 30, `only ${encoded} encode vectors`);
+  assert(decoded > 3, `only ${decoded} decode vectors`);
+  assert(refused > 2, `only ${refused} refused vectors`);
+});
+
+test("the art selector's two halves tile the word and do not bleed into each other", () => {
+  assert(ART_SELECTOR_RUNTIME_ID_SHIFT === 224n, "the shift moved");
+  assert(ART_SELECTOR_TEMPLATE_ID_MASK === (1n << 224n) - 1n, "the mask moved");
+  assert(encodeArtSelector(ART_SELECTOR_MAX_RUNTIME_ID, ART_SELECTOR_MAX_TEMPLATE_ID) === (1n << 256n) - 1n, "the halves do not tile the word");
+  // encode(3, 1) and encode(1, 3) are both legal and mean different things.
+  assert(encodeArtSelector(3, 1) !== encodeArtSelector(1, 3), "the halves are interchangeable");
+  // A hand-written word, so a reversed decoder cannot hide behind a matching encoder.
+  const literal = 0x000000abn * (1n << 224n) + 0xcdn;
+  assert(decodeArtSelector(literal).artRuntimeId === 0xab, "decode read the runtime id from the wrong end");
+  assert(decodeArtSelector(literal).templateId === 0xcdn, "decode read the template id from the wrong end");
+});
+
+test("zero is no preference and can never be a runtime election", () => {
+  // `ArtRuntimeRegistryV1.registerRuntime` reverts `ReservedRuntimeId()` for id 0, so nothing can
+  // ever be registered there — which is what makes a zero runtime half safe to read as "no
+  // preference" AND makes representing an election with zero a permanent mistake.
+  assert(isRuntimeElection(0) === false, "0 was accepted as an election");
+  assert(isRuntimeElection(1) === true, "1 was refused as an election");
+  assert(encodeArtSelector(0, 1) === 1n, "a runtime id was invented for a no-preference selector");
+  assert(validateArtSelector({ artRuntimeId: 0, templateId: 1 }, { requireRuntimeElection: true }).code === "NO_RUNTIME_ELECTION");
+});
+
+test("encode masks an oversized template id and refuses an oversized runtime id", () => {
+  // MASKS, exactly as the chain does. Refusing where the chain masks would make the two
+  // implementations disagree about a value the chain accepts.
+  assert(encodeArtSelector(3, ART_SELECTOR_TEMPLATE_ID_MASK + 1n) === encodeArtSelector(3, 0), "encode(3, 2^224) != encode(3, 0)");
+  // REFUSES, because Solidity's uint32 parameter makes an oversized id unrepresentable at the call
+  // site and JavaScript has no cast — masking would bind a different runtime, permanently.
+  assertThrows(() => encodeArtSelector(ART_SELECTOR_MAX_RUNTIME_ID + 1n, 1), "exceeds the uint32", "an oversized runtime id was masked");
+  // …while `validate` refuses what the codec masks. The two answers differ on purpose.
+  assert(validateArtSelector({ artRuntimeId: 3, templateId: ART_SELECTOR_TEMPLATE_ID_MASK + 1n }).code === "TEMPLATE_ID_OVERFLOW");
+});
+
+test("runtimeCount is a denominator, never a source of runtime ids", () => {
+  // Ethereum and Base report runtimeCount() == 3 today while ids 1, 3 and 4 are registered, so a
+  // `1..runtimeCount` sweep concludes NOT_REGISTERED for a live runtime. Discovery reads the
+  // registration LOG and uses the counter only to prove the log set is whole.
+  const log = (id) => ({ topics: [ART_RUNTIME_REGISTERED_TOPIC0, `0x${id.toString(16).padStart(64, "0")}`] });
+  const sparse = discoverRegisteredRuntimeIds([log(1), log(3), log(4)], { runtimeCount: 3 });
+  assert(sparse.complete === true, `sparse discovery reported incomplete: ${sparse.reason}`);
+  assert(JSON.stringify(sparse.ids) === "[1,3,4]", `expected [1,3,4], got ${JSON.stringify(sparse.ids)}`);
+  // A truncated eth_getLogs range must be INCOMPLETE rather than an answer.
+  assert(discoverRegisteredRuntimeIds([log(1), log(3)], { runtimeCount: 3 }).complete === false, "a short log set was reported complete");
+  // …and so must a log set with no denominator at all.
+  assert(discoverRegisteredRuntimeIds([log(1), log(3), log(4)], {}).complete === false, "a log set with no denominator was reported complete");
+  // Zero is refused rather than coerced: registerRuntime reverts for it, so a decoder that fell
+  // back to it would manufacture a registration at the one key that cannot have one.
+  assert(runtimeIdFromRegisteredLog(log(0)) === null, "id 0 decoded as a registration");
+  assert(runtimeIdFromRegisteredLog({ topics: ["0x" + "11".repeat(32), log(3).topics[1]] }) === null, "a foreign event decoded as a registration");
+});
+
+test("the zero-address trap: an unregistered runtimeInfo record does not name a runtime", () => {
+  // `runtimeInfo` is a bare mapping read with no `exists` guard, so it does NOT revert for an
+  // unregistered id — it returns a zero-address record a "did it resolve?" check reads as success.
+  assert(runtimeRecordNamesARuntime({ exists: false, runtime: "0x0000000000000000000000000000000000000000" }) === false);
+  assert(runtimeRecordNamesARuntime({ exists: true, runtime: "0x0000000000000000000000000000000000000000" }) === false, "a zero address named a runtime");
+  assert(runtimeRecordNamesARuntime({ exists: false, runtime: "0x265eE6a0E321d8581B91a032CE43617Da591dAB4" }) === false, "exists:false named a runtime");
+  assert(runtimeRecordNamesARuntime({ exists: true, runtime: "0x265eE6a0E321d8581B91a032CE43617Da591dAB4" }) === true);
 });
 
 // ---------------------------------------------------------------- summary
