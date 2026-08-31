@@ -217,6 +217,20 @@ export async function cmdPrepare(name, workspace, flags, json, ctx) {
   }
   const { ART_RUNTIME_IDS } = await import("../schema.js");
   const runtimeTag = ART_RUNTIME_IDS[artSource.runtime] ?? artSource.runtime;
+
+  // ---- THE VISUAL REVIEW MAY NOT APPLY TO THIS WORKSPACE, AND THAT IS WORTH SAYING OUT LOUD ----
+  //
+  // `artReviewApplies` binds on an `art.json` or on a template-selection receipt, so a project
+  // SCAFFOLDED with `relics init` on a Wave-1 runtime — which became possible when the Wave-1
+  // scaffolds shipped — answers NOT_APPLICABLE and reaches this point with nobody having looked at
+  // the pictures. That is exactly the case the review loop exists for: an agent launching art no
+  // human has seen.
+  //
+  // THIS IS A WARNING AND NOT A REFUSAL, deliberately. Making it refuse would decide, on the
+  // owner's behalf, that every Wave-1 terminal launch requires a reviewer round — a product
+  // decision with a real cost, and not one a gate should make quietly on the way past. What is NOT
+  // acceptable is the gap being invisible, so it is named here, in the run's own output, every time.
+  const reviewGap = await unreviewedWave1Warning(workspace, artSource.runtime);
   const elected = await sdk.resolveArtRuntime(made.client, profile.contracts.artRuntimeRegistry, runtimeTag);
   if (elected.state !== "ACTIVE") {
     emit(name, {
@@ -266,12 +280,40 @@ export async function cmdPrepare(name, workspace, flags, json, ctx) {
         hookAddress: mined.hookAddress, hookSaltAttempts: mined.attempts, hookFlags: mined.flags,
         artSelector: { runtimeTag, artRuntimeId: elected.artRuntimeId, templateId: String(artSource.templateId), selector: `0x${prepared.params.artTemplateId.toString(16).padStart(64, "0")}` },
       },
+      warnings: reviewGap ? [reviewGap] : [],
       nextActions: ["READY_FOR_SIMULATION"],
     }, { json });
     return EXIT.OK;
   } catch (err) {
     emit(name, { success: false, errors: [err instanceof Error ? err.message : String(err)], nextActions: ["FIX_VALIDATION"] }, { json });
     return EXIT.REFUSED;
+  }
+}
+
+/**
+ * The warning above, or null when the review loop already binds this workspace.
+ *
+ * IT ASKS THE REVIEW PACKAGE WHICH RUNTIMES IT CAN DRAW rather than carrying a list: a runtime the
+ * loop cannot render is one it has no opinion about, and hard-coding names here would go stale the
+ * moment a third engine ships.
+ */
+async function unreviewedWave1Warning(workspace, runtime) {
+  try {
+    const { artReviewApplies } = await import("./agent-art.js");
+    if (artReviewApplies(workspace).applies) return null;
+    const { RUNTIMES: REVIEWABLE } = await import("../../../art-review/src/runtimes.js");
+    const { ART_RUNTIME_IDS } = await import("../schema.js");
+    const id = ART_RUNTIME_IDS[runtime] ?? runtime;
+    if (!REVIEWABLE[id]) return null;
+    return (
+      `NO VISUAL REVIEW APPLIES TO THIS WORKSPACE. ${id} is a runtime the review loop can draw, and this project reached prepare with no art.json and no template-selection receipt, ` +
+      "so `artReviewApplies` stands aside and nobody has looked at the pictures. The art binding is one-shot: a launch commits this configuration permanently. " +
+      "Run `npm run kit -- agent art-review --workspace <dir> --chain <id>` and have a reviewer that is not the author judge the images before signing."
+    );
+  } catch {
+    // A warning that cannot be computed is not a warning that does not apply — but it is also not a
+    // reason to refuse a launch, so it is dropped rather than turned into a false all-clear.
+    return null;
   }
 }
 
