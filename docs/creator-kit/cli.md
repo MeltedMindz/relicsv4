@@ -60,10 +60,10 @@ purpose, so nobody exports a project that pays a placeholder.
 
 Lists the starter templates, the art runtime each one targets, and whether a launch binds that
 runtime yet. Whether a template can be launched is two questions, not one. The RUNTIME half: four
-of the five templates below target `ONCHAIN_JAVASCRIPT_V1`, which no launch binds in this release,
-so those four cannot be launched — on an open chain or anywhere else. `solidity-svg-params` targets
-`SOLIDITY_SVG_V1`, which a launch does bind. The CHAIN half is `relics status`; run it rather than
-reading a chain's state out of this table.
+of the seven templates below target `ONCHAIN_JAVASCRIPT_V1`, which no launch binds in this release,
+so those four cannot be launched — on an open chain or anywhere else. The other three target
+runtimes a launch does bind. The CHAIN half is `relics status`; run it rather than reading a
+chain's state out of this table.
 
 | id | runtime id | bound by a launch | what it shows |
 | --- | --- | --- | --- |
@@ -71,13 +71,24 @@ reading a chain's state out of this table.
 | `market-responsive` | `ONCHAIN_JAVASCRIPT_V1` | preview only | four sensors wired to four art parameters, and a SPLIT earnings config |
 | `static-art` | `ONCHAIN_JAVASCRIPT_V1` | preview only | no mappings at all — the art never changes |
 | `onchain-js` | `ONCHAIN_JAVASCRIPT_V1` | preview only | writing for the 36,000-byte script budget |
-| `solidity-svg-params` | `SOLIDITY_SVG_V1` | first in line | parameters for a registered on-chain template, with a local preview |
+| `solidity-svg-params` | `SOLIDITY_SVG_V1` | yes | parameters for a registered on-chain template, with a local preview |
+| `geometric-recursion-compass` | `GEOMETRIC_RECURSION_V1` | yes | the Wave-1 `compass` preset: rings of rings, coloured by level |
+| `vector-composition-alluvium` | `VECTOR_COMPOSITION_V1` | yes | the Wave-1 `alluvium` preset: sediment the market writes |
 
-**Approved is not the same as launchable.** Both runtimes are approved — the format accepts them,
-and all five templates validate, preview and export. Only `SOLIDITY_SVG` is currently bound and
-rendered by a deployed collection, so the four JavaScript templates are marked `preview only` here,
-in `relics init` and in `relics validate` rather than presented as launchable. A template on a
-gated runtime is marked, never deleted.
+**Approved is not the same as launchable.** Every runtime here is approved — the format accepts
+them, and all seven templates validate, preview and export. Three are bound and rendered by a
+deployed collection, so the four JavaScript templates are marked `preview only` here, in
+`relics init` and in `relics validate` rather than presented as launchable. A template on a gated
+runtime is marked, never deleted.
+
+**The two Wave-1 engines reach a launch through the TERMINAL.** They are launchable through the autonomous terminal workflow (`relics agent ...`) while Studio integration is being completed; there is no Studio picker for them yet and this document does not imply one. The two are not
+alternative paths a creator picks between, and describing them that way would offer a surface that
+does not exist.
+
+**And launchable is still not the same as available on YOUR chain.** Which numeric id a runtime
+holds, and whether it is active, is per chain and is read from `ArtRuntimeRegistryV1` at the moment
+`relics agent prepare` composes the art selector. A registry that could not be read completely is
+UNKNOWN, and the run refuses with a retry rather than guessing.
 
 There is no p5-style template. p5 is not an approved art runtime, so the schema refuses a bundle
 that names it rather than shipping a template that could not export.

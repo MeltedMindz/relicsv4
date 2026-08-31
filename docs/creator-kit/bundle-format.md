@@ -249,8 +249,10 @@ unknown-key check. This is the same REQUEST-never-APPROVAL rule the quote asset 
 ### Approved is not launchable
 
 `APPROVED_ART_RUNTIMES` is what the format accepts. `LAUNCHABLE_ART_RUNTIMES` is what the
-launchpad binds and renders. A runtime can be approved and not launchable — and the JavaScript
-refusal is structural rather than a queue position: `ArtRuntimeRegistry.modeAvailable` is `pure`
+launchpad binds and renders. Four names are approved — `SOLIDITY_SVG`, `GEOMETRIC_RECURSION`,
+`VECTOR_COMPOSITION` and `JAVASCRIPT` — and the first three are launchable. A runtime can be
+approved and not launchable — and the JavaScript refusal is structural rather than a queue
+position: `ArtRuntimeRegistry.modeAvailable` is `pure`
 and admits `SOLIDITY_SVG_V1` alone, so no authority can register a JavaScript runtime. Its
 templates still ship, still preview, still export; the kit marks them rather than deleting the work
 or implying they can be launched.
@@ -258,6 +260,14 @@ or implying they can be launched.
 Launchability is deliberately **not** a manifest field. It is a property of the protocol on the day
 you ask, and folding it into the bundle hash would mean enabling a runtime invalidated every bundle
 exported while it was gated.
+
+Neither is the ELECTED RUNTIME'S NUMBER. `LaunchParams.artTemplateId` carries the registered
+template in its low 224 bits and the elected art runtime's `uint32` registry key in its top 32, and
+only the template half is a bundle field (`artBinding.templateId`, a decimal string). The runtime
+half is a per-chain fact — ids are chosen by the registering authority and may be sparse — so a
+bundle names its runtime by STABLE STRING (`artBinding.runtimeId`) and the packed word is composed
+at prepare time from a live registry read. This is the same rule that refuses `runtimeCodeHash` and
+`scriptPointer` by name, applied to the same kind of claim.
 
 ### There is no field for contract code
 

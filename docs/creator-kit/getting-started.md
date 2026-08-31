@@ -47,13 +47,19 @@ whether that runtime is currently **launchable**.
 | `market-responsive` | `ONCHAIN_JAVASCRIPT_V1` | you want four sensors already wired to four art parameters |
 | `static-art` | `ONCHAIN_JAVASCRIPT_V1` | the art should never change after mint |
 | `onchain-js` | `ONCHAIN_JAVASCRIPT_V1` | you want the 36,000-byte script budget in view from line one |
-| `solidity-svg-params` | `SOLIDITY_SVG_V1` | you want the one runtime a launch currently binds |
+| `solidity-svg-params` | `SOLIDITY_SVG_V1` | you want the generic parameter surface a launch binds |
+| `geometric-recursion-compass` | `GEOMETRIC_RECURSION_V1` | recursive geometry: rings of rings, coloured by level |
+| `vector-composition-alluvium` | `VECTOR_COMPOSITION_V1` | layered vector fields: sediment the market writes |
 
-**Approved and launchable are not the same question.** Both runtimes are approved: the format
-accepts them, and all five templates validate, preview and export. Only `SOLIDITY_SVG` is *bound
-and rendered* by a deployed collection, so the four JavaScript templates are marked `preview only`
-in `relics templates`, in `relics init`, and in `relics validate`. They are real, valid projects
-that cannot be launched — not broken ones, and not launchable ones being described loosely.
+**Approved and launchable are not the same question.** Every runtime here is approved: the format
+accepts them, and all seven templates validate, preview and export. Three are *bound and rendered*
+by a deployed collection, so the four JavaScript templates are marked `preview only` in
+`relics templates`, in `relics init`, and in `relics validate`. They are real, valid projects that
+cannot be launched — not broken ones, and not launchable ones being described loosely.
+
+The two Wave-1 engines are launchable through the autonomous terminal workflow
+(`relics agent ...`) while Studio integration is being completed. That is the whole claim: there is
+no Studio picker for them yet, and this page does not offer one.
 
 The JavaScript refusal is **structural, not a schedule**: `ArtRuntimeRegistry.modeAvailable` is a
 `pure` function admitting the Solidity-SVG mode alone, so registering a JavaScript runtime reverts

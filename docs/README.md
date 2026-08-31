@@ -209,7 +209,12 @@ canonical `tokenURI`.
   sensor reading to `[0, 1]`.
 - **destination** — a named art parameter (`fracture`, `density`, `brightness`, …) your generator
   reads from `context.market`.
-- **art runtime** — how a collection's art is rendered on chain: `SOLIDITY_SVG_V1` or
+- **art selector** — the packed `LaunchParams.artTemplateId` word: the registered template in the
+  low 224 bits, the elected art runtime's per-chain registry key in the top 32. A bundle carries
+  the template half and names its runtime by stable string; the number is read from the chain at
+  prepare time.
+- **art runtime** — how a collection's art is rendered on chain: `SOLIDITY_SVG_V1`,
+  `GEOMETRIC_RECURSION_V1`, `VECTOR_COMPOSITION_V1` or
   `ONCHAIN_JAVASCRIPT_V1`.
 - **approved vs launchable** — approved means the bundle format accepts the runtime; launchable
   means a deployed collection will actually bind and render through it. They are not the same

@@ -4,7 +4,7 @@
   "version": "4.1.0",
   "packageVersion": "3.13.0",
   "creatorKitVersion": "4.3.0",
-  "surfaceSha256": "d3d46e920007b28f7eaf20cdbe6d4efa60f93c9dc1a966197f36c266691c1882",
+  "surfaceSha256": "540eeb7712019fe3dba2767932a699fc9f9da4876cadfccee2c8789aaa33986e",
   "checks": [
     "ALLOWED_DEPENDENCIES",
     "ALLOWED_RUNTIME",
@@ -54,7 +54,7 @@
     },
     {
       "path": "fixtures/art-selector/vectors.json",
-      "sha256": "eeeab59308f09d7315e71db8b8cf0d7b943509d67e26ea6dfa05a8b06977e1e7"
+      "sha256": "0a906126d8396d1dddef1789c85d2972539a6f6c9aedf9c40b0a7f92786626ae"
     },
     {
       "path": "index.js",
@@ -74,7 +74,7 @@
     },
     {
       "path": "src/art-runtime-discovery.js",
-      "sha256": "e93ea536fc0a7e098f5a9d792e8800f090aac199c7d65e4bf17385de8fec5cdb"
+      "sha256": "f56989a921ab01b7841d1b292ae465c80657e248c3f8189dac676c9369352eb8"
     },
     {
       "path": "src/art-selector.js",

@@ -15,8 +15,8 @@
 // CALLER ARGUMENT and only does `$.runtimeCount += 1` (`:213-215`), so ids are chosen by the
 // registering Safe and are free to be sparse. Measured live on 2026-08-30: Ethereum and Base both
 // report `runtimeCount() == 3` while ids 1, 3 and 4 are registered and id 2 is deliberately empty
-// (Robinhood's id 2 is `666_CANONICAL_SKULL_V1`, and the other two chains were left with a hole so
-// one runtime has one id everywhere). A `for id in 1..runtimeCount` sweep therefore reads ids
+// (id 2 is registered on Robinhood alone, and the other two chains were left with a hole so one
+// runtime has one id everywhere). A `for id in 1..runtimeCount` sweep therefore reads ids
 // 1, 2, 3 and concludes NOT_REGISTERED for `VECTOR_COMPOSITION_V1`, which is live at id 4.
 //
 // A FIXED-WINDOW PROBE IS NOT A FIX EITHER. Scanning `1..16` and stopping once `runtimeCount`

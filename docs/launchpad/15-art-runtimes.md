@@ -133,7 +133,11 @@ contract said at read time, and an owner of that contract could change the art.
 
 The launchable path does not involve writing or deploying a contract at all.
 
-`LAUNCHABLE_ART_RUNTIMES` is **`["SOLIDITY_SVG"]`** today. That is one shared, vetted singleton per
+`LAUNCHABLE_ART_RUNTIMES` is **`["SOLIDITY_SVG", "GEOMETRIC_RECURSION", "VECTOR_COMPOSITION"]`**
+today, and it is a RELEASE answer rather than a chain answer: it says the protocol implements a
+runtime, not that any particular chain has it registered and active. That second question is per
+chain, changes without this repository changing, and is answered by reading
+`ArtRuntimeRegistryV1` on the day you ask. That is one shared, vetted singleton per
 chain — `SolidityGenerativeRuntimeV1` — used by every `SOLIDITY_SVG_V1` project on that chain. You
 supply **ACV1 parameters** in your bundle and the launch binds them to that runtime:
 

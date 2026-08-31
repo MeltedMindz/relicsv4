@@ -270,18 +270,34 @@ below is the runtime half only.
 | `static-art` | JAVASCRIPT | **no — preview only** | seed-driven art that never changes after mint |
 | `onchain-js` | JAVASCRIPT | **no — preview only** | writing tight against the 36,000-byte script budget |
 | `solidity-svg-params` | SOLIDITY_SVG | **yes** | configuring a registered on-chain Solidity renderer by parameters |
+| `geometric-recursion-compass` | GEOMETRIC_RECURSION | **yes** | recursive geometry — the Wave-1 `compass` preset, rings of rings coloured by level |
+| `vector-composition-alluvium` | VECTOR_COMPOSITION | **yes** | layered vector fields — the Wave-1 `alluvium` preset, sediment the market writes |
 
 **Approved is not launchable, and you must say so out loud.** `APPROVED_ART_RUNTIMES` is what the
 bundle format accepts; `LAUNCHABLE_ART_RUNTIMES`
 (`packages/project-schema/src/vocabulary.js`) is what the launchpad will actually bind and render.
-Today only `SOLIDITY_SVG` is in the second set. A JAVASCRIPT project authors, previews, validates
-and exports perfectly — and cannot launch yet. Nothing about the bundle has to change when that is
-enabled.
+Today `SOLIDITY_SVG`, `GEOMETRIC_RECURSION` and `VECTOR_COMPOSITION` are in the second set. A
+JAVASCRIPT project authors, previews, validates and exports perfectly — and cannot launch yet.
+Nothing about the bundle has to change when that is enabled.
+
+**`LAUNCHABLE_ART_RUNTIMES` IS A RELEASE ANSWER AND NOT A CHAIN ANSWER, and with three names in it
+the difference is now load-bearing.** It says the protocol implements a runtime. Whether a given
+chain has that runtime REGISTERED and ACTIVE is per chain, changes without this repository
+changing, and can only be established by reading `ArtRuntimeRegistryV1` on the day you ask —
+`relics agent prepare` does exactly that before it composes the art selector, and refuses rather
+than guessing when the registry cannot be read completely.
+
+**The two Wave-1 engines launch through the TERMINAL. They are available through the autonomous terminal workflow (`relics agent ...`) while Studio integration is being completed.** Do not describe a
+Studio picker for them, do not present the two as alternative paths a creator chooses between, and
+do not imply a date for the second one.
 
 The CLI already prints this at `init`, at `templates`, in `validate` (`ART_RUNTIME_PREVIEW_ONLY`)
 and at `export`. Do not suppress it or paraphrase it away. **If a creator's priority is launching
 soonest, that is `solidity-svg-params`; if their priority is the art, JavaScript is far more
-expressive. State the trade-off and let them choose — do not choose silently.**
+expressive. State the trade-off and let them choose — do not choose silently.** The three
+launchable runtimes are a real choice too: `solidity-svg-params` is the generic parameter surface,
+and the two Wave-1 engines are specific instruments with their own config formats. Which one suits
+the work is the creator's question, not a tool's.
 
 **Never advise switching runtime to unlock a launch.** A JavaScript generator and a Solidity-SVG
 parameter set are two different artworks, and which one the creator meant is not a question a tool

@@ -209,13 +209,18 @@ today**:
 | `static-art` | art fixed forever at mint | preview only |
 | `onchain-js` | very tight, compact generators | preview only |
 | `solidity-svg-params` | configuring a built-in on-chain renderer | **yes** |
+| `geometric-recursion-compass` | recursive geometry — the Wave-1 `compass` preset | **yes** |
+| `vector-composition-alluvium` | layered vector fields — the Wave-1 `alluvium` preset | **yes** |
+
+The last two are launchable through the autonomous terminal workflow (`relics agent ...`) while
+Studio integration is being completed. There is no Studio picker for them yet and this page does
+not offer one — they are not two paths you choose between.
 
 ### The Wave-1 art templates are a different list, and your agent does not pick from it by hand
 
-Separate from the five scaffolds above there is a catalog of **art templates** — configuration
-presets for on-chain art runtimes. Thirty-five went through a blind visual review; seven passed, five
-of those were repaired and re-reviewed blind, and three ship. `npm run kit -- templates` shows the
-three.
+Separate from the scaffolds above there is a catalog of **art templates** — configuration presets
+for on-chain art runtimes. Thirty-five went through a blind visual review; seven passed, five of
+those were repaired and re-reviewed blind, and two ship. `npm run kit -- templates` shows them.
 
 **Your agent must not choose one of these by reading descriptions.** The presets that did not clear
 review describe themselves as well as the ones that did — their weaknesses are things like "recovery
@@ -268,7 +273,10 @@ and export a JavaScript project completely — you just cannot launch it until t
 enabled, and nothing about your bundle has to change when it is.
 
 The trade-off is real and your agent should state it plainly: **JavaScript is far more expressive;
-`solidity-svg-params` is what you can launch soonest.** That is your decision, not the agent's.
+the three Solidity-mode runtimes are what you can launch.** Among those three it is a choice about
+the work, not about timing — `solidity-svg-params` is the generic parameter surface, and the two
+Wave-1 engines are specific instruments with their own configuration formats. That is your
+decision, not the agent's.
 
 ---
 

@@ -236,7 +236,7 @@ disagree; the code is the definition.
 | `goal` | `BUILD_ONLY` \| `LAUNCH` | `BUILD_ONLY` stops the run at a built, simulated, policy-approved transaction. It is the safe way to see exactly what would be sent. |
 | `allowedChains` | non-empty array of positive integer chain ids | The chains the agent may consider. A chain absent from this list may still be reachable and open — the point is that the creator, not the agent, decides. |
 | `chainSelection` | `PREFERRED_ORDER` \| `LOWEST_ESTIMATED_GAS` \| `PREFERRED_THEN_GAS` | The rule applied to the chains that pass admission. See §6 for what each one means, in words. |
-| `allowedRuntimes` | non-empty array of runtime tags | The runtime a chain must have registered and active before it is admitted. Today the launchable entry is `SOLIDITY_SVG_V1`. |
+| `allowedRuntimes` | non-empty array of runtime tags | The runtime a chain must have registered and active before it is admitted, named by its STABLE STRING — never by a registry id, which is per chain. Today the launchable entries are `SOLIDITY_SVG_V1`, `GEOMETRIC_RECURSION_V1` and `VECTOR_COMPOSITION_V1`. |
 | `allowedQuoteAssets` | `"AUTO"` or an array of symbols | `"AUTO"` lets the agent take any live-admitted quote; a list restricts it to those symbols. |
 | `creatorRecipient` | a checksummed address | Where the project's rights and the creator's fee stream go. **Never derived from the signer.** The wallet that pays for a launch and the wallet that receives a permanent revenue right are routinely different, and guessing one from the other hands a hot wallet the fee stream forever. |
 | `allowedAntiSnipeModes` | non-empty subset of `NONE` \| `PROTECTED_98_MINUTES` | The elections the agent may make. `UNSPECIFIED` is not a third choice: the factory refuses it, so a launch that "forgot" can never be mistaken for one that deliberately chose no protection. |
@@ -377,6 +377,7 @@ the transaction, so nothing is taken on the orchestrator's word:
 | the chain | the approved build names the factory for **one** chain. The RC6 factory shares a CREATE2 address across three chains, so an address comparison alone cannot tell them apart, and a request for a different chain than the build is refused. |
 | `value`, gas, gas price | compared against the policy's ceilings. An unreadable amount is not a bounded one, so a non-bigint `value` is refused too. |
 | **the creator's recipient** | **decoded out of the calldata**, never accepted beside it. It is one field of a nineteen-field positional tuple, and it is the one an attacker gains anything by changing. |
+| **the elected art runtime** | **decoded out of the calldata**, out of the top 32 bits of `artTemplateId`, and compared against the election the approved build carries — which was read from `ArtRuntimeRegistryV1` before the request existed. There is no runtime field beside the request, and adding one would be the substitution this check exists to stop. |
 
 That last row is the reason the whole boundary is worth its complexity. Chain, factory, selector
 and all three hashes can be correct while `creatorRecipient` names somebody else — and that field
@@ -387,6 +388,46 @@ recipient is the creator's, which is the only thing that would let it sign.
 The order matters too: the calldata hash is verified **before** the recipient is decoded, so a
 mutated body is reported as the tampering it is rather than as a recipient the creator never chose.
 
+#### The art selector, and why `artMode` could not do this job
+
+`LaunchParams.artTemplateId` is not a template id. It packs two creator choices into one word — the
+registered template in the low 224 bits, the elected art runtime's per-chain registry key in the
+top 32:
+
+```
+artTemplateId = uint256(artRuntimeId) << 224 | templateId
+```
+
+The signer decoded the field, because the nineteen-field arity check requires it to be present, and
+then never read it. The one art check that existed looked at `artMode`, which is `0` for the
+generic `SOLIDITY_SVG_V1` **and** `0` for both Wave-1 engines — so it could not tell them apart.
+
+The attack that closes is a substitution *after* simulation. An agent prepares, predicts and
+simulates on `GEOMETRIC_RECURSION_V1` (id 3 on the three chains that carry it today), then hands
+the signer calldata electing something else. Every other field is identical, the simulation receipt
+is honest because it is of those exact bytes, and **the launch succeeds**: the pool opens, the
+collection deploys, `tokenURI` returns a perfectly good picture. It is the wrong runtime's picture,
+permanently, because the art binding is one-shot and no transaction repairs it.
+
+Four things are checked, and each has its own code:
+
+| Refused when | Code |
+| --- | --- |
+| the word does not decode, or its **template half** is `0` — `3 << 224` is a very large non-zero number that a `!== 0` test cannot see, and the chain reverts `BadTemplate` | `ART_SELECTOR_MALFORMED` |
+| the election does not equal the approved one — including dropping it to `0`, which is not runtime 0 (the registry reserves that id) but "no preference", so the factory resolves its generic runtime | `ART_SELECTOR_NOT_APPROVED` |
+| the approved runtime's stable tag is not in `policy.allowedRuntimes` | `ART_RUNTIME_NOT_ALLOWED_BY_POLICY` |
+| the reading the approval rests on does not show that runtime **active with code** on this chain — including an enumeration that never reconciled against `runtimeCount()`, which is nobody's answer rather than a bad one | `ART_RUNTIME_NOT_ACTIVE_ON_CHAIN` |
+
+**The election travels on the approved build, not beside the request.** It is a fact about a chain,
+and a signer that read a registry itself would read it through the same table the orchestrator used
+to build the transaction — the identical argument the canonical factory address already makes. So
+the reading is taken once, upstream, with its evidence: which registry, which address, how many
+bytes of code, whether the id enumeration was complete, at which block.
+
+**An approval that carries no election refuses a request that names one.** Absence is not
+permission: there is nothing for the election to be shown to match, and an election nobody approved
+is not an approved election.
+
 ### The refusal codes
 
 Handle all thirteen; they are a closed set:
@@ -396,6 +437,14 @@ Handle all thirteen; they are a closed set:
 `CALLDATA_HASH_MISMATCH` · `POLICY_HASH_MISMATCH` · `LAUNCH_PLAN_HASH_MISMATCH` ·
 `BUNDLE_HASH_MISMATCH` · `RECIPIENT_NOT_POLICY_RECIPIENT` · `SIGNER_DOES_NOT_SUPPORT_CHAIN` ·
 `NO_APPROVED_BUILD`
+
+Two guards carry their own codes beside these, and a client should branch on the string rather than
+on the closed union: the GRANT guard (`NO_AUTHORIZATION`, `AUTHORIZATION_EXPIRED`,
+`RUNTIME_NOT_AUTHORIZED`, `SIMULATION_CALLDATA_MISMATCH`, …) and the ART SELECTOR guard
+(`ART_SELECTOR_MALFORMED`, `ART_SELECTOR_NOT_APPROVED`, `ART_RUNTIME_NOT_ALLOWED_BY_POLICY`,
+`ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`). Widening the thirteen would be a cross-package contract change;
+keeping a guard's codes local is the precedent the grant guard set, and the codes still reach the
+agent verbatim.
 
 **No approved build is not "no constraints".** Without one there is nothing to compare the hashes
 or the target against, so every other check would pass vacuously. It is refused, and it is refused
@@ -633,6 +682,32 @@ choice can be re-derived by somebody who was not there.
   returns a full record with the zero address and `exists: false`. Treating a successful *call* as
   a successful *resolution* is the bug, so a non-zero address holding code, active, and matching
   the required tag is what counts as registered.
+- **`runtimeCount()` is a COUNT, not `maxRuntimeId + 1`.** Ids are chosen by the registering
+  authority and may be sparse. Read live on 2026-08-31: Ethereum reports `runtimeCount() == 3`
+  while ids **1, 3 and 4** are registered and active and id 2 is deliberately empty, so a
+  `for id in 1..runtimeCount` sweep reads 1, 2, 3 and concludes `VECTOR_COMPOSITION_V1` is absent —
+  a fabricated fact about a live chain. The registry exposes no enumeration function, so the
+  complete surface is the `RuntimeRegistered` **log**, and the counter is used only as an
+  independent denominator: a log set of a different size is a truncated read, not an answer.
+  Providers cap `eth_getLogs` (measured: *"ranges over 10000 blocks are not supported on free
+  plan"*), so the resolver windows backwards and stops on the counter rather than on a guess about
+  how far back to look.
+
+### The art runtime a project elects, and where its number comes from
+
+A project names its runtime by **stable string** — `GEOMETRIC_RECURSION_V1` — in
+`artBinding.runtimeId`, and a policy names the same string in `allowedRuntimes`. The **number** is
+never written down anywhere in a bundle, a policy or this repository: registry keys are per chain,
+chosen by the registering authority, and may be sparse.
+
+`relics agent prepare` resolves it, on the chain that was selected, at the moment it composes the
+calldata, and records the reading in its receipt. Then it composes the word through
+`encodeArtSelector` — the one public implementation of the shift, checked against the deployed
+Solidity library's own corpus. Nothing in the kit open-codes `<< 224`.
+
+An unread registry is `UNKNOWN`, never `NOT_REGISTERED`: the two refuse a launch alike and say
+different things to a creator, and only one of them is a reason to retry. `prepare` exits
+`UNKNOWN_CHAIN_STATE` for the first and `BLOCKED` for the second.
 
 ---
 
@@ -1001,6 +1076,9 @@ Where this page and the code disagree, the code is right.
 | the policy schema and every refusal message | `packages/launch-sdk/src/policy.ts` |
 | the shared types, the state list, the action list, the exit codes | `packages/launch-sdk/src/contracts.ts` |
 | what the signer checks, in the order it checks it | `packages/signer-protocol/src/policyGuard.ts` |
+| the art-selector guard, and why the approval carries the election | `packages/signer-protocol/src/artSelectorGuard.ts` |
+| the packed selector's codec — the ONE implementation of the shift | `packages/project-schema/src/art-selector.js` |
+| resolving a runtime's numeric id on one chain, sparse-safe | `packages/launch-sdk/src/artRuntime.ts` |
 | the signer boundary and the policy-bound wrapper | `packages/signer-protocol/src/index.ts` |
 | the next-action decision, in full | `packages/agent-flow/src/nextAction.ts` |
 | the receipt chain | `packages/agent-flow/src/receipts.ts` |
@@ -1008,6 +1086,33 @@ Where this page and the code disagree, the code is right.
 | chain admission and scoring | `packages/launch-sdk/src/plan.ts`, `packages/launch-sdk/src/capabilities.ts` |
 | the metadata birth pipeline | `packages/launch-sdk/src/metadata/` |
 | the command surface itself | `packages/creator-cli/src/commands/agent.js` |
+
+### Running the proof yourself
+
+```bash
+npm run e2e:wave1            # brief -> select -> init -> validate -> export -> prepare ->
+                             # predict -> simulate -> build, against a LOCAL ANVIL FORK of
+                             # Ethereum, then DECODE the final calldata and require it to elect
+                             # art runtime 3 for compass and 4 for alluvium. Nothing is signed and
+                             # nothing is broadcast; the run stops at BUILT.
+npm run e2e:wave1:controls   # the same harness with the wiring broken three ways — the election
+                             # dropped, the runtime hardcoded to the generic one, and the live
+                             # registry read replaced by a plausible constant. Each must turn it
+                             # red, because a valid picture from the wrong runtime is not success.
+npm run e2e:autonomous       # the full MODE B rehearsal, through broadcast, on the same fork
+```
+
+Both Wave-1 commands need `anvil` on PATH and an Ethereum endpoint to fork from
+(`E2E_FORK_RPC_URL`, `ETHEREUM_RPC_URL` or `MAINNET_RPC_URL`; the chain profile's public fallback
+is used, and named, when none is set). Without one they report **SKIPPED**, loudly, and
+`WRONG_RUNTIME_VALID_RENDER_CAN_PASS=NOT_MEASURED` — a skipped run is not a passed one, and neither
+harness has a code path that prints PASS without a decoded selector.
+
+**Neither exercises the visual review.** The Wave-1 review loop refuses a launch until a reviewer
+that is not the author has looked at the pictures, and there is no headless substitute; writing a
+scripted `verdict.json` would put a fabricated judgement about art into a hash-linked receipt
+chain. `WAVE1_ART_REVIEW_EXERCISED=NO` says so in the harness's own output rather than leaving it
+to be assumed.
 
 | Related documents | |
 | --- | --- |

@@ -504,11 +504,13 @@ something you explicitly did — connecting a wallet, or finishing that wizard.
 
 ## The starter templates
 
-Five ship. All five scaffold, validate and export cleanly — that is checked in CI on every push
+Seven ship. All seven scaffold, validate and export cleanly — that is checked in CI on every push
 (`npm run kit:templates`). The output below is verbatim from that check.
 
 | Template | Runtime | Market-responsive | Runtime a launch can bind |
 | --- | --- | --- | --- |
+| `geometric-recursion-compass` | `GEOMETRIC_RECURSION_V1` | yes — 2 sensors | **yes** |
+| `vector-composition-alluvium` | `VECTOR_COMPOSITION_V1` | yes — 3 sensors | **yes** |
 | `solidity-svg-params` | `SOLIDITY_SVG_V1` | yes | **yes** |
 | `market-responsive` | `ONCHAIN_JAVASCRIPT_V1` | yes — 4 mappings | no |
 | `minimal` | `ONCHAIN_JAVASCRIPT_V1` | no | no |
@@ -518,8 +520,17 @@ Five ship. All five scaffold, validate and export cleanly — that is checked in
 **That last column is about the RUNTIME, not the chain, and the two are independent.** The chain
 half is a separate question with its own answer — run `npm run kit:status` and read it rather than
 trusting any table, including this one. The runtime half is what the column asks: which runtime a
-launch can bind and render. That is `SOLIDITY_SVG_V1`, and it is the only one, so the four
-JavaScript templates cannot be launched — on an open chain or any other.
+launch can bind and render. Three do — `SOLIDITY_SVG_V1`, `GEOMETRIC_RECURSION_V1` and
+`VECTOR_COMPOSITION_V1` — so the four JavaScript templates cannot be launched, on an open chain or
+any other.
+
+**The two Wave-1 engines are launchable through the TERMINAL today, and that is the whole claim.**
+They are available through the autonomous terminal workflow (`relics agent ...`) while Studio integration is being completed. There is no Studio picker for them yet
+and this document does not imply one: the two paths are not maintained as alternatives, and a
+sentence that offered a choice would be describing a surface that does not exist. What the terminal
+does is proved rather than asserted — `npm run e2e:wave1:controls` drives the public CLI from a
+brief to a frozen signing request, decodes the final calldata, and requires it to elect art runtime
+3 for `compass` and 4 for `alluvium`, with three mutations that must turn it red.
 
 **The JavaScript refusal is structural, not a queue position.** `ArtRuntimeRegistryV1.modeAvailable`
 is a `pure` function that admits the Solidity-SVG mode alone, so registering a JavaScript runtime
@@ -546,6 +557,10 @@ JavaScript templates are marked "preview only" everywhere they appear — in `re
 `relics init`, in `relics validate` and in the CI table — rather than quietly presented as
 launchable.
 
+- **`geometric-recursion-compass`** — the Wave-1 `compass` preset on `GEOMETRIC_RECURSION_V1`:
+  rings of rings, coloured by level, opening as the market heals and cut back by drawdown.
+- **`vector-composition-alluvium`** — the Wave-1 `alluvium` preset on `VECTOR_COMPOSITION_V1`:
+  sediment, where drawdown lays down beds and recovery rules lines through them.
 - **`solidity-svg-params`** — configure a registered on-chain Solidity renderer by parameters, with
   a local preview of the same shapes.
 - **`market-responsive`** — a lattice that fractures under drawdown, thickens with volume, and
