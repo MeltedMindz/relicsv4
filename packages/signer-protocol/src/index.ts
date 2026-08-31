@@ -27,6 +27,7 @@ export * from "./contracts.ts";
 export { checkGrantPermission, checkGrantCalldata, type GrantVerdict, type GrantRefusalCode, type SimulationReceipt } from "./grantGuard.ts";
 export { checkAuthorization, readAuthorization, writeAuthorization, revokeAuthorization, consumeAuthorization, authorizationFingerprint, relicsHome, authorizationPath, type Authorization, type AuthorizationPreset, type AuthorizationMode } from "./authorization.ts";
 export { checkStaticPolicy, guardSigningRequest, type ApprovedBuild, type ChainSupportProbe, type PolicyGuardInput, type PolicyVerdict } from "./policyGuard.ts";
+export { checkArtSelector, runtimeTagAllowed, type ApprovedArtSelector, type ArtSelectorRefusalCode, type ArtSelectorVerdict } from "./artSelectorGuard.ts";
 export { ALLOWED_SELECTORS, LAUNCH_FACTORY_ABI, LAUNCH_FUNCTION_NAME, LAUNCH_SELECTOR, LaunchAbiShapeError, LaunchCalldataDecodeError, decodeCreatorRecipient } from "./launchAbi.ts";
 export { WireFormatError, decodeSignerRefusal, decodeSignerResult, decodeSigningRequest, encodeSigningRequest, type WireSigningRequest } from "./wire.ts";
 

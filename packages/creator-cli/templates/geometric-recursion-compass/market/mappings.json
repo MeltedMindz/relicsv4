@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "mappings": [
+    {
+      "id": "drawdown-fracture",
+      "sensor": "drawdown",
+      "transform": "clamp",
+      "transformParams": {
+        "min": 0,
+        "max": 0.7
+      },
+      "destination": "fracture"
+    },
+    {
+      "id": "epoch-palette",
+      "sensor": "epoch",
+      "transform": "tier",
+      "transformParams": {
+        "steps": 4
+      },
+      "destination": "palette"
+    }
+  ]
+}

@@ -162,7 +162,12 @@ export function printBinding(result) {
     ["runtime id hash", at(binding.runtimeIdHash)],
     ["art config format", `${binding.artConfigFormat}  ${dim(`${binding.artConfigBytes.toLocaleString()} bytes`)}`],
     ["art config", at(binding.artConfigHash)],
-    ["  visual", at(binding.artConfigVisualHash) ?? dim("null  (a JavaScript generator declares no layer graph)")],
+    // THE REASON FOR THE NULL DEPENDS ON THE FORMAT, AND ONE SENTENCE CANNOT COVER BOTH. These two
+    // digests are `ArtConfigV1.sol`'s own derivations over an ACV1 program. A JavaScript generator
+    // declares no such program; a Wave-1 engine declares a DIFFERENT one, with its own commitments
+    // this kit cannot compute. Printing the JavaScript sentence over a GRV1 binding told a creator
+    // their configuration has no layer graph, which is false about their art.
+    ["  visual", at(binding.artConfigVisualHash) ?? dim(`null  (${acv1CommitmentAbsence(binding)})`)],
     ["  trait schema", at(binding.artConfigTraitSchemaHash) ?? dim("null")],
     ["template params", at(binding.templateParamsHash) ?? "null"],
     ["generator source", at(binding.generatorSourceHash)],
@@ -248,4 +253,12 @@ function fatalRemedy(message, root) {
     edit: "The project could not be assembled. The message above names the file; fix it in the project directory — never edit a `.relics` file, and never hand-write a manifest.",
     run: "relics validate .",
   };
+}
+
+
+/** Why an ACV1-only commitment is absent, named by the binding's own config format. */
+function acv1CommitmentAbsence(binding) {
+  if (binding.artConfigFormat === "JS_SOURCE_V1") return "a JavaScript generator declares no layer graph";
+  if (binding.artConfigFormat === "ACV1") return "not derived";
+  return `an ACV1-only commitment; ${binding.runtimeId} declares its own ${binding.artConfigFormat} program`;
 }

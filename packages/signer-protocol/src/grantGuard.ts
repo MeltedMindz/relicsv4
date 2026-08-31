@@ -18,6 +18,7 @@
 import { formatEther, getAddress, type Hex } from "viem";
 import { decodeLaunchParamsFromCalldata, LAUNCH_PARAMS_FIELD_COUNT } from "./launchAbi.ts";
 import { checkAuthorization, type Authorization } from "./authorization.ts";
+import { runtimeTagAllowed } from "./artSelectorGuard.ts";
 import type { SigningRequest } from "./contracts.ts";
 
 export type GrantRefusalCode =
@@ -135,7 +136,7 @@ export function checkGrantPermission(input: {
  * Phase 3: the decoded fields against the grant. Runs only AFTER the shape guard has established
  * that these bytes are a `launch()` call at the canonical factory.
  */
-export function checkGrantCalldata(input: { request: SigningRequest; now?: Date }): GrantVerdict {
+export function checkGrantCalldata(input: { request: SigningRequest; approvedArtRuntimeTag?: string; now?: Date }): GrantVerdict {
   const { request } = input;
   const state = checkAuthorization(input.now ? { signerAddress: request.from, now: input.now } : { signerAddress: request.from });
   if (!state.ok) return { kind: "REFUSED", code: state.reason as GrantRefusalCode, detail: state.detail };
@@ -168,8 +169,22 @@ export function checkGrantCalldata(input: { request: SigningRequest; now?: Date 
   // bind one today — the grant is the creator's statement, not a restatement of what happens to work.
   const artMode = Number(params.artMode ?? -1);
   const modeName = artMode === 0 ? "SOLIDITY_SVG_V1" : artMode === 1 ? "ONCHAIN_JAVASCRIPT_V1" : `UNKNOWN_ART_MODE(${artMode})`;
-  if (!auth.allowedRuntimes.some((r) => r === modeName || (modeName.startsWith(r) && r.length > 4))) {
+  if (!auth.allowedRuntimes.some((r) => runtimeTagAllowed(r, modeName))) {
     return { kind: "REFUSED", code: "RUNTIME_NOT_AUTHORIZED", detail: `The calldata launches on ${modeName}; the creator authorized ${auth.allowedRuntimes.join(", ")}.` };
+  }
+
+  // THE ELECTED RUNTIME, WHICH `artMode` CANNOT NAME. Mode 0 is the generic `SOLIDITY_SVG_V1` and
+  // it is ALSO mode 0 for every Wave-1 engine, so the check above admits all of them equally. The
+  // elected runtime lives in the top 32 bits of `artTemplateId` as a per-chain registry key, and the
+  // tag it resolves to is established upstream and proven to match these bytes by the shape guard
+  // immediately before this runs. A grant naming one engine must not silently authorize another.
+  const electedTag = input.approvedArtRuntimeTag;
+  if (electedTag && !auth.allowedRuntimes.some((r) => runtimeTagAllowed(r, electedTag))) {
+    return {
+      kind: "REFUSED",
+      code: "RUNTIME_NOT_AUTHORIZED",
+      detail: `The calldata elects ${electedTag}; the creator authorized ${auth.allowedRuntimes.join(", ")}. Every one of these renders through artMode 0, so the mode alone cannot tell them apart.`,
+    };
   }
 
   return { kind: "ALLOWED", authorization: auth };

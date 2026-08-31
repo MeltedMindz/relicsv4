@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Compass Study",
+  "symbol": "CMPS",
+  "description": "Recursive geometry rendered on chain by GEOMETRIC_RECURSION_V1. The bundle carries the GRV1 configuration bytes; the runtime carries the code.",
+  "tokenNamePattern": "Form #{id}"
+}

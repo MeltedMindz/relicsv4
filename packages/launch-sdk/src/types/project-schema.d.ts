@@ -51,6 +51,7 @@ declare module "@relics/project-schema" {
   export const ART_RUNTIME_REGISTERED_SIGNATURE: string;
   export const ART_RUNTIME_REGISTERED_TOPIC0: string;
   export const ART_RUNTIME_RESERVED_ID: number;
+  export const ART_RUNTIME_TAG_PREFIX: string;
   export const ART_RUNTIME_TO_CONFIG_FORMAT: { readonly "SOLIDITY_SVG": string; readonly "GEOMETRIC_RECURSION": string; readonly "VECTOR_COMPOSITION": string; readonly "JAVASCRIPT": string };
   export const ART_RUNTIME_TO_MODE: { readonly "SOLIDITY_SVG": number; readonly "GEOMETRIC_RECURSION": number; readonly "VECTOR_COMPOSITION": number; readonly "JAVASCRIPT": number };
   export const ART_RUNTIME_VERSIONS: { readonly "SOLIDITY_SVG": number; readonly "GEOMETRIC_RECURSION": number; readonly "VECTOR_COMPOSITION": number; readonly "JAVASCRIPT": number };
@@ -191,7 +192,9 @@ declare module "@relics/project-schema" {
   export function allocateSettledPlatformWeth(...args: any[]): any;
   export function analyzeGeneratorSource(...args: any[]): any;
   export function applyTransform(...args: any[]): any;
+  export function artConfigFormatMagic(...args: any[]): any;
   export function artRuntimeIdOf(...args: any[]): any;
+  export function artRuntimeTagPreimage(...args: any[]): any;
   export function assembleBundle(...args: any[]): any;
   export function bindCanonicalEconomics(...args: any[]): any;
   export function bpsToPercentString(...args: any[]): any;

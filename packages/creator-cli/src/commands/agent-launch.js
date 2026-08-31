@@ -16,6 +16,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { scrub } from "../scrub.js";
 import { explainCode } from "./agent-remedies.js";
+import { encodeArtSelector } from "../schema.js";
 
 export const EXIT = { OK: 0, REFUSED: 1, USAGE: 2, UNKNOWN_CHAIN_STATE: 3, POLICY: 4, SIGNER_REFUSED: 5, BLOCKED: 6 };
 
@@ -184,20 +185,158 @@ export async function cmdPrepare(name, workspace, flags, json, ctx) {
     return EXIT.REFUSED;
   }
 
+  // ---- THE ART SELECTOR. THE ELECTION IS A LIVE CHAIN READ, NOT A CONSTANT --------------------
+  //
+  // `artTemplateId` carries the registered template in its low 224 bits and the ELECTED art
+  // runtime's registry key in its top 32. This step used to pass `BigInt(cfg.art?.templateId ?? 1)`
+  // — template 1 with a runtime half of zero — so every launch it prepared expressed NO PREFERENCE
+  // and the chain bound its generic runtime. A creator who authored for GEOMETRIC_RECURSION_V1 got
+  // a project that launches, succeeds, and renders somebody else's art, permanently.
+  //
+  // The number cannot be written down here: registry ids are per chain, chosen by the registering
+  // authority, and sparse. So the project names its runtime by STABLE STRING and the id is read off
+  // the chain that is about to be launched on.
+  const artSource = await artSourceFor(workspace, cfg);
+  if (artSource.error) {
+    emit(name, { success: false, errors: [artSource.error], nextActions: ["FIX_VALIDATION"] }, { json });
+    return EXIT.REFUSED;
+  }
+  const { ART_RUNTIME_IDS } = await import("../schema.js");
+  const runtimeTag = ART_RUNTIME_IDS[artSource.runtime] ?? artSource.runtime;
+  const elected = await sdk.resolveArtRuntime(made.client, profile.contracts.artRuntimeRegistry, runtimeTag);
+  if (elected.state !== "ACTIVE") {
+    emit(name, {
+      success: false,
+      result: { runtimeTag, chainId, election: electionRecord(elected) },
+      errors: [`the project elects ${runtimeTag} and that runtime is ${elected.state} on chain ${chainId}: ${elected.detail}`],
+      // AN UNREAD REGISTRY IS A REASON TO RETRY; AN ABSENT RUNTIME IS NOT. The two land on
+      // different exit codes so an agent branches on them differently.
+      nextActions: [elected.state === "UNKNOWN" ? "RETRY_CHAIN_READ" : "BLOCKED"],
+    }, { json });
+    return elected.state === "UNKNOWN" ? EXIT.UNKNOWN_CHAIN_STATE : EXIT.BLOCKED;
+  }
+  if (!ctx.policy.allowedRuntimes.some((allowed) => allowed === runtimeTag || (runtimeTag.startsWith(allowed) && allowed.length > 4))) {
+    emit(name, { success: false, errors: [`the project elects ${runtimeTag} but the policy allows only ${ctx.policy.allowedRuntimes.join(", ")}`], nextActions: ["BLOCKED"] }, { json });
+    return EXIT.POLICY;
+  }
+
   try {
-    const input = creatorInputFromConfig(cfg, meta.uri, ctx.policy, sdk);
+    const input = creatorInputFromConfig(cfg, meta.uri, ctx.policy, sdk, { artSource, artRuntimeId: elected.artRuntimeId });
     const prepared = sdk.prepare(input, { tokenSalt: ZERO32, hookSalt: mined.salt }, chainId, profile.contracts.launchpadFactory);
+    // THE SDK'S OWN VALIDATOR, RUN AGAINST THE ELECTION THAT WAS READ. `prepare` builds; this is
+    // the independent refusal, and it is given the live reading rather than a boolean.
+    const verdict = sdk.validateLaunchParams(prepared.params, {
+      electedRuntime: { runtimeTag, artRuntimeId: elected.artRuntimeId, state: elected.state, detail: elected.detail },
+    });
+    if (!verdict.ok) {
+      emit(name, { success: false, errors: verdict.problems, nextActions: ["FIX_VALIDATION"] }, { json });
+      return EXIT.REFUSED;
+    }
     const { data, dataHash } = sdk.encodeLaunch(prepared.params);
     writeReceipt(workspace, {
       phase: "PREPARE", chainId, policyHash: ctx.policyHash,
-      body: { prepareHash: prepared.prepareHash, factory: prepared.factory, dataHash, calldataBytes: (data.length - 2) / 2, launcher, hook: { address: mined.hookAddress, salt: mined.salt, attempts: mined.attempts, flags: mined.flags, deployer: mined.deployer }, params: sdk.launchParamsAsTuple(prepared.params) },
+      body: {
+        prepareHash: prepared.prepareHash, factory: prepared.factory, dataHash, calldataBytes: (data.length - 2) / 2, launcher,
+        hook: { address: mined.hookAddress, salt: mined.salt, attempts: mined.attempts, flags: mined.flags, deployer: mined.deployer },
+        // THE ELECTION IS RECEIPTED, WITH ITS EVIDENCE. Everything downstream — simulate, build, the
+        // signer's approval — compares against this rather than re-deriving it from a config file
+        // the agent can edit between phases.
+        artSelector: { runtime: artSource.runtime, runtimeTag, artRuntimeId: elected.artRuntimeId, templateId: String(artSource.templateId), selector: prepared.params.artTemplateId.toString(), election: electionRecord(elected) },
+        params: sdk.launchParamsAsTuple(prepared.params),
+      },
     });
-    emit(name, { success: true, result: { chainId, prepareHash: prepared.prepareHash, dataHash, calldataBytes: (data.length - 2) / 2, launcher, hookAddress: mined.hookAddress, hookSaltAttempts: mined.attempts, hookFlags: mined.flags }, nextActions: ["READY_FOR_SIMULATION"] }, { json });
+    emit(name, {
+      success: true,
+      result: {
+        chainId, prepareHash: prepared.prepareHash, dataHash, calldataBytes: (data.length - 2) / 2, launcher,
+        hookAddress: mined.hookAddress, hookSaltAttempts: mined.attempts, hookFlags: mined.flags,
+        artSelector: { runtimeTag, artRuntimeId: elected.artRuntimeId, templateId: String(artSource.templateId), selector: `0x${prepared.params.artTemplateId.toString(16).padStart(64, "0")}` },
+      },
+      nextActions: ["READY_FOR_SIMULATION"],
+    }, { json });
     return EXIT.OK;
   } catch (err) {
     emit(name, { success: false, errors: [err instanceof Error ? err.message : String(err)], nextActions: ["FIX_VALIDATION"] }, { json });
     return EXIT.REFUSED;
   }
+}
+
+/** The readings a resolution rests on, carried into the receipt so a later reader can check them. */
+function electionRecord(resolved) {
+  return {
+    state: resolved.state, registry: resolved.registry, tagHash: resolved.tagHash,
+    runtimeAddress: resolved.runtimeAddress, runtimeCodeBytes: resolved.runtimeCodeBytes,
+    artRuntimeMode: resolved.artRuntimeMode, artRuntimeVersion: resolved.artRuntimeVersion,
+    active: resolved.active, exists: resolved.exists, registeredIds: resolved.registeredIds,
+    declaredCount: resolved.declaredCount, complete: resolved.complete, logSource: resolved.logSource,
+    blockNumber: resolved.blockNumber,
+  };
+}
+
+/**
+ * WHERE THE ART COMES FROM: THE EXPORTED BUNDLE WHEN THERE IS ONE.
+ *
+ * `relics.config.json` is what a creator edits; `project.relics` is what they validated, exported
+ * and would upload, and its `artBinding` was DERIVED from their files and then re-checked against
+ * the container by the validator. Preferring it is not a convenience — this step used to default
+ * `artConfig` to `"0x41435631"`, four bytes that are the ACV1 magic and nothing else, so a run that
+ * did not carry the configuration across prepared a launch whose art was a stub.
+ *
+ * A WAVE-1 PROJECT WITHOUT A BUNDLE IS REFUSED RATHER THAN GUESSED. Its configuration bytes are
+ * produced by that engine's own codec from `generator/params.json`; there is nothing in
+ * `relics.config.json` to encode, and a default here would bind a stub to a creator's name forever.
+ *
+ * TWO SOURCES THAT MUST AGREE IS TWO SOURCES THAT CAN DISAGREE, so a bundle exported for one
+ * runtime beside a config declaring another is a refusal rather than a precedence rule.
+ */
+async function artSourceFor(workspace, cfg) {
+  const declared = cfg.art?.runtime ?? null;
+  const bundlePath = join(workspace, "project.relics");
+  let fromBundle = null;
+  if (existsSync(bundlePath)) {
+    try {
+      const { readContainer } = await import("../schema.js");
+      const container = readContainer(new Uint8Array(readFileSync(bundlePath)));
+      const manifest = JSON.parse(new TextDecoder().decode(container.byPath.get("relics.project.json")));
+      const binding = manifest.artBinding ?? {};
+      if (typeof binding.artConfig === "string" && binding.artConfig.length > 0) {
+        fromBundle = {
+          runtime: binding.runtime,
+          templateId: String(binding.templateId ?? manifest.art?.templateId ?? "1"),
+          artConfig: `0x${binding.artConfig}`,
+          source: "project.relics",
+        };
+      }
+    } catch (err) {
+      // A BUNDLE THAT WILL NOT OPEN IS NOT AN ABSENT ONE. Falling through to the config file would
+      // silently launch from a different art configuration than the one on disk.
+      return { error: `project.relics is present in ${workspace} but could not be read: ${err instanceof Error ? err.message : String(err)}` };
+    }
+  }
+
+  if (fromBundle) {
+    if (declared && declared !== fromBundle.runtime) {
+      return {
+        error:
+          `relics.config.json declares the ${declared} runtime and project.relics was exported for ${fromBundle.runtime}. ` +
+          "One project cannot launch two runtimes; re-export the bundle from the current configuration.",
+      };
+    }
+    return fromBundle;
+  }
+
+  if (!declared) return { error: "relics.config.json declares no art.runtime, so this launch cannot say which runtime renders it" };
+  if (declared !== "SOLIDITY_SVG" && declared !== "JAVASCRIPT") {
+    return {
+      error:
+        `the ${declared} runtime's configuration bytes are produced by that engine's own codec from generator/params.json, and there is no exported project.relics in ${workspace} to read them from. ` +
+        "Run `relics export` first: a launch cannot invent a creator's art configuration.",
+    };
+  }
+  if (typeof cfg.art?.configHex !== "string" || !/^0x[0-9a-fA-F]+$/.test(cfg.art.configHex) || cfg.art.configHex.length <= 2) {
+    return { error: "relics.config.json carries no art.configHex and no exported project.relics was found, so there is no art configuration to launch" };
+  }
+  return { runtime: declared, templateId: String(cfg.art?.templateId ?? "1"), artConfig: cfg.art.configHex, source: "relics.config.json" };
 }
 
 const ZERO32 = `0x${"00".repeat(32)}`;
@@ -209,7 +348,7 @@ const ZERO32 = `0x${"00".repeat(32)}`;
  * builder multiplies by 1e18; `artScriptHash` is keccak of the art config and the builder computes
  * it; `metadataUriHash` comes from the URI. Anywhere two values must agree, only one is an input.
  */
-function creatorInputFromConfig(cfg, metadataUri, policy, sdk) {
+function creatorInputFromConfig(cfg, metadataUri, policy, sdk, artSelector) {
   const project = cfg.project ?? {};
   const market = cfg.market ?? {};
   const supply = cfg.supply ?? {};
@@ -229,7 +368,16 @@ function creatorInputFromConfig(cfg, metadataUri, policy, sdk) {
     creatorRecipient: policy.creatorRecipient,
     antiSnipeMode: election === "NONE" ? sdk.AntiSnipeMode.NONE : sdk.AntiSnipeMode.PROTECTED_98_MINUTES,
     metadataUri,
-    art: { mode: sdk.ArtMode.SOLIDITY_SVG, artTemplateId: BigInt(cfg.art?.templateId ?? 1), artConfig: cfg.art?.configHex ?? "0x41435631" },
+    art: {
+      mode: sdk.ArtMode.SOLIDITY_SVG,
+      // THE PACKED SELECTOR, THROUGH THE ONE PUBLIC ENCODER. `encodeArtSelector` lives in
+      // `@relics/project-schema` and is checked against the deployed `ArtSelectorLib`'s own corpus;
+      // `ART_SELECTOR_PUBLIC_IMPLEMENTATION_COUNT=1` is gate-enforced, so nothing here open-codes
+      // `<< 224n`. The runtime half comes from a live registry read on the SELECTED chain and the
+      // template half from the project — the two are composed once, here.
+      artTemplateId: encodeArtSelector(artSelector.artRuntimeId, artSelector.artSource.templateId),
+      artConfig: artSelector.artSource.artConfig,
+    },
   };
 }
 

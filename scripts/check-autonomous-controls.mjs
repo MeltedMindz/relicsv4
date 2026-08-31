@@ -88,7 +88,7 @@ function runSuite(label, argv) {
 }
 
 control("LaunchParams 19->15 / field swap / enum drift are all caught by the parity gate", () => runSuite("launch:parity --controls", ["scripts/check-launch-semantics-parity.mjs", "--controls"]));
-control("signer refuses arbitrary transactions (18 mutations, none survive)", () => runSuite("signer:mutate", ["packages/signer-protocol/test/mutate.mjs"]));
+control("signer refuses arbitrary transactions (27 mutations, none survive)", () => runSuite("signer:mutate", ["packages/signer-protocol/test/mutate.mjs"]));
 control("metadata fetch-back mismatch, gateway URI and digest conflation are refused", () => runSuite("launch:test", ["--test", "packages/launch-sdk/test/metadata.test.mjs"]));
 control("MODE A stays offline when outbound connect is blocked", () => runSuite("kit:offline", ["scripts/check-offline-mode.mjs"]));
 control("the vendored SDK has not drifted from the canonical private tree", () => runSuite("launch:parity", ["scripts/check-launch-semantics-parity.mjs"]));

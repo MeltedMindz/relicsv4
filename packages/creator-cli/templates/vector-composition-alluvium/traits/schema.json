@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "dimensions": [
+    {
+      "name": "Palette",
+      "distribution": "uniform",
+      "values": [
+        {
+          "name": "Ash"
+        },
+        {
+          "name": "Rust"
+        },
+        {
+          "name": "Verdigris"
+        },
+        {
+          "name": "Bone"
+        }
+      ]
+    },
+    {
+      "name": "Silhouette",
+      "distribution": "weighted",
+      "values": [
+        {
+          "name": "Monolith",
+          "weight": 40
+        },
+        {
+          "name": "Vessel",
+          "weight": 35
+        },
+        {
+          "name": "Lattice",
+          "weight": 25
+        }
+      ]
+    }
+  ]
+}

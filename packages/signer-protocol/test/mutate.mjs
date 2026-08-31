@@ -29,7 +29,12 @@ const TEST_DIR = fileURLToPath(new URL("./", import.meta.url));
 const SRC = fileURLToPath(new URL("../src/", import.meta.url));
 const GUARD = join(SRC, "policyGuard.ts");
 const DEV = join(SRC, "adapters/devKeystore.ts");
-const SUITE = ["policyGuard.test.mjs", "devKeystore.test.mjs", "sidecar.test.mjs"].map((f) => join(TEST_DIR, f));
+const ART = join(SRC, "artSelectorGuard.ts");
+const GRANT = join(SRC, "grantGuard.ts");
+// `walletAttack.test.mjs` AND `artSelector.test.mjs` ARE IN THE SUITE NOW. They were not, and the
+// consequence was structural rather than cosmetic: no mutation targeted `grantGuard.ts` at all, so
+// every grant-side check in this package was unmeasured by the harness that reports its coverage.
+const SUITE = ["policyGuard.test.mjs", "devKeystore.test.mjs", "sidecar.test.mjs", "artSelector.test.mjs", "walletAttack.test.mjs"].map((f) => join(TEST_DIR, f));
 
 const MUTATIONS = [
   { id: "selector allowlist", file: GUARD, from: `if (!ALLOWED_SELECTORS.some((allowed) => allowed.toLowerCase() === actualSelector)) {`, to: `if (false) {`, expect: "arbitrary ERC-20 transfer() calldata is refused SELECTOR_NOT_ALLOWED" },
@@ -62,6 +67,75 @@ const MUTATIONS = [
   },
   { id: "dev signer supportsChain", file: DEV, from: `return !REFUSED_CHAIN_IDS.includes(chainId);`, to: `return true;`, expect: "every production chain is refused" },
   { id: "dev signer sign()", file: DEV, from: `if (REFUSED_CHAIN_IDS.includes(req.chainId)) throw refusalFor(req.chainId);`, to: `if (false) throw refusalFor(req.chainId);`, expect: "the dev keystore refuses to sign on chainId 1" },
+
+  // ---- THE ART SELECTOR -------------------------------------------------------------------------
+  //
+  // Seven mutations, one per arm, plus the meta-mutation that removes the call entirely. Each names
+  // a control that must go red — a red suite from some unrelated test proves nothing about the arm
+  // that was broken.
+  {
+    id: "art selector guard runs at all",
+    file: GUARD,
+    from: `  const selector = checkArtSelector({ request, policy, approvedArtSelector: approvedBuild.artSelector ?? null });`,
+    to: `  const selector = { kind: "ALLOWED" }; void checkArtSelector;`,
+    expect: "swapping the elected runtime for the GENERIC one after approval is refused",
+  },
+  {
+    id: "elected runtime matches the approval",
+    file: ART,
+    from: `  if (decoded.artRuntimeId !== approvedRuntimeId) {`,
+    to: `  if (false) {`,
+    expect: "swapping the elected runtime for the GENERIC one after approval is refused",
+  },
+  {
+    id: "an election with no approval is refused",
+    file: ART,
+    from: `    if (elects) {`,
+    to: `    if (false) {`,
+    expect: "an election with no approved selector at all is refused",
+  },
+  {
+    id: "template half non-zero",
+    file: ART,
+    from: `  if (decoded.templateId === 0n) {`,
+    to: `  if (false) {`,
+    expect: "a template half of ZERO is refused ART_SELECTOR_MALFORMED",
+  },
+  {
+    id: "policy runtime allowlist",
+    file: ART,
+    from: `  if (!policy.allowedRuntimes.some((allowed) => runtimeTagAllowed(allowed, approvedArtSelector.runtimeTag))) {`,
+    to: `  if (false) {`,
+    expect: "a runtime the POLICY does not allow is refused",
+  },
+  {
+    id: "runtime active on chain",
+    file: ART,
+    from: `  if (!approvedArtSelector.exists || !approvedArtSelector.active) {`,
+    to: `  if (false) {`,
+    expect: "an INACTIVE runtime is refused",
+  },
+  {
+    id: "incomplete registry read is not a pass",
+    file: ART,
+    from: `  if (!approvedArtSelector.registryComplete) {`,
+    to: `  if (false) {`,
+    expect: "an INCOMPLETE registry read is refused",
+  },
+  {
+    id: "the zero-address record",
+    file: ART,
+    from: `  if (!approvedArtSelector.runtimeAddress || BigInt(approvedArtSelector.runtimeAddress) === 0n) {`,
+    to: `  if (false) {`,
+    expect: "the ZERO-ADDRESS record is refused",
+  },
+  {
+    id: "grant names the elected engine",
+    file: GRANT,
+    from: `  if (electedTag && !auth.allowedRuntimes.some((r) => runtimeTagAllowed(r, electedTag))) {`,
+    to: `  if (false) {`,
+    expect: "a grant that does not name the elected runtime refuses it",
+  },
 ];
 
 const backupDir = mkdtempSync(join(tmpdir(), "relics-signer-mutate-"));

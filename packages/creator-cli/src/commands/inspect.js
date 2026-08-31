@@ -4,6 +4,7 @@
 
 import { readFileSync } from "node:fs";
 import { readContainer, validateBundleBytes, toStudioDraft, decodeArtConfigV1, describeArtConfigV1, isArtConfigV1, isRuntimeLaunchable, ACV1_LIMITS } from "../schema.js";
+import { encodeRuntimeConfig } from "../runtime-config.js";
 import { bold, cyan, dim, green, red, yellow, heading, truncate } from "../report.js";
 import { printChecks, printIssues } from "../report.js";
 
@@ -22,7 +23,7 @@ export function inspectBundle(path, options = {}) {
   }
 
   // Structural only: inspecting a bundle must never execute a stranger's generator.
-  const result = validateBundleBytes(bytes, { skipExecution: true });
+  const result = validateBundleBytes(bytes, { skipExecution: true, encodeRuntimeConfig });
 
   if (options.json) {
     const payload = {

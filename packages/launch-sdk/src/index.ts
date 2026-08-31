@@ -18,6 +18,7 @@ export * from "./quotes.js";
 // A pipeline nobody can import is a pipeline nobody uses.
 export * from "./metadata/index.js";
 export * from "./hookSalt.js";
+export * from "./artRuntime.js";
 export { rc6Abi, FACTORY_ABI, METADATA_RESOLVER_ABI, PROJECT_REGISTRY_ABI, PROJECT_COLLECTION_ABI, PROJECT_TOKEN_ABI, ART_HOOK_ABI, ART_RUNTIME_REGISTRY_ABI } from "./abi.js";
 
 // The vendored canonical semantics, re-exported so a consumer never has to reach into `vendor/`

@@ -4,6 +4,8 @@
 
 import { readFileSync } from "node:fs";
 import { assembleBundle, validateBundle, validateBundleBytes, readContainer, sha256Utf8, fromUtf8, BINDING_SEEDS } from "../schema.js";
+// The Wave-1 engines' config codec, handed to the schema rather than reimplemented in it.
+import { encodeRuntimeConfig } from "../runtime-config.js";
 import { readConfig, readProjectFiles, generatorSources } from "../project.js";
 import { renderSeedsIsolated, makeReplayEvaluator, makeVmEvaluator } from "../sandbox.js";
 import { checkPreviewDrift } from "../preview-drift.js";
@@ -43,20 +45,20 @@ export function validateProject(root, options = {}) {
   const files = readProjectFiles(root);
 
   const status = options.status ?? "FINAL";
-  const probe = assembleBundle({ files, config, status });
+  const probe = assembleBundle({ files, config, status, encodeRuntimeConfig });
   const seedCount = options.seeds ?? 24;
 
   if (options.inProcess) {
     // The in-process path has no separate recording step, so it renders during validation. It
     // still needs the binding digests up front, which it gets from one throwaway evaluation.
     const outputs = recordBindingOutputsInProcess(probe.entries, probe.manifest);
-    const assembled = assembleBundle({ files, config, representativeOutputs: outputs, status });
-    const inProcessResult = validateBundle(assembled.entries, { evaluate: makeVmEvaluator(), seeds: seedCount });
+    const assembled = assembleBundle({ files, config, representativeOutputs: outputs, status, encodeRuntimeConfig });
+    const inProcessResult = validateBundle(assembled.entries, { evaluate: makeVmEvaluator(), encodeRuntimeConfig, seeds: seedCount });
     reportPreviewDrift(files, inProcessResult);
     return { ...inProcessResult, assembled };
   }
 
-  const structural = validateBundle(probe.entries, { skipExecution: true });
+  const structural = validateBundle(probe.entries, { skipExecution: true, encodeRuntimeConfig });
   const recorded = renderSeedsIsolated({
     sources: generatorSources(probe.entries),
     seeds: seedsToRender(seedCount),
@@ -68,7 +70,7 @@ export function validateProject(root, options = {}) {
   // The previews the bundle ships are WRITTEN from this render, never copied from `previews/`.
   // A creator who edits the generator and forgets to re-render cannot ship images of the old art.
   const canonicalPreviews = recorded.ok ? canonicalPreviewsFrom(recorded) : null;
-  const assembled = assembleBundle({ files, config, representativeOutputs, canonicalPreviews, status });
+  const assembled = assembleBundle({ files, config, representativeOutputs, canonicalPreviews, status, encodeRuntimeConfig });
   const result = finishValidation(assembled.entries, recorded, seedCount);
 
   // AND SAY SO. Because assembly now writes previews from the render, the assembled bundle is
@@ -186,7 +188,7 @@ function reportStalePreviewsOnDisk(files, canonicalPreviews, result) {
 
 /** @param {Map<string, Uint8Array>} entries @param {any} manifest */
 function recordBindingOutputsInProcess(entries, manifest) {
-  const probe = validateBundle(entries, { evaluate: makeVmEvaluator(), seeds: 1 });
+  const probe = validateBundle(entries, { evaluate: makeVmEvaluator(), encodeRuntimeConfig, seeds: 1 });
   return probe.execution?.bindingOutputs ?? null;
 }
 
@@ -198,12 +200,12 @@ export function runValidation(entries, options = {}) {
   const seedCount = options.seeds ?? 24;
 
   if (options.inProcess) {
-    return validateBundle(entries, { evaluate: makeVmEvaluator(), seeds: seedCount });
+    return validateBundle(entries, { evaluate: makeVmEvaluator(), encodeRuntimeConfig, seeds: seedCount });
   }
 
   // The isolated sandbox needs the parsed documents to build render contexts, and those come from
   // a first, execution-free pass. A bundle whose manifest cannot even be read never gets run.
-  const structural = validateBundle(entries, { skipExecution: true });
+  const structural = validateBundle(entries, { skipExecution: true, encodeRuntimeConfig });
   const recorded = renderSeedsIsolated({
     sources: generatorSources(entries),
     seeds: seedsToRender(seedCount),
@@ -222,7 +224,7 @@ export function runValidation(entries, options = {}) {
  */
 function finishValidation(entries, recorded, seedCount) {
   if (!recorded.ok) {
-    const result = validateBundle(entries, { skipExecution: true, seeds: seedCount });
+    const result = validateBundle(entries, { skipExecution: true, encodeRuntimeConfig, seeds: seedCount });
     result.issues.push({ severity: "error", code: "SANDBOX_FAILED", where: "generator/generate.js", message: recorded.error ?? "the sandbox failed" });
     result.summary.errors.push(result.issues[result.issues.length - 1]);
     result.summary.errorCount += 1;
@@ -237,14 +239,14 @@ function finishValidation(entries, recorded, seedCount) {
     return result;
   }
 
-  return validateBundle(entries, { evaluate: makeReplayEvaluator(recorded), seeds: seedCount });
+  return validateBundle(entries, { evaluate: makeReplayEvaluator(recorded), encodeRuntimeConfig, seeds: seedCount });
 }
 
 /** Validates an exported `.relics` file. */
 export function validateBundleFile(path, options = {}) {
   const bytes = new Uint8Array(readFileSync(path));
   const container = readContainer(bytes);
-  if (options.structuralOnly) return validateBundleBytes(bytes, { skipExecution: true });
+  if (options.structuralOnly) return validateBundleBytes(bytes, { skipExecution: true, encodeRuntimeConfig });
   return runValidation(container.byPath, options);
 }
 

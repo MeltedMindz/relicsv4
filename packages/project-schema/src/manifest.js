@@ -876,15 +876,11 @@ function validateArtBindingBlock(manifest, at) {
         );
       }
     }
-    if (binding.representativeOutputsHash !== null) {
-      issues.push(
-        error(
-          "ART_BINDING_OUTPUTS_HASH",
-          `${where}.representativeOutputsHash`,
-          "a RUNTIME_CONFIG project is rendered by a deployed contract this kit does not execute, so there is nothing honest for it to commit to and the field stays null",
-        ),
-      );
-    }
+    // `representativeOutputsHash` IS NEITHER REQUIRED NOR REFUSED HERE, exactly as it is for an
+    // ACV1 binding. It commits to what the project's LOCAL SKETCH draws — a real fact about the
+    // bundle's own bytes — while the launched art is drawn by a deployed contract this kit does not
+    // execute. Requiring it would demand a commitment about the wrong renderer; refusing it would
+    // throw away the one the creator actually previewed.
   }
 
   for (const key of ["generatorSourceHash", "traitSchemaDocumentHash", "marketMappingHash", "metadataHash"]) {

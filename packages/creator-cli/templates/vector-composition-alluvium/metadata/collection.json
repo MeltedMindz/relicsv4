@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Alluvium Study",
+  "symbol": "ALVM",
+  "description": "Layered vector fields rendered on chain by VECTOR_COMPOSITION_V1. The bundle carries the VCV1 configuration bytes; the runtime carries the code.",
+  "tokenNamePattern": "Form #{id}"
+}

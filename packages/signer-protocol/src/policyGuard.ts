@@ -29,6 +29,7 @@
 import { keccak256, type Address, type Hex } from "viem";
 import type { AgentPolicy, SignerRefusal, SignerRefusalCode, SigningRequest } from "./contracts.ts";
 import { ALLOWED_SELECTORS, LAUNCH_SELECTOR, LaunchCalldataDecodeError, decodeCreatorRecipient } from "./launchAbi.ts";
+import { checkArtSelector, type ApprovedArtSelector } from "./artSelectorGuard.ts";
 
 /**
  * What the creator approved, captured BEFORE the signing request existed.
@@ -45,6 +46,19 @@ export interface ApprovedBuild {
   readonly policyHash: Hex;
   readonly launchPlanHash: Hex;
   readonly bundleHash: Hex;
+  /**
+   * THE ART RUNTIME THIS BUILD WAS APPROVED TO ELECT, and the live reading it rests on.
+   *
+   * Optional in the type and NOT optional in effect: a request whose calldata NAMES a runtime is
+   * refused when this is absent, because there is then nothing the election can be shown to match.
+   * It is optional only so an approval that predates the field can still describe the launches that
+   * predate it — a selector with a zero runtime half, which is "no preference" rather than a runtime.
+   *
+   * It sits beside the factory address and the three hashes for the same reason they do: it is a
+   * CHAIN fact, established upstream before the request existed. A signer that resolved it here
+   * would resolve it through the same table the orchestrator built the transaction from.
+   */
+  readonly artSelector?: ApprovedArtSelector | null;
 }
 
 /** The guard's answer. `ALLOWED` is the only value that permits a signature. */
@@ -206,6 +220,14 @@ export function checkStaticPolicy(input: PolicyGuardInput): PolicyVerdict {
     return refuse("RECIPIENT_NOT_POLICY_RECIPIENT", `the calldata names creatorRecipient ${recipient}; the policy authorizes ${policy.creatorRecipient}`);
   }
 
+  // THE ART SELECTOR, OUT OF THE SAME BYTES. `artTemplateId` carries the elected art runtime in its
+  // top 32 bits and the registered template in its low 224, and neither half was ever read: the
+  // field was decoded, because the nineteen-field arity check requires it to be present, and then
+  // ignored. `artMode` is 0 for the generic runtime and 0 for both Wave-1 engines alike, so the one
+  // art check that did exist could not tell them apart. See `artSelectorGuard.ts`.
+  const selector = checkArtSelector({ request, policy, approvedArtSelector: approvedBuild.artSelector ?? null });
+  if (selector.kind === "REFUSED") return refuse(selector.code as unknown as SignerRefusalCode, selector.detail);
+
   return ALLOWED;
 }
 
@@ -250,7 +272,13 @@ export async function guardSigningRequest(
 
   // PHASE 3 — the decoded fields against what the creator authorized.
   if (grantRequired) {
-    const calldata = checkGrantCalldata({ request: input.request });
+    // THE ELECTED RUNTIME'S TAG IS HANDED TO THE GRANT, and it is sound to hand it because phase 2
+    // has just PROVEN the calldata's numeric election equals the approval's. Without it the grant
+    // could only see `artMode`, which is 0 for the generic runtime and 0 for every Wave-1 engine —
+    // so a creator who authorized GEOMETRIC_RECURSION_V1 and nothing else would have authorized all
+    // three without being told.
+    const approvedTag = input.approvedBuild?.artSelector?.runtimeTag;
+    const calldata = checkGrantCalldata(approvedTag ? { request: input.request, approvedArtRuntimeTag: approvedTag } : { request: input.request });
     if (calldata.kind === "REFUSED") return { kind: "REFUSED", code: calldata.code as unknown as SignerRefusalCode, detail: calldata.detail };
   }
 

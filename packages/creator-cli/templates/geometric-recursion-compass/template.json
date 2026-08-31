@@ -1,0 +1,5 @@
+{
+  "title": "Geometric recursion — compass",
+  "summary": "Start from the Wave-1 `compass` preset on the GEOMETRIC_RECURSION_V1 runtime: rings of rings, coloured by level.",
+  "runtime": "GEOMETRIC_RECURSION"
+}

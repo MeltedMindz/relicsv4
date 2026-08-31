@@ -4,7 +4,7 @@
 // final authority (see readiness.ts, which simulates the real call).
 import { keccak256, type Address, type Hex } from "viem";
 import { WHOLE_UNIT, MAX_COLLABORATORS } from "./constants.js";
-import { LIMITS } from "@relics/project-schema";
+import { LIMITS, decodeArtSelector, isRuntimeElection, ArtSelectorError } from "@relics/project-schema";
 import {
   AntiSnipeMode,
   ArtMode,
@@ -87,7 +87,19 @@ export interface CreatorInput {
    * the resolver and the digest the launch carries cannot come from two different strings.
    */
   metadataUri: string;
-  /** SOLIDITY_SVG: a registered template id + its config bytes. JAVASCRIPT: raw script bytes. */
+  /**
+   * SOLIDITY_SVG: a registered template id + its config bytes. JAVASCRIPT: raw script bytes.
+   *
+   * `artTemplateId` IS THE PACKED SELECTOR WORD, not the bare template id, and the name is the
+   * chain's. It carries the registered template in its low 224 bits and the ELECTED ART RUNTIME's
+   * per-chain `uint32` registry key in its top 32. A caller that has already composed the word
+   * passes it here; a caller holding the two halves should compose it with `encodeArtSelector`
+   * from `@relics/project-schema` — the one public implementation of the shift — rather than
+   * open-coding `<< 224n`.
+   *
+   * A runtime half of ZERO is legal and means "no preference": the chain resolves its generic
+   * runtime. It can never NAME a runtime, because zero is the registry's own reserved id.
+   */
   art:
     | { mode: typeof ArtMode.SOLIDITY_SVG; artTemplateId: bigint; artConfig: Hex }
     | { mode: typeof ArtMode.JAVASCRIPT; artConfig: Hex };
@@ -191,9 +203,7 @@ export function validateCreatorInput(input: CreatorInput): string[] {
   if (input.artworkBackingUnits * backingPer > input.totalSupplyWhole) {
     problems.push("artworkBackingUnits * backingUnitsPerArtwork exceeds totalSupply (in whole-token terms)");
   }
-  if (input.art.mode === ArtMode.SOLIDITY_SVG && input.art.artTemplateId === 0n) {
-    problems.push("SOLIDITY_SVG mode requires a non-zero artTemplateId");
-  }
+  if (input.art.mode === ArtMode.SOLIDITY_SVG) problems.push(...artSelectorProblems(input.art.artTemplateId));
   if (
     input.burnPolicy !== undefined &&
     input.burnPolicy !== BurnPolicy.NONE &&
@@ -342,7 +352,7 @@ export interface LaunchParamsValidation {
  * `simulateAtomicLaunch()`, which is the final authority (a real `eth_call` against the deployed
  * factory) and will catch a stale/deactivated template regardless.
  */
-export function validateLaunchParams(params: LaunchParams, opts?: { scriptByteLimit?: number; templateIsActive?: boolean }): LaunchParamsValidation {
+export function validateLaunchParams(params: LaunchParams, opts?: { scriptByteLimit?: number; templateIsActive?: boolean; electedRuntime?: ElectedRuntimeCheck }): LaunchParamsValidation {
   const problems: string[] = [];
   problems.push(...identityLengthProblems(params.name, params.symbol));
   if (params.creatorRecipient === "0x0000000000000000000000000000000000000000") {
@@ -354,8 +364,13 @@ export function validateLaunchParams(params: LaunchParams, opts?: { scriptByteLi
     problems.push("artworkBackingUnits * backingUnitsPerArtwork exceeds the whole-unit supply that could ever back it");
   }
   if (params.artMode === ArtMode.SOLIDITY_SVG) {
-    if (params.artTemplateId === 0n) problems.push("SOLIDITY_SVG mode requires a non-zero artTemplateId");
+    problems.push(...artSelectorProblems(params.artTemplateId));
     if (opts?.templateIsActive === false) problems.push(`artTemplateId ${params.artTemplateId} is not active (or not registered)`);
+    // THE ELECTED RUNTIME, WHEN THE CALLER HAS ESTABLISHED ONE. An integrator holding this SDK
+    // never touches an HTTP route, so the refusal lives here as well as upstream — and it is
+    // OPTIONAL because "is this runtime active on this chain?" is a LIVE question this pure
+    // function cannot answer. Absent means unchecked and says so; it never means "fine".
+    if (opts?.electedRuntime !== undefined) problems.push(...electedRuntimeProblems(params.artTemplateId, opts.electedRuntime));
   } else if (params.artTemplateId !== 0n) {
     problems.push("JAVASCRIPT mode must carry artTemplateId 0");
   }
@@ -412,3 +427,91 @@ export function validateLaunchParams(params: LaunchParams, opts?: { scriptByteLi
 }
 
 export { ArtMode, StartingPreset };
+
+/**
+ * What a caller must have ESTABLISHED about the runtime a selector elects, when it wants that
+ * election checked.
+ *
+ * EVERY FIELD IS A READING, NOT A PREFERENCE. `artRuntimeId` is the id the caller resolved from
+ * `ArtRuntimeRegistryV1` on the chain it is launching on; `state` is what that read returned. The
+ * shape exists so a caller cannot express "check the election" without also saying where its
+ * answer came from — `resolveArtRuntime` in this SDK produces exactly this.
+ */
+export interface ElectedRuntimeCheck {
+  readonly runtimeTag: string;
+  readonly artRuntimeId: number | null;
+  readonly state: "ACTIVE" | "INACTIVE" | "NOT_REGISTERED" | "UNKNOWN";
+  readonly detail?: string;
+}
+
+/**
+ * The two halves of `artTemplateId`, checked as the two separate things they are.
+ *
+ * WHY A BARE `!== 0n` WAS NOT ENOUGH, AND WAS WRONG IN A WAY THAT LOOKS RIGHT. The old rule refused
+ * a zero WORD. A selector electing runtime 3 with template 0 is `0x0000_0003 << 224` — a very large
+ * non-zero number that sails past it, and then `LaunchPolicyV1.validateLaunchParams` reverts
+ * `BadTemplate` on chain because `TemplateRegistryV1` reserves 0 as its no-template sentinel. The
+ * check has to look at the TEMPLATE HALF, which is what the chain looks at.
+ *
+ * The runtime half is deliberately NOT required to be non-zero: zero means the creator expressed no
+ * preference and the chain resolves its generic runtime, which is what every launch did before the
+ * Wave-1 engines existed and is still a legal launch.
+ */
+function artSelectorProblems(selector: bigint): string[] {
+  let decoded;
+  try {
+    decoded = decodeArtSelector(selector);
+  } catch (err) {
+    const named = err as { code?: string; message?: string } | null;
+    const why = err instanceof (ArtSelectorError as unknown as { new (...a: any[]): object }) ? `${named?.code}: ${named?.message}` : String(err);
+    return [`artTemplateId is not a legal art selector — ${why}`];
+  }
+  if (decoded.templateId === 0n) {
+    return [
+      "the art selector's TEMPLATE half is 0, the registry's reserved no-template sentinel. " +
+        `The word ${selector} is non-zero because it elects art runtime ${decoded.artRuntimeId}, but ` +
+        "`TemplateRegistryV1.registerTemplate` refuses template 0 and `LaunchPolicyV1.validateLaunchParams` reverts `BadTemplate`, " +
+        "so a launch carrying it cannot succeed.",
+    ];
+  }
+  return [];
+}
+
+/**
+ * The elected runtime against what the caller read off the chain.
+ *
+ * `UNKNOWN` IS REFUSED, AND THAT IS THE POINT. A registry that could not be read does not prove a
+ * runtime is absent, and it does not prove one is present either — so a launch built on it would be
+ * built on nobody's answer. The refusal names a retry rather than a fact.
+ */
+function electedRuntimeProblems(selector: bigint, elected: ElectedRuntimeCheck): string[] {
+  let decoded;
+  try {
+    decoded = decodeArtSelector(selector);
+  } catch {
+    return []; // already reported by artSelectorProblems; one defect, one message
+  }
+  const problems: string[] = [];
+  if (!isRuntimeElection(decoded.artRuntimeId)) {
+    problems.push(
+      `the caller established the ${elected.runtimeTag} runtime for this launch, but the selector's runtime half is 0 — ` +
+        "which is not that runtime, it is the absence of a preference, and the chain would bind its generic runtime instead. " +
+        "Compose the selector with `encodeArtSelector(artRuntimeId, templateId)`.",
+    );
+    return problems;
+  }
+  if (elected.state !== "ACTIVE") {
+    problems.push(
+      `the selector elects art runtime ${decoded.artRuntimeId} (${elected.runtimeTag}), and that runtime is ${elected.state} on the target chain` +
+        (elected.detail ? `: ${elected.detail}` : "") +
+        (elected.state === "UNKNOWN" ? ". An unread registry is not an absence — this is a reason to retry, not a finding about the chain." : ""),
+    );
+  }
+  if (elected.artRuntimeId !== null && elected.artRuntimeId !== decoded.artRuntimeId) {
+    problems.push(
+      `the selector elects art runtime ${decoded.artRuntimeId} but ${elected.runtimeTag} resolved to id ${elected.artRuntimeId} on the target chain. ` +
+        "Registry ids are per chain and chosen by the registering authority; a selector composed against one chain's ids binds a different runtime on another.",
+    );
+  }
+  return problems;
+}

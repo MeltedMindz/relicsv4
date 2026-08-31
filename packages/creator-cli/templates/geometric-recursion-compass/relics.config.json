@@ -1,0 +1,33 @@
+{
+  "project": {
+    "name": "Compass Study",
+    "symbol": "CMPS",
+    "description": "Recursive geometry rendered on chain by GEOMETRIC_RECURSION_V1. The bundle carries the GRV1 configuration bytes; the runtime carries the code.",
+    "license": "CC0-1.0"
+  },
+  "supply": {
+    "totalSupplyWhole": "10000",
+    "artworkSupply": "1000",
+    "backingModel": "FULL_PARITY"
+  },
+  "art": {
+    "runtime": "GEOMETRIC_RECURSION",
+    "templateId": "1",
+    "seed": "1"
+  },
+  "market": {
+    "startingPreset": "MID",
+    "launchMode": "INSTANT_V4",
+    "antiSnipeMode": "UNSPECIFIED"
+  },
+  "earnings": {
+    "mode": "SOLO",
+    "creatorRecipient": "0x1111111111111111111111111111111111111111",
+    "collaborators": []
+  },
+  "chains": {
+    "requested": [
+      1
+    ]
+  }
+}

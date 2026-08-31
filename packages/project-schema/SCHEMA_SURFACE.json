@@ -4,7 +4,7 @@
   "version": "4.1.0",
   "packageVersion": "3.13.0",
   "creatorKitVersion": "4.3.0",
-  "surfaceSha256": "7d1699e6c95bbeb0efacc2b08ac7a02214bbc8fcb8589b866f5fd2c298856d04",
+  "surfaceSha256": "d3d46e920007b28f7eaf20cdbe6d4efa60f93c9dc1a966197f36c266691c1882",
   "checks": [
     "ALLOWED_DEPENDENCIES",
     "ALLOWED_RUNTIME",
@@ -58,7 +58,7 @@
     },
     {
       "path": "index.js",
-      "sha256": "915ecc5518630122e0626f7191b33794c98efb40a6d6ae3b4144f88a729b94e1"
+      "sha256": "a84d3512abad714fcb36b4b557ab139f6d89cb9a04595ae71b02e6a17b4d1064"
     },
     {
       "path": "package.json",
@@ -126,7 +126,7 @@
     },
     {
       "path": "src/manifest.js",
-      "sha256": "2c82dc2454a4e8cd5b0ee0bbe134671d8b7fe7134ea3cb9c8f24ec2a29749dd8"
+      "sha256": "7e2e94eac61edb64978fe8911f28741ca7334efc5b0939199f52ba72f10e29a4"
     },
     {
       "path": "src/market.js",
@@ -190,7 +190,7 @@
     },
     {
       "path": "types.d.ts",
-      "sha256": "66a01b8e49186342806a75777dc7b9e1586df1ab092dda8289e8ec7744922b13"
+      "sha256": "2a6f4620dfa50fe8915847f1d56989fabc6da5546a9da38014d706e6f5feacce"
     }
   ]
 }

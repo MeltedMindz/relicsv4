@@ -6,6 +6,7 @@
 // shows a refusal proves nothing — a guard that refuses everything would pass it.
 import { encodeFunctionData, keccak256, toHex } from "viem";
 import { LAUNCH_FACTORY_ABI, LAUNCH_SELECTOR } from "../src/launchAbi.ts";
+import { encodeArtSelector } from "@relics/project-schema";
 
 // ------------------------------------------------------------------------------------------------
 // TEST ONLY — anvil default account #0, public knowledge, never fund.
@@ -61,6 +62,60 @@ export const APPROVED_BUILD = Object.freeze({
   launchPlanHash: LAUNCH_PLAN_HASH,
   bundleHash: BUNDLE_HASH,
 });
+
+// ------------------------------------------------------------------------------------------------
+// THE WAVE-1 FIXTURES.
+//
+// `APPROVED_BUILD` above carries no `artSelector` and the default calldata's selector is the bare
+// template `1n` — runtime half 0, which is "no preference", the shape of every launch that predates
+// the Wave-1 engines. Those two facts together are what let the twenty pre-existing shape controls
+// keep asserting what they assert.
+//
+// The fixtures below are the other case: a launch that ELECTS a runtime. `3` is the id
+// `GEOMETRIC_RECURSION_V1` holds on Ethereum, Base and Robinhood, read live on 2026-08-31; `4` is
+// `VECTOR_COMPOSITION_V1`. The numbers appear here as fixture data, not as an assertion about a
+// chain — `resolveArtRuntime` is what establishes them, and this suite has no network.
+// ------------------------------------------------------------------------------------------------
+
+export const GEOMETRIC_RECURSION_RUNTIME_ID = 3;
+export const VECTOR_COMPOSITION_RUNTIME_ID = 4;
+export const GENERIC_SOLIDITY_RUNTIME_ID = 1;
+export const RUNTIME_ADDRESS = "0x5555555555555555555555555555555555555555";
+export const REGISTRY_ADDRESS = "0x6666666666666666666666666666666666666666";
+
+/** The election an approval carries, with the reading it rests on. Every field is a "was read". */
+export function approvedArtSelector(overrides = {}) {
+  return {
+    chainId: TEST_CHAIN_ID,
+    runtimeTag: "GEOMETRIC_RECURSION_V1",
+    artRuntimeId: GEOMETRIC_RECURSION_RUNTIME_ID,
+    templateId: "1",
+    registry: REGISTRY_ADDRESS,
+    runtimeAddress: RUNTIME_ADDRESS,
+    runtimeCodeBytes: 21_000,
+    active: true,
+    exists: true,
+    registryComplete: true,
+    blockNumber: "25877267",
+    ...overrides,
+  };
+}
+
+/** An approved build that elects a Wave-1 runtime. */
+export function approvedBuildElecting(overrides = {}) {
+  return { ...APPROVED_BUILD, artSelector: approvedArtSelector(overrides) };
+}
+
+/** `launch()` calldata whose selector elects `artRuntimeId` with `templateId`. */
+export function electingCalldata(artRuntimeId, templateId = 1n, overrides = {}) {
+  return encodeFunctionData({
+    abi: LAUNCH_FACTORY_ABI,
+    functionName: "launch",
+    // THE ONE PUBLIC ENCODER, in the test too. A harness that open-coded `<< 224n` would be
+    // checking the guard against its own arithmetic rather than against the protocol's.
+    args: [launchParamsWith({ artTemplateId: encodeArtSelector(artRuntimeId, templateId), ...overrides })],
+  });
+}
 
 const ART_CONFIG = "0xdeadbeefcafebabe";
 
@@ -190,7 +245,7 @@ export function withTestAuthorization(overrides = {}) {
     launchesAllowed: 1, launchesUsed: 0, revokedAt: null,
     signerAddress: ANVIL_ACCOUNT_ZERO_ADDRESS,
     creatorRecipient: CREATOR_RECIPIENT,
-    allowedChains: [TEST_CHAIN_ID], allowedRuntimes: ["SOLIDITY_SVG_V1"],
+    allowedChains: [TEST_CHAIN_ID], allowedRuntimes: ["SOLIDITY_SVG_V1", "GEOMETRIC_RECURSION_V1"],
     allowedQuoteAssets: "AUTO", allowedAntiSnipeModes: ["NONE", "PROTECTED_98_MINUTES"],
     maxRoyaltyBps: 500,
     maxTotalGasCostWei: (10n ** 18n).toString(),

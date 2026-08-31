@@ -1,0 +1,33 @@
+{
+  "project": {
+    "name": "Alluvium Study",
+    "symbol": "ALVM",
+    "description": "Layered vector fields rendered on chain by VECTOR_COMPOSITION_V1. The bundle carries the VCV1 configuration bytes; the runtime carries the code.",
+    "license": "CC0-1.0"
+  },
+  "supply": {
+    "totalSupplyWhole": "10000",
+    "artworkSupply": "1000",
+    "backingModel": "FULL_PARITY"
+  },
+  "art": {
+    "runtime": "VECTOR_COMPOSITION",
+    "templateId": "1",
+    "seed": "1"
+  },
+  "market": {
+    "startingPreset": "MID",
+    "launchMode": "INSTANT_V4",
+    "antiSnipeMode": "UNSPECIFIED"
+  },
+  "earnings": {
+    "mode": "SOLO",
+    "creatorRecipient": "0x1111111111111111111111111111111111111111",
+    "collaborators": []
+  },
+  "chains": {
+    "requested": [
+      1
+    ]
+  }
+}

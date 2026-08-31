@@ -1,0 +1,91 @@
+{
+  "format": "GRV1",
+  "version": 2,
+  "flags": [
+    "DEPTH_PALETTE"
+  ],
+  "groundMode": "RADIAL",
+  "groundIx": 0,
+  "groundIx2": 6,
+  "palette": [
+    "#0f0c08",
+    "#e0b44a",
+    "#3f7e72",
+    "#ede4d0",
+    "#a8492a",
+    "#7c8aa6",
+    "#241c14"
+  ],
+  "rules": [
+    {
+      "shapeSet": [
+        "HEX",
+        "CIRCLE",
+        "DIAMOND"
+      ],
+      "ruleSet": [
+        "QUAD",
+        "TRI",
+        "BRANCH",
+        "RING"
+      ],
+      "paletteIx": 1,
+      "sensor": "RECOVERY",
+      "curve": "LOG2",
+      "drive": "CONTRACT",
+      "depthMin": 3,
+      "depthMax": 3,
+      "branch": 3,
+      "contraction": 90,
+      "rotation": 24,
+      "prune": 7,
+      "symSet": [
+        "NONE",
+        "MIRROR_X",
+        "ROT3",
+        "ROT6"
+      ],
+      "stroke": true,
+      "variant": 3
+    },
+    {
+      "shapeSet": [
+        "DIAMOND",
+        "CROSS"
+      ],
+      "ruleSet": [
+        "RING",
+        "BSP"
+      ],
+      "paletteIx": 2,
+      "sensor": "DRAWDOWN",
+      "curve": "LINEAR",
+      "drive": "DEPTH",
+      "depthMin": 1,
+      "depthMax": 4,
+      "branch": 2,
+      "contraction": 78,
+      "rotation": 12,
+      "prune": 3,
+      "symSet": [
+        "NONE",
+        "ROT3"
+      ],
+      "stroke": true,
+      "variant": 3
+    }
+  ],
+  "traits": [
+    {
+      "name": "Generations",
+      "source": "RECOVERY",
+      "style": "NUMBER"
+    },
+    {
+      "name": "Compression",
+      "source": "DRAWDOWN",
+      "style": "WORD"
+    }
+  ],
+  "title": "Compass"
+}

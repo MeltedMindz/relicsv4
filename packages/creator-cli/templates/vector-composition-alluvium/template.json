@@ -1,0 +1,5 @@
+{
+  "title": "Vector composition — alluvium",
+  "summary": "Start from the Wave-1 `alluvium` preset on the VECTOR_COMPOSITION_V1 runtime: layered vector fields, stacked as strata.",
+  "runtime": "VECTOR_COMPOSITION"
+}

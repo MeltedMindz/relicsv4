@@ -23,6 +23,8 @@ import {
   ANVIL_ACCOUNT_ZERO, ANVIL_ACCOUNT_ZERO_ADDRESS, TEST_CHAIN_ID, TEST_POLICY, APPROVED_BUILD,
   CREATOR_RECIPIENT, ATTACKER_RECIPIENT, APPROVED_FACTORY, SOME_OTHER_CONTRACT,
   launchCalldata, signingRequest, erc20TransferCalldata, withTestAuthorization,
+  approvedBuildElecting, electingCalldata, GEOMETRIC_RECURSION_RUNTIME_ID, GENERIC_SOLIDITY_RUNTIME_ID,
+  VECTOR_COMPOSITION_RUNTIME_ID,
 } from "./helpers.mjs";
 
 let running, client, grant;
@@ -270,4 +272,84 @@ test("22 the signer exposes no way to sign an arbitrary message", async () => {
     const res = await fetch(new URL(path, running.url), { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
     assert.equal(res.status, 404, `${path} answered ${res.status}; this signer must serve only /address, /supports-chain and /sign`);
   }
+});
+
+
+// ---- 26-29. THE ART SELECTOR, OVER THE REAL SOCKET ----------------------------------------------
+//
+// A SECOND SERVER, because these attacks need a signer whose APPROVAL elects a Wave-1 runtime and
+// the suite-wide one deliberately does not — its approval predates the field, which is the case
+// controls 1-25 are about. Reusing it would have meant testing the wrong signer.
+//
+// THE ATTACK IS A SUBSTITUTION AFTER SIMULATION. The agent prepares, predicts and simulates a
+// launch on GEOMETRIC_RECURSION_V1, then posts calldata that elects something else. It is a
+// PERFECTLY VALID LAUNCH: it succeeds on chain, the collection deploys, the pool opens, and it
+// renders art the creator never chose — permanently, because the art binding is one-shot. Every
+// other check in this file passes it, which is why it needed its own.
+
+let electing, electingClient;
+before(async () => {
+  electing = await startSignerServer({
+    adapter: createDevKeystoreSigner({ privateKey: ANVIL_ACCOUNT_ZERO }),
+    policy: { ...TEST_POLICY, allowedRuntimes: ["GEOMETRIC_RECURSION_V1"] },
+    approvedBuild: approvedBuildElecting(),
+  });
+  electingClient = createLocalSidecarSigner({ url: electing.url });
+});
+after(async () => { await electing?.close(); });
+
+/** The same refusal helper, pointed at the electing signer. */
+async function electingRefuses(label, req, simulation = undefined) {
+  let refusal = null;
+  try {
+    await electingClient.sign(req, simulation === undefined ? sim(req) : simulation);
+  } catch (e) {
+    if (e instanceof SignerRefusedError) refusal = e.code;
+    else refusal = `THREW_NON_REFUSAL:${e?.name} ${e?.message ?? ""}`;
+  }
+  assert.ok(refusal !== null, `${label}: the signer SIGNED it. This is the whole boundary and it did not hold.`);
+  assert.ok(!String(refusal).startsWith("THREW_NON_REFUSAL"), `${label}: refused by throwing ${refusal} rather than a typed refusal an agent can branch on`);
+  return refusal;
+}
+
+test("26 BASELINE the electing signer signs the launch it approved", async () => {
+  // WITHOUT THIS THE THREE CONTROLS BELOW PROVE NOTHING. A signer that refused every electing
+  // launch would score three out of three.
+  const data = electingCalldata(GEOMETRIC_RECURSION_RUNTIME_ID);
+  const req = signingRequest({ data, dataHash: keccak256(data) });
+  const signed = await electingClient.sign(req, sim(req));
+  assert.equal(signed.kind, "SIGNED");
+});
+
+test("27 swapping runtime 3 for runtime 1 AFTER simulation is refused", async () => {
+  // The simulation receipt is honest — it is of these exact bytes — so nothing about the simulation
+  // catches this. What catches it is that these bytes elect a runtime nobody approved.
+  const data = electingCalldata(GENERIC_SOLIDITY_RUNTIME_ID);
+  const code = await electingRefuses("runtime 3 -> 1 after simulation", signingRequest({ data, dataHash: keccak256(data) }));
+  assert.equal(code, "ART_SELECTOR_NOT_APPROVED");
+});
+
+test("28 swapping runtime 3 for runtime 4 AFTER simulation is refused", async () => {
+  const data = electingCalldata(VECTOR_COMPOSITION_RUNTIME_ID);
+  const code = await electingRefuses("runtime 3 -> 4 after simulation", signingRequest({ data, dataHash: keccak256(data) }));
+  assert.equal(code, "ART_SELECTOR_NOT_APPROVED");
+});
+
+test("29 dropping the election entirely, so the chain binds its GENERIC runtime, is refused", async () => {
+  // The subtlest form: the word becomes a bare `1`, which looks exactly like an ordinary template
+  // id and is what every pre-Wave-1 launch carried. The runtime half is 0 — not runtime 0, which
+  // cannot exist, but "no preference", which the factory resolves to the generic runtime.
+  const data = electingCalldata(0);
+  const code = await electingRefuses("election dropped to no-preference", signingRequest({ data, dataHash: keccak256(data) }));
+  assert.equal(code, "ART_SELECTOR_NOT_APPROVED");
+});
+
+test("30 a grant that does not name the elected runtime refuses it, though artMode alone would not", async () => {
+  // artMode is 0 for the generic runtime AND 0 for both Wave-1 engines, so the grant's original
+  // runtime check admitted all three equally. The elected tag is what tells them apart.
+  await withGrant({ allowedRuntimes: ["SOLIDITY_SVG_V1"] }, async () => {
+    const data = electingCalldata(GEOMETRIC_RECURSION_RUNTIME_ID);
+    const code = await electingRefuses("grant does not name the elected engine", signingRequest({ data, dataHash: keccak256(data) }));
+    assert.equal(code, "RUNTIME_NOT_AUTHORIZED");
+  });
 });

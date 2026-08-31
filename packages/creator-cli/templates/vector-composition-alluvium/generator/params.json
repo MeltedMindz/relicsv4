@@ -1,0 +1,76 @@
+{
+  "format": "VCV1",
+  "version": 1,
+  "flags": [],
+  "groundMode": "LINEAR",
+  "groundIx": 0,
+  "groundIx2": 4,
+  "palette": [
+    "#0b0c10",
+    "#8c6a3f",
+    "#d8cbb0",
+    "#3f5a63",
+    "#161a20",
+    "#a33b24"
+  ],
+  "fields": [
+    {
+      "layout": "STACK",
+      "primitive": "RECT",
+      "paletteIx": 1,
+      "sensor": "DRAWDOWN",
+      "curve": "LINEAR",
+      "drive": "COUNT",
+      "countMin": 8,
+      "countMax": 34,
+      "sizeMax": 20,
+      "spreadMax": 122,
+      "symmetry": "NONE",
+      "variant": 0,
+      "stroke": false
+    },
+    {
+      "layout": "LINEFIELD",
+      "primitive": "LINE",
+      "paletteIx": 2,
+      "sensor": "RECOVERY",
+      "curve": "LOG2",
+      "drive": "COUNT",
+      "countMin": 9,
+      "countMax": 28,
+      "sizeMax": 20,
+      "spreadMax": 118,
+      "symmetry": "NONE",
+      "variant": 0,
+      "stroke": false
+    },
+    {
+      "layout": "ORBIT",
+      "primitive": "ARC",
+      "paletteIx": 5,
+      "sensor": "STRESS",
+      "curve": "LINEAR",
+      "drive": "DEPTH",
+      "countMin": 26,
+      "countMax": 26,
+      "sizeMax": 16,
+      "spreadMax": 110,
+      "symmetry": "NONE",
+      "variant": 0,
+      "stroke": false
+    }
+  ],
+  "traits": [
+    {
+      "name": "Beds",
+      "source": "DRAWDOWN",
+      "style": "NUMBER"
+    },
+    {
+      "name": "Nodule",
+      "source": "STRESS",
+      "style": "WORD"
+    }
+  ],
+  "title": "Alluvium"
+}
