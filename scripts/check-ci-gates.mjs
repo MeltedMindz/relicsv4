@@ -99,6 +99,10 @@ const REQUIRED_GATES = [
   { id: "LAUNCH_CLAIMS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:launch-claims" },
   { id: "TRAIT_DISCLOSURE", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:traits" },
   { id: "CI_COVERAGE_SELF", workflow: "creator-kit.yml", job: "kit", needle: "npm run ci:gates" },
+  // The Wave-1 election, decoded out of the final calldata, plus the mutations that must turn it
+  // red. Registered so the step cannot quietly leave the workflow; a SKIPPED run of it is still not
+  // a pass, and the harness reports that itself rather than relying on this list to say so.
+  { id: "WAVE1_RUNTIME_E2E_CONTROLS", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:wave1:controls" },
 
   // --- docs ---
   { id: "DOC_LINKS", workflow: "docs.yml", job: "links", needle: "npm run docs:links" },

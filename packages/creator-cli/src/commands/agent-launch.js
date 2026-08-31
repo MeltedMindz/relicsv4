@@ -12,6 +12,7 @@
 // process can die between any two steps and the next invocation picks up from what is on disk —
 // and, for anything that touched a chain, from what the CHAIN says rather than what the disk says.
 // ================================================================================================
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { scrub } from "../scrub.js";
@@ -110,7 +111,8 @@ export async function cmdMetadata(name, workspace, flags, json, ctx) {
     emit(name, { success: false, errors: [`no metadata document at ${docPath}. A collection's metadata is written at BIRTH and cannot be changed afterwards, so there is nothing this command may invent on the creator's behalf.`] }, { json });
     return EXIT.REFUSED;
   }
-  const doc = JSON.parse(readFileSync(docPath, "utf8"));
+  const bundleShaped = JSON.parse(readFileSync(docPath, "utf8"));
+  const doc = contractUriDocument(bundleShaped);
 
   // PROVIDER CHOICE IS EXPLICIT. `--dry-run` uses the in-memory provider, which performs the SAME
   // fetch-back and byte comparison against a store that lives in this process — it proves the
@@ -124,6 +126,18 @@ export async function cmdMetadata(name, workspace, flags, json, ctx) {
 
   try {
     const verified = await pinAndVerifyMetadataDocument({ document: doc, provider, filename: "collection.json" });
+    // A REFUSAL IS A REFUSAL, NOT A CRASH. This used to read `verified.uri` straight through, so a
+    // refused pin surfaced as "Cannot read properties of undefined (reading 'length')" from
+    // somewhere downstream — a stage code and a reason were sitting in the result, unread.
+    if (verified.kind !== "VERIFIED") {
+      emit(name, {
+        success: false,
+        result: { stage: verified.stage ?? null, code: verified.code ?? null },
+        errors: [`the metadata pin was refused at stage ${verified.stage ?? "?"}: ${verified.code ?? "?"} — ${verified.detail ?? "no detail"}`],
+        nextActions: ["FIX_VALIDATION"],
+      }, { json });
+      return EXIT.REFUSED;
+    }
     writeReceipt(workspace, { phase: "METADATA", body: { uri: verified.uri, cid: verified.cid, contentSha256: verified.contentSha256, resolverDigest: verified.resolverDigest, provider: provider.id, pinnedToNetwork: !useMemory } });
     emit(name, {
       success: true,
@@ -489,10 +503,17 @@ export async function cmdBuild(name, workspace, flags, json, ctx) {
   return EXIT.OK;
 }
 
+/**
+ * The exported bundle's sha256, or the zero digest when there is none.
+ *
+ * `createHash` IS IMPORTED AT THE TOP OF THIS MODULE, not `require`d here. This function used to
+ * call `require("node:crypto")` inside an ES module, where `require` is not defined — so
+ * `relics agent build` threw "require is not defined" for EVERY project that had actually exported
+ * a bundle, and worked only for the ones that had not. The zero-digest branch is the one that ran.
+ */
 function bundleHashOf(workspace) {
   const p = join(workspace, "project.relics");
   if (!existsSync(p)) return `0x${"00".repeat(32)}`;
-  const { createHash } = require("node:crypto");
   return `0x${createHash("sha256").update(readFileSync(p)).digest("hex")}`;
 }
 
@@ -835,4 +856,43 @@ export async function cmdTokenMetadata(name, workspace, flags, json, ctx) {
     nextActions: ["CREATOR_ACTION_REQUIRED"],
   }, { json });
   return EXIT.OK;
+}
+
+
+/**
+ * THE `contractURI` DOCUMENT, PROJECTED FROM THE BUNDLE'S OWN METADATA.
+ *
+ * TWO KEY SPELLINGS, AND NEITHER IS WRONG. A `.relics` bundle's `metadata/collection.json` is
+ * camelCase and CLOSED — `bannerImage`, `featuredImage`, `externalLink` — because that is the
+ * format's own vocabulary and its validator refuses anything else by name. The document a
+ * collection's `contractURI()` must resolve to is OpenSea's, and OpenSea's keys are snake_case with
+ * `banner_image`, `featured_image` and `external_link` all REQUIRED.
+ *
+ * So the two documents can never be the same bytes, and this command used to feed the first
+ * straight into the pipeline that requires the second. It could not succeed for ANY project: the
+ * pin was refused for three missing keys, the refusal was read as a success, and the crash that
+ * followed named a `length` property rather than the fields. Projecting here is the fix, and it
+ * belongs here rather than in a harness — the kit's own launch E2E works around this by assembling
+ * a separate `contract-uri.json`, which is this projection written a second time.
+ *
+ * A DOCUMENT THAT ALREADY CARRIES THE CONTRACT KEYS IS PASSED THROUGH UNTOUCHED, so a creator who
+ * maintains their own is never overridden.
+ *
+ * NOTHING IS INVENTED. An absent optional field becomes the empty string — which is what the
+ * required-key check wants and what a marketplace reads as "not set" — never a plausible URL.
+ */
+export function contractUriDocument(collection) {
+  const CONTRACT_KEYS = ["name", "symbol", "description", "image", "banner_image", "featured_image", "external_link", "collaborators"];
+  if (CONTRACT_KEYS.every((k) => Object.hasOwn(collection ?? {}, k))) return collection;
+  const str = (v) => (typeof v === "string" ? v : "");
+  return {
+    name: str(collection?.name),
+    symbol: str(collection?.symbol),
+    description: str(collection?.description),
+    image: str(collection?.image),
+    banner_image: str(collection?.bannerImage),
+    featured_image: str(collection?.featuredImage),
+    external_link: str(collection?.externalLink),
+    collaborators: Array.isArray(collection?.collaborators) ? collection.collaborators : [],
+  };
 }

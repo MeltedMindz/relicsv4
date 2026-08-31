@@ -63,6 +63,22 @@ jobs:
       - name: metadata is pinned, fetched back, and byte-verified
         run: npm run launch:test
 
+      - name: the Wave-1 runtime election reaches the final calldata, and its negative controls
+        # THE ONE STEP HERE THAT TOUCHES A CHAIN, and it touches a LOCAL ANVIL FORK of one. The
+        # deployed ArtRuntimeRegistryV1 and the two deployed Wave-1 runtimes are the point: the
+        # numeric id a runtime holds is a per-chain fact and there is nothing to check against a
+        # mock. Nothing is signed and nothing is broadcast; the run stops at BUILT.
+        #
+        # NO ENDPOINT MEANS SKIPPED, AND SKIPPED IS NOT PASSED. The harness says so in its own
+        # output and exits 0, and the controls answer WRONG_RUNTIME_VALID_RENDER_CAN_PASS=NOT_MEASURED
+        # rather than NO. A green tick on a skipped run is not evidence and must not be read as any.
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash
+          echo "$HOME/.foundry/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.foundry/bin:$PATH"
+          foundryup
+          npm run e2e:wave1:controls
+
       - name: adversarial public-export review
         # Everything here is world-readable the moment it is pushed. Walks every added file, counts
         # the verbatim vendored copies rather than pretending there are none, and checks each file

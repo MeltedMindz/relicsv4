@@ -25,7 +25,12 @@ export { rc6Abi, FACTORY_ABI, METADATA_RESOLVER_ABI, PROJECT_REGISTRY_ABI, PROJE
 // (and so that reaching into it is a visible smell rather than a normal import).
 export { AntiSnipeMode, ArtMode, BurnPolicy, StartingPreset, metadataDigestForUri, launchParamsAsTuple } from "./vendor/types.js";
 export type { LaunchParams, LaunchResult, PoolKey, Collaborator } from "./vendor/types.js";
-export { buildLaunchParams, validateCreatorInput, DEFAULT_BACKING_UNITS_PER_ARTWORK } from "./vendor/params.js";
+// `validateLaunchParams` IS EXPORTED NOW, and its absence was not cosmetic: the vendored builder
+// carries the SDK's own independent refusal — including the art-selector and elected-runtime checks
+// — and an integrator holding this package could not reach it. Everything that validates a launch
+// went through `prepare`, which BUILDS rather than judges.
+export { buildLaunchParams, validateCreatorInput, validateLaunchParams, DEFAULT_BACKING_UNITS_PER_ARTWORK } from "./vendor/params.js";
+export type { ElectedRuntimeCheck, LaunchParamsValidation } from "./vendor/params.js";
 export type { CreatorInput } from "./vendor/params.js";
 export { packCreatorEarnings, unpackCreatorEarnings, NO_CREATOR_EARNINGS, CreatorEarningsMode } from "./vendor/creatorEarnings.js";
 export { assertAbiMatchesLaunchParams, LaunchAbiGenerationMismatchError } from "./vendor/launchCalldata.js";

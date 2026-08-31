@@ -81,6 +81,8 @@
     "public:review": "node scripts/public-export-review.mjs",
     "public:freshclone": "node scripts/verify-fresh-clone.mjs",
     "build:packages": "tsc -p packages/launch-sdk/tsconfig.json && tsc -p packages/agent-flow/tsconfig.json",
-    "postinstall": "node scripts/postinstall-build.mjs"
+    "postinstall": "node scripts/postinstall-build.mjs",
+    "e2e:wave1": "node scripts/e2e-wave1-runtime.mjs",
+    "e2e:wave1:controls": "node scripts/e2e-wave1-controls.mjs"
   }
 }
