@@ -24,7 +24,7 @@ export interface Issue {
 export type SupportedChainId = 1 | 8453 | 4663 | 56;
 export type DeployedChainId = 1 | 8453 | 4663;
 export type LaunchAccess = "PREPARED" | "PUBLIC";
-export type ArtRuntime = "SOLIDITY_SVG" | "JAVASCRIPT";
+export type ArtRuntime = "SOLIDITY_SVG" | "GEOMETRIC_RECURSION" | "VECTOR_COMPOSITION" | "JAVASCRIPT";
 export type StartingPreset = "LOW" | "MID" | "HIGH";
 export type BackingModel = "FULL_PARITY" | "PARTIAL";
 /**
@@ -225,7 +225,11 @@ export interface ProjectManifest {
   };
 }
 
-export type ArtConfigSource = "GENERATOR_SCRIPT" | "TEMPLATE_PARAMS";
+export type ArtConfigSource = "GENERATOR_SCRIPT" | "ART_CONFIG_V1" | "RUNTIME_CONFIG";
+export type ArtConfigFormat = "ACV1" | "GRV1" | "VCV1" | "JS_SOURCE_V1";
+/** The codec a Wave-1 engine's configuration bytes are produced by. Injected, never implemented in
+ *  `@relics/project-schema` — see `deriveArtConfig`. */
+export type RuntimeConfigEncoder = (input: { runtime: ArtRuntime; runtimeId: string; configFormat: ArtConfigFormat; document: any }) => Uint8Array | string;
 
 export interface ArtBinding {
   schemaVersion: string;
@@ -313,6 +317,9 @@ export interface ValidationResult {
 export interface ValidateOptions {
   /** Host-supplied sandbox. Given the generator sources and the entry path, return its exports. */
   evaluate?: (files: Map<string, string>, entry: string) => GeneratorModule;
+  /** Host-supplied codec for a Wave-1 engine's config format. Absent means the binding cannot be
+   *  recomputed, which is a refusal (`ART_BINDING_CONFIG_MISSING`) and never a pass. */
+  encodeRuntimeConfig?: RuntimeConfigEncoder;
   seeds?: number;
   skipExecution?: boolean;
 }
@@ -775,6 +782,7 @@ export function assembleBundle(input: {
   config: Record<string, unknown>;
   /** seed -> sha256 of the render, for each of `BINDING_SEEDS`. Supplied by whoever has a sandbox. */
   representativeOutputs?: Record<string, string> | null;
+  encodeRuntimeConfig?: RuntimeConfigEncoder;
 }): {
   bytes: Uint8Array;
   manifest: ProjectManifest;
@@ -808,6 +816,14 @@ export const ZERO_DIGEST: string;
 export const BINDING_SEEDS: readonly string[];
 export const ART_BINDING_KEYS: readonly string[];
 export const ART_CONFIG_SOURCES: readonly ArtConfigSource[];
+export const ART_CONFIG_FORMATS: readonly ArtConfigFormat[];
+export const ART_RUNTIME_TO_CONFIG_FORMAT: Readonly<Record<ArtRuntime, ArtConfigFormat>>;
+/** The four bytes a format's configuration opens with, derived from the format's own name. Null
+ *  for `JS_SOURCE_V1`, which has no magic. */
+export function artConfigFormatMagic(format: string): Uint8Array | null;
+export const ART_RUNTIME_TAG_PREFIX: string;
+/** `V4ART.RUNTIME.<stable id>` — the preimage of the `bytes32 tag` ArtRuntimeRegistryV1 stores. */
+export function artRuntimeTagPreimage(runtime: string): string | null;
 export const CHAIN_RESOLVED_BINDING_FIELDS: readonly string[];
 export function keccakJson(document: unknown): string;
 export function computeBundleCommitment(projectConfigHash: string, contentHash: string): string;

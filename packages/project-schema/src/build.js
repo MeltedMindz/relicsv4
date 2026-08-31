@@ -57,7 +57,7 @@ function sortDeep(value) {
  *   bundle being assembled by a path that never executed the art.
  * @returns {{ bytes: Uint8Array, manifest: any, checksums: any, entries: Map<string, Uint8Array> }}
  */
-export function assembleBundle({ files: inputFiles, config, representativeOutputs = null, canonicalPreviews = null, status = "FINAL" }) {
+export function assembleBundle({ files: inputFiles, config, representativeOutputs = null, canonicalPreviews = null, status = "FINAL", encodeRuntimeConfig = undefined }) {
   if (!(inputFiles instanceof Map)) throw new BuildError("files must be a Map of path -> bytes");
 
   // FRESH PREVIEWS, NOT WHATEVER SITS IN `previews/`.
@@ -99,7 +99,10 @@ export function assembleBundle({ files: inputFiles, config, representativeOutput
   // runtime is handed. Encoding them here — inside assembly, from the same files the hashes are
   // taken over — is what makes it impossible for a bundle to carry a configuration its own
   // parameters do not produce.
-  const art = deriveArtConfig({ runtime: config.art?.runtime, templateParams, scriptBytes });
+  // `encodeRuntimeConfig` IS PASSED THROUGH, NOT DEFAULTED. The Wave-1 engines' config codecs live
+  // outside this dependency-free package; a caller that has one supplies it, and a caller that does
+  // not gets a refusal naming the reason rather than a bundle assembled from bytes nobody derived.
+  const art = deriveArtConfig({ runtime: config.art?.runtime, templateParams, scriptBytes, encodeRuntimeConfig });
 
   if (!BUNDLE_STATUSES.includes(status)) throw new BuildError(`unknown bundle status ${JSON.stringify(status)}`);
   const magic = magicForStatus(status);

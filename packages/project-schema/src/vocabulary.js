@@ -140,10 +140,29 @@ export function nativeSymbolFor(chainId) {
   return profile.nativeSymbol;
 }
 
-/** Art runtimes. Mirrors the launchpad `ArtMode` enum: 0 = SOLIDITY_SVG, 1 = JAVASCRIPT. */
-export const ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"]);
+/**
+ * Art runtimes a bundle may name.
+ *
+ * TWO NUMBERINGS LIVE IN THIS FILE AND THEY ARE NOT THE SAME QUESTION. `ART_RUNTIME_TO_MODE` is
+ * `LaunchParams.artMode` — the launchpad's `ArtMode` enum, 0 = SOLIDITY_SVG, 1 = JAVASCRIPT — and
+ * it says which CLASS of renderer a launch binds. It is NOT the `uint32` key
+ * `ArtRuntimeRegistryV1` stores a runtime under, and it is not the runtime ELECTION.
+ *
+ * THE ELECTION IS A PER-CHAIN FACT AND IS DELIBERATELY ABSENT FROM THIS PACKAGE. Which numeric id
+ * `GEOMETRIC_RECURSION_V1` holds on a given chain is answered by reading that chain's registry on
+ * the day you ask (`src/art-runtime-discovery.js` says how, and why `runtimeCount()` is not an
+ * enumeration). A bundle names a runtime by its STABLE STRING id and nothing else; the numeric
+ * half of `artTemplateId` is composed at prepare time, on a selected chain, by
+ * `encodeArtSelector`. Writing a number here would be a chain claim in a format that refuses them.
+ *
+ * FOUR NAMES, THREE OF THEM `ArtMode.SOLIDITY_SVG`. `SOLIDITY_SVG` is the generic runtime the
+ * launchpad has always carried; `GEOMETRIC_RECURSION` and `VECTOR_COMPOSITION` are the two Wave-1
+ * engines. All three are bound through `artMode` 0 and differ in which runtime the selector elects
+ * and in the config format their bytes are written in — see `ART_RUNTIME_TO_CONFIG_FORMAT`.
+ */
+export const ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "GEOMETRIC_RECURSION", "VECTOR_COMPOSITION", "JAVASCRIPT"]);
 
-export const ART_RUNTIME_TO_MODE = Object.freeze({ SOLIDITY_SVG: 0, JAVASCRIPT: 1 });
+export const ART_RUNTIME_TO_MODE = Object.freeze({ SOLIDITY_SVG: 0, GEOMETRIC_RECURSION: 0, VECTOR_COMPOSITION: 0, JAVASCRIPT: 1 });
 
 /**
  * The stable identifier each runtime is bound under in a project's on-chain art binding. The name
@@ -154,8 +173,27 @@ export const ART_RUNTIME_TO_MODE = Object.freeze({ SOLIDITY_SVG: 0, JAVASCRIPT: 
  */
 export const ART_RUNTIME_IDS = Object.freeze({
   SOLIDITY_SVG: "SOLIDITY_SVG_V1",
+  GEOMETRIC_RECURSION: "GEOMETRIC_RECURSION_V1",
+  VECTOR_COMPOSITION: "VECTOR_COMPOSITION_V1",
   JAVASCRIPT: "ONCHAIN_JAVASCRIPT_V1",
 });
+
+/**
+ * The registry TAG preimage for each runtime: `keccak256(utf8(preimage))` is the `bytes32 tag`
+ * `ArtRuntimeRegistryV1` stores, and matching on it is how a stable string id is turned into that
+ * chain's numeric runtime id without anybody writing the number down.
+ *
+ * DERIVED FROM THE STABLE ID, NOT TRANSCRIBED. The prefix is the registry's own namespace and the
+ * remainder IS `ART_RUNTIME_IDS[runtime]`, so a new runtime cannot acquire a tag that disagrees
+ * with its id — there is no second string to keep in step.
+ */
+export const ART_RUNTIME_TAG_PREFIX = "V4ART.RUNTIME.";
+
+/** @param {string} runtime */
+export function artRuntimeTagPreimage(runtime) {
+  const id = ART_RUNTIME_IDS[runtime];
+  return id ? `${ART_RUNTIME_TAG_PREFIX}${id}` : null;
+}
 
 /**
  * The `uint16` version each runtime reports about ITSELF, mirroring `IArtRuntimeV1.runtimeVersion()`
@@ -164,14 +202,21 @@ export const ART_RUNTIME_IDS = Object.freeze({
  * generator was written against: this one identifies the deployed renderer's own revision, and it
  * is what a project's binding pins.
  */
-export const ART_RUNTIME_VERSIONS = Object.freeze({ SOLIDITY_SVG: 1, JAVASCRIPT: 1 });
+export const ART_RUNTIME_VERSIONS = Object.freeze({ SOLIDITY_SVG: 1, GEOMETRIC_RECURSION: 1, VECTOR_COMPOSITION: 1, JAVASCRIPT: 1 });
 
 /**
  * Runtimes a bundle may declare TODAY. A p5-style runtime is deliberately absent: it is not an
  * approved launchpad runtime, so no template ships on it and the validator refuses a bundle that
  * names it. Adding one is a protocol decision, not a kit decision.
+ *
+ * WIDENING THIS SET IS A SCHEMA CHANGE AND WAS TREATED AS ONE. `GEOMETRIC_RECURSION` and
+ * `VECTOR_COMPOSITION` joined at schema 4.1.0 — a MINOR, because the widening is additive: no
+ * field changed meaning, no field became required, and every 4.0.0 bundle imports here unchanged.
+ * The half that matters runs the other way: a 4.1.0 bundle naming a Wave-1 runtime is REFUSED by a
+ * 4.0.0 importer, which is correct, because that importer's vocabulary cannot bind it and would
+ * otherwise fall through to a runtime the creator did not choose.
  */
-export const APPROVED_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"]);
+export const APPROVED_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "GEOMETRIC_RECURSION", "VECTOR_COMPOSITION", "JAVASCRIPT"]);
 
 /**
  * Runtimes the protocol will actually BIND AND RENDER — the set a template may be presented as
@@ -186,6 +231,12 @@ export const APPROVED_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"
  * THIS LIST IS THE ONE PLACE THAT DECIDES. `relics templates` marks it, `validate` warns on it,
  * and the monorepo's runtime-parity check reads the protocol's own enum and gate and fails if this
  * list claims more than the protocol accepts. Gating a runtime off is a one-line edit here.
+ *
+ * IT IS A RELEASE ANSWER AND NOT A CHAIN ANSWER, and the difference is load-bearing now that there
+ * are three launchable names. This list says the protocol implements a runtime; it says nothing
+ * about whether a particular chain has it REGISTERED and ACTIVE, which is per chain, changes
+ * without this file changing, and can only be established by reading `ArtRuntimeRegistryV1` on the
+ * day you ask. A launch consults BOTH: this list, and the live registry. Neither substitutes.
  *
  * JAVASCRIPT IS GATED OFF IN THIS RELEASE, and the kit says so rather than implying otherwise.
  * The protocol refuses it in three independent places — `ProjectCollection.bindArt` reverts
@@ -202,7 +253,7 @@ export const APPROVED_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "JAVASCRIPT"
  * export — they simply cannot be launched yet, and every surface that shows them marks that. A
  * template on a gated runtime is MARKED, never deleted and never presented as launchable.
  */
-export const LAUNCHABLE_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG"]);
+export const LAUNCHABLE_ART_RUNTIMES = Object.freeze(["SOLIDITY_SVG", "GEOMETRIC_RECURSION", "VECTOR_COMPOSITION"]);
 
 /** Approved but not currently launchable — preview and authoring work, launching does not. */
 export const PREVIEW_ONLY_ART_RUNTIMES = Object.freeze(APPROVED_ART_RUNTIMES.filter((r) => !LAUNCHABLE_ART_RUNTIMES.includes(r)));

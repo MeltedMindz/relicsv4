@@ -8,6 +8,31 @@
  * added; bump the MINOR when a purely additive optional field appears. An importer accepts a
  * bundle whose MAJOR it knows and whose MINOR is <= its own.
  *
+ * 4.1.0 — the art-runtime vocabulary widened to name the two Wave-1 engines,
+ * `GEOMETRIC_RECURSION` (`GEOMETRIC_RECURSION_V1`) and `VECTOR_COMPOSITION`
+ * (`VECTOR_COMPOSITION_V1`), alongside the generic `SOLIDITY_SVG`. With them come two art
+ * configuration formats, `GRV1` and `VCV1`, and one new `artConfigSource`, `RUNTIME_CONFIG`.
+ *
+ * A MINOR, AND THE DEFAULTING RULE IS WHAT MAKES THAT TRUE — the same argument 3.1.0 and 3.2.0
+ * made. The change WIDENS an accepted value set and changes no field's meaning: `art.runtime`
+ * still names one runtime, `artBinding.runtimeId` is still that runtime's stable string id,
+ * `artBinding.templateId` is still a decimal string, and every 4.0.0 bundle imports here byte for
+ * byte unchanged, hashing to the same values it always did.
+ *
+ * The compatibility rule then does the half that matters, in the other direction: a 4.1.0 bundle
+ * naming `GEOMETRIC_RECURSION` is REFUSED by a 4.0.0 importer, because that importer's vocabulary
+ * has no such runtime and the alternative to refusing is falling through to a runtime the creator
+ * did not choose. An importer that cannot honour a field must not quietly drop it.
+ *
+ * WHAT DELIBERATELY DID NOT ENTER THE BUNDLE. The elected runtime's NUMERIC id — the `uint32` key
+ * `ArtRuntimeRegistryV1` stores it under, and the top 32 bits of `LaunchParams.artTemplateId` — is
+ * a PER-CHAIN fact. `GEOMETRIC_RECURSION_V1` is id 3 and `VECTOR_COMPOSITION_V1` is id 4 on the
+ * three chains that carry them today, and neither number is a property of a bundle: ids are chosen
+ * by the registering Safe, may be sparse, and can differ per chain. This schema already refuses
+ * `runtimeCodeHash` and `scriptPointer` by name for exactly this reason, and a numeric runtime id
+ * belongs in that family. The packed selector is composed at prepare time, on a selected chain,
+ * from a live registry read — see `src/art-selector.js` and `src/art-runtime-discovery.js`.
+ *
  * 4.0.0 — every bundle carries the independent RC6 `market.antiSnipeMode` wire value. FINAL
  * bundles must explicitly elect NONE or PROTECTED_98_MINUTES; UNSPECIFIED is draft-only. This is
  * a MAJOR because the field is required and a 3.x bundle cannot prove which creator election was
@@ -41,7 +66,7 @@
  * the work that matters: a 3.1.0 bundle declaring chain 56 is REFUSED by a 3.0.0 importer, because
  * that importer genuinely cannot launch it. A 3.0.0 bundle still imports here unchanged.
  */
-export const SCHEMA_VERSION = "4.0.0";
+export const SCHEMA_VERSION = "4.1.0";
 
 /**
  * Version of the creator kit (this repo's CLI + templates) that produced the bundle.
@@ -87,6 +112,12 @@ export const SCHEMA_VERSION = "4.0.0";
  * networked command group reached only through a dynamic import so the offline kit's module graph
  * is unchanged. A creator who wants none of it runs exactly what they ran before, with no network.
  *
+ * 4.3.0 CARRIES THE SCHEMA MINOR ABOVE (4.1.0) AND THE WIRING THAT MAKES IT REACHABLE: a project
+ * may now DECLARE a Wave-1 engine, `relics agent prepare` composes the packed art selector from a
+ * LIVE registry read on the selected chain rather than hardcoding template 1 with no runtime half,
+ * and the protected signer decodes that selector back out of the final calldata and refuses a
+ * runtime the approval, the policy or the chain does not carry.
+ *
  * 4.2.0 MAKES THE SAFE PATH THE EASY PATH, and again changes no bundle field. `agent setup` is a
  * one-time human wizard; the signer gained an authorization GRANT it holds itself (single-use by
  * default, expiring, revocable) and a real encrypted keystore; and the ERC-20's own metadata -- the
@@ -98,7 +129,7 @@ export const SCHEMA_VERSION = "4.0.0";
  * name, flags and behaviour, and `npm run kit:offline` proves the offline half by RUNNING it with
  * outbound connections blocked rather than by asserting it in a comment like this one.
  */
-export const CREATOR_KIT_VERSION = "4.2.0";
+export const CREATOR_KIT_VERSION = "4.3.0";
 
 /**
  * Version of the deterministic art runtime contract the generator was written against — the

@@ -20,6 +20,7 @@ import {
   APPROVED_ART_RUNTIMES,
   UNAPPROVED_ART_RUNTIMES,
   ART_RUNTIMES,
+  ART_RUNTIME_TO_MODE,
   STARTING_PRESETS,
   BACKING_MODELS,
   LAUNCH_MODES,
@@ -35,9 +36,9 @@ import {
 } from "./vocabulary.js";
 import { isSchemaCompatible, SCHEMA_VERSION, RUNTIME_VERSION, PROTOCOL_RELEASE_COMPATIBILITY, parseSemver, explainIncompatibility } from "./version.js";
 import { isSha256Hex } from "./hashes.js";
-import { ART_BINDING_KEYS, ART_CONFIG_SOURCES, ART_CONFIG_FORMATS, ART_RUNTIME_TO_CONFIG_FORMAT, CHAIN_RESOLVED_BINDING_FIELDS } from "./binding.js";
+import { ART_BINDING_KEYS, ART_CONFIG_SOURCES, ART_CONFIG_FORMATS, ART_RUNTIME_TO_CONFIG_FORMAT, CHAIN_RESOLVED_BINDING_FIELDS, artConfigFormatMagic } from "./binding.js";
 import { isArtConfigV1, validateArtConfigV1, hashArtConfigV1 } from "./art-config-v1.js";
-import { isKeccak256Hex } from "./keccak256.js";
+import { isKeccak256Hex, keccak256Hex } from "./keccak256.js";
 import { reviewedTemplateSupplyPin, validateReviewedProtocolTemplate } from "./protocol-templates.js";
 import { isLaunchModeAvailable, LAUNCHABLE_MODES, LAUNCH_MODE_UNAVAILABLE_REASON } from "./launch-protection.js";
 
@@ -335,9 +336,18 @@ export function validateManifest(manifest) {
         ),
       );
     }
-    if (runtime === "SOLIDITY_SVG") {
+    // THE TEMPLATE HALF, AND ONLY THE TEMPLATE HALF. Every Solidity-mode runtime binds a
+    // REGISTERED template, so the rule keys off `ART_RUNTIME_TO_MODE` rather than off the one
+    // runtime name it used to know — three names share mode 0 now, and a rule that named only
+    // `SOLIDITY_SVG` would have let a Wave-1 bundle through with `templateId: null`.
+    //
+    // WHAT THIS FIELD IS NOT: the packed `LaunchParams.artTemplateId` word. That word carries the
+    // template id in its low 224 bits AND the elected runtime's per-chain numeric id in its top 32,
+    // and the runtime half is a chain fact a bundle may not assert. This is the decimal template
+    // id alone; the word is composed at prepare time by `encodeArtSelector`, on a selected chain.
+    if (ART_RUNTIME_TO_MODE[runtime] === 0) {
       if (typeof art.templateId !== "string" || !DECIMAL_RE.test(art.templateId) || art.templateId === "0") {
-        issues.push(error("ART_TEMPLATE_ID", `${at}#art.templateId`, "SOLIDITY_SVG needs a non-zero decimal templateId (0 is the no-template sentinel)"));
+        issues.push(error("ART_TEMPLATE_ID", `${at}#art.templateId`, `${runtime} needs a non-zero decimal templateId (0 is the no-template sentinel)`));
       }
     } else if (art.templateId !== null && art.templateId !== undefined) {
       issues.push(error("ART_TEMPLATE_ID", `${at}#art.templateId`, "templateId must be null for the JAVASCRIPT runtime"));
@@ -817,6 +827,63 @@ function validateArtBindingBlock(manifest, at) {
       if (!isKeccak256Hex(binding[key])) {
         issues.push(error("ART_BINDING_ACV1_COMMITMENT", `${where}.${key}`, `artBinding.${key} must be the keccak256 the runtime derives from the decoded configuration`));
       }
+    }
+  } else if (binding.artConfigSource === "RUNTIME_CONFIG") {
+    // A WAVE-1 ENGINE'S OWN CONFIGURATION. The bundle carries the bytes, exactly as an ACV1 binding
+    // does, so an importer can hand them to that engine and see what a creator will launch.
+    //
+    // WHAT IS CHECKED HERE IS WEAKER THAN THE ACV1 BRANCH ABOVE, AND SAYING SO IS THE POINT. This
+    // package does not carry `GRV1`/`VCV1` decoders — they are transcriptions of frozen Solidity
+    // with exactly one off-chain implementation elsewhere, and a second copy here would be a byte
+    // layout waiting to disagree with an immutable art binding. So it verifies what it honestly
+    // can: the bytes are hex, their length is stated correctly, they open with the format's own
+    // magic, and `artConfigHash` really is their keccak256 — the one value the chain checks. Whether
+    // the configuration is INTERNALLY valid is answered by that engine, on chain, inside the atomic
+    // launch, and a plausible second opinion here would be a validator that agrees until it does not.
+    const config = binding.artConfig;
+    if (typeof config !== "string" || !/^[0-9a-f]+$/.test(config) || config.length % 2 !== 0) {
+      issues.push(error("ART_BINDING_CONFIG", `${where}.artConfig`, "a RUNTIME_CONFIG binding must carry the configuration as bare lowercase hex"));
+    } else {
+      const bytes = Uint8Array.from(config.match(/../g).map((b) => parseInt(b, 16)));
+      if (bytes.length !== binding.artConfigBytes) {
+        issues.push(error("ART_BINDING_CONFIG_BYTES", `${where}.artConfigBytes`, "artConfigBytes must be the length of artConfig"));
+      }
+      const magic = artConfigFormatMagic(binding.artConfigFormat);
+      if (magic !== null && !(bytes.length >= magic.length && magic.every((b, i) => bytes[i] === b))) {
+        issues.push(
+          error(
+            "ART_BINDING_CONFIG_FORMAT",
+            `${where}.artConfig`,
+            `artConfig does not open with the ${binding.artConfigFormat} magic, so these bytes were written for a different engine than the one this binding names`,
+          ),
+        );
+      }
+      if (isKeccak256Hex(binding.artConfigHash) && keccak256Hex(bytes) !== binding.artConfigHash) {
+        issues.push(error("ART_BINDING_CONFIG_HASH", `${where}.artConfigHash`, "artConfigHash is not keccak256 of artConfig — the launch would revert BadArtHash"));
+      }
+    }
+    if (!isKeccak256Hex(binding.templateParamsHash)) {
+      issues.push(error("ART_BINDING_TEMPLATE_PARAMS", `${where}.templateParamsHash`, "a RUNTIME_CONFIG binding must carry keccak256 of the creator's authoring document"));
+    }
+    for (const key of ["artConfigVisualHash", "artConfigTraitSchemaHash"]) {
+      if (binding[key] !== null) {
+        issues.push(
+          error(
+            "ART_BINDING_ACV1_COMMITMENT",
+            `${where}.${key}`,
+            `${key} is ArtConfigV1's own derivation over an ACV1 program. A ${binding.runtime} configuration is not one, so a value here would be a commitment nobody computed — the field stays null.`,
+          ),
+        );
+      }
+    }
+    if (binding.representativeOutputsHash !== null) {
+      issues.push(
+        error(
+          "ART_BINDING_OUTPUTS_HASH",
+          `${where}.representativeOutputsHash`,
+          "a RUNTIME_CONFIG project is rendered by a deployed contract this kit does not execute, so there is nothing honest for it to commit to and the field stays null",
+        ),
+      );
     }
   }
 

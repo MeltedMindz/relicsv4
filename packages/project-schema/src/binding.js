@@ -39,6 +39,7 @@ import { visualHashArtConfigV1, traitSchemaHashArtConfigV1 } from "./art-config-
 import { keccak256Hex, keccak256Utf8, isKeccak256Hex } from "./keccak256.js";
 import { utf8, toHex } from "./sha256.js";
 import { APPROVED_ART_RUNTIMES, ART_RUNTIME_IDS, ART_RUNTIME_TO_MODE, ART_RUNTIME_VERSIONS, LAUNCHABLE_ART_RUNTIMES } from "./vocabulary.js";
+import { utf8 as utf8Bytes } from "./sha256.js";
 import { BUNDLE_MAGIC, SCHEMA_VERSION } from "./version.js";
 
 /** Raised when a project cannot state the art configuration its own launch would carry. */
@@ -53,8 +54,18 @@ export class ArtConfigDerivationError extends Error {}
  */
 export const BINDING_SEEDS = Object.freeze(["1", "2", "3", "5", "8", "13", "21", "34"]);
 
-/** Where the bytes hashed into `artConfigHash` come from. */
-export const ART_CONFIG_SOURCES = Object.freeze(["GENERATOR_SCRIPT", "ART_CONFIG_V1"]);
+/**
+ * Where the bytes hashed into `artConfigHash` come from.
+ *
+ * `RUNTIME_CONFIG` joined at schema 4.1.0 for the Wave-1 engines. It names the case where the
+ * creator's authoring document is encoded by A RUNTIME'S OWN CODEC rather than by this package:
+ * `GEOMETRIC_RECURSION_V1` writes `GRV1` bytes and `VECTOR_COMPOSITION_V1` writes `VCV1` bytes,
+ * both transcribed from frozen Solidity that lives outside this schema. Keeping it a separate
+ * source rather than stretching `ART_CONFIG_V1` is the point: an `ART_CONFIG_V1` binding is one
+ * this package can decode and re-validate byte for byte, and a `RUNTIME_CONFIG` binding is one it
+ * can only hash and shape-check. Two different strengths of claim should not share a name.
+ */
+export const ART_CONFIG_SOURCES = Object.freeze(["GENERATOR_SCRIPT", "ART_CONFIG_V1", "RUNTIME_CONFIG"]);
 
 /**
  * The FORMAT of the bytes a runtime is handed. Not a synonym for the runtime: it names how the
@@ -66,10 +77,36 @@ export const ART_CONFIG_SOURCES = Object.freeze(["GENERATOR_SCRIPT", "ART_CONFIG
  *   JS_SOURCE_V1  the generator entry file, byte for byte. The JavaScript runtime's `artConfig`
  *                 IS the script, so there is no separate configuration document.
  */
-export const ART_CONFIG_FORMATS = Object.freeze(["ACV1", "JS_SOURCE_V1"]);
+export const ART_CONFIG_FORMATS = Object.freeze(["ACV1", "GRV1", "VCV1", "JS_SOURCE_V1"]);
 
 /** Which format each runtime's `artConfig` is written in. */
-export const ART_RUNTIME_TO_CONFIG_FORMAT = Object.freeze({ SOLIDITY_SVG: "ACV1", JAVASCRIPT: "JS_SOURCE_V1" });
+export const ART_RUNTIME_TO_CONFIG_FORMAT = Object.freeze({
+  SOLIDITY_SVG: "ACV1",
+  GEOMETRIC_RECURSION: "GRV1",
+  VECTOR_COMPOSITION: "VCV1",
+  JAVASCRIPT: "JS_SOURCE_V1",
+});
+
+/**
+ * The four bytes a runtime's configuration opens with, DERIVED from the format's own name.
+ *
+ * NOT A SECOND DECLARATION OF A FROZEN SOLIDITY FACT. Each of these formats is named after its own
+ * magic — `ArtConfigV1.sol` opens `0x41435631` ("ACV1"), `RecursionConfigV1.sol` opens `0x47525631`
+ * ("GRV1"), `VectorConfigV1.sol` opens `0x56435631` ("VCV1") — so the ASCII of the format name IS
+ * the magic and there is nothing here to keep in step with anything. `JS_SOURCE_V1` has none: a
+ * JavaScript generator's `artConfig` is the source file, which begins however the creator wrote it.
+ *
+ * It is the one check this package can make about bytes it did not encode: a caller that injects
+ * the WRONG runtime's codec produces bytes that open with the wrong four characters, and that is
+ * caught here rather than becoming a permanent, silently mismatched art binding.
+ *
+ * @param {string} format
+ * @returns {Uint8Array | null}
+ */
+export function artConfigFormatMagic(format) {
+  if (typeof format !== "string" || !/^[A-Z]{2}V1$/.test(format)) return null;
+  return utf8Bytes(format);
+}
 
 /**
  * Binding fields that are resolved or produced ON CHAIN. A bundle carries them as `null`, always.
@@ -169,9 +206,14 @@ export function representativeOutputsCommitment(outputs) {
  */
 export function computeArtBinding(input) {
   const runtime = input.runtime;
-  const isJavaScript = runtime === "JAVASCRIPT";
+  const configFormat = ART_RUNTIME_TO_CONFIG_FORMAT[runtime] ?? null;
+  const isJavaScript = configFormat === "JS_SOURCE_V1";
+  // ACV1 IS A SOURCE THIS PACKAGE CAN RE-DERIVE; A RUNTIME CONFIG IS ONE IT CAN ONLY HASH.
+  // Branching on the FORMAT rather than on `runtime === "JAVASCRIPT"` is what let a third format
+  // arrive without every `else` in this function silently meaning "ACV1".
+  const isAcv1 = configFormat === "ACV1";
 
-  // THE BYTES A RUNTIME IS ACTUALLY HANDED, for both runtimes, with no null left standing.
+  // THE BYTES A RUNTIME IS ACTUALLY HANDED, for every runtime, with no null left standing.
   //
   // JAVASCRIPT: `artConfig` IS the generator entry file, byte for byte.
   //
@@ -180,9 +222,13 @@ export function computeArtBinding(input) {
   // could not derive was the right call. ACV1 is that layout, so the refusal has expired: the kit
   // encodes the creator's configuration itself and states the hash the launch will check.
   //
-  // In BOTH cases `artConfigHash` is keccak256 over the EXACT bytes handed to the factory —
+  // GEOMETRIC_RECURSION / VECTOR_COMPOSITION: `artConfig` is the creator's configuration in that
+  // engine's own format, encoded by that engine's own codec. This package does not own the codec
+  // and does not pretend to — see `deriveArtConfig`.
+  //
+  // In EVERY case `artConfigHash` is keccak256 over the EXACT bytes handed to the factory —
   // appendix included for ACV1 — which is `LaunchParams.artScriptHash`.
-  const artConfigSource = isJavaScript ? "GENERATOR_SCRIPT" : "ART_CONFIG_V1";
+  const artConfigSource = isJavaScript ? "GENERATOR_SCRIPT" : isAcv1 ? "ART_CONFIG_V1" : "RUNTIME_CONFIG";
   const artConfigBytes = isJavaScript ? input.scriptBytes : (input.artConfigBytes ?? null);
 
   if (!(artConfigBytes instanceof Uint8Array) || artConfigBytes.length === 0) {
@@ -208,10 +254,13 @@ export function computeArtBinding(input) {
     artConfig: isJavaScript ? null : toHex(artConfigBytes),
     artConfigBytes: artConfigBytes.length,
     artConfigHash: keccak256Hex(artConfigBytes),
-    // The two commitments the runtime derives from the DECODED configuration. ACV1 only: they are
-    // properties of the declared program, and a JavaScript generator declares no such program.
-    artConfigVisualHash: isJavaScript ? null : (input.artConfigVisualHash ?? null),
-    artConfigTraitSchemaHash: isJavaScript ? null : (input.artConfigTraitSchemaHash ?? null),
+    // The two commitments the runtime derives from the DECODED configuration. ACV1 ONLY, and the
+    // narrowing is deliberate: they are `ArtConfigV1.sol`'s own derivations over an ACV1 program.
+    // A JavaScript generator declares no such program, and a Wave-1 engine declares a DIFFERENT
+    // one whose commitments this package cannot compute — stating a null there is the honest
+    // answer, and stating an ACV1 hash over non-ACV1 bytes would be a fabricated commitment.
+    artConfigVisualHash: isAcv1 ? (input.artConfigVisualHash ?? null) : null,
+    artConfigTraitSchemaHash: isAcv1 ? (input.artConfigTraitSchemaHash ?? null) : null,
     // Retained: the creator's AUTHORING document, which is what they edit and diff. The
     // configuration bytes are derived from it, so the two are checked against each other.
     templateParamsHash: isJavaScript ? null : keccakJson(input.templateParams ?? null),
@@ -286,7 +335,7 @@ export { utf8 };
  * make that proof meaningless the moment they disagreed; one derivation makes the recomputation a
  * real check.
  */
-export function deriveArtConfig({ runtime, templateParams, scriptBytes }) {
+export function deriveArtConfig({ runtime, templateParams, scriptBytes, encodeRuntimeConfig }) {
   if (runtime === "JAVASCRIPT") return { bytes: scriptBytes, visualHash: null, traitSchemaHash: null };
 
   // AN UNKNOWN RUNTIME IS REFUSED BY NAME, not treated as the other one.
@@ -300,6 +349,11 @@ export function deriveArtConfig({ runtime, templateParams, scriptBytes }) {
     throw new ArtConfigDerivationError(
       `"${runtime}" is not an art runtime this format approves. The approved runtimes are ${APPROVED_ART_RUNTIMES.join(" and ")}; nothing else can be bound, so no bundle declaring one could ever be launched.`,
     );
+  }
+
+  const configFormat = ART_RUNTIME_TO_CONFIG_FORMAT[runtime] ?? null;
+  if (configFormat !== "ACV1") {
+    return deriveRuntimeConfig({ runtime, configFormat, templateParams, encodeRuntimeConfig });
   }
 
   if (!templateParams || typeof templateParams !== "object") {
@@ -347,4 +401,88 @@ function hexBytes(value) {
   const out = new Uint8Array(value.length / 2);
   for (let i = 0; i < out.length; i++) out[i] = parseInt(value.slice(i * 2, i * 2 + 2), 16);
   return out;
+}
+
+/**
+ * THE WAVE-1 ENGINES' CONFIGURATION BYTES — encoded by A CODEC THIS PACKAGE DOES NOT OWN.
+ *
+ * WHY IT IS INJECTED RATHER THAN IMPLEMENTED HERE. `GEOMETRIC_RECURSION_V1` writes `GRV1` and
+ * `VECTOR_COMPOSITION_V1` writes `VCV1`, and both layouts are transcriptions of frozen Solidity
+ * (`RecursionConfigV1.sol`, `VectorConfigV1.sol`) that already have exactly one off-chain
+ * implementation, in `@relics/art-review`'s codec. Copying either one in here would be a SECOND
+ * declaration of a byte layout whose disagreement is permanent: the bytes a bundle commits to are
+ * the bytes `LaunchpadFactory._storeArt` checks `keccak256(artConfig)` against, and a launch bound
+ * to the wrong ones renders somebody else's picture forever. This package is dependency-free by
+ * design, so the honest move is to take the codec as a capability — the same shape as
+ * `validateBundle`'s injected `evaluate`, and for the same reason.
+ *
+ * AN ABSENT CODEC IS A REFUSAL, NEVER A PASS. A caller that cannot supply one cannot derive the
+ * binding, so it cannot prove the manifest was not hand-edited, so the bundle is refused with the
+ * reason. `validateBundle` turns this throw into `ART_BINDING_CONFIG_MISSING`.
+ *
+ * THE PROPERTY THE ACV1 PATH HAS IS PRESERVED. The bytes are still a FUNCTION OF THE CREATOR'S
+ * AUTHORING DOCUMENT — `generator/params.json` goes in, bytes come out — so a creator still cannot
+ * hand over a configuration their own parameters do not produce. What moved is who computes the
+ * function, not where its input comes from.
+ *
+ * WHAT THIS PACKAGE STILL CHECKS ABOUT BYTES IT DID NOT ENCODE, because "injected" must not mean
+ * "unexamined": the document declares the format, the codec returns non-empty bytes, and those
+ * bytes open with the format's own four-character magic. A caller that wires the wrong engine's
+ * codec is caught by the third one.
+ *
+ * @param {{ runtime: string, configFormat: string | null, templateParams: unknown,
+ *           encodeRuntimeConfig?: (input: { runtime: string, runtimeId: string,
+ *             configFormat: string, document: any }) => Uint8Array | string }} input
+ */
+function deriveRuntimeConfig({ runtime, configFormat, templateParams, encodeRuntimeConfig }) {
+  if (configFormat === null) {
+    throw new ArtConfigDerivationError(`"${runtime}" declares no art configuration format, so no bundle could state what its launch would render`);
+  }
+  if (!templateParams || typeof templateParams !== "object") {
+    throw new ArtConfigDerivationError(
+      `generator/params.json is required for the ${runtime} runtime: it is the project's ${configFormat} art configuration, and a bundle that does not state one cannot state what its launch would render`,
+    );
+  }
+  if (templateParams.format !== configFormat) {
+    throw new ArtConfigDerivationError(
+      `generator/params.json must declare "format": "${configFormat}" for the ${runtime} runtime; it declares ${JSON.stringify(templateParams.format ?? null)}. ` +
+        "A document that names another engine's format is a document for another engine, and encoding it here would bind the creator's project to bytes their own parameters do not produce.",
+    );
+  }
+  if (typeof encodeRuntimeConfig !== "function") {
+    throw new ArtConfigDerivationError(
+      `the ${runtime} runtime's ${configFormat} configuration is encoded by that engine's own codec, which this schema package deliberately does not carry — a second copy of a frozen byte layout is a permanent art binding waiting to disagree. ` +
+        "Supply `encodeRuntimeConfig` (the CLI wires `@relics/art-review`'s codec) so the binding can be derived rather than taken on trust.",
+    );
+  }
+
+  let produced;
+  try {
+    produced = encodeRuntimeConfig({ runtime, runtimeId: ART_RUNTIME_IDS[runtime], configFormat, document: templateParams });
+  } catch (err) {
+    throw new ArtConfigDerivationError(
+      `the ${configFormat} codec refused generator/params.json: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+
+  const bytes = produced instanceof Uint8Array ? produced : typeof produced === "string" ? hexBytes(produced.replace(/^0x/, "")) : null;
+  if (!(bytes instanceof Uint8Array) || bytes.length === 0) {
+    throw new ArtConfigDerivationError(`the ${configFormat} codec returned no configuration bytes; an empty art configuration is not a configuration`);
+  }
+
+  const magic = artConfigFormatMagic(configFormat);
+  if (magic !== null) {
+    const opensCorrectly = bytes.length >= magic.length && magic.every((b, i) => bytes[i] === b);
+    if (!opensCorrectly) {
+      throw new ArtConfigDerivationError(
+        `the codec produced bytes that do not open with the ${configFormat} magic. ${runtime} is handed ${configFormat} bytes, so this is the wrong engine's codec — and a wrong codec here would be committed into an immutable art binding.`,
+      );
+    }
+  }
+
+  // NULL, NOT A COMPUTED VALUE. `visualHash` and `traitSchemaHash` are `ArtConfigV1.sol`'s own
+  // derivations over an ACV1 program. The Wave-1 engines declare different programs with their own
+  // commitments, and this package cannot compute them; a plausible substitute would be a
+  // fabricated commitment, which is worse than an absent one.
+  return { bytes, visualHash: null, traitSchemaHash: null };
 }

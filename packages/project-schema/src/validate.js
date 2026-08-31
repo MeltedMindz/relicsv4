@@ -72,10 +72,21 @@ export function validateBundleBytes(bytes, options = {}) {
 /**
  * @typedef {{
  *   evaluate?: (files: Map<string, string>, entry: string) => { render: (context: any) => unknown },
+ *   encodeRuntimeConfig?: (input: { runtime: string, runtimeId: string, configFormat: string, document: any }) => Uint8Array | string,
  *   seeds?: number,
  *   duplicateSampleSize?: number,
  *   skipExecution?: boolean,
  * }} ValidateOptions
+ */
+
+/*
+ * `encodeRuntimeConfig` IS THE SECOND INJECTED CAPABILITY, AND IT IS INJECTED FOR THE SAME REASON
+ * `evaluate` IS. A Wave-1 engine's configuration bytes are produced by that engine's own codec,
+ * which lives outside this dependency-free package; a validator that carried a copy would be
+ * holding a second declaration of a frozen byte layout, and the day the two disagreed a creator's
+ * art binding would already be immutable on chain. So the capability is handed in, and a caller
+ * that has none does not get a pass — `deriveArtConfig` throws and the binding check reports
+ * `ART_BINDING_CONFIG_MISSING`, which is a refusal naming its reason.
  */
 
 /**
@@ -340,7 +351,7 @@ export function validateBundle(byPath, options = {}) {
   // ---- 7. art binding -------------------------------------------------------------------------
   // Runs AFTER execution because half the binding is a claim about what the generator draws, and
   // the only way to check that claim is to have drawn it.
-  const binding = checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark });
+  const binding = checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark, options });
   checkPreviewsFresh({ byPath, execution, collect, mark });
 
   const summary = summarize(issues);
@@ -438,7 +449,7 @@ function checkPreviewsFresh({ byPath, execution, collect, mark }) {
   else mark("PREVIEWS_FRESH", "fail", `${stale} stale, ${missing} missing`);
 }
 
-function checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark }) {
+function checkArtBinding({ manifest, byPath, documents, computed, execution, collect, mark, options = {} }) {
   if (!manifest || !manifest.artBinding || typeof manifest.artBinding !== "object") {
     mark("ART_BINDING", "fail", "the bundle declares no art binding");
     return null;
@@ -465,7 +476,7 @@ function checkArtBinding({ manifest, byPath, documents, computed, execution, col
   // with the reason rather than crashing.
   let art;
   try {
-    art = deriveArtConfig({ runtime: manifest.art?.runtime, templateParams, scriptBytes });
+    art = deriveArtConfig({ runtime: manifest.art?.runtime, templateParams, scriptBytes, encodeRuntimeConfig: options.encodeRuntimeConfig });
   } catch (err) {
     const reason = err instanceof Error ? err.message : String(err);
     collect("ART_BINDING", [error("ART_BINDING_CONFIG_MISSING", "relics.project.json#artBinding", reason)]);
