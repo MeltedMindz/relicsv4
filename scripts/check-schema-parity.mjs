@@ -63,7 +63,17 @@ const SURFACE_FILE = join(PKG, "SCHEMA_SURFACE.json");
  * shape deliberately: if the launchpad's MIRRORED list and this one ever disagree, a file is being
  * copied that nothing here guards, or guarded here and not copied.
  */
-const SURFACE_FILES = ["package.json", "index.js", "types.d.ts", "art-config.js", "art-config.d.ts", "fixtures/acv1/vectors.json"];
+const SURFACE_FILES = [
+  "package.json",
+  "index.js",
+  "types.d.ts",
+  "art-config.js",
+  "art-config.d.ts",
+  "art-selector.js",
+  "art-selector.d.ts",
+  "fixtures/acv1/vectors.json",
+  "fixtures/art-selector/vectors.json",
+];
 const SURFACE_DIRS = ["src"];
 
 /**
