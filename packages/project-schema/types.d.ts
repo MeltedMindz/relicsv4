@@ -8,6 +8,11 @@
 // here so a consumer importing the package root sees one complete type surface.
 export * from "./art-config.js";
 
+// The RC6 art selector word. Declared in its own file because the 224/32 split is a PROTOCOL bit
+// layout (`launchpad/src/rc6/art/ArtSelectorLib.sol`) with its own version axis, not a bundle-format
+// concern — re-exported here so a consumer importing the package root sees one complete type surface.
+export * from "./art-selector.js";
+
 export type Severity = "error" | "warning";
 export interface Issue {
   severity: Severity;

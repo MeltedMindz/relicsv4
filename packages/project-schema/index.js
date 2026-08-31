@@ -227,6 +227,44 @@ export {
 } from "./src/art-config-v1.js";
 export { visualHashArtConfigV1, traitSchemaHashArtConfigV1, runtimeCommitmentArtConfigV1 } from "./src/art-config-v1-hashes.js";
 
+// The RC6 ART SELECTOR WORD: `LaunchParams.artTemplateId` packs the elected art runtime in its top
+// 32 bits and the registered template in the low 224. Declared once, in `src/art-selector.js`, and
+// re-exported both here and on the `./art-selector` subpath — the codec is a PROTOCOL bit layout
+// with its own version axis, so a consumer that only builds launch calldata should not have to take
+// on the whole bundle-format surface to reach it.
+export {
+  ART_SELECTOR_RUNTIME_ID_SHIFT,
+  ART_SELECTOR_TEMPLATE_ID_MASK,
+  ART_SELECTOR_MAX_RUNTIME_ID,
+  ART_SELECTOR_MAX_TEMPLATE_ID,
+  ART_SELECTOR_MAX,
+  ART_SELECTOR_NO_RUNTIME_PREFERENCE,
+  ART_SELECTOR_CODES,
+  ArtSelectorError,
+  encodeArtSelector,
+  decodeArtSelector,
+  validateArtSelector,
+  templateIdOf,
+  artRuntimeIdOf,
+  isRuntimeElection,
+} from "./src/art-selector.js";
+
+// Which art runtime ids EXIST on a chain. The selector's runtime half is a registry key, so
+// discovering the keys is the same subject as packing one — and `runtimeCount()` is a COUNT rather
+// than `maxRuntimeId + 1`, which is the trap this module exists to close. Pure: it reconciles logs
+// the caller fetched and opens no socket.
+export {
+  ART_RUNTIME_REGISTERED_SIGNATURE,
+  ART_RUNTIME_REGISTERED_TOPIC0,
+  ART_RUNTIME_ACTIVE_SET_SIGNATURE,
+  ART_RUNTIME_ACTIVE_SET_TOPIC0,
+  ART_RUNTIME_RESERVED_ID,
+  ART_RUNTIME_MAX_ID,
+  runtimeIdFromRegisteredLog,
+  discoverRegisteredRuntimeIds,
+  runtimeRecordNamesARuntime,
+} from "./src/art-runtime-discovery.js";
+
 export { normalizeEntryPath, collisionKey, extensionOf, roleOf, checkEntryPolicy, EntryPathError } from "./src/paths.js";
 export { writeContainer, readContainer, crc32, ContainerError } from "./src/container.js";
 
