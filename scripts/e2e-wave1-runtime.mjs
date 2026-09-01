@@ -410,7 +410,11 @@ export async function runWave1E2E(options = {}) {
     summary.WAVE1_FORK_TRANSACTIONS = String(forkTransactions);
     return { summary, workspace, exitCode: 1 };
   } finally {
-    if (node && !options.keepNode) node.close?.();
+    // `startAnvilFork` returns { child, url, client } -- there is no `close`, so the optional call
+    // here silently no-opped and the anvil child OUTLIVED the harness. The run still exited 0, so
+    // nothing said a fork node was left listening on the port the next run wants. Kill the child,
+    // the way `startAnvilFork`'s own failure path already does.
+    if (node && !options.keepNode) node.child?.kill("SIGKILL");
   }
 }
 
