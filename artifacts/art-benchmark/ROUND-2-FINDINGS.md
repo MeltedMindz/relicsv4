@@ -158,3 +158,52 @@ The commit "Round two: ninety-six findings, ninety-six answers" says the disposi
 "18 ACCEPT, 53 PARTIALLY_ACCEPT and 25 REJECT_WITH_REASON". They are **15 / 57 / 24**. The figures
 were added up from three agents' summaries before the last of them had landed, and counting the
 files gives the numbers above. The total, 96, and the count answered, 96, were right.
+
+## THE HOLDOUT WAS COMPROMISED IN BOTH ROUNDS, AND THIS 0/12 CANNOT BE RE-SCORED CLEAN
+
+Recorded 2026-09-03, after the round closed. It does not change a verdict and it does change what
+the number is evidence of, so it belongs beside the number rather than in a changelog.
+
+**Three facts, each measurable from the artifacts in this directory.**
+
+1. `FINAL_HOLDOUT_SEEDS` was an arithmetic sequence — a base and a stride — declared in
+   `packages/art-direction/src/seeds.js`, which is the module `author.js` imports, four lines below
+   the sentence "THE AUTHOR NEVER SEES THEM". Anyone who opened the file computed the twelve. That
+   is true of round one and round two alike.
+
+2. **One holdout set served both rounds, byte for byte.** Compare `finalReview.seeds` in any
+   receipt here with any receipt in `../art-benchmark-round1/`. Round two's holdout was round one's
+   holdout, and round one's had already been reviewed and written about.
+
+3. A round-one final holdout reviewer's sentence was quoted **verbatim in `author.js`**, naming a
+   holdout seed and saying what that token rendered as, beside the parameter change it motivated.
+   It landed at `2026-09-03T11:47:14-07:00` (commit `e67f7369`); round two's verdicts were taken at
+   `12:59:28`. So round two was authored with part of round one's holdout unblinded, in the
+   author's own source. The quotation is preserved at
+   `packages/art-direction/rounds/QUARANTINE.md` and has been removed from `author.js`.
+
+**`FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING=NO` was therefore false in substance**, and it was
+also never measured: the harness wrote the literal `false` into every receipt and the flag read it
+back. The twenty-four receipts now carry `authorSawHoldout: true`, derived from
+`packages/art-direction/rounds/registry.json`, and the flag reads `YES`.
+
+**What this does NOT do.** It does not overturn a verdict. Every one of the twenty-four final
+verdicts across both rounds is `REFUSE`, so no configuration was ever accepted under the
+compromised holdout and no false `PASS` was produced. The refusal taxonomy above stands; the
+reviewers' reasoning stands; the round-two improvements measured against round one stand, because
+they are differences between two rounds run under the same (compromised) conditions.
+
+**What it does do.** It removes this `0/12` from the class of results that can be described as a
+blind holdout score. A holdout that the author could compute, and that had already been reviewed
+once, is a development set with a different name. **The 0/12 cannot be re-scored clean without a
+fresh round on a fresh holdout, and a fresh round is not authorised.** Until one is run, the honest
+statement is: *twelve independent reviewers refused twelve collections, on seeds that were not
+properly held out.*
+
+**What was changed so the next round is different.** The holdout is derived per round from a salt
+that is not in this repository, committed to in advance by publishing `sha256(domain, salt)`;
+`packages/art-direction/src/seeds.js` exports no seed list at all and refuses to invent one when
+the salt is absent; `authorSawHoldout` is measured by scanning author-visible source for the
+round's seeds; and `npm run kit:artreceipts` reads every committed receipt and fails on a leak.
+Planting a holdout seed back into `author.js` turns the named test
+`NO HOLDOUT SEED OF A COMPLETED ROUND APPEARS IN AUTHOR-VISIBLE SOURCE` red.

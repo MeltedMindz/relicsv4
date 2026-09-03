@@ -182,13 +182,27 @@
       "704000933baca9971813ce621026b389eafc1b744a37e2cdebe536dce30d3a8d"
     ],
     "visualDescriptionHash": "d63a7747df88ff3aae82191583b8f967844a7e1e0c0f3531cf4a313c36359531",
-    "hash": "e4c1201a348459dceb657d23635af23cafb6b1cd932182f75e3bbcbbeaeffed1"
+    "hash": "e4c1201a348459dceb657d23635af23cafb6b1cd932182f75e3bbcbbeaeffed1",
+    "verdictDocument": {
+      "path": "final-review/verdict.json",
+      "sha256": "c3bc2e4c6e5ceed2121d1e6a0e5b2af0c2836fd1e327d823da2416a1bd9dcaa8",
+      "verdictField": "verdict"
+    }
   },
   "seedGroups": {
-    "authorSawHoldout": false,
+    "authorSawHoldout": true,
     "authoring": "AUTHORING_SEEDS",
     "development": "DEVELOPMENT_REVIEW_SEEDS",
-    "final": "FINAL_HOLDOUT_SEEDS"
+    "final": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-rounds-1-and-2",
+    "holdoutIntegrity": "COMPROMISED",
+    "holdoutDetail": "One holdout set served BOTH completed benchmark rounds, byte for byte. It was not derived from a salt at all: packages/art-direction/src/seeds.js computed it from an arithmetic generator written out in the module the author imports. The two rounds are therefore not distinguishable by their holdout, which is why they share one registry entry rather than having one each.",
+    "holdoutSeedsDigest": "388c5cfc76a1f5c1cbc1426cfe8525a41bc05989a47798df1fb85518e6da09e6",
+    "liveLeakScan": {
+      "scannedFiles": 41,
+      "occurrences": 0,
+      "files": []
+    }
   },
   "objective": null,
   "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."

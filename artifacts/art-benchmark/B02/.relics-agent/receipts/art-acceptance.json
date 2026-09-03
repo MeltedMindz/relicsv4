@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "ART_ACCEPTANCE",
-  "acceptedAt": "2026-09-03T19:54:21.686Z",
+  "acceptedAt": "2026-09-03T20:52:51.635Z",
   "runtimeId": "VECTOR_COMPOSITION_V1",
   "templateId": "VECTOR_COMPOSITION_V1/alluvium",
   "chainId": 8453,
@@ -214,13 +214,27 @@
       "5f10229c1d1d59e1653781b43c8b4f1b81d42b7eda2f94e8709f27f18413f06f"
     ],
     "visualDescriptionHash": "f05a9c2ecf6db5275f8abf1cf00808731c21c851e76ec8d21a8695d86bceb4d3",
-    "hash": "a4cbaf3856142f29afc4df2b1f796c7ce4436d001aca9f9500389a485e4aefbc"
+    "verdictDocument": {
+      "path": "final-review/verdict.json",
+      "sha256": "1a84515d84a389cfa24a40fb2b34f7522b1880db65a48bc66e661a621d9033a7",
+      "verdictField": "verdict"
+    },
+    "hash": "167dee1aec9a5bdaf7e33087ebec328d49be4dcbb4eadf97429c672eff6a5892"
   },
   "seedGroups": {
-    "authorSawHoldout": false,
+    "authorSawHoldout": true,
     "authoring": "AUTHORING_SEEDS",
     "development": "DEVELOPMENT_REVIEW_SEEDS",
-    "final": "FINAL_HOLDOUT_SEEDS"
+    "final": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-rounds-1-and-2",
+    "holdoutIntegrity": "COMPROMISED",
+    "holdoutDetail": "One holdout set served BOTH completed benchmark rounds, byte for byte. It was not derived from a salt at all: packages/art-direction/src/seeds.js computed it from an arithmetic generator written out in the module the author imports. The two rounds are therefore not distinguishable by their holdout, which is why they share one registry entry rather than having one each.",
+    "holdoutSeedsDigest": "388c5cfc76a1f5c1cbc1426cfe8525a41bc05989a47798df1fb85518e6da09e6",
+    "liveLeakScan": {
+      "scannedFiles": 41,
+      "occurrences": 0,
+      "files": []
+    }
   },
   "objective": null,
   "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."

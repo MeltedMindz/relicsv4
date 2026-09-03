@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "ART_ACCEPTANCE",
-  "acceptedAt": "2026-09-03T19:54:21.703Z",
+  "acceptedAt": "2026-09-03T20:52:51.659Z",
   "runtimeId": "GEOMETRIC_RECURSION_V1",
   "templateId": "GEOMETRIC_RECURSION_V1/compass",
   "chainId": 8453,
@@ -185,13 +185,27 @@
       "550c8cffd8635401cf16e11dbd1b33b60529b8896ab3efc85eca25778561e1ae"
     ],
     "visualDescriptionHash": "bac467ac4bf694c46a8819993adf1677cd1b49f625c20f2d2594a0833a3585d7",
-    "hash": "3d732a21c776f7695f3c1a5328c53f6821a45aaf5578d1217faf01d2ebc88b62"
+    "verdictDocument": {
+      "path": "final-review/verdict.json",
+      "sha256": "7dd8de50dcaa79c3bd01176a59c1e24a6200cbe2c9ceaacb9dcf8513cea582d5",
+      "verdictField": "verdict"
+    },
+    "hash": "ecf53f6f8beeebfb3456f87bd27fd946d4faa36db3919f48ee68919e30bb78f3"
   },
   "seedGroups": {
-    "authorSawHoldout": false,
+    "authorSawHoldout": true,
     "authoring": "AUTHORING_SEEDS",
     "development": "DEVELOPMENT_REVIEW_SEEDS",
-    "final": "FINAL_HOLDOUT_SEEDS"
+    "final": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-rounds-1-and-2",
+    "holdoutIntegrity": "COMPROMISED",
+    "holdoutDetail": "One holdout set served BOTH completed benchmark rounds, byte for byte. It was not derived from a salt at all: packages/art-direction/src/seeds.js computed it from an arithmetic generator written out in the module the author imports. The two rounds are therefore not distinguishable by their holdout, which is why they share one registry entry rather than having one each.",
+    "holdoutSeedsDigest": "388c5cfc76a1f5c1cbc1426cfe8525a41bc05989a47798df1fb85518e6da09e6",
+    "liveLeakScan": {
+      "scannedFiles": 41,
+      "occurrences": 0,
+      "files": []
+    }
   },
   "objective": null,
   "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
