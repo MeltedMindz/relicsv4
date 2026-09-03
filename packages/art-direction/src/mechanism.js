@@ -398,7 +398,12 @@ export const MECHANISM_PHRASES = Object.freeze({
     lower: [rx(String.raw`\b(thins?\s+(the\s+)?(line|stroke)|lines?\s+\w{0,6}\s*thin\w*|lighter\s+(line|stroke)|loses?\s+weight|hairline\w*\s+further)\b`)],
   },
   DILATION: {
-    raise: [rx(String.raw`\b(expand\w+|grow\w+|swell\w+|enlarg\w+|larger|bigger|reach\w+\s+(further|outward|out)|pushe?s?\s+\w{0,6}\s*outward|extends?\s+(further|outward)|scale\w*\s+up)\b`)],
+    // `growth` THE NOUN IS NOT HERE, AND ITS ABSENCE IS DELIBERATE. `grow\w+` matched "An organic
+    // growth", "the logic of growth" and "how far the growth has gone" — three motif sentences in
+    // two briefs, none of them a market instruction — and on the strength of them DILATION became
+    // the primary mechanism of two briefs whose market ask is to multiply members. This file's own
+    // header says a vocabulary that reads atmosphere mis-routes on adjectives; a noun does it too.
+    raise: [rx(String.raw`\b(expand\w+|grows?|growing|grew|swell\w+|enlarg\w+|larger|bigger|reach\w+\s+(further|outward|out)|pushe?s?\s+\w{0,8}\s*outward|extends?\s+(further|outward)|scale\w*\s+up)\b`)],
     lower: [rx(String.raw`\b(contract\w+|shrink\w+|smaller|draws?\s+in\b|pulls?\s+\w{0,10}\s*back\s+toward\s+the\s+cent(re|er)|recedes?|diminish\w+|scale\w*\s+down)\b`)],
   },
 });
@@ -527,6 +532,12 @@ export function mechanismsRequestedBy(text) {
     const ranked = Object.entries(v.polarityVotes).sort((a, b) => b[1] - a[1]);
     return {
       mechanism: v.mechanism,
+      // A MECHANISM NAMED ONLY IN CLAUSES WITH NO MARKET STATE IS NOT A MARKET INSTRUCTION.
+      // "Growth and retreat are the whole market story" names OCCLUSION through the word `retreat`
+      // and asks for nothing; it is a sentence about the brief rather than about a transformation.
+      // Recorded so a reader can see it was seen, and excluded from what admission is held to.
+      statedVotes: v.votes.filter((x) => x.state !== null).length,
+      unstated: v.votes.every((x) => x.state === null),
       // A mechanism named with no state attached is REAL but UNPOLARISED, and the author is told
       // so rather than handed a silent default. An unpolarised mechanism that reaches a binding
       // has a 50% chance of rendering the brief backwards, which is what seven of twelve round-one
@@ -551,39 +562,68 @@ export function mechanismsRequestedBy(text) {
  */
 export function mechanismAdmission(text, runtimeIds = Object.keys(MECHANISM_TABLE)) {
   const requested = mechanismsRequestedBy(text);
+  // A SECONDARY THAT IS THE PRIMARY READ TWICE IS NOT A SECOND ASK.
+  //
+  // B10 says "it opens out in recovery and draws in under stress" and that one sentence supports
+  // DILATION (the figure's reach) and SEPARATION (the interval opening) alike — they are the same
+  // instruction seen from two angles, not two things the work has to do. Counting it as a second
+  // mechanism the recursion runtime cannot perform charged that runtime a concession for a promise
+  // nobody made twice. A secondary whose evidence clauses are a SUBSET of the primary's is marked
+  // `overlapsPrimary` and costs nothing.
+  // THE PRIMARY IS THE FIRST STATED ONE. A mechanism named only in clauses with no market state
+  // (B12's "a slight tightening or loosening of the enclosure") is not an instruction the runtime
+  // has to be able to carry, and gating viability on it refused a brief for a promise it never
+  // made.
+  const stated = requested.mechanisms.filter((m) => !m.unstated);
+  const primary = stated[0] ?? null;
+  const primaryClauses = new Set((primary?.evidence ?? []).map((e) => e.clause));
+  const withOverlap = requested.mechanisms.map((m, i) => ({
+    ...m,
+    overlapsPrimary: i > 0 && m.evidence.length > 0 && m.evidence.every((e) => primaryClauses.has(e.clause)),
+  }));
+
   const perRuntime = runtimeIds.map((runtimeId) => {
-    const rows = requested.mechanisms.map((m) => {
+    const rows = withOverlap.map((m) => {
       const polarity = m.polarity ?? "PEAKS_AT_RECOVERY";
       const r = realisationFor(runtimeId, m.mechanism, polarity);
-      return { mechanism: m.mechanism, polarity, assumedPolarity: m.polarity === null, ...r };
+      return { mechanism: m.mechanism, polarity, assumedPolarity: m.polarity === null, overlapsPrimary: m.overlapsPrimary, unstated: m.unstated, ...r };
     });
+    const distinct = rows.filter((r) => !r.overlapsPrimary && !r.unstated);
+    const cannot = distinct.filter((r) => !r.ok);
     return {
       runtimeId,
       canExpress: rows.filter((r) => r.ok).map((r) => r.mechanism),
-      cannotExpress: rows.filter((r) => !r.ok).map((r) => ({ mechanism: r.mechanism, reason: r.reason, detail: r.detail, alternative: r.alternative })),
-      // The PRIMARY mechanism is the one with the most evidence in the prose. A runtime that can
-      // carry the primary is viable even if it cannot carry a secondary; a runtime that cannot
-      // carry the primary is not, whatever else it can do.
-      carriesPrimary: requested.mechanisms.length === 0 ? null : rows[0]?.ok === true,
+      cannotExpress: cannot.map((r) => ({ mechanism: r.mechanism, reason: r.reason, detail: r.detail, alternative: r.alternative, overlapsPrimary: r.overlapsPrimary })),
+      // The PRIMARY mechanism is the one with the most evidence in the prose. A runtime that
+      // cannot carry the primary is not viable, whatever else it can do.
+      carriesPrimary: primary === null ? null : rows.find((r) => r.mechanism === primary.mechanism)?.ok === true,
+      // AND IT MUST CARRY THE MAJORITY OF WHAT WAS ASKED. B07 names four distinct transformations
+      // and the recursion runtime can perform one of them; sending it there would mean writing a
+      // direction that withdraws three of the brief's four market promises, which is a different
+      // artwork with the brief's title on it. The primary gate alone admitted exactly that.
+      carriesMajority: distinct.length === 0 ? null : (distinct.length - cannot.length) * 2 >= distinct.length,
+      distinctMechanisms: distinct.length,
+      cannotExpressCount: cannot.length,
     };
   });
-  const viable = perRuntime.filter((r) => r.carriesPrimary !== false);
+  const viable = perRuntime.filter((r) => r.carriesPrimary !== false && r.carriesMajority !== false);
   return {
-    requested: requested.mechanisms,
+    requested: withOverlap,
     rejected: requested.rejected,
     perRuntime,
     viable: viable.map((r) => r.runtimeId),
     // No mechanism named at all is NOT a refusal. Plenty of briefs describe the market in words
     // this vocabulary does not have, and refusing them would be the invisible failure again.
-    outcome: requested.mechanisms.length === 0
+    primary: primary?.mechanism ?? null,
+    outcome: stated.length === 0
       ? "NO_MECHANISM_NAMED"
       : (viable.length === 0 ? "MECHANISM_NOT_EXPRESSIBLE_BY_CURRENT_WAVE1_CATALOG" : "ADMITTED"),
-    detail: requested.mechanisms.length === 0
-      ? "the direction names no mechanism this vocabulary recognises; the author will choose one from the composition and record that it did"
+    detail: stated.length === 0
+      ? "no clause names both a mechanism and a market state; the author will choose one from the composition and record that it did"
       : (viable.length === 0
-        ? `the primary mechanism asked for is ${requested.mechanisms[0].mechanism}, and neither Wave-1 runtime can perform it: ` +
+        ? `the primary mechanism asked for is ${primary.mechanism}, and neither Wave-1 runtime can perform it: ` +
           perRuntime.map((r) => `${r.runtimeId} — ${r.cannotExpress[0]?.detail ?? "no finding"}`).join(" / ")
-        : `${viable.length} of ${runtimeIds.length} runtimes can carry the primary mechanism ${requested.mechanisms[0].mechanism}`),
+        : `${viable.length} of ${runtimeIds.length} runtimes can carry the primary mechanism ${primary.mechanism}`),
   };
 }
 

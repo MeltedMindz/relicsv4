@@ -47,16 +47,24 @@ const briefText = (id) => BRIEFS.find((b) => b.id === id).text;
  */
 const EXPECTED = Object.freeze({
   B01: [["SUBTRACTION", "PEAKS_AT_RECOVERY"], ["SEPARATION", "PEAKS_AT_STRESS"]],
-  B02: [["DILATION", "PEAKS_AT_RECOVERY"], ["SUBTRACTION", "PEAKS_AT_RECOVERY"]],
+  // B02 and B07 both READ as growth briefs and their primary market instruction is nonetheless
+  // SUBTRACTION: "multiply its divisions" / "retracts toward a bare armature", and "multiplies its
+  // members" / "reduces it". The word `growth` in both is a motif noun and is deliberately not in
+  // the DILATION vocabulary — on the strength of it DILATION was primary for both, and the
+  // recursion runtime, which cannot multiply members visibly, was the recommended runtime.
+  B02: [["SUBTRACTION", "PEAKS_AT_RECOVERY"]],
   B03: [["SUBTRACTION", "PEAKS_AT_RECOVERY"]],
   B04: [["SUBTRACTION", "PEAKS_AT_STRESS"]],
   B05: [["DILATION", "PEAKS_AT_RECOVERY"]],
   B06: [["SEPARATION", "PEAKS_AT_STRESS"], ["SUBTRACTION", "PEAKS_AT_RECOVERY"]],
-  B07: [["DILATION", "PEAKS_AT_RECOVERY"], ["SUBTRACTION", "PEAKS_AT_RECOVERY"]],
+  B07: [["SUBTRACTION", "PEAKS_AT_RECOVERY"], ["DILATION", "PEAKS_AT_RECOVERY"], ["SEPARATION", "PEAKS_AT_RECOVERY"]],
   B08: [["SEPARATION", "PEAKS_AT_STRESS"]],
   B09: [["FRACTURE", "PEAKS_AT_STRESS"]],
   B10: [["DILATION", "PEAKS_AT_RECOVERY"], ["SEPARATION", "PEAKS_AT_RECOVERY"]],
   B11: [["FRACTURE", "PEAKS_AT_STRESS"]],
+  // B12 names a mechanism and never names a market state beside it — "a slight tightening or
+  // loosening of the enclosure" — so it is recorded UNSTATED and carries no polarity. That is the
+  // honest reading of a brief that says the market "may register, but only faintly".
   B12: [["SEPARATION", null]],
 });
 
@@ -102,6 +110,25 @@ test("an atmosphere word is not a mechanism", () => {
   // about a colonnade with no fracture content anywhere in it.
   const r = mechanismsRequestedBy("The work should feel engineered rather than drawn — regular, load-bearing, and slightly severe.");
   assert.equal(r.mechanisms.find((m) => m.mechanism === "FRACTURE"), undefined);
+});
+
+test("a mechanism named with no market state beside it is recorded UNSTATED, not requested", () => {
+  const r = mechanismsRequestedBy("The market may register, but only faintly — a slight tightening or loosening of the enclosure.");
+  const sep = r.mechanisms.find((m) => m.mechanism === "SEPARATION");
+  assert.ok(sep, "SEPARATION should still be visible");
+  assert.equal(sep.unstated, true);
+  assert.equal(sep.statedVotes, 0);
+  const a = mechanismAdmission("The market may register, but only faintly — a slight tightening or loosening of the enclosure, nothing a casual viewer would notice at thumbnail size.");
+  assert.equal(a.outcome, "NO_MECHANISM_NAMED");
+  assert.equal(a.viable.length, 2, "an unstated mechanism must not gate viability");
+});
+
+test("a motif noun is not a market instruction", () => {
+  // "An organic growth", "the logic of growth", "how far the growth has gone" — three motif
+  // sentences that made DILATION the primary mechanism of two briefs whose market ask is to
+  // multiply members.
+  const r = mechanismsRequestedBy("An organic growth: a colony of cells radiating from a shared centre.");
+  assert.equal(r.mechanisms.find((m) => m.mechanism === "DILATION"), undefined);
 });
 
 test("a brief that names no mechanism is not refused", () => {

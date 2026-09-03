@@ -285,6 +285,117 @@ export const IMPOSSIBLE_DEMANDS = Object.freeze([
 ]);
 
 /**
+ * COMPOSITION DEMANDS — what the frame is asked to look like, as opposed to what is in it.
+ *
+ * THE GAP THIS CLOSES. `IMPOSSIBLE_DEMANDS` is built from the atlas's `cannot` clauses, and those
+ * clauses are about SUBJECTS and MARKS — a horizon, a numeral, an alpha channel. They say nothing
+ * about the shape of the composition as a whole, and seven of twelve round-one blind reviews
+ * refused on exactly that: "every token is a centred island with wide empty margins on all four
+ * sides" and "the brief demands an all-over field rather than a figure on a ground ... that is a
+ * figure on a ground, verbatim, arrived at blind."
+ *
+ * GEOMETRIC_RECURSION_V1's own positive statement settles it: it draws "one self-similar figure,
+ * centred". A single centred figure IS a figure on a ground. That is not a defect to be tuned out
+ * with a parameter; it is what the runtime is, and a brief whose subject is the absence of a
+ * figure belongs on the other runtime.
+ *
+ * CITED THE SAME WAY AND VERIFIED THE SAME WAY. Each entry names a phrase that must still appear
+ * in the runtime's `can` statement, and `assertCapabilityMappingCurrent()` checks it. A refusal
+ * whose citation has gone is a refusal this module stops making.
+ *
+ * NARROW ON PURPOSE, for the reason in this file's header: a false refusal is invisible. Neither
+ * pattern fires on "centred", "balanced", "dense" or any other adjective — they fire on a brief
+ * that says outright that nothing dominates, or that the work is a horizontal section.
+ */
+export const COMPOSITION_DEMANDS = Object.freeze([
+  Object.freeze({
+    id: "ALL_OVER_FIELD",
+    class: "MEDIUM",
+    severity: "HARD",
+    what: "an all-over field with no dominant element, rather than a figure on a ground",
+    positiveCitation: { GEOMETRIC_RECURSION_V1: "one self-similar figure, centred" },
+    blockedFor: ["GEOMETRIC_RECURSION_V1"],
+    patterns: [
+      rx(String.raw`\ball[- ]over\s+(field|composition|pattern|arrangement)\b`),
+      rx(String.raw`\bno\s+single\s+(dominant|focal)\s+\w*\s*(element|form|mass|point)\b`),
+      rx(String.raw`\bnothing\s+dominat\w+\b`),
+      rx(String.raw`\brather\s+than\s+a\s+figure\s+on\s+a\s+ground\b`),
+      rx(String.raw`\bno\s+single\s+element\s+dominating\b`),
+    ],
+    notWhen: [rx(String.raw`\b(one|a\s+single)\s+(dominant|overwhelming)\b`)],
+  }),
+  Object.freeze({
+    id: "PER_TOKEN_SYMMETRY_VARIATION",
+    class: "MEDIUM",
+    severity: "SOFT",
+    what: "tokens that differ from each other in their symmetry order",
+    // VECTOR_COMPOSITION_V1's own atlas note says it outright: the seed reaches NOTHING
+    // categorical, and symmetry is named in the list of creator constants. A brief whose stated
+    // variation strategy is "tokens differ in the order of rotational symmetry" is asking for the
+    // one axis of variety that runtime does not have; GEOMETRIC_RECURSION_V1 draws a symmetry per
+    // token out of the creator's symSet.
+    noteCitation: { VECTOR_COMPOSITION_V1: "symmetry" },
+    blockedFor: ["VECTOR_COMPOSITION_V1"],
+    patterns: [
+      rx(String.raw`\btokens?\s+(differ|vary|var\w+)\b[^.]{0,80}\bsymmetr\w+\b`),
+      rx(String.raw`\b(order\s+of\s+)?(rotational\s+)?symmetr\w+\b[^.]{0,40}\b(vary|varies|differ\w*|per\s+token)\b`),
+      rx(String.raw`\bwhat\s+varies\s+between\s+tokens\b[^.]{0,80}\bsymmetr\w+\b`),
+    ],
+    notWhen: [],
+  }),
+  Object.freeze({
+    id: "HORIZONTAL_STRATIFICATION",
+    class: "MEDIUM",
+    severity: "HARD",
+    what: "horizontal banding: a stacked sequence of beds read as a section",
+    // The vector runtime's own layout vocabulary carries STACK, which the atlas calls "the only
+    // layout that reads as horizontal bands". The recursion runtime's six productions place
+    // children at quadrant corners, edge midpoints, the parent centre, a fan or a ring — none of
+    // them lays a band, and the runtime's `can` statement describes one figure repeating on
+    // itself rather than a sequence of registers.
+    positiveCitation: { GEOMETRIC_RECURSION_V1: "repeating a production on itself" },
+    blockedFor: ["GEOMETRIC_RECURSION_V1"],
+    patterns: [
+      rx(String.raw`\bhorizontal\s+band\w*\b`),
+      rx(String.raw`\b(bed|band|layer|stratum|strata)s?\s+(deposited|stacked|laid)\b`),
+      rx(String.raw`\bone\s+bed\s+(over|above)\s+another\b`),
+      rx(String.raw`\bcore\s+sample\b`),
+    ],
+    notWhen: [],
+  }),
+]);
+
+/** Which composition demands a brief makes. Same sentence-level negation rule as the atlas ones. */
+export function detectCompositionDemands(briefText) {
+  const text = readableText(briefText);
+  const sentences = text.split(/(?<=[.!?;:])\s+|\n+/).filter((s) => s.trim().length > 0);
+  const found = [];
+  for (const demand of COMPOSITION_DEMANDS) {
+    const hits = [];
+    for (const sentence of sentences) {
+      if (demand.notWhen?.some((n) => n.test(sentence))) continue;
+      const pattern = demand.patterns.find((p) => p.test(sentence));
+      if (pattern) hits.push({ sentence: sentence.trim().slice(0, 220), pattern: String(pattern) });
+    }
+    if (hits.length) {
+      found.push({
+        id: demand.id,
+        class: demand.class,
+        severity: demand.severity,
+        what: demand.what,
+        citations: {},
+        positiveCitation: demand.positiveCitation ?? {},
+        noteCitation: demand.noteCitation ?? {},
+        occurrences: hits.length,
+        evidence: hits.slice(0, 3),
+        blockedFor: [...demand.blockedFor],
+      });
+    }
+  }
+  return found;
+}
+
+/**
  * Verify every citation against the atlas as it stands NOW.
  *
  * WHY THIS IS NOT A TEST BUT A LOAD-TIME ASSERTION. The failure it guards is not a broken build,
@@ -315,10 +426,23 @@ export function assertCapabilityMappingCurrent() {
       problems.push(`${demand.id}: carries no citation of any kind; a refusal must be traceable to the atlas`);
     }
   }
+  for (const demand of COMPOSITION_DEMANDS) {
+    for (const [runtimeId, phrase] of Object.entries(demand.positiveCitation ?? {})) {
+      const s = statements[runtimeId];
+      if (!s) { problems.push(`${demand.id}: positive citation names unknown runtime ${runtimeId}`); continue; }
+      if (!s.can.includes(phrase)) problems.push(`${demand.id}: ${runtimeId}'s "can" statement no longer contains "${phrase}"`);
+    }
+    for (const [runtimeId, phrase] of Object.entries(demand.noteCitation ?? {})) {
+      const s = statements[runtimeId];
+      if (!s) { problems.push(`${demand.id}: note citation names unknown runtime ${runtimeId}`); continue; }
+      if (!String(s.note ?? "").includes(phrase)) problems.push(`${demand.id}: ${runtimeId}'s atlas note no longer contains "${phrase}"`);
+    }
+    if (Object.keys(demand.positiveCitation ?? {}).length === 0 && Object.keys(demand.noteCitation ?? {}).length === 0) problems.push(`${demand.id}: carries no citation of any kind`);
+  }
   if (problems.length) {
     throw new Error(`CAPABILITY_MAPPING_STALE — the brief-admission vocabulary disagrees with the atlas:\n  ${problems.join("\n  ")}`);
   }
-  return { ok: true, demands: IMPOSSIBLE_DEMANDS.length, runtimes: Object.keys(statements) };
+  return { ok: true, demands: IMPOSSIBLE_DEMANDS.length, compositionDemands: COMPOSITION_DEMANDS.length, runtimes: Object.keys(statements) };
 }
 
 /**
