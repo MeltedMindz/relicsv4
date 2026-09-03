@@ -17,6 +17,7 @@ harness's failures to the work's — but the number is the number, and the targe
 | collections whose market response a reviewer called inverted | 6 of 12 (development round) | 3 of 12 |
 | `HUMAN_ART_INTERVENTIONS` | not measured | 0, derived by re-running the author |
 | `CRITIQUE_WITHOUT_AUTHOR_RESPONSE` | 0 of 61 findings | 0 of 96 findings |
+| dispositions | — | 15 ACCEPT · 57 PARTIALLY_ACCEPT · 24 REJECT_WITH_REASON |
 | briefs refused at admission as unsatisfiable | 0 | 1 (found by this round, see below) |
 
 Four reviewers said in their own words that the numeric battery could not see what they were
@@ -148,5 +149,12 @@ should have refused and did not. That is worth knowing about the flag.
 The reviewer was not softened, the rubric was not lowered, no `REFUSE` was relabelled, and none of
 the twelve briefs was edited — they were frozen before either round existed and are byte-identical
 between them. `briefFidelity` is still the gate. The two-stage discipline is intact and its value is
-visible in every verdict: eleven of twelve name a sentence the reviewer wrote BEFORE reading the
-brief and which the brief then contradicted, which is a refusal nobody can argue was anchored.
+visible in the verdicts: each one turns on a sentence the reviewer wrote BEFORE reading the brief
+and which the brief then contradicted, which is a refusal nobody can argue was anchored.
+
+## A correction to a commit message in this lane
+
+The commit "Round two: ninety-six findings, ninety-six answers" says the dispositions were
+"18 ACCEPT, 53 PARTIALLY_ACCEPT and 25 REJECT_WITH_REASON". They are **15 / 57 / 24**. The figures
+were added up from three agents' summaries before the last of them had landed, and counting the
+files gives the numbers above. The total, 96, and the count answered, 96, were right.
