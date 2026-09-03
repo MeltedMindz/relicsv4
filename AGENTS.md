@@ -819,12 +819,37 @@ calldata** rather than accepting it alongside. Everything else can be correct �
 factory, right selector, right hashes — while that one field names somebody else, and it is the
 field that carries the project's rights NFT and its fee stream.
 
-A refusal comes back as a typed code, never as prose. Handle all of them:
-`CHAIN_NOT_ALLOWED` · `TARGET_NOT_CANONICAL_FACTORY` · `SELECTOR_NOT_ALLOWED` ·
-`VALUE_EXCEEDS_POLICY` · `GAS_EXCEEDS_POLICY` · `GAS_PRICE_EXCEEDS_POLICY` ·
-`CALLDATA_HASH_MISMATCH` · `POLICY_HASH_MISMATCH` · `LAUNCH_PLAN_HASH_MISMATCH` ·
-`BUNDLE_HASH_MISMATCH` · `RECIPIENT_NOT_POLICY_RECIPIENT` · `SIGNER_DOES_NOT_SUPPORT_CHAIN` ·
-`NO_APPROVED_BUILD`.
+A refusal comes back as a typed code, never as prose. **Branch on the string and keep a fallback
+arm; do NOT write an exhaustive switch.** Three guards answer on the same `refusal.code` field and
+only the first of them is a closed union:
+
+- **the SHAPE guard** — `CHAIN_NOT_ALLOWED` · `TARGET_NOT_CANONICAL_FACTORY` ·
+  `SELECTOR_NOT_ALLOWED` · `VALUE_EXCEEDS_POLICY` · `GAS_EXCEEDS_POLICY` ·
+  `GAS_PRICE_EXCEEDS_POLICY` · `CALLDATA_HASH_MISMATCH` · `POLICY_HASH_MISMATCH` ·
+  `LAUNCH_PLAN_HASH_MISMATCH` · `BUNDLE_HASH_MISMATCH` · `RECIPIENT_NOT_POLICY_RECIPIENT` ·
+  `SIGNER_DOES_NOT_SUPPORT_CHAIN` · `NO_APPROVED_BUILD`
+- **the GRANT guard** — `NO_AUTHORIZATION` · `AUTHORIZATION_UNREADABLE` · `AUTHORIZATION_REVOKED` ·
+  `AUTHORIZATION_EXPIRED` · `AUTHORIZATION_CONSUMED` · `AUTHORIZATION_NOT_FOR_THIS_SIGNER` ·
+  `BROADCAST_NOT_AUTHORIZED` · `CHAIN_NOT_AUTHORIZED` · `TOTAL_GAS_COST_EXCEEDS_AUTHORIZATION` ·
+  `NO_SIMULATION_RECEIPT` · `SIMULATION_CALLDATA_MISMATCH` · `LAUNCH_PARAMS_FIELD_COUNT_WRONG` ·
+  `RECIPIENT_NOT_AUTHORIZED` · `ANTISNIPE_NOT_AUTHORIZED` · `ROYALTY_EXCEEDS_AUTHORIZATION` ·
+  `RUNTIME_NOT_AUTHORIZED`
+- **the ART SELECTOR guard** — `ART_SELECTOR_MALFORMED` · `ART_SELECTOR_NOT_APPROVED` ·
+  `ART_RUNTIME_NOT_ALLOWED_BY_POLICY` · `ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`
+
+**THE GRANT GUARD RUNS FIRST, AND IT SHADOWS TWO OF THE THIRTEEN.** Whether the creator still
+permits any launch is answered before the transaction's shape is, so in the production shape —
+`signerServer`, where `requireGrant` is true and has no escape hatch — a request for a chain the
+creator did not authorize is refused `CHAIN_NOT_AUTHORIZED`, not `CHAIN_NOT_ALLOWED`, and one that
+sends more native currency than they allowed is refused `TOTAL_GAS_COST_EXCEEDS_AUTHORIZATION`, not
+`VALUE_EXCEEDS_POLICY`. Both were measured over a real socket. An agent holding only the thirteen
+falls through on the most ordinary refusals there are: an expired grant, a wrong chain, a missing
+simulation.
+
+This list is a map, not a contract. `decodeSignerRefusal` validates `code` for SHAPE only, so a
+guard added later reaches you verbatim and an exhaustiveness assertion is what breaks. Say the code
+back to the creator rather than translating it — a code you do not recognise is still the precise
+reason their launch was declined.
 
 **A refusal and a transport failure are not the same event.** A refusal means the request was read
 and declined, and rebuilding it the same way will be declined again. A transport failure means
