@@ -1,0 +1,600 @@
+{
+  "briefId": "B06",
+  "axis": "dense",
+  "title": "THICKET",
+  "phase": "AUTHORED",
+  "briefSha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-03T17:37:52.750Z",
+    "briefSha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
+    "briefSubstance": {
+      "chars": 703,
+      "words": 112,
+      "distinctWords": 81
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "VECTOR_COMPOSITION"
+      ],
+      "MOTIF": [],
+      "AESTHETIC": [
+        "DENSE"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION",
+        "DENSITY_CHANGE"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [],
+    "candidates": [
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "registryId": 3,
+        "viable": true,
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "one self-similar figure, centred, built by repeating a production on itself over up to 6 levels, drawn in regular primitives, optionally replicated by a symmetry order, over a flat or gradient ground",
+        "fit": 0,
+        "matchedSignals": []
+      },
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "registryId": 4,
+        "viable": true,
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+        "fit": 3,
+        "matchedSignals": [
+          "VECTOR_COMPOSITION"
+        ]
+      }
+    ],
+    "ranking": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "fit": 3,
+        "concessions": 0,
+        "matchedSignals": [
+          "VECTOR_COMPOSITION"
+        ]
+      },
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "fit": 0,
+        "concessions": 0,
+        "matchedSignals": []
+      }
+    ],
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "concessions": [],
+    "detail": "2 of 2 Wave-1 templates can carry this brief"
+  },
+  "sentToAuthor": true,
+  "direction": {
+    "schemaVersion": 1,
+    "kind": "ART_DIRECTION",
+    "createdAt": "2026-09-03T17:37:52.750Z",
+    "briefSha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
+    "admissionOutcome": "ADMITTED",
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+    "directionHash": "23de073f8ee09d6e9aaf864b4c53485dcfb7f126a1c9465666ca793883b0b0b1",
+    "direction": {
+      "medium": "Vector composition: several dense fields of filled primitives distributed about the canvas centre.",
+      "motifTranslation": "The thicket becomes overlapping fields of small members at several scales, so profusion is expressed as accumulated incident rather than as depicted growth.",
+      "composition": "The fields spread wide and reach toward the edges, filling the frame so there is no rest and no isolated object anywhere.",
+      "focalHierarchy": "Layered rather than singular: a dense primary field with two secondary fields threading through it at different scales.",
+      "density": "Dense to near saturation. Crowded, teeming and intricate, with structure at every scale and no empty quarter.",
+      "negativeSpace": "There is almost no negative space by intent; what little exists is the incidental gap between members, never a margin.",
+      "paletteIntent": "Warm and dark: rust, copper and umber piled over a near black ground, values close so density reads as mass.",
+      "rhythm": "Irregular repetition, the interval broken and varied so the field reads as profusion rather than as pattern.",
+      "variationStrategy": "Tokens differ first in density, then in the distribution of the secondary fields, then in palette rotation.",
+      "marketTransformation": "Under stress the thicket thins dramatically and opens; in recovery it closes again, and the difference is obvious at browse size.",
+      "identityAnchors": "The warm dark palette, the near black ground and the multi scale overlapping construction hold across every seed and state.",
+      "thumbnailIntent": "At 120px the overall mass and its dense grain survive; individual members do not resolve and are not meant to."
+    },
+    "fields": [
+      "medium",
+      "motifTranslation",
+      "composition",
+      "focalHierarchy",
+      "density",
+      "negativeSpace",
+      "paletteIntent",
+      "rhythm",
+      "variationStrategy",
+      "marketTransformation",
+      "identityAnchors",
+      "thumbnailIntent"
+    ],
+    "containsRuntimeConfig": false
+  },
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeBytes": 24455,
+  "rounds": [
+    {
+      "round": 1,
+      "configHash": "5e5b5b7cfd62ef2822f2c0cdf7bc62674f660ee303c967c1b58e2fc915eb8e1a",
+      "configBytes": "0x564356310102000303048c4a2fa4643c5b46320f1113030700010200001a28227c0000000000030102050c13744800070001040000050c0c6c50000013546869636b6574204f7665726c617070696e67ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "SCATTER",
+            "primitive": "RECT",
+            "sizeMax": 34,
+            "spreadMax": 124,
+            "symmetry": "NONE",
+            "countMin": 26,
+            "countMax": 40,
+            "paletteIx": 1,
+            "stroke": false,
+            "variant": 0,
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR"
+          },
+          {
+            "layout": "GRID",
+            "primitive": "RECT",
+            "sizeMax": 19,
+            "spreadMax": 116,
+            "symmetry": "NONE",
+            "countMin": 5,
+            "countMax": 12,
+            "paletteIx": 0,
+            "variant": 1,
+            "stroke": true,
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "SCATTER",
+            "primitive": "RECT",
+            "sizeMax": 12,
+            "spreadMax": 108,
+            "symmetry": "NONE",
+            "countMin": 5,
+            "countMax": 12,
+            "paletteIx": 1,
+            "variant": 2,
+            "stroke": true,
+            "drive": "COUNT",
+            "sensor": "VOLATILITY",
+            "curve": "LINEAR"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#8c4a2f",
+          "#a4643c",
+          "#5b4632",
+          "#0f1113"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 3,
+        "groundIx2": 3,
+        "flags": [
+          "PALETTE_SHIFT"
+        ],
+        "title": "Thicket Overlapping"
+      },
+      "intent": {
+        "densityTarget": "DENSE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "LAYERED",
+        "rhythmMode": "BROKEN",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "DENSE",
+          "phrase": "Dense",
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": [
+            {
+              "option": "SPARSE",
+              "phrase": "empty",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "phrase": "spread wide",
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": [
+            {
+              "option": "COMPACT",
+              "phrase": "margin",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "focalMode": {
+          "source": "DIRECTION",
+          "value": "LAYERED",
+          "phrase": "Layered",
+          "fields": [
+            "focalHierarchy",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "BROKEN",
+          "phrase": "Irregular",
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "SOLID",
+          "phrase": "filled",
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "DENSITY",
+          "phrase": "thins",
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": []
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 26,
+            "ceiling": 40,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 20,
+                "resolved": 26
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 900,
+                "resolved": 38
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 80,
+                "resolved": 27
+              }
+            },
+            "resolved": [
+              26,
+              38,
+              27
+            ],
+            "span": 12,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 26 / 38 / 27 across neutral / stress / recovery (span 12 of 14)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 116,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 48
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 16
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 112
+              }
+            },
+            "resolved": [
+              48,
+              16,
+              112
+            ],
+            "span": 96,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 48 / 16 / 112 across neutral / stress / recovery (span 96 of 100)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "VOLATILITY",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 5,
+            "ceiling": 12,
+            "readings": {
+              "neutral": {
+                "perMille": 40,
+                "curved": 40,
+                "resolved": 5
+              },
+              "stress": {
+                "perMille": 600,
+                "curved": 600,
+                "resolved": 9
+              },
+              "recovery": {
+                "perMille": 600,
+                "curved": 600,
+                "resolved": 9
+              }
+            },
+            "resolved": [
+              5,
+              9,
+              9
+            ],
+            "span": 4,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 5 / 9 / 9 across neutral / stress / recovery (span 4 of 7)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout SCATTER from rhythmMode=BROKEN; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "sizeMax 34 from densityTarget=DENSE; below ~10 is a blank tile at 120px",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 124 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry NONE (~3x coverage, project constant so it carries no variety); count range kept tight because widening thins the neutral composition",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s); the 120-site budget is paid at countMax across all fields, so secondaries stay at countMax 12"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "4 colour(s) named; PALETTE_SHIFT elected=true because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke and variant are the last decisions because neither changes whether the work reads at 120px",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "field[1] is SIZE-driven by RECOVERY: it blooms in recovery and erodes to size 2 under stress. Legitimate only because field[0] carries the composition alone."
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "marketAxis=DENSITY -> COUNT <- DRAWDOWN/LINEAR; SIZE is never elected (floor 2 renders a blank at low sensor)",
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "707530262bceaa4ee682030536bda0c02d8eb60e0d6c7f130b65a8b21eca9466",
+          "bytes": 150062
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "8dddb16f2a8ee388ab9762ea5300b0844cc13f1110212a3cb4aac1494d1031a3",
+          "bytes": 61562
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "5111e885193c8df3064eaf21415a1d8c8bce5087ba4d34fad89de1d929960796",
+          "bytes": 158073
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "c1f8270d9b933d5ec0bdcf966c41f7d9783755d0b388bfdc460565a32c4d42c3",
+          "bytes": 62815
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "fd9b0c90b2a367bbbc8d45e07e24f897ce412f1bff9c0186a3f78b680152f5bf",
+          "bytes": 21371
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.144,
+        "inkMin": 0.035,
+        "stateDeMean": 2.87,
+        "stateDeMin": 0.14,
+        "seedDeMean": 6.23,
+        "seedDeMin": 1.76
+      }
+    }
+  ]
+}

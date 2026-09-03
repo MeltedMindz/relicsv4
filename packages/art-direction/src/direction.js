@@ -131,10 +131,32 @@ export function validateDirection(direction, { admission = null } = {}) {
 
   // NO PARAMETER NAMES. The whole value of this step is that intent is fixed before parameters,
   // and a direction naming `sizeMax` has skipped the step it exists to be.
-  const parameterish = /\b(sizeMax|spreadMax|countM(in|ax)|depthM(in|ax)|contraction|paletteIx|groundIx|ruleSet|shapeSet|symSet|fieldCount|ruleCount|primitive\s*=|layout\s*=)\b/;
+  //
+  // TWO RULES, BECAUSE SOME PARAMETERS ARE ALSO ORDINARY ENGLISH. `sizeMax` is unambiguous: nobody
+  // writes it except to name the parameter. `contraction`, `rotation`, `branch`, `stroke`,
+  // `palette` and `symmetry` are the words a person actually uses to describe what a picture does,
+  // and a first cut of this check refused three of twelve benchmark directions for sentences like
+  // "each generation a steady contraction of the one before it" -- which is a statement about the
+  // work, is exactly what this field is for, and names no parameter at all. Refusing it would have
+  // pushed the direction toward vaguer language to get past its own guard, which is the opposite
+  // of the intent. So the shared words are flagged only when they appear as a SETTING: beside a
+  // number, an assignment, or a range.
+  const identifiers = /\b(sizeMax|spreadMax|countMin|countMax|depthMin|depthMax|paletteIx|groundIx2?|ruleSet|shapeSet|symSet|fieldCount|ruleCount|groundMode|artConfig|configHash)\b/;
+  const sharedWords = /\b(contraction|rotation|prune|branch|stroke|palette|layout|primitive|symmetry|variant|depth|count|spread)\b/gi;
+  const asSetting = /(?:\s*(?:=|:|of|at|to)\s*|\s+)(?:\d+(?:\s*(?:\.\.|-|to)\s*\d+)?)\b/;
   for (const field of DIRECTION_FIELDS) {
-    if (typeof direction[field] === "string" && parameterish.test(direction[field])) {
-      problems.push(`${field}: names a runtime parameter. The direction says what the work is; the atlas and the author decide which parameter delivers it.`);
+    const value = direction[field];
+    if (typeof value !== "string") continue;
+    if (identifiers.test(value)) {
+      problems.push(`${field}: names the runtime parameter "${value.match(identifiers)[0]}". The direction says what the work is; the atlas and the author decide which parameter delivers it.`);
+      continue;
+    }
+    for (const m of value.matchAll(sharedWords)) {
+      const after = value.slice(m.index + m[0].length, m.index + m[0].length + 14);
+      if (asSetting.test(after)) {
+        problems.push(`${field}: sets "${m[0]}" to a value. Describe the effect, not the setting — choosing the number is the author's step, against the atlas.`);
+        break;
+      }
     }
   }
 

@@ -19,7 +19,8 @@ import {
   ATLAS_CONSULTATION_FACETS, assertAtlasFresh, atlasProvenance, atlasRuntimeIds, consult, parameterNames,
 } from "../src/atlas.js";
 import { assertCapabilityMappingCurrent, detectImpossibleDemands, runtimeCanExpress } from "../src/capabilities.js";
-import { admitBrief, impossibleCommissionsSentToAuthor } from "../src/admission.js";
+import { admitBrief, impossibleCommissionsSentToAuthor, WAVE1_CATALOG } from "../src/admission.js";
+import { shipCatalog } from "../../template-catalog/src/select.js";
 import { DIRECTION_FIELDS, validateDirection } from "../src/direction.js";
 import { AUTHORING_SEEDS, DEVELOPMENT_REVIEW_SEEDS, FINAL_HOLDOUT_SEEDS, assertSeedGroupsDisjoint, holdoutLeak, seedsVisibleTo } from "../src/seeds.js";
 import { checkBindings } from "../src/binding.js";
@@ -178,6 +179,14 @@ test("REGRESSION: counting things is not a demand for a numeral", () => {
   // and the real demand is still caught
   assert.ok(detectImpossibleDemands('the letter R at the centre').some((d) => d.id === "LEGIBLE_GLYPH"));
   assert.ok(detectImpossibleDemands('tick marks and numerals around its rim').some((d) => d.id === "LEGIBLE_GLYPH"));
+});
+
+test("the catalog admission ranks against is DERIVED from the SHIP tier", () => {
+  // Not a hardcoded pair. A second selection policy agrees with the protocol's until a verdict
+  // moves, and then disagrees without saying so. This is also NOT the CLI's starter list: an agent
+  // keyed to a printed scaffold list would silently lose a runtime if a starter were ever gated.
+  assert.deepEqual(WAVE1_CATALOG.map((c) => c.templateId), [...shipCatalog()]);
+  assert.equal(new Set(WAVE1_CATALOG.map((c) => c.runtimeId)).size, 2, "both Wave-1 runtimes must be reachable");
 });
 
 test("the recommendation follows medium fit, not catalog order", () => {

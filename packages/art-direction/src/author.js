@@ -231,27 +231,67 @@ export function deriveIntent(direction) {
 const COLOUR_WORDS = Object.freeze({
   ochre: "#b07d3a", rust: "#8c4a2f", iron: "#4a4f55", ash: "#8d8b86", bone: "#d9d2c2",
   charcoal: "#26282b", ink: "#14161a", copper: "#a4643c", brass: "#9c7f3d", verdigris: "#4e7d6e",
-  green: "#3f6b४f".replace("४", "4"), moss: "#5b6b45", slate: "#59636b", sand: "#c2ac82",
+  green: "#3f6b4f", moss: "#5b6b45", slate: "#59636b", sand: "#c2ac82",
   blue: "#3a5a7a", indigo: "#2b3350", violet: "#5a4a6b", crimson: "#7a2f33", red: "#8f3a33",
   gold: "#c2a04a", cream: "#e6dcc6", white: "#efeae0", black: "#0f1113", grey: "#6f7377",
   gray: "#6f7377", umber: "#5b4632", sepia: "#6b533a", teal: "#356b6b", amber: "#c08a35",
 });
 
-/** The default palette when the direction names no colour: archaeological, restrained, dark ground. */
-const DEFAULT_PALETTE = Object.freeze(["#14161a", "#8d8b86", "#b07d3a", "#d9d2c2"]);
+/** The dark anchor a ground falls back to when the direction names no dark colour of its own. */
+const DARK_ANCHOR = "#0f1113";
 
+/** The default palette when the direction names no colour: archaeological, restrained, dark ground. */
+const DEFAULT_PALETTE = Object.freeze([DARK_ANCHOR, "#8d8b86", "#b07d3a", "#d9d2c2"]);
+
+/** Relative luminance, for deciding which declared colour is the ground. */
+function luma(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return (0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
+}
+
+/**
+ * Resolve the palette from the direction.
+ *
+ * TWO THINGS WERE WRONG HERE AND BOTH WERE VISIBLE IN THE FIRST BENCHMARK RENDER.
+ *
+ * ORDER. Colours were collected by iterating COLOUR_WORDS, so the palette came out in the order
+ * this dictionary happens to declare rather than the order the direction says them. `ochre` is
+ * declared first, so a direction reading "iron and ash over a near black ground, with one warm
+ * ochre accent" produced a palette whose index 0 -- the ground -- was ochre. Twelve architectural
+ * studies rendered on a tan field. Colours are now collected in order of appearance in the text.
+ *
+ * THE GROUND IS THE DARKEST COLOUR, NOT INDEX 0. Every one of these briefs asks for a dark ground
+ * ("near black", "deep ink", "over a dark ground"), and reading the ground off a fixed index makes
+ * that depend on which colour the author happened to name first. The ground is chosen by luminance,
+ * and if the direction names nothing dark a dark anchor is prepended rather than the lightest
+ * available colour being pressed into service as a background.
+ */
 function paletteFrom(direction, intent) {
-  const text = `${direction.paletteIntent ?? ""} ${direction.motifTranslation ?? ""}`.toLowerCase();
-  const named = [];
+  const text = `${direction.paletteIntent ?? ""} ${direction.motifTranslation ?? ""} ${direction.composition ?? ""}`.toLowerCase();
+  const hits = [];
   for (const [word, hex] of Object.entries(COLOUR_WORDS)) {
-    if (new RegExp(`\\b${word}\\b`).test(text) && !named.includes(hex)) named.push(hex);
+    const at = text.search(new RegExp(`\\b${word}\\b`));
+    if (at >= 0 && !hits.some((h) => h.hex === hex)) hits.push({ at, hex, word });
   }
-  let palette = named.length >= 2 ? named : [...DEFAULT_PALETTE];
-  if (intent.paletteMode === "MONOCHROME") palette = [palette[0] ?? "#14161a", palette[palette.length - 1] ?? "#d9d2c2"];
+  hits.sort((x, y) => x.at - y.at);
+  let palette = hits.length >= 2 ? hits.map((h) => h.hex) : [...DEFAULT_PALETTE];
+
+  if (intent.paletteMode === "MONOCHROME") {
+    const sorted = [...palette].sort((x, y) => luma(x) - luma(y));
+    palette = [sorted[0], sorted[sorted.length - 1]];
+  }
   if (intent.paletteMode === "CONTRASTING" && palette.length < 3) palette = [...palette, "#c2a04a"];
-  // The codec accepts 2..10 and the chain enforces it; clamp rather than emit an illegal document.
+
+  // A ground the eye reads as ground. 0.18 is below every mid tone in the table and above pure ink.
+  if (!palette.some((c) => luma(c) < 0.18)) palette = [DARK_ANCHOR, ...palette];
   if (palette.length < 2) palette = [...DEFAULT_PALETTE];
-  return { palette: palette.slice(0, 10), namedInDirection: named.length };
+  palette = palette.slice(0, 10);
+
+  const groundIx = palette.indexOf(palette.reduce((a, b) => (luma(a) <= luma(b) ? a : b)));
+  // The accent is the FURTHEST from the ground in luminance -- what the direction means by "one
+  // warm accent doing all the work" is the thing that reads against the dark, whatever its hue.
+  const accentIx = palette.indexOf(palette.reduce((a, b) => (Math.abs(luma(a) - luma(palette[groundIx])) >= Math.abs(luma(b) - luma(palette[groundIx])) ? a : b)));
+  return { palette, namedInDirection: hits.length, groundIx, accentIx };
 }
 
 /**
@@ -378,6 +418,19 @@ export function authorConfig({ runtimeId, direction, observedCodeHashes = null, 
  * ground the loudest thing in the frame; the node budget refuses branch 3 above depth 4.
  */
 function authorRecursion({ set, session, intent, direction, attempt, notes }) {
+  // THE PALETTE IS RESOLVED FIRST AND WRITTEN LATER.
+  //
+  // Every paletteIx must be below paletteCount or the runtime refuses the document
+  // (ERR_FIELD_PALETTE / ERR_RULE_PALETTE), and the palette's SIZE comes from the direction --
+  // "moss and bone over a dark ground" is two colours plus a ground. A secondary structure written
+  // before the palette stage was indexing colour 2 of a 2-colour palette and the chain rejected it.
+  // Resolving here and writing in the PALETTE stage keeps stage ownership intact while making the
+  // count available to every stage that needs to index into it.
+  const pal0 = paletteFrom(direction, intent);
+  const ixCap = pal0.palette.length - 1;
+  const groundIx = pal0.groundIx;
+  const accentIx = pal0.accentIx;
+
   // ---- 1. SILHOUETTE -----------------------------------------------------------------------
   const shapes = session.consult("rules[n].shapeSet");
   const rules = session.consult("rules[n].ruleSet");
@@ -474,16 +527,19 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
 
   // ---- 5. SECONDARY STRUCTURE ---------------------------------------------------------------
   if (secondRule === 2) {
-    set("SECONDARY_STRUCTURE", "rules[1].shapeSet", ["CIRCLE"]);
-    set("SECONDARY_STRUCTURE", "rules[1].ruleSet", ["INSCRIBE"]);
-    set("SECONDARY_STRUCTURE", "rules[1].contraction", 46);
+    // DERIVED FROM THE PRIMARY, not fixed. This was hardcoded to CIRCLE + INSCRIBE, so every
+    // recursion project in the benchmark -- architectural, monumental, delicate alike -- carried
+    // the same large outer circle, and it was the most visible thing in every frame.
+    set("SECONDARY_STRUCTURE", "rules[1].shapeSet", [shapeSet[1] ?? shapeSet[0], shapeSet[0]]);
+    set("SECONDARY_STRUCTURE", "rules[1].ruleSet", ruleSet.length > 1 ? [ruleSet[1], ruleSet[0]] : ruleSet);
+    set("SECONDARY_STRUCTURE", "rules[1].contraction", Math.max(24, contractionCeiling - 30));
     set("SECONDARY_STRUCTURE", "rules[1].branch", 2);
     set("SECONDARY_STRUCTURE", "rules[1].prune", pruneMaskFor(2, intent.densityTarget));
-    set("SECONDARY_STRUCTURE", "rules[1].symSet", ["NONE"]);
-    set("SECONDARY_STRUCTURE", "rules[1].rotation", 20);
-    set("SECONDARY_STRUCTURE", "rules[1].paletteIx", 2);
+    set("SECONDARY_STRUCTURE", "rules[1].symSet", symSet.slice(0, 2));
+    set("SECONDARY_STRUCTURE", "rules[1].rotation", intent.rhythmMode === "BROKEN" ? 40 : 18);
+    set("SECONDARY_STRUCTURE", "rules[1].paletteIx", ixCap === groundIx ? groundIx : (groundIx === 0 ? Math.min(2, ixCap) : 0));
     set("SECONDARY_STRUCTURE", "rules[1].variant", 1);
-    set("SECONDARY_STRUCTURE", "rules[1].stroke", true);
+    set("SECONDARY_STRUCTURE", "rules[1].stroke", intent.strokeMode !== "LINEWORK");
     set("SECONDARY_STRUCTURE", "rules[1].depthMin", 2);
     set("SECONDARY_STRUCTURE", "rules[1].depthMax", 3);
     notes.push({ stage: "SECONDARY_STRUCTURE", why: "a second rule is the runtime's real colour control (paletteCount does nothing) and its only route to two registers" });
@@ -491,14 +547,14 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
 
   // ---- 6. PALETTE ---------------------------------------------------------------------------
   const pal = session.consult("palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2");
-  const { palette, namedInDirection } = paletteFrom(direction, intent);
+  const { palette, namedInDirection } = pal0;
   set("PALETTE", "palette", palette);
   // A gradient ground makes the ground the loudest thing in the frame (measured 0.399 FLAT ->
   // 0.882 RADIAL). That is a deliberate choice for a radial work and a mistake everywhere else.
   set("PALETTE", "groundMode", intent.rhythmMode === "RADIAL" && intent.densityTarget !== "DENSE" ? "RADIAL" : "FLAT");
-  set("PALETTE", "groundIx", 0);
-  set("PALETTE", "groundIx2", Math.min(1, palette.length - 1));
-  set("PALETTE", "rules[0].paletteIx", Math.min(intent.paletteMode === "CONTRASTING" ? 2 : 1, palette.length - 1));
+  set("PALETTE", "groundIx", groundIx);
+  set("PALETTE", "groundIx2", ixCap === groundIx ? groundIx : Math.min(groundIx + 1, ixCap));
+  set("PALETTE", "rules[0].paletteIx", accentIx);
   // DEPTH_PALETTE is the colour control; OUTLINE reads as linework at browse size.
   const flags = [];
   if (intent.paletteMode !== "MONOCHROME") flags.push("DEPTH_PALETTE");
@@ -576,6 +632,12 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
  * because size's floor is 2; the site budget is 120 total and 40 per field, paid at countMax.
  */
 function authorVector({ set, session, intent, direction, attempt, notes }) {
+  // Resolved first, written in the PALETTE stage -- see the note in authorRecursion.
+  const pal0 = paletteFrom(direction, intent);
+  const ixCap = pal0.palette.length - 1;
+  const groundIx = pal0.groundIx;
+  const accentIx = pal0.accentIx;
+
   // ---- 1. SILHOUETTE -----------------------------------------------------------------------
   const layout = session.consult("fields[n].layout");
   const primitive = session.consult("fields[n].primitive");
@@ -638,16 +700,39 @@ function authorVector({ set, session, intent, direction, attempt, notes }) {
   notes.push({ stage: "RHYTHM", why: `symmetry ${sym} (~3x coverage, project constant so it carries no variety); count range kept tight because widening thins the neutral composition`, consulted: [symmetry.parameter, count.parameter] });
 
   // ---- 5. SECONDARY STRUCTURE ---------------------------------------------------------------
+  // A SECONDARY MUST REINFORCE THE PRIMARY, NOT ARGUE WITH IT.
+  //
+  // These were hardcoded to SCATTER/CIRCLE and LINEFIELD/LINE whatever the primary was doing. On
+  // the sediment brief -- a STACK of horizontal beds -- that laid diagonal linefields across the
+  // banding, and the strata stopped reading as strata. The direction said horizontal; the work said
+  // horizontal and then crossed it out.
+  //
+  // The layout vocabulary is ordered BY FAMILY and the runtime dispatches on ranges (GRID..TILING
+  // share a cell-grid core, RADIAL..BURST a polar one), so the family is available to key on. A
+  // secondary is drawn from the primary's own family, which is also why there is a short list per
+  // family rather than one substitute: two fields of the identical layout is a thicker primary,
+  // not a second register.
+  const LAYOUT_FAMILY = {
+    GRID: "CELL", LATTICE: "CELL", TILING: "CELL", SUBDIVIDE: "CELL", STACK: "CELL", LINEFIELD: "CELL", WAVE: "CELL",
+    SCATTER: "FREE", RADIAL: "POLAR", ORBIT: "POLAR", SPIRAL: "POLAR", BURST: "POLAR",
+  };
+  const SECONDARY_BY_FAMILY = {
+    CELL: ["STACK", "GRID"],
+    POLAR: ["ORBIT", "RADIAL"],
+    FREE: ["SCATTER", "GRID"],
+  };
+  const family = LAYOUT_FAMILY[chosenLayout] ?? "FREE";
+  const secondaries = SECONDARY_BY_FAMILY[family].filter((l) => l !== chosenLayout).concat(SECONDARY_BY_FAMILY[family]);
   // The site budget is 120 total and 40 per field, PAID AT countMax across all fields.
   for (let i = 1; i < fields; i += 1) {
-    set("SECONDARY_STRUCTURE", `fields[${i}].layout`, i === 1 ? (intent.rhythmMode === "RADIAL" ? "ORBIT" : "SCATTER") : "LINEFIELD");
-    set("SECONDARY_STRUCTURE", `fields[${i}].primitive`, i === 1 ? "CIRCLE" : "LINE");
-    set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, Math.max(6, Math.round(sizeMax * (i === 1 ? 0.45 : 0.3))));
-    set("SECONDARY_STRUCTURE", `fields[${i}].spreadMax`, Math.min(128, spreadMax + 10 * i));
-    set("SECONDARY_STRUCTURE", `fields[${i}].symmetry`, "NONE");
+    set("SECONDARY_STRUCTURE", `fields[${i}].layout`, secondaries[(i - 1) % secondaries.length]);
+    set("SECONDARY_STRUCTURE", `fields[${i}].primitive`, family === "POLAR" ? "ARC" : (intent.strokeMode === "LINEWORK" ? "POLYLINE" : "RECT"));
+    set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, Math.max(6, Math.round(sizeMax * (i === 1 ? 0.55 : 0.35))));
+    set("SECONDARY_STRUCTURE", `fields[${i}].spreadMax`, Math.min(128, spreadMax - 8 * i));
+    set("SECONDARY_STRUCTURE", `fields[${i}].symmetry`, sym);
     set("SECONDARY_STRUCTURE", `fields[${i}].countMin`, 5);
     set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, 12);
-    set("SECONDARY_STRUCTURE", `fields[${i}].paletteIx`, Math.min(i + 1, 3));
+    set("SECONDARY_STRUCTURE", `fields[${i}].paletteIx`, (() => { const c = []; for (let k = 0; k <= ixCap; k += 1) if (k !== groundIx) c.push(k); return c.length ? c[(i - 1) % c.length] : groundIx; })());
     set("SECONDARY_STRUCTURE", `fields[${i}].variant`, i);
     set("SECONDARY_STRUCTURE", `fields[${i}].stroke`, true);
   }
@@ -655,12 +740,12 @@ function authorVector({ set, session, intent, direction, attempt, notes }) {
 
   // ---- 6. PALETTE ---------------------------------------------------------------------------
   const pal = session.consult("palette, groundMode, PALETTE_SHIFT");
-  const { palette, namedInDirection } = paletteFrom(direction, intent);
+  const { palette, namedInDirection } = pal0;
   set("PALETTE", "palette", palette);
   set("PALETTE", "groundMode", intent.rhythmMode === "RADIAL" && intent.densityTarget === "SPARSE" ? "RADIAL" : "FLAT");
-  set("PALETTE", "groundIx", 0);
-  set("PALETTE", "groundIx2", Math.min(1, palette.length - 1));
-  set("PALETTE", "fields[0].paletteIx", Math.min(1, palette.length - 1));
+  set("PALETTE", "groundIx", groundIx);
+  set("PALETTE", "groundIx2", ixCap === groundIx ? groundIx : Math.min(groundIx + 1, ixCap));
+  set("PALETTE", "fields[0].paletteIx", accentIx);
   // The seed reaches nothing categorical in this runtime, so PALETTE_SHIFT is one of the very few
   // routes to per-token variety that exists at all. It is elected whenever variety is wanted.
   const flags = [];

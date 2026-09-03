@@ -1,0 +1,468 @@
+{
+  "briefId": "B04",
+  "axis": "pure-abstract",
+  "title": "INTERVAL",
+  "phase": "AUTHORED",
+  "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-03T17:37:48.742Z",
+    "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+    "briefSubstance": {
+      "chars": 706,
+      "words": 113,
+      "distinctWords": 82
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "VECTOR_COMPOSITION"
+      ],
+      "MOTIF": [],
+      "AESTHETIC": [],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION",
+        "DENSITY_CHANGE"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [],
+    "candidates": [
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "registryId": 3,
+        "viable": true,
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "one self-similar figure, centred, built by repeating a production on itself over up to 6 levels, drawn in regular primitives, optionally replicated by a symmetry order, over a flat or gradient ground",
+        "fit": 0,
+        "matchedSignals": []
+      },
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "registryId": 4,
+        "viable": true,
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+        "fit": 3,
+        "matchedSignals": [
+          "VECTOR_COMPOSITION"
+        ]
+      }
+    ],
+    "ranking": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "fit": 3,
+        "concessions": 0,
+        "matchedSignals": [
+          "VECTOR_COMPOSITION"
+        ]
+      },
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "fit": 0,
+        "concessions": 0,
+        "matchedSignals": []
+      }
+    ],
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "concessions": [],
+    "detail": "2 of 2 Wave-1 templates can carry this brief"
+  },
+  "sentToAuthor": true,
+  "direction": {
+    "schemaVersion": 1,
+    "kind": "ART_DIRECTION",
+    "createdAt": "2026-09-03T17:37:48.743Z",
+    "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+    "admissionOutcome": "ADMITTED",
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+    "directionHash": "d130223477e68a496dacb8238c57c93ce211bb0d4e1fbd304c6481a4e7bfb8f6",
+    "direction": {
+      "medium": "Vector composition: fields of primitives distributed about the canvas centre with no depicted subject at all.",
+      "motifTranslation": "There is no motif to translate. The work is an arrangement of marks whose only content is the interval between them and their distribution across the field.",
+      "composition": "An all over field that uses the whole frame evenly, with no isolated object and no reserved margin anywhere in the composition.",
+      "focalHierarchy": "Deliberately flat hierarchy: nothing dominates, and the even distribution is the point rather than an absence of decision.",
+      "density": "Moderate. Enough marks that the field reads as populated, few enough that individual intervals remain legible at browse size.",
+      "negativeSpace": "Negative space is distributed rather than pooled, appearing as the gaps between marks across the entire field evenly.",
+      "paletteIntent": "Narrow and tonal: close values in slate and bone over a dark ground, so difference reads as spacing rather than as colour.",
+      "rhythm": "Regular distribution with local variation, the interval steady enough to establish a measure and loose enough to avoid a grid.",
+      "variationStrategy": "Tokens differ first in the count of marks, then in their distribution, then in the subtle palette rotation across the field.",
+      "marketTransformation": "The market acts on the density of the field: markedly more marks under drawdown and fewer in recovery, visible at browse size.",
+      "identityAnchors": "The even all over field, the dark ground and the narrow tonal palette stay constant across every seed and every state.",
+      "thumbnailIntent": "At 120px the overall density and grain of the field survives; individual marks do not resolve and are not meant to."
+    },
+    "fields": [
+      "medium",
+      "motifTranslation",
+      "composition",
+      "focalHierarchy",
+      "density",
+      "negativeSpace",
+      "paletteIntent",
+      "rhythm",
+      "variationStrategy",
+      "marketTransformation",
+      "identityAnchors",
+      "thumbnailIntent"
+    ],
+    "containsRuntimeConfig": false
+  },
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeBytes": 24455,
+  "rounds": [
+    {
+      "round": 1,
+      "configHash": "a13aeae0842459bde4511dbcc58e478e5c6783238dc6611142cf98f15ad426a4",
+      "configBytes": "0x564356310100000001030f111359636bd9d2c201000002020000102818560100000b5468657265204d6f746966ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "GRID",
+            "primitive": "RECT",
+            "sizeMax": 24,
+            "spreadMax": 86,
+            "symmetry": "MIRROR_X",
+            "countMin": 16,
+            "countMax": 40,
+            "paletteIx": 2,
+            "stroke": false,
+            "variant": 0,
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR"
+          }
+        ],
+        "fieldCount": 1,
+        "palette": [
+          "#0f1113",
+          "#59636b",
+          "#d9d2c2"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 1,
+        "flags": [],
+        "title": "There Motif"
+      },
+      "intent": {
+        "densityTarget": "MODERATE",
+        "extentTarget": "COMPACT",
+        "focalMode": "EVEN_FIELD",
+        "rhythmMode": "REGULAR",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "NARROW"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "MODERATE",
+          "phrase": "Moderate",
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DEFAULT",
+          "value": "COMPACT",
+          "detail": "the direction's composition/negativeSpace did not name a extentTarget",
+          "rejected": [
+            {
+              "option": "COMPACT",
+              "phrase": "margin",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "focalMode": {
+          "source": "DIRECTION",
+          "value": "EVEN_FIELD",
+          "phrase": "Deliberately flat hierarchy",
+          "fields": [
+            "focalHierarchy",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "REGULAR",
+          "phrase": "Regular",
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DIRECTION",
+          "value": "RESTRAINED",
+          "phrase": "Narrow",
+          "fields": [
+            "paletteIntent"
+          ],
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DEFAULT",
+          "value": "SOLID",
+          "detail": "the direction's medium/motifTranslation/paletteIntent/thumbnailIntent did not name a strokeMode",
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "DENSITY",
+          "phrase": "density",
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DIRECTION",
+          "value": "NARROW",
+          "phrase": "subtle",
+          "fields": [
+            "variationStrategy",
+            "identityAnchors"
+          ],
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": []
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 16,
+            "ceiling": 40,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 20,
+                "resolved": 16
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 900,
+                "resolved": 37
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 80,
+                "resolved": 17
+              }
+            },
+            "resolved": [
+              16,
+              37,
+              17
+            ],
+            "span": 21,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 16 / 37 / 17 across neutral / stress / recovery (span 21 of 24)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 1,
+          "reachable": 1,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "1 of 1 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout GRID from rhythmMode=REGULAR; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "sizeMax 24 from densityTarget=MODERATE; below ~10 is a blank tile at 120px",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 86 from extentTarget=COMPACT; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry MIRROR_X (~3x coverage, project constant so it carries no variety); count range kept tight because widening thins the neutral composition",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "PALETTE",
+          "why": "2 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke and variant are the last decisions because neither changes whether the work reads at 120px",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "marketAxis=DENSITY -> COUNT <- DRAWDOWN/LINEAR; SIZE is never elected (floor 2 renders a blank at low sensor)",
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "8884e22854de701a4f638e40ef1816dc8e016cae294234ed2131a5d11877c821",
+          "bytes": 104935
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "19317a797518e1fb99eca65291761d9e9db1a404174a4812d0e1b34f3cd8f6d1",
+          "bytes": 43301
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "926ce5a61c95512d7f8751ede79ed226319351e6352b0a7d88e5c86f3cea824a",
+          "bytes": 107578
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "a45266a0fa1769d03e468fbe096134e3e076ffcd2cbd55084cdc720cb4788ddb",
+          "bytes": 42999
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "e1f8f9eb41c32d819962094993f1cdd05dbafcd528646474fd93390568a0c05e",
+          "bytes": 5443
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.148,
+        "inkMin": 0.017,
+        "stateDeMean": 5.86,
+        "stateDeMin": 0.63,
+        "seedDeMean": 11.32,
+        "seedDeMin": 1.31
+      }
+    }
+  ]
+}

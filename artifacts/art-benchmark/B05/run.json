@@ -1,0 +1,549 @@
+{
+  "briefId": "B05",
+  "axis": "minimal",
+  "title": "STELE",
+  "phase": "AUTHORED",
+  "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-03T17:37:50.766Z",
+    "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
+    "briefSubstance": {
+      "chars": 680,
+      "words": 108,
+      "distinctWords": 75
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "requiredCapabilities": {
+      "MEDIUM": [],
+      "MOTIF": [
+        "ARCHITECTURE",
+        "MONUMENT"
+      ],
+      "AESTHETIC": [
+        "SPARSE",
+        "QUIET"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [],
+    "candidates": [
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "registryId": 3,
+        "viable": true,
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "one self-similar figure, centred, built by repeating a production on itself over up to 6 levels, drawn in regular primitives, optionally replicated by a symmetry order, over a flat or gradient ground",
+        "fit": 3,
+        "matchedSignals": [
+          "ARCHITECTURE",
+          "MONUMENT"
+        ]
+      },
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "registryId": 4,
+        "viable": true,
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+        "fit": 2,
+        "matchedSignals": [
+          "ARCHITECTURE"
+        ]
+      }
+    ],
+    "ranking": [
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "fit": 3,
+        "concessions": 0,
+        "matchedSignals": [
+          "ARCHITECTURE",
+          "MONUMENT"
+        ]
+      },
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "fit": 2,
+        "concessions": 0,
+        "matchedSignals": [
+          "ARCHITECTURE"
+        ]
+      }
+    ],
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "concessions": [],
+    "detail": "2 of 2 Wave-1 templates can carry this brief"
+  },
+  "sentToAuthor": true,
+  "direction": {
+    "schemaVersion": 1,
+    "kind": "ART_DIRECTION",
+    "createdAt": "2026-09-03T17:37:50.767Z",
+    "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
+    "admissionOutcome": "ADMITTED",
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "templateId": "GEOMETRIC_RECURSION_V1/compass",
+    "directionHash": "71b2599febb8ea4350f32d20efc77b39932dafa662d11d5bad1a59cfa052be4d",
+    "direction": {
+      "medium": "Geometric recursion: one centred self-similar figure built from regular primitives over a flat ground.",
+      "motifTranslation": "The stele becomes a single upright nested mass, one generation inside the last, so the monument is expressed as concentration rather than as depicted stone.",
+      "composition": "A single compact form centred and held well clear of every edge, with the frame reading as mostly empty around it.",
+      "focalHierarchy": "One dominant mass and nothing else of consequence; any inner structure is texture subordinate to the single silhouette.",
+      "density": "Sparse and austere. Very few elements, the mass occupying well under half the frame at browse size.",
+      "negativeSpace": "The surrounding emptiness does as much work as the mass and is the reason the object reads as placed rather than as drawn.",
+      "paletteIntent": "Two values and a ground: bone against charcoal over near black, nothing decorative and no third colour anywhere.",
+      "rhythm": "Regular contraction inward, each generation a steady step smaller, with no interruption and no ornament.",
+      "variationStrategy": "Tokens differ first in the silhouette of the single form, then in its symmetry, then in how many generations it holds.",
+      "marketTransformation": "The market changes the form's scale rather than its complexity: it contracts under drawdown and expands again in recovery.",
+      "identityAnchors": "The single centred mass, the near black ground and the two value palette hold constant across every seed and every state.",
+      "thumbnailIntent": "At 120px one compact silhouette survives and reads immediately as a single object; interior steps do not resolve."
+    },
+    "fields": [
+      "medium",
+      "motifTranslation",
+      "composition",
+      "focalHierarchy",
+      "density",
+      "negativeSpace",
+      "paletteIntent",
+      "rhythm",
+      "variationStrategy",
+      "marketTransformation",
+      "identityAnchors",
+      "thumbnailIntent"
+    ],
+    "containsRuntimeConfig": false
+  },
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeBytes": 23909,
+  "rounds": [
+    {
+      "round": 1,
+      "configHash": "4d6ee1df56b4d366ac83f6516fbc44b69a8f10abd82917eba6f3268681a8f251",
+      "configBytes": "0x47525631020200020203d9d2c226282b0f1113021a0700030102040402520c011b0000120302030102020302341201430100000c5374656c652053696e676c65ff",
+      "config": {
+        "rules": [
+          {
+            "shapeSet": [
+              "DIAMOND",
+              "TRIANGLE",
+              "CIRCLE"
+            ],
+            "ruleSet": [
+              "QUAD",
+              "TRI",
+              "INSCRIBE"
+            ],
+            "contraction": 82,
+            "branch": 2,
+            "prune": 1,
+            "symSet": [
+              "NONE",
+              "MIRROR_X",
+              "QUAD",
+              "ROT3"
+            ],
+            "rotation": 12,
+            "paletteIx": 0,
+            "depthMin": 4,
+            "depthMax": 4,
+            "stroke": false,
+            "variant": 0,
+            "drive": "CONTRACT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "shapeSet": [
+              "TRIANGLE",
+              "DIAMOND"
+            ],
+            "ruleSet": [
+              "TRI",
+              "QUAD"
+            ],
+            "contraction": 52,
+            "branch": 2,
+            "prune": 1,
+            "symSet": [
+              "NONE",
+              "MIRROR_X"
+            ],
+            "rotation": 18,
+            "paletteIx": 2,
+            "variant": 1,
+            "stroke": true,
+            "depthMin": 2,
+            "depthMax": 3,
+            "drive": "CONTRACT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          }
+        ],
+        "ruleCount": 2,
+        "palette": [
+          "#d9d2c2",
+          "#26282b",
+          "#0f1113"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 2,
+        "groundIx2": 2,
+        "flags": [
+          "DEPTH_PALETTE"
+        ],
+        "title": "Stele Single"
+      },
+      "intent": {
+        "densityTarget": "SPARSE",
+        "extentTarget": "COMPACT",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "REGULAR",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "SCALE",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "SPARSE",
+          "phrase": "Sparse",
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "COMPACT",
+          "phrase": "compact",
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": []
+        },
+        "focalMode": {
+          "source": "DIRECTION",
+          "value": "SINGLE_DOMINANT",
+          "phrase": "One dominant",
+          "fields": [
+            "focalHierarchy",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "REGULAR",
+          "phrase": "Regular",
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": [
+            {
+              "option": "BROKEN",
+              "phrase": "interruption",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "SOLID",
+          "phrase": "mass",
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "SCALE",
+          "phrase": "scale",
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "rules[n].shapeSet",
+          "rules[n].ruleSet",
+          "ruleCount",
+          "rules[n].contraction",
+          "rules[n].branch and rules[n].prune",
+          "rules[n].symSet",
+          "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+          "rules[n].depthMin / depthMax",
+          "rules[n].stroke and the OUTLINE flag",
+          "rules[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "ruleCount",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+            "facets": [
+              "lowHighBehaviour",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "rules[n].drive x sensor x curve",
+            "facets": [
+              "lowHighBehaviour",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": []
+      },
+      "bindings": {
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "rule[0]",
+            "drive": "CONTRACT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "contraction",
+            "floor": 20,
+            "ceiling": 82,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 40
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 20
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 79
+              }
+            },
+            "resolved": [
+              40,
+              20,
+              79
+            ],
+            "span": 59,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 40 / 20 / 79 across neutral / stress / recovery (span 59 of 62)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "rule[1]",
+            "drive": "CONTRACT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "contraction",
+            "floor": 20,
+            "ceiling": 52,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 30
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 20
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 50
+              }
+            },
+            "resolved": [
+              30,
+              20,
+              50
+            ],
+            "span": 30,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 30 / 20 / 50 across neutral / stress / recovery (span 30 of 32)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 2,
+          "reachable": 2,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "2 of 2 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "shapeSet from densityTarget=SPARSE; the atlas ranks seed shape second-loudest at 120px",
+          "consulted": "rules[n].shapeSet"
+        },
+        {
+          "stage": "SILHOUETTE",
+          "why": "ruleSet from extentTarget=COMPACT; BSP excluded on every path (law L3: inert under PRUNE/ROTATE)",
+          "consulted": "rules[n].ruleSet"
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "contraction is a CEILING over floor 20 (law L1); 82 from focalMode=SINGLE_DOMINANT",
+          "consulted": [
+            "ruleCount",
+            "rules[n].contraction"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "branch 2 kept low so the node budget admits depth in DETAIL; prune mask avoids all-ones (law L2)",
+          "consulted": "rules[n].branch and rules[n].prune"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symSet NONE,MIRROR_X,QUAD,ROT3 from rhythmMode=REGULAR; symmetry is free coverage and imposes a mandala",
+          "consulted": "rules[n].symSet"
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "a second rule is the runtime's real colour control (paletteCount does nothing) and its only route to two registers"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "3 colour(s) named in the direction; DEPTH_PALETTE carries colour because paletteCount is measured inert",
+          "consulted": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "depth pinned at 4 (measured +0.004 ink over five levels, 30x elements); stroke=SOLID is the loudest control at 120px",
+          "consulted": [
+            "rules[n].depthMin / depthMax",
+            "rules[n].stroke and the OUTLINE flag"
+          ]
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "marketAxis=SCALE -> CONTRACT <- RECOVERY/LOG2",
+          "consulted": "rules[n].drive x sensor x curve"
+        }
+      ],
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "f49586e63c45e07a31c1311df0581f4c5801152abfbcf3bcbf2e2cfa251b9565",
+          "bytes": 117611
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "a152d26693d8bd83873909f45701fba25798c9d8fbeb0bbfe7e4a07c459d5990",
+          "bytes": 49579
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "9bd351f50c42a620918f14c560f994af7fb0822921122b41592de06179189a78",
+          "bytes": 113244
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "8b25979cab409ee4a65f4ebb32ba69dfa930df857f50a808740cd9f37ac40876",
+          "bytes": 46652
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "d2fe28885bfec06161f3f9454bd62774547421f0320911ca79de466033a1b537",
+          "bytes": 10986
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.202,
+        "inkMin": 0.085,
+        "stateDeMean": 1.94,
+        "stateDeMin": 0.89,
+        "seedDeMean": 8.92,
+        "seedDeMin": 2.85
+      }
+    }
+  ]
+}

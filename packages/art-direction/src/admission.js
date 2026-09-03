@@ -30,6 +30,8 @@
 
 import { createHash } from "node:crypto";
 
+import { shipCatalog } from "../../template-catalog/src/select.js";
+
 import { atlasRuntimeIds, capabilityStatement } from "./atlas.js";
 import {
   CAPABILITY_CLASSES,
@@ -39,11 +41,23 @@ import {
   runtimeCanExpress,
 } from "./capabilities.js";
 
-/** The Wave-1 catalog. Two templates; nothing else is selectable. */
-export const WAVE1_CATALOG = Object.freeze([
-  Object.freeze({ templateId: "GEOMETRIC_RECURSION_V1/compass", runtimeId: "GEOMETRIC_RECURSION_V1", registryId: 3 }),
-  Object.freeze({ templateId: "VECTOR_COMPOSITION_V1/alluvium", runtimeId: "VECTOR_COMPOSITION_V1", registryId: 4 }),
-]);
+/**
+ * The catalog admission ranks against: SHIP-tier templates, DERIVED, never listed here.
+ *
+ * `shipCatalog()` intersects the append-only review ledger with the autonomous-selection filter, so
+ * what an agent may start from follows the REVIEW TIER and moves when a verdict moves. A hardcoded
+ * pair — which this was — is a second, silent selection policy that agrees with the protocol's
+ * until the day a template is promoted or withdrawn, and then disagrees without saying so.
+ *
+ * IT IS ALSO NOT THE CLI'S STARTER LIST, and that distinction is the point. `relics templates`
+ * prints scaffolds for a person to type; this asks which templates the review programme permits an
+ * agent to select. They happen to name the same two today. If a starter were ever hidden, renamed
+ * or gated behind a flag, an agent keyed to the printed list would silently lose a runtime and the
+ * benchmark would fail its vector floor for a reason that has nothing to do with art.
+ */
+export const WAVE1_CATALOG = Object.freeze(
+  shipCatalog().map((templateId) => Object.freeze({ templateId, runtimeId: templateId.split("/")[0] })),
+);
 
 export const ADMISSION_OUTCOMES = Object.freeze([
   "ADMITTED",
