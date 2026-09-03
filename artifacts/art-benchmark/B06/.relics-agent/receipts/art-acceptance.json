@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T17:59:11.942Z",
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "chainId": 8453,
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+  "acceptedConfigHash": "7558abc0cd7fe820a49bb4cb73d38ce00bf58b17adaf207cf8ab7ee0462bd588",
+  "acceptedConfigBytes": 81,
+  "briefSha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "VECTOR_COMPOSITION"
+      ],
+      "MOTIF": [],
+      "AESTHETIC": [
+        "DENSE"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION",
+        "DENSITY_CHANGE"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "948b8c114e937eb1565c1365d7e3cc1748ee52867da476a5214ac9de92c3a058"
+  },
+  "direction": {
+    "hash": "23de073f8ee09d6e9aaf864b4c53485dcfb7f126a1c9465666ca793883b0b0b1",
+    "createdAt": "2026-09-03T17:48:30.500Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "fields[n].layout",
+      "fields[n].primitive",
+      "fields[n].sizeMax",
+      "fieldCount, and the site budget",
+      "fields[n].spreadMax",
+      "fields[n].symmetry",
+      "fields[n].countMin / countMax",
+      "palette, groundMode, PALETTE_SHIFT",
+      "fields[n].stroke and the OUTLINE flag",
+      "fields[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "fields[n].layout",
+        "facets": [
+          "failureMode"
+        ]
+      },
+      {
+        "parameter": "fieldCount, and the site budget",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].symmetry",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, groundMode, PALETTE_SHIFT",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].stroke and the OUTLINE flag",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "fields[n].drive x sensor x curve",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": []
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B06",
+      "configHash": "7558abc0cd7fe820a49bb4cb73d38ce00bf58b17adaf207cf8ab7ee0462bd588",
+      "critiqueHash": "481b93d940f72cc2cdbabbdc60d0a28a274cfa7f13848903437c1c76946329a3",
+      "findings": [
+        "no-saturation-sparse-floor",
+        "centred-blob-empty-margin",
+        "two-scales-and-segregated-dust",
+        "state-relocates-instead-of-thinning",
+        "hollow-members-vanish-at-browse-size"
+      ],
+      "dispositions": [
+        {
+          "findingId": "no-saturation-sparse-floor",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "centred-blob-empty-margin",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "two-scales-and-segregated-dust",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "state-relocates-instead-of-thinning",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "hollow-members-vanish-at-browse-size",
+          "disposition": "ACCEPT"
+        }
+      ],
+      "responseHash": "959c80f0d65db8a9e51a2c39c9f17a647fec72124bd2c44fa51bac285ff31844",
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B06",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "7558abc0cd7fe820a49bb4cb73d38ce00bf58b17adaf207cf8ab7ee0462bd588",
+    "inputHashes": [
+      "63f7b109a024de4de9d619aabee378e9b25aeef9afac704d9dd79c83ff3b6516",
+      "2f9ee402946c3aa3c961a52122105ebbb176ea23e064390acb3b4a6c07998d9e",
+      "fefc0bae4d0582c64ca4854ffa473975ed0473861034cd1fc49bf5dab360f5b6",
+      "5228c0cfa1a022e6b44868e24e36d3b6265910f901f691c67fb73f54dec812f5",
+      "704000933baca9971813ce621026b389eafc1b744a37e2cdebe536dce30d3a8d"
+    ],
+    "visualDescriptionHash": "d63a7747df88ff3aae82191583b8f967844a7e1e0c0f3531cf4a313c36359531",
+    "hash": "e4c1201a348459dceb657d23635af23cafb6b1cd932182f75e3bbcbbeaeffed1"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}

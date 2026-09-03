@@ -288,6 +288,26 @@ async function phaseHoldout() {
     });
     if (!out.ok) throw new Error(`${brief.id}: ${out.detail}`);
 
+    // A BLANK TOKEN BLOCKS THE FREEZE, AND THIS GATE EXISTS BECAUSE ITS ABSENCE COST A REVIEW.
+    //
+    // `inkMean` was being reported and `inkMin` was being computed and ignored. Two projects went
+    // to a final reviewer with a token that renders NOTHING -- ink 0.000 at every market state --
+    // and both reviewers found it unaided and called it, correctly, disqualifying for a permanent
+    // on-chain commitment. The mean hid it: eleven good tokens and one empty one average to a
+    // perfectly healthy number.
+    //
+    // `@relics/art-review`'s objective battery already has a BLANK_DETECTION check against exactly
+    // this floor and this harness does not run it -- that is the real gap, and this is the narrow
+    // guard for the specific defect that got through, not a substitute for the battery.
+    const INK_FLOOR = 0.04;
+    if (out.measurements.inkMin < INK_FLOOR) {
+      console.log(`${brief.id} BLOCKED: a holdout token renders blank (ink ${out.measurements.inkMin} < ${INK_FLOOR}). Not frozen; a collection with an empty token must not reach a final review.`);
+      run.phase = "BLOCKED_BLANK_TOKEN";
+      run.blankTokenInk = out.measurements.inkMin;
+      writeJson(runPath, run);
+      continue;
+    }
+
     run.finalReviewInput = {
       seedGroup: "FINAL_HOLDOUT_SEEDS",
       seeds: [...FINAL_HOLDOUT_SEEDS],
@@ -345,6 +365,75 @@ function phaseReport() {
   writeJson(join(OUT, "report.json"), { generatedAt: new Date().toISOString(), rows, blindPass: pass.length, total: rows.length, byRuntime, mutatedAfterUnblind: mutated.length });
 }
 
-const phases = { author: phaseAuthor, revise: phaseRevise, holdout: phaseHoldout, report: async () => phaseReport() };
+// ---------------------------------------------------------------------------------------------
+// PHASE: receipt -- bind everything to the exact bytes, once a verdict exists
+// ---------------------------------------------------------------------------------------------
+async function phaseReceipt() {
+  const { buildArtAcceptance, writeArtAcceptance, verifyArtAcceptance, acceptanceFlags } = await import("../packages/art-direction/src/acceptance.js");
+  const { atlasProvenance } = await import("../packages/art-direction/src/atlas.js");
+  const briefsById = Object.fromEntries(readJson(BRIEFS).briefs.map((b) => [b.id, b]));
+  let built = 0;
+  for (const brief of loadBriefs()) {
+    const dir = caseDir(brief.id);
+    const runPath = join(dir, "run.json");
+    if (!existsSync(runPath)) continue;
+    const run = readJson(runPath);
+    if (run.phase === "ADMISSION") continue;
+    const vPath = join(dir, "final-review", "verdict.json");
+    if (!existsSync(vPath)) { console.log(`${brief.id} SKIP: no final verdict yet`); continue; }
+    const verdict = readJson(vPath);
+    const last = run.rounds[run.rounds.length - 1];
+
+    const rounds = run.rounds.map((r, i) => {
+      const cp = join(dir, `round-${i + 1}`, "critique.json");
+      const rp = join(dir, `round-${i + 1}`, "response.json");
+      return {
+        round: i + 1,
+        criticId: existsSync(cp) ? readJson(cp).criticId : null,
+        configHash: r.configHash,
+        critique: existsSync(cp) ? readJson(cp) : null,
+        response: existsSync(rp) ? readJson(rp) : null,
+      };
+    });
+
+    // THE WORKSPACE IS THE CASE DIRECTORY, so the receipt sits beside the evidence it binds.
+    const record = buildArtAcceptance({
+      runtimeId: run.runtimeId,
+      templateId: run.templateId,
+      chainId: run.chainId ?? CHAIN_ID,
+      runtimeAddress: run.runtimeAddress,
+      runtimeCodeHash: atlasProvenance().runtimeCodeHash?.[run.runtimeId]?.codeHash ?? null,
+      briefText: briefsById[brief.id].text,
+      admission: run.admission,
+      direction: run.direction,
+      atlasRecord: last.atlas ?? run.rounds[0].atlas,
+      acceptedConfigBytes: last.configBytes,
+      objective: null,
+      rounds,
+      finalReview: {
+        reviewerId: verdict.reviewerId,
+        verdict: verdict.verdict,
+        blinded: true,
+        describedBeforeBrief: verdict.describedBeforeBrief === true,
+        seedGroup: run.finalReviewInput.seedGroup,
+        seeds: run.finalReviewInput.seeds,
+        states: run.finalReviewInput.states,
+        configHashAtUnblind: run.finalReviewInput.configHashAtUnblind,
+        inputHashes: run.finalReviewInput.inputHashes,
+        visualDescription: existsSync(join(dir, "final-review", "description.json"))
+          ? JSON.stringify(readJson(join(dir, "final-review", "description.json"))) : null,
+      },
+      seedGroups: { authorSawHoldout: false, authoring: "AUTHORING_SEEDS", development: "DEVELOPMENT_REVIEW_SEEDS", final: "FINAL_HOLDOUT_SEEDS" },
+    });
+    writeArtAcceptance(dir, record);
+    const check = verifyArtAcceptance(dir, { configBytes: last.configBytes, briefText: briefsById[brief.id].text, runtimeId: run.runtimeId });
+    const flags = acceptanceFlags(dir);
+    built += 1;
+    console.log(`${brief.id} ${verdict.verdict.padEnd(6)} receipt ${check.accepted ? "ACCEPTED" : check.reasonCode} | atlas ${flags.AUTHOR_USES_RUNTIME_PARAMETER_ATLAS} | blinded ${flags.FINAL_REVIEW_BLINDED} | describedFirst ${flags.VISUAL_DESCRIPTION_BEFORE_BRIEF_COMPARISON} | unanswered ${flags.CRITIQUE_WITHOUT_AUTHOR_RESPONSE} | mutatedAfterUnblind ${flags.FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND}`);
+  }
+  console.log(`\nreceipts built: ${built}`);
+}
+
+const phases = { author: phaseAuthor, revise: phaseRevise, holdout: phaseHoldout, receipt: phaseReceipt, report: async () => phaseReport() };
 if (!phases[phase]) { console.error(`unknown phase "${phase}"; one of ${Object.keys(phases).join(", ")}`); process.exit(2); }
 await phases[phase]();

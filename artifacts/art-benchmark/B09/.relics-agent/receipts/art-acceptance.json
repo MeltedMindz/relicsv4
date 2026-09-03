@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T17:59:11.943Z",
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "chainId": 8453,
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+  "acceptedConfigHash": "fb3dc63b23240ee8179c33184da95296e5e3ddd14ea51b92dae597d15ddcdb2f",
+  "acceptedConfigBytes": 69,
+  "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "requiredCapabilities": {
+      "MEDIUM": [],
+      "MOTIF": [
+        "MONUMENT"
+      ],
+      "AESTHETIC": [
+        "MONUMENTAL",
+        "BRUTALIST"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "FRACTURE",
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "7a24437a6477a59f2186787f05a63dc488e9c5aeb914714734c3bf3b0cf02aa9"
+  },
+  "direction": {
+    "hash": "f800cabdd500d226c8776c62a47f56778a6275f3df241a0292f45697b9ad8148",
+    "createdAt": "2026-09-03T17:48:37.232Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "rules[n].shapeSet",
+      "rules[n].ruleSet",
+      "ruleCount",
+      "rules[n].contraction",
+      "rules[n].branch and rules[n].prune",
+      "rules[n].symSet",
+      "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+      "rules[n].depthMin / depthMax",
+      "rules[n].stroke and the OUTLINE flag",
+      "rules[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "ruleCount",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "rules[n].drive x sensor x curve",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": []
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B09",
+      "configHash": "fb3dc63b23240ee8179c33184da95296e5e3ddd14ea51b92dae597d15ddcdb2f",
+      "critiqueHash": "12ce78b0e5d9d3cafa67367061e780a5f8e2b4ff15471e05c4c5e8016d651f59",
+      "findings": [
+        "hollow-outline-no-mass",
+        "mass-undersized-with-comfortable-margin",
+        "ochre-is-the-mass-not-the-seam",
+        "stress-is-a-zoom-not-a-fracture",
+        "seed-families-clone-at-120"
+      ],
+      "dispositions": [
+        {
+          "findingId": "hollow-outline-no-mass",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "mass-undersized-with-comfortable-margin",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "ochre-is-the-mass-not-the-seam",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "stress-is-a-zoom-not-a-fracture",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "seed-families-clone-at-120",
+          "disposition": "ACCEPT"
+        }
+      ],
+      "responseHash": "82d3e99f60706d83525040d46121a7837eba3cde9cb7e837edb21d069df7535e",
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B09",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "fb3dc63b23240ee8179c33184da95296e5e3ddd14ea51b92dae597d15ddcdb2f",
+    "inputHashes": [
+      "4942bd35760039b13b55aaeca3058d039d7e2a07b36ff3f568dd2abf715d135f",
+      "1efd492da7dea51d52a74bf4df4719761012b1b7368906510793b7830cd1dabb",
+      "2faf88f0205573779143e993beff51335efe978d5b70c7ab8396ab00e98e216f",
+      "4a83488ea6e60c1ba31bc9d81ea0ef8c616ac8bda1c146a3eea3106f0990d154",
+      "2bed6b9a07bfcab9d73ee169f0c9501e4e88dc8d5d99f3a4adbc9819c0b084a3"
+    ],
+    "visualDescriptionHash": "ec4d104ebdd5ad0f7319021082857c42e7ae30b99a9b8660c588f5dc305cbfb5",
+    "hash": "76c8f13cc8a9372e5a2b75dba5f8fcc8ec3e42d1e53b374d49611e8334bca2be"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}

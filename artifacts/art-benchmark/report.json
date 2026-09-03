@@ -1,0 +1,153 @@
+{
+  "generatedAt": "2026-09-03T17:59:12.053Z",
+  "rows": [
+    {
+      "id": "B01",
+      "axis": "architectural",
+      "outcome": "ADMITTED",
+      "runtime": "GEOMETRIC_RECURSION_V1",
+      "template": "GEOMETRIC_RECURSION_V1/compass",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B01",
+      "configHashAtUnblind": "5efc12040ca3feb460f59316825b4962035d8744d60b7fecf4b264cfa1fb0db6",
+      "acceptedConfigHash": "5efc12040ca3feb460f59316825b4962035d8744d60b7fecf4b264cfa1fb0db6"
+    },
+    {
+      "id": "B02",
+      "axis": "botanical-abstraction",
+      "outcome": "ADMITTED",
+      "runtime": "VECTOR_COMPOSITION_V1",
+      "template": "VECTOR_COMPOSITION_V1/alluvium",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B02",
+      "configHashAtUnblind": "31242a5123e3a5dfc9cc3957982eb166a5d4f79b41648d78260aba3931b475fc",
+      "acceptedConfigHash": "31242a5123e3a5dfc9cc3957982eb166a5d4f79b41648d78260aba3931b475fc"
+    },
+    {
+      "id": "B03",
+      "axis": "geological-layered",
+      "outcome": "ADMITTED",
+      "runtime": "VECTOR_COMPOSITION_V1",
+      "template": "VECTOR_COMPOSITION_V1/alluvium",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B03",
+      "configHashAtUnblind": "e82728445a38867f07d2ec1d36258d21c70906f8a9b3b4d2f0a00c79561f10b0",
+      "acceptedConfigHash": "e82728445a38867f07d2ec1d36258d21c70906f8a9b3b4d2f0a00c79561f10b0"
+    },
+    {
+      "id": "B04",
+      "axis": "pure-abstract",
+      "outcome": "ADMITTED",
+      "runtime": "VECTOR_COMPOSITION_V1",
+      "template": "VECTOR_COMPOSITION_V1/alluvium",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B04",
+      "configHashAtUnblind": "b96c694cc0c133ba2f982ad6378080cb4b2d26d75c73a0ca6e38dd96ac529b5e",
+      "acceptedConfigHash": "b96c694cc0c133ba2f982ad6378080cb4b2d26d75c73a0ca6e38dd96ac529b5e"
+    },
+    {
+      "id": "B05",
+      "axis": "minimal",
+      "outcome": "ADMITTED",
+      "runtime": "GEOMETRIC_RECURSION_V1",
+      "template": "GEOMETRIC_RECURSION_V1/compass",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B05",
+      "configHashAtUnblind": "c963b485d4fab05ca6c008e48051fbedc4dcf26b2fa306cf92af7cc412151bac",
+      "acceptedConfigHash": "c963b485d4fab05ca6c008e48051fbedc4dcf26b2fa306cf92af7cc412151bac"
+    },
+    {
+      "id": "B06",
+      "axis": "dense",
+      "outcome": "ADMITTED",
+      "runtime": "VECTOR_COMPOSITION_V1",
+      "template": "VECTOR_COMPOSITION_V1/alluvium",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B06",
+      "configHashAtUnblind": "7558abc0cd7fe820a49bb4cb73d38ce00bf58b17adaf207cf8ab7ee0462bd588",
+      "acceptedConfigHash": "7558abc0cd7fe820a49bb4cb73d38ce00bf58b17adaf207cf8ab7ee0462bd588"
+    },
+    {
+      "id": "B07",
+      "axis": "organic",
+      "outcome": "ADMITTED",
+      "runtime": "VECTOR_COMPOSITION_V1",
+      "template": "VECTOR_COMPOSITION_V1/alluvium",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B07",
+      "configHashAtUnblind": "786eabeab213f60ff7d10889930c430b2baa5f9fa15fee0b24005ba54ad72d0d",
+      "acceptedConfigHash": "786eabeab213f60ff7d10889930c430b2baa5f9fa15fee0b24005ba54ad72d0d"
+    },
+    {
+      "id": "B08",
+      "axis": "mechanical",
+      "outcome": "ADMITTED",
+      "runtime": "GEOMETRIC_RECURSION_V1",
+      "template": "GEOMETRIC_RECURSION_V1/compass",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B08",
+      "configHashAtUnblind": "b9234a78e1760a1f912e9b9ae6886e33f3ab4fc1f3f9ddee1cc158d002ea1a8a",
+      "acceptedConfigHash": "b9234a78e1760a1f912e9b9ae6886e33f3ab4fc1f3f9ddee1cc158d002ea1a8a"
+    },
+    {
+      "id": "B09",
+      "axis": "monumental",
+      "outcome": "ADMITTED",
+      "runtime": "GEOMETRIC_RECURSION_V1",
+      "template": "GEOMETRIC_RECURSION_V1/compass",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B09",
+      "configHashAtUnblind": "fb3dc63b23240ee8179c33184da95296e5e3ddd14ea51b92dae597d15ddcdb2f",
+      "acceptedConfigHash": "fb3dc63b23240ee8179c33184da95296e5e3ddd14ea51b92dae597d15ddcdb2f"
+    },
+    {
+      "id": "B10",
+      "axis": "delicate",
+      "outcome": "ADMITTED",
+      "runtime": "GEOMETRIC_RECURSION_V1",
+      "template": "GEOMETRIC_RECURSION_V1/compass",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B10",
+      "configHashAtUnblind": "13b0470719aba349daaf246a071c472874228756ac405518222ad6d905714b1b",
+      "acceptedConfigHash": "13b0470719aba349daaf246a071c472874228756ac405518222ad6d905714b1b"
+    },
+    {
+      "id": "B11",
+      "axis": "market-heavy",
+      "outcome": "ADMITTED",
+      "runtime": "GEOMETRIC_RECURSION_V1",
+      "template": "GEOMETRIC_RECURSION_V1/compass",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B11",
+      "configHashAtUnblind": "6f5aff94824b3bba16d2462cea67c3fbaba7b6e9750306d5f0c1c0ae69b9a2c6",
+      "acceptedConfigHash": "6f5aff94824b3bba16d2462cea67c3fbaba7b6e9750306d5f0c1c0ae69b9a2c6"
+    },
+    {
+      "id": "B12",
+      "axis": "market-light",
+      "outcome": "ADMITTED",
+      "runtime": "GEOMETRIC_RECURSION_V1",
+      "template": "GEOMETRIC_RECURSION_V1/compass",
+      "rounds": 1,
+      "verdict": "REFUSE",
+      "reviewerId": "final-B12",
+      "configHashAtUnblind": "e5ad94bc16f8dc33ee9eb1d8cbb523d0f7255840d0d0de2a8c6517b60c8b6861",
+      "acceptedConfigHash": "e5ad94bc16f8dc33ee9eb1d8cbb523d0f7255840d0d0de2a8c6517b60c8b6861"
+    }
+  ],
+  "blindPass": 0,
+  "total": 12,
+  "byRuntime": {},
+  "mutatedAfterUnblind": 0
+}

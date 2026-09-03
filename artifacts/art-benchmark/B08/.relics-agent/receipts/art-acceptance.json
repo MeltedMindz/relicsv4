@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T17:59:11.943Z",
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "chainId": 8453,
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+  "acceptedConfigHash": "b9234a78e1760a1f912e9b9ae6886e33f3ab4fc1f3f9ddee1cc158d002ea1a8a",
+  "acceptedConfigBytes": 70,
+  "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "RECURSIVE_GEOMETRY",
+        "RADIAL_SYSTEM"
+      ],
+      "MOTIF": [
+        "MACHINE"
+      ],
+      "AESTHETIC": [
+        "DELICATE"
+      ],
+      "MARKET_TRANSFORMATION": [],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "7b1ba14a5dc900ca2bfdfea0069f50e1c4654d619ad3c291451bd8c07675921b"
+  },
+  "direction": {
+    "hash": "fbae7f362748e19b78e07cda0886d41ba5842131edb151ebedc9e4febbe1a771",
+    "createdAt": "2026-09-03T17:48:35.194Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "rules[n].shapeSet",
+      "rules[n].ruleSet",
+      "ruleCount",
+      "rules[n].contraction",
+      "rules[n].branch and rules[n].prune",
+      "rules[n].symSet",
+      "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+      "rules[n].depthMin / depthMax",
+      "rules[n].stroke and the OUTLINE flag",
+      "rules[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "ruleCount",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "rules[n].drive x sensor x curve",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": []
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B08",
+      "configHash": "b9234a78e1760a1f912e9b9ae6886e33f3ab4fc1f3f9ddee1cc158d002ea1a8a",
+      "critiqueHash": "f45568ad4e7ee85fc7dded08a6b8dd5f66071295c1cc4af24133370e4ae37e0b",
+      "findings": [
+        "ground-is-lit-brass-not-dark",
+        "filled-mass-not-fine-line",
+        "one-ring-not-a-nested-assembly",
+        "seeds-collapse-at-120px",
+        "stress-inflates-clips-and-collides"
+      ],
+      "dispositions": [
+        {
+          "findingId": "ground-is-lit-brass-not-dark",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "filled-mass-not-fine-line",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "one-ring-not-a-nested-assembly",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "seeds-collapse-at-120px",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "stress-inflates-clips-and-collides",
+          "disposition": "ACCEPT"
+        }
+      ],
+      "responseHash": "310c82067c1ff2fad45b8d3ca0f2cf0046c8646caa86e4b4c6b1480b1a449de6",
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B08",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "b9234a78e1760a1f912e9b9ae6886e33f3ab4fc1f3f9ddee1cc158d002ea1a8a",
+    "inputHashes": [
+      "9a274f68554e81474afbd1c5122037dcc886e6c4b6266412a9a3b9ba9867f327",
+      "bceaccf1537232a3f61ec4f5ba8a90a0d5b1b29a5cbd7c94d74a1ec25a9fe5b1",
+      "202f87e8eea8bd6e61c516bfec07a8bbb92bab53dc31b25653fd6b71c3a2b588",
+      "c76d857b10f0b7eada4ccbfee55c7a5e405634fadda370744a8d49e2f17d94dc",
+      "1e2817cfe687a637013fe991819fab559e040e9449681eb8336ea6761a14a364"
+    ],
+    "visualDescriptionHash": "94c009419b99cee86fbe6241ec527caefbba35427ea8973dcf29afa76f8fbf28",
+    "hash": "06aab7dbd7335237ddad4eb3ae6a5166141858465b09b7aa1d6791cdbdbb1ba6"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}
