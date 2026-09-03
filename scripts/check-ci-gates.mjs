@@ -103,6 +103,11 @@ const REQUIRED_GATES = [
   // red. Registered so the step cannot quietly leave the workflow; a SKIPPED run of it is still not
   // a pass, and the harness reports that itself rather than relying on this list to say so.
   { id: "WAVE1_RUNTIME_E2E_CONTROLS", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:wave1:controls" },
+  // The full MODE B rehearsal and the crash-resume proof. Registered for the same reason and after
+  // a sharper lesson: neither ran anywhere, and `e2e:autonomous` was failing at SIGNED on a fresh
+  // clone — it wrote no authorization while the signer server requires one — with nothing to say so.
+  { id: "AUTONOMOUS_FULL_LAUNCH_E2E", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:autonomous" },
+  { id: "BROADCAST_CRASH_RESUME_E2E", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:resume" },
 
   // --- docs ---
   { id: "DOC_LINKS", workflow: "docs.yml", job: "links", needle: "npm run docs:links" },

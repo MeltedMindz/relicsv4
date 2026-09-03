@@ -71,8 +71,13 @@ suggest switching runtime to unlock a launch, or delete a generator.
 ## 2. Scaffold
 
 ```bash
-npm run kit -- init my-project --template minimal
+npm run kit -- init ../my-project --template minimal
 ```
+
+**Scaffold outside this checkout.** `relics init` writes wherever you point it, and a project
+created inside the repository is untracked, not covered by `.gitignore`, and gets swept into a
+commit by the next `git add -A`. The CLI warns you if a target lands inside; `../` is the form that
+does not. Every later command in this guide takes the same path.
 
 You get a directory that looks like this:
 
@@ -120,7 +125,7 @@ to what you actually want.
 ## 4. Open the studio
 
 ```bash
-npm run kit -- dev my-project
+npm run kit -- dev ../my-project
 ```
 
 Serves a page on `127.0.0.1` — render any seed, drag the market sliders to see how the art
@@ -167,8 +172,8 @@ recognisably itself while the whole collection moves together.
 ## 6. Look at a lot of seeds
 
 ```bash
-npm run kit -- preview my-project --count 8
-npm run kit -- test-seeds my-project --count 100
+npm run kit -- preview ../my-project --count 8
+npm run kit -- test-seeds ../my-project --count 100
 ```
 
 `preview` writes deterministic SVGs into `previews/` plus a contact sheet at
@@ -200,7 +205,7 @@ not, and export will refuse it.
 ## 7. Validate
 
 ```bash
-npm run kit -- validate my-project
+npm run kit -- validate ../my-project
 ```
 
 Runs every check the importer runs, and writes nothing. This is the same code path `export` uses on
@@ -214,7 +219,7 @@ Warnings do not fail a run; errors do. Exit code is `0` on pass, `1` otherwise.
 ## 8. Export
 
 ```bash
-npm run kit -- export my-project --output my-project.relics
+npm run kit -- export ../my-project --output ../my-project.relics
 ```
 
 Validates, then writes. A project that fails validation is never packaged, and there is no
@@ -224,7 +229,7 @@ It prints a bundle hash. Keep it — the importer derives the same one from your
 compare them.
 
 ```bash
-npm run kit -- inspect my-project.relics
+npm run kit -- inspect ../my-project.relics
 ```
 
 Reads a bundle and prints what it declares — entries, sizes, identity, supply, runtime, market,
@@ -234,7 +239,7 @@ bundle somebody sent you.
 ## 9. Circulate a draft, if you need to
 
 ```bash
-npm run kit -- export my-project --output my-project.relics-draft --draft
+npm run kit -- export ../my-project --output ../my-project.relics-draft --draft
 ```
 
 A draft is for circulating work in progress. It still has to pass every check a final bundle

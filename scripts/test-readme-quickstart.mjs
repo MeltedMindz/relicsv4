@@ -25,7 +25,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readContainer, validateBundleBytes, BUNDLE_MAGIC, DRAFT_MAGIC } from "../packages/project-schema/index.js";
 
@@ -56,9 +56,19 @@ function quickstartCommands() {
   return commands;
 }
 
+/**
+ * Run the CLI as the README documents it, FROM THE TEMP DIRECTORY.
+ *
+ * `cwd` is not a detail. Every documented path is relative, and the resolver below rewrites only the
+ * tokens it recognises — so the moment the README says something this harness did not expect, the
+ * unrecognised path is resolved against the working directory instead. Inheriting the repository's
+ * cwd meant that a drifted document made this gate scaffold a project INTO the repository while
+ * testing it, which is the exact hazard the gate now checks the document for. Anchoring cwd in the
+ * temp directory makes the harness structurally unable to write here, whatever the README says.
+ */
 function run(args, { expectFailure = false } = {}) {
   try {
-    const out = execFileSync(process.execPath, [CLI, ...args], { encoding: "utf8", env: { ...process.env, NO_COLOR: "1" }, maxBuffer: 64 * 1024 * 1024 });
+    const out = execFileSync(process.execPath, [CLI, ...args], { cwd: dir, encoding: "utf8", env: { ...process.env, NO_COLOR: "1" }, maxBuffer: 64 * 1024 * 1024 });
     return { ok: true, out };
   } catch (err) {
     const out = `${err.stdout ?? ""}${err.stderr ?? ""}`;
@@ -75,12 +85,37 @@ try {
   const commands = quickstartCommands();
   if (commands.length === 0) throw new Error("README.md contains no `npm run kit -- …` commands — the quickstart moved, and this test is checking nothing.");
 
-  // The README's project directory name, as written. Resolved into the temp dir so the run cannot
-  // touch the repository.
-  const PROJECT_TOKEN = "my-project";
-  const project = join(dir, PROJECT_TOKEN);
+  // The README's project path, AS WRITTEN — `../my-project`, outside the checkout. Mapped onto the
+  // temp directory so the run touches neither the repository nor its parent; what is under test is
+  // the command, not the literal location.
+  const PROJECT_TOKEN = "../my-project";
+  const BUNDLE_TOKEN = `${PROJECT_TOKEN}.relics`;
+  const project = join(dir, "my-project");
   const bundle = join(dir, "my-project.relics");
-  const resolve = (arg) => (arg === PROJECT_TOKEN ? project : arg === `${PROJECT_TOKEN}.relics` ? bundle : arg);
+  const resolve = (arg) => (arg === PROJECT_TOKEN ? project : arg === BUNDLE_TOKEN ? bundle : arg);
+
+  // THE PATH ITSELF IS A CLAIM, AND REWRITING IT IS EXACTLY WHAT HID THE DEFECT.
+  //
+  // This harness has always mapped the README's project token into a temp directory, which is right
+  // — a documentation test must not write into the repository. But it also means the harness cannot
+  // see WHERE the documented path would have landed, and for a long time the README taught
+  // `init my-project` while AGENTS.md §2 marked that exact form as bad: it scaffolds inside the
+  // checkout, untracked and one `git add -A` from being committed. The quickstart gate was green
+  // the whole time, because it had resolved the hazard away before running anything.
+  //
+  // So the token is asserted BEFORE it is resolved. This is a check on the document.
+  for (const command of commands) {
+    const [verb] = command;
+    if (verb !== "init") continue;
+    const target = command.find((a) => !a.startsWith("-") && a !== "init");
+    if (!target) continue;
+    if (isAbsolute(target)) continue;
+    const landed = resolvePath(ROOT, target);
+    const rel = relative(ROOT, landed);
+    if (!rel.startsWith("..")) {
+      problems.push(`the README scaffolds to \`${target}\`, which lands INSIDE this checkout at ${rel || "."}. AGENTS.md §2 marks that form bad: the project is untracked, not covered by .gitignore, and the next \`git add -A\` commits somebody's work product into this repository. Document the \`../\` form.`);
+    }
+  }
 
   let placeholderRefused = false;
 

@@ -430,7 +430,8 @@ is not an approved election.
 
 ### The refusal codes
 
-Handle all thirteen; they are a closed set:
+The SHAPE guard's thirteen. This is a closed union in TypeScript and it is **not** the whole
+vocabulary that reaches you over the wire — see below:
 
 `CHAIN_NOT_ALLOWED` · `TARGET_NOT_CANONICAL_FACTORY` · `SELECTOR_NOT_ALLOWED` ·
 `VALUE_EXCEEDS_POLICY` · `GAS_EXCEEDS_POLICY` · `GAS_PRICE_EXCEEDS_POLICY` ·
@@ -439,12 +440,25 @@ Handle all thirteen; they are a closed set:
 `NO_APPROVED_BUILD`
 
 Two guards carry their own codes beside these, and a client should branch on the string rather than
-on the closed union: the GRANT guard (`NO_AUTHORIZATION`, `AUTHORIZATION_EXPIRED`,
-`RUNTIME_NOT_AUTHORIZED`, `SIMULATION_CALLDATA_MISMATCH`, …) and the ART SELECTOR guard
+on the closed union: the GRANT guard's sixteen (`NO_AUTHORIZATION`, `AUTHORIZATION_UNREADABLE`,
+`AUTHORIZATION_REVOKED`, `AUTHORIZATION_EXPIRED`, `AUTHORIZATION_CONSUMED`,
+`AUTHORIZATION_NOT_FOR_THIS_SIGNER`, `BROADCAST_NOT_AUTHORIZED`, `CHAIN_NOT_AUTHORIZED`,
+`TOTAL_GAS_COST_EXCEEDS_AUTHORIZATION`, `NO_SIMULATION_RECEIPT`, `SIMULATION_CALLDATA_MISMATCH`,
+`LAUNCH_PARAMS_FIELD_COUNT_WRONG`, `RECIPIENT_NOT_AUTHORIZED`, `ANTISNIPE_NOT_AUTHORIZED`,
+`ROYALTY_EXCEEDS_AUTHORIZATION`, `RUNTIME_NOT_AUTHORIZED`) and the ART SELECTOR guard's four
 (`ART_SELECTOR_MALFORMED`, `ART_SELECTOR_NOT_APPROVED`, `ART_RUNTIME_NOT_ALLOWED_BY_POLICY`,
-`ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`). Widening the thirteen would be a cross-package contract change;
-keeping a guard's codes local is the precedent the grant guard set, and the codes still reach the
-agent verbatim.
+`ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`). Thirty-three in total. Widening the thirteen would be a
+cross-package contract change; keeping a guard's codes local is the precedent the grant guard set,
+and the codes still reach the agent verbatim.
+
+**The grant guard runs FIRST, and it shadows two of the thirteen.** Whether the creator still
+permits any launch is cheaper to answer than whether these particular bytes have the right shape,
+so a revoked or expired grant refuses before the signer decodes calldata it will never sign. The
+consequence is that in production — `signerServer`, where `requireGrant` is true and has no escape
+hatch — a wrong chain is refused `CHAIN_NOT_AUTHORIZED` rather than `CHAIN_NOT_ALLOWED`, and an
+over-budget native value is refused `TOTAL_GAS_COST_EXCEEDS_AUTHORIZATION` rather than
+`VALUE_EXCEEDS_POLICY`. Both codes still exist and both still fire when the grant's own bound is
+looser than the policy's; they are simply not the ones an agent will usually see.
 
 **No approved build is not "no constraints".** Without one there is nothing to compare the hashes
 or the target against, so every other check would pass vacuously. It is refused, and it is refused

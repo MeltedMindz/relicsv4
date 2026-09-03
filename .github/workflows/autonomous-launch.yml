@@ -79,6 +79,25 @@ jobs:
           foundryup
           npm run e2e:wave1:controls
 
+      - name: the full MODE B rehearsal, and the crash that must not launch twice
+        # THE DOCUMENTED PROOFS, RUN. Both are named in the launch-agent guide under "Running the
+        # proof yourself" and until now neither appeared in any workflow — which is exactly how
+        # `e2e:autonomous` came to fail at SIGNED with NO_AUTHORIZATION on a fresh clone while every
+        # tick here stayed green. A harness nothing runs is decorative.
+        #
+        # `e2e:resume` spawns the autonomous harness with --crash-after-send, so it covers the
+        # broadcast path a second time from the other side: SIGKILL between the send returning and
+        # the hash being recorded, then a resume that must find the launch on chain and send
+        # nothing. Its own negative control — an intent for a launch that never happened must still
+        # score SAFE_TO_SEND — is what stops ALREADY_LAUNCHED being a constant.
+        #
+        # Same skip semantics as the step above: no anvil or no endpoint reports SKIPPED and exits
+        # 0, loudly, and a skipped run is not a passed one.
+        run: |
+          export PATH="$HOME/.foundry/bin:$PATH"
+          npm run e2e:autonomous
+          npm run e2e:resume
+
       - name: adversarial public-export review
         # Everything here is world-readable the moment it is pushed. Walks every added file, counts
         # the verbatim vendored copies rather than pretending there are none, and checks each file
