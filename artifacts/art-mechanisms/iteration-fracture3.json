@@ -1,0 +1,2945 @@
+{
+  "generatedAt": "2026-09-03T18:45:21.132Z",
+  "chainId": 8453,
+  "registry": "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
+  "runtimes": {
+    "VECTOR_COMPOSITION_V1": {
+      "address": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+      "codeBytes": 24455
+    }
+  },
+  "seeds": [
+    500003,
+    508194,
+    516385,
+    524576,
+    532767,
+    540958,
+    549149,
+    557340
+  ],
+  "measuredAt120px": true,
+  "rows": [
+    {
+      "name": "F3-count-VOLUME",
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "note": "third register on VOLUME_TIER, which is measured dead on neutral-to-stress and alive on neutral-to-recovery",
+      "ok": true,
+      "configBytesLength": 67,
+      "seeds": 8,
+      "stateDe": {
+        "ns": {
+          "mean": 4.484,
+          "min": 0.884
+        },
+        "nr": {
+          "mean": 1.842,
+          "min": 0.69
+        },
+        "sr": {
+          "mean": 4.722,
+          "min": 1.231
+        }
+      },
+      "weakestPairing": "nr",
+      "weakestPairingMean": 1.842,
+      "seedDe": {
+        "mean": 16.579,
+        "min": 8.375
+      },
+      "states": {
+        "neutral": {
+          "inkMean": 0.278,
+          "inkMin": 0.161,
+          "extentMean": 0.772,
+          "extentMin": 0.583,
+          "marginMinMean": 0.092,
+          "edgeContactSeeds": 1,
+          "componentsMean": 5.25,
+          "largestShareMean": 0.79,
+          "blankSeeds": 0
+        },
+        "stress": {
+          "inkMean": 0.341,
+          "inkMin": 0.306,
+          "extentMean": 0.825,
+          "extentMin": 0.692,
+          "marginMinMean": 0.059,
+          "edgeContactSeeds": 1,
+          "componentsMean": 4.5,
+          "largestShareMean": 0.877,
+          "blankSeeds": 0
+        },
+        "recovery": {
+          "inkMean": 0.288,
+          "inkMin": 0.186,
+          "extentMean": 0.774,
+          "extentMin": 0.608,
+          "marginMinMean": 0.089,
+          "edgeContactSeeds": 1,
+          "componentsMean": 5.375,
+          "largestShareMean": 0.812,
+          "blankSeeds": 0
+        }
+      },
+      "perSeed": {
+        "neutral": [
+          {
+            "seed": 500003,
+            "ink": 0.2722222222222222,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.667,
+            "extent": 0.683,
+            "edgeContact": 0,
+            "marginMin": 0.133,
+            "pixels": 3920,
+            "components": 4,
+            "largest": 3357,
+            "inkPixels": 3920,
+            "largestShare": 0.856,
+            "sizes": [
+              3357,
+              328,
+              223,
+              12
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.23083333333333333,
+            "empty": false,
+            "extentX": 0.625,
+            "extentY": 0.642,
+            "extent": 0.642,
+            "edgeContact": 0,
+            "marginMin": 0.15,
+            "pixels": 3324,
+            "components": 2,
+            "largest": 3216,
+            "inkPixels": 3324,
+            "largestShare": 0.968,
+            "sizes": [
+              3216,
+              108
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.34326388888888887,
+            "empty": false,
+            "extentX": 0.825,
+            "extentY": 0.858,
+            "extent": 0.858,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 4943,
+            "components": 2,
+            "largest": 4507,
+            "inkPixels": 4943,
+            "largestShare": 0.912,
+            "sizes": [
+              4507,
+              436
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.3877777777777778,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 124,
+            "marginMin": 0,
+            "pixels": 5584,
+            "components": 11,
+            "largest": 2846,
+            "inkPixels": 5584,
+            "largestShare": 0.51,
+            "sizes": [
+              2846,
+              664,
+              583,
+              489,
+              399,
+              224,
+              200,
+              109,
+              34,
+              24,
+              12
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.16118055555555555,
+            "empty": false,
+            "extentX": 0.867,
+            "extentY": 0.758,
+            "extent": 0.867,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 2321,
+            "components": 13,
+            "largest": 1463,
+            "inkPixels": 2321,
+            "largestShare": 0.63,
+            "sizes": [
+              1463,
+              187,
+              172,
+              150,
+              88,
+              84,
+              67,
+              39,
+              21,
+              18,
+              18,
+              8
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.29368055555555556,
+            "empty": false,
+            "extentX": 0.692,
+            "extentY": 0.592,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 4229,
+            "components": 1,
+            "largest": 4229,
+            "inkPixels": 4229,
+            "largestShare": 1,
+            "sizes": [
+              4229
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.31555555555555553,
+            "empty": false,
+            "extentX": 0.85,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 4544,
+            "components": 5,
+            "largest": 2138,
+            "inkPixels": 4544,
+            "largestShare": 0.471,
+            "sizes": [
+              2138,
+              814,
+              744,
+              436,
+              412
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.22333333333333333,
+            "empty": false,
+            "extentX": 0.575,
+            "extentY": 0.583,
+            "extent": 0.583,
+            "edgeContact": 0,
+            "marginMin": 0.167,
+            "pixels": 3216,
+            "components": 4,
+            "largest": 3129,
+            "inkPixels": 3216,
+            "largestShare": 0.973,
+            "sizes": [
+              3129,
+              57,
+              18,
+              12
+            ]
+          }
+        ],
+        "stress": [
+          {
+            "seed": 500003,
+            "ink": 0.3379861111111111,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.692,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.108,
+            "pixels": 4867,
+            "components": 1,
+            "largest": 4867,
+            "inkPixels": 4867,
+            "largestShare": 1,
+            "sizes": [
+              4867
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.32729166666666665,
+            "empty": false,
+            "extentX": 0.758,
+            "extentY": 0.75,
+            "extent": 0.758,
+            "edgeContact": 0,
+            "marginMin": 0.067,
+            "pixels": 4713,
+            "components": 1,
+            "largest": 4713,
+            "inkPixels": 4713,
+            "largestShare": 1,
+            "sizes": [
+              4713
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.34881944444444446,
+            "empty": false,
+            "extentX": 0.825,
+            "extentY": 0.858,
+            "extent": 0.858,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 5023,
+            "components": 2,
+            "largest": 4587,
+            "inkPixels": 5023,
+            "largestShare": 0.913,
+            "sizes": [
+              4587,
+              436
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.39402777777777775,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 124,
+            "marginMin": 0,
+            "pixels": 5674,
+            "components": 12,
+            "largest": 2736,
+            "inkPixels": 5674,
+            "largestShare": 0.482,
+            "sizes": [
+              2736,
+              664,
+              582,
+              489,
+              399,
+              397,
+              200,
+              109,
+              34,
+              32,
+              24,
+              8
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.305625,
+            "empty": false,
+            "extentX": 0.867,
+            "extentY": 0.758,
+            "extent": 0.867,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 4401,
+            "components": 11,
+            "largest": 3295,
+            "inkPixels": 4401,
+            "largestShare": 0.749,
+            "sizes": [
+              3295,
+              550,
+              162,
+              150,
+              84,
+              66,
+              39,
+              21,
+              18,
+              10,
+              6
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.3275,
+            "empty": false,
+            "extentX": 0.692,
+            "extentY": 0.6,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 4716,
+            "components": 1,
+            "largest": 4716,
+            "inkPixels": 4716,
+            "largestShare": 1,
+            "sizes": [
+              4716
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.3752083333333333,
+            "empty": false,
+            "extentX": 0.85,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 5403,
+            "components": 3,
+            "largest": 4862,
+            "inkPixels": 5403,
+            "largestShare": 0.9,
+            "sizes": [
+              4862,
+              412,
+              129
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.31166666666666665,
+            "empty": false,
+            "extentX": 0.767,
+            "extentY": 0.883,
+            "extent": 0.883,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 4488,
+            "components": 5,
+            "largest": 4363,
+            "inkPixels": 4488,
+            "largestShare": 0.972,
+            "sizes": [
+              4363,
+              57,
+              40,
+              16,
+              12
+            ]
+          }
+        ],
+        "recovery": [
+          {
+            "seed": 500003,
+            "ink": 0.28097222222222223,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.667,
+            "extent": 0.683,
+            "edgeContact": 0,
+            "marginMin": 0.133,
+            "pixels": 4046,
+            "components": 4,
+            "largest": 3448,
+            "inkPixels": 4046,
+            "largestShare": 0.852,
+            "sizes": [
+              3448,
+              328,
+              252,
+              18
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.21083333333333334,
+            "empty": false,
+            "extentX": 0.625,
+            "extentY": 0.625,
+            "extent": 0.625,
+            "edgeContact": 0,
+            "marginMin": 0.15,
+            "pixels": 3036,
+            "components": 2,
+            "largest": 2902,
+            "inkPixels": 3036,
+            "largestShare": 0.956,
+            "sizes": [
+              2902,
+              134
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.35291666666666666,
+            "empty": false,
+            "extentX": 0.825,
+            "extentY": 0.867,
+            "extent": 0.867,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 5082,
+            "components": 3,
+            "largest": 4640,
+            "inkPixels": 5082,
+            "largestShare": 0.913,
+            "sizes": [
+              4640,
+              436,
+              6
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.3921527777777778,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 124,
+            "marginMin": 0,
+            "pixels": 5647,
+            "components": 12,
+            "largest": 2778,
+            "inkPixels": 5647,
+            "largestShare": 0.492,
+            "sizes": [
+              2778,
+              676,
+              585,
+              489,
+              415,
+              246,
+              232,
+              130,
+              45,
+              32,
+              11,
+              8
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.18555555555555556,
+            "empty": false,
+            "extentX": 0.867,
+            "extentY": 0.767,
+            "extent": 0.867,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 2672,
+            "components": 13,
+            "largest": 1786,
+            "inkPixels": 2672,
+            "largestShare": 0.668,
+            "sizes": [
+              1786,
+              187,
+              172,
+              162,
+              88,
+              84,
+              67,
+              39,
+              27,
+              21,
+              18,
+              13
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.30027777777777775,
+            "empty": false,
+            "extentX": 0.692,
+            "extentY": 0.592,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 4324,
+            "components": 1,
+            "largest": 4324,
+            "inkPixels": 4324,
+            "largestShare": 1,
+            "sizes": [
+              4324
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.33006944444444447,
+            "empty": false,
+            "extentX": 0.85,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 4753,
+            "components": 4,
+            "largest": 3062,
+            "inkPixels": 4753,
+            "largestShare": 0.644,
+            "sizes": [
+              3062,
+              824,
+              445,
+              422
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.2507638888888889,
+            "empty": false,
+            "extentX": 0.608,
+            "extentY": 0.583,
+            "extent": 0.608,
+            "edgeContact": 0,
+            "marginMin": 0.142,
+            "pixels": 3611,
+            "components": 4,
+            "largest": 3495,
+            "inkPixels": 3611,
+            "largestShare": 0.968,
+            "sizes": [
+              3495,
+              57,
+              40,
+              19
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "F3-count-EPOCH",
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "note": "same on EPOCH",
+      "ok": true,
+      "configBytesLength": 67,
+      "seeds": 8,
+      "stateDe": {
+        "ns": {
+          "mean": 4.545,
+          "min": 0.891
+        },
+        "nr": {
+          "mean": 2.14,
+          "min": 0.701
+        },
+        "sr": {
+          "mean": 5.025,
+          "min": 2.153
+        }
+      },
+      "weakestPairing": "nr",
+      "weakestPairingMean": 2.14,
+      "seedDe": {
+        "mean": 16.019,
+        "min": 8.107
+      },
+      "states": {
+        "neutral": {
+          "inkMean": 0.27,
+          "inkMin": 0.157,
+          "extentMean": 0.77,
+          "extentMin": 0.583,
+          "marginMinMean": 0.095,
+          "edgeContactSeeds": 1,
+          "componentsMean": 5.375,
+          "largestShareMean": 0.793,
+          "blankSeeds": 0
+        },
+        "stress": {
+          "inkMean": 0.333,
+          "inkMin": 0.301,
+          "extentMean": 0.823,
+          "extentMin": 0.692,
+          "marginMinMean": 0.063,
+          "edgeContactSeeds": 1,
+          "componentsMean": 4.875,
+          "largestShareMean": 0.874,
+          "blankSeeds": 0
+        },
+        "recovery": {
+          "inkMean": 0.284,
+          "inkMin": 0.184,
+          "extentMean": 0.772,
+          "extentMin": 0.6,
+          "marginMinMean": 0.089,
+          "edgeContactSeeds": 1,
+          "componentsMean": 5.125,
+          "largestShareMean": 0.816,
+          "blankSeeds": 0
+        }
+      },
+      "perSeed": {
+        "neutral": [
+          {
+            "seed": 500003,
+            "ink": 0.2683333333333333,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.667,
+            "extent": 0.683,
+            "edgeContact": 0,
+            "marginMin": 0.133,
+            "pixels": 3864,
+            "components": 3,
+            "largest": 3313,
+            "inkPixels": 3864,
+            "largestShare": 0.857,
+            "sizes": [
+              3313,
+              328,
+              223
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.22722222222222221,
+            "empty": false,
+            "extentX": 0.625,
+            "extentY": 0.642,
+            "extent": 0.642,
+            "edgeContact": 0,
+            "marginMin": 0.15,
+            "pixels": 3272,
+            "components": 2,
+            "largest": 3180,
+            "inkPixels": 3272,
+            "largestShare": 0.972,
+            "sizes": [
+              3180,
+              92
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.32645833333333335,
+            "empty": false,
+            "extentX": 0.817,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 4701,
+            "components": 3,
+            "largest": 4189,
+            "inkPixels": 4701,
+            "largestShare": 0.891,
+            "sizes": [
+              4189,
+              400,
+              112
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.36180555555555555,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 112,
+            "marginMin": 0,
+            "pixels": 5210,
+            "components": 11,
+            "largest": 2766,
+            "inkPixels": 5210,
+            "largestShare": 0.531,
+            "sizes": [
+              2766,
+              650,
+              535,
+              450,
+              340,
+              185,
+              178,
+              75,
+              15,
+              12,
+              4
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.15652777777777777,
+            "empty": false,
+            "extentX": 0.858,
+            "extentY": 0.758,
+            "extent": 0.858,
+            "edgeContact": 0,
+            "marginMin": 0.067,
+            "pixels": 2254,
+            "components": 13,
+            "largest": 1464,
+            "inkPixels": 2254,
+            "largestShare": 0.65,
+            "sizes": [
+              1464,
+              187,
+              140,
+              108,
+              88,
+              72,
+              67,
+              57,
+              25,
+              18,
+              13,
+              9
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.28881944444444446,
+            "empty": false,
+            "extentX": 0.692,
+            "extentY": 0.592,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 4159,
+            "components": 1,
+            "largest": 4159,
+            "inkPixels": 4159,
+            "largestShare": 1,
+            "sizes": [
+              4159
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.3103472222222222,
+            "empty": false,
+            "extentX": 0.842,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 4469,
+            "components": 5,
+            "largest": 2125,
+            "inkPixels": 4469,
+            "largestShare": 0.475,
+            "sizes": [
+              2125,
+              803,
+              742,
+              410,
+              389
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.220625,
+            "empty": false,
+            "extentX": 0.575,
+            "extentY": 0.583,
+            "extent": 0.583,
+            "edgeContact": 0,
+            "marginMin": 0.167,
+            "pixels": 3177,
+            "components": 5,
+            "largest": 3068,
+            "inkPixels": 3177,
+            "largestShare": 0.966,
+            "sizes": [
+              3068,
+              57,
+              28,
+              12,
+              12
+            ]
+          }
+        ],
+        "stress": [
+          {
+            "seed": 500003,
+            "ink": 0.33611111111111114,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.692,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.108,
+            "pixels": 4840,
+            "components": 1,
+            "largest": 4840,
+            "inkPixels": 4840,
+            "largestShare": 1,
+            "sizes": [
+              4840
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.3240972222222222,
+            "empty": false,
+            "extentX": 0.758,
+            "extentY": 0.75,
+            "extent": 0.758,
+            "edgeContact": 0,
+            "marginMin": 0.067,
+            "pixels": 4667,
+            "components": 1,
+            "largest": 4667,
+            "inkPixels": 4667,
+            "largestShare": 1,
+            "sizes": [
+              4667
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.3313888888888889,
+            "empty": false,
+            "extentX": 0.817,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 4772,
+            "components": 3,
+            "largest": 4260,
+            "inkPixels": 4772,
+            "largestShare": 0.893,
+            "sizes": [
+              4260,
+              400,
+              112
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.3684722222222222,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 112,
+            "marginMin": 0,
+            "pixels": 5306,
+            "components": 12,
+            "largest": 2663,
+            "inkPixels": 5306,
+            "largestShare": 0.502,
+            "sizes": [
+              2663,
+              650,
+              535,
+              450,
+              356,
+              340,
+              178,
+              75,
+              32,
+              15,
+              8,
+              4
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.30145833333333333,
+            "empty": false,
+            "extentX": 0.858,
+            "extentY": 0.758,
+            "extent": 0.858,
+            "edgeContact": 0,
+            "marginMin": 0.067,
+            "pixels": 4341,
+            "components": 12,
+            "largest": 3172,
+            "inkPixels": 4341,
+            "largestShare": 0.731,
+            "sizes": [
+              3172,
+              550,
+              162,
+              140,
+              108,
+              72,
+              66,
+              24,
+              18,
+              13,
+              10,
+              6
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.32416666666666666,
+            "empty": false,
+            "extentX": 0.692,
+            "extentY": 0.6,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 4668,
+            "components": 1,
+            "largest": 4668,
+            "inkPixels": 4668,
+            "largestShare": 1,
+            "sizes": [
+              4668
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.37104166666666666,
+            "empty": false,
+            "extentX": 0.842,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 5343,
+            "components": 3,
+            "largest": 4825,
+            "inkPixels": 5343,
+            "largestShare": 0.903,
+            "sizes": [
+              4825,
+              389,
+              129
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.3090277777777778,
+            "empty": false,
+            "extentX": 0.767,
+            "extentY": 0.883,
+            "extent": 0.883,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 4450,
+            "components": 6,
+            "largest": 4278,
+            "inkPixels": 4450,
+            "largestShare": 0.961,
+            "sizes": [
+              4278,
+              59,
+              57,
+              28,
+              16,
+              12
+            ]
+          }
+        ],
+        "recovery": [
+          {
+            "seed": 500003,
+            "ink": 0.2768055555555556,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.667,
+            "extent": 0.683,
+            "edgeContact": 0,
+            "marginMin": 0.133,
+            "pixels": 3986,
+            "components": 4,
+            "largest": 3423,
+            "inkPixels": 3986,
+            "largestShare": 0.859,
+            "sizes": [
+              3423,
+              328,
+              223,
+              12
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.20854166666666665,
+            "empty": false,
+            "extentX": 0.625,
+            "extentY": 0.617,
+            "extent": 0.625,
+            "edgeContact": 0,
+            "marginMin": 0.15,
+            "pixels": 3003,
+            "components": 2,
+            "largest": 2895,
+            "inkPixels": 3003,
+            "largestShare": 0.964,
+            "sizes": [
+              2895,
+              108
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.34576388888888887,
+            "empty": false,
+            "extentX": 0.825,
+            "extentY": 0.858,
+            "extent": 0.858,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 4979,
+            "components": 2,
+            "largest": 4543,
+            "inkPixels": 4979,
+            "largestShare": 0.912,
+            "sizes": [
+              4543,
+              436
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.381875,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 124,
+            "marginMin": 0,
+            "pixels": 5499,
+            "components": 11,
+            "largest": 2763,
+            "inkPixels": 5499,
+            "largestShare": 0.502,
+            "sizes": [
+              2763,
+              664,
+              582,
+              489,
+              399,
+              224,
+              200,
+              109,
+              34,
+              24,
+              11
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.1836111111111111,
+            "empty": false,
+            "extentX": 0.867,
+            "extentY": 0.758,
+            "extent": 0.867,
+            "edgeContact": 0,
+            "marginMin": 0.058,
+            "pixels": 2644,
+            "components": 13,
+            "largest": 1786,
+            "inkPixels": 2644,
+            "largestShare": 0.675,
+            "sizes": [
+              1786,
+              187,
+              172,
+              150,
+              88,
+              84,
+              67,
+              39,
+              21,
+              18,
+              18,
+              8
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.298125,
+            "empty": false,
+            "extentX": 0.692,
+            "extentY": 0.592,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 4293,
+            "components": 1,
+            "largest": 4293,
+            "inkPixels": 4293,
+            "largestShare": 1,
+            "sizes": [
+              4293
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.3248611111111111,
+            "empty": false,
+            "extentX": 0.85,
+            "extentY": 0.85,
+            "extent": 0.85,
+            "edgeContact": 0,
+            "marginMin": 0.05,
+            "pixels": 4678,
+            "components": 4,
+            "largest": 3023,
+            "inkPixels": 4678,
+            "largestShare": 0.646,
+            "sizes": [
+              3023,
+              807,
+              436,
+              412
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.24972222222222223,
+            "empty": false,
+            "extentX": 0.6,
+            "extentY": 0.583,
+            "extent": 0.6,
+            "edgeContact": 0,
+            "marginMin": 0.142,
+            "pixels": 3596,
+            "components": 4,
+            "largest": 3487,
+            "inkPixels": 3596,
+            "largestShare": 0.97,
+            "sizes": [
+              3487,
+              57,
+              40,
+              12
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "F3-spread-RECOVERY",
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "note": "third register separating in recovery",
+      "ok": true,
+      "configBytesLength": 67,
+      "seeds": 8,
+      "stateDe": {
+        "ns": {
+          "mean": 16.34,
+          "min": 9.193
+        },
+        "nr": {
+          "mean": 20.514,
+          "min": 7.255
+        },
+        "sr": {
+          "mean": 20.729,
+          "min": 10.573
+        }
+      },
+      "weakestPairing": "ns",
+      "weakestPairingMean": 16.34,
+      "seedDe": {
+        "mean": 16.871,
+        "min": 8.58
+      },
+      "states": {
+        "neutral": {
+          "inkMean": 0.377,
+          "inkMin": 0.168,
+          "extentMean": 0.786,
+          "extentMin": 0.683,
+          "marginMinMean": 0.099,
+          "edgeContactSeeds": 0,
+          "componentsMean": 4,
+          "largestShareMean": 0.778,
+          "blankSeeds": 0
+        },
+        "stress": {
+          "inkMean": 0.219,
+          "inkMin": 0.123,
+          "extentMean": 0.674,
+          "extentMin": 0.517,
+          "marginMinMean": 0.116,
+          "edgeContactSeeds": 0,
+          "componentsMean": 2.375,
+          "largestShareMean": 0.918,
+          "blankSeeds": 0
+        },
+        "recovery": {
+          "inkMean": 0.45,
+          "inkMin": 0.204,
+          "extentMean": 0.982,
+          "extentMin": 0.933,
+          "marginMinMean": 0.005,
+          "edgeContactSeeds": 6,
+          "componentsMean": 8.5,
+          "largestShareMean": 0.501,
+          "blankSeeds": 0
+        }
+      },
+      "perSeed": {
+        "neutral": [
+          {
+            "seed": 500003,
+            "ink": 0.39118055555555553,
+            "empty": false,
+            "extentX": 0.742,
+            "extentY": 0.783,
+            "extent": 0.783,
+            "edgeContact": 0,
+            "marginMin": 0.108,
+            "pixels": 5633,
+            "components": 1,
+            "largest": 5633,
+            "inkPixels": 5633,
+            "largestShare": 1,
+            "sizes": [
+              5633
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.360625,
+            "empty": false,
+            "extentX": 0.75,
+            "extentY": 0.808,
+            "extent": 0.808,
+            "edgeContact": 0,
+            "marginMin": 0.092,
+            "pixels": 5193,
+            "components": 3,
+            "largest": 4144,
+            "inkPixels": 5193,
+            "largestShare": 0.798,
+            "sizes": [
+              4144,
+              603,
+              446
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.44625,
+            "empty": false,
+            "extentX": 0.817,
+            "extentY": 0.958,
+            "extent": 0.958,
+            "edgeContact": 0,
+            "marginMin": 0.008,
+            "pixels": 6426,
+            "components": 2,
+            "largest": 4112,
+            "inkPixels": 6426,
+            "largestShare": 0.64,
+            "sizes": [
+              4112,
+              2314
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.4907638888888889,
+            "empty": false,
+            "extentX": 0.783,
+            "extentY": 0.775,
+            "extent": 0.783,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 7067,
+            "components": 1,
+            "largest": 7067,
+            "inkPixels": 7067,
+            "largestShare": 1,
+            "sizes": [
+              7067
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.1675,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.658,
+            "extent": 0.683,
+            "edgeContact": 0,
+            "marginMin": 0.142,
+            "pixels": 2412,
+            "components": 13,
+            "largest": 1513,
+            "inkPixels": 2412,
+            "largestShare": 0.627,
+            "sizes": [
+              1513,
+              131,
+              113,
+              75,
+              74,
+              72,
+              69,
+              68,
+              63,
+              62,
+              61,
+              58
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.42770833333333336,
+            "empty": false,
+            "extentX": 0.825,
+            "extentY": 0.825,
+            "extent": 0.825,
+            "edgeContact": 0,
+            "marginMin": 0.075,
+            "pixels": 6159,
+            "components": 2,
+            "largest": 4946,
+            "inkPixels": 6159,
+            "largestShare": 0.803,
+            "sizes": [
+              4946,
+              1213
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.46055555555555555,
+            "empty": false,
+            "extentX": 0.758,
+            "extentY": 0.75,
+            "extent": 0.758,
+            "edgeContact": 0,
+            "marginMin": 0.117,
+            "pixels": 6632,
+            "components": 3,
+            "largest": 3414,
+            "inkPixels": 6632,
+            "largestShare": 0.515,
+            "sizes": [
+              3414,
+              1679,
+              1539
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.26805555555555555,
+            "empty": false,
+            "extentX": 0.675,
+            "extentY": 0.692,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.15,
+            "pixels": 3860,
+            "components": 7,
+            "largest": 3261,
+            "inkPixels": 3860,
+            "largestShare": 0.845,
+            "sizes": [
+              3261,
+              143,
+              132,
+              126,
+              97,
+              75,
+              26
+            ]
+          }
+        ],
+        "stress": [
+          {
+            "seed": 500003,
+            "ink": 0.26256944444444447,
+            "empty": false,
+            "extentX": 0.592,
+            "extentY": 0.625,
+            "extent": 0.625,
+            "edgeContact": 0,
+            "marginMin": 0.108,
+            "pixels": 3781,
+            "components": 1,
+            "largest": 3781,
+            "inkPixels": 3781,
+            "largestShare": 1,
+            "sizes": [
+              3781
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.26868055555555553,
+            "empty": false,
+            "extentX": 0.65,
+            "extentY": 0.733,
+            "extent": 0.733,
+            "edgeContact": 0,
+            "marginMin": 0.067,
+            "pixels": 3869,
+            "components": 2,
+            "largest": 3576,
+            "inkPixels": 3869,
+            "largestShare": 0.924,
+            "sizes": [
+              3576,
+              293
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.16909722222222223,
+            "empty": false,
+            "extentX": 0.508,
+            "extentY": 0.517,
+            "extent": 0.517,
+            "edgeContact": 0,
+            "marginMin": 0.208,
+            "pixels": 2435,
+            "components": 3,
+            "largest": 2313,
+            "inkPixels": 2435,
+            "largestShare": 0.95,
+            "sizes": [
+              2313,
+              118,
+              4
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.12305555555555556,
+            "empty": false,
+            "extentX": 0.567,
+            "extentY": 0.433,
+            "extent": 0.567,
+            "edgeContact": 0,
+            "marginMin": 0.167,
+            "pixels": 1772,
+            "components": 3,
+            "largest": 1669,
+            "inkPixels": 1772,
+            "largestShare": 0.942,
+            "sizes": [
+              1669,
+              93,
+              9
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.2734027777777778,
+            "empty": false,
+            "extentX": 0.725,
+            "extentY": 0.658,
+            "extent": 0.725,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 3937,
+            "components": 4,
+            "largest": 3215,
+            "inkPixels": 3937,
+            "largestShare": 0.817,
+            "sizes": [
+              3215,
+              550,
+              162,
+              10
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.18048611111111112,
+            "empty": false,
+            "extentX": 0.492,
+            "extentY": 0.6,
+            "extent": 0.6,
+            "edgeContact": 0,
+            "marginMin": 0.175,
+            "pixels": 2599,
+            "components": 1,
+            "largest": 2597,
+            "inkPixels": 2599,
+            "largestShare": 0.999,
+            "sizes": [
+              2597
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.18743055555555554,
+            "empty": false,
+            "extentX": 0.742,
+            "extentY": 0.5,
+            "extent": 0.742,
+            "edgeContact": 0,
+            "marginMin": 0.083,
+            "pixels": 2699,
+            "components": 3,
+            "largest": 2266,
+            "inkPixels": 2699,
+            "largestShare": 0.84,
+            "sizes": [
+              2266,
+              304,
+              129
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.29104166666666664,
+            "empty": false,
+            "extentX": 0.767,
+            "extentY": 0.883,
+            "extent": 0.883,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 4191,
+            "components": 2,
+            "largest": 3646,
+            "inkPixels": 4191,
+            "largestShare": 0.87,
+            "sizes": [
+              3646,
+              545
+            ]
+          }
+        ],
+        "recovery": [
+          {
+            "seed": 500003,
+            "ink": 0.4970833333333333,
+            "empty": false,
+            "extentX": 0.975,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 21,
+            "marginMin": 0,
+            "pixels": 7158,
+            "components": 3,
+            "largest": 3203,
+            "inkPixels": 7158,
+            "largestShare": 0.447,
+            "sizes": [
+              3203,
+              2095,
+              1860
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.403125,
+            "empty": false,
+            "extentX": 0.975,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 71,
+            "marginMin": 0,
+            "pixels": 5805,
+            "components": 9,
+            "largest": 2441,
+            "inkPixels": 5805,
+            "largestShare": 0.42,
+            "sizes": [
+              2441,
+              695,
+              598,
+              489,
+              433,
+              417,
+              263,
+              252,
+              217
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.48131944444444447,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 152,
+            "marginMin": 0,
+            "pixels": 6931,
+            "components": 4,
+            "largest": 3019,
+            "inkPixels": 6931,
+            "largestShare": 0.436,
+            "sizes": [
+              3019,
+              1790,
+              1500,
+              622
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.6640972222222222,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 231,
+            "marginMin": 0,
+            "pixels": 9563,
+            "components": 3,
+            "largest": 5824,
+            "inkPixels": 9563,
+            "largestShare": 0.609,
+            "sizes": [
+              5824,
+              2778,
+              961
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.20395833333333332,
+            "empty": false,
+            "extentX": 0.933,
+            "extentY": 0.9,
+            "extent": 0.933,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 2937,
+            "components": 15,
+            "largest": 1944,
+            "inkPixels": 2937,
+            "largestShare": 0.662,
+            "sizes": [
+              1944,
+              142,
+              74,
+              73,
+              72,
+              71,
+              68,
+              67,
+              65,
+              65,
+              65,
+              65
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.5011111111111111,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 177,
+            "marginMin": 0,
+            "pixels": 7216,
+            "components": 3,
+            "largest": 3298,
+            "inkPixels": 7216,
+            "largestShare": 0.457,
+            "sizes": [
+              3298,
+              2528,
+              1390
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.5213194444444444,
+            "empty": false,
+            "extentX": 0.992,
+            "extentY": 0.992,
+            "extent": 0.992,
+            "edgeContact": 8,
+            "marginMin": 0,
+            "pixels": 7507,
+            "components": 17,
+            "largest": 1901,
+            "inkPixels": 7507,
+            "largestShare": 0.253,
+            "sizes": [
+              1901,
+              368,
+              366,
+              365,
+              364,
+              362,
+              362,
+              359,
+              357,
+              357,
+              351,
+              350
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.3246527777777778,
+            "empty": false,
+            "extentX": 0.917,
+            "extentY": 0.933,
+            "extent": 0.933,
+            "edgeContact": 0,
+            "marginMin": 0.025,
+            "pixels": 4675,
+            "components": 14,
+            "largest": 3396,
+            "inkPixels": 4675,
+            "largestShare": 0.726,
+            "sizes": [
+              3396,
+              174,
+              151,
+              147,
+              131,
+              126,
+              124,
+              74,
+              72,
+              70,
+              70,
+              62
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "F3-count-RECOVERY-wide",
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "note": "third register on RECOVERY with real headroom",
+      "ok": true,
+      "configBytesLength": 67,
+      "seeds": 8,
+      "stateDe": {
+        "ns": {
+          "mean": 17.55,
+          "min": 10.331
+        },
+        "nr": {
+          "mean": 14.54,
+          "min": 6.958
+        },
+        "sr": {
+          "mean": 20.601,
+          "min": 10.475
+        }
+      },
+      "weakestPairing": "nr",
+      "weakestPairingMean": 14.54,
+      "seedDe": {
+        "mean": 23.107,
+        "min": 10.24
+      },
+      "states": {
+        "neutral": {
+          "inkMean": 0.427,
+          "inkMin": 0.212,
+          "extentMean": 0.86,
+          "extentMin": 0.692,
+          "marginMinMean": 0.066,
+          "edgeContactSeeds": 2,
+          "componentsMean": 5.5,
+          "largestShareMean": 0.759,
+          "blankSeeds": 0
+        },
+        "stress": {
+          "inkMean": 0.265,
+          "inkMin": 0.177,
+          "extentMean": 0.845,
+          "extentMin": 0.642,
+          "marginMinMean": 0.06,
+          "edgeContactSeeds": 1,
+          "componentsMean": 5.875,
+          "largestShareMean": 0.644,
+          "blankSeeds": 0
+        },
+        "recovery": {
+          "inkMean": 0.496,
+          "inkMin": 0.268,
+          "extentMean": 0.859,
+          "extentMin": 0.708,
+          "marginMinMean": 0.065,
+          "edgeContactSeeds": 2,
+          "componentsMean": 4.625,
+          "largestShareMean": 0.87,
+          "blankSeeds": 0
+        }
+      },
+      "perSeed": {
+        "neutral": [
+          {
+            "seed": 500003,
+            "ink": 0.44854166666666667,
+            "empty": false,
+            "extentX": 0.758,
+            "extentY": 0.8,
+            "extent": 0.8,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 6459,
+            "components": 1,
+            "largest": 6459,
+            "inkPixels": 6459,
+            "largestShare": 1,
+            "sizes": [
+              6459
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.35805555555555557,
+            "empty": false,
+            "extentX": 0.675,
+            "extentY": 0.733,
+            "extent": 0.733,
+            "edgeContact": 0,
+            "marginMin": 0.133,
+            "pixels": 5156,
+            "components": 1,
+            "largest": 5156,
+            "inkPixels": 5156,
+            "largestShare": 1,
+            "sizes": [
+              5156
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.5171527777777778,
+            "empty": false,
+            "extentX": 0.858,
+            "extentY": 0.992,
+            "extent": 0.992,
+            "edgeContact": 6,
+            "marginMin": 0,
+            "pixels": 7447,
+            "components": 2,
+            "largest": 4800,
+            "inkPixels": 7447,
+            "largestShare": 0.645,
+            "sizes": [
+              4800,
+              2647
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.688125,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 346,
+            "marginMin": 0,
+            "pixels": 9909,
+            "components": 3,
+            "largest": 6255,
+            "inkPixels": 9909,
+            "largestShare": 0.631,
+            "sizes": [
+              6255,
+              2489,
+              1165
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.21166666666666667,
+            "empty": false,
+            "extentX": 0.933,
+            "extentY": 0.95,
+            "extent": 0.95,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 3048,
+            "components": 16,
+            "largest": 1718,
+            "inkPixels": 3048,
+            "largestShare": 0.564,
+            "sizes": [
+              1718,
+              176,
+              93,
+              93,
+              93,
+              92,
+              90,
+              85,
+              82,
+              80,
+              80,
+              80
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.3748611111111111,
+            "empty": false,
+            "extentX": 0.725,
+            "extentY": 0.742,
+            "extent": 0.742,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 5398,
+            "components": 1,
+            "largest": 5398,
+            "inkPixels": 5398,
+            "largestShare": 1,
+            "sizes": [
+              5398
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.5729861111111111,
+            "empty": false,
+            "extentX": 0.975,
+            "extentY": 0.942,
+            "extent": 0.975,
+            "edgeContact": 0,
+            "marginMin": 0.008,
+            "pixels": 8251,
+            "components": 15,
+            "largest": 2581,
+            "inkPixels": 8251,
+            "largestShare": 0.313,
+            "sizes": [
+              2581,
+              720,
+              405,
+              404,
+              398,
+              397,
+              396,
+              396,
+              396,
+              394,
+              387,
+              384
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.24625,
+            "empty": false,
+            "extentX": 0.692,
+            "extentY": 0.683,
+            "extent": 0.692,
+            "edgeContact": 0,
+            "marginMin": 0.142,
+            "pixels": 3546,
+            "components": 5,
+            "largest": 3266,
+            "inkPixels": 3546,
+            "largestShare": 0.921,
+            "sizes": [
+              3266,
+              105,
+              74,
+              74,
+              27
+            ]
+          }
+        ],
+        "stress": [
+          {
+            "seed": 500003,
+            "ink": 0.3308333333333333,
+            "empty": false,
+            "extentX": 0.775,
+            "extentY": 0.767,
+            "extent": 0.775,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 4764,
+            "components": 2,
+            "largest": 4442,
+            "inkPixels": 4764,
+            "largestShare": 0.932,
+            "sizes": [
+              4442,
+              322
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.2791666666666667,
+            "empty": false,
+            "extentX": 0.775,
+            "extentY": 0.8,
+            "extent": 0.8,
+            "edgeContact": 0,
+            "marginMin": 0.067,
+            "pixels": 4020,
+            "components": 4,
+            "largest": 2225,
+            "inkPixels": 4020,
+            "largestShare": 0.553,
+            "sizes": [
+              2225,
+              1224,
+              547,
+              24
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.17673611111111112,
+            "empty": false,
+            "extentX": 0.792,
+            "extentY": 0.408,
+            "extent": 0.792,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 2545,
+            "components": 4,
+            "largest": 1786,
+            "inkPixels": 2545,
+            "largestShare": 0.702,
+            "sizes": [
+              1786,
+              735,
+              20,
+              4
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.2292361111111111,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 202,
+            "marginMin": 0,
+            "pixels": 3301,
+            "components": 13,
+            "largest": 576,
+            "inkPixels": 3301,
+            "largestShare": 0.174,
+            "sizes": [
+              576,
+              503,
+              498,
+              484,
+              387,
+              294,
+              231,
+              180,
+              93,
+              32,
+              9,
+              8
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.2824305555555556,
+            "empty": false,
+            "extentX": 0.875,
+            "extentY": 0.908,
+            "extent": 0.908,
+            "edgeContact": 0,
+            "marginMin": 0.025,
+            "pixels": 4067,
+            "components": 9,
+            "largest": 2931,
+            "inkPixels": 4067,
+            "largestShare": 0.721,
+            "sizes": [
+              2931,
+              550,
+              162,
+              93,
+              91,
+              82,
+              81,
+              67,
+              10
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.2170138888888889,
+            "empty": false,
+            "extentX": 0.642,
+            "extentY": 0.6,
+            "extent": 0.642,
+            "edgeContact": 0,
+            "marginMin": 0.15,
+            "pixels": 3125,
+            "components": 1,
+            "largest": 3125,
+            "inkPixels": 3125,
+            "largestShare": 1,
+            "sizes": [
+              3125
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.30256944444444445,
+            "empty": false,
+            "extentX": 0.958,
+            "extentY": 0.958,
+            "extent": 0.958,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 4357,
+            "components": 11,
+            "largest": 934,
+            "inkPixels": 4357,
+            "largestShare": 0.214,
+            "sizes": [
+              934,
+              752,
+              401,
+              400,
+              397,
+              396,
+              394,
+              304,
+              218,
+              129,
+              32
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.3,
+            "empty": false,
+            "extentX": 0.767,
+            "extentY": 0.883,
+            "extent": 0.883,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 4320,
+            "components": 3,
+            "largest": 3700,
+            "inkPixels": 4320,
+            "largestShare": 0.856,
+            "sizes": [
+              3700,
+              545,
+              75
+            ]
+          }
+        ],
+        "recovery": [
+          {
+            "seed": 500003,
+            "ink": 0.5079861111111111,
+            "empty": false,
+            "extentX": 0.775,
+            "extentY": 0.808,
+            "extent": 0.808,
+            "edgeContact": 0,
+            "marginMin": 0.092,
+            "pixels": 7315,
+            "components": 1,
+            "largest": 7315,
+            "inkPixels": 7315,
+            "largestShare": 1,
+            "sizes": [
+              7315
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.3466666666666667,
+            "empty": false,
+            "extentX": 0.642,
+            "extentY": 0.742,
+            "extent": 0.742,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 4992,
+            "components": 1,
+            "largest": 4992,
+            "inkPixels": 4992,
+            "largestShare": 1,
+            "sizes": [
+              4992
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.5696527777777778,
+            "empty": false,
+            "extentX": 0.875,
+            "extentY": 0.975,
+            "extent": 0.975,
+            "edgeContact": 6,
+            "marginMin": 0,
+            "pixels": 8203,
+            "components": 1,
+            "largest": 8203,
+            "inkPixels": 8203,
+            "largestShare": 1,
+            "sizes": [
+              8203
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.8482638888888889,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 361,
+            "marginMin": 0,
+            "pixels": 12215,
+            "components": 1,
+            "largest": 12215,
+            "inkPixels": 12215,
+            "largestShare": 1,
+            "sizes": [
+              12215
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.2682638888888889,
+            "empty": false,
+            "extentX": 0.933,
+            "extentY": 0.958,
+            "extent": 0.958,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 3863,
+            "components": 21,
+            "largest": 2211,
+            "inkPixels": 3863,
+            "largestShare": 0.572,
+            "sizes": [
+              2211,
+              172,
+              96,
+              91,
+              90,
+              88,
+              88,
+              87,
+              85,
+              82,
+              80,
+              78
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.3790972222222222,
+            "empty": false,
+            "extentX": 0.708,
+            "extentY": 0.692,
+            "extent": 0.708,
+            "edgeContact": 0,
+            "marginMin": 0.125,
+            "pixels": 5459,
+            "components": 1,
+            "largest": 5459,
+            "inkPixels": 5459,
+            "largestShare": 1,
+            "sizes": [
+              5459
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.7528472222222222,
+            "empty": false,
+            "extentX": 0.967,
+            "extentY": 0.967,
+            "extent": 0.967,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 10841,
+            "components": 6,
+            "largest": 5503,
+            "inkPixels": 10841,
+            "largestShare": 0.508,
+            "sizes": [
+              5503,
+              2097,
+              1831,
+              726,
+              396,
+              288
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.296875,
+            "empty": false,
+            "extentX": 0.7,
+            "extentY": 0.717,
+            "extent": 0.717,
+            "edgeContact": 0,
+            "marginMin": 0.142,
+            "pixels": 4275,
+            "components": 5,
+            "largest": 3746,
+            "inkPixels": 4275,
+            "largestShare": 0.876,
+            "sizes": [
+              3746,
+              214,
+              121,
+              114,
+              80
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "F3-fracture-EASE",
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "note": "fracture fields on EASE, which pushes neutral even tighter",
+      "ok": true,
+      "configBytesLength": 67,
+      "seeds": 8,
+      "stateDe": {
+        "ns": {
+          "mean": 1.833,
+          "min": 0.12
+        },
+        "nr": {
+          "mean": 12.502,
+          "min": 3.686
+        },
+        "sr": {
+          "mean": 13.667,
+          "min": 8.838
+        }
+      },
+      "weakestPairing": "ns",
+      "weakestPairingMean": 1.833,
+      "seedDe": {
+        "mean": 25.344,
+        "min": 11.429
+      },
+      "states": {
+        "neutral": {
+          "inkMean": 0.511,
+          "inkMin": 0.273,
+          "extentMean": 0.868,
+          "extentMin": 0.725,
+          "marginMinMean": 0.055,
+          "edgeContactSeeds": 3,
+          "componentsMean": 3.5,
+          "largestShareMean": 0.911,
+          "blankSeeds": 0
+        },
+        "stress": {
+          "inkMean": 0.523,
+          "inkMin": 0.299,
+          "extentMean": 0.879,
+          "extentMin": 0.75,
+          "marginMinMean": 0.046,
+          "edgeContactSeeds": 3,
+          "componentsMean": 3.5,
+          "largestShareMean": 0.928,
+          "blankSeeds": 0
+        },
+        "recovery": {
+          "inkMean": 0.526,
+          "inkMin": 0.267,
+          "extentMean": 0.88,
+          "extentMin": 0.725,
+          "marginMinMean": 0.056,
+          "edgeContactSeeds": 3,
+          "componentsMean": 3.5,
+          "largestShareMean": 0.91,
+          "blankSeeds": 0
+        }
+      },
+      "perSeed": {
+        "neutral": [
+          {
+            "seed": 500003,
+            "ink": 0.52625,
+            "empty": false,
+            "extentX": 0.775,
+            "extentY": 0.833,
+            "extent": 0.833,
+            "edgeContact": 0,
+            "marginMin": 0.083,
+            "pixels": 7578,
+            "components": 1,
+            "largest": 7578,
+            "inkPixels": 7578,
+            "largestShare": 1,
+            "sizes": [
+              7578
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.4054861111111111,
+            "empty": false,
+            "extentX": 0.717,
+            "extentY": 0.75,
+            "extent": 0.75,
+            "edgeContact": 0,
+            "marginMin": 0.117,
+            "pixels": 5839,
+            "components": 1,
+            "largest": 5839,
+            "inkPixels": 5839,
+            "largestShare": 1,
+            "sizes": [
+              5839
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.6114583333333333,
+            "empty": false,
+            "extentX": 0.908,
+            "extentY": 0.85,
+            "extent": 0.908,
+            "edgeContact": 13,
+            "marginMin": 0,
+            "pixels": 8805,
+            "components": 1,
+            "largest": 8805,
+            "inkPixels": 8805,
+            "largestShare": 1,
+            "sizes": [
+              8805
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.7948611111111111,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 383,
+            "marginMin": 0,
+            "pixels": 11446,
+            "components": 2,
+            "largest": 9596,
+            "inkPixels": 11446,
+            "largestShare": 0.838,
+            "sizes": [
+              9596,
+              1850
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.2727777777777778,
+            "empty": false,
+            "extentX": 0.95,
+            "extentY": 0.883,
+            "extent": 0.95,
+            "edgeContact": 0,
+            "marginMin": 0.008,
+            "pixels": 3928,
+            "components": 17,
+            "largest": 2270,
+            "inkPixels": 3928,
+            "largestShare": 0.578,
+            "sizes": [
+              2270,
+              209,
+              112,
+              112,
+              107,
+              106,
+              105,
+              102,
+              99,
+              98,
+              98,
+              98
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.4377083333333333,
+            "empty": false,
+            "extentX": 0.775,
+            "extentY": 0.75,
+            "extent": 0.775,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 6303,
+            "components": 1,
+            "largest": 6303,
+            "inkPixels": 6303,
+            "largestShare": 1,
+            "sizes": [
+              6303
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.7683333333333333,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 479,
+            "marginMin": 0,
+            "pixels": 11064,
+            "components": 1,
+            "largest": 11064,
+            "inkPixels": 11064,
+            "largestShare": 1,
+            "sizes": [
+              11064
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.2743055555555556,
+            "empty": false,
+            "extentX": 0.7,
+            "extentY": 0.725,
+            "extent": 0.725,
+            "edgeContact": 0,
+            "marginMin": 0.133,
+            "pixels": 3950,
+            "components": 4,
+            "largest": 3442,
+            "inkPixels": 3950,
+            "largestShare": 0.871,
+            "sizes": [
+              3442,
+              376,
+              94,
+              38
+            ]
+          }
+        ],
+        "stress": [
+          {
+            "seed": 500003,
+            "ink": 0.5331944444444444,
+            "empty": false,
+            "extentX": 0.775,
+            "extentY": 0.833,
+            "extent": 0.833,
+            "edgeContact": 0,
+            "marginMin": 0.083,
+            "pixels": 7678,
+            "components": 1,
+            "largest": 7678,
+            "inkPixels": 7678,
+            "largestShare": 1,
+            "sizes": [
+              7678
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.4226388888888889,
+            "empty": false,
+            "extentX": 0.717,
+            "extentY": 0.817,
+            "extent": 0.817,
+            "edgeContact": 0,
+            "marginMin": 0.067,
+            "pixels": 6086,
+            "components": 1,
+            "largest": 6086,
+            "inkPixels": 6086,
+            "largestShare": 1,
+            "sizes": [
+              6086
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.6114583333333333,
+            "empty": false,
+            "extentX": 0.908,
+            "extentY": 0.85,
+            "extent": 0.908,
+            "edgeContact": 13,
+            "marginMin": 0,
+            "pixels": 8805,
+            "components": 1,
+            "largest": 8805,
+            "inkPixels": 8805,
+            "largestShare": 1,
+            "sizes": [
+              8805
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.7967361111111111,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 383,
+            "marginMin": 0,
+            "pixels": 11473,
+            "components": 3,
+            "largest": 9614,
+            "inkPixels": 11473,
+            "largestShare": 0.838,
+            "sizes": [
+              9614,
+              1850,
+              9
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.2989583333333333,
+            "empty": false,
+            "extentX": 0.95,
+            "extentY": 0.883,
+            "extent": 0.95,
+            "edgeContact": 0,
+            "marginMin": 0.008,
+            "pixels": 4305,
+            "components": 18,
+            "largest": 2546,
+            "inkPixels": 4305,
+            "largestShare": 0.591,
+            "sizes": [
+              2546,
+              209,
+              112,
+              112,
+              107,
+              106,
+              105,
+              102,
+              99,
+              98,
+              98,
+              98
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.4379166666666667,
+            "empty": false,
+            "extentX": 0.775,
+            "extentY": 0.75,
+            "extent": 0.775,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 6306,
+            "components": 1,
+            "largest": 6306,
+            "inkPixels": 6306,
+            "largestShare": 1,
+            "sizes": [
+              6306
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.7681944444444444,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 479,
+            "marginMin": 0,
+            "pixels": 11062,
+            "components": 1,
+            "largest": 11062,
+            "inkPixels": 11062,
+            "largestShare": 1,
+            "sizes": [
+              11062
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.31256944444444446,
+            "empty": false,
+            "extentX": 0.7,
+            "extentY": 0.75,
+            "extent": 0.75,
+            "edgeContact": 0,
+            "marginMin": 0.108,
+            "pixels": 4501,
+            "components": 2,
+            "largest": 4463,
+            "inkPixels": 4501,
+            "largestShare": 0.992,
+            "sizes": [
+              4463,
+              38
+            ]
+          }
+        ],
+        "recovery": [
+          {
+            "seed": 500003,
+            "ink": 0.49666666666666665,
+            "empty": false,
+            "extentX": 0.808,
+            "extentY": 0.817,
+            "extent": 0.817,
+            "edgeContact": 0,
+            "marginMin": 0.083,
+            "pixels": 7152,
+            "components": 1,
+            "largest": 7152,
+            "inkPixels": 7152,
+            "largestShare": 1,
+            "sizes": [
+              7152
+            ]
+          },
+          {
+            "seed": 508194,
+            "ink": 0.39479166666666665,
+            "empty": false,
+            "extentX": 0.683,
+            "extentY": 0.733,
+            "extent": 0.733,
+            "edgeContact": 0,
+            "marginMin": 0.117,
+            "pixels": 5685,
+            "components": 1,
+            "largest": 5685,
+            "inkPixels": 5685,
+            "largestShare": 1,
+            "sizes": [
+              5685
+            ]
+          },
+          {
+            "seed": 516385,
+            "ink": 0.6582638888888889,
+            "empty": false,
+            "extentX": 0.9,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 26,
+            "marginMin": 0,
+            "pixels": 9479,
+            "components": 1,
+            "largest": 9479,
+            "inkPixels": 9479,
+            "largestShare": 1,
+            "sizes": [
+              9479
+            ]
+          },
+          {
+            "seed": 524576,
+            "ink": 0.8322916666666667,
+            "empty": false,
+            "extentX": 1,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 392,
+            "marginMin": 0,
+            "pixels": 11985,
+            "components": 2,
+            "largest": 9993,
+            "inkPixels": 11985,
+            "largestShare": 0.834,
+            "sizes": [
+              9993,
+              1992
+            ]
+          },
+          {
+            "seed": 532767,
+            "ink": 0.2721527777777778,
+            "empty": false,
+            "extentX": 0.95,
+            "extentY": 0.967,
+            "extent": 0.967,
+            "edgeContact": 0,
+            "marginMin": 0.017,
+            "pixels": 3919,
+            "components": 18,
+            "largest": 2173,
+            "inkPixels": 3919,
+            "largestShare": 0.554,
+            "sizes": [
+              2173,
+              201,
+              113,
+              110,
+              108,
+              107,
+              107,
+              103,
+              102,
+              99,
+              97,
+              96
+            ]
+          },
+          {
+            "seed": 540958,
+            "ink": 0.48638888888888887,
+            "empty": false,
+            "extentX": 0.758,
+            "extentY": 0.8,
+            "extent": 0.8,
+            "edgeContact": 0,
+            "marginMin": 0.1,
+            "pixels": 7004,
+            "components": 1,
+            "largest": 7004,
+            "inkPixels": 7004,
+            "largestShare": 1,
+            "sizes": [
+              7004
+            ]
+          },
+          {
+            "seed": 549149,
+            "ink": 0.7986805555555555,
+            "empty": false,
+            "extentX": 0.992,
+            "extentY": 1,
+            "extent": 1,
+            "edgeContact": 56,
+            "marginMin": 0,
+            "pixels": 11501,
+            "components": 1,
+            "largest": 11501,
+            "inkPixels": 11501,
+            "largestShare": 1,
+            "sizes": [
+              11501
+            ]
+          },
+          {
+            "seed": 557340,
+            "ink": 0.26694444444444443,
+            "empty": false,
+            "extentX": 0.667,
+            "extentY": 0.725,
+            "extent": 0.725,
+            "edgeContact": 0,
+            "marginMin": 0.133,
+            "pixels": 3844,
+            "components": 3,
+            "largest": 3432,
+            "inkPixels": 3844,
+            "largestShare": 0.893,
+            "sizes": [
+              3432,
+              311,
+              101
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

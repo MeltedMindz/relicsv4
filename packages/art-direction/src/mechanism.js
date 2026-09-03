@@ -244,7 +244,7 @@ export const MECHANISM_TABLE = Object.freeze({
       realisations: Object.freeze([
         Object.freeze({
           drive: "SPREAD", curve: "LINEAR", polarities: ["PEAKS_AT_STRESS"],
-          requires: Object.freeze({ pinnedCount: true, fewLargeMembers: true, minFields: 2, secondSensorRegister: true }),
+          requires: Object.freeze({ pinnedCount: true, fewLargeMembers: true, minFields: 3, spreadCeiling: true, secondSensorRegister: true }),
           detail: "A FEW LARGE members and a LINEAR curve. Linear is what makes this fracture rather than dilation: it leaves the neutral reading at 20 per mille, so the members resolve near the spread floor and OVERLAP INTO ONE MASS, and the stress reading of 900 pulls them to the frame. LOG2 lifts neutral to 326 and the mass is already broken before the market does anything.",
           evidence: Object.freeze({ row: "FRAC-a-3field", componentsByState: "1.0 neutral -> 2.875 stress", largestShareByState: "1.000 -> 0.895", weakestPairing: 3.64, blankSeeds: 0, mixedSensorRow: Object.freeze({ row: "FRAC-e-mixed", weakestPairing: 6.149 }) }),
         }),
