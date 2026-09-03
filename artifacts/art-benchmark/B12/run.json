@@ -2,25 +2,12 @@
   "briefId": "B12",
   "axis": "market-light",
   "title": "RELIQUARY",
-  "phase": "BLOCKED_BY_OBJECTIVE_BATTERY",
-  "objectiveBlockers": [
-    {
-      "id": "DUPLICATE_PERCEPTUAL",
-      "detail": "the closest pair of seeds differs by 1.036 dE (floor 1.2)"
-    },
-    {
-      "id": "SEED_DIVERSITY",
-      "detail": "seeds differ by 12.261 dE on average and 1.036 at the closest pair (floors 3 / 1.2)"
-    },
-    {
-      "id": "BLANK_DETECTION",
-      "detail": "12 of 52 sampled frames are below the 4% floor; the emptiest is collection sweep at neutral, covering 0.0%. 10 of them are review-ring frames that VANISH in a market state the token survives elsewhere: stress"
-    }
-  ],
+  "phase": "AUTHORED",
+  "objectiveBlockers": [],
   "briefSha256": "3a3eb44732a3d5accda9ebb0cbe0c6218712f9812abb04a03f695012e7fc5271",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:07:35.026Z",
+    "decidedAt": "2026-09-03T19:11:19.700Z",
     "briefSha256": "3a3eb44732a3d5accda9ebb0cbe0c6218712f9812abb04a03f695012e7fc5271",
     "briefSubstance": {
       "chars": 695,
@@ -184,7 +171,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:07:35.040Z",
+    "createdAt": "2026-09-03T19:11:19.702Z",
     "briefSha256": "3a3eb44732a3d5accda9ebb0cbe0c6218712f9812abb04a03f695012e7fc5271",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "GEOMETRIC_RECURSION_V1",
@@ -227,8 +214,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "70594761f13e5466c75b8c0150370d3e3983fb876e996e4782ef87bc2fc9f709",
-      "configBytes": "0x47525631020000020203c2a04a5b463214161a021d1700030104040502520c011100001506020201020204025a1201110100001252656c697175617279205265737461746564ff",
+      "configHash": "fc8355ff46fe9ea829a36370cd046c27287230054d3f4dc84259584a3e26f7a1",
+      "configBytes": "0x47525631020000020203c2a04a5b463214161a021d1700030104040502520c011100001506010201020204025a1201110100001252656c697175617279205265737461746564ff",
       "config": {
         "rules": [
           {
@@ -279,7 +266,7 @@
               "ROT3"
             ],
             "rotation": 18,
-            "paletteIx": 2,
+            "paletteIx": 1,
             "variant": 1,
             "stroke": false,
             "depthMin": 2,
@@ -633,12 +620,8 @@
         }
       ],
       "objective": {
-        "pass": false,
-        "blocked": [
-          "DUPLICATE_PERCEPTUAL",
-          "SEED_DIVERSITY",
-          "BLANK_DETECTION"
-        ],
+        "pass": true,
+        "blocked": [],
         "checks": [
           {
             "id": "CONFIG_LEGAL",
@@ -662,15 +645,15 @@
           },
           {
             "id": "DUPLICATE_PERCEPTUAL",
-            "ok": false
+            "ok": true
           },
           {
             "id": "SEED_DIVERSITY",
-            "ok": false
+            "ok": true
           },
           {
             "id": "BLANK_DETECTION",
-            "ok": false
+            "ok": true
           },
           {
             "id": "STATE_IDENTITY_EXACT",
@@ -690,8 +673,41 @@
           }
         ]
       },
-      "sheets": [],
-      "measurements": null
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "b04d09f35d17e2725d253eb7e769e9c90f7039b2807e7400e903f342f41fdfdf",
+          "bytes": 106981
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "9ee1252f9ea806e7a992edf062725058ffd0908f66edeeff1e69bad87d611466",
+          "bytes": 45571
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "7bd0dc497264473a8cf918543b1cd0eb6620ccfc9a238c0ff0eef23c2f42f43f",
+          "bytes": 108908
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "51ca6334f5056a6b25d75a34ebaf5a8508a2d56f2cd8a412ccd905250bf76b45",
+          "bytes": 44068
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "ee2467748948bd7c6ac2abcdb3761faf732c245fbb865932a05d565a0fe385b8",
+          "bytes": 10914
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.372,
+        "inkMin": 0.228,
+        "stateDeMean": 8.66,
+        "stateDeMin": 2.02,
+        "seedDeMean": 13.44,
+        "seedDeMin": 2
+      }
     }
   ]
 }

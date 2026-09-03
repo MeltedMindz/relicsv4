@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "startedAt": "2026-09-03T19:02:53.871Z",
-  "finishedAt": "2026-09-03T19:02:55.775Z",
+  "startedAt": "2026-09-03T19:10:43.559Z",
+  "finishedAt": "2026-09-03T19:10:45.163Z",
   "runtimeId": "VECTOR_COMPOSITION_V1",
   "floors": {
     "ink": 0.04,
@@ -60,28 +60,28 @@
     {
       "id": "DUPLICATE_PERCEPTUAL",
       "ok": true,
-      "detail": "the closest pair of seeds differs by 6.482 dE (floor 1.2)",
+      "detail": "the closest pair of seeds differs by 8.532 dE (floor 1.2)",
       "measured": {
-        "minPairDeltaE": 6.482,
+        "minPairDeltaE": 8.532,
         "pairs": 120
       }
     },
     {
       "id": "SEED_DIVERSITY",
       "ok": true,
-      "detail": "seeds differ by 14.511 dE on average and 6.482 at the closest pair (floors 3 / 1.2)",
+      "detail": "seeds differ by 18.894 dE on average and 8.532 at the closest pair (floors 3 / 1.2)",
       "measured": {
-        "meanDeltaE": 14.511,
-        "minDeltaE": 6.482
+        "meanDeltaE": 18.894,
+        "minDeltaE": 8.532
       }
     },
     {
       "id": "BLANK_DETECTION",
       "ok": true,
-      "detail": "the emptiest of 52 sampled frames covers 24.2% of the frame with drawing (floor 4%), across all three market states",
+      "detail": "the emptiest of 52 sampled frames covers 22.2% of the frame with drawing (floor 4%), across all three market states",
       "measured": {
-        "minInk": 0.2422,
-        "meanInk": 0.486,
+        "minInk": 0.2219,
+        "meanInk": 0.5277,
         "frames": 52,
         "emptiestState": "neutral",
         "vanishingFrames": 0
@@ -99,34 +99,34 @@
     {
       "id": "PERCEPTUAL_SEPARATION",
       "ok": true,
-      "detail": "the weakest state pairing is nr at 4.778 dE (floor 3.8)",
+      "detail": "the weakest state pairing is nr at 6.111 dE (floor 3.8)",
       "measured": {
-        "ns": 6.9,
-        "nr": 4.778,
-        "sr": 5.774,
+        "ns": 8.78,
+        "nr": 6.111,
+        "sr": 7.464,
         "weakestPairing": "nr"
       }
     },
     {
       "id": "STRUCTURAL_ROLE",
       "ok": true,
-      "detail": "all 3 declared fields change the picture when removed (weakest 8.448 dE, floor 1.5)",
+      "detail": "all 3 declared fields change the picture when removed (weakest 10.573 dE, floor 1.5)",
       "measured": {
         "units": 3,
         "findings": [
           {
             "unit": 0,
-            "measured": 12.837,
+            "measured": 16.248,
             "detail": "draws"
           },
           {
             "unit": 1,
-            "measured": 8.448,
+            "measured": 10.573,
             "detail": "draws"
           },
           {
             "unit": 2,
-            "measured": 9.96,
+            "measured": 11.599,
             "detail": "draws"
           }
         ]
@@ -135,9 +135,9 @@
     {
       "id": "RENDER_GAS",
       "ok": true,
-      "detail": "the most expensive sampled render costs 1,358,529 gas (portable budget 10,000,000)",
+      "detail": "the most expensive sampled render costs 1,343,295 gas (portable budget 10,000,000)",
       "measured": {
-        "worstGas": 1358529,
+        "worstGas": 1343295,
         "cell": {
           "seed": 138,
           "state": "recovery"

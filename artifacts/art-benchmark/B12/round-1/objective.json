@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "startedAt": "2026-09-03T19:07:35.422Z",
-  "finishedAt": "2026-09-03T19:07:37.214Z",
+  "startedAt": "2026-09-03T19:11:19.742Z",
+  "finishedAt": "2026-09-03T19:11:21.163Z",
   "runtimeId": "GEOMETRIC_RECURSION_V1",
   "floors": {
     "ink": 0.04,
@@ -12,7 +12,7 @@
     "renderGas": 10000000,
     "collectionSeeds": 100
   },
-  "pass": false,
+  "pass": true,
   "unknown": false,
   "checks": [
     {
@@ -59,32 +59,32 @@
     },
     {
       "id": "DUPLICATE_PERCEPTUAL",
-      "ok": false,
-      "detail": "the closest pair of seeds differs by 1.036 dE (floor 1.2)",
+      "ok": true,
+      "detail": "the closest pair of seeds differs by 2.814 dE (floor 1.2)",
       "measured": {
-        "minPairDeltaE": 1.036,
+        "minPairDeltaE": 2.814,
         "pairs": 120
       }
     },
     {
       "id": "SEED_DIVERSITY",
-      "ok": false,
-      "detail": "seeds differ by 12.261 dE on average and 1.036 at the closest pair (floors 3 / 1.2)",
+      "ok": true,
+      "detail": "seeds differ by 10.274 dE on average and 2.814 at the closest pair (floors 3 / 1.2)",
       "measured": {
-        "meanDeltaE": 12.261,
-        "minDeltaE": 1.036
+        "meanDeltaE": 10.274,
+        "minDeltaE": 2.814
       }
     },
     {
       "id": "BLANK_DETECTION",
-      "ok": false,
-      "detail": "12 of 52 sampled frames are below the 4% floor; the emptiest is collection sweep at neutral, covering 0.0%. 10 of them are review-ring frames that VANISH in a market state the token survives elsewhere: stress",
+      "ok": true,
+      "detail": "the emptiest of 52 sampled frames covers 16.2% of the frame with drawing (floor 4%), across all three market states",
       "measured": {
-        "minInk": 0,
-        "meanInk": 0.2011,
+        "minInk": 0.1621,
+        "meanInk": 0.4223,
         "frames": 52,
-        "emptiestState": "neutral",
-        "vanishingFrames": 10
+        "emptiestState": "stress",
+        "vanishingFrames": 0
       }
     },
     {
@@ -99,29 +99,29 @@
     {
       "id": "PERCEPTUAL_SEPARATION",
       "ok": true,
-      "detail": "the weakest state pairing is ns at 5.837 dE (floor 3.8)",
+      "detail": "the weakest state pairing is ns at 6.014 dE (floor 3.8)",
       "measured": {
-        "ns": 5.837,
-        "nr": 7.962,
-        "sr": 13.16,
+        "ns": 6.014,
+        "nr": 7.899,
+        "sr": 12.842,
         "weakestPairing": "ns"
       }
     },
     {
       "id": "STRUCTURAL_ROLE",
       "ok": true,
-      "detail": "all 2 declared rules change the picture when removed (weakest 3.513 dE, floor 1.5)",
+      "detail": "all 2 declared rules change the picture when removed (weakest 5.399 dE, floor 1.5)",
       "measured": {
         "units": 2,
         "findings": [
           {
             "unit": 0,
-            "measured": 3.513,
+            "measured": 5.399,
             "detail": "draws"
           },
           {
             "unit": 1,
-            "measured": 11.595,
+            "measured": 8.307,
             "detail": "draws"
           }
         ]

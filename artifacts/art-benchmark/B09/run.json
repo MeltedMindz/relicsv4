@@ -7,7 +7,7 @@
   "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:03:17.173Z",
+    "decidedAt": "2026-09-03T19:11:08.901Z",
     "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
     "briefSubstance": {
       "chars": 675,
@@ -197,7 +197,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:03:17.175Z",
+    "createdAt": "2026-09-03T19:11:08.903Z",
     "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -240,8 +240,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "cbe9606a9dc27e33a011b1da203953eba3b40bfa3a323dedc842eb065f8efe73",
-      "configBytes": "0x5643563101000002030426282b4a4f550f1113b07d3a0307000302000207073e8000000701000200020606357a100000000103010005211e741800000f426172726f77205265737461746564ff",
+      "configHash": "a251a803188b1828e8885f59c8aaf31dc13ecd9e9e46659a2008cfb607252bea",
+      "configBytes": "0x5643563101000002020426282b4a4f550f1113b07d3a0307000302000207073e8000000701000200020606357a100000000103010005211e741800000f426172726f77205265737461746564ff",
       "config": {
         "fields": [
           {
@@ -299,7 +299,7 @@
         ],
         "groundMode": "FLAT",
         "groundIx": 2,
-        "groundIx2": 3,
+        "groundIx2": 2,
         "flags": [],
         "title": "Barrow Restated"
       },

@@ -7,7 +7,7 @@
   "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:03:11.902Z",
+    "decidedAt": "2026-09-03T19:11:03.204Z",
     "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
     "briefSubstance": {
       "chars": 683,
@@ -187,7 +187,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:03:11.904Z",
+    "createdAt": "2026-09-03T19:11:03.206Z",
     "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -230,8 +230,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "90a13d6b2096a6e76c28eb84dcb79418e087c3eee871dfb0e3584802040b11e3",
-      "configBytes": "0x564356310100000001030f11139c7f3d59636b030b000102010218181c8005000906010201021414187a15000806020301000a2214741d0000134573636170656d656e74205265737461746564ff",
+      "configHash": "a63d0f7756bbb1fd7bd3a9e578c75cd64c81ce0bf1f35e4abfe4901eac08ee63",
+      "configBytes": "0x564356310100000000030f11139c7f3d59636b030b000102010218181c8005000906010201021414187a15000806020301000a2214741d0000134573636170656d656e74205265737461746564ff",
       "config": {
         "fields": [
           {
@@ -288,7 +288,7 @@
         ],
         "groundMode": "FLAT",
         "groundIx": 0,
-        "groundIx2": 1,
+        "groundIx2": 0,
         "flags": [],
         "title": "Escapement Restated"
       },

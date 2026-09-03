@@ -7,7 +7,7 @@
   "briefSha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:03:03.563Z",
+    "decidedAt": "2026-09-03T19:10:54.919Z",
     "briefSha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
     "briefSubstance": {
       "chars": 703,
@@ -170,7 +170,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:03:03.565Z",
+    "createdAt": "2026-09-03T19:10:54.920Z",
     "briefSha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",

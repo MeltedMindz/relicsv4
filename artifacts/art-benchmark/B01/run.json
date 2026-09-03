@@ -7,7 +7,7 @@
   "briefSha256": "682713ed3290e0629dbf2a67488d05d5ff4ca952a265dcac8b12b7dde5db81ef",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:02:44.959Z",
+    "decidedAt": "2026-09-03T19:10:34.709Z",
     "briefSha256": "682713ed3290e0629dbf2a67488d05d5ff4ca952a265dcac8b12b7dde5db81ef",
     "briefSubstance": {
       "chars": 725,
@@ -178,7 +178,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:02:44.974Z",
+    "createdAt": "2026-09-03T19:10:34.723Z",
     "briefSha256": "682713ed3290e0629dbf2a67488d05d5ff4ca952a265dcac8b12b7dde5db81ef",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -221,8 +221,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "43bd0e25a8fbf75b448c1ac30940b323a6028de504f95414d3f57bdbf1b7980d",
-      "configBytes": "0x564356310100020202034a4f558d8b860f111303000001030100081a1a8000000401000201021414167a10000500010201030719127418000012436f6c6f6e6e616465205265737461746564ff",
+      "configHash": "be511f7c9e213395fcee42b518b7ad2d86c29685225f78992f12ca70b14adbb3",
+      "configBytes": "0x564356310100000202034a4f558d8b860f111303000001030100081a1a8000000401000201021414167a10000500010201030719127418000012436f6c6f6e6e616465205265737461746564ff",
       "config": {
         "fields": [
           {
@@ -277,7 +277,7 @@
           "#8d8b86",
           "#0f1113"
         ],
-        "groundMode": "RADIAL",
+        "groundMode": "FLAT",
         "groundIx": 2,
         "groundIx2": 2,
         "flags": [],

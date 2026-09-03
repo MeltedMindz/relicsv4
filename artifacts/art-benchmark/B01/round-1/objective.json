@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "startedAt": "2026-09-03T19:02:45.324Z",
-  "finishedAt": "2026-09-03T19:02:47.539Z",
+  "startedAt": "2026-09-03T19:10:35.095Z",
+  "finishedAt": "2026-09-03T19:10:37.017Z",
   "runtimeId": "VECTOR_COMPOSITION_V1",
   "floors": {
     "ink": 0.04,
@@ -78,12 +78,12 @@
     {
       "id": "BLANK_DETECTION",
       "ok": true,
-      "detail": "the emptiest of 52 sampled frames covers 30.5% of the frame with drawing (floor 4%), across all three market states",
+      "detail": "the emptiest of 52 sampled frames covers 44.4% of the frame with drawing (floor 4%), across all three market states",
       "measured": {
-        "minInk": 0.3047,
-        "meanInk": 0.5893,
+        "minInk": 0.4435,
+        "meanInk": 0.6911,
         "frames": 52,
-        "emptiestState": "stress",
+        "emptiestState": "neutral",
         "vanishingFrames": 0
       }
     },
@@ -135,9 +135,9 @@
     {
       "id": "RENDER_GAS",
       "ok": true,
-      "detail": "the most expensive sampled render costs 1,272,944 gas (portable budget 10,000,000)",
+      "detail": "the most expensive sampled render costs 1,257,565 gas (portable budget 10,000,000)",
       "measured": {
-        "worstGas": 1272944,
+        "worstGas": 1257565,
         "cell": {
           "seed": 138,
           "state": "recovery"

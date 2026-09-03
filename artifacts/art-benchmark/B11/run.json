@@ -7,7 +7,7 @@
   "briefSha256": "6c6700e88bf407cd39449d9657748f7012fea3e9f9be92837d2a020005358475",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:03:24.920Z",
+    "decidedAt": "2026-09-03T19:11:16.132Z",
     "briefSha256": "6c6700e88bf407cd39449d9657748f7012fea3e9f9be92837d2a020005358475",
     "briefSubstance": {
       "chars": 698,
@@ -136,7 +136,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:03:24.922Z",
+    "createdAt": "2026-09-03T19:11:16.134Z",
     "briefSha256": "6c6700e88bf407cd39449d9657748f7012fea3e9f9be92837d2a020005358475",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -179,8 +179,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "d01f9685333af589889e973b19b11ea231da73292203ab2d6b224d8d9feb4697",
-      "configBytes": "0x564356310100000001050f111359636b4a4f55b07d3aa4643c0307000302000207073e8000000701010200020606357a100000000203010005211e741800000d4d61726b657420497473656c66ff",
+      "configHash": "fbfc46d462f08fd7db8edcbe79cbe1dfcbe7b8250e2092a1dccb8fcdfacf9eb7",
+      "configBytes": "0x564356310100000000050f111359636b4a4f55b07d3aa4643c0307000302000207073e8000000701010200020606357a100000000203010005211e741800000d4d61726b657420497473656c66ff",
       "config": {
         "fields": [
           {
@@ -239,7 +239,7 @@
         ],
         "groundMode": "FLAT",
         "groundIx": 0,
-        "groundIx2": 1,
+        "groundIx2": 0,
         "flags": [],
         "title": "Market Itself"
       },

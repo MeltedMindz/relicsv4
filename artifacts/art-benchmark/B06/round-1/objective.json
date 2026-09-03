@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "startedAt": "2026-09-03T19:03:03.605Z",
-  "finishedAt": "2026-09-03T19:03:05.377Z",
+  "startedAt": "2026-09-03T19:10:54.960Z",
+  "finishedAt": "2026-09-03T19:10:56.716Z",
   "runtimeId": "VECTOR_COMPOSITION_V1",
   "floors": {
     "ink": 0.04,
@@ -78,10 +78,10 @@
     {
       "id": "BLANK_DETECTION",
       "ok": true,
-      "detail": "the emptiest of 52 sampled frames covers 28.1% of the frame with drawing (floor 4%), across all three market states",
+      "detail": "the emptiest of 52 sampled frames covers 28.3% of the frame with drawing (floor 4%), across all three market states",
       "measured": {
-        "minInk": 0.281,
-        "meanInk": 0.5288,
+        "minInk": 0.2834,
+        "meanInk": 0.5661,
         "frames": 52,
         "emptiestState": "stress",
         "vanishingFrames": 0

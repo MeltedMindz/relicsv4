@@ -7,7 +7,7 @@
   "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:02:57.974Z",
+    "decidedAt": "2026-09-03T19:10:47.422Z",
     "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
     "briefSubstance": {
       "chars": 706,
@@ -170,7 +170,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:02:57.976Z",
+    "createdAt": "2026-09-03T19:10:47.424Z",
     "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -213,8 +213,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "e518a21098a5446e82f876f6eae928c80f2aaf451c349e489f8500151cf860c5",
-      "configBytes": "0x564356310100000001040f11138d8b86b07d3ad9d2c2030000030201000a1e1a800000040101020100091b167a10000500020301000c221274180000105375626a656374205265737461746564ff",
+      "configHash": "4a1c83b853580481450ce77da5425368ea93936d54d24df233275111442e8f00",
+      "configBytes": "0x564356310100000000040f11138d8b86b07d3ad9d2c2030000030201000a1e1a800000040101020100091b167a10000500020301000c221274180000105375626a656374205265737461746564ff",
       "config": {
         "fields": [
           {
@@ -272,7 +272,7 @@
         ],
         "groundMode": "FLAT",
         "groundIx": 0,
-        "groundIx2": 1,
+        "groundIx2": 0,
         "flags": [],
         "title": "Subject Restated"
       },

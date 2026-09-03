@@ -7,7 +7,7 @@
   "briefSha256": "36c766ba051a2c28f5b9aa7a0c2705ef4edf72dfd51a45a717b05a0932532292",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:02:53.830Z",
+    "decidedAt": "2026-09-03T19:10:43.510Z",
     "briefSha256": "36c766ba051a2c28f5b9aa7a0c2705ef4edf72dfd51a45a717b05a0932532292",
     "briefSubstance": {
       "chars": 682,
@@ -202,7 +202,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:02:53.832Z",
+    "createdAt": "2026-09-03T19:10:43.512Z",
     "briefSha256": "36c766ba051a2c28f5b9aa7a0c2705ef4edf72dfd51a45a717b05a0932532292",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -245,8 +245,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "797c1d18424ca14b53a27a7fd828f26a0b94afb3648dca8983f81cf8b01323a2",
-      "configBytes": "0x564356310100020001050f11135b4632b07d3ac2ac8259636b030400030301000a1e1a800000000101030100091b167a1000050002020103091b127418000011536564696d656e74205265737461746564ff",
+      "configHash": "32ce169e149ef2405f29d4fac5275747586addade7d48fc4cf38ea2a23e4f0eb",
+      "configBytes": "0x564356310100000000050f11135b4632b07d3ac2ac8259636b030400030301000a1e1a800000000101030100091b167a1000050002020103091b127418000011536564696d656e74205265737461746564ff",
       "config": {
         "fields": [
           {
@@ -303,9 +303,9 @@
           "#c2ac82",
           "#59636b"
         ],
-        "groundMode": "RADIAL",
+        "groundMode": "FLAT",
         "groundIx": 0,
-        "groundIx2": 1,
+        "groundIx2": 0,
         "flags": [],
         "title": "Sediment Restated"
       },
@@ -817,37 +817,37 @@
       "sheets": [
         {
           "name": "dev-seeds-256.png",
-          "sha256": "0a2e4a63b1256c52b7aeb0d6ea57f1affc29b6757dff71677c724fb03d432592",
-          "bytes": 342611
+          "sha256": "068ea4d4da5338ec169c9df56c11c5d1dfd1719104e97a057e0106c891d80af9",
+          "bytes": 260804
         },
         {
           "name": "dev-seeds-120.png",
-          "sha256": "5c99689e463b10fc0c7481ad8ace79b21fa6157e4b2194c997cb9b6b386aebc3",
-          "bytes": 148862
+          "sha256": "8ee35f434371bb417dff02b848c50f43f17bc356dfd1a8bed541d21d80db283a",
+          "bytes": 115008
         },
         {
           "name": "dev-states-256.png",
-          "sha256": "1ae2ad83942c6e29b79effec76985c4345c0fc1f49a0986ad6c2f296557277d3",
-          "bytes": 327308
+          "sha256": "18166ba27fcd011897f13710adbb658957fccae6088959165699cd9dccdd4eae",
+          "bytes": 247407
         },
         {
           "name": "dev-states-120.png",
-          "sha256": "5c63f3f4008867962498627183d63406d02d940f85cb6082e03fe3f17d3fbdc3",
-          "bytes": 146324
+          "sha256": "1120dc8333beffbec24a2bbb36d7782ee74e3c140788445f6811c6174110f7ce",
+          "bytes": 110297
         },
         {
           "name": "dev-single-512.png",
-          "sha256": "4304c4cbc8eb2b763fd9b3b321f08ede459b73c2d508c5de8572f8e1e8a4444b",
-          "bytes": 60392
+          "sha256": "0b2f32d47952c8abde631a39d7b0ed547264ffc899458bd65481c05e0d7da571",
+          "bytes": 37610
         }
       ],
       "measurements": {
-        "inkMean": 0.505,
-        "inkMin": 0.264,
-        "stateDeMean": 6.54,
-        "stateDeMin": 3.09,
-        "seedDeMean": 14.25,
-        "seedDeMin": 7.09
+        "inkMean": 0.529,
+        "inkMin": 0.274,
+        "stateDeMean": 8.36,
+        "stateDeMin": 4.06,
+        "seedDeMean": 18.28,
+        "seedDeMin": 8.64
       }
     }
   ]

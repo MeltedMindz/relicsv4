@@ -7,7 +7,7 @@
   "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T19:06:12.408Z",
+    "decidedAt": "2026-09-03T19:11:12.458Z",
     "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
     "briefSubstance": {
       "chars": 660,
@@ -248,7 +248,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T19:06:12.411Z",
+    "createdAt": "2026-09-03T19:11:12.460Z",
     "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "GEOMETRIC_RECURSION_V1",
@@ -291,8 +291,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "23bedf2eec69a2eda6a5e4a7bba93570324553bd9ad90209a49483b157e18675",
-      "configBytes": "0x475256310204000001030f1113d9d2c259636b021d1301030104030303370c037100001506020201020204025a1201510100001146696c6967726565205265737461746564ff",
+      "configHash": "6761819a7eba297f14cfb20ecf1c3fc9e7a71e0abb705b4860a6901fe76b4283",
+      "configBytes": "0x475256310204000000030f1113d9d2c259636b021d1301030104030303370c037100001506020201020204025a1201510100001146696c6967726565205265737461746564ff",
       "config": {
         "rules": [
           {
@@ -361,7 +361,7 @@
         ],
         "groundMode": "FLAT",
         "groundIx": 0,
-        "groundIx2": 1,
+        "groundIx2": 0,
         "flags": [
           "OUTLINE"
         ],

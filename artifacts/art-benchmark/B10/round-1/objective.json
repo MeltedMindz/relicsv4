@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "startedAt": "2026-09-03T19:06:12.452Z",
-  "finishedAt": "2026-09-03T19:06:14.102Z",
+  "startedAt": "2026-09-03T19:11:12.504Z",
+  "finishedAt": "2026-09-03T19:11:14.008Z",
   "runtimeId": "GEOMETRIC_RECURSION_V1",
   "floors": {
     "ink": 0.04,
@@ -80,8 +80,8 @@
       "ok": true,
       "detail": "the emptiest of 52 sampled frames covers 13.4% of the frame with drawing (floor 4%), across all three market states",
       "measured": {
-        "minInk": 0.1337,
-        "meanInk": 0.3188,
+        "minInk": 0.1341,
+        "meanInk": 0.3198,
         "frames": 52,
         "emptiestState": "stress",
         "vanishingFrames": 0
@@ -130,9 +130,9 @@
     {
       "id": "RENDER_GAS",
       "ok": true,
-      "detail": "the most expensive sampled render costs 981,699 gas (portable budget 10,000,000)",
+      "detail": "the most expensive sampled render costs 981,687 gas (portable budget 10,000,000)",
       "measured": {
-        "worstGas": 981699,
+        "worstGas": 981687,
         "cell": {
           "seed": 212,
           "state": "stress"
