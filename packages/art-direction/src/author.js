@@ -544,15 +544,34 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   // CROSS is never elected on any path: it is stroke-forced, carries ink120 0.060 against SQUARE's
   // 0.399, and the atlas records that widening a set to include it manufactures near-blank tokens.
   const shapeByDensity = {
-    // SPARSENESS IS ABOUT WHERE THE INK IS NOT, and it is delivered by extent and contraction
-    // below rather than by drawing almost nothing. TRIANGLE is the lightest shape after CROSS
-    // (ink120 0.162 against SQUARE's 0.399) and a SPARSE set built around it measured an ink floor
-    // of 0.029 across the review ring — below the blank floor, on a stress frame.
-    SPARSE: ["DIAMOND", "CIRCLE", "HEX"],
-    MODERATE: ["SQUARE", "DIAMOND", "HEX"],
-    DENSE: ["SQUARE", "HEX", "CIRCLE"],
+    // FOUR MEMBERS, BECAUSE THE SHAPE IS THIS RUNTIME'S ONLY CATEGORICAL SEED DRAW WORTH WIDENING.
+    //
+    // The seed picks one shape, one production and one symmetry per token, and those three draws
+    // are the entire per-token topology — the difference between twelve works and one work at
+    // twelve settings, which is the axis that held `idol`. Measured on a single-form configuration,
+    // widening the shape set from three members to four moved seed separation from 8.420 mean /
+    // 3.447 min to 9.896 / 4.778 with the ink floor unchanged at 0.185, and adding a third
+    // production and a second symmetry on top reached 12.441 / 4.388.
+    //
+    // TWO OF THE SIX SHAPES ARE EXCLUDED ON EVERY PATH AND BOTH EXCLUSIONS ARE MEASURED.
+    //
+    // CROSS is stroke-forced whatever the flag says and carries ink120 0.060 against SQUARE's
+    // 0.399; the atlas records that including it manufactures near-blank tokens with no warning.
+    // TRIANGLE is the next lightest at 0.162, which is survivable at full scale and is not at the
+    // spread floor: a DILATION binding puts the root at the bytecode floor of 40 of 256 in its low
+    // state, and a sparse set carrying TRIANGLE measured an ink floor of 0.038 there — under the
+    // blank floor of 0.040, on one frame of thirty-six. Removing it and keeping four members costs
+    // no diversity: the four-member set measured 9.896 mean / 4.778 min seed separation against
+    // the three-member set's 8.420 / 3.447.
+    //
+    // That leaves four usable shapes and all three densities take them. Density in this runtime is
+    // carried by stroke, branch and contraction — which the atlas's own 120px ranking puts first,
+    // sixth and fifth, against shape's second — and shape is spent on per-token topology instead.
+    SPARSE: ["SQUARE", "DIAMOND", "CIRCLE", "HEX"],
+    MODERATE: ["SQUARE", "DIAMOND", "CIRCLE", "HEX"],
+    DENSE: ["SQUARE", "DIAMOND", "CIRCLE", "HEX"],
   };
-  const shapeSet = wantsRadial ? ["CIRCLE", "HEX", "DIAMOND"] : shapeByDensity[intent.densityTarget];
+  const shapeSet = wantsRadial ? ["CIRCLE", "HEX", "DIAMOND", "SQUARE"] : shapeByDensity[intent.densityTarget];
   set("SILHOUETTE", "rules[0].shapeSet", attempt === 0 ? shapeSet : [...shapeSet].reverse());
   notes.push({ stage: "SILHOUETTE", why: `shapeSet from densityTarget=${intent.densityTarget}; the atlas ranks seed shape second-loudest at 120px and CROSS is excluded on every path`, consulted: shapes.parameter });
 

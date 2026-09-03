@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T18:46:51.876Z",
+  "generatedAt": "2026-09-03T18:51:54.564Z",
   "seeds": [
     500003,
     508194,
@@ -8,177 +8,13 @@
     532767,
     540958,
     549149,
-    557340
+    557340,
+    565531,
+    573722,
+    581913,
+    590104
   ],
   "rows": [
-    {
-      "id": "B01",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "SUBTRACTION",
-      "polarity": "PEAKS_AT_RECOVERY",
-      "drive": "COUNT",
-      "sensor": "RECOVERY",
-      "curve": "LOG2",
-      "de": {
-        "ns": 2.167,
-        "nr": 1.453,
-        "sr": 2.364
-      },
-      "weakest": 1.453,
-      "seedDe": {
-        "mean": 8.246,
-        "min": 3.223
-      },
-      "ink": {
-        "mean": 0.396,
-        "min": 0.131
-      },
-      "extent": {
-        "mean": 0.898,
-        "min": 0.542
-      },
-      "components": {
-        "neutral": 1,
-        "stress": 1
-      },
-      "largestShare": {
-        "neutral": 1,
-        "stress": 1
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": false,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B02",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "SUBTRACTION",
-      "polarity": "PEAKS_AT_RECOVERY",
-      "drive": "COUNT",
-      "sensor": "RECOVERY",
-      "curve": "LOG2",
-      "de": {
-        "ns": 4.197,
-        "nr": 3.874,
-        "sr": 4.783
-      },
-      "weakest": 3.874,
-      "seedDe": {
-        "mean": 7.87,
-        "min": 2.705
-      },
-      "ink": {
-        "mean": 0.207,
-        "min": 0.095
-      },
-      "extent": {
-        "mean": 0.748,
-        "min": 0.4
-      },
-      "components": {
-        "neutral": 1.75,
-        "stress": 1.625
-      },
-      "largestShare": {
-        "neutral": 0.968,
-        "stress": 0.932
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B03",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "SUBTRACTION",
-      "polarity": "PEAKS_AT_RECOVERY",
-      "drive": "COUNT",
-      "sensor": "RECOVERY",
-      "curve": "LOG2",
-      "de": {
-        "ns": 8.095,
-        "nr": 5.726,
-        "sr": 6.607
-      },
-      "weakest": 5.726,
-      "seedDe": {
-        "mean": 16.988,
-        "min": 7.172
-      },
-      "ink": {
-        "mean": 0.56,
-        "min": 0.33
-      },
-      "extent": {
-        "mean": 0.967,
-        "min": 0.867
-      },
-      "components": {
-        "neutral": 3.25,
-        "stress": 3.25
-      },
-      "largestShare": {
-        "neutral": 0.979,
-        "stress": 0.814
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B04",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "SUBTRACTION",
-      "polarity": "PEAKS_AT_STRESS",
-      "drive": "COUNT",
-      "sensor": "DRAWDOWN",
-      "curve": "LOG2",
-      "de": {
-        "ns": 13.298,
-        "nr": 8.963,
-        "sr": 13.218
-      },
-      "weakest": 8.963,
-      "seedDe": {
-        "mean": 20.329,
-        "min": 11.671
-      },
-      "ink": {
-        "mean": 0.605,
-        "min": 0.311
-      },
-      "extent": {
-        "mean": 0.988,
-        "min": 0.9
-      },
-      "components": {
-        "neutral": 3.25,
-        "stress": 3.125
-      },
-      "largestShare": {
-        "neutral": 0.92,
-        "stress": 0.829
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
     {
       "id": "B05",
       "runtimeId": "GEOMETRIC_RECURSION_V1",
@@ -188,198 +24,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 10.356,
-        "nr": 9.288,
-        "sr": 19.586
+        "ns": 12.142,
+        "nr": 10.66,
+        "sr": 22.721
       },
-      "weakest": 9.288,
+      "weakest": 10.66,
       "seedDe": {
-        "mean": 7.463,
-        "min": 1.954
+        "mean": 9.433,
+        "min": 2.532
       },
       "ink": {
-        "mean": 0.243,
+        "mean": 0.298,
         "min": 0.058
       },
       "extent": {
-        "mean": 0.614,
+        "mean": 0.669,
         "min": 0.583
       },
       "components": {
         "neutral": 1,
-        "stress": 1.375
+        "stress": 1.5
       },
       "largestShare": {
         "neutral": 1,
         "stress": 0.996
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B06",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "SUBTRACTION",
-      "polarity": "PEAKS_AT_RECOVERY",
-      "drive": "COUNT",
-      "sensor": "RECOVERY",
-      "curve": "LOG2",
-      "de": {
-        "ns": 5.66,
-        "nr": 3.898,
-        "sr": 4.287
-      },
-      "weakest": 3.898,
-      "seedDe": {
-        "mean": 14.757,
-        "min": 6.2
-      },
-      "ink": {
-        "mean": 0.553,
-        "min": 0.331
-      },
-      "extent": {
-        "mean": 0.967,
-        "min": 0.867
-      },
-      "components": {
-        "neutral": 4.5,
-        "stress": 2.75
-      },
-      "largestShare": {
-        "neutral": 0.967,
-        "stress": 0.983
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B07",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "SUBTRACTION",
-      "polarity": "PEAKS_AT_RECOVERY",
-      "drive": "COUNT",
-      "sensor": "RECOVERY",
-      "curve": "LOG2",
-      "de": {
-        "ns": 9.753,
-        "nr": 6.98,
-        "sr": 9.557
-      },
-      "weakest": 6.98,
-      "seedDe": {
-        "mean": 27.47,
-        "min": 7.173
-      },
-      "ink": {
-        "mean": 0.475,
-        "min": 0.254
-      },
-      "extent": {
-        "mean": 0.914,
-        "min": 0.6
-      },
-      "components": {
-        "neutral": 8.625,
-        "stress": 8.5
-      },
-      "largestShare": {
-        "neutral": 0.78,
-        "stress": 0.852
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B08",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "SEPARATION",
-      "polarity": "PEAKS_AT_STRESS",
-      "drive": "SPREAD",
-      "sensor": "DRAWDOWN",
-      "curve": "LOG2",
-      "de": {
-        "ns": 13.23,
-        "nr": 5.619,
-        "sr": 9.858
-      },
-      "weakest": 5.619,
-      "seedDe": {
-        "mean": 13.125,
-        "min": 2.738
-      },
-      "ink": {
-        "mean": 0.392,
-        "min": 0.178
-      },
-      "extent": {
-        "mean": 0.706,
-        "min": 0.583
-      },
-      "components": {
-        "neutral": 3.25,
-        "stress": 5.75
-      },
-      "largestShare": {
-        "neutral": 0.98,
-        "stress": 0.944
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B09",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "FRACTURE",
-      "polarity": "PEAKS_AT_STRESS",
-      "drive": "SPREAD",
-      "sensor": "DRAWDOWN",
-      "curve": "LINEAR",
-      "de": {
-        "ns": 7.121,
-        "nr": 5.818,
-        "sr": 8.374
-      },
-      "weakest": 5.818,
-      "seedDe": {
-        "mean": 9.043,
-        "min": 4.87
-      },
-      "ink": {
-        "mean": 0.283,
-        "min": 0.106
-      },
-      "extent": {
-        "mean": 0.845,
-        "min": 0.692
-      },
-      "components": {
-        "neutral": 7.125,
-        "stress": 5.625
-      },
-      "largestShare": {
-        "neutral": 0.63,
-        "stress": 0.613
       },
       "blankFrames": 0,
       "floors": {
@@ -398,72 +66,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 7.737,
-        "nr": 10.14,
-        "sr": 11.754
+        "ns": 10.409,
+        "nr": 12.463,
+        "sr": 15.865
       },
-      "weakest": 7.737,
+      "weakest": 10.409,
       "seedDe": {
-        "mean": 8.894,
-        "min": 4.36
+        "mean": 12.288,
+        "min": 4.689
       },
       "ink": {
-        "mean": 0.212,
+        "mean": 0.296,
         "min": 0.05
       },
       "extent": {
-        "mean": 0.639,
+        "mean": 0.723,
         "min": 0.617
       },
       "components": {
-        "neutral": 1.125,
-        "stress": 1
+        "neutral": 1.083,
+        "stress": 1.083
       },
       "largestShare": {
-        "neutral": 0.962,
+        "neutral": 1,
         "stress": 1
-      },
-      "blankFrames": 0,
-      "floors": {
-        "state": true,
-        "seedMean": true,
-        "seedMin": true,
-        "ink": true
-      }
-    },
-    {
-      "id": "B11",
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "mechanism": "FRACTURE",
-      "polarity": "PEAKS_AT_STRESS",
-      "drive": "SPREAD",
-      "sensor": "DRAWDOWN",
-      "curve": "LINEAR",
-      "de": {
-        "ns": 7.55,
-        "nr": 5.7,
-        "sr": 8.521
-      },
-      "weakest": 5.7,
-      "seedDe": {
-        "mean": 8.95,
-        "min": 4.893
-      },
-      "ink": {
-        "mean": 0.314,
-        "min": 0.109
-      },
-      "extent": {
-        "mean": 0.845,
-        "min": 0.692
-      },
-      "components": {
-        "neutral": 6.25,
-        "stress": 5.125
-      },
-      "largestShare": {
-        "neutral": 0.731,
-        "stress": 0.664
       },
       "blankFrames": 0,
       "floors": {
@@ -482,26 +108,26 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 10.332,
-        "nr": 9.267,
-        "sr": 19.538
+        "ns": 12.093,
+        "nr": 10.619,
+        "sr": 22.628
       },
-      "weakest": 9.267,
+      "weakest": 10.619,
       "seedDe": {
-        "mean": 7.384,
-        "min": 1.883
+        "mean": 9.377,
+        "min": 2.627
       },
       "ink": {
-        "mean": 0.243,
+        "mean": 0.298,
         "min": 0.058
       },
       "extent": {
-        "mean": 0.614,
+        "mean": 0.669,
         "min": 0.583
       },
       "components": {
         "neutral": 1,
-        "stress": 1.375
+        "stress": 1.5
       },
       "largestShare": {
         "neutral": 1,
