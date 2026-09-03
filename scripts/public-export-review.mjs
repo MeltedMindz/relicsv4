@@ -166,7 +166,11 @@ for (const v of verbatim) console.log(`    ${v}`);
 console.log(`  (each is PUBLIC_SAFE deterministic protocol math or a published ABI, digest-pinned in VENDOR.json and enforced by npm run launch:parity)`);
 console.log(`\nPUBLIC_SAFE_FILES_ADDED=${publicSafeAdded.length}`);
 console.log(`SERVER_SECRETS_EXPOSED=${violations === 0 ? 0 : violations}`);
-console.log(`TEST_ONLY_ANVIL_KEYS=${anvilTestKeys}  (recognised by digest AND required to sit in a file carrying the TEST ONLY marking; a real key in the same file would not match a known digest and would still be a violation)`);
+// SCOPE IN THE NAME. This counter is over the CHANGED files only, and it printed `0` beside a
+// repository that holds one — which is how "TEST_KEY_LEAK_LOCATIONS=0" came to be reported. The
+// whole-tree count is `TEST_KEY_LEAK_LOCATIONS` above; these two are different questions and must
+// never be read as the same one.
+console.log(`TEST_ONLY_ANVIL_KEYS_IN_CHANGED_FILES=${anvilTestKeys}  (this diff only — the repository-wide figure is TEST_KEY_LEAK_LOCATIONS above. Recognised by digest AND required to sit in a file carrying the TEST ONLY marking; a real key in the same file would not match a known digest and would still be a violation)`);
 console.log(`ADMIN_ONLY_OPERATIONS_EXPOSED=0  (deploySingletons, upgradeability and the multichain operator wiring are recorded as WITHHELD in the sync script, with the reason for each)`);
 console.log(`PRIVATE_OPERATOR_CODE_COPIED=${violations === 0 ? "NO" : "REVIEW"}`);
 console.log(`SCANNER_SELF_EXEMPTION=${selfSkipped ? "scripts/public-export-review.mjs only" : "none"}`);
