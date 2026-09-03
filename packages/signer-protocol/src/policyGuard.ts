@@ -71,7 +71,7 @@ export interface PolicyGuardInput {
   readonly approvedBuild: ApprovedBuild | null | undefined;
 }
 
-import { checkGrantPermission, checkGrantCalldata, type SimulationReceipt } from "./grantGuard.ts";
+import { checkGrantPermission, checkGrantCalldata, checkSignerKeyBinding, type SignerKeyIdentity, type SimulationReceipt } from "./grantGuard.ts";
 
 function refuse(code: SignerRefusalCode, detail: string): SignerRefusal {
   return { kind: "REFUSED", code, detail };
@@ -231,9 +231,30 @@ export function checkStaticPolicy(input: PolicyGuardInput): PolicyVerdict {
   return ALLOWED;
 }
 
-/** The one capability the guard needs from a signer, kept minimal so the guard imports no adapter. */
+/**
+ * The capabilities the guard needs from a signer, kept minimal so the guard imports no adapter.
+ *
+ * `getAddress` is here because the grant is bound to a KEY, and the only component that knows which
+ * key is behind the socket is the thing holding it. It used to be read out of `request.from` — a
+ * field supplied by the caller — which made the binding a check on the request's honesty rather
+ * than on the key's identity.
+ */
 export interface ChainSupportProbe {
   supportsChain(chainId: number): Promise<boolean>;
+  getAddress(): Promise<Address>;
+}
+
+/** Ask the signer which key it holds. An adapter that cannot answer yields a null, never a guess. */
+async function readKeyIdentity(signer: ChainSupportProbe): Promise<SignerKeyIdentity> {
+  try {
+    const keyAddress = await signer.getAddress();
+    if (!ADDRESS_SHAPE.test(String(keyAddress))) {
+      return { keyAddress: null, unreadableBecause: `the signer reported ${JSON.stringify(keyAddress)}, which is not an address` };
+    }
+    return { keyAddress };
+  } catch (cause) {
+    return { keyAddress: null, unreadableBecause: cause instanceof Error ? cause.message : String(cause) };
+  }
 }
 
 /**
@@ -258,10 +279,19 @@ export async function guardSigningRequest(
   // never sets it: `signerServer` requires a grant unconditionally.
   const grantRequired = input.requireGrant !== false;
 
+  // PHASE 0 — WHOSE KEY IS THIS? Asked of the signer, once, before either grant phase, and asked
+  // even when no grant is required: `request.from` is a claim about which account a transaction
+  // will come from, and a signature comes from the key whatever the claim says.
+  const identity = await readKeyIdentity(input.signer);
+  const binding = checkSignerKeyBinding(identity, input.request);
+  if (binding) return { kind: "REFUSED", code: binding.code as unknown as SignerRefusalCode, detail: binding.detail };
+
   // PHASE 1 — permission. No calldata is touched, so an expired or revoked grant refuses before the
   // signer does any work on bytes it will never sign.
   if (grantRequired) {
-    const permission = checkGrantPermission(input.simulation !== undefined ? { request: input.request, simulation: input.simulation } : { request: input.request });
+    const permission = checkGrantPermission(
+      input.simulation !== undefined ? { request: input.request, identity, simulation: input.simulation } : { request: input.request, identity },
+    );
     if (permission.kind === "REFUSED") return { kind: "REFUSED", code: permission.code as unknown as SignerRefusalCode, detail: permission.detail };
   }
 
@@ -278,7 +308,7 @@ export async function guardSigningRequest(
     // so a creator who authorized GEOMETRIC_RECURSION_V1 and nothing else would have authorized all
     // three without being told.
     const approvedTag = input.approvedBuild?.artSelector?.runtimeTag;
-    const calldata = checkGrantCalldata(approvedTag ? { request: input.request, approvedArtRuntimeTag: approvedTag } : { request: input.request });
+    const calldata = checkGrantCalldata(approvedTag ? { request: input.request, identity, approvedArtRuntimeTag: approvedTag } : { request: input.request, identity });
     if (calldata.kind === "REFUSED") return { kind: "REFUSED", code: calldata.code as unknown as SignerRefusalCode, detail: calldata.detail };
   }
 

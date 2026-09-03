@@ -53,6 +53,11 @@ export const REMEDIES = {
     "The grant was issued for a different wallet. A grant is bound to the key it was given for.",
     "npm run kit -- agent ready",
   ),
+  REQUEST_FROM_NOT_SIGNER_KEY: R(
+    "AGENT_CAN_FIX",
+    "The transaction says it comes from one account and this signer holds a different key. Whatever the request declares, the signature comes from the key — so the nonce, the balance and the fee this was built against belong to the wrong account. Rebuild the transaction from the address the signer actually reports.",
+    "npm run kit -- agent ready",
+  ),
   AUTHORIZATION_UNREADABLE: R(
     "CREATOR_ACTION_REQUIRED",
     "The authorization file cannot be read by this version of the signer.",

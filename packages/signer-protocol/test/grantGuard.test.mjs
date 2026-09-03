@@ -4,7 +4,7 @@
 //
 // WHY THIS FILE EXISTS AT ALL, AND WHY `walletAttack.test.mjs` COULD NOT HOLD IT.
 //
-// The grant guard exposes sixteen refusal codes. It runs FIRST — before the shape guard — and the
+// The grant guard exposes seventeen refusal codes. It runs FIRST — before the shape guard — and the
 // shape guard bounds several of the same quantities: both have a chain allowlist, both have a
 // native-value ceiling, both check the creatorRecipient inside the calldata. So on the suite-wide
 // signer a bad chain surfaces as `CHAIN_NOT_AUTHORIZED` rather than `CHAIN_NOT_ALLOWED` purely
@@ -33,6 +33,7 @@
 import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { encodeFunctionData, keccak256, parseEther } from "viem";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { startSignerServer } from "../src/signerServer.ts";
 import { createDevKeystoreSigner } from "../src/adapters/devKeystore.ts";
 import { createLocalSidecarSigner } from "../src/adapters/localSidecar.ts";
@@ -40,10 +41,20 @@ import { SignerRefusedError } from "../src/index.ts";
 import { checkGrantPermission, checkGrantCalldata } from "../src/grantGuard.ts";
 import { LAUNCH_SELECTOR, LAUNCH_FACTORY_ABI } from "../src/launchAbi.ts";
 import {
-  ANVIL_ACCOUNT_ZERO, TEST_CHAIN_ID, TEST_POLICY, APPROVED_BUILD,
+  ANVIL_ACCOUNT_ZERO, ANVIL_ACCOUNT_ZERO_ADDRESS, TEST_CHAIN_ID, TEST_POLICY, APPROVED_BUILD,
   CREATOR_RECIPIENT, SOME_OTHER_CONTRACT, launchCalldata, launchParamsWith, signingRequest,
   withTestAuthorization,
 } from "./helpers.mjs";
+
+/**
+ * THE KEY BEHIND THE SIGNER, stated rather than taken from the request.
+ *
+ * `checkGrantPermission` and `checkGrantCalldata` take this as a REQUIRED argument because the
+ * grant is bound to a key, and until 2026-09-03 they read `request.from` instead — a field the
+ * caller supplies, compared against a grant, by a guard whose whole purpose is not to trust the
+ * caller. A direct unit test that omitted it would be re-testing the defect.
+ */
+const HELD_KEY = { keyAddress: ANVIL_ACCOUNT_ZERO_ADDRESS };
 
 /**
  * A SECOND LOCAL CHAIN ID. Not 1/8453/4663/56 — the dev keystore refuses every production chain,
@@ -239,7 +250,7 @@ test("G-12 phase one refuses a revoked grant on its own, with no phase three to 
   await withGrant({ revokedAt: new Date().toISOString() }, async () => {
     const data = launchCalldata();
     const req = signingRequest({ data, dataHash: keccak256(data) });
-    const verdict = checkGrantPermission({ request: req, simulation: sim(req) });
+    const verdict = checkGrantPermission({ request: req, identity: HELD_KEY, simulation: sim(req) });
     assert.equal(verdict.kind, "REFUSED", "checkGrantPermission allowed a revoked grant; over the socket phase three would have hidden this");
     assert.equal(verdict.code, "AUTHORIZATION_REVOKED");
   });
@@ -249,7 +260,7 @@ test("G-13 phase three refuses a revoked grant on its own, with no phase one to 
   await withGrant({ revokedAt: new Date().toISOString() }, async () => {
     const data = launchCalldata();
     const req = signingRequest({ data, dataHash: keccak256(data) });
-    const verdict = checkGrantCalldata({ request: req });
+    const verdict = checkGrantCalldata({ request: req, identity: HELD_KEY });
     assert.equal(verdict.kind, "REFUSED", "checkGrantCalldata allowed a revoked grant; over the socket phase one would have hidden this");
     assert.equal(verdict.code, "AUTHORIZATION_REVOKED");
   });
@@ -262,7 +273,7 @@ test("G-14 phase three refuses calldata that does not decode as LaunchParams", a
   // `checkGrantCalldata` is exported and an integrator may call it directly.
   const data = `${LAUNCH_SELECTOR}${"11".repeat(64)}`;
   const req = signingRequest({ data, dataHash: keccak256(data), selector: LAUNCH_SELECTOR });
-  const verdict = checkGrantCalldata({ request: req });
+  const verdict = checkGrantCalldata({ request: req, identity: HELD_KEY });
   assert.equal(verdict.kind, "REFUSED", "undecodable calldata was ALLOWED by the grant guard; an unread struct is not a matching one");
   assert.equal(verdict.code, "LAUNCH_PARAMS_FIELD_COUNT_WRONG");
 });
@@ -277,13 +288,75 @@ test("G-15 the royalty is read from bits 8..23 of creatorEarnings, not from the 
   const atCeiling = launchParamsWith({ creatorEarnings: 1n | (500n << 8n) | (1n << 24n) });
   const data = encodeFunctionData({ abi: LAUNCH_FACTORY_ABI, functionName: "launch", args: [atCeiling] });
   const req = signingRequest({ data, dataHash: keccak256(data) });
-  const verdict = checkGrantCalldata({ request: req });
+  const verdict = checkGrantCalldata({ request: req, identity: HELD_KEY });
   assert.equal(verdict.kind, "ALLOWED", `a royalty exactly AT the authorized ceiling was refused (${verdict.detail}); the ceiling is inclusive and the policyVersion byte above it must not be read as royalty`);
 
   // And one bps over is refused, so the two assertions together bracket the field.
   const overCeiling = launchParamsWith({ creatorEarnings: 1n | (501n << 8n) | (1n << 24n) });
   const overData = encodeFunctionData({ abi: LAUNCH_FACTORY_ABI, functionName: "launch", args: [overCeiling] });
-  const overVerdict = checkGrantCalldata({ request: signingRequest({ data: overData, dataHash: keccak256(overData) }) });
+  const overVerdict = checkGrantCalldata({ request: signingRequest({ data: overData, dataHash: keccak256(overData) }), identity: HELD_KEY });
   assert.equal(overVerdict.kind, "REFUSED");
   assert.equal(overVerdict.code, "ROYALTY_EXCEEDS_AUTHORIZATION");
+});
+
+// ---- THE GRANT IS BOUND TO A KEY, NOT TO A FIELD IN THE REQUEST ---------------------------------
+//
+// MEASURED DEFECT, 2026-09-03. `checkAuthorization({ signerAddress: request.from })` compared the
+// grant's address against a value the CALLER supplied. So a signer holding key B signed under a
+// grant issued for key A, because the request said A — and `AUTHORIZATION_NOT_FOR_THIS_SIGNER`,
+// the refusal written for exactly that, could not fire: the two things being compared both came
+// from the request.
+//
+// THE CONTROL HAS TO SEPARATE THREE ADDRESSES OR IT PROVES NOTHING. G-07 already sets the grant to
+// a third party while the request and the key agree, and it passed BEFORE the fix as well as after
+// — the request's `from` was the grant's counterparty, so the mismatch was visible either way. The
+// case that distinguishes them is: the grant names A, the request CLAIMS A, and the key is B.
+
+const OTHER_KEY = generatePrivateKey();
+const OTHER_KEY_ADDRESS = privateKeyToAccount(OTHER_KEY).address;
+
+test("G-16 a signer holding a DIFFERENT key than the grant names is refused, though the request claims the grant's address", async () => {
+  assert.notEqual(OTHER_KEY_ADDRESS.toLowerCase(), ANVIL_ACCOUNT_ZERO_ADDRESS.toLowerCase(), "fixture drift: the two keys must differ or this control is vacuous");
+  const wrongKey = await startSignerServer({
+    adapter: createDevKeystoreSigner({ privateKey: OTHER_KEY }),
+    policy: WIDE_POLICY,
+    approvedBuild: APPROVED_BUILD,
+  });
+  const wrongKeyClient = createLocalSidecarSigner({ url: wrongKey.url });
+  try {
+    // The grant is the suite's ordinary one: issued to ANVIL_ACCOUNT_ZERO_ADDRESS. The request says
+    // it is from ANVIL_ACCOUNT_ZERO_ADDRESS too, so every value the OLD guard compared agreed. The
+    // key behind the socket is neither of them.
+    const held = await wrongKeyClient.getAddress();
+    assert.equal(held.toLowerCase(), OTHER_KEY_ADDRESS.toLowerCase(), "the harness did not actually put a different key behind the signer");
+    const data = launchCalldata();
+    const code = await refusedBy(wrongKeyClient, "grant for a key this signer does not hold", signingRequest({ data, dataHash: keccak256(data) }));
+    assert.equal(code, "REQUEST_FROM_NOT_SIGNER_KEY", `refused with ${code}; the signature would have come from ${OTHER_KEY_ADDRESS} under a grant issued to ${ANVIL_ACCOUNT_ZERO_ADDRESS}`);
+  } finally {
+    await wrongKey.close();
+  }
+});
+
+test("G-17 BASELINE the same request through the signer that DOES hold the grant's key is signed", async () => {
+  // Without this, G-16 is satisfied by a signer that refuses everything — and the change under test
+  // is one that adds a refusal, which is exactly the kind that can over-refuse.
+  const data = launchCalldata();
+  const req = signingRequest({ data, dataHash: keccak256(data) });
+  const signed = await wideClient.sign(req, sim(req));
+  assert.equal(signed.kind, "SIGNED");
+});
+
+test("G-18 a grant check with NO signer key identity REFUSES rather than falling back to request.from", async () => {
+  // `checkGrantPermission` and `checkGrantCalldata` are exported and a JavaScript integrator can
+  // still call them with the old one-argument shape. That call must produce a typed refusal — not a
+  // TypeError the caller's `catch` turns into a retry, and above all not a silent fallback to the
+  // field whose use was the defect.
+  const data = launchCalldata();
+  const req = signingRequest({ data, dataHash: keccak256(data) });
+  const permission = checkGrantPermission({ request: req, simulation: sim(req) });
+  assert.equal(permission.kind, "REFUSED", "an unidentified key was ALLOWED; an unread key is not a matching one");
+  assert.equal(permission.code, "AUTHORIZATION_NOT_FOR_THIS_SIGNER");
+  const calldata = checkGrantCalldata({ request: req });
+  assert.equal(calldata.kind, "REFUSED", "an unidentified key was ALLOWED by phase three");
+  assert.equal(calldata.code, "AUTHORIZATION_NOT_FOR_THIS_SIGNER");
 });

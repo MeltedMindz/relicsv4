@@ -440,14 +440,14 @@ vocabulary that reaches you over the wire — see below:
 `NO_APPROVED_BUILD`
 
 Two guards carry their own codes beside these, and a client should branch on the string rather than
-on the closed union: the GRANT guard's sixteen (`NO_AUTHORIZATION`, `AUTHORIZATION_UNREADABLE`,
+on the closed union: the GRANT guard's seventeen (`NO_AUTHORIZATION`, `AUTHORIZATION_UNREADABLE`,
 `AUTHORIZATION_REVOKED`, `AUTHORIZATION_EXPIRED`, `AUTHORIZATION_CONSUMED`,
 `AUTHORIZATION_NOT_FOR_THIS_SIGNER`, `BROADCAST_NOT_AUTHORIZED`, `CHAIN_NOT_AUTHORIZED`,
 `TOTAL_GAS_COST_EXCEEDS_AUTHORIZATION`, `NO_SIMULATION_RECEIPT`, `SIMULATION_CALLDATA_MISMATCH`,
 `LAUNCH_PARAMS_FIELD_COUNT_WRONG`, `RECIPIENT_NOT_AUTHORIZED`, `ANTISNIPE_NOT_AUTHORIZED`,
-`ROYALTY_EXCEEDS_AUTHORIZATION`, `RUNTIME_NOT_AUTHORIZED`) and the ART SELECTOR guard's four
-(`ART_SELECTOR_MALFORMED`, `ART_SELECTOR_NOT_APPROVED`, `ART_RUNTIME_NOT_ALLOWED_BY_POLICY`,
-`ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`). Thirty-three in total. Widening the thirteen would be a
+`ROYALTY_EXCEEDS_AUTHORIZATION`, `RUNTIME_NOT_AUTHORIZED`, `REQUEST_FROM_NOT_SIGNER_KEY`) and the
+ART SELECTOR guard's four (`ART_SELECTOR_MALFORMED`, `ART_SELECTOR_NOT_APPROVED`,
+`ART_RUNTIME_NOT_ALLOWED_BY_POLICY`, `ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`). Thirty-four in total. Widening the thirteen would be a
 cross-package contract change; keeping a guard's codes local is the precedent the grant guard set,
 and the codes still reach the agent verbatim.
 

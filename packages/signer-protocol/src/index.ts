@@ -21,11 +21,12 @@
 // ================================================================================================
 import type { Address, AgentPolicy, SignerRefusal, SignerRefusalCode, SignerResult, SigningRequest } from "./contracts.ts";
 import { guardSigningRequest, type ApprovedBuild, type PolicyVerdict } from "./policyGuard.ts";
+import { AuthorizationSpendError, consumeAuthorization } from "./authorization.ts";
 import type { SimulationReceipt } from "./grantGuard.ts";
 
 export * from "./contracts.ts";
-export { checkGrantPermission, checkGrantCalldata, type GrantVerdict, type GrantRefusalCode, type SimulationReceipt } from "./grantGuard.ts";
-export { checkAuthorization, readAuthorization, writeAuthorization, revokeAuthorization, consumeAuthorization, authorizationFingerprint, relicsHome, authorizationPath, type Authorization, type AuthorizationPreset, type AuthorizationMode } from "./authorization.ts";
+export { checkGrantPermission, checkGrantCalldata, checkSignerKeyBinding, type GrantVerdict, type GrantRefusal, type GrantRefusalCode, type SignerKeyIdentity, type SimulationReceipt } from "./grantGuard.ts";
+export { checkAuthorization, readAuthorization, writeAuthorization, revokeAuthorization, consumeAuthorization, AuthorizationSpendError, authorizationFingerprint, relicsHome, authorizationPath, type Authorization, type AuthorizationPreset, type AuthorizationMode } from "./authorization.ts";
 export { checkStaticPolicy, guardSigningRequest, type ApprovedBuild, type ChainSupportProbe, type PolicyGuardInput, type PolicyVerdict } from "./policyGuard.ts";
 export { checkArtSelector, runtimeTagAllowed, type ApprovedArtSelector, type ArtSelectorRefusalCode, type ArtSelectorVerdict } from "./artSelectorGuard.ts";
 export { ALLOWED_SELECTORS, LAUNCH_FACTORY_ABI, LAUNCH_FUNCTION_NAME, LAUNCH_SELECTOR, LaunchAbiShapeError, LaunchCalldataDecodeError, decodeCreatorRecipient } from "./launchAbi.ts";
@@ -135,16 +136,49 @@ export function createPolicyBoundSigner(
       approvedBuild,
       requireGrant: options?.requireGrant !== false,
       ...(simulation !== undefined ? { simulation } : options?.simulation !== undefined ? { simulation: options.simulation } : {}),
-      // Bound rather than passed as the adapter itself: the guard is given the one capability it
-      // needs and no way to reach `sign`.
-      signer: { supportsChain: (chainId: number) => adapter.supportsChain(chainId) },
+      // Bound rather than passed as the adapter itself: the guard is given the two capabilities it
+      // needs and no way to reach `sign`. `getAddress` is one of them because the GRANT IS BOUND TO
+      // A KEY, and the only component that knows which key is behind this boundary is the adapter.
+      signer: {
+        supportsChain: (chainId: number) => adapter.supportsChain(chainId),
+        getAddress: () => adapter.getAddress(),
+      },
     });
 
   // The simulation proof travels WITH the call rather than being baked into the signer at
   // construction: one signer serves many requests, and each one must show its own evidence.
+  //
+  // ---- AND THE GRANT IS SPENT HERE, WHICH IS THE ONLY PLACE IT CAN BE ------------------------------
+  //
+  // `consumeAuthorization` had ZERO call sites until 2026-09-03. Every check on `launchesUsed`
+  // therefore read a number nothing ever incremented, `AUTHORIZATION_CONSUMED` was unreachable in
+  // shipped code, and a grant declaring `launchesAllowed: 1` signed an unbounded stream of launches
+  // — measured: five repeats of one request, then a second, DIFFERENT project.
+  //
+  // IT IS SPENT BEFORE THE ADAPTER IS ASKED TO SIGN, not after. A spend that follows the signature
+  // leaves a window in which a killed process has handed back signed bytes against a grant that
+  // still reads unspent; a spend that precedes it can at worst cost a slot for a signature that was
+  // never produced, which costs a re-authorization rather than a second project. `checkAuthorization`
+  // treats a re-sign of the SAME `launchPlanHash` as the same launch, so a resumed run is not
+  // charged twice and a crash between broadcast and receipt cannot strand a launch that succeeded.
+  //
+  // A SPEND THAT FAILS IS A REFUSAL, NEVER A SIGNATURE. `consumeAuthorization` throws only when the
+  // grant and the check disagree, and the fail-closed answer to that disagreement is not to sign.
   const trySign = async (req: SigningRequest, simulation?: SimulationReceipt | null): Promise<SignerResult | SignerRefusal> => {
     const verdict = await check(req, simulation);
     if (verdict.kind !== "ALLOWED") return verdict;
+    if (options?.requireGrant !== false) {
+      try {
+        consumeAuthorization(req.launchPlanHash);
+      } catch (cause) {
+        const reason = cause instanceof AuthorizationSpendError ? cause.reason : "AUTHORIZATION_CONSUMED";
+        return {
+          kind: "REFUSED",
+          code: reason as unknown as SignerRefusalCode,
+          detail: `the grant could not be spent for this launch, so nothing was signed: ${cause instanceof Error ? cause.message : String(cause)}`,
+        };
+      }
+    }
     return adapter.sign(req);
   };
 

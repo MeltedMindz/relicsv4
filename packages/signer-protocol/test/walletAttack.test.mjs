@@ -207,7 +207,15 @@ test("18 an EXPIRED authorization is refused", async () => {
   });
 });
 test("19 a CONSUMED single-launch authorization is refused", async () => {
-  await withGrant({ launchesUsed: 1, launchesAllowed: 1 }, async () => {
+  // THIS CONTROL SETS THE COUNTER BY HAND, AND THAT IS ALL IT CAN PROVE. It shows the CHECK reads
+  // `launchesUsed`; it cannot show that anything ever writes it, and for a long time nothing did —
+  // `consumeAuthorization` had zero call sites, so this control was green over a state production
+  // never reached. The lifecycle is exercised in `grantLifecycle.test.mjs`, which signs twice.
+  //
+  // `consumedLaunchPlanHashes: []` is not decoration: a spent grant still covers the launch it was
+  // spent on, so without clearing it this control would pass or fail depending on whether an
+  // earlier test in this file had already signed the same plan hash.
+  await withGrant({ launchesUsed: 1, launchesAllowed: 1, consumedLaunchPlanHashes: [] }, async () => {
     const data = launchCalldata();
     const code = await refuses("spent grant", signingRequest({ data, dataHash: keccak256(data) }));
     assert.equal(code, "AUTHORIZATION_CONSUMED");

@@ -206,3 +206,40 @@ test("a well-formed in-policy launch is ALLOWED and reaches the signer exactly o
   assert.equal(calls.length, 1);
   assert.equal(calls[0].data, request.data, "the signer is handed the exact bytes the guard checked");
 });
+
+// ---- WHOSE KEY IS THIS? -------------------------------------------------------------------------
+//
+// This file's signers run with `requireGrant: false`, which is the ONLY place the key-identity
+// check can be observed on its own. With a grant required, both grant phases run the same check, so
+// deleting the call at the top of `guardSigningRequest` leaves them refusing the identical request
+// with the identical code — a guard with a backstop, which is a guard nothing can measure.
+//
+// It also matters in its own right: a request naming an account this signer does not hold is not a
+// grant question. The signature comes from the key whatever the request claims, so every nonce,
+// balance and fee decision taken against that `from` was taken about the wrong account.
+
+test("CONTROL: a request whose `from` is not the key this signer holds is refused REQUEST_FROM_NOT_SIGNER_KEY", async () => {
+  const { calls, adapter } = recordingAdapter();
+  const signer = createPolicyBoundSigner(adapter, TEST_POLICY, APPROVED_BUILD, { requireGrant: false });
+
+  const baseline = await signer.trySign(signingRequest());
+  assert.equal(baseline.kind, "SIGNED", "the unmodified request must be accepted, or this control proves nothing");
+  assert.equal(calls.length, 1);
+
+  const refused = await signer.trySign(signingRequest({ from: ATTACKER_RECIPIENT }));
+  assert.equal(refused.kind, "REFUSED");
+  assert.equal(refused.code, "REQUEST_FROM_NOT_SIGNER_KEY");
+  assert.equal(calls.length, 1, "the request reached the key after the guard had rejected it");
+});
+
+test("a signer whose getAddress THROWS is refused, never assumed", async () => {
+  // Same rule as `supportsChain`: a signer that could not be asked has not answered. An adapter
+  // that cannot say which key it holds cannot have anything it signs attributed to one.
+  const { calls, adapter } = recordingAdapter();
+  const failing = { ...adapter, getAddress: async () => { throw new Error("hardware wallet disconnected"); } };
+  const signer = createPolicyBoundSigner(failing, TEST_POLICY, APPROVED_BUILD, { requireGrant: false });
+  const refused = await signer.trySign(signingRequest());
+  assert.equal(refused.kind, "REFUSED");
+  assert.equal(refused.code, "AUTHORIZATION_NOT_FOR_THIS_SIGNER");
+  assert.equal(calls.length, 0);
+});

@@ -49,7 +49,11 @@ const GRANT = join(SRC, "grantGuard.ts");
 // consequence was structural rather than cosmetic: no mutation targeted `grantGuard.ts` at all, so
 // every grant-side check in this package was unmeasured by the harness that reports its coverage.
 const AUTH = join(SRC, "authorization.ts");
-const SUITE = ["policyGuard.test.mjs", "devKeystore.test.mjs", "sidecar.test.mjs", "artSelector.test.mjs", "walletAttack.test.mjs", "grantGuard.test.mjs"].map((f) => join(TEST_DIR, f));
+const INDEX = join(SRC, "index.ts");
+// `grantLifecycle.test.mjs` IS IN THE SUITE, and without it the six mutations below have nowhere to
+// be caught: every other file in this list asserts against a grant whose counter was set by hand,
+// so the whole SPEND half of the lifecycle can be deleted and every one of them stays green.
+const SUITE = ["policyGuard.test.mjs", "devKeystore.test.mjs", "sidecar.test.mjs", "artSelector.test.mjs", "walletAttack.test.mjs", "grantGuard.test.mjs", "grantLifecycle.test.mjs"].map((f) => join(TEST_DIR, f));
 
 const MUTATIONS = [
   { id: "selector allowlist", file: GUARD, from: `if (!ALLOWED_SELECTORS.some((allowed) => allowed.toLowerCase() === actualSelector)) {`, to: `if (false) {`, expect: "arbitrary ERC-20 transfer() calldata is refused SELECTOR_NOT_ALLOWED" },
@@ -164,7 +168,23 @@ const MUTATIONS = [
   { id: "grant version is understood", file: AUTH, grantGuard: true, occurrences: 1, from: `  if (auth.version !== 1) {`, to: `  if (false) {`, expect: "an authorization at an unrecognised VERSION is refused" },
   { id: "grant revocation", file: AUTH, grantGuard: true, occurrences: 1, from: `  if (auth.revokedAt) {`, to: `  if (false) {`, expect: "a REVOKED authorization is refused" },
   { id: "grant expiry", file: AUTH, grantGuard: true, occurrences: 1, from: `  if (auth.expiresAt && new Date(auth.expiresAt) <= now) {`, to: `  if (false) {`, expect: "an EXPIRED authorization is refused" },
-  { id: "grant consumption", file: AUTH, grantGuard: true, occurrences: 1, from: `  if (auth.launchesUsed >= auth.launchesAllowed) {`, to: `  if (false) {`, expect: "a CONSUMED single-launch authorization is refused" },
+  {
+    // THIS MUTATION SILENTLY RE-AIMED ITSELF ONCE, AND `occurrences` DID NOT NOTICE. Its anchor used
+    // to be the bare `if (auth.launchesUsed >= auth.launchesAllowed) {`. When the CHECK gained its
+    // "a spent grant still covers the launch it was spent on" clause, that exact text stopped
+    // matching the check and started matching the SPEND's bound instead — still exactly one
+    // occurrence, still a legal mutation, aimed at a different guard. A count pins how many copies
+    // exist; it cannot pin which one you meant.
+    //
+    // AND THE CHECK IS NOW SHADOWED BY THE SPEND, so the socket control cannot separate them:
+    // disabling the check lets a spent grant through the guard and `consumeAuthorization` refuses
+    // it one step later, with the same code. Only a direct call to `checkAuthorization` isolates it.
+    id: "grant consumption (the CHECK)",
+    file: AUTH, grantGuard: true, occurrences: 1,
+    from: `  if (!alreadySpentOnThisLaunch(auth, opts.launchPlanHash) && auth.launchesUsed >= auth.launchesAllowed) {`,
+    to: `  if (false) {`,
+    expect: "checkAuthorization refuses a spent grant on its own, with no spend to fall back on",
+  },
   { id: "grant is bound to this signer", file: AUTH, grantGuard: true, occurrences: 1, from: `  if (opts.signerAddress && auth.signerAddress.toLowerCase() !== opts.signerAddress.toLowerCase()) {`, to: `  if (false) {`, expect: "an authorization granted to a DIFFERENT signer is refused" },
 
   // ---- PHASE ONE: PERMISSION (grantGuard.ts) ------------------------------------------------------
@@ -256,6 +276,84 @@ const MUTATIONS = [
   },
   { id: "grant artMode runtime allowlist", file: GRANT, grantGuard: true, occurrences: 1, from: `  if (!auth.allowedRuntimes.some((r) => runtimeTagAllowed(r, modeName))) {`, to: `  if (false) {`, expect: "a runtime the creator did not authorize is refused" },
 
+  // ---- THE GRANT IS ACTUALLY SPENT (index.ts + authorization.ts) ---------------------------------
+  //
+  // SIX MUTATIONS ON A LIFECYCLE THAT HAD ONE, AND THE ONE IT HAD PROVED THE WRONG HALF. Before
+  // 2026-09-03 the only consumption mutation was `grant consumption`, which breaks the CHECK — and
+  // it scored CAUGHT against a fixture that wrote `launchesUsed: 1` by hand. The SPEND did not
+  // exist: `consumeAuthorization` had zero call sites, `launchesUsed` was only ever written as 0,
+  // and no mutation could have found that because a mutation removes code and there was none to
+  // remove. These six break the spend, its idempotence, its bound and its ordering.
+  {
+    id: "the grant is SPENT on a successful sign",
+    file: INDEX, grantGuard: true, occurrences: 1,
+    from: `        consumeAuthorization(req.launchPlanHash);`,
+    to: `        void consumeAuthorization;`,
+    expect: "a SECOND, DIFFERENT project under the same one-launch grant is refused",
+  },
+  {
+    id: "a spend is idempotent on the SAME launch",
+    file: AUTH, grantGuard: true, occurrences: 1,
+    from: `  if (alreadySpentOnThisLaunch(auth, launchPlanHash)) return auth;`,
+    to: `  if (false) return auth;`,
+    expect: "re-signing THE SAME launch is still permitted",
+  },
+  {
+    id: "a spent grant still covers the launch it was spent on",
+    file: AUTH, grantGuard: true, occurrences: 1,
+    from: `  if (!alreadySpentOnThisLaunch(auth, opts.launchPlanHash) && auth.launchesUsed >= auth.launchesAllowed) {`,
+    to: `  if (auth.launchesUsed >= auth.launchesAllowed) {`,
+    expect: "re-signing THE SAME launch is still permitted",
+  },
+  {
+    id: "a spend cannot exceed the allowance",
+    file: AUTH, grantGuard: true, occurrences: 1,
+    from: `  if (auth.launchesUsed >= auth.launchesAllowed) {\n    throw new AuthorizationSpendError(`,
+    to: `  if (false) {\n    throw new AuthorizationSpendError(`,
+    expect: "spending an exhausted grant THROWS rather than writing launchesUsed past launchesAllowed",
+  },
+  {
+    id: "a failed spend is a refusal, never a signature",
+    file: INDEX, grantGuard: true, occurrences: 1,
+    from: `        return {\n          kind: "REFUSED",\n          code: reason as unknown as SignerRefusalCode,`,
+    to: `        return adapter.sign(req);\n        return {\n          kind: "REFUSED",\n          code: reason as unknown as SignerRefusalCode,`,
+    expect: "a grant that DISAPPEARS between the check and the spend is refused, not signed",
+  },
+
+  // ---- THE GRANT IS BOUND TO A KEY, NOT TO A CALLER-SUPPLIED FIELD -------------------------------
+  //
+  // The defect these replace was not a missing check but a check fed its own answer:
+  // `checkAuthorization({ signerAddress: request.from })` compared the grant against the request,
+  // for a guard that exists because the request cannot be trusted.
+  {
+    id: "the key identity is READ FROM THE ADAPTER, not from request.from",
+    file: GUARD, grantGuard: true, occurrences: 1,
+    from: `  const identity = await readKeyIdentity(input.signer);`,
+    to: `  const identity = { keyAddress: input.request.from }; void readKeyIdentity;`,
+    expect: "a signer holding a DIFFERENT key than the grant names is refused",
+  },
+  {
+    id: "the request's `from` must be the key that will sign",
+    file: GRANT, grantGuard: true, occurrences: 1,
+    from: `  if (getAddress(request.from) !== getAddress(identity.keyAddress)) {`,
+    to: `  if (false) {`,
+    expect: "a signer holding a DIFFERENT key than the grant names is refused",
+  },
+  {
+    id: "an unread key is not a matching one",
+    file: GRANT, grantGuard: true, occurrences: 1,
+    from: `  if (!identity || identity.keyAddress === null || identity.keyAddress === undefined) {`,
+    to: `  if (false) {`,
+    expect: "a grant check with NO signer key identity REFUSES rather than falling back to request.from",
+  },
+  {
+    id: "the key binding runs before the grant phases",
+    file: GUARD, grantGuard: true, occurrences: 1,
+    from: `  const binding = checkSignerKeyBinding(identity, input.request);`,
+    to: `  const binding = null; void checkSignerKeyBinding;`,
+    expect: "a request whose `from` is not the key this signer holds is refused",
+  },
+
   // ---- THE GRANT IS CONSULTED AT ALL (policyGuard.ts) ---------------------------------------------
   //
   // Three kill switches. Every check above can be perfect and reach nothing if the phase that calls
@@ -270,15 +368,15 @@ const MUTATIONS = [
   {
     id: "phase one runs at all",
     file: GUARD, grantGuard: true, occurrences: 1,
-    from: `    const permission = checkGrantPermission(input.simulation !== undefined ? { request: input.request, simulation: input.simulation } : { request: input.request });`,
-    to: `    const permission = { kind: "ALLOWED" } as const; void checkGrantPermission;`,
+    from: `    const permission = checkGrantPermission(\n      input.simulation !== undefined ? { request: input.request, identity, simulation: input.simulation } : { request: input.request, identity },\n    );`,
+    to: `    const permission = { kind: "ALLOWED" } as const; void checkGrantPermission; void identity;`,
     expect: "a request with NO simulation receipt at all is refused",
   },
   {
     id: "phase three runs at all",
     file: GUARD, grantGuard: true, occurrences: 1,
-    from: `    const calldata = checkGrantCalldata(approvedTag ? { request: input.request, approvedArtRuntimeTag: approvedTag } : { request: input.request });`,
-    to: `    const calldata = { kind: "ALLOWED" } as const; void checkGrantCalldata; void approvedTag;`,
+    from: `    const calldata = checkGrantCalldata(approvedTag ? { request: input.request, identity, approvedArtRuntimeTag: approvedTag } : { request: input.request, identity });`,
+    to: `    const calldata = { kind: "ALLOWED" } as const; void checkGrantCalldata; void approvedTag; void identity;`,
     expect: "a royalty above the authorization is refused",
   },
 ];

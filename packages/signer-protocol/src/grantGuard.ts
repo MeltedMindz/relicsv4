@@ -15,7 +15,7 @@
 // the royalty all sit inside `LaunchParams`; reading them from an object handed in alongside would
 // make this guard a check on the orchestrator's honesty rather than on the transaction.
 // ================================================================================================
-import { formatEther, getAddress, type Hex } from "viem";
+import { formatEther, getAddress, type Address, type Hex } from "viem";
 import { decodeLaunchParamsFromCalldata, LAUNCH_PARAMS_FIELD_COUNT } from "./launchAbi.ts";
 import { checkAuthorization, type Authorization } from "./authorization.ts";
 import { runtimeTagAllowed } from "./artSelectorGuard.ts";
@@ -28,6 +28,7 @@ export type GrantRefusalCode =
   | "AUTHORIZATION_REVOKED"
   | "AUTHORIZATION_UNREADABLE"
   | "AUTHORIZATION_NOT_FOR_THIS_SIGNER"
+  | "REQUEST_FROM_NOT_SIGNER_KEY"
   | "TOTAL_GAS_COST_EXCEEDS_AUTHORIZATION"
   | "LAUNCH_PARAMS_FIELD_COUNT_WRONG"
   | "RUNTIME_NOT_AUTHORIZED"
@@ -39,9 +40,9 @@ export type GrantRefusalCode =
   | "SIMULATION_CALLDATA_MISMATCH"
   | "BROADCAST_NOT_AUTHORIZED";
 
-export type GrantVerdict =
-  | { readonly kind: "ALLOWED"; readonly authorization: Authorization }
-  | { readonly kind: "REFUSED"; readonly code: GrantRefusalCode; readonly detail: string };
+export type GrantRefusal = { readonly kind: "REFUSED"; readonly code: GrantRefusalCode; readonly detail: string };
+
+export type GrantVerdict = { readonly kind: "ALLOWED"; readonly authorization: Authorization } | GrantRefusal;
 
 /** Proof that the EXACT bytes about to be signed were simulated. */
 export interface SimulationReceipt {
@@ -52,6 +53,62 @@ export interface SimulationReceipt {
 }
 
 const ANTI_SNIPE_NAMES = ["UNSPECIFIED", "NONE", "PROTECTED_98_MINUTES"] as const;
+
+/**
+ * THE ADDRESS OF THE KEY THAT WILL ACTUALLY SIGN — not the one the request claims.
+ *
+ * `checkAuthorization({ signerAddress: request.from })` bound the grant to a CALLER-SUPPLIED FIELD.
+ * `from` is part of the request, the request comes from the component whose compromise this whole
+ * boundary exists to survive, and the grant's own binding check compared it against itself. A
+ * signer holding key B signed under a grant issued for key A, because the request said A. The
+ * refusal `AUTHORIZATION_NOT_FOR_THIS_SIGNER` existed and could not fire for the case it names.
+ *
+ * So the address is now the adapter's own answer, resolved by `guardSigningRequest` before either
+ * phase runs, and passed in. It is REQUIRED rather than optional: an absent key address means
+ * nothing establishes which key is behind the socket, and "we could not tell" is refused rather
+ * than defaulted to the request's claim. That is why it has no `?`.
+ */
+export interface SignerKeyIdentity {
+  /** What `SignerAdapter.getAddress()` returned, or `null` if it could not be read. */
+  readonly keyAddress: Address | null;
+  /** Why it could not be read. Present only when `keyAddress` is null. */
+  readonly unreadableBecause?: string;
+}
+
+/**
+ * The grant's binding, decided against the KEY. An unread key is not a matching one.
+ *
+ * ONE IMPLEMENTATION, THREE CALLERS. `guardSigningRequest` calls it before either phase (so it
+ * holds even when no grant is required), and both exported phases call it themselves (so an
+ * integrator calling one directly gets it too). A second copy of this rule written next to
+ * `guardSigningRequest` would be a second rule, and the one that matters is whichever runs next to
+ * the key.
+ */
+export function checkSignerKeyBinding(identity: SignerKeyIdentity | undefined, request: SigningRequest): GrantRefusal | null {
+  // AN OMITTED IDENTITY IS A REFUSAL, NOT A CRASH. These functions are exported and a JavaScript
+  // integrator can call them with the old one-argument shape; throwing a TypeError there would put
+  // the failure in the caller's error handler, which is exactly where a `catch` turns a refusal
+  // into a retry. Falling back to `request.from` is the one thing it must never do.
+  if (!identity || identity.keyAddress === null || identity.keyAddress === undefined) {
+    return {
+      kind: "REFUSED",
+      code: "AUTHORIZATION_NOT_FOR_THIS_SIGNER",
+      detail: `The address of the key behind this signer could not be read (${identity?.unreadableBecause ?? "no signer key identity was supplied"}), so the grant cannot be shown to have been issued for it. An unread key is not a matching one.`,
+    };
+  }
+  // The request is allowed to be wrong about itself; it is not allowed to be signed anyway. A
+  // signature is produced by the KEY, so a `from` naming another account describes a transaction
+  // that will not exist — and every nonce, balance and fee decision taken against that `from` was
+  // taken about the wrong account.
+  if (getAddress(request.from) !== getAddress(identity.keyAddress)) {
+    return {
+      kind: "REFUSED",
+      code: "REQUEST_FROM_NOT_SIGNER_KEY",
+      detail: `This request declares it is from ${request.from}, and the key behind this signer is ${identity.keyAddress}. Whatever the request says, the signature would come from the key.`,
+    };
+  }
+  return null;
+}
 
 /** The royalty bps packed into `creatorEarnings`: `mode | royaltyBps << 8 | policyVersion << 24`. */
 function royaltyBpsOf(creatorEarnings: bigint): number {
@@ -75,15 +132,26 @@ function royaltyBpsOf(creatorEarnings: bigint): number {
  */
 export function checkGrantPermission(input: {
   request: SigningRequest;
+  /** The key that will sign. REQUIRED: see `SignerKeyIdentity`. */
+  identity: SignerKeyIdentity;
   simulation?: SimulationReceipt | null;
   now?: Date;
 }): GrantVerdict {
   const { request } = input;
 
+  // ---- 0. WHOSE KEY IS THIS? ---------------------------------------------------------------------
+  const binding = checkSignerKeyBinding(input.identity, request);
+  if (binding) return binding;
+  const keyAddress = input.identity.keyAddress as Address;
+
   // ---- 1. IS THERE STILL A GRANT? ---------------------------------------------------------------
   // `exactOptionalPropertyTypes` is on in this package, so an explicit `undefined` is not the same
   // as an absent key — the property is omitted rather than passed as undefined.
-  const state = checkAuthorization(input.now ? { signerAddress: request.from, now: input.now } : { signerAddress: request.from });
+  const state = checkAuthorization(
+    input.now
+      ? { signerAddress: keyAddress, launchPlanHash: request.launchPlanHash, now: input.now }
+      : { signerAddress: keyAddress, launchPlanHash: request.launchPlanHash },
+  );
   if (!state.ok) return { kind: "REFUSED", code: state.reason as GrantRefusalCode, detail: state.detail };
   const auth = state.authorization;
 
@@ -136,9 +204,16 @@ export function checkGrantPermission(input: {
  * Phase 3: the decoded fields against the grant. Runs only AFTER the shape guard has established
  * that these bytes are a `launch()` call at the canonical factory.
  */
-export function checkGrantCalldata(input: { request: SigningRequest; approvedArtRuntimeTag?: string; now?: Date }): GrantVerdict {
+export function checkGrantCalldata(input: { request: SigningRequest; identity: SignerKeyIdentity; approvedArtRuntimeTag?: string; now?: Date }): GrantVerdict {
   const { request } = input;
-  const state = checkAuthorization(input.now ? { signerAddress: request.from, now: input.now } : { signerAddress: request.from });
+  const binding = checkSignerKeyBinding(input.identity, request);
+  if (binding) return binding;
+  const keyAddress = input.identity.keyAddress as Address;
+  const state = checkAuthorization(
+    input.now
+      ? { signerAddress: keyAddress, launchPlanHash: request.launchPlanHash, now: input.now }
+      : { signerAddress: keyAddress, launchPlanHash: request.launchPlanHash },
+  );
   if (!state.ok) return { kind: "REFUSED", code: state.reason as GrantRefusalCode, detail: state.detail };
   const auth = state.authorization;
 
