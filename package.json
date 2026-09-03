@@ -46,6 +46,8 @@
     "kit:artatlas": "node scripts/sync-art-atlas.mjs --check",
     "kit:artatlas:live": "node scripts/sync-art-atlas.mjs --check --live",
     "kit:artatlas:sync": "node scripts/sync-art-atlas.mjs --sync",
+    "art:benchmark": "node scripts/run-art-benchmark.mjs",
+    "art:benchmark:report": "node scripts/run-art-benchmark.mjs report",
     "kit:launch-claims": "node scripts/check-launch-claims.mjs",
     "kit:launch-claims:controls": "node scripts/check-launch-claims.mjs --controls",
     "ci:gates": "node scripts/check-ci-gates.mjs",

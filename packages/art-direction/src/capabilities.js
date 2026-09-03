@@ -169,7 +169,15 @@ export const IMPOSSIBLE_DEMANDS = Object.freeze([
     patterns: [
       rx(String.raw`\b(portrait\s+of|photo ?realistic|photograph\w*|lifelike|realistic\s+(depiction|render\w*|image))\b`),
       rx(String.raw`\b(human|humanoid)\s+(figure|form|face|body|silhouette)\b`),
-      rx(String.raw`\ba\s+(face|skull|hand|eye|animal|bird|fish|insect|tree|flower|leaf|creature|dragon|serpent)\b`),
+      // ONE NOUN WAS REMOVED FROM THIS LIST BY THE RESERVED-TERM GATE, and it is left absent rather
+      // than replaced by a synonym. The word belongs to another project's identity, the gate's
+      // instruction is to remove the content rather than exempt it or reword around it, and
+      // reaching for an equivalent would be evading a rule whose whole purpose is that the term
+      // does not appear here. The narrow consequence is real and worth stating: a brief demanding
+      // that one specific object, named bare and with no other figurative cue, is not caught by
+      // THIS pattern -- though "photorealistic", "lifelike", "depict an actual" and the other
+      // nouns below still catch every phrasing of it observed in the corpus.
+      rx(String.raw`\ba\s+(face|hand|eye|animal|bird|fish|insect|tree|flower|leaf|creature|dragon|serpent)\b`),
       rx(String.raw`\b(recognis\w+|identifi\w+)\s+as\s+an?\s+\w+`),
       rx(String.raw`\b(depict|depicts|depicting|illustrat\w+|render\w*)\s+an?\s+(actual|real|specific)\b`),
     ],
