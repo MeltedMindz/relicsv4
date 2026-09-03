@@ -484,6 +484,56 @@ async function phaseHoldout() {
 // ---------------------------------------------------------------------------------------------
 // PHASE: report
 // ---------------------------------------------------------------------------------------------
+/**
+ * HUMAN_ART_INTERVENTIONS, DERIVED RATHER THAN ASSERTED.
+ *
+ * The claim is that nobody hand-tuned a configuration, chose a colour or picked a parameter for
+ * one brief — every change is a change to the AUTHOR, which is a machine, and applies to every
+ * future brief on the same terms. A flag saying so would be worth nothing; anyone can write YES.
+ *
+ * So it is measured the only way it can be: RE-RUN THE AUTHOR against the recorded art direction
+ * and compare the bytes with the ones the case actually accepted. If a hand-written patch touched
+ * the configuration — which is what `revise` applies, and why this lane does not use it — the two
+ * differ, and the difference is the intervention.
+ *
+ * WHAT A MISMATCH MEANS, EXACTLY. Either a hand edit touched the configuration, or the AUTHOR has
+ * moved since that round was accepted. Both need looking at and neither is dismissible, so the
+ * number is reported rather than explained away — and it is only a clean measurement when it is
+ * taken at the same commit the accepted round was authored at, which is why it is run immediately
+ * after the authoring phase rather than at some later convenience.
+ *
+ * An UNREADABLE case counts as UNKNOWN, never as zero. A run with no evidence of having been
+ * checked has not been checked.
+ */
+function humanArtInterventions(briefs) {
+  const directions = existsSync(join(OUT, "directions.json")) ? loadDirections() : null;
+  if (!directions) return { value: "UNKNOWN", detail: "no directions on disk; the author cannot be re-run to compare against" };
+  const rows = [];
+  for (const b of briefs) {
+    const p = join(caseDir(b.id), "run.json");
+    if (!existsSync(p)) continue;
+    const run = readJson(p);
+    if (run.phase === "ADMISSION" || !run.rounds?.length) continue;
+    const accepted = run.rounds[run.rounds.length - 1];
+    try {
+      const reauthored = encodeConfig(run.runtimeId, authorConfig({ runtimeId: run.runtimeId, direction: directions[b.id] }).config);
+      rows.push({ id: b.id, matches: sha256(reauthored) === accepted.configHash });
+    } catch (err) {
+      rows.push({ id: b.id, matches: null, detail: err.message });
+    }
+  }
+  const unknown = rows.filter((r) => r.matches === null);
+  const touched = rows.filter((r) => r.matches === false);
+  if (unknown.length) return { value: "UNKNOWN", checked: rows.length, detail: `${unknown.length} case(s) could not be re-authored: ${unknown.map((u) => `${u.id} (${u.detail})`).join(", ")}` };
+  return {
+    value: touched.length,
+    checked: rows.length,
+    detail: touched.length === 0
+      ? `all ${rows.length} accepted configurations reproduce byte for byte from the author and their own art direction`
+      : `${touched.length} accepted configuration(s) do not reproduce from the author: ${touched.map((t) => t.id).join(", ")}. Either a hand edit touched them or the author has moved since they were accepted; re-run the authoring phase and re-read this number before concluding either.`,
+  };
+}
+
 function phaseReport() {
   const briefs = readJson(BRIEFS).briefs;
   const rows = [];
@@ -522,7 +572,12 @@ function phaseReport() {
   console.log(`FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND   ${mutated.length}`);
   console.log(`BLOCKED_BY_OBJECTIVE_BATTERY                 ${blockedRows.length}${blockedRows.length ? ` (${blockedRows.map((r) => `${r.id}:${r.objectiveBlockers.join("+")}`).join(", ")})` : ""}`);
   console.log(`OBJECTIVE_BATTERY_RUN_BEFORE_REVIEW          YES (all phases)`);
-  writeJson(join(OUT, "report.json"), { generatedAt: new Date().toISOString(), rows, blindPass: pass.length, total: rows.length, byRuntime, mutatedAfterUnblind: mutated.length, blockedByObjectiveBattery: blockedRows.map((r) => ({ id: r.id, blockers: r.objectiveBlockers })) });
+  const hai = humanArtInterventions(briefs);
+  console.log(`HUMAN_ART_INTERVENTIONS                      ${hai.value}  (${hai.detail})`);
+  const runtimes = Object.fromEntries(Object.entries(byRuntime).map(([k, v]) => [k, v]));
+  console.log(`RECURSION_BLIND_PASSES                       ${runtimes.GEOMETRIC_RECURSION_V1 ?? 0}`);
+  console.log(`VECTOR_BLIND_PASSES                          ${runtimes.VECTOR_COMPOSITION_V1 ?? 0}`);
+  writeJson(join(OUT, "report.json"), { generatedAt: new Date().toISOString(), rows, blindPass: pass.length, total: rows.length, byRuntime, mutatedAfterUnblind: mutated.length, humanArtInterventions: hai, blockedByObjectiveBattery: blockedRows.map((r) => ({ id: r.id, blockers: r.objectiveBlockers })) });
 }
 
 // ---------------------------------------------------------------------------------------------
