@@ -106,6 +106,26 @@ export function resolveMechanism({ runtimeId, direction }) {
       ? `read from ${MECHANISM_SOURCE_FIELDS.join(" / ")}: ${chosen.evidence.map((e) => `"${e.phrase}"`).join(", ")}`
       : `the direction's ${MECHANISM_SOURCE_FIELDS.join("/")} names no mechanism beside a market state; defaulting to ${mechanismId} ${DEFAULT_POLARITY}`,
     otherSensor: mechanismId && SENSOR_FOR_POLARITY[polarity] === "RECOVERY" ? "DRAWDOWN" : "RECOVERY",
+    // A SECOND MECHANISM THE DIRECTION ACTUALLY ASKS FOR, RESOLVED THE SAME WAY AS THE FIRST.
+    //
+    // B01 says both halves out loud — "bays are removed from the run and fewer members survive,
+    // and the interval between the supports that remain widens" — and building only the first of
+    // them leaves the second as a promise the direction made and the work does not keep. It also
+    // leaves the work quieter than it should be: a subtraction on a composition carrying half the
+    // frame in ink moved the weakest pairing 2.901 dE, where the separation the same brief asks
+    // for measures 14-15 on its own.
+    //
+    // Only mechanisms this runtime can EXPRESS are carried, and only onto a secondary register.
+    // The primary keeps field 0, so a reviewer comparing the state rows is watching the
+    // transformation the brief is chiefly about.
+    secondary: (() => {
+      for (const m of stated.slice(1)) {
+        if (m.overlapsPrimary || m.mechanism === mechanismId) continue;
+        const r = realisationFor(runtimeId, m.mechanism, m.polarity ?? DEFAULT_POLARITY);
+        if (r.ok) return { ...r, mechanism: m.mechanism, polarity: m.polarity ?? DEFAULT_POLARITY, evidence: m.evidence };
+      }
+      return null;
+    })(),
     alsoRequested: stated.slice(1).map((m) => ({ mechanism: m.mechanism, polarity: m.polarity })),
   };
 }
@@ -178,7 +198,20 @@ export const INTENT_VOCABULARY = Object.freeze({
     from: ["composition", "negativeSpace"],
     options: {
       COMPACT: [rx(String.raw`\b(compact|contained|inset|centred?\s+mass|held\s+(in|within)|margin\w*|clear\s+of\s+the\s+edge|island)\b`)],
-      EXPANSIVE: [rx(String.raw`\b(expansive|reach\w+\s+(out|toward|to)\s+the\s+edge|fills?\s+the\s+frame|spread\w*\s+wide|edge\s+to\s+edge|sprawl\w*)\b`)],
+      // THE PATTERN REQUIRED ONE EXACT PHRASING AND THE DIRECTIONS USED FIVE OTHERS.
+      //
+      // `reach\w+\s+(out|toward|to)\s+the\s+edge` matches "reaches toward the edge" and nothing
+      // else: "reaches OUT TO the edges" fails on the extra word, "reach the edges on all four
+      // sides" fails for want of a preposition, "meets the edges of the frame" and "occupies the
+      // whole frame" match nothing at all. Three directions that say plainly that the work fills
+      // the frame scored zero here and fell to the default.
+      EXPANSIVE: [
+        rx(String.raw`\b(expansive|edge\s+to\s+edge|sprawl\w*|spread\w*\s+wide|full[- ]bleed)\b`),
+        rx(String.raw`\b(reach\w+|extend\w+|run\w*|meet\w*|touch\w*|carr\w+|continu\w+)\b(?:\s+\w+){0,4}?\s+the\s+(frame\s+|canvas\s+)?(edges?|border|frame\s+edge)\b`),
+        rx(String.raw`\b(fills?|occupies?|uses?)\s+(the\s+)?(whole|entire|full)?\s*(frame|canvas)\b`),
+        rx(String.raw`\bon\s+all\s+four\s+sides\b`),
+        rx(String.raw`\b(border|frame)\s+crops?\b`),
+      ],
     },
     // THE DEFAULT WAS COMPACT AND IT PRODUCED THE MOST REPEATED COMPLAINT IN THE CORPUS.
     //
@@ -265,7 +298,21 @@ export const INTENT_VOCABULARY = Object.freeze({
  * picture. A direction is written in careful prose by something trying to be precise, and careful
  * prose says what a thing is NOT at least as often as what it is.
  */
-const NEGATORS = /\b(no|not|never|without|avoid\w*|free\s+of|absent|lack\w*|refus\w*|un(interrupted|broken))\b/i;
+/**
+ * WIDENED, AND THE WIDENING IS MEASURED. The first cut held the plain negatives. Careful prose
+ * denies a thing far more often by CONTRASTING it: three of twelve art directions said the work
+ * fills the frame in exactly these shapes —
+ *
+ *   "it is measured space held between members RATHER THAN leftover margin around a floating figure"
+ *   "gathers into NEITHER a margin NOR a void"
+ *   "the border crops a spreading growth RATHER THAN containing a small object floating in dead space"
+ *
+ * — and every one of them scored a vote for COMPACT off the word `margin`, on a sentence saying
+ * there is no margin. All three then rendered at a spread ceiling two thirds of the range, which
+ * is the centred island seven of twelve blind reviews described. `mechanism.js` already carried
+ * `rather than` and `instead of`; this brings the two lists together.
+ */
+const NEGATORS = /\b(no|not|never|without|avoid\w*|free\s+of|absent|lack\w*|refus\w*|neither|nor|rather\s+than|instead\s+of|un(interrupted|broken))\b/i;
 
 /** Look backward from a match for a negator inside the same clause. */
 function negatedAt(haystack, index) {
@@ -307,10 +354,35 @@ export function deriveIntent(direction) {
       }
       scores.push({ option, score: hits.length, phrases: hits });
     }
-    const best = scores.filter((x) => x.score > 0).sort((a, b) => b.score - a.score)[0] ?? null;
+    // ON A TIE THE DEFAULT WINS, NOT THE FIRST OPTION DECLARED.
+    //
+    // Scoring by distinct phrases fixed the case where one incidental noun outvoted four
+    // deliberate ones. It did not fix the ONE-ALL tie, and that is the same failure one step
+    // smaller: two directions here score LINEWORK 1 against SOLID 1 — each on a single occurrence
+    // of the word "outline", in a clause about the edge of an enclosure — and LINEWORK won both
+    // because it is declared first. Stroke is the loudest coverage control in either runtime
+    // (0.399 filled against 0.121 stroked), so a coin toss decided a third of the coverage of two
+    // collections, and one of them then failed the blank floor.
+    //
+    // A tie is precisely "the direction does not settle this", which is what the stated default is
+    // for. When the default is not among the tied options the declaration order still decides, and
+    // the tie is recorded so a reader of the receipt can see a choice was close.
+    const ranked = scores.filter((x) => x.score > 0).sort((a, b) => b.score - a.score);
+    const top = ranked.length ? ranked.filter((x) => x.score === ranked[0].score) : [];
+    const tied = top.length > 1;
+    const best = tied ? (top.find((x) => x.option === spec.default) ?? top[0]) : (ranked[0] ?? null);
     intent[key] = best?.option ?? spec.default;
     derivation[key] = best
-      ? { source: "DIRECTION", value: best.option, evidence: best.phrases, score: best.score, runnerUp: scores.filter((x) => x.option !== best.option && x.score > 0).map((x) => `${x.option}:${x.score}`), fields: spec.from, rejected }
+      ? {
+        source: tied && best.option === spec.default ? "DEFAULT_ON_TIE" : "DIRECTION",
+        value: best.option,
+        evidence: best.phrases,
+        score: best.score,
+        tiedWith: tied ? top.filter((x) => x.option !== best.option).map((x) => `${x.option}:${x.score}`) : [],
+        runnerUp: scores.filter((x) => x.option !== best.option && x.score > 0).map((x) => `${x.option}:${x.score}`),
+        fields: spec.from,
+        rejected,
+      }
       : { source: "DEFAULT", value: spec.default, detail: `the direction's ${spec.from.join("/")} did not name a ${key}`, rejected };
   }
   return { intent, derivation };
@@ -607,7 +679,12 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   // debris entirely so each token is one silhouette in an empty frame". A second rule IS the
   // orbiting debris. Measured: a single SPREAD-driven rule reads ns 10.932 / nr 11.209 / sr 19.955
   // with 1.6 components and largestShare 0.997 — one object, three states, no debris.
-  const singleForm = intent.focalMode === "SINGLE_DOMINANT" && intent.densityTarget === "SPARSE";
+  // A SINGLE STROKED RULE IS TOO THIN TO BE A COLLECTION. Stroke is the loudest coverage control
+  // in the runtime — measured 0.399 filled against 0.121 stroked — so a lone stroked rule sits at
+  // a third of the coverage a lone filled one does, and a DILATION binding then puts it at the
+  // spread floor in its low state on top of that: measured ink 0.031 on one frame of thirty-six,
+  // under the blank floor. Two stroked rules measured 0.375 mean / 0.199 min on the same ring.
+  const singleForm = intent.focalMode === "SINGLE_DOMINANT" && intent.densityTarget === "SPARSE" && intent.strokeMode !== "LINEWORK";
   const ruleN = singleForm ? 1 : 2;
   set("FOCAL_HIERARCHY", "ruleCount", ruleN);
   const contraction = session.consult("rules[n].contraction");
@@ -684,8 +761,14 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   // it is measured dead (0.348 dE between neutral and recovery), and as a SEED dimension it is the
   // only per-token control over how many enclosures a nested figure has. B12's "what varies
   // between tokens is the number of enclosures" is exactly that question.
-  set("DETAIL", "rules[0].depthMin", seedVariesDepth ? 3 : depthPin);
-  set("DETAIL", "rules[0].depthMax", seedVariesDepth ? 5 : depthPin);
+  // THE SEED-VARIED DEPTH RANGE STARTS AT THE PINNED DEPTH RATHER THAN BELOW IT. Its floor is the
+  // lightest token the collection will ever draw, and a range of 3..5 put that floor two
+  // generations under the configuration's own centre: measured, the seed that drew the low end
+  // came back at 0.031 ink in the stress state, under the blank floor, while every other seed sat
+  // between 0.044 and 0.138. Four to six is the same three distinct enclosure counts with the
+  // floor raised, and the node budget admits it at branch 2.
+  set("DETAIL", "rules[0].depthMin", seedVariesDepth ? depthPin : depthPin);
+  set("DETAIL", "rules[0].depthMax", seedVariesDepth ? Math.min(6, depthPin + 2) : depthPin);
   set("DETAIL", "rules[0].stroke", intent.strokeMode === "LINEWORK");
   set("DETAIL", "rules[0].variant", attempt === 0 ? 0 : 2);
   set("DETAIL", "title", titleFrom(direction));
@@ -800,7 +883,18 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   // component, and adding or removing a third of its elements moved the weakest pairing only
   // 3.279 because the members it added landed on top of members already there. The mechanism needs
   // coverage headroom, not just count headroom.
-  const sizeMax = req.fewLargeMembers ? 62 : (mechanism.drive === "COUNT" ? Math.min(sizeByDensity, 26) : sizeByDensity);
+  // A STROKE-ONLY PRIMITIVE'S "SIZE" IS ITS LENGTH, AND A LONG LINE CROSSES THE WHOLE FRAME.
+  //
+  // LINE, POLYLINE, ARC, QUAD and CUBIC have no interior and the runtime always strokes them, so
+  // the size ceiling sets how far each mark reaches rather than how much area it fills. Measured
+  // on a linework composition at a size ceiling of 26: twelve marks and thirty-six marks read
+  // ink120 0.367 and 0.423 — a count that TRIPLES and a coverage that moves nine per cent, because
+  // long lines already cross everything the new ones would land on. The subtraction is real in the
+  // bytes and 2.243 dE on the raster. Shorter marks are separable marks.
+  const strokeOnly = ["LINE", "POLYLINE", "ARC", "QUAD", "CUBIC"].includes(prim);
+  const sizeMax = req.fewLargeMembers
+    ? 62
+    : (mechanism.drive === "COUNT" ? Math.min(sizeByDensity, strokeOnly ? 16 : 26) : sizeByDensity);
   set("FOCAL_HIERARCHY", "fields[0].sizeMax", mechanism.drive === "SIZE" ? Math.max(sizeMax, 52) : sizeMax);
   notes.push({ stage: "FOCAL_HIERARCHY", why: `${fields} fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax ${sizeMax} from densityTarget=${intent.densityTarget}${req.fewLargeMembers ? ", raised because FRACTURE needs members large enough to overlap into one mass" : ""}`, consulted: [size.parameter, fieldCount.parameter] });
 
@@ -830,16 +924,23 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   // requirements recorded in the mechanism table rather than preferences.
   const base = req.fewLargeMembers ? 7 : { SPARSE: 18, MODERATE: 24, DENSE: 30 }[intent.densityTarget];
   const wide = mechanism.drive === "COUNT";
-  // A RATIO, NOT AN OFFSET, AND THE DIFFERENCE IS WHETHER A DENSE BRIEF CAN SUBTRACT AT ALL.
+  // WHEN COUNT IS THE DRIVE, THE DENSITY TARGET IS THE FULL STATE AND NOT THE MIDDLE ONE.
   //
-  // Coverage tracks count until the members start landing on each other, so what a viewer reads as
-  // "fewer" is countMax/countMin rather than countMax-countMin. An offset of nine either side is a
-  // ratio of 1.9 on a dense composition and 3.0 on a sparse one — measured, the dense end came
-  // back at 3.096 dE on its weakest pairing while the sparse end cleared comfortably, from the
-  // same rule. Half to one-and-a-half of the base is a ratio of 3 at every density, and it still
-  // satisfies the mechanism table's minimum range of 18 at all three.
-  const countLo = Math.max(4, Math.round(base * 0.5));
-  const countHi = Math.min(38, Math.max(countLo + (req.countRangeAtLeast ?? 18), Math.round(base * 1.5)));
+  // Two measured facts decide this together. Coverage tracks count only until the members start
+  // landing on each other, so what a viewer reads as "fewer" is countMax/countMin rather than
+  // countMax-countMin; and a driven count spends the CALM market near its floor, so where the base
+  // sits decides how much room the response has left. Centring the range on the density target put
+  // the neutral frame at half the coverage of the whole frame — measured ink 0.487 and 0.533 on
+  // two dense subtraction compositions — and from there a count that rises 77% moved the raster
+  // 3.675 and 3.719 dE, under the floor, because the members it added landed on members already
+  // there.
+  //
+  // A dense brief that subtracts is dense in its FULL state and thinner in the other two, which is
+  // also what those briefs say: "under stress the thicket thins dramatically", "in recovery the
+  // sequence thickens and more beds return". So countMax carries the density target and countMin
+  // is a third of it, widened where that would not reach the mechanism table's minimum range.
+  const countLo = Math.max(4, Math.round(base / 3));
+  const countHi = Math.min(38, Math.max(base, countLo + (req.countRangeAtLeast ?? 18)));
   const span = countHi - countLo;
   set("RHYTHM", "fields[0].countMin", wide ? countLo : base);
   set("RHYTHM", "fields[0].countMax", wide ? countHi : base);
@@ -871,9 +972,9 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
     set("SECONDARY_STRUCTURE", `fields[${i}].symmetry`, sym);
     const sBase = req.fewLargeMembers ? Math.max(4, base - i) : Math.max(10, Math.round(base * 0.85));
     const sWide = mechanism.drive === "COUNT";
-    const sLo = Math.max(4, Math.round(sBase * 0.5));
+    const sLo = Math.max(4, Math.round(sBase / 3));
     set("SECONDARY_STRUCTURE", `fields[${i}].countMin`, sWide ? sLo : sBase);
-    set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, sWide ? Math.min(34, Math.max(sLo + (req.countRangeAtLeast ?? 18), Math.round(sBase * 1.5))) : sBase);
+    set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, sWide ? Math.min(34, Math.max(sBase, sLo + (req.countRangeAtLeast ?? 18))) : sBase);
     set("SECONDARY_STRUCTURE", `fields[${i}].paletteIx`, (() => { const c = []; for (let k = 0; k <= ixCap; k += 1) if (k !== groundIx) c.push(k); return c.length ? c[(i - 1) % c.length] : groundIx; })());
     set("SECONDARY_STRUCTURE", `fields[${i}].variant`, i + 1);
     set("SECONDARY_STRUCTURE", `fields[${i}].stroke`, req.strokedField ? true : intent.strokeMode === "LINEWORK");
@@ -972,13 +1073,25 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
       }
       continue;
     }
-    set("MARKET_BEHAVIOUR", `fields[${i}].drive`, mechanism.drive === "SIZE" ? "SPREAD" : mechanism.drive);
-    set("MARKET_BEHAVIOUR", `fields[${i}].sensor`, mechanism.sensor);
-    set("MARKET_BEHAVIOUR", `fields[${i}].curve`, mechanism.curve);
+    // A SECOND MECHANISM THE DIRECTION ASKED FOR TAKES THE FIRST SECONDARY REGISTER.
+    const sec = i === 1 && mechanism.secondary && !req.fewLargeMembers ? mechanism.secondary : null;
+    set("MARKET_BEHAVIOUR", `fields[${i}].drive`, sec ? sec.drive : (mechanism.drive === "SIZE" ? "SPREAD" : mechanism.drive));
+    set("MARKET_BEHAVIOUR", `fields[${i}].sensor`, sec ? sec.sensor : mechanism.sensor);
+    set("MARKET_BEHAVIOUR", `fields[${i}].curve`, sec ? sec.curve : mechanism.curve);
+    if (sec && sec.requires?.pinnedCount) {
+      // SEPARATION and DILATION are about the interval and the reach, so their register's count is
+      // pinned: a count that moves at the same time is a second mechanism nobody asked for on that
+      // field, and the reviewer cannot tell which one it is watching.
+      const pin = Math.max(10, Math.round(base * 0.85));
+      set("SECONDARY_STRUCTURE", `fields[${i}].countMin`, pin);
+      set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, pin);
+    }
   }
   notes.push({
     stage: "MARKET_BEHAVIOUR",
-    why: `mechanism ${mechanism.mechanism} ${mechanism.polarity} -> drive ${mechanism.drive} <- ${mechanism.sensor}/${mechanism.curve}, with the last field on ${other} so all three states separate. ${mechanism.detail}`,
+    why: `mechanism ${mechanism.mechanism} ${mechanism.polarity} -> drive ${mechanism.drive} <- ${mechanism.sensor}/${mechanism.curve}` +
+      (mechanism.secondary ? `; field[1] carries the second mechanism the direction asks for, ${mechanism.secondary.mechanism} ${mechanism.secondary.polarity} -> ${mechanism.secondary.drive} <- ${mechanism.secondary.sensor}` : "") +
+      `, with the last field on ${other} so all three states separate. ${mechanism.detail}`,
     evidence: mechanism.evidence,
     consulted: drive.parameter,
   });
