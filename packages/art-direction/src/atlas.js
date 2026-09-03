@@ -104,13 +104,33 @@ export function assertAtlasFresh(observed) {
   return { fresh: true, checked: seen, pinnedRuntimes: ids };
 }
 
-/** What a runtime can and cannot depict. The basis for brief admission; see `capabilities.js`. */
+/**
+ * What a runtime can and cannot depict. The basis for brief admission; see `capabilities.js`.
+ *
+ * `cannot` IS STORED AS ONE SEMICOLON-DELIMITED SENTENCE and is split into clauses here. That is
+ * a presentation detail of the upstream file and not something callers should each re-derive —
+ * two consumers splitting the same sentence slightly differently is how a citation check starts
+ * passing against a clause nobody else can find. The raw sentence is kept beside the split so a
+ * reader can always see what was actually written.
+ */
 export function capabilityStatement(runtimeId) {
   const r = loadGuidance().runtimes?.[runtimeId];
   if (!r) throw new Error(`the atlas documents no runtime "${runtimeId}"`);
   const w = r.whatItCanDepict;
-  if (!w?.can || !Array.isArray(w.cannot)) throw new Error(`${runtimeId}: whatItCanDepict is missing or malformed`);
-  return Object.freeze({ runtimeId, can: w.can, cannot: Object.freeze([...w.cannot]), note: w.note ?? null });
+  if (!w?.can || !w?.cannot) throw new Error(`${runtimeId}: whatItCanDepict is missing or malformed`);
+  const cannot = Array.isArray(w.cannot)
+    ? w.cannot.map((c) => String(c).trim())
+    : String(w.cannot).split(";").map((c) => c.trim()).filter(Boolean);
+  if (cannot.length < 2) {
+    throw new Error(`${runtimeId}: whatItCanDepict.cannot yielded ${cannot.length} clauses; brief admission would have almost nothing to cite`);
+  }
+  return Object.freeze({
+    runtimeId,
+    can: w.can,
+    cannot: Object.freeze(cannot),
+    cannotRaw: Array.isArray(w.cannot) ? w.cannot.join("; ") : String(w.cannot),
+    note: w.note ?? null,
+  });
 }
 
 /** The five cross-runtime laws. These bind BOTH runtimes and are what a naive author violates first. */
