@@ -93,6 +93,9 @@ const REQUIRED_GATES = [
   { id: "ART_REVIEW", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artreview" },
   { id: "ART_REVIEW_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artreview:controls" },
   { id: "ART_REVIEW_TESTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artreview:test" },
+  // The art-direction layer ran in no workflow at all until this was added — the brief-admission
+  // gate, the mechanism vocabulary and the direction schema were all enforced by nothing.
+  { id: "ART_DIRECTION_TESTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artdirection" },
   { id: "TEMPLATE_STATUS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus" },
   { id: "TEMPLATE_STATUS_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus:controls" },
   { id: "KIT_GATES_SELFTEST", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:gates:selftest" },

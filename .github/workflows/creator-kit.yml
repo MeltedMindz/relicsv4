@@ -159,6 +159,14 @@ jobs:
           npm run kit:artreview
           npm run kit:artreview:test
 
+      - name: The art-direction layer, which had no CI at all
+        # The mechanism vocabulary, the brief-admission gate and the direction schema. Every
+        # capability refusal in here cites a clause of the vendored atlas and is verified against
+        # it at load, so a re-measured atlas fails loudly rather than continuing to turn briefs
+        # away on the strength of a limit that has been lifted. Sixty-odd assertions and no
+        # network: it reads the frozen briefs and the committed measurements.
+        run: npm run kit:artdirection
+
       - name: no gate passes on zero input
         # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
         # is the only evidence that the rest of this file means anything. It existed, it worked,
