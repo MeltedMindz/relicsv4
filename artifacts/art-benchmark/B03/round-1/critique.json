@@ -1,0 +1,47 @@
+{
+  "criticId": "critic-B03",
+  "whatWorks": [
+    "The horizontal band stack survives compression: at 120px every tile still reads as stacked horizontal strata rather than as noise, so the core motif of the brief is already carried at the size the collection is actually browsed at.",
+    "The warm half of the palette is correct. Umber, ochre and sand sitting over a near-black base read as sediment rather than as decoration, and the dark base holds identically across all twelve seeds and all three market states.",
+    "Within a single token the pitch genuinely varies: 5396 and 6051 alternate heavier beds with hairline partings, which is exactly the 'sequence not texture' rhythm the direction asks for. Do not flatten this into an even comb.",
+    "Where the cold slate band does appear (5527, 5789, 5920) it does the job the brief describes: one cold interruption inside a warm sequence, reading as a distinct bed rather than as a colour accent laid over the top."
+  ],
+  "findings": [
+    {
+      "id": "centered-figure-not-section",
+      "whatFails": "Every seed is a centred, bilaterally symmetric object floating inside a dark margin of roughly 15-25% on all four sides. Nothing touches the frame edge, and the outer silhouette rather than the banding is the first thing the eye reads at any size.",
+      "why": "The brief asks for a core sample filling the frame edge to edge, with negative space appearing only as thin partings between beds and never as a margin around the whole. A stack with air all around it reads as an isolated artefact sitting on a ground, which is precisely what the composition and negativeSpace directions rule out.",
+      "specificChange": "Widen the bed stack until the widest beds overrun the viewBox horizontally and are clipped by it, and extend the stack vertically until the top and bottom beds are cut by the frame; remove the outer margin entirely so no bed has visible empty ground beyond its ends.",
+      "keep": "Keep the varying bed widths. Beds that stop short of the widest band are what makes the section read as deposited rather than as a ruled grid, so the fix is to delete the margin, not to make every bed the same length."
+    },
+    {
+      "id": "mirrored-ornament-limbs",
+      "whatFails": "Squares, diamonds, chevrons and a crown-like polygon cluster are mirrored left and right above and below the stack, giving nearly every seed a head, two arms ending in square hands, and two feet. 5265 and the 512px single read unmistakably as an armoured figure or an insect, not as a section.",
+      "why": "The brief contains only horizontal bands. These primitives are not beds, they sit outside the banding, and their bilateral arrangement manufactures exactly the single dominating element that focalHierarchy forbids. A totem silhouette is a different work from a core sample, and it is currently the dominant read.",
+      "specificChange": "Remove the non-band primitives (squares, diamonds, chevrons, crown polygons) from the composition, or demote them to inclusions clipped inside a bed's own rectangle so none can appear above, below or outside the stack; and break the strict left-right mirror by offsetting each bed's start and end independently.",
+      "keep": "Keep the horizontal registration of the beds. Bands sharing a common vertical axis is what makes them read as one continuous section, so removing the mirror must not turn the stack into a ragged diagonal drift."
+    },
+    {
+      "id": "seed-collapse-at-120",
+      "whatFails": "At 120px the twelve seeds collapse into about three families: a warm tan block stack (5134, 5265, 6182), a thin orange line stack (5003, 5658, 6051), and a faint pale-on-dark sketch (5920, 6444, 6313). Members inside each family are near-clones, and 6313 is almost an empty tile - a scatter of small squares and two hairlines.",
+      "why": "variationStrategy names bed count first, then spacing, then which band is cold. What actually differs between seeds is mostly the ornament silhouette, which is the wrong axis and is also the first thing to vanish at browse size. The brief also calls the work dense, and a near-empty tile breaks that floor outright.",
+      "specificChange": "Spread bed count per seed across a much wider declared range, roughly 6 to 24 beds, and pin a per-seed pitch schedule (even, upward-coarsening, downward-fining, clustered) so two seeds with similar counts still stack differently; declare a hard minimum of six beds so no seed can render as sparse as 6313.",
+      "keep": "Keep the two seeds that already separate at 120px: 5396's fine-pitch ruled section against 5265's few heavy beds. That contrast is the range the other ten should be spread across, not a pair to be averaged away."
+    },
+    {
+      "id": "state-read-by-ornament-not-beds",
+      "whatFails": "Across the state rows the bed count is essentially constant. On 5265 neutral, stress and recovery all carry roughly the same number of beds; what actually changes is that stress deletes the crown and the four squares and recovery returns them larger. On 5134 stress carries more bands than neutral, which is backwards.",
+      "why": "marketTransformation states that under drawdown beds thin and fewer survive, and in recovery the sequence thickens and more beds return. The visible change currently lives in the ornament layer, so the claimed mechanic is not the one a viewer sees - and once the ornaments are removed the three states will be nearly indistinguishable.",
+      "specificChange": "Bind bed count and bed thickness directly to the market sensor: decrease stress to roughly half the neutral bed count at 50-70% of neutral thickness, and increase recovery to roughly 1.4x the neutral count at full thickness, so total stack height and the number of visible partings change between rows.",
+      "keep": "Keep the token recognisable down its own column. The surviving beds must hold their vertical order and their colours, so 5003 under stress is still obviously 5003 and not a different token wearing the same palette."
+    },
+    {
+      "id": "hollow-planks-and-absent-slate",
+      "whatFails": "Each bed is drawn as a light rectangle containing a darker inset rectangle, so every band carries a double edge and reads as a hollow plank or a crate slat rather than a deposited mass. Separately, the cold slate band is absent from at least seven of the twelve seeds, which are pure warm tan.",
+      "why": "paletteIntent requires one cold slate band as part of the earth palette and identityAnchors holds that palette constant across every seed, so a seed with no cold band has lost an anchor. The outlined bed also fights the medium: filled primitives are what make sediment read as mass, and at 120px the double edge greys into mush.",
+      "specificChange": "Replace the outlined beds with solid filled rectangles, using bed-to-bed value separation instead of an internal outline to keep them distinct; and guarantee the slate band on every seed by having the seed choose which bed index takes the cold colour rather than whether a cold bed exists at all.",
+      "keep": "Keep the close value range of the warm beds. Umber, ochre and sand sitting near each other is what makes the sequence read as sediment rather than as stripes, so filling the beds must not push them apart into high-contrast bars."
+    }
+  ],
+  "overall": "This does not currently read as the thing the brief asked for. The brief is a core sample - a continuous section filling the frame with no single element dominating - and what renders is a centred, bilaterally symmetric totem figure floating in a dark margin, complete with a crown, mirrored arms ending in square hands, and feet. The band stack at the centre of that figure is genuinely good: the horizontal repetition survives 120px, the warm umber/ochre/sand over near-black reads as sediment, and within a token the pitch really does vary. The problem is everything wrapped around it. Two fixes carry most of the distance: bleed the beds past the viewBox on all four sides so the margin disappears, and delete the mirrored non-band primitives that are manufacturing a figure. Doing that will expose the two weaknesses currently hidden behind the silhouette - at 120px the twelve seeds are really about three families of near-clones, and the market states are being carried by the ornaments rather than by the beds, so with the ornaments gone neutral, stress and recovery would be almost the same picture. So the seed axis must move onto bed count and pitch, and the state axis must move onto bed count and thickness, at the same time as the composition is opened out. The slate band should stop being optional and the beds should stop being hollow outlines; both are cheap and both push the work toward mass rather than diagram."
+}

@@ -1,0 +1,47 @@
+{
+  "criticId": "critic-B12",
+  "whatWorks": [
+    "The palette is genuinely disciplined: one narrow gold-to-umber range over a flat deep-ink ground, with no stray hue anywhere across twelve seeds and three states, so the twelve read as one collection even where their shapes disagree.",
+    "Four seeds (5265, 5789, 6313, 6444) are already the brief exactly: a small centred figure, far clear of every edge, with most of the frame given to settled dark, and they stay quiet and unhurried at 120px rather than shouting.",
+    "Token identity survives the state rows: 5396 and 5265 are unmistakably the same object at neutral and at recovery, so the market is modulating a token rather than replacing it.",
+    "The ground is truly flat and truly empty on the strongest tiles, so the dark reads as settled emptiness rather than as an unfinished background waiting for something."
+  ],
+  "findings": [
+    {
+      "id": "centre-value-inverted",
+      "whatFails": "The value assignment is upside down. In 5265, 6444 and the 512px single, the small dense centre is the darkest thing in the frame -- an umber-brown lump -- sitting inside a bright, fully saturated gold enclosure, so at 120px the eye lands on the gold outer mass and the centre reads as a hole punched in it.",
+      "why": "The direction reserves gold for the centre and umber for the enclosures, makes the dense centre the focus with the enclosures secondary, and states that at 120px a small bright centre inside quiet concentric boundaries must survive. All three are inverted here: the boundary is the brightest mark and the focus is the dimmest.",
+      "specificChange": "Invert the two value roles: raise the centre to the lightest gold in the palette and darken every enclosure fill to umber at roughly half the centre's luminance, so the centre is the brightest mark in the frame by a clear, measurable margin at 120px.",
+      "keep": "Keep the centre physically small -- do not enlarge it to buy back prominence. Brightness, not area, must carry the focus, and the generous dark margin around the figure must not shrink to make room."
+    },
+    {
+      "id": "response-all-in-stress",
+      "whatFails": "The market response is all-or-nothing. Stress grows the figure by roughly half again to double its neutral diameter on 5134, 5265 and 5396, and adds a heavy near-black ring plus new spike and facet elements that do not exist at neutral -- while neutral and recovery are visually indistinguishable on 5265 and 5396.",
+      "why": "The brief says the market may register only faintly, that nothing a casual viewer would notice at thumbnail size should change, and explicitly not to manufacture drama. A doubling plus new loud elements is drama; an invisible recovery is not faint, it is absent. The response is a two-state switch rather than a quiet continuum.",
+      "specificChange": "Redistribute the amplitude: cut the stress-state scale delta to under about five percent of figure diameter, remove the newly appearing black ring and the spike and facet elements entirely, and move that budget into recovery so it widens the enclosure interval by a small but visible amount, on the order of one stroke width at 256px.",
+      "keep": "Keep the direction of the response -- stress tightening and recovery loosening is the right reading. Keep the element count and the silhouette fixed across the three states so the token stays recognisably itself, exactly as 5396 already does."
+    },
+    {
+      "id": "archetype-scatter",
+      "whatFails": "Only about a third of the twelve are centred concentric containers. 5134 is a disc ringed by six satellites, 5527 is a horizontal bar of blocks, 5920 is an off-centre pile of overlapping hexagons, 5396 and 5658 sit up and off to one side, and 6051 and 6182 are large dispersed circle groups left of centre.",
+      "why": "The variation strategy says tokens differ first in the NUMBER of enclosures, then in the character of the centre, then in symmetry -- not in archetype or position. The identity anchor is the centred concentric construction holding across every seed, and the composition asks for a small centred figure held far clear of every edge.",
+      "specificChange": "Constrain the generator so recursion only goes inward: remove the satellite-ring, lateral-tile and horizontal-bar arrangements, pin every seed's figure centroid to the frame centre within a few percent of frame width, and spread the seed variation onto enclosure count (say two to six) and centre character instead.",
+      "keep": "Keep the silhouette variety that already separates the twelve at 120px -- hexagon, diamond, disc, faceted star. That variety must survive, carried by the enclosure shape and count, rather than by relocating or dispersing the figure."
+    },
+    {
+      "id": "overlap-not-nesting",
+      "whatFails": "The enclosures are alpha-filled solids stacked at irregular offsets rather than boundaries at an even step. In 5003, 5920 and 6444 the inner shapes are visibly off-axis from the outer and the loose rings float away from the mass, so what reads is a mottled tonal patch with accents, not one boundary inside another.",
+      "why": "The medium is concentric enclosures and the rhythm is specified as regular concentric repetition at a quiet even interval, unhurried, with no break and no accent in the spacing. Offset translucent fills produce exactly the accented, irregular texture the rhythm forbids, and they hide the nesting the whole motif depends on.",
+      "specificChange": "Replace the outer enclosure fills with thin concentric strokes sharing one exact centre point, and space them at a constant radial interval so the gap between every adjacent pair is identical; reserve solid fill for the small centre alone.",
+      "keep": "Keep the strictly limited element count and the flat empty ground -- this must not become dense line-work. Keep the quiet quartet 5265, 5789, 6313 and 6444 as sparse as they are now while their nesting is made legible."
+    },
+    {
+      "id": "edge-clip-and-dust",
+      "whatFails": "6051's leftmost circle runs into and is cut by the left frame edge, and 5658 scatters three tiny detached dots near the top-right corner and the left edge, far from the figure; 5658's mass also carries a soft halo that mushes its boundary at 120px.",
+      "why": "The composition requires the figure held far clear of every edge and the negative space must read as settled emptiness. A boundary sliced by the viewBox reads as a render error, and detached specks near the corners read as dirt on the plate rather than as intent -- both break the settled, finished feeling the brief is built on.",
+      "specificChange": "Clamp the figure's bounding radius so no element reaches within about twenty percent of any edge, delete the detached sub-scale satellites entirely rather than shrinking them, and remove the blur or halo on 5658 so every boundary resolves crisply at 120px.",
+      "keep": "Keep the generous dark margin already achieved on 5265, 5789 and 6313 -- that margin is the standard the clamp should raise the other seeds to, not a value to average away."
+    }
+  ],
+  "overall": "The palette, the flat ink ground and about four of the twelve seeds are already the reliquary the brief describes -- small, centred, sparse, finished. Everything else drifts away from it in two directions at once. Inside the figure the value roles are inverted: the enclosure is bright gold and the dense centre is the darkest thing in the frame, so at 120px the thumbnail reads as a gold blob with a hole rather than as a bright centre inside quiet boundaries, and the nesting itself is expressed as offset translucent overlap rather than as concentric boundaries at an even interval. Outside the figure the generator is varying the wrong axis: instead of differing in enclosure count and centre character, seeds change archetype and position entirely -- satellite rings, horizontal bars, off-centre piles, dispersed circle groups, one of them clipped by the frame -- so the declared identity anchor does not hold across the set. The state rows compound this: stress nearly doubles the figure and introduces heavy black rings and spikes that exist in no other state, which is precisely the manufactured drama the brief rules out, while neutral and recovery are indistinguishable on two of four seeds, leaving no faint register at all. The fixes point the same way: pull the response amplitude down and spread a little of it into recovery, pull the figures back to centre and inward, and flip the gold onto the centre where the direction put it."
+}

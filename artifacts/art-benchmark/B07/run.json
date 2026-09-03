@@ -6,7 +6,7 @@
   "briefSha256": "ee37cb8dce1333e24ca49f4ecb27f486b2efd2180755bf54d7e6e754ea51edc1",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T17:37:54.866Z",
+    "decidedAt": "2026-09-03T17:48:32.607Z",
     "briefSha256": "ee37cb8dce1333e24ca49f4ecb27f486b2efd2180755bf54d7e6e754ea51edc1",
     "briefSubstance": {
       "chars": 687,
@@ -46,7 +46,6 @@
       {
         "templateId": "GEOMETRIC_RECURSION_V1/compass",
         "runtimeId": "GEOMETRIC_RECURSION_V1",
-        "registryId": 3,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -60,7 +59,6 @@
       {
         "templateId": "VECTOR_COMPOSITION_V1/alluvium",
         "runtimeId": "VECTOR_COMPOSITION_V1",
-        "registryId": 4,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -100,7 +98,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T17:37:54.866Z",
+    "createdAt": "2026-09-03T17:48:32.607Z",
     "briefSha256": "ee37cb8dce1333e24ca49f4ecb27f486b2efd2180755bf54d7e6e754ea51edc1",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -143,8 +141,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "c6aabf9e3fe7539c535a67acc36e852474b4b1e94f236b8297bc189989f7c0ac",
-      "configBytes": "0x564356310102000202034e7d6ed9d2c214161a020800010200001a2822560500090600030102050c134e4d000010436f6c6f6e7920436c75737465726564ff",
+      "configHash": "786eabeab213f60ff7d10889930c430b2baa5f9fa15fee0b24005ba54ad72d0d",
+      "configBytes": "0x564356310102000202034e7d6ed9d2c214161a020800010301001a2822560500090600020103050c13480d000010436f6c6f6e7920436c75737465726564ff",
       "config": {
         "fields": [
           {
@@ -159,22 +157,22 @@
             "stroke": false,
             "variant": 0,
             "drive": "COUNT",
-            "sensor": "DRAWDOWN",
-            "curve": "LINEAR"
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
           },
           {
             "layout": "ORBIT",
             "primitive": "ARC",
             "sizeMax": 19,
-            "spreadMax": 78,
+            "spreadMax": 72,
             "symmetry": "ROT6",
             "countMin": 5,
             "countMax": 12,
             "paletteIx": 0,
             "variant": 1,
-            "stroke": true,
-            "drive": "SPREAD",
-            "sensor": "RECOVERY",
+            "stroke": false,
+            "drive": "SIZE",
+            "sensor": "DRAWDOWN",
             "curve": "LOG2"
           }
         ],
@@ -206,7 +204,11 @@
         "densityTarget": {
           "source": "DIRECTION",
           "value": "DENSE",
-          "phrase": "Dense",
+          "evidence": [
+            "dense"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "density",
             "negativeSpace",
@@ -229,7 +231,13 @@
         "rhythmMode": {
           "source": "DIRECTION",
           "value": "RADIAL",
-          "phrase": "Radial",
+          "evidence": [
+            "radial"
+          ],
+          "score": 1,
+          "runnerUp": [
+            "BROKEN:1"
+          ],
           "fields": [
             "rhythm",
             "composition"
@@ -245,7 +253,11 @@
         "strokeMode": {
           "source": "DIRECTION",
           "value": "SOLID",
-          "phrase": "silhouette",
+          "evidence": [
+            "silhouette"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "medium",
             "motifTranslation",
@@ -257,7 +269,11 @@
         "marketAxis": {
           "source": "DIRECTION",
           "value": "DENSITY",
-          "phrase": "multiplies",
+          "evidence": [
+            "multiplies"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "marketTransformation"
           ],
@@ -350,36 +366,36 @@
             "index": 0,
             "unit": "field[0]",
             "drive": "COUNT",
-            "sensor": "DRAWDOWN",
-            "curve": "LINEAR",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
             "parameter": "countMax",
             "floor": 26,
             "ceiling": 40,
             "readings": {
               "neutral": {
                 "perMille": 20,
-                "curved": 20,
-                "resolved": 26
+                "curved": 326,
+                "resolved": 30
               },
               "stress": {
-                "perMille": 900,
-                "curved": 900,
-                "resolved": 38
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 26
               },
               "recovery": {
-                "perMille": 80,
-                "curved": 80,
-                "resolved": 27
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 39
               }
             },
             "resolved": [
+              30,
               26,
-              38,
-              27
+              39
             ],
-            "span": 12,
+            "span": 13,
             "verdict": "REACHABLE",
-            "detail": "resolves to 26 / 38 / 27 across neutral / stress / recovery (span 12 of 14)",
+            "detail": "resolves to 30 / 26 / 39 across neutral / stress / recovery (span 13 of 14)",
             "worstMember": {
               "ok": true,
               "risky": [],
@@ -389,37 +405,37 @@
           {
             "index": 1,
             "unit": "field[1]",
-            "drive": "SPREAD",
-            "sensor": "RECOVERY",
+            "drive": "SIZE",
+            "sensor": "DRAWDOWN",
             "curve": "LOG2",
-            "parameter": "spreadMax",
-            "floor": 16,
-            "ceiling": 78,
+            "parameter": "sizeMax",
+            "floor": 2,
+            "ceiling": 19,
             "readings": {
               "neutral": {
                 "perMille": 20,
                 "curved": 326,
-                "resolved": 36
+                "resolved": 7
               },
               "stress": {
-                "perMille": 0,
-                "curved": 0,
-                "resolved": 16
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 18
               },
               "recovery": {
-                "perMille": 820,
-                "curved": 964,
-                "resolved": 75
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 11
               }
             },
             "resolved": [
-              36,
-              16,
-              75
+              7,
+              18,
+              11
             ],
-            "span": 59,
+            "span": 11,
             "verdict": "REACHABLE",
-            "detail": "resolves to 36 / 16 / 75 across neutral / stress / recovery (span 59 of 62)",
+            "detail": "resolves to 7 / 18 / 11 across neutral / stress / recovery (span 11 of 17)",
             "worstMember": {
               "ok": true,
               "risky": [],
@@ -489,44 +505,44 @@
         },
         {
           "stage": "MARKET_BEHAVIOUR",
-          "why": "marketAxis=DENSITY -> COUNT <- DRAWDOWN/LINEAR; SIZE is never elected (floor 2 renders a blank at low sensor)",
+          "why": "marketAxis=DENSITY -> COUNT <- RECOVERY/LOG2; SIZE is never elected (floor 2 renders a blank at low sensor)",
           "consulted": "fields[n].drive x sensor x curve"
         }
       ],
       "sheets": [
         {
           "name": "dev-seeds-256.png",
-          "sha256": "d94e7fe745242939f853500d9621acc62e59540b76a5547f85c2aec5a3f863dc",
-          "bytes": 270224
+          "sha256": "d37b3d781975c24c81dcb8c77d9091e033702a698fa14bf057038b60f3ac7d5c",
+          "bytes": 257814
         },
         {
           "name": "dev-seeds-120.png",
-          "sha256": "8aa95efe57234d06aa9cbc1997c146a2389298ad261aaaa39c5144f32be5f640",
-          "bytes": 89394
+          "sha256": "93652fd2f6a9d22e872bd525f040b472393b5e7c37c57a36090aa2be6aa1d8ef",
+          "bytes": 85292
         },
         {
           "name": "dev-states-256.png",
-          "sha256": "b247c6472dc2e1b63007cf3cdf81aaea4161c5fcb4ac04e5361c407526502b99",
-          "bytes": 246504
+          "sha256": "0c06f004acd9d38db7997248bacbecd8da195e63058b78408f1cf99808be1e32",
+          "bytes": 251384
         },
         {
           "name": "dev-states-120.png",
-          "sha256": "a01e4f342ed26acd1afb147362631728ff7d46d0a755f8b53541fbb89c47b1a6",
-          "bytes": 80447
+          "sha256": "0d506dc66fa8d59fd819a24d685ac6594db4c4231a1a9cb9c20abd96453586df",
+          "bytes": 82103
         },
         {
           "name": "dev-single-512.png",
-          "sha256": "ddd50f8e4918b1ae0bf89a63022b49b912c3d3898bc1baeca6b04bc287efe2f5",
-          "bytes": 25801
+          "sha256": "df3ea9d61c520e3b7c5785975ac4858f4bbfe4f7d975f7e06e3e3652b5239c23",
+          "bytes": 27438
         }
       ],
       "measurements": {
-        "inkMean": 0.271,
-        "inkMin": 0.03,
-        "stateDeMean": 2.73,
-        "stateDeMin": 0.42,
-        "seedDeMean": 16.12,
-        "seedDeMin": 3.21
+        "inkMean": 0.282,
+        "inkMin": 0.022,
+        "stateDeMean": 2.38,
+        "stateDeMin": 0.38,
+        "seedDeMean": 16.43,
+        "seedDeMin": 4.25
       }
     }
   ]

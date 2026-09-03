@@ -1,0 +1,47 @@
+{
+  "criticId": "critic-B04",
+  "whatWorks": [
+    "The palette is the one part of the brief that is fully delivered: bone and cream over slate over a near-black ground, close enough in value that the twelve seeds and all three states read as a single collection. Nothing here reads as colour, and that must survive every other fix.",
+    "Token identity across market states holds cleanly. In 5003, 5134 and 5396 the neutral, stress and recovery frames are unmistakably the same token: the placement schema, the mark family and the value range all persist while the population changes. That is the hardest thing on this sheet to keep and the easiest to lose when recovery is pushed.",
+    "The neutral to stress step is unambiguous at browse size in the mid-density seeds. 5396 goes from two loose clusters to a fully populated frame and 5003 gains a whole row; the market is visibly acting on density exactly as the brief asks, at least on that one pairing.",
+    "The primitive is right for the brief. A quadrilateral with a small seeded rotation, at the scale used in 6051 and 5920, produces the loose measure the direction asks for: a steady interval that is clearly not a grid. 6051 in particular is the only frame on the sheet that begins to look like an all-over field, and it should be treated as the target rather than an outlier."
+  ],
+  "findings": [
+    {
+      "id": "mirror-axis",
+      "whatFails": "Every one of the twelve seeds is exactly bilaterally symmetric about the vertical centre line. Marks appear in reflected pairs at identical y, identical size and identical value, visible in the 512 render where each small square has a twin at the same height on the other side of centre.",
+      "why": "The brief asks for a composition balanced without being symmetrical, and the direction says nothing should invite a viewer to name it. An exact mirror axis is the strongest naming cue there is, which is why 6182 reads as a torso or vest, 5527 as an arch or helmet, 5396 as a mask and 6444 as a crown. The work is producing subjects in a brief that forbids subjects.",
+      "specificChange": "Remove the mirror pass entirely and draw each side of the canvas from an independent seeded draw; if the reflection has to stay for cost reasons, displace every mirrored mark by a seeded offset of at least one full mark width in both x and y, and re-roll its rotation and value, so no two marks on the sheet form a visible pair.",
+      "keep": "Keep the balance the mirror was buying: left and right halves should still carry comparable total mass and comparable value distribution, so the field stays weighted evenly rather than sliding into one corner once the axis goes."
+    },
+    {
+      "id": "figure-on-ground",
+      "whatFails": "The marks are massed into the central half of the canvas in every seed, with a wide unbroken border of bare ground around them. In the 512 render roughly the outer forty percent of the frame is empty, and in 5134, 5527, 6182 and 6444 the marks fuse into one contiguous central mass sitting on that ground.",
+      "why": "The direction is explicit: an all-over field that uses the whole frame evenly, with no isolated object and no reserved margin anywhere. What is on the sheet is the exact figure-on-ground composition the brief rules out, and the reserved margin is what turns each central mass into an object with a silhouette to be read.",
+      "specificChange": "Spread the mark distribution across the full canvas including the outer twenty percent band on all four edges, and allow marks to be clipped by the viewBox at the edges so the field reads as continuing past the frame rather than terminating inside it.",
+      "keep": "Keep the moderate density and the legible spacing of the mid-range seeds while spreading. Spreading the same mark count over a larger area must not thin the field into the near-empty state that 5265 and 5789 are already in."
+    },
+    {
+      "id": "pooled-bands",
+      "whatFails": "Marks are laid in two to four horizontal rows separated by wide empty stripes of ground, so the negative space collects into a few large horizontal pools rather than sitting between marks. 5003, 5658, 5789 and 5920 are the same three-band schema at different scales and brightnesses, and at 120px those four read as one repeated work.",
+      "why": "The direction asks for negative space distributed as the gaps between marks across the entire field evenly, and for a regular distribution with local variation. Row layout produces a structural rhythm the brief did not ask for, pools the space it wanted distributed, and collapses a third of the seed set onto a single recognisable template at browse size.",
+      "specificChange": "Replace the row layout with a jittered point distribution over the whole canvas, such as a relaxed lattice or Poisson-disc sampling with the minimum separation set to about one and a half mark widths, so that every gap on the frame is of the same local order and no gap grows to several mark widths.",
+      "keep": "Keep the steady measure. The result must still read as a regular interval with local variation, not as clumped noise; the per-mark rotation and the near-constant spacing already visible along a single row in 5920 are the grain to preserve."
+    },
+    {
+      "id": "interval-destroyed-at-both-ends",
+      "whatFails": "Mark scale swings with the seed instead of staying fixed. 5265, 5789 and 6313 draw specks a few pixels across that vanish at 120px, while 5134, 5527 and 6444 draw slabs nearly a quarter of the frame wide that overlap into a fused translucent mass. Separately, the darkest marks sit so close to the ground value that they drop out entirely, most visibly in the upper cluster of 5396 and the bottom row of 5003.",
+      "why": "The brief says the only content is the relationship between marks, and the density direction wants individual intervals to stay legible. At the sparse end there is nothing close enough to read an interval against; at the dense end the marks merge and there is no interval left to read; and where marks sink into the ground the visible count is being set by value rather than by spacing, which is precisely the substitution the palette intent forbids.",
+      "specificChange": "Pin mark size to a narrow band of roughly two and a half to five percent of the canvas, independent of the mark count, and let count alone carry the density variation. Raise the darkest mark value off the ground until every mark is separable from the background, and decrease overlap so adjacent marks read as two marks rather than one merged shape.",
+      "keep": "Keep count as the primary variation axis between tokens, and keep the close tonal spread of bone and slate. Lifting the dark floor must not widen the palette into contrast; the values should still read as one narrow family."
+    },
+    {
+      "id": "recovery-does-nothing",
+      "whatFails": "On the state sheet, recovery is visually the same frame as neutral in all four seeds. 5396 neutral and 5396 recovery are near-identical two-cluster frames, 5003 recovery repeats the neutral row count mark for mark, and 5265 is a near-blank frame in all three states. Only the stress row separates, so three declared states present as two.",
+      "why": "The market transformation is stated as markedly more marks under drawdown and fewer in recovery, visible at browse size. Fewer in recovery is not happening at all, so a viewer comparing the two states a collection sits in most of the time sees no change, and on the sparse seeds no state is visible at 120px in any direction.",
+      "specificChange": "Decrease the recovery mark count to roughly sixty percent of neutral so the three states form a monotone ladder of stress above neutral above recovery, and raise the sparse seeds' floor so that even the lowest-count token loses a visible number of marks between neutral and recovery at 120px.",
+      "keep": "Keep the same-token identity that currently survives the state change, and keep the strength of the neutral to stress step. Placement schema, mark family and value range must stay constant across the three states exactly as they do now."
+    }
+  ],
+  "overall": "The palette, the primitive and the market's grip on density are all working, and the token stays itself across states, which is the part that is genuinely hard. What is not working is the composition, and it fails against the central premise rather than at the edges: every seed is exactly mirrored about the vertical axis, massed into the middle of the frame with a wide reserved border, and laid out in horizontal rows with the empty space pooled into stripes between them. Those three together produce the one thing the brief forbids, a nameable figure on a ground, and the sheet duly delivers a torso, an arch, a mask and a crown. Underneath that, mark scale is riding the seed rather than being held constant, so the sparse tokens are specks that vanish at 120px while the dense ones fuse into slabs, and in both cases the interval that is supposed to be the entire content of the work is not readable. The fix is one coherent move rather than five: break the mirror, spread the same marks over the whole frame at a fixed size, and let count alone vary, which also restores the interval and gives recovery somewhere to go once it is pushed below neutral."
+}

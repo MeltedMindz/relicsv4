@@ -6,7 +6,7 @@
   "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T17:37:48.742Z",
+    "decidedAt": "2026-09-03T17:48:26.462Z",
     "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
     "briefSubstance": {
       "chars": 706,
@@ -43,7 +43,6 @@
       {
         "templateId": "GEOMETRIC_RECURSION_V1/compass",
         "runtimeId": "GEOMETRIC_RECURSION_V1",
-        "registryId": 3,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -54,7 +53,6 @@
       {
         "templateId": "VECTOR_COMPOSITION_V1/alluvium",
         "runtimeId": "VECTOR_COMPOSITION_V1",
-        "registryId": 4,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -89,7 +87,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T17:37:48.743Z",
+    "createdAt": "2026-09-03T17:48:26.462Z",
     "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "VECTOR_COMPOSITION_V1",
@@ -132,8 +130,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "a13aeae0842459bde4511dbcc58e478e5c6783238dc6611142cf98f15ad426a4",
-      "configBytes": "0x564356310100000001030f111359636bd9d2c201000002020000102818560100000b5468657265204d6f746966ff",
+      "configHash": "b96c694cc0c133ba2f982ad6378080cb4b2d26d75c73a0ca6e38dd96ac529b5e",
+      "configBytes": "0x564356310100000001030f111359636bd9d2c201000002030100102818560000000b5468657265204d6f746966ff",
       "config": {
         "fields": [
           {
@@ -141,15 +139,15 @@
             "primitive": "RECT",
             "sizeMax": 24,
             "spreadMax": 86,
-            "symmetry": "MIRROR_X",
+            "symmetry": "NONE",
             "countMin": 16,
             "countMax": 40,
             "paletteIx": 2,
             "stroke": false,
             "variant": 0,
             "drive": "COUNT",
-            "sensor": "DRAWDOWN",
-            "curve": "LINEAR"
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
           }
         ],
         "fieldCount": 1,
@@ -178,7 +176,11 @@
         "densityTarget": {
           "source": "DIRECTION",
           "value": "MODERATE",
-          "phrase": "Moderate",
+          "evidence": [
+            "moderate"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "density",
             "negativeSpace",
@@ -201,7 +203,13 @@
         "focalMode": {
           "source": "DIRECTION",
           "value": "EVEN_FIELD",
-          "phrase": "Deliberately flat hierarchy",
+          "evidence": [
+            "deliberately flat hierarchy",
+            "nothing dominates",
+            "all over"
+          ],
+          "score": 3,
+          "runnerUp": [],
           "fields": [
             "focalHierarchy",
             "composition"
@@ -211,7 +219,12 @@
         "rhythmMode": {
           "source": "DIRECTION",
           "value": "REGULAR",
-          "phrase": "Regular",
+          "evidence": [
+            "regular",
+            "steady"
+          ],
+          "score": 2,
+          "runnerUp": [],
           "fields": [
             "rhythm",
             "composition"
@@ -221,7 +234,12 @@
         "paletteMode": {
           "source": "DIRECTION",
           "value": "RESTRAINED",
-          "phrase": "Narrow",
+          "evidence": [
+            "narrow",
+            "close values"
+          ],
+          "score": 2,
+          "runnerUp": [],
           "fields": [
             "paletteIntent"
           ],
@@ -236,7 +254,14 @@
         "marketAxis": {
           "source": "DIRECTION",
           "value": "DENSITY",
-          "phrase": "density",
+          "evidence": [
+            "density",
+            "fewer"
+          ],
+          "score": 2,
+          "runnerUp": [
+            "SCALE:1"
+          ],
           "fields": [
             "marketTransformation"
           ],
@@ -245,7 +270,12 @@
         "variationBreadth": {
           "source": "DIRECTION",
           "value": "NARROW",
-          "phrase": "subtle",
+          "evidence": [
+            "subtle",
+            "narrow"
+          ],
+          "score": 2,
+          "runnerUp": [],
           "fields": [
             "variationStrategy",
             "identityAnchors"
@@ -333,36 +363,36 @@
             "index": 0,
             "unit": "field[0]",
             "drive": "COUNT",
-            "sensor": "DRAWDOWN",
-            "curve": "LINEAR",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
             "parameter": "countMax",
             "floor": 16,
             "ceiling": 40,
             "readings": {
               "neutral": {
                 "perMille": 20,
-                "curved": 20,
-                "resolved": 16
+                "curved": 326,
+                "resolved": 23
               },
               "stress": {
-                "perMille": 900,
-                "curved": 900,
-                "resolved": 37
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 16
               },
               "recovery": {
-                "perMille": 80,
-                "curved": 80,
-                "resolved": 17
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 39
               }
             },
             "resolved": [
+              23,
               16,
-              37,
-              17
+              39
             ],
-            "span": 21,
+            "span": 23,
             "verdict": "REACHABLE",
-            "detail": "resolves to 16 / 37 / 17 across neutral / stress / recovery (span 21 of 24)",
+            "detail": "resolves to 23 / 16 / 39 across neutral / stress / recovery (span 23 of 24)",
             "worstMember": {
               "ok": true,
               "risky": [],
@@ -406,7 +436,7 @@
         },
         {
           "stage": "RHYTHM",
-          "why": "symmetry MIRROR_X (~3x coverage, project constant so it carries no variety); count range kept tight because widening thins the neutral composition",
+          "why": "symmetry NONE (~3x coverage, project constant so it carries no variety); count range kept tight because widening thins the neutral composition",
           "consulted": [
             "fields[n].symmetry",
             "fields[n].countMin / countMax"
@@ -424,44 +454,44 @@
         },
         {
           "stage": "MARKET_BEHAVIOUR",
-          "why": "marketAxis=DENSITY -> COUNT <- DRAWDOWN/LINEAR; SIZE is never elected (floor 2 renders a blank at low sensor)",
+          "why": "marketAxis=DENSITY -> COUNT <- RECOVERY/LOG2; SIZE is never elected (floor 2 renders a blank at low sensor)",
           "consulted": "fields[n].drive x sensor x curve"
         }
       ],
       "sheets": [
         {
           "name": "dev-seeds-256.png",
-          "sha256": "8884e22854de701a4f638e40ef1816dc8e016cae294234ed2131a5d11877c821",
-          "bytes": 104935
+          "sha256": "a924654d5c01745c285cad98dad27e0bdbdfd47653288af0c2b4fed3b0b026ca",
+          "bytes": 112676
         },
         {
           "name": "dev-seeds-120.png",
-          "sha256": "19317a797518e1fb99eca65291761d9e9db1a404174a4812d0e1b34f3cd8f6d1",
-          "bytes": 43301
+          "sha256": "77a8bf77c9ef563d42594424f3f5abc0a75e093f503acb34eff97a51a579a054",
+          "bytes": 46589
         },
         {
           "name": "dev-states-256.png",
-          "sha256": "926ce5a61c95512d7f8751ede79ed226319351e6352b0a7d88e5c86f3cea824a",
-          "bytes": 107578
+          "sha256": "dbc91ee3d7d35b6c9a1fcd119fbd08af0179ca08f98374a8fb7eb8c9c2d02c47",
+          "bytes": 94226
         },
         {
           "name": "dev-states-120.png",
-          "sha256": "a45266a0fa1769d03e468fbe096134e3e076ffcd2cbd55084cdc720cb4788ddb",
-          "bytes": 42999
+          "sha256": "8c31e0298a199ce38f87d84f975025d913c01537f3d198c4d45bfb91b601de24",
+          "bytes": 38556
         },
         {
           "name": "dev-single-512.png",
-          "sha256": "e1f8f9eb41c32d819962094993f1cdd05dbafcd528646474fd93390568a0c05e",
-          "bytes": 5443
+          "sha256": "5c3bf7eaa6b0569e2bdbf73e04b5575c154f0ed8d5a5fa01044d10e548a8b85d",
+          "bytes": 6127
         }
       ],
       "measurements": {
-        "inkMean": 0.148,
-        "inkMin": 0.017,
-        "stateDeMean": 5.86,
-        "stateDeMin": 0.63,
-        "seedDeMean": 11.32,
-        "seedDeMin": 1.31
+        "inkMean": 0.161,
+        "inkMin": 0.015,
+        "stateDeMean": 5.26,
+        "stateDeMin": 0.4,
+        "seedDeMean": 10.74,
+        "seedDeMin": 1.18
       }
     }
   ]

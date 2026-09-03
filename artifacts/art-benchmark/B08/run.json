@@ -6,7 +6,7 @@
   "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T17:37:57.460Z",
+    "decidedAt": "2026-09-03T17:48:35.194Z",
     "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
     "briefSubstance": {
       "chars": 683,
@@ -45,7 +45,6 @@
       {
         "templateId": "GEOMETRIC_RECURSION_V1/compass",
         "runtimeId": "GEOMETRIC_RECURSION_V1",
-        "registryId": 3,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -60,7 +59,6 @@
       {
         "templateId": "VECTOR_COMPOSITION_V1/alluvium",
         "runtimeId": "VECTOR_COMPOSITION_V1",
-        "registryId": 4,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -101,7 +99,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T17:37:57.460Z",
+    "createdAt": "2026-09-03T17:48:35.194Z",
     "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "GEOMETRIC_RECURSION_V1",
@@ -144,8 +142,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "854550d022e4b624e2f109dee227744f9ef3e53058d5bbefcf669badea57bba9",
-      "configBytes": "0x475256310202020001030f11139c7f3d59636b021c0701020004040402520c013900000c050203010202030234120151010000114573636170656d656e74204e6573746564ff",
+      "configHash": "b9234a78e1760a1f912e9b9ae6886e33f3ab4fc1f3f9ddee1cc158d002ea1a8a",
+      "configBytes": "0x475256310202000001030f11139c7f3d59636b021c0701030104040402520c013100000c050202010202030234120111010000114573636170656d656e74204e6573746564ff",
       "config": {
         "rules": [
           {
@@ -165,8 +163,7 @@
             "symSet": [
               "NONE",
               "ROT3",
-              "ROT6",
-              "QUAD"
+              "ROT6"
             ],
             "rotation": 12,
             "paletteIx": 1,
@@ -175,8 +172,8 @@
             "stroke": false,
             "variant": 0,
             "drive": "SPREAD",
-            "sensor": "DRAWDOWN",
-            "curve": "LINEAR"
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
           },
           {
             "shapeSet": [
@@ -197,11 +194,11 @@
             "rotation": 18,
             "paletteIx": 2,
             "variant": 1,
-            "stroke": true,
+            "stroke": false,
             "depthMin": 2,
             "depthMax": 3,
             "drive": "CONTRACT",
-            "sensor": "RECOVERY",
+            "sensor": "DRAWDOWN",
             "curve": "LOG2"
           }
         ],
@@ -211,7 +208,7 @@
           "#9c7f3d",
           "#59636b"
         ],
-        "groundMode": "RADIAL",
+        "groundMode": "FLAT",
         "groundIx": 0,
         "groundIx2": 1,
         "flags": [
@@ -233,7 +230,11 @@
         "densityTarget": {
           "source": "DIRECTION",
           "value": "MODERATE",
-          "phrase": "Moderate",
+          "evidence": [
+            "moderate"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "density",
             "negativeSpace",
@@ -244,7 +245,11 @@
         "extentTarget": {
           "source": "DIRECTION",
           "value": "COMPACT",
-          "phrase": "margin",
+          "evidence": [
+            "margin"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "composition",
             "negativeSpace"
@@ -260,7 +265,16 @@
         "rhythmMode": {
           "source": "DIRECTION",
           "value": "RADIAL",
-          "phrase": "rotational",
+          "evidence": [
+            "rotational",
+            "ring",
+            "concentric",
+            "rings"
+          ],
+          "score": 4,
+          "runnerUp": [
+            "REGULAR:2"
+          ],
           "fields": [
             "rhythm",
             "composition"
@@ -276,7 +290,12 @@
         "strokeMode": {
           "source": "DIRECTION",
           "value": "SOLID",
-          "phrase": "mass",
+          "evidence": [
+            "mass",
+            "silhouette"
+          ],
+          "score": 2,
+          "runnerUp": [],
           "fields": [
             "medium",
             "motifTranslation",
@@ -358,8 +377,8 @@
             "index": 0,
             "unit": "rule[0]",
             "drive": "SPREAD",
-            "sensor": "DRAWDOWN",
-            "curve": "LINEAR",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
             "parameter": null,
             "floor": null,
             "ceiling": null,
@@ -378,7 +397,7 @@
             "index": 1,
             "unit": "rule[1]",
             "drive": "CONTRACT",
-            "sensor": "RECOVERY",
+            "sensor": "DRAWDOWN",
             "curve": "LOG2",
             "parameter": "contraction",
             "floor": 20,
@@ -390,24 +409,24 @@
                 "resolved": 30
               },
               "stress": {
-                "perMille": 0,
-                "curved": 0,
-                "resolved": 20
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 51
               },
               "recovery": {
-                "perMille": 820,
-                "curved": 964,
-                "resolved": 50
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 37
               }
             },
             "resolved": [
               30,
-              20,
-              50
+              51,
+              37
             ],
-            "span": 30,
+            "span": 21,
             "verdict": "REACHABLE",
-            "detail": "resolves to 30 / 20 / 50 across neutral / stress / recovery (span 30 of 32)",
+            "detail": "resolves to 30 / 51 / 37 across neutral / stress / recovery (span 21 of 32)",
             "worstMember": {
               "ok": true,
               "risky": [],
@@ -427,7 +446,7 @@
           {
             "unit": "rule[0]",
             "drive": "SPREAD",
-            "sensor": "DRAWDOWN",
+            "sensor": "RECOVERY",
             "detail": "reachability not computable: no floor recorded for the dimension DRIVE_SPREAD moves. Render is the only evidence available for this binding."
           }
         ],
@@ -460,7 +479,7 @@
         },
         {
           "stage": "RHYTHM",
-          "why": "symSet NONE,ROT3,ROT6,QUAD from rhythmMode=RADIAL; symmetry is free coverage and imposes a mandala",
+          "why": "symSet NONE,ROT3,ROT6 from rhythmMode=RADIAL; symmetry is free coverage and imposes a mandala",
           "consulted": "rules[n].symSet"
         },
         {
@@ -482,44 +501,44 @@
         },
         {
           "stage": "MARKET_BEHAVIOUR",
-          "why": "marketAxis=DENSITY -> SPREAD <- DRAWDOWN/LINEAR",
+          "why": "marketAxis=DENSITY -> SPREAD <- RECOVERY/LOG2",
           "consulted": "rules[n].drive x sensor x curve"
         }
       ],
       "sheets": [
         {
           "name": "dev-seeds-256.png",
-          "sha256": "184f3c32b6c1d84d5ea3c54710ca95f1f44e2c995a41450d9b8fb671d85d719a",
-          "bytes": 226137
+          "sha256": "efddfb7452da01f8f9794b4807c558f525652f9b94fd1e5256d88a9df32aeb79",
+          "bytes": 120215
         },
         {
           "name": "dev-seeds-120.png",
-          "sha256": "28c9f92464d8dff0d27d7047557a4b147ac9094ed4c00270ee706ddcba69e460",
-          "bytes": 79799
+          "sha256": "06643e9ac592fd37bc1ff1a2370cf9b9716b3dd3fc3807d633c6f867aeec5903",
+          "bytes": 51976
         },
         {
           "name": "dev-states-256.png",
-          "sha256": "ce9ad8908b264a2b01016fb20b9da20744a4af677f83bd05656a3bfc04ca1001",
-          "bytes": 265811
+          "sha256": "e24fd37a63f46f77a1eb30119f2e5ccc81f03093a48788beb9f5390f251a8ce4",
+          "bytes": 137399
         },
         {
           "name": "dev-states-120.png",
-          "sha256": "231dd96276b95cd98d4db1e15cdccff24fc6f46c15112be2e399f225e44eda6f",
-          "bytes": 102927
+          "sha256": "785783772376c5c75646a863999084a1e2d9121fa6a687da4c50dc4bd9bd8165",
+          "bytes": 57903
         },
         {
           "name": "dev-single-512.png",
-          "sha256": "2ed4c68d17bff034f671c016cf8f4513561f3908ca4f8dc5597e1e218749c24c",
-          "bytes": 53451
+          "sha256": "71dbdb4edadc7bce0d1aaf21a5dcd0aafcdc938767a225856a443034aeea89c1",
+          "bytes": 12519
         }
       ],
       "measurements": {
-        "inkMean": 0.501,
-        "inkMin": 0.48,
-        "stateDeMean": 5.63,
-        "stateDeMin": 3.81,
-        "seedDeMean": 3.31,
-        "seedDeMin": 1.69
+        "inkMean": 0.348,
+        "inkMin": 0.23,
+        "stateDeMean": 5.38,
+        "stateDeMin": 1.58,
+        "seedDeMean": 8.68,
+        "seedDeMin": 2.39
       }
     }
   ]

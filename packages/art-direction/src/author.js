@@ -86,6 +86,9 @@ export const STAGE_PARAMETERS = Object.freeze({
 
 const rx = (s) => new RegExp(s, "i");
 
+/** An explicitly described graded ground. Nothing else turns the gradient on. */
+const GRADED_GROUND = /\b(gradient|graded|glow\w*|vignette|radiant|luminous\s+ground|light\s+falls?|halo\s+of\s+light)\b/i;
+
 /**
  * THE INTENT VOCABULARY — eight closed decisions, each with a STATED default.
  *
@@ -203,25 +206,33 @@ export function deriveIntent(direction) {
   const derivation = {};
   for (const [key, spec] of Object.entries(INTENT_VOCABULARY)) {
     const haystack = spec.from.map((f) => direction[f] ?? "").join(" \n ");
-    let chosen = null;
-    let phrase = null;
     const rejected = [];
+    // EVIDENCE IS COUNTED, NOT RACED.
+    //
+    // This used to take the first option whose pattern matched and stop. B09 -- a brief whose
+    // every line is about MASS, weight and consolidation -- came out LINEWORK and rendered as a
+    // hairline outline at ink 0.045, because the word "outline" appears once, in a subordinate
+    // clause of thumbnailIntent ("the fracture is visible as broken outline"), and LINEWORK is
+    // declared before SOLID. One incidental noun outvoted four deliberate ones.
+    //
+    // So every option is scored by how many DISTINCT phrases support it, and the declared order is
+    // only the tie-break. That also makes the derivation legible: the receipt carries the count,
+    // so a reading that won 4-to-1 looks different from one that won 1-to-0.
+    const scores = [];
     for (const [option, patterns] of Object.entries(spec.options)) {
-      let hit = null;
+      const hits = [];
       for (const p of patterns) {
-        // Scan every occurrence, not just the first: "no interruption ... then a broken interval"
-        // must still read as BROKEN on the second phrase.
-        for (const m of haystack.matchAll(new RegExp(p.source, `${p.flags.includes("g") ? p.flags : `${p.flags}g`}`))) {
+        for (const m of haystack.matchAll(new RegExp(p.source, p.flags.includes("g") ? p.flags : `${p.flags}g`))) {
           if (negatedAt(haystack, m.index)) { rejected.push({ option, phrase: m[0], why: "negated in its own clause" }); continue; }
-          hit = m; break;
+          if (!hits.includes(m[0].toLowerCase())) hits.push(m[0].toLowerCase());
         }
-        if (hit) break;
       }
-      if (hit) { chosen = option; phrase = hit[0]; break; }
+      scores.push({ option, score: hits.length, phrases: hits });
     }
-    intent[key] = chosen ?? spec.default;
-    derivation[key] = chosen
-      ? { source: "DIRECTION", value: chosen, phrase, fields: spec.from, rejected }
+    const best = scores.filter((x) => x.score > 0).sort((a, b) => b.score - a.score)[0] ?? null;
+    intent[key] = best?.option ?? spec.default;
+    derivation[key] = best
+      ? { source: "DIRECTION", value: best.option, evidence: best.phrases, score: best.score, runnerUp: scores.filter((x) => x.option !== best.option && x.score > 0).map((x) => `${x.option}:${x.score}`), fields: spec.from, rejected }
       : { source: "DEFAULT", value: spec.default, detail: `the direction's ${spec.from.join("/")} did not name a ${key}`, rejected };
   }
   return { intent, derivation };
@@ -515,10 +526,21 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
   // 0.331 to 0.434 -- so its tokens differ in WEIGHT as well as in structure. A set of three
   // similar symmetries (QUAD, MIRROR_X, ROT3) measured seed separation 1.79-3.01 where compass
   // reaches 12.1-18.3, because every token came out the same weight.
+  // BILATERAL SYMMETRY MANUFACTURES FIGURES, AND THAT IS THE ONE THING THESE RUNTIMES MUST NOT DO.
+  //
+  // Five development critics, working independently on five different briefs, reported the same
+  // thing in their own words: a totem "with a head, arms with square hands and feet", "two seeds
+  // resolve into accidental faces", "a torso, an arch, a mask, a crown". MIRROR_X over centred
+  // regular primitives is a recipe for pareidolia -- a vertical axis of reflection is exactly what
+  // a body is -- and these runtimes are refused figurative briefs at admission precisely because
+  // they cannot draw a figure on purpose. Drawing one by accident is worse.
+  //
+  // Rotational orders do not do this: three-fold and six-fold read as instrument, rosette or
+  // mandala. So mirrors are dropped from every set and rotation carries the symmetry.
   const symSet = {
-    RADIAL: ["NONE", "ROT3", "ROT6", "QUAD"],
-    REGULAR: ["NONE", "MIRROR_X", "QUAD", "ROT3"],
-    BROKEN: ["NONE", "MIRROR_X", "MIRROR_Y", "ROT3"],
+    RADIAL: ["NONE", "ROT3", "ROT6"],
+    REGULAR: ["NONE", "ROT3", "ROT6"],
+    BROKEN: ["NONE", "ROT3"],
   }[intent.rhythmMode];
   set("RHYTHM", "rules[0].symSet", symSet);
   // rotation 0 makes DRIVE_ROTATE a multiplication by zero (law L2). Non-zero unless deliberately unused.
@@ -539,7 +561,7 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
     set("SECONDARY_STRUCTURE", "rules[1].rotation", intent.rhythmMode === "BROKEN" ? 40 : 18);
     set("SECONDARY_STRUCTURE", "rules[1].paletteIx", ixCap === groundIx ? groundIx : (groundIx === 0 ? Math.min(2, ixCap) : 0));
     set("SECONDARY_STRUCTURE", "rules[1].variant", 1);
-    set("SECONDARY_STRUCTURE", "rules[1].stroke", intent.strokeMode !== "LINEWORK");
+    set("SECONDARY_STRUCTURE", "rules[1].stroke", intent.strokeMode === "LINEWORK");
     set("SECONDARY_STRUCTURE", "rules[1].depthMin", 2);
     set("SECONDARY_STRUCTURE", "rules[1].depthMax", 3);
     notes.push({ stage: "SECONDARY_STRUCTURE", why: "a second rule is the runtime's real colour control (paletteCount does nothing) and its only route to two registers" });
@@ -551,7 +573,14 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
   set("PALETTE", "palette", palette);
   // A gradient ground makes the ground the loudest thing in the frame (measured 0.399 FLAT ->
   // 0.882 RADIAL). That is a deliberate choice for a radial work and a mistake everywhere else.
-  set("PALETTE", "groundMode", intent.rhythmMode === "RADIAL" && intent.densityTarget !== "DENSE" ? "RADIAL" : "FLAT");
+  // A GRADIENT GROUND IS OPT-IN AND ALMOST NEVER WANTED.
+  //
+  // The atlas measures it as the single loudest thing available: FLAT 0.399 -> RADIAL 0.882, and
+  // says plainly that "a gradient ground makes the ground the loudest thing in the frame". This
+  // used to be inferred from a RADIAL rhythm, which conflates how the FIGURE repeats with what the
+  // GROUND does -- B10 asked for delicate hairline work and got ink 0.605, almost all of it
+  // background. It is now taken only from an explicit description of a graded ground.
+  set("PALETTE", "groundMode", GRADED_GROUND.test(direction.paletteIntent ?? "") ? "RADIAL" : "FLAT");
   set("PALETTE", "groundIx", groundIx);
   set("PALETTE", "groundIx2", ixCap === groundIx ? groundIx : Math.min(groundIx + 1, ixCap));
   set("PALETTE", "rules[0].paletteIx", accentIx);
@@ -596,11 +625,38 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
   // symbolic reachability is NECESSARY AND NOT SUFFICIENT, an unprovable binding is settled by the
   // render, and a provably-reachable invisible one is settled by nothing at all because it looks
   // like a pass. CONTRACT keeps the scale axis, where it is both provable and measurably loud.
+  // THE SENSOR'S POLARITY DECIDES WHICH STATE LOOKS DAMAGED, AND IT WAS BACKWARDS EVERYWHERE.
+  //
+  // Seven of twelve development critics, independently, reported the same thing: stress was the
+  // DENSEST, largest, warmest state and recovery was indistinguishable from neutral. One measured
+  // it -- ink 19.3% -> 40.3% into stress, extent 68.6% -> 89.7%. Every brief says the opposite.
+  //
+  // The cause is arithmetic, not art. Measured on the review ring, in per mille:
+  //     DRAWDOWN    20 / 900 /  80     rises under stress
+  //     RECOVERY    20 /   0 / 820     falls to zero under stress, highest in recovery
+  //     VOLATILITY  40 / 600 / 600     stress and recovery IDENTICAL -- cannot separate them
+  //     STRESS     100 / 700 / 700     same defect
+  // Driving COUNT or SPREAD from DRAWDOWN therefore means "more elements under drawdown", which is
+  // a legal, reachable, perfectly visible binding pointed the wrong way -- the worst kind, because
+  // every objective gate passes it and it actively misreads.
+  //
+  // RECOVERY IS THE CONDITION SENSOR, and it is chosen on a MEASUREMENT rather than on that table.
+  // LIQUIDITY reads 100/20/300 -- monotone, neutral between the ends, apparently perfect -- and was
+  // elected on exactly that reasoning. All twelve projects then re-rendered with a state separation
+  // of EXACTLY 0.00: the deployed runtime draws the identical picture at all three states, because
+  // this file's normalisation of LIQUIDITY is not the runtime's. See MEASURED_SENSOR_MOVEMENT in
+  // binding.js for the measured table; only DRAWDOWN, RECOVERY and STRESS move at all.
+  //
+  // RECOVERY has the polarity every brief asks for -- lowest under stress, highest in recovery --
+  // and is proven on chain both by that measurement and by both shipped SHIP templates using it.
+  // DRAWDOWN is kept for STRUCTURE, where rising-under-stress is the ask: members SEPARATE as the
+  // market falls. The secondary binding takes the OTHER of the pair, which is what compass and
+  // alluvium both do: one unit answers damage, another answers healing.
   const axis = {
-    DENSITY: { drive: "SPREAD", sensor: "DRAWDOWN", curve: "LINEAR" },
-    STRUCTURE: { drive: "SPREAD", sensor: "DRAWDOWN", curve: "LINEAR" },
+    DENSITY: { drive: "SPREAD", sensor: "RECOVERY", curve: "LOG2" },
+    STRUCTURE: { drive: "SPREAD", sensor: "DRAWDOWN", curve: "LOG2" },
     SCALE: { drive: "CONTRACT", sensor: "RECOVERY", curve: "LOG2" },
-    EROSION: { drive: "SPREAD", sensor: "DRAWDOWN", curve: "LINEAR" },
+    EROSION: { drive: "SPREAD", sensor: "RECOVERY", curve: "LOG2" },
   }[intent.marketAxis];
   // DEPTH as a drive REQUIRES an unpinned depth range, or law L2 makes it a constant. This is the
   // one place a later stage legitimately revisits an earlier parameter, and it is not a stage
@@ -616,7 +672,7 @@ function authorRecursion({ set, session, intent, direction, attempt, notes }) {
   }
   if (secondRule === 2) {
     set("MARKET_BEHAVIOUR", "rules[1].drive", "CONTRACT");
-    set("MARKET_BEHAVIOUR", "rules[1].sensor", "RECOVERY");
+    set("MARKET_BEHAVIOUR", "rules[1].sensor", "DRAWDOWN");
     set("MARKET_BEHAVIOUR", "rules[1].curve", "LOG2");
   }
   notes.push({ stage: "MARKET_BEHAVIOUR", why: `marketAxis=${intent.marketAxis} -> ${axis.drive} <- ${axis.sensor}/${axis.curve}`, consulted: drive.parameter });
@@ -690,7 +746,11 @@ function authorVector({ set, session, intent, direction, attempt, notes }) {
   const count = session.consult("fields[n].countMin / countMax");
   // Symmetry roughly triples coverage for free and is a PROJECT CONSTANT, so it cannot carry
   // variety -- it is a rhythm decision only.
-  const sym = { RADIAL: "ROT6", REGULAR: "MIRROR_X", BROKEN: "NONE" }[intent.rhythmMode];
+  // alluvium, the shipped SHIP template for this runtime, uses symmetry NONE on all three of its
+  // fields. Imposing MIRROR_X for a regular rhythm turned a bedded section into a bilaterally
+  // symmetric totem, which is the same pareidolia failure as the recursion runtime's. Symmetry is
+  // now elected only where the direction actually asks for a radial figure.
+  const sym = { RADIAL: "ROT6", REGULAR: "NONE", BROKEN: "NONE" }[intent.rhythmMode];
   set("RHYTHM", "fields[0].symmetry", sym);
   // Widening countMin..countMax makes the NEUTRAL composition thinner, not richer. So the range is
   // kept tight unless COUNT is the market axis, which MARKET_BEHAVIOUR widens deliberately.
@@ -728,13 +788,17 @@ function authorVector({ set, session, intent, direction, attempt, notes }) {
     set("SECONDARY_STRUCTURE", `fields[${i}].layout`, secondaries[(i - 1) % secondaries.length]);
     set("SECONDARY_STRUCTURE", `fields[${i}].primitive`, family === "POLAR" ? "ARC" : (intent.strokeMode === "LINEWORK" ? "POLYLINE" : "RECT"));
     set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, Math.max(6, Math.round(sizeMax * (i === 1 ? 0.55 : 0.35))));
-    set("SECONDARY_STRUCTURE", `fields[${i}].spreadMax`, Math.min(128, spreadMax - 8 * i));
+    // NEVER WIDER THAN THE PRIMARY. Critics called the overspill "dirt on the tile" and
+    // "satellites": a secondary that reaches further than the field it supports stops reading as
+    // subordinate and starts reading as debris outside the work.
+    set("SECONDARY_STRUCTURE", `fields[${i}].spreadMax`, Math.max(16, spreadMax - 14 * i));
     set("SECONDARY_STRUCTURE", `fields[${i}].symmetry`, sym);
     set("SECONDARY_STRUCTURE", `fields[${i}].countMin`, 5);
     set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, 12);
     set("SECONDARY_STRUCTURE", `fields[${i}].paletteIx`, (() => { const c = []; for (let k = 0; k <= ixCap; k += 1) if (k !== groundIx) c.push(k); return c.length ? c[(i - 1) % c.length] : groundIx; })());
     set("SECONDARY_STRUCTURE", `fields[${i}].variant`, i);
-    set("SECONDARY_STRUCTURE", `fields[${i}].stroke`, true);
+    // A HOLLOW SECONDARY UNDER A FILLED PRIMARY reads as a crate slat, and greys to mush at 120px.
+    set("SECONDARY_STRUCTURE", `fields[${i}].stroke`, intent.strokeMode === "LINEWORK");
   }
   if (fields > 1) notes.push({ stage: "SECONDARY_STRUCTURE", why: `${fields - 1} secondary field(s); the 120-site budget is paid at countMax across all fields, so secondaries stay at countMax 12` });
 
@@ -742,7 +806,7 @@ function authorVector({ set, session, intent, direction, attempt, notes }) {
   const pal = session.consult("palette, groundMode, PALETTE_SHIFT");
   const { palette, namedInDirection } = pal0;
   set("PALETTE", "palette", palette);
-  set("PALETTE", "groundMode", intent.rhythmMode === "RADIAL" && intent.densityTarget === "SPARSE" ? "RADIAL" : "FLAT");
+  set("PALETTE", "groundMode", GRADED_GROUND.test(direction.paletteIntent ?? "") ? "RADIAL" : "FLAT");
   set("PALETTE", "groundIx", groundIx);
   set("PALETTE", "groundIx2", ixCap === groundIx ? groundIx : Math.min(groundIx + 1, ixCap));
   set("PALETTE", "fields[0].paletteIx", accentIx);
@@ -766,11 +830,38 @@ function authorVector({ set, session, intent, direction, attempt, notes }) {
   // A SIZE-driven field is BLANK whenever its sensor reads low, because size's floor is the
   // constant 2 -- measured 0.005 / 0.005 / 0.156 across the ring. SIZE is therefore never elected
   // on field 0, whatever the direction asks for; SCALE is delivered by SPREAD instead.
+  // THE SENSOR'S POLARITY DECIDES WHICH STATE LOOKS DAMAGED, AND IT WAS BACKWARDS EVERYWHERE.
+  //
+  // Seven of twelve development critics, independently, reported the same thing: stress was the
+  // DENSEST, largest, warmest state and recovery was indistinguishable from neutral. One measured
+  // it -- ink 19.3% -> 40.3% into stress, extent 68.6% -> 89.7%. Every brief says the opposite.
+  //
+  // The cause is arithmetic, not art. Measured on the review ring, in per mille:
+  //     DRAWDOWN    20 / 900 /  80     rises under stress
+  //     RECOVERY    20 /   0 / 820     falls to zero under stress, highest in recovery
+  //     VOLATILITY  40 / 600 / 600     stress and recovery IDENTICAL -- cannot separate them
+  //     STRESS     100 / 700 / 700     same defect
+  // Driving COUNT or SPREAD from DRAWDOWN therefore means "more elements under drawdown", which is
+  // a legal, reachable, perfectly visible binding pointed the wrong way -- the worst kind, because
+  // every objective gate passes it and it actively misreads.
+  //
+  // RECOVERY IS THE CONDITION SENSOR, and it is chosen on a MEASUREMENT rather than on that table.
+  // LIQUIDITY reads 100/20/300 -- monotone, neutral between the ends, apparently perfect -- and was
+  // elected on exactly that reasoning. All twelve projects then re-rendered with a state separation
+  // of EXACTLY 0.00: the deployed runtime draws the identical picture at all three states, because
+  // this file's normalisation of LIQUIDITY is not the runtime's. See MEASURED_SENSOR_MOVEMENT in
+  // binding.js for the measured table; only DRAWDOWN, RECOVERY and STRESS move at all.
+  //
+  // RECOVERY has the polarity every brief asks for -- lowest under stress, highest in recovery --
+  // and is proven on chain both by that measurement and by both shipped SHIP templates using it.
+  // DRAWDOWN is kept for STRUCTURE, where rising-under-stress is the ask: members SEPARATE as the
+  // market falls. The secondary binding takes the OTHER of the pair, which is what compass and
+  // alluvium both do: one unit answers damage, another answers healing.
   const axis = {
-    DENSITY: { drive: "COUNT", sensor: "DRAWDOWN", curve: "LINEAR" },
-    STRUCTURE: { drive: "COUNT", sensor: "STRESS", curve: "LINEAR" },
+    DENSITY: { drive: "COUNT", sensor: "RECOVERY", curve: "LOG2" },
+    STRUCTURE: { drive: "COUNT", sensor: "DRAWDOWN", curve: "LOG2" },
     SCALE: { drive: "SPREAD", sensor: "RECOVERY", curve: "LOG2" },
-    EROSION: { drive: "COUNT", sensor: "DRAWDOWN", curve: "LINEAR" },
+    EROSION: { drive: "COUNT", sensor: "RECOVERY", curve: "LOG2" },
   }[intent.marketAxis];
   set("MARKET_BEHAVIOUR", "fields[0].drive", axis.drive);
   set("MARKET_BEHAVIOUR", "fields[0].sensor", axis.sensor);
@@ -797,15 +888,15 @@ function authorVector({ set, session, intent, direction, attempt, notes }) {
   // COUNT alone on every field measured 1.66-3.88 against a 3.8 floor. This is what the atlas
   // means by sizeMax being the loudest control the runtime owns; the trick is only ever WHERE.
   if (fields > 1) {
-    set("MARKET_BEHAVIOUR", "fields[1].drive", "SPREAD");
-    set("MARKET_BEHAVIOUR", "fields[1].sensor", "RECOVERY");
+    set("MARKET_BEHAVIOUR", "fields[1].drive", "SIZE");
+    set("MARKET_BEHAVIOUR", "fields[1].sensor", "DRAWDOWN");
     set("MARKET_BEHAVIOUR", "fields[1].curve", "LOG2");
     notes.push({ stage: "MARKET_BEHAVIOUR", why: "field[1] is SIZE-driven by RECOVERY: it blooms in recovery and erodes to size 2 under stress. Legitimate only because field[0] carries the composition alone." });
   }
   for (let i = 2; i < fields; i += 1) {
     set("MARKET_BEHAVIOUR", `fields[${i}].drive`, "COUNT");
-    set("MARKET_BEHAVIOUR", `fields[${i}].sensor`, "VOLATILITY");
-    set("MARKET_BEHAVIOUR", `fields[${i}].curve`, "LINEAR");
+    set("MARKET_BEHAVIOUR", `fields[${i}].sensor`, "DRAWDOWN");
+    set("MARKET_BEHAVIOUR", `fields[${i}].curve`, "EASE");
   }
   notes.push({ stage: "MARKET_BEHAVIOUR", why: `marketAxis=${intent.marketAxis} -> ${axis.drive} <- ${axis.sensor}/${axis.curve}; SIZE is never elected (floor 2 renders a blank at low sensor)`, consulted: drive.parameter });
 }

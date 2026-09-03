@@ -123,7 +123,53 @@ export const UNPROVEN_DRIVES = Object.freeze({
  * per mille, which is movement but not enough to see — it is flagged rather than refused, because
  * "small" is a judgement the render should settle.
  */
-export const DEAD_SENSORS_ON_REVIEW_RING = Object.freeze(["FLOW_BIAS", "QUOTE_VOLUME"]);
+export const DEAD_SENSORS_ON_REVIEW_RING = Object.freeze([
+  "FLOW_BIAS",
+  "QUOTE_VOLUME",
+  "LIQUIDITY",
+  "VOLATILITY",
+]);
+
+/**
+ * MEASURED ON CHAIN, AND IT OVERRULES THE ARITHMETIC BELOW.
+ *
+ * `sensorPerMille` is a MODEL of how the runtime normalises each sensor, reconstructed from the
+ * fixture fields. For four sensors that model is simply wrong, and the way it was caught is the
+ * point: the author was switched to LIQUIDITY on the strength of the model -- which reads
+ * 100/20/300 across the ring, monotone, with neutral properly between the ends, exactly the
+ * "condition" curve every brief describes -- and twelve re-rendered projects came back with a
+ * state separation of EXACTLY 0.00. Not small. Zero. The chain draws the same picture at all three
+ * states.
+ *
+ * Measured directly, one VCV1 field, COUNT drive, countMin 4 / countMax 32, LOG2, seed 2017,
+ * mean CIE76 dE at 120px:
+ *
+ *     sensor        n->stress   n->recovery
+ *     DRAWDOWN         0.99        0.90
+ *     RECOVERY         1.53        0.99
+ *     STRESS           0.98        0.98
+ *     VOLUME_TIER      0.00        0.70
+ *     EPOCH            0.00        0.38
+ *     LIQUIDITY        0.00        0.00
+ *     VOLATILITY       0.00        0.00
+ *
+ * So the dead list is longer than the atlas's two, and the extra two are dead for a reason the
+ * atlas never claimed to cover: this file's own normalisation of them does not match the runtime's.
+ * The numbers here are the authority and the arithmetic is a convenience. Anything measured at
+ * 0.00 against a state is refused as a binding for that state, whatever `sensorPerMille` returns.
+ *
+ * VOLUME_TIER and EPOCH are NOT on the dead list because they genuinely move into recovery; they
+ * are simply blind to stress, which is a narrower fact and is recorded rather than generalised.
+ */
+export const MEASURED_SENSOR_MOVEMENT = Object.freeze({
+  DRAWDOWN: { neutralToStress: 0.99, neutralToRecovery: 0.90 },
+  RECOVERY: { neutralToStress: 1.53, neutralToRecovery: 0.99 },
+  STRESS: { neutralToStress: 0.98, neutralToRecovery: 0.98 },
+  VOLUME_TIER: { neutralToStress: 0.00, neutralToRecovery: 0.70 },
+  EPOCH: { neutralToStress: 0.00, neutralToRecovery: 0.38 },
+  LIQUIDITY: { neutralToStress: 0.00, neutralToRecovery: 0.00 },
+  VOLATILITY: { neutralToStress: 0.00, neutralToRecovery: 0.00 },
+});
 
 /** The three fixtures a review is conducted against. */
 export const REVIEW_RING = Object.freeze(["neutral", "stress", "recovery"]);

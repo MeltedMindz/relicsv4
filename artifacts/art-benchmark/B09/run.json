@@ -6,7 +6,7 @@
   "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
   "admission": {
     "schemaVersion": 1,
-    "decidedAt": "2026-09-03T17:37:59.580Z",
+    "decidedAt": "2026-09-03T17:48:37.232Z",
     "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
     "briefSubstance": {
       "chars": 675,
@@ -46,7 +46,6 @@
       {
         "templateId": "GEOMETRIC_RECURSION_V1/compass",
         "runtimeId": "GEOMETRIC_RECURSION_V1",
-        "registryId": 3,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -59,7 +58,6 @@
       {
         "templateId": "VECTOR_COMPOSITION_V1/alluvium",
         "runtimeId": "VECTOR_COMPOSITION_V1",
-        "registryId": 4,
         "viable": true,
         "blockedBy": [],
         "concessions": [],
@@ -92,7 +90,7 @@
   "direction": {
     "schemaVersion": 1,
     "kind": "ART_DIRECTION",
-    "createdAt": "2026-09-03T17:37:59.580Z",
+    "createdAt": "2026-09-03T17:48:37.232Z",
     "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
     "admissionOutcome": "ADMITTED",
     "runtimeId": "GEOMETRIC_RECURSION_V1",
@@ -135,8 +133,8 @@
   "rounds": [
     {
       "round": 1,
-      "configHash": "c92a76597efc2dcfc352bdb178ec4f2c181d97c56e1fc2092e2d5d14c8ccb49c",
-      "configBytes": "0x4752563102060003030426282b4a4f55b07d3a0f1113021a0702020004040402520c015b0000120303030102020302341201030100000d426172726f772053696e676c65ff",
+      "configHash": "fb3dc63b23240ee8179c33184da95296e5e3ddd14ea51b92dae597d15ddcdb2f",
+      "configBytes": "0x4752563102020003030426282b4a4f55b07d3a0f1113021a0702020104040402520c01310000120303020102020302341201110100000d426172726f772053696e676c65ff",
       "config": {
         "rules": [
           {
@@ -155,19 +153,18 @@
             "prune": 1,
             "symSet": [
               "NONE",
-              "MIRROR_X",
-              "QUAD",
-              "ROT3"
+              "ROT3",
+              "ROT6"
             ],
             "rotation": 12,
             "paletteIx": 2,
             "depthMin": 4,
             "depthMax": 4,
-            "stroke": true,
+            "stroke": false,
             "variant": 0,
             "drive": "SPREAD",
             "sensor": "DRAWDOWN",
-            "curve": "LINEAR"
+            "curve": "LOG2"
           },
           {
             "shapeSet": [
@@ -183,7 +180,7 @@
             "prune": 1,
             "symSet": [
               "NONE",
-              "MIRROR_X"
+              "ROT3"
             ],
             "rotation": 18,
             "paletteIx": 3,
@@ -192,7 +189,7 @@
             "depthMin": 2,
             "depthMax": 3,
             "drive": "CONTRACT",
-            "sensor": "RECOVERY",
+            "sensor": "DRAWDOWN",
             "curve": "LOG2"
           }
         ],
@@ -207,8 +204,7 @@
         "groundIx": 3,
         "groundIx2": 3,
         "flags": [
-          "DEPTH_PALETTE",
-          "OUTLINE"
+          "DEPTH_PALETTE"
         ],
         "title": "Barrow Single"
       },
@@ -218,7 +214,7 @@
         "focalMode": "SINGLE_DOMINANT",
         "rhythmMode": "REGULAR",
         "paletteMode": "RESTRAINED",
-        "strokeMode": "LINEWORK",
+        "strokeMode": "SOLID",
         "marketAxis": "STRUCTURE",
         "variationBreadth": "WIDE"
       },
@@ -226,7 +222,13 @@
         "densityTarget": {
           "source": "DIRECTION",
           "value": "SPARSE",
-          "phrase": "empty",
+          "evidence": [
+            "empty"
+          ],
+          "score": 1,
+          "runnerUp": [
+            "DENSE:1"
+          ],
           "fields": [
             "density",
             "negativeSpace",
@@ -237,7 +239,11 @@
         "extentTarget": {
           "source": "DIRECTION",
           "value": "COMPACT",
-          "phrase": "margin",
+          "evidence": [
+            "margin"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "composition",
             "negativeSpace"
@@ -253,7 +259,11 @@
         "rhythmMode": {
           "source": "DIRECTION",
           "value": "REGULAR",
-          "phrase": "Regular",
+          "evidence": [
+            "regular"
+          ],
+          "score": 1,
+          "runnerUp": [],
           "fields": [
             "rhythm",
             "composition"
@@ -268,8 +278,17 @@
         },
         "strokeMode": {
           "source": "DIRECTION",
-          "value": "LINEWORK",
-          "phrase": "outline",
+          "value": "SOLID",
+          "evidence": [
+            "massive",
+            "weight",
+            "mass",
+            "silhouette"
+          ],
+          "score": 4,
+          "runnerUp": [
+            "LINEWORK:1"
+          ],
           "fields": [
             "medium",
             "motifTranslation",
@@ -281,7 +300,12 @@
         "marketAxis": {
           "source": "DIRECTION",
           "value": "STRUCTURE",
-          "phrase": "fractures",
+          "evidence": [
+            "fractures",
+            "breaks"
+          ],
+          "score": 2,
+          "runnerUp": [],
           "fields": [
             "marketTransformation"
           ],
@@ -355,7 +379,7 @@
             "unit": "rule[0]",
             "drive": "SPREAD",
             "sensor": "DRAWDOWN",
-            "curve": "LINEAR",
+            "curve": "LOG2",
             "parameter": null,
             "floor": null,
             "ceiling": null,
@@ -374,7 +398,7 @@
             "index": 1,
             "unit": "rule[1]",
             "drive": "CONTRACT",
-            "sensor": "RECOVERY",
+            "sensor": "DRAWDOWN",
             "curve": "LOG2",
             "parameter": "contraction",
             "floor": 20,
@@ -386,24 +410,24 @@
                 "resolved": 30
               },
               "stress": {
-                "perMille": 0,
-                "curved": 0,
-                "resolved": 20
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 51
               },
               "recovery": {
-                "perMille": 820,
-                "curved": 964,
-                "resolved": 50
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 37
               }
             },
             "resolved": [
               30,
-              20,
-              50
+              51,
+              37
             ],
-            "span": 30,
+            "span": 21,
             "verdict": "REACHABLE",
-            "detail": "resolves to 30 / 20 / 50 across neutral / stress / recovery (span 30 of 32)",
+            "detail": "resolves to 30 / 51 / 37 across neutral / stress / recovery (span 21 of 32)",
             "worstMember": {
               "ok": true,
               "risky": [],
@@ -456,7 +480,7 @@
         },
         {
           "stage": "RHYTHM",
-          "why": "symSet NONE,MIRROR_X,QUAD,ROT3 from rhythmMode=REGULAR; symmetry is free coverage and imposes a mandala",
+          "why": "symSet NONE,ROT3,ROT6 from rhythmMode=REGULAR; symmetry is free coverage and imposes a mandala",
           "consulted": "rules[n].symSet"
         },
         {
@@ -470,7 +494,7 @@
         },
         {
           "stage": "DETAIL",
-          "why": "depth pinned at 4 (measured +0.004 ink over five levels, 30x elements); stroke=LINEWORK is the loudest control at 120px",
+          "why": "depth pinned at 4 (measured +0.004 ink over five levels, 30x elements); stroke=SOLID is the loudest control at 120px",
           "consulted": [
             "rules[n].depthMin / depthMax",
             "rules[n].stroke and the OUTLINE flag"
@@ -478,44 +502,44 @@
         },
         {
           "stage": "MARKET_BEHAVIOUR",
-          "why": "marketAxis=STRUCTURE -> SPREAD <- DRAWDOWN/LINEAR",
+          "why": "marketAxis=STRUCTURE -> SPREAD <- DRAWDOWN/LOG2",
           "consulted": "rules[n].drive x sensor x curve"
         }
       ],
       "sheets": [
         {
           "name": "dev-seeds-256.png",
-          "sha256": "1cffcefeb7c122b132b8e1122a7a00cf44592dd3014ef9ecdf6488fd9a55b46e",
-          "bytes": 94709
+          "sha256": "5792006814b1fff061d9babe5bb71ccf9a826416e321902ec51e6d3e999f83cf",
+          "bytes": 115136
         },
         {
           "name": "dev-seeds-120.png",
-          "sha256": "23ebdb10552288f7436bf50dc1c8b43e33bd685c5c83db4bb2a2ed134cefee06",
-          "bytes": 36958
+          "sha256": "08245d38e6ae8e12b6b0bdc8c1bb96046d0795c13ebd2b0d4cca83d5a4ba0279",
+          "bytes": 49173
         },
         {
           "name": "dev-states-256.png",
-          "sha256": "f8092a7b3c4550438f438bb514cfe45d88363d8c8312fc99d1d3f014509592d9",
-          "bytes": 126278
+          "sha256": "91e6fedd98acc67eab0ed468a7b280e8465ef6e1b4181ea5bde4197efcb7f179",
+          "bytes": 172228
         },
         {
           "name": "dev-states-120.png",
-          "sha256": "bbb347ea404eda8a8efafc564982d788065613959d337914527dd7ff780688ee",
-          "bytes": 46685
+          "sha256": "cb99bb0902ac02aeee0b2b2a4c1a5fe6c4c568244dae868f2ecafc00679c45a8",
+          "bytes": 71594
         },
         {
           "name": "dev-single-512.png",
-          "sha256": "76f2ee03a1af93ad1494420a5d49fcaec7b36d7fd443674bbb264ca988d49ed4",
-          "bytes": 9256
+          "sha256": "a345cfb3961b0ef96b82a2887dc35a0d6d8afda7a7d0c889e295db69cf2447bf",
+          "bytes": 10828
         }
       ],
       "measurements": {
-        "inkMean": 0.045,
-        "inkMin": 0.031,
-        "stateDeMean": 3.02,
-        "stateDeMin": 2.08,
-        "seedDeMean": 1.63,
-        "seedDeMin": 0.42
+        "inkMean": 0.173,
+        "inkMin": 0.027,
+        "stateDeMean": 6.73,
+        "stateDeMin": 1.16,
+        "seedDeMean": 7.29,
+        "seedDeMin": 1.98
       }
     }
   ]
