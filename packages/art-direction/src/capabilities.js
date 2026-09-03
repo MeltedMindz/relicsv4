@@ -140,7 +140,16 @@ export const IMPOSSIBLE_DEMANDS = Object.freeze([
     atlasClause: { GEOMETRIC_RECURSION_V1: "a tick, numeral or pointer" },
     patterns: [
       rx(String.raw`\b(numeral|glyph|letterform|typograph\w+|lettering|inscription|calligraph\w+)\b`),
-      rx(String.raw`\b(the\s+)?(letter|word|number|digit)\s+["'‘“]?[A-Za-z0-9]`),
+      // NAMING A CHARACTER, NOT COUNTING THINGS.
+      //
+      // This pattern used to be `(letter|word|number|digit)\s+["']?[A-Za-z0-9]`, which refused
+      // "what varies between tokens is the NUMBER OF enclosures" -- an ordinary sentence about
+      // quantity, in a brief with no typographic content at all. That is the invisible failure
+      // this file's header warns about, caught only because a frozen benchmark brief came back
+      // refused and the refusal looked wrong. A demand for a glyph names the glyph: a quoted
+      // character, or a capital letter standing alone.
+      rx(String.raw`\b(letter|digit|character)\s+["'‘“]?[A-Za-z0-9]\b`),
+      rx(String.raw`\bthe\s+word\s+["'‘“][^"'’”]+["'’”]`),
       rx(String.raw`\b(spell|spells|spelling|reads?\s+as\s+text|legible\s+text|readable\s+text)\b`),
       rx(String.raw`\b(tick\s+marks?|clock\s+face|dial\s+with\s+(numbers|numerals)|compass\s+rose\s+with\s+letters)\b`),
       rx(String.raw`\b(logo|word ?mark|monogram|signature)\b`),

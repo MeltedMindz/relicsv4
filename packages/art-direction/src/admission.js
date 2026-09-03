@@ -62,6 +62,48 @@ export const BRIEF_FLOOR = Object.freeze({ minChars: 120, minWords: 25, minDisti
 
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
 
+/**
+ * WHICH RUNTIME SUITS WHICH KIND OF ASK.
+ *
+ * Every weight below is traceable to the runtime's own `whatItCanDepict.can`, quoted here so the
+ * table can be argued with rather than merely obeyed:
+ *
+ *   GEOMETRIC_RECURSION_V1  "one self-similar figure, centred, built by repeating a production on
+ *                            itself over up to 6 levels, drawn in regular primitives, optionally
+ *                            replicated by a symmetry order"
+ *      -> recursion and radial systems are what it IS. Monuments and machines are single centred
+ *         figures with internal repetition, which is the same shape of thing. It has no way to
+ *         stack independent registers, so layering scores nothing.
+ *
+ *   VECTOR_COMPOSITION_V1   "1 to 6 fields of primitives placed about the canvas centre by one of
+ *                            twelve layouts, each field with its own colour, market sensor and drive"
+ *      -> independent fields ARE registers, so layering and sediment are its natural subjects
+ *         (STACK is one of its twelve layouts and `alluvium` is a sediment template). Its
+ *         stroke-only primitives make linework native. It cannot nest a figure inside itself, so
+ *         recursion scores nothing.
+ *
+ * A zero means "this runtime has no special claim on that ask", never "refused" -- refusal is the
+ * `cannot` list's job and happens before any of this.
+ */
+export const MEDIUM_AFFINITY = Object.freeze({
+  GEOMETRIC_RECURSION_V1: Object.freeze({
+    RECURSIVE_GEOMETRY: 3, RADIAL_SYSTEM: 3, LAYERING: 0, VECTOR_COMPOSITION: 0, LINEWORK: 1,
+    MONUMENT: 2, MACHINE: 2, ARCHITECTURE: 1, BOTANICAL: 1, ORGANISM: 1, SEDIMENT: 0,
+  }),
+  VECTOR_COMPOSITION_V1: Object.freeze({
+    RECURSIVE_GEOMETRY: 0, RADIAL_SYSTEM: 1, LAYERING: 3, VECTOR_COMPOSITION: 3, LINEWORK: 2,
+    MONUMENT: 0, MACHINE: 1, ARCHITECTURE: 2, BOTANICAL: 1, ORGANISM: 2, SEDIMENT: 3,
+  }),
+});
+
+/** The MEDIUM and MOTIF rows of a requiredCapabilities record, defensively. */
+function signals_(requiredCapabilities) {
+  return {
+    MEDIUM: requiredCapabilities?.MEDIUM ?? [],
+    MOTIF: requiredCapabilities?.MOTIF ?? [],
+  };
+}
+
 function briefSubstance(briefText) {
   const text = String(briefText ?? "");
   const words = text.toLowerCase().match(/[a-z][a-z'-]{1,}/g) ?? [];
@@ -165,16 +207,32 @@ export function admitBrief(briefText, { catalog = WAVE1_CATALOG } = {}) {
     });
   }
 
+  // FIT, NOT CATALOG ORDER.
+  //
+  // Ranking on concessions alone made every brief recommend the first entry, because a brief with
+  // no impossible demands ties at zero and the tiebreak was the array. Twelve frozen benchmark
+  // briefs -- including one explicitly about sediment, strata and banding, which is the other
+  // template's entire subject -- all came back recommending the recursion runtime.
+  //
+  // So concessions decide first (a candidate that cannot carry part of the ask is worse), and fit
+  // decides the tie. Fit is the brief's own MEDIUM and MOTIF signals scored against MEDIUM_AFFINITY.
+  const scored = viable.map((c) => {
+    const affinity = MEDIUM_AFFINITY[c.runtimeId] ?? {};
+    const signals = [...(signals_(requiredCapabilities).MEDIUM), ...(signals_(requiredCapabilities).MOTIF)];
+    const fit = signals.reduce((n, s) => n + (affinity[s] ?? 0), 0);
+    return { ...c, fit, matchedSignals: signals.filter((s) => (affinity[s] ?? 0) > 0) };
+  });
+  const ranked = [...scored].sort((a, b) => (a.concessions.length - b.concessions.length) || (b.fit - a.fit));
+
   return Object.freeze({
     ...base,
     outcome: "ADMITTED",
     admitted: true,
     requiredCapabilities,
     impossibleDemands: impossible,
-    candidates,
-    // Ranked by how much of the ask each candidate can carry: fewest concessions first, then the
-    // catalog's own order so the result is deterministic when they tie.
-    recommended: [...viable].sort((a, b) => a.concessions.length - b.concessions.length)[0].templateId,
+    candidates: scored,
+    ranking: ranked.map((c) => ({ templateId: c.templateId, fit: c.fit, concessions: c.concessions.length, matchedSignals: c.matchedSignals })),
+    recommended: ranked[0].templateId,
     concessions: viable.flatMap((c) => c.concessions.map((x) => ({ templateId: c.templateId, ...x }))),
     detail:
       `${viable.length} of ${catalog.length} Wave-1 templates can carry this brief` +

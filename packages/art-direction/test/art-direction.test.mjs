@@ -168,6 +168,25 @@ test("negation is read per sentence, not per document", () => {
     "a negation in one sentence must not excuse a demand in another");
 });
 
+test("REGRESSION: counting things is not a demand for a numeral", () => {
+  // "the number of enclosures" was refused as LEGIBLE_GLYPH by a pattern that matched
+  // `number` followed by any character. Caught only because a frozen benchmark brief came back
+  // refused and the refusal looked wrong -- which is the invisible-failure case, so it gets a test.
+  const counting = "What varies between tokens is the number of enclosures and the character of the centre they hold. A quiet contemplative object, gold and umber over deep ink, sparing throughout.";
+  assert.equal(detectImpossibleDemands(counting).length, 0, "counting nouns must not read as typography");
+  assert.equal(admitBrief(counting).outcome, "ADMITTED");
+  // and the real demand is still caught
+  assert.ok(detectImpossibleDemands('the letter R at the centre').some((d) => d.id === "LEGIBLE_GLYPH"));
+  assert.ok(detectImpossibleDemands('tick marks and numerals around its rim').some((d) => d.id === "LEGIBLE_GLYPH"));
+});
+
+test("the recommendation follows medium fit, not catalog order", () => {
+  const sediment = "Sediment and strata as pure pattern: horizontal banding at varying pitch, dense and layered, one bed deposited over another across the whole section. Under drawdown the beds thin and fewer survive.";
+  const recursive = "Nested self-similar geometry repeating inward at diminishing scale, a radial system of concentric rings, precise and instrument-like, with the market loosening and tightening the whole figure.";
+  assert.equal(admitBrief(sediment).recommended, "VECTOR_COMPOSITION_V1/alluvium");
+  assert.equal(admitBrief(recursive).recommended, "GEOMETRIC_RECURSION_V1/compass");
+});
+
 test("a runtime asymmetry is a real escape route", () => {
   assert.equal(runtimeCanExpress("GEOMETRIC_RECURSION_V1", "CURVE_OR_ARC"), false);
   assert.equal(runtimeCanExpress("VECTOR_COMPOSITION_V1", "CURVE_OR_ARC"), true);
