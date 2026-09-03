@@ -290,22 +290,30 @@ export function checkBindings({ runtimeId, config }) {
     const worst = runtimeId === "GEOMETRIC_RECURSION_V1" ? worstMemberRisk(unit) : { ok: true, risky: [], detail: null };
     return { index: i, unit: `${unitNoun}[${i}]`, ...binding, worstMember: worst };
   });
-  const bad = results.filter((r) => ["UNREACHABLE", "DRIVE_DISABLED", "DEAD_SENSOR"].includes(r.verdict));
+  const provablyDead = results.filter((r) => ["UNREACHABLE", "DRIVE_DISABLED", "DEAD_SENSOR"].includes(r.verdict));
   const unknown = results.filter((r) => r.verdict === "UNKNOWN");
   const reachable = results.filter((r) => r.verdict === "REACHABLE");
+
+  // REFUSE ONLY WHAT IS PROVABLY DEAD. An earlier cut refused whenever nothing was REACHABLE,
+  // which collapsed "proven to do nothing" into "we cannot tell" and pushed the author toward
+  // whichever drive this module happens to have a floor for — and the drive it has a floor for is
+  // not the drive that is visible (see the SPREAD note in `author.js`). An unproven binding is a
+  // question for the render; a provably dead one is a question already answered.
+  const refuse = results.length > 0 && provablyDead.length === results.length;
+
   return {
     runtimeId,
     bindings: results,
-    counts: { total: results.length, reachable: reachable.length, unreachable: bad.length, unknown: unknown.length },
-    // A CONFIGURATION WITH NO REACHABLE BINDING CANNOT RESPOND TO THE MARKET AT ALL. That is the
-    // headline finding and it is stated separately, because a per-binding list of three problems
-    // reads as three small problems rather than as one total failure.
-    respondsToMarket: reachable.length > 0,
+    counts: { total: results.length, reachable: reachable.length, provablyDead: provablyDead.length, unknown: unknown.length },
+    // Three-valued on purpose. `false` means proven dead; `"UNPROVEN"` means this module declines
+    // to answer and the render must; `true` means at least one binding is proven to move.
+    respondsToMarket: reachable.length > 0 ? true : (unknown.length > 0 ? "UNPROVEN" : false),
     worstMemberRisks: results.filter((r) => !r.worstMember.ok).map((r) => ({ unit: r.unit, ...r.worstMember })),
-    refuse: reachable.length === 0,
-    detail: reachable.length === 0
-      ? `no binding on this configuration can move across neutral/stress/recovery: ${results.map((r) => `${r.unit} ${r.verdict}`).join(", ")}. The work cannot respond to the market, whatever the brief claims.`
-      : `${reachable.length} of ${results.length} bindings are reachable across the review ring`,
+    unprovenBindings: unknown.map((r) => ({ unit: r.unit, drive: r.drive, sensor: r.sensor, detail: r.detail })),
+    refuse,
+    detail: refuse
+      ? `every binding on this configuration is provably dead across neutral/stress/recovery: ${results.map((r) => `${r.unit} ${r.verdict}`).join(", ")}. The work cannot respond to the market, whatever the brief claims.`
+      : `${reachable.length} of ${results.length} bindings proven reachable, ${unknown.length} unproven (render decides), ${provablyDead.length} proven dead`,
   };
 }
 
