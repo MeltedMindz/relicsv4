@@ -84,11 +84,31 @@ console.log("\n=== the adversarial controls ===\n");
 function runSuite(label, argv) {
   const r = spawnSync(process.execPath, argv, { cwd: ROOT, encoding: "utf8", timeout: 600_000 });
   if (r.status === null) return `${label} did not run to completion (timeout/kill) — an unrun control is not a passed one`;
-  return r.status === 0 ? true : `${label} exited ${r.status}: ${(r.stdout + r.stderr).split("\n").filter(Boolean).slice(-2).join(" | ").slice(0, 160)}`;
+  if (r.status !== 0) return `${label} exited ${r.status}: ${(r.stdout + r.stderr).split("\n").filter(Boolean).slice(-2).join(" | ").slice(0, 160)}`;
+  lastSuiteOutput = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  return true;
 }
+let lastSuiteOutput = "";
 
 control("LaunchParams 19->15 / field swap / enum drift are all caught by the parity gate", () => runSuite("launch:parity --controls", ["scripts/check-launch-semantics-parity.mjs", "--controls"]));
-control("signer refuses arbitrary transactions (27 mutations, none survive)", () => runSuite("signer:mutate", ["packages/signer-protocol/test/mutate.mjs"]));
+// THE MUTATION COUNT IS READ OUT OF THE HARNESS, NEVER TYPED HERE. This label said "27 mutations"
+// while the harness ran 53, which is the ordinary way a control's own description stops describing
+// it. The harness prints its totals; a run that does not print them has not been measured, so the
+// absence of the line is a failure rather than a count of zero.
+control("signer refuses arbitrary transactions (mutation count read from the harness, none survive)", () => {
+  const ok = runSuite("signer:mutate", ["packages/signer-protocol/test/mutate.mjs"]);
+  if (ok !== true) return ok;
+  const totals = /MUTATIONS=(\d+) SURVIVED=(\d+)/.exec(lastSuiteOutput);
+  if (!totals) return "signer:mutate exited 0 but printed no MUTATIONS=/SURVIVED= line; there is nothing to read a result out of";
+  const [, ran, survived] = totals;
+  if (Number(survived) !== 0) return `${survived} of ${ran} signer mutations SURVIVED`;
+  const grant = /SIGNER_GRANT_GUARD_MUTATIONS=(\d+)\/(\d+)_CAUGHT/.exec(lastSuiteOutput);
+  if (!grant) return "signer:mutate printed no SIGNER_GRANT_GUARD_MUTATIONS line; the grant guard is the protected boundary and its coverage must be reported, not assumed";
+  if (grant[1] !== grant[2]) return `only ${grant[1]} of ${grant[2]} grant-guard mutations were caught`;
+  if (Number(grant[2]) === 0) return "the harness reports ZERO grant-guard mutations; an empty subject set is not a pass";
+  console.log(`        (${ran} mutations, ${grant[2]} of them on the grant guard, 0 survivors)`);
+  return true;
+});
 control("metadata fetch-back mismatch, gateway URI and digest conflation are refused", () => runSuite("launch:test", ["--test", "packages/launch-sdk/test/metadata.test.mjs"]));
 control("MODE A stays offline when outbound connect is blocked", () => runSuite("kit:offline", ["scripts/check-offline-mode.mjs"]));
 control("the vendored SDK has not drifted from the canonical private tree", () => runSuite("launch:parity", ["scripts/check-launch-semantics-parity.mjs"]));

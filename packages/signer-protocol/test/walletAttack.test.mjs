@@ -1,6 +1,20 @@
 // SPDX-License-Identifier: MIT
 // ================================================================================================
-// THE WALLET ATTACK SUITE — 22 things the signer must refuse.
+// THE WALLET ATTACK SUITE — thirty things the signer must refuse.
+//
+// THE COUNT MOVES AND THE NUMBERS BELOW ARE NOT RENUMBERED WHEN IT DOES. A control's number is how
+// a finding refers to it; renumbering would silently repoint every reference. The historical
+// measurements in the comments ("removing `worstCase > ceiling` left all 22 controls green") are
+// dated records of what was true when they were taken and are deliberately NOT restated upward.
+//
+// WHAT THIS FILE CANNOT PROVE, AND WHERE THAT LIVES INSTEAD. Its signer's POLICY bounds several of
+// the same quantities the GRANT bounds — chain, native value, creatorRecipient — and the grant runs
+// first, so those three grant checks are refused-by-something-else here rather than proven. Measured
+// 2026-09-03: deleting phase one's `if (!state.ok)` — the first of two byte-identical copies, which
+// is what a single-match replace removes — left ALL EIGHTY-SIX controls in this package green.
+// `grantGuard.test.mjs` is the file built to separate them: its policy is deliberately WIDER than
+// its grant, so a request inside the policy and outside the grant has exactly one thing that can
+// refuse it.
 //
 // THE PREMISE IS THAT THE AGENT IS COMPROMISED. Not careless: compromised. It has read a hostile
 // brief, or a README with an injected instruction, or it has simply been replaced. Every request

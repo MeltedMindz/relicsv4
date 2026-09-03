@@ -23,6 +23,18 @@
 //
 // EVERY IMAGE COMES FROM THE DEPLOYED RUNTIME by `eth_call`. Nothing is drawn locally, and a render
 // that fails is a failure rather than a skipped cell.
+//
+// THE OBJECTIVE BATTERY RUNS BEFORE ANY REVIEWER SEES A FRAME, IN EVERY PHASE. That is not a
+// convenience; it is the repair of a defect that cost a whole round. `@relics/art-review` has had
+// a BLANK_DETECTION check the entire time and this harness did not call it, so two projects
+// reached a final reviewer rendering ink 0.000 at all three market states. Both reviewers found it
+// unaided and both called it disqualifying — a reviewer doing the harness's job, in a review that
+// could have been about the art. The narrow ink floor added afterwards, on the holdout phase only,
+// was not the battery either: it looked at twelve neutral frames of one seed group and could not
+// see a duplicate, a dead unit, a non-deterministic document or a gas ceiling.
+//
+// A case whose battery fails a BLOCKING check gets no critic sheets, no critic prompt and no
+// holdout freeze. It is recorded as blocked, with the failing checks named, and the run continues.
 // ================================================================================================
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -36,10 +48,13 @@ import { authorConfig } from "../packages/art-direction/src/author.js";
 import { AUTHORING_SEEDS, DEVELOPMENT_REVIEW_SEEDS, FINAL_HOLDOUT_SEEDS, assertSeedGroupsDisjoint, marketResponseClaimed } from "../packages/art-direction/src/seeds.js";
 import { validateCritique, validateResponse, assertBoundedChange, criticPrompt } from "../packages/art-direction/src/critique.js";
 import { encodeConfig, decodeConfig } from "../packages/art-review/src/runtimes.js";
+import { REVIEW_SEEDS, collectionSeeds } from "../packages/art-review/src/market.js";
+import { FLOORS } from "../packages/art-review/src/objective.js";
 import { resolveRuntime, createRenderer } from "../packages/art-review/src/render.js";
 import { describeValidatorCode } from "../packages/art-review/src/codec/errors.js";
 import { grid, rasterize } from "../packages/art-review/src/raster.js";
 import { planeOf, inkCoverage, meanDeltaE } from "../packages/art-review/src/perceptual.js";
+import { runObjectiveBattery, blockingFailures } from "../packages/art-review/src/objective.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "artifacts", "art-benchmark");
@@ -134,6 +149,35 @@ async function renderSheets({ renderer, configBytes, seeds, states, outDir, labe
   };
 }
 
+/**
+ * Run the battery and say whether a reviewer may be shown this configuration.
+ *
+ * THE BATTERY'S OWN SEEDS ARE NEITHER THE DEVELOPMENT NOR THE HOLDOUT GROUP — it uses
+ * `REVIEW_SEEDS` (101 + 37i) and `collectionSeeds` (1 + 613i), both disjoint from all three
+ * benchmark groups, which is asserted rather than assumed below. So running it costs nothing in
+ * holdout leakage and its hundred-seed sweep says something about the collection that twelve seeds
+ * cannot.
+ */
+async function gateOn({ renderer, runtimeId, config, configBytes, briefId, phase }) {
+  const battery = await runObjectiveBattery({ renderer, runtimeId, config, configBytes });
+  const blocked = blockingFailures(battery);
+  const summary = battery.checks.map((c) => `${c.ok ? "ok  " : "FAIL"} ${c.id}`).join("\n    ");
+  if (blocked.length) {
+    console.log(`${briefId} BLOCKED at ${phase} by the objective battery:\n    ${summary}`);
+    for (const b of blocked) console.log(`      ${b.id}: ${b.detail}`);
+  }
+  return { battery, blocked };
+}
+
+function assertBatterySeedsAreNotBenchmarkSeeds() {
+  const groups = new Set([...AUTHORING_SEEDS, ...DEVELOPMENT_REVIEW_SEEDS, ...FINAL_HOLDOUT_SEEDS]);
+  const overlap = [...REVIEW_SEEDS, ...collectionSeeds(FLOORS.collectionSeeds)].filter((s) => groups.has(s));
+  if (overlap.length) {
+    throw new Error(`OBJECTIVE_BATTERY_SEED_LEAK: the battery renders ${overlap.join(", ")}, which are benchmark seeds. Running it would put holdout or development frames into the author's reach.`);
+  }
+  return { ok: true };
+}
+
 async function rendererFor(runtimeId, url) {
   const resolved = await resolveRuntime({ rpcUrl: url, registry: REGISTRY, runtimeId });
   if (!resolved.ok) throw new Error(`${runtimeId}: ${resolved.state} — ${resolved.detail}`);
@@ -145,6 +189,7 @@ async function rendererFor(runtimeId, url) {
 // ---------------------------------------------------------------------------------------------
 async function phaseAuthor() {
   assertSeedGroupsDisjoint();
+  assertBatterySeedsAreNotBenchmarkSeeds();
   const url = rpcUrl();
   const directions = loadDirections();
   const renderers = {};
@@ -176,28 +221,42 @@ async function phaseAuthor() {
       throw new Error(`${brief.id}: authored config rejected by the deployed runtime — ${JSON.stringify(describeValidatorCode(runtimeId, v.code))}`);
     }
 
+    // THE BATTERY FIRST, AND THE SHEETS ONLY IF IT LETS THEM THROUGH.
+    const { battery, blocked } = await gateOn({ renderer, runtimeId, config: authored.config, configBytes, briefId: brief.id, phase: "author" });
+    writeJson(join(dir, "round-1", "objective.json"), battery);
+
     const states = ["neutral", "stress", "recovery"];
-    const dev = await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states, outDir: join(dir, "round-1", "critic-sheets"), label: "dev" });
+    const dev = blocked.length === 0
+      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states, outDir: join(dir, "round-1", "critic-sheets"), label: "dev" })
+      : { ok: true, artifacts: [], renders: 0, measurements: null };
     if (!dev.ok) throw new Error(`${brief.id}: ${dev.detail}`);
 
     writeJson(join(dir, "run.json"), {
-      briefId: brief.id, axis: brief.axis, title: brief.title, phase: "AUTHORED",
+      briefId: brief.id, axis: brief.axis, title: brief.title,
+      phase: blocked.length === 0 ? "AUTHORED" : "BLOCKED_BY_OBJECTIVE_BATTERY",
+      objectiveBlockers: blocked,
       briefSha256: sha256(brief.text), admission, sentToAuthor: true,
       direction: record, runtimeId, templateId,
       runtimeAddress: resolved.address, runtimeCodeBytes: resolved.codeBytes,
       rounds: [{
         round: 1, configHash: sha256(configBytes), configBytes,
         config: authored.config, intent: authored.intent, intentDerivation: authored.intentDerivation,
+        mechanism: authored.mechanism,
         atlas: authored.atlas, bindings: authored.bindings, notes: authored.notes,
+        objective: { pass: battery.pass, blocked: blocked.map((b) => b.id), checks: battery.checks.map((c) => ({ id: c.id, ok: c.ok })) },
         sheets: dev.artifacts.map((a) => ({ name: a.name, sha256: a.sha256, bytes: a.bytes })),
         measurements: dev.measurements,
       }],
     });
-    writeFileSync(join(dir, "round-1", "critic-prompt.md"), criticPrompt({
-      round: 1, roundsRemaining: 4, direction, briefText: brief.text,
-    }));
-    rows.push({ id: brief.id, runtime: runtimeId, ...dev.measurements });
-    console.log(`${brief.id} ${runtimeId.replace("_V1", "").padEnd(20)} ink ${dev.measurements.inkMean} state ${dev.measurements.stateDeMean} seed ${dev.measurements.seedDeMean}`);
+    if (blocked.length === 0) {
+      writeFileSync(join(dir, "round-1", "critic-prompt.md"), criticPrompt({
+        round: 1, roundsRemaining: 4, direction, briefText: brief.text,
+      }));
+    }
+    rows.push({ id: brief.id, runtime: runtimeId, blocked: blocked.length, ...(dev.measurements ?? {}) });
+    if (blocked.length === 0) {
+      console.log(`${brief.id} ${runtimeId.replace("_V1", "").padEnd(20)} ${authored.mechanism.mechanism.padEnd(11)} ink ${dev.measurements.inkMean} state ${dev.measurements.stateDeMean} seed ${dev.measurements.seedDeMean}`);
+    }
   }
   console.log(`\nAUTHORED ${rows.length} case(s). Critic packets: artifacts/art-benchmark/<id>/round-1/`);
 }
@@ -248,7 +307,11 @@ async function phaseRevise() {
     if (!v.legal) throw new Error(`${brief.id}: revised config rejected — ${JSON.stringify(describeValidatorCode(run.runtimeId, v.code))}`);
 
     const next = roundNo + 1;
-    const dev = await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states: ["neutral", "stress", "recovery"], outDir: join(dir, `round-${next}`, "critic-sheets"), label: "dev" });
+    const { battery, blocked } = await gateOn({ renderer, runtimeId: run.runtimeId, config: after, configBytes, briefId: brief.id, phase: `revise round ${next}` });
+    writeJson(join(dir, `round-${next}`, "objective.json"), battery);
+    const dev = blocked.length === 0
+      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states: ["neutral", "stress", "recovery"], outDir: join(dir, `round-${next}`, "critic-sheets"), label: "dev" })
+      : { ok: true, artifacts: [], renders: 0, measurements: null };
     if (!dev.ok) throw new Error(`${brief.id}: ${dev.detail}`);
 
     run.rounds[roundNo - 1].critique = critique;
@@ -256,12 +319,14 @@ async function phaseRevise() {
     run.rounds[roundNo - 1].boundedChange = bounded;
     run.rounds.push({
       round: next, configHash: sha256(configBytes), configBytes, config: after,
+      objective: { pass: battery.pass, blocked: blocked.map((b) => b.id), checks: battery.checks.map((c) => ({ id: c.id, ok: c.ok })) },
       sheets: dev.artifacts.map((a) => ({ name: a.name, sha256: a.sha256, bytes: a.bytes })),
       measurements: dev.measurements,
     });
-    run.phase = "REVISED";
+    run.phase = blocked.length === 0 ? "REVISED" : "BLOCKED_BY_OBJECTIVE_BATTERY";
+    run.objectiveBlockers = blocked;
     writeJson(runPath, run);
-    console.log(`${brief.id} round ${next}: ink ${dev.measurements.inkMean} state ${dev.measurements.stateDeMean} seed ${dev.measurements.seedDeMean} (moved ${bounded.counts.moved} params, all named)`);
+    if (blocked.length === 0) console.log(`${brief.id} round ${next}: ink ${dev.measurements.inkMean} state ${dev.measurements.stateDeMean} seed ${dev.measurements.seedDeMean} (moved ${bounded.counts.moved} params, all named)`);
   }
 }
 
@@ -269,6 +334,7 @@ async function phaseRevise() {
 // PHASE: holdout — the ONLY phase that renders FINAL_HOLDOUT_SEEDS
 // ---------------------------------------------------------------------------------------------
 async function phaseHoldout() {
+  assertBatterySeedsAreNotBenchmarkSeeds();
   const url = rpcUrl();
   const renderers = {};
   const briefsById = Object.fromEntries(readJson(BRIEFS).briefs.map((b) => [b.id, b]));
@@ -282,31 +348,26 @@ async function phaseHoldout() {
 
     renderers[run.runtimeId] ??= await rendererFor(run.runtimeId, url);
     const { renderer } = renderers[run.runtimeId];
+
+    // THE BATTERY RUNS AGAIN HERE, ON THE EXACT BYTES ABOUT TO BE FROZEN, BEFORE THE HOLDOUT IS
+    // EVER RENDERED. The configuration may have moved since the last round, and the freeze is the
+    // last moment anything can be said about it: after `configHashAtUnblind` is written, a
+    // render-affecting change voids the acceptance rather than improving it.
+    const { battery, blocked } = await gateOn({ renderer, runtimeId: run.runtimeId, config: last.config, configBytes: last.configBytes, briefId: brief.id, phase: "holdout freeze" });
+    writeJson(join(dir, "final-review", "objective.json"), battery);
+    if (blocked.length) {
+      run.phase = "BLOCKED_BY_OBJECTIVE_BATTERY";
+      run.objectiveBlockers = blocked;
+      writeJson(runPath, run);
+      console.log(`${brief.id} NOT FROZEN: ${blocked.map((b) => b.id).join(", ")}. No reviewer is asked to look at a collection the harness already knows is broken.`);
+      continue;
+    }
+
     const out = await renderSheets({
       renderer, configBytes: last.configBytes, seeds: FINAL_HOLDOUT_SEEDS,
       states: ["neutral", "stress", "recovery"], outDir: join(dir, "final-review", "sheets"), label: "holdout",
     });
     if (!out.ok) throw new Error(`${brief.id}: ${out.detail}`);
-
-    // A BLANK TOKEN BLOCKS THE FREEZE, AND THIS GATE EXISTS BECAUSE ITS ABSENCE COST A REVIEW.
-    //
-    // `inkMean` was being reported and `inkMin` was being computed and ignored. Two projects went
-    // to a final reviewer with a token that renders NOTHING -- ink 0.000 at every market state --
-    // and both reviewers found it unaided and called it, correctly, disqualifying for a permanent
-    // on-chain commitment. The mean hid it: eleven good tokens and one empty one average to a
-    // perfectly healthy number.
-    //
-    // `@relics/art-review`'s objective battery already has a BLANK_DETECTION check against exactly
-    // this floor and this harness does not run it -- that is the real gap, and this is the narrow
-    // guard for the specific defect that got through, not a substitute for the battery.
-    const INK_FLOOR = 0.04;
-    if (out.measurements.inkMin < INK_FLOOR) {
-      console.log(`${brief.id} BLOCKED: a holdout token renders blank (ink ${out.measurements.inkMin} < ${INK_FLOOR}). Not frozen; a collection with an empty token must not reach a final review.`);
-      run.phase = "BLOCKED_BLANK_TOKEN";
-      run.blankTokenInk = out.measurements.inkMin;
-      writeJson(runPath, run);
-      continue;
-    }
 
     run.finalReviewInput = {
       seedGroup: "FINAL_HOLDOUT_SEEDS",
@@ -314,6 +375,7 @@ async function phaseHoldout() {
       states: ["neutral", "stress", "recovery"],
       marketResponseClaimed: marketResponseClaimed(briefsById[brief.id].text),
       configHashAtUnblind: last.configHash,
+      objectiveBatteryPassed: battery.pass,
       sheets: out.artifacts.map((a) => ({ name: a.name, sha256: a.sha256, bytes: a.bytes })),
       inputHashes: out.artifacts.map((a) => a.sha256),
       measurements: out.measurements,
@@ -344,6 +406,7 @@ function phaseReport() {
       template: run.templateId ?? null,
       rounds: run.rounds?.length ?? 0,
       verdict: verdict?.verdict ?? (run.phase === "AWAITING_FINAL_REVIEW" ? "AWAITING" : run.phase),
+      objectiveBlockers: run.objectiveBlockers?.map((b) => b.id) ?? [],
       reviewerId: verdict?.reviewerId ?? null,
       configHashAtUnblind: run.finalReviewInput?.configHashAtUnblind ?? null,
       acceptedConfigHash: run.rounds?.[run.rounds.length - 1]?.configHash ?? null,
@@ -361,8 +424,11 @@ function phaseReport() {
   console.log("");
   console.log(`BLIND_PASS                                   ${pass.length}/${rows.length}`);
   for (const [rt, n] of Object.entries(byRuntime)) console.log(`  from ${rt.padEnd(38)} ${n}`);
+  const blockedRows = rows.filter((r) => r.objectiveBlockers?.length);
   console.log(`FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND   ${mutated.length}`);
-  writeJson(join(OUT, "report.json"), { generatedAt: new Date().toISOString(), rows, blindPass: pass.length, total: rows.length, byRuntime, mutatedAfterUnblind: mutated.length });
+  console.log(`BLOCKED_BY_OBJECTIVE_BATTERY                 ${blockedRows.length}${blockedRows.length ? ` (${blockedRows.map((r) => `${r.id}:${r.objectiveBlockers.join("+")}`).join(", ")})` : ""}`);
+  console.log(`OBJECTIVE_BATTERY_RUN_BEFORE_REVIEW          YES (all phases)`);
+  writeJson(join(OUT, "report.json"), { generatedAt: new Date().toISOString(), rows, blindPass: pass.length, total: rows.length, byRuntime, mutatedAfterUnblind: mutated.length, blockedByObjectiveBattery: blockedRows.map((r) => ({ id: r.id, blockers: r.objectiveBlockers })) });
 }
 
 // ---------------------------------------------------------------------------------------------

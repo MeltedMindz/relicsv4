@@ -75,6 +75,34 @@ export const OBJECTIVE_CHECK_IDS = Object.freeze([
   "STATE_IDENTITY_EXACT", "PERCEPTUAL_SEPARATION", "STRUCTURAL_ROLE", "RENDER_GAS",
 ]);
 
+/**
+ * THE CHECKS THAT STOP A CONFIGURATION REACHING A REVIEWER AT ALL.
+ *
+ * WHY THERE IS A LIST AND NOT SIMPLY `pass`. The battery's own verdict is the conjunction and that
+ * does not change. This is a narrower question: which failures mean nobody should be asked to look
+ * at the pictures, because the answer is already known and asking wastes the one scarce thing in
+ * this pipeline. Round one sent two projects to a final reviewer rendering ink 0.000 at all three
+ * market states. BOTH REVIEWERS CAUGHT IT UNAIDED and called it, correctly, disqualifying for a
+ * permanent on-chain commitment — which is a reviewer doing the harness's job, in a review that
+ * could have been about the art.
+ *
+ * EVERY CHECK IS IN THIS LIST, and that is deliberate rather than lazy. Each one describes a
+ * configuration that is broken as a COLLECTION rather than merely unloved: bytes the runtime
+ * refuses, a render that fails, a non-deterministic document, duplicate tokens, a token that draws
+ * nothing, three market states that are one document, a declared unit that draws nothing, a render
+ * over the portable budget. None of them is a matter of taste and none of them gets better by
+ * being looked at. If a check is ever added that a reviewer SHOULD be allowed to overrule, it must
+ * be added to OBJECTIVE_CHECK_IDS and left out of this one, deliberately and with a reason.
+ */
+export const BLOCKING_CHECK_IDS = Object.freeze([...OBJECTIVE_CHECK_IDS]);
+
+/** Which blocking checks a battery result failed. `[]` means a reviewer may be asked. */
+export function blockingFailures(battery) {
+  if (!battery) return [{ id: "BATTERY_NOT_RUN", detail: "no objective battery result was supplied; an unrun battery is not a passed one" }];
+  if (battery.unknown) return battery.checks.filter((c) => !c.ok).map((c) => ({ id: c.id, detail: c.detail }));
+  return battery.checks.filter((c) => BLOCKING_CHECK_IDS.includes(c.id) && !c.ok).map((c) => ({ id: c.id, detail: c.detail }));
+}
+
 const nowIso = () => new Date().toISOString();
 
 function check(id, ok, detail, measured = null) {
@@ -188,13 +216,32 @@ export async function runObjectiveBattery({ renderer, runtimeId, config, configB
     `(floors ${FLOORS.seedDiversityMean} / ${FLOORS.seedDiversityMin})`,
     { meanDeltaE: Number(meanPair.toFixed(3)), minDeltaE: Number(minPair.toFixed(3)) }));
 
-  // ---- 8. blank detection -----------------------------------------------------------------------
-  const inks = subPlanes.map((p) => inkCoverage(p));
-  const minInk = Math.min(...inks);
-  const meanInk = inks.reduce((a, b) => a + b, 0) / inks.length;
+  // ---- 8. blank detection, ACROSS ALL THREE MARKET STATES ---------------------------------------
+  // BLANK IS NOT ENOUGH; THE WORD IS VANISHING. A token can carry a healthy neutral frame and
+  // render nothing under stress, and this check only ever looked at neutral. That is not a
+  // hypothetical: `SIZE` driven by `RECOVERY` resolves to the bytecode floor of 2 at stress
+  // because the sensor reads exactly zero there, and a measured probe of that construction came
+  // back with eight seeds of eight empty in the stress column and a perfectly healthy neutral one.
+  //
+  // So the sample is the collection sweep at neutral PLUS every review-ring frame at all three
+  // states, and the number reported is the emptiest frame of any of them. The state is named,
+  // because "a token is blank" and "a token vanishes under drawdown" are different defects with
+  // different fixes.
+  const ringPlanes = new Map();
+  for (const r of ring) ringPlanes.set(`${r.seed}|${r.state}`, await planeOf(r.svg));
+  const sweepInks = subPlanes.map((p) => ({ ink: inkCoverage(p), state: "neutral", where: "collection sweep" }));
+  const ringInks = [...ringPlanes.entries()].map(([k, p]) => ({ ink: inkCoverage(p), state: k.split("|")[1], where: `review ring seed ${k.split("|")[0]}` }));
+  const allInks = [...sweepInks, ...ringInks];
+  const emptiest = allInks.reduce((a, b) => (a.ink <= b.ink ? a : b));
+  const minInk = emptiest.ink;
+  const meanInk = allInks.reduce((a, b) => a + b.ink, 0) / allInks.length;
+  const vanishing = ringInks.filter((r) => r.ink < FLOORS.ink);
   checks.push(check("BLANK_DETECTION", minInk >= FLOORS.ink,
-    `the emptiest sampled seed covers ${(minInk * 100).toFixed(1)}% of the frame with drawing (floor ${(FLOORS.ink * 100).toFixed(0)}%)`,
-    { minInk: Number(minInk.toFixed(4)), meanInk: Number(meanInk.toFixed(4)) }));
+    minInk >= FLOORS.ink
+      ? `the emptiest of ${allInks.length} sampled frames covers ${(minInk * 100).toFixed(1)}% of the frame with drawing (floor ${(FLOORS.ink * 100).toFixed(0)}%), across all three market states`
+      : `${allInks.filter((r) => r.ink < FLOORS.ink).length} of ${allInks.length} sampled frames are below the ${(FLOORS.ink * 100).toFixed(0)}% floor; the emptiest is ${emptiest.where} at ${emptiest.state}, covering ${(minInk * 100).toFixed(1)}%` +
+        (vanishing.length ? `. ${vanishing.length} of them are review-ring frames that VANISH in a market state the token survives elsewhere: ${[...new Set(vanishing.map((v) => v.state))].join(", ")}` : ""),
+    { minInk: Number(minInk.toFixed(4)), meanInk: Number(meanInk.toFixed(4)), frames: allInks.length, emptiestState: emptiest.state, vanishingFrames: vanishing.length }));
 
   // ---- 9. the exact state-identity gate ---------------------------------------------------------
   // For EVERY review seed, the three market states must be byte-distinct documents. This is the
@@ -218,8 +265,6 @@ export async function runObjectiveBattery({ renderer, runtimeId, config, configB
     { pairings: REVIEW_SEEDS.length * 3, identical: identicalPairs.length }));
 
   // ---- 10. perceptual separation between states -------------------------------------------------
-  const ringPlanes = new Map();
-  for (const r of ring) ringPlanes.set(`${r.seed}|${r.state}`, await planeOf(r.svg));
   const pairing = {};
   const NAMES = { ns: ["neutral", "stress"], nr: ["neutral", "recovery"], sr: ["stress", "recovery"] };
   for (const [key, [a, b]] of Object.entries(NAMES)) {
