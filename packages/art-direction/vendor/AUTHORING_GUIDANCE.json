@@ -1,0 +1,781 @@
+{
+ "$comment": [
+  "AUTHORING GUIDANCE FOR THE TWO WAVE-1 ART RUNTIMES, DERIVED FROM RENDERS AND NOT FROM READING.",
+  "",
+  "EVERY CLAIM HERE CARRIES AN `evidence` FIELD NAMING THE SWEEP THAT PRODUCED IT AND THE NUMBERS IT PRODUCED.",
+  "Nothing was carried over from a schema comment, a runtime document or a prior report unless a sweep in",
+  "`atlas/RECURSION_PARAMETER_ATLAS.json` or `atlas/VECTOR_PARAMETER_ATLAS.json` reproduced it. Where a sweep",
+  "showed something other than what the documents predict, `contradicts` records the disagreement and the",
+  "measurement wins -- see `contradictions` at the end, which is the most useful section in this file.",
+  "",
+  "TWO NUMBERS RECUR AND THEY MEAN DIFFERENT THINGS.",
+  "  ink120   the fraction of pixels at TRUE 120px that differ from the frame's modal colour. Under a FLAT ground",
+  "           that is the figure's coverage. Under a LINEAR or RADIAL ground it counts the GROUND's own variation",
+  "           too, which is why those readings are high; that is a fact about the mode, not a flaw in the number.",
+  "  extentX  the width of the bounding box of those pixels, as a fraction of the frame. It is how much of the",
+  "           canvas the work reaches, independent of how densely it fills it.",
+  "A control that moves ink and not extent changes density. One that moves extent and not ink changes scale. Several",
+  "controls in these runtimes move neither, and those are the ones the author kept reaching for.",
+  "",
+  "NUMBERS BESIDE PICTURES, NEVER INSTEAD OF THEM. Each entry names the contact sheets that show it. The numbers are",
+  "an index into the sheets; two cheap proxies have already ranked configurations backwards in this project, and one",
+  "of this atlas's own measures failed during its first run and was caught by a sheet.",
+  "",
+  "READ `crossRuntimeLaws` FIRST. Five of them explain most of what went wrong, and four of the five are invisible in",
+  "the schema."
+ ],
+ "generatedAt": "2026-08-31T02:20:21.374Z",
+ "source": {
+  "atlas": [
+   "launchpad/docs/runtimes/atlas/RECURSION_PARAMETER_ATLAS.json",
+   "launchpad/docs/runtimes/atlas/VECTOR_PARAMETER_ATLAS.json"
+  ],
+  "sheets": "launchpad/docs/runtimes/atlas/sheets/<RUNTIME>/<sweep>.png and <sweep>-thumb120.png",
+  "chainId": 1,
+  "runtimeRegistry": "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
+  "GEOMETRIC_RECURSION_V1": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "VECTOR_COMPOSITION_V1": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "marketFixtures": "the review ring from @relics/art-review: neutral / stress / recovery, the same three the published contact sheets use",
+  "seeds": "101, 175, 249, 397 for single-axis sweeps; 101 and 249 for interactions; 101 alone where a sweep is large"
+ },
+ "crossRuntimeLaws": [
+  {
+   "id": "L1",
+   "law": "EVERY NUMERIC IN BOTH SCHEMAS IS A CEILING, AND THE FLOOR IS A CONSTANT IN THE BYTECODE.",
+   "detail": "A structural dimension resolves as floor + (ceiling - floor) * v / 1000, integer, where v is the market reading through the curve if this dimension is the unit's `drive` and a byte of the token's seed otherwise. contraction's floor is 20, root's is 40, size's is 2, spread's is 16, rotation's is 0. `contraction: 55` therefore does not mean 55 -- it means somewhere in 20..55, and the seed picks.",
+   "consequence": "The author cannot set a value. It can set a RANGE and a distribution. The only dimensions it can pin are the two with a creator-owned floor: depthMin == depthMax, and countMin == countMax.",
+   "evidence": "sweep `gr-depthmax` holds depthMin at 1 and sweeps depthMax 1..6: drawnElements is 4.3 and ink120 is 0.397 at EVERY value -- the ceiling moved and the drawing did not. Sweep `gr-depth-pinned` sets depthMin == depthMax over the same range: drawnElements 4.3 -> 128.3."
+  },
+  {
+   "id": "L2",
+   "law": "A DRIVE IS DISABLED BY THE PARAMETER IT DRIVES, SILENTLY, AT VALUES THE VALIDATOR CALLS LEGAL.",
+   "detail": "If the ceiling equals the floor the drive has nowhere to go. Three instances are exact: `rotation: 0` makes DRIVE_ROTATE a multiplication by zero; `prune` with every low `branch` bit set makes DRIVE_PRUNE a rotation of an all-ones mask, which is the identity; `depthMin == depthMax` makes DRIVE_DEPTH a constant. All three are the natural 'I am not using this' default.",
+   "evidence": "sweep `gr-drive` renders the six recursion drives at 2 seeds x 3 states. DRIVE_PRUNE (prune 15, branch 3) and DRIVE_ROTATE (rotation 0) each produce 6 of 6 BYTE-IDENTICAL state pairs. DRIVE_SPREAD produces 0 of 6 and an ink120 delta of 0.184.",
+   "check": "Evaluate every binding's reachable range symbolically before rendering. It costs no chain call."
+  },
+  {
+   "id": "L3",
+   "law": "A DECLARED SET IS AS RESPONSIVE AS ITS WORST MEMBER, AND THE SEED PICKS.",
+   "detail": "The token's seed draws one shape, one production and one symmetry from the creator's sets, so a configuration has one behaviour per drawable combination rather than one behaviour. The render budget already prices a set at its dearest member; nothing prices its MOVEMENT at its worst.",
+   "evidence": "rendering compass-cairn's shipped bytes with rules[0].ruleSet forced to {QUAD}: 0 of 12 seeds are byte-identical neutral-to-stress. Forced to {BSP}: 12 of 12. Shipped as {QUAD, BSP}: 7 of 12. BSP places every child k>=1 at the same offset, so rotating the prune mask -- which is all DRIVE_PRUNE does -- redraws the same figure.",
+   "check": "Price market movement at the worst member of every set, exactly as maxNodeUnits prices gas at the dearest."
+  },
+  {
+   "id": "L4",
+   "law": "THE LOUDEST-SOUNDING CONTROL IS THE QUIETEST ON A RASTER.",
+   "detail": "Recursion depth and field depth multiply the document and barely touch the picture at browse size. Coverage is decided by the seed shape, the stroke flag, the symmetry order and (in the vector runtime) sizeMax -- none of which sounds structural.",
+   "evidence": "`gr-depth-pinned`: 30x the drawn elements for +0.004 ink120. `gr-drive` at drive=DEPTH: 5 / 14 / 5 elements across the market ring at ink120 0.490 / 0.490 / 0.490. `vc-drive` at drive=DEPTH: ink120 delta 0.001.",
+   "ranking120px": {
+    "GEOMETRIC_RECURSION_V1": [
+     "stroke (0.399 -> 0.121)",
+     "seed shape (0.399 SQUARE -> 0.060 CROSS)",
+     "symSet (0.331 NONE -> 0.434 ROT6)",
+     "ground mode (0.399 FLAT -> 0.882 RADIAL)",
+     "contraction (0.393 -> 0.435)",
+     "branch (0.396 -> 0.402)",
+     "rotation (no measurable change)",
+     "depth (+0.004 over five levels)"
+    ],
+    "VECTOR_COMPOSITION_V1": [
+     "sizeMax (0.005 -> 0.390)",
+     "ground mode (0.059 FLAT -> 0.915 RADIAL)",
+     "symmetry (0.059 NONE -> 0.199 ROT6)",
+     "count (0.006 -> 0.139)",
+     "layout",
+     "primitive (0.010 POLYLINE -> 0.059 RECT)",
+     "spreadMax (0.041 -> 0.065 ink, but 0.27 -> 0.70 extent)"
+    ]
+   }
+  },
+  {
+   "id": "L5",
+   "law": "THE FIGURE IS CENTRED BY CONSTRUCTION IN BOTH RUNTIMES, AND OFF-CENTRE IS ONLY REACHABLE AS A SIDE EFFECT OF CLIPPING.",
+   "detail": "GEOMETRIC_RECURSION_V1 roots at the canvas centre at angle 0; VECTOR_COMPOSITION_V1 places every layout about the canvas centre within a spread half-extent. The only recursion productions that push the drawing off the root's own footprint are RING and BRANCH, which place children at a distance equal to the PARENT's size -- and those are the two that run off the frame.",
+   "evidence": "`gr-rule` extentX at 120px: RING 0.85, BRANCH 0.78, QUAD 0.65, BSP 0.64, TRI 0.60, INSCRIBE 0.60. `gr-x-rule-contraction`: RING's extentX climbs 0.88 -> 0.99 as contraction goes 20 -> 90 while INSCRIBE stays at 0.79 throughout.",
+   "consequence": "There is no placement parameter and no inset. Composition is chosen at the production or layout, and 'move it off centre' is not an instruction either runtime can take."
+  }
+ ],
+ "runtimes": {
+  "GEOMETRIC_RECURSION_V1": {
+   "whatItCanDepict": {
+    "can": "one self-similar figure, centred, built by repeating a production on itself over up to 6 levels, drawn in regular primitives, optionally replicated by a symmetry order, over a flat or gradient ground",
+    "cannot": "a horizon or ground plane; an off-centre subject; a non-square aspect; an irregular or perturbed outline; a curve or an arc; a tick, numeral or pointer; a subtractive cut; a per-element deletion; opaque compositing; a state-driven colour; more than 2 colours without DEPTH_PALETTE or a second rule",
+    "note": "Six of these were asked for repeatedly by the blind reviewer and none can be delivered. Refuse a brief that needs one."
+   },
+   "parameters": [
+    {
+     "name": "rules[n].shapeSet",
+     "visualRole": "THE LARGEST SINGLE LEVER ON COVERAGE, and the seed draws one member per token.",
+     "structuralEffect": "Decides the primitive drawn at every node. Also decides the render-budget price of the whole rule, at the set's DEAREST member.",
+     "lowEnd": "CROSS is a stroked pair of segments and carries almost no area: ink120 0.060 against SQUARE's 0.399 at identical settings, and 0.034 in the CROSS x INSCRIBE cell -- the lowest of the 36-cell shape x production matrix.",
+     "highEnd": "SQUARE at ink120 0.399 and extentX 0.79. It is the only shape whose bounding box fills its node.",
+     "fullOrdering": "ink120 by shape, identical settings: SQUARE 0.399 > CIRCLE 0.316 > HEX 0.265 > DIAMOND 0.224 > TRIANGLE 0.162 > CROSS 0.060. extentX: SQUARE 0.79 > CIRCLE/HEX/DIAMOND/CROSS 0.69 > TRIANGLE 0.52-0.62.",
+     "interactions": "Shape and production are near-orthogonal for coverage -- the 36-cell matrix varies by shape far more than by production -- but CROSS is stroke-forced by the runtime whatever the stroke flag says, so a shapeSet containing CROSS ships a token with one fill colour instead of two.",
+     "failureModes": "Widening the set to buy per-token variety manufactures faint tokens: mean ink120 falls 0.402 -> 0.266 as cardinality goes 1 -> 6, and the floor of that distribution is CROSS at 0.060. A collection with CROSS in its set will have near-blank members and no warning.",
+     "usefulRelationships": "DIAMOND costs the same 7 node units as CROSS and carries 3.7x the ink; if a set needs a fourth member, DIAMOND is the free substitution.",
+     "marketBindingSuitability": "not bindable -- shapeSet is seed-drawn, never market-driven",
+     "evidence": {
+      "sweeps": [
+       "gr-shape",
+       "gr-setsize",
+       "gr-x-shape-rule"
+      ],
+      "sheets": [
+       "gr-shape.png",
+       "gr-shape-thumb120.png",
+       "gr-x-shape-rule-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].ruleSet",
+     "visualRole": "Decides WHERE children go, and therefore whether the figure nests, tiles or throws itself outward.",
+     "structuralEffect": "QUAD: children at the parent's quadrant corners. TRI: at edge midpoints. INSCRIBE: at the parent's own centre. BRANCH: a fan outward at radius = parent size. RING: around a circle at radius = parent size. BSP: an axis split, alternating by level.",
+     "lowEnd": "INSCRIBE -- extentX 0.60, the tightest. Every child sits inside its parent, so the figure never grows and contraction moves nesting only.",
+     "highEnd": "RING -- extentX 0.85 at contraction 55 and 0.99 at contraction 90, i.e. touching the frame on both sides.",
+     "interactions": "This is the parameter that changes what every OTHER parameter means. contraction moves EXTENT only under RING (0.88 -> 0.99) and BRANCH (0.82 -> 0.88); under QUAD, TRI, INSCRIBE and BSP the extent is flat at 0.79 across the whole 20..90 range. `branch` buys almost nothing under INSCRIBE (ink120 0.382 -> 0.386 over branch 1..4) against QUAD's 0.382 -> 0.437, because INSCRIBE's children coincide.",
+     "failureModes": [
+      "BSP places every child k>=1 at the SAME offset, so branch 3 and branch 4 draw the same two positions as branch 2, and any prune mask that keeps bit 0 plus any other bit draws the same figure. Consequence: BSP x DRIVE_PRUNE is completely frozen -- measured 12 of 12 seeds byte-identical across the market ring.",
+      "RING and BRANCH place children at a distance equal to the parent's own size, so the drawing exceeds the root's footprint by construction and the runtime clamps a coordinate rather than fitting the shape. Clipping is a production choice, not a bug to repair at the edge.",
+      "QUAD at branch 2 keeps children 0 and 1, which are the parent's UPPER-LEFT and UPPER-RIGHT corners. That is a face, on every seed, and it is the single most repeated subject complaint in the review corpus."
+     ],
+     "marketBindingSuitability": "not bindable -- seed-drawn",
+     "evidence": {
+      "sweeps": [
+       "gr-rule",
+       "gr-x-rule-contraction",
+       "gr-x-rule-branch",
+       "gr-x-rule-depth",
+       "gr-x-rule-symmetry",
+       "gr-x-branch-prune"
+      ],
+      "sheets": [
+       "gr-rule.png",
+       "gr-x-rule-contraction-seed101.png",
+       "gr-x-branch-prune-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].depthMin / depthMax",
+     "visualRole": "How many generations are drawn. The loudest-sounding control in the schema and one of the quietest on a raster.",
+     "structuralEffect": "Resolved depth = depthMin + (depthMax - depthMin) * v / 1000, integer. Node count is branch^depth summed, and the node budget is taken at depthMax.",
+     "lowEnd": "depth 1: 4.3 drawn elements, ink120 0.397.",
+     "highEnd": "depth 6: 128.3 drawn elements, ink120 0.401. Thirty times the document for four thousandths of the picture.",
+     "interactions": "Interacts with contraction only in the sense that contraction decides how quickly a level becomes invisible, and the interaction sweep shows the ink is decided ENTIRELY by contraction: across the whole (contraction, depthMax) grid, ink120 is constant down every depth row and varies only across the contraction rows, 0.390 to 0.413.",
+     "failureModes": [
+      "RAISING depthMax ALONE DOES NOTHING. With depthMin held at 1, sweeping depthMax 1..6 left drawnElements at 4.3 and ink120 at 0.397 on every value and every production tested -- the resolved depth is drawn from the seed and these seeds drew the floor. The author paid node budget for levels it never rendered.",
+      "The node budget is the real ceiling and it is not where the schema suggests: branch 3 is refused above depthMax 4, branch 4 above depthMax 3."
+     ],
+     "usefulRelationships": "depthMin == depthMax is the ONLY way to pin depth in this runtime. Use it whenever depth is not the drive.",
+     "marketBindingSuitability": "poor. Bindable, and the range has to be at least three levels wide before the integer arithmetic produces three different answers on the review fixtures -- and even a 1 -> 6 change is +0.004 ink120.",
+     "evidence": {
+      "sweeps": [
+       "gr-depthmax",
+       "gr-depth-pinned",
+       "gr-x-contraction-depth",
+       "gr-x-rule-depth",
+       "gr-x-budget-branch-depth"
+      ],
+      "sheets": [
+       "gr-depth-pinned.png",
+       "gr-depthmax.png",
+       "gr-x-budget-branch-depth-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].contraction",
+     "visualRole": "The child-to-parent scale ratio. Under most productions it changes internal density; under two it changes the size of the whole work.",
+     "structuralEffect": "Resolved contraction = 20 + (ceiling - 20) * v / 1000. Applied at every level, so it compounds.",
+     "lowEnd": "20: children a fifth of the parent, levels visually separate, ink120 0.393.",
+     "highEnd": "90: children nearly the size of their parent, levels overlapping, ink120 0.435 and -- under RING -- extentX 0.99.",
+     "interactions": "PRODUCTION-DEPENDENT, and this is the interaction the author most needed. Extent across contraction 20 -> 90: RING 0.88 -> 0.99, BRANCH 0.82 -> 0.88, everything else flat at 0.79. Ink across the same range is a modest 0.39 -> 0.41 for every production. So contraction is a SCALE control under RING and BRANCH and a DENSITY control everywhere else.",
+     "failureModes": "Contraction and rotation do not interact at all -- across the (contraction, rotation) grid the ink is decided by contraction alone and rotation changes it by at most 0.001. An author tuning both is tuning one.",
+     "marketBindingSuitability": "good under RING or BRANCH, where it moves extent; weak under QUAD, TRI, INSCRIBE and BSP, where the whole 20..90 range moves ink120 by 0.02. Note that binding it to DRAWDOWN pins it near the FLOOR in the calm state, because DRAWDOWN reads 10 per mille at neutral.",
+     "evidence": {
+      "sweeps": [
+       "gr-contraction",
+       "gr-x-rule-contraction",
+       "gr-x-contraction-depth",
+       "gr-x-contraction-rotation",
+       "gr-drive-headroom"
+      ],
+      "sheets": [
+       "gr-contraction.png",
+       "gr-x-rule-contraction-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].branch and rules[n].prune",
+     "visualRole": "How many children a node produces, and which of them survive. Together they are the figure's internal count.",
+     "structuralEffect": "branch is a creator constant the seed never touches. prune is a KEEP MASK over the low `branch` bits, and DRIVE_PRUNE ROTATES it rather than replacing it, so the surviving count is invariant and only the arrangement moves.",
+     "lowEnd": "branch 1: 5.3 elements. prune with one bit: 4.3 elements.",
+     "highEnd": "branch 4 with prune 15: 86.3 elements, ink120 0.402. The element count rises 16x and the 120px ink rises by 0.006.",
+     "interactions": [
+      "prune's effect is POPCOUNT, and the phase is seed-rotated. At branch 4 the nine swept values collapse to four element counts: prune 1 and 2 give 4.3; 3, 5 and 9 give 8.3; 7, 11 and 13 give 14.3; 15 gives 22.3.",
+      "At branch 2 only the low two bits are read, so prune 3, 7, 11 and 15 are the same configuration and prune 5, 9 and 13 are the same as prune 1. Twelve of the fifteen legal values are duplicates.",
+      "Under INSCRIBE branch buys nothing (0.382 -> 0.386 over 1..4) because the children coincide at the parent centre."
+     ],
+     "failureModes": [
+      "prune 15 -- the obvious 'keep everything' value -- makes DRIVE_PRUNE the identity, because rotating an all-ones mask changes nothing. Measured: 6 of 6 byte-identical state pairs.",
+      "The node budget refuses branch 3 above depthMax 4 and branch 4 above depthMax 3, and the refusal is ERR_NODE_BUDGET rather than a warning."
+     ],
+     "marketBindingSuitability": "DRIVE_PRUNE is a rearrangement at a constant element count, which is the cheapest possible state change in gas and one of the least visible -- and it is dead outright on an all-ones mask, on branch 1, and under BSP.",
+     "evidence": {
+      "sweeps": [
+       "gr-branch",
+       "gr-prune",
+       "gr-x-branch-prune",
+       "gr-x-budget-branch-depth",
+       "gr-drive"
+      ],
+      "sheets": [
+       "gr-x-branch-prune-seed101.png",
+       "gr-prune.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].rotation",
+     "visualRole": "Per-level angle. It changes orientation and it does not change coverage or extent.",
+     "lowEnd": "0 degrees, ink120 0.399.",
+     "highEnd": "90 degrees, ink120 0.399, extentX 0.66 against 0.65.",
+     "interactions": "None measurable. Across the (contraction, rotation) grid rotation moves ink by at most 0.001 at every contraction; across the (rotation, symSet) grid it moves ink by at most 0.008 at every symmetry.",
+     "failureModes": "rotation 0 silently disables DRIVE_ROTATE -- the resolved rotation is v * ceiling / 1000, so a zero ceiling is a zero range. Measured: 6 of 6 byte-identical state pairs.",
+     "marketBindingSuitability": "poor at browse size. It is an internal-reading control, and the review corpus already records recursion tokens that render byte-identically across a market pairing under DRIVE_ROTATE because a circle drawn at its parent's centre is the same circle at any angle.",
+     "evidence": {
+      "sweeps": [
+       "gr-rotation",
+       "gr-x-contraction-rotation",
+       "gr-x-rotation-symmetry",
+       "gr-drive"
+      ],
+      "sheets": [
+       "gr-rotation.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].symSet",
+     "visualRole": "The cheapest coverage in the runtime, and the fastest route to a mandala.",
+     "structuralEffect": "Emits `<use>` replicas of the whole rule group. Costs nothing in the node budget or the render budget.",
+     "lowEnd": "NONE: ink120 0.331, extentX 0.65, 16 elements.",
+     "highEnd": "ROT6: ink120 0.434, extentX 0.78, 21 elements. A 31% coverage gain and a 20% extent gain for five free replicas.",
+     "interactions": [
+      "WHICH symmetry pays depends on which axis the production has already used. Under QUAD, MIRROR_X adds nothing (0.400 -> 0.402) because QUAD's branch-2 children are already left-right paired, while MIRROR_Y adds a lot (0.400 -> 0.435) because they are both in the top half. Under BSP both mirrors add nothing (0.402). Under TRI, MIRROR_X pays (0.400 -> 0.419).",
+      "ROT3 and ROT6 pay under every production, 0.48 to 0.62, and lift extentX to 0.90 in every case.",
+      "Under BRANCH and RING, ROT6 pays LESS than ROT3 (0.475 against 0.517, 0.508 against 0.525) because the replicas overlap what the production has already thrown outward."
+     ],
+     "failureModes": "ROT3 and ROT6 are, unavoidably, a rosette. Every brief in the corpus that forbids a mandala or a centred emblem forbids them, and the reviewer named the result a compass rosette on run after run.",
+     "marketBindingSuitability": "not bindable -- seed-drawn from the declared set",
+     "evidence": {
+      "sweeps": [
+       "gr-symmetry",
+       "gr-x-rule-symmetry",
+       "gr-x-rotation-symmetry"
+      ],
+      "sheets": [
+       "gr-symmetry.png",
+       "gr-x-rule-symmetry-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].stroke and the OUTLINE flag",
+     "visualRole": "The second largest coverage lever after shape, and the only control that raises internal legibility without adding an element.",
+     "lowEnd": "filled: ink120 0.399, edgeDensity 0.024, two distinct fills.",
+     "highEnd": "stroked: ink120 0.121, edgeDensity 0.074, ONE distinct fill. Coverage falls to a third and edge count triples.",
+     "interactions": "The ratio holds across the whole contraction range -- stroked 0.099..0.130 against filled 0.390..0.413 at contraction 20..90 -- so stroke is a multiplier on coverage rather than a tuning of it.",
+     "failureModes": "A stroked figure has one colour, because stroke replaces the fill rather than adding to it. A CROSS shape is stroke-forced by the runtime whatever the flag says.",
+     "usefulRelationships": "OUTLINE at document level and `stroke` at rule level measured identically on every axis. Use the rule-level flag so the choice is per rule.",
+     "marketBindingSuitability": "not bindable",
+     "evidence": {
+      "sweeps": [
+       "gr-stroke",
+       "gr-flags",
+       "gr-x-stroke-contraction"
+      ],
+      "sheets": [
+       "gr-stroke.png",
+       "gr-x-stroke-contraction-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+     "visualRole": "The colour system, and it is much smaller than the schema makes it look.",
+     "structuralEffect": "A rule paints in exactly one palette entry. The ground takes one or two more. DEPTH_PALETTE walks the index by one per recursion level.",
+     "failureModes": [
+      "paletteCount IS NOT A PALETTE. The rendered document carried exactly 2.0 distinct fills at paletteCount 2, 3, 4, 6, 8 and 10, with ink120 identical to four decimal places throughout. Declaring more stops changes nothing.",
+      "A gradient ground is the loudest thing in the frame: ink120 FLAT 0.399, LINEAR 0.870, RADIAL 0.882, and the ground pair 1->0 reaches 0.990 with extentX 1.00. BANDED is the only non-flat mode that leaves the figure dominant (0.399, unchanged).",
+      "Colour is NEVER market-driven in this runtime. Every reviewer instruction asking for a darker ground under stress or a warmer one on recovery is unexecutable."
+     ],
+     "usefulRelationships": "More than two colours arrives from exactly three places: DEPTH_PALETTE (2.0 -> 5.0 distinct fills, at no cost in ink or elements), a second and third rule (2.0 -> 2.0 -> 3.0), and the ground pair. If a brief needs a value ladder, DEPTH_PALETTE is the control.",
+     "marketBindingSuitability": "none, for colour. NOTE that DEPTH_PALETTE combined with DRIVE_DEPTH makes the palette indirectly market-reachable, which breaks the property that colour is a creator-and-seed fact.",
+     "evidence": {
+      "sweeps": [
+       "gr-palettecount",
+       "gr-flags",
+       "gr-ground",
+       "gr-groundpair",
+       "gr-rulecount"
+      ],
+      "sheets": [
+       "gr-palettecount.png",
+       "gr-ground.png",
+       "gr-groundpair.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].variant",
+     "visualRole": "Inert for five of the six productions.",
+     "lowEnd": "under QUAD, variant 0 through 7 produced IDENTICAL elements, ink120, extentX and edgeDensity to every decimal recorded.",
+     "highEnd": "under BRANCH it is the fan half-angle: edgeDensity 0.033 -> 0.049 and extentX 0.80 -> 0.75 across 0..7.",
+     "failureModes": "The schema field is documented as 'branch spread angle, shape detail'. There is no shape detail; nothing but the BRANCH production reads it. An author setting variant on a QUAD or RING rule has set nothing.",
+     "marketBindingSuitability": "not bindable",
+     "evidence": {
+      "sweeps": [
+       "gr-variant",
+       "gr-variant-branch"
+      ],
+      "sheets": [
+       "gr-variant.png",
+       "gr-variant-branch.png"
+      ]
+     }
+    },
+    {
+     "name": "ruleCount",
+     "visualRole": "Rules are layers over one shared centre, and they compose rather than bury.",
+     "measured": "1 rule: 16.3 elements, ink120 0.399, extentX 0.65, 2.0 fills. 2 rules: 23.3 elements, 0.421, 0.82, 2.0 fills. 3 rules: 30.3 elements, 0.432, 0.82, 3.0 fills. The second rule buys 26% more extent; the third buys a third colour and little else.",
+     "usefulRelationships": "A second rule is the cheapest way to break a single figure's silhouette monotony, because its own shapeSet and ruleSet are drawn independently by the seed.",
+     "marketBindingSuitability": "each rule carries its OWN sensor, curve and drive -- this is the only way to get two market signals into one recursion token, and it is what the DRAWDOWN-plus-RECOVERY rule requires.",
+     "evidence": {
+      "sweeps": [
+       "gr-rulecount"
+      ],
+      "sheets": [
+       "gr-rulecount.png"
+      ]
+     }
+    },
+    {
+     "name": "rules[n].drive x sensor x curve",
+     "visualRole": "The market binding. One structural dimension per rule.",
+     "measuredAcrossTheReviewRing": {
+      "$note": "ink120 per state (neutral / stress / recovery) at sensor=DRAWDOWN, curve=LINEAR, and the count of byte-identical state pairs over 2 seeds x 3 pairings.",
+      "DEPTH": "0.490 / 0.490 / 0.490, 2 of 6 identical. Elements 5 / 14 / 5 -- the document changes, the picture does not.",
+      "PRUNE": "0.490 / 0.490 / 0.490, 6 of 6 IDENTICAL at prune 15.",
+      "CONTRACT": "0.490 / 0.490 / 0.490, 0 of 6 identical -- the frames differ but not in coverage.",
+      "ROTATE": "0.490 / 0.490 / 0.490, 6 of 6 IDENTICAL at rotation 0.",
+      "SPREAD": "0.100 / 0.284 / 0.111, 0 of 6 identical. Delta 0.184 -- the only recursion drive with a large raster signature.",
+      "ASYMMETRY": "0.490 / 0.490 / 0.490, 2 of 6 identical."
+     },
+     "failureModes": [
+      "DRIVE_SPREAD sets the ROOT SIZE from the sensor, so binding it to DRAWDOWN makes the figure SMALLEST in the calm market -- DRAWDOWN reads 10 per mille at neutral against 450 under stress. Most briefs want the opposite.",
+      "Held on CONTRACT, no sensor separated the three states at 120px, at any contraction ceiling from 30 to 90 -- ink120 was 0.340 for all nine sensors and all five ceilings. CONTRACT is a real change and it is not a coverage change.",
+      "FLOW_BIAS and QUOTE_VOLUME produced byte-identical frames on all three pairings, confirming the published dead-sensor table."
+     ],
+     "usefulRelationships": "Two rules, one bound to DRAWDOWN and one to RECOVERY, is the minimum for three distinguishable states -- necessary, and not sufficient, because the ceiling must also leave the resolved integers room to differ.",
+     "evidence": {
+      "sweeps": [
+       "gr-drive",
+       "gr-drive-contract",
+       "gr-drive-headroom",
+       "gr-curve"
+      ],
+      "sheets": [
+       "gr-drive-thumb120.png",
+       "gr-drive-contract-thumb120.png"
+      ]
+     }
+    }
+   ]
+  },
+  "VECTOR_COMPOSITION_V1": {
+   "whatItCanDepict": {
+    "can": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+    "cannot": "a fixed row pitch or any quantised spacing; per-element coordinates; alpha; stroke width as a creator choice; an aspect ratio; a subtractive cut; a horizon or base; frame bleed; a cross-field conditional; a per-seed parameter table; a state-driven colour; an element that fills the frame",
+    "note": "The seed reaches NOTHING categorical in this runtime -- layout, primitive, variant, symmetry, stroke and palette index are all creator constants. It reaches only the scalars, a palette rotation under PALETTE_SHIFT, and per-site jitter. This is the exact defect GEOMETRIC_RECURSION_V1 version 2 was created to fix, and there is no ERR_SEED_BLIND equivalent here."
+   },
+   "parameters": [
+    {
+     "name": "fields[n].sizeMax",
+     "visualRole": "THE COVERAGE CONTROL. Nothing else in this runtime moves ink as far.",
+     "structuralEffect": "Resolved size = 2 + (sizeMax - 2) * v / 1000, the half-extent of one element in a 256-unit viewBox.",
+     "lowEnd": "sizeMax 2: ink120 0.005 -- an invisible frame. 4 gives 0.009, 6 gives 0.014. Anything below about 10 is a blank tile at browse size.",
+     "highEnd": "sizeMax 64: ink120 0.390, extentX 0.69, at only 13 elements.",
+     "fullCurve": "2:0.005  4:0.009  6:0.014  10:0.030  16:0.059  24:0.115  32:0.167  48:0.278  64:0.390",
+     "interactions": [
+      "sizeMax and spreadMax are close to ORTHOGONAL and this is the most useful fact in the runtime: down a column of the (sizeMax, spreadMax) grid ink rises 0.011 -> 0.291 while extent barely moves; across a row extent rises 0.27 -> 0.65 while ink barely moves. Size is density, spread is scale.",
+      "sizeMax and count MULTIPLY. The (sizeMax, count) grid runs from 0.002 at (4, 2) to 0.461 at (64, 24) -- a 230x range from two controls the author treated as independent.",
+      "FOUR LAYOUTS IGNORE IT ENTIRELY OR NEARLY: across sizeMax 4 -> 64, SUBDIVIDE stays at 0.007 and STACK stays at 0.054, unchanged to three decimals. BURST moves only 0.028 -> 0.136 where GRID moves 0.010 -> 0.438."
+     ],
+     "failureModes": "The resolved floor is the constant 2, so a SIZE-driven field is INVISIBLE whenever its sensor reads low. Measured: a field driven SIZE by RECOVERY reads ink120 0.005 / 0.005 / 0.156 across neutral / stress / recovery -- a blank frame in two states of three.",
+     "marketBindingSuitability": "the loudest drive in the runtime (delta 0.121 across the ring) and the most dangerous, because its floor is a blank.",
+     "evidence": {
+      "sweeps": [
+       "vc-size",
+       "vc-x-size-spread",
+       "vc-x-size-count",
+       "vc-x-layout-size",
+       "vc-drive-size-recovery"
+      ],
+      "sheets": [
+       "vc-size.png",
+       "vc-x-size-spread-seed101.png",
+       "vc-drive-size-recovery-thumb120.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].spreadMax",
+     "visualRole": "THE SCALE CONTROL. How far from the canvas centre a site may sit, and therefore how much of the frame the work reaches.",
+     "structuralEffect": "Resolved spread = 16 + (spreadMax - 16) * v / 1000, a half-extent about (128,128) in a 256-unit viewBox.",
+     "lowEnd": "16: extentX 0.27, a tight central cluster with dead margin on all four sides.",
+     "highEnd": "128: extentX 0.70, elements touching the frame edges.",
+     "interactions": "Moves extent for EVERY layout and moves ink for almost none: across spreadMax 16 -> 128, GRID's extent runs 0.32 -> 0.70 while its ink runs 0.054 -> 0.081. Same shape for all twelve layouts.",
+     "failureModes": "At spreadMax 128 elements land on the frame boundary and are cut by the viewBox -- the runtime clamps a site's CENTRE, not its extent. This is also where a naive corner-sampled background measure breaks, which is how this atlas caught its own defect.",
+     "usefulRelationships": "If the brief asks for a work that fills the frame, raise spreadMax. If it asks for a work that is dense, raise sizeMax. Raising the wrong one produces the complaint the reviewer made most often about this runtime -- a centred blob with dead margins.",
+     "marketBindingSuitability": "good: delta 0.114 across the ring, second only to SIZE, and its floor of 16 is a visible cluster rather than a blank.",
+     "evidence": {
+      "sweeps": [
+       "vc-spread",
+       "vc-x-layout-spread",
+       "vc-x-size-spread",
+       "vc-x-spread-count",
+       "vc-drive"
+      ],
+      "sheets": [
+       "vc-spread.png",
+       "vc-spread-thumb120.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].countMin / countMax",
+     "visualRole": "How many elements. The composition is countMin; countMax is only what the market may add.",
+     "lowEnd": "n=1: ink120 0.006, extentX 0.07. A single element cannot be a subject in this runtime.",
+     "highEnd": "n=40 (the per-field ceiling): ink120 0.139, 41 elements. Above 40 the validator answers ERR_FIELD_COUNT_RANGE.",
+     "interactions": "Multiplies with sizeMax (see above). Orthogonal to spreadMax: across the (spreadMax, count) grid ink is decided by count alone (0.014 -> 0.144) and extent by spread alone (0.32 -> 0.69).",
+     "failureModes": "WIDENING THE RANGE THINS THE COMPOSITION. A driven count spends the calm market near its floor, so 12..12 draws 13 elements at neutral while 2..32 draws 3. The author widened ranges expecting richness and got emptier neutral frames -- which is the published near-black-tile finding, reproduced here as a sweep.",
+     "usefulRelationships": "countMin == countMax pins the count, and it is one of only two dimensions in either runtime with a creator-owned floor.",
+     "marketBindingSuitability": "moderate (delta 0.074) and safe, because its floor is whatever countMin the author chose rather than a bytecode constant.",
+     "evidence": {
+      "sweeps": [
+       "vc-count",
+       "vc-countrange",
+       "vc-x-size-count",
+       "vc-x-spread-count",
+       "vc-drive-headroom"
+      ],
+      "sheets": [
+       "vc-count.png",
+       "vc-countrange.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].layout",
+     "visualRole": "Where the sites go. Twelve names, fewer than twelve pictures.",
+     "families": {
+      "cell grid (GRID, LATTICE, TILING, and WAVE in practice)": "measured within a few per cent of each other on every primitive -- GRID/LATTICE/TILING/WAVE at RECT read 0.072 / 0.067 / 0.056 / 0.076. Four names, one look at these settings.",
+      "SUBDIVIDE": "the sparsest layout in the runtime by a wide margin (0.007 at RECT against GRID's 0.072) and highly seed-dependent, because its level is seed-drawn and capped at 4.",
+      "STACK": "the only layout that reads as horizontal bands. It takes its element extent from spread and ignores sizeMax entirely.",
+      "LINEFIELD": "the densest layout (0.129 at RECT, 0.213 at CIRCLE) and the one that clumps.",
+      "polar (RADIAL, ORBIT, SPIRAL, BURST)": "ring and starburst readings at 120px. These are what a brief forbidding 'radial symmetry' or 'a centred emblem' forbids.",
+      "SCATTER": "sparse and irregular, 0.035 at RECT."
+     },
+     "interactions": "Layout decides whether sizeMax means anything (SUBDIVIDE and STACK ignore it) and whether the primitive matters (STACK x CIRCLE is 0.163 against STACK x RECT's 0.054, a 3x difference from the primitive alone, because STACK overrides one extent and not the other).",
+     "marketBindingSuitability": "not bindable -- a creator constant, never seed-drawn",
+     "evidence": {
+      "sweeps": [
+       "vc-layout",
+       "vc-x-layout-primitive",
+       "vc-x-layout-size",
+       "vc-x-layout-spread",
+       "vc-x-layout-symmetry"
+      ],
+      "sheets": [
+       "vc-layout.png",
+       "vc-layout-thumb120.png",
+       "vc-x-layout-primitive-seed101.png",
+       "vc-x-layout-size-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].primitive",
+     "visualRole": "What is drawn at each site. A 6x coverage range at identical count and size.",
+     "fullOrdering": "ink120 at 13 elements, sizeMax 16, GRID: RECT 0.059 > CIRCLE 0.048 > CUBIC 0.032 > QUAD 0.026 > ARC 0.024 > NGON 0.021 > LINE 0.019 > ELLIPSE 0.015 > POLYLINE 0.010",
+     "interactions": "RECT and CIRCLE are the only primitives whose coverage responds strongly to the stroke flag (RECT 0.098 filled against 0.054 stroked; CIRCLE 0.080 against 0.043). NGON responds weakly (0.038 / 0.035). ELLIPSE, LINE, POLYLINE, ARC, QUAD and CUBIC measured IDENTICALLY filled and stroked.",
+     "failureModes": "POLYLINE is the sparsest primitive in the runtime at every layout and is also the most expensive in the render budget at 11 units per site -- the worst coverage-per-unit trade available.",
+     "marketBindingSuitability": "not bindable",
+     "evidence": {
+      "sweeps": [
+       "vc-primitive",
+       "vc-x-layout-primitive",
+       "vc-x-primitive-stroke",
+       "vc-stroke-line",
+       "vc-x-budget-primitive-count"
+      ],
+      "sheets": [
+       "vc-primitive.png",
+       "vc-x-primitive-stroke-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].symmetry",
+     "visualRole": "The cheapest coverage in this runtime too, and it pays under every layout.",
+     "measured": "ink120 at GRID: NONE 0.072, MIRROR_X 0.112, MIRROR_Y 0.108, QUAD 0.151, ROT3 0.158, ROT6 0.227. Roughly 3x for five free `<use>` replicas. The pattern holds for all twelve layouts.",
+     "failureModes": "SYMMETRY IS A PROJECT FACT, NOT A TOKEN FACT. It has no seed fallback: unless DRIVE_SYMMETRY is bound, every token of the project shares the order. It therefore cannot be a source of per-token variety, which is a large part of why this runtime's collections read as one work at N settings.",
+     "marketBindingSuitability": "DRIVE_SYMMETRY measured a delta of 0.072 across the ring -- comparable to COUNT -- but it changes the order of the whole composition, which reads as a different work rather than a changed one.",
+     "evidence": {
+      "sweeps": [
+       "vc-symmetry",
+       "vc-x-layout-symmetry",
+       "vc-drive"
+      ],
+      "sheets": [
+       "vc-symmetry.png",
+       "vc-x-layout-symmetry-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].variant",
+     "visualRole": "A per-PRIMITIVE sub-mode. It is not a per-layout control and it does nothing for six of the nine primitives.",
+     "measured": [
+      "Across all twelve layouts with RECT, variant 0 through 7 produced IDENTICAL ink120 and extentX to three decimals. Twelve rows, eight columns, one number per row.",
+      "Under ELLIPSE it is the axis ratio and it is monotone: 0.036, 0.045, 0.055, 0.064, 0.072, 0.079, 0.088, 0.099.",
+      "Under NGON it is the side count and IT WRAPS: variant 6 measured identical to variant 0 (0.034) and variant 7 identical to variant 1 (0.050). The render budget charges 7 and 8 units for those two while drawing a triangle and a quadrilateral."
+     ],
+     "failureModes": "Setting variant on a RECT, CIRCLE, LINE, ARC, QUAD or CUBIC field sets nothing.",
+     "marketBindingSuitability": "not bindable",
+     "evidence": {
+      "sweeps": [
+       "vc-variant",
+       "vc-variant-ngon",
+       "vc-variant-ellipse",
+       "vc-x-layout-variant"
+      ],
+      "sheets": [
+       "vc-variant-ngon.png",
+       "vc-variant-ellipse.png",
+       "vc-x-layout-variant-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].stroke and the OUTLINE flag",
+     "visualRole": "A fill/outline switch that reaches only the four primitives with an interior, and reaches ELLIPSE not at all in measurement.",
+     "measured": "On RECT at 13 elements the flag moved ink120 0.059 -> 0.064 and edgeDensity 0.025 -> 0.047, and dropped distinct fills from 2 to 1. At 9 elements and sizeMax 24 the same flag moved RECT 0.098 -> 0.054 and CIRCLE 0.080 -> 0.043. On LINE the two settings measured byte-for-byte identical on every axis, which is the documented always-stroked rule, confirmed.",
+     "unexpected": "ELLIPSE measured identical filled and stroked (0.030 both) although it sits below the always-stroked boundary and should honour the flag. Recorded as measured rather than explained; a rebuild should not rely on stroke to change an ELLIPSE field.",
+     "marketBindingSuitability": "not bindable, but it GATES a drive: see WEIGHT.",
+     "evidence": {
+      "sweeps": [
+       "vc-stroke",
+       "vc-stroke-line",
+       "vc-x-primitive-stroke",
+       "vc-flags"
+      ],
+      "sheets": [
+       "vc-x-primitive-stroke-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "fieldCount, and the site budget",
+     "visualRole": "Fields are layers. They compose up to about three and then flatten.",
+     "measured": "elements / ink120 / extentY by field count: 1 field 13.0 / 0.059 / 0.45; 2 fields 26.8 / 0.062 / 0.55; 3 fields 37.8 / 0.134 / 0.80; 4 fields 45.3 / 0.139 / 0.80; 5 fields 52.0 / 0.159 / 0.80; 6 fields 60.0 / 0.167 / 0.80. Extent saturates at three; the fourth, fifth and sixth add elements and about 0.01 ink each.",
+     "failureModes": "The 120-site ceiling is paid at countMax, not at what the market draws. Four fields at countMax 40 is 160 sites and is refused; six fields at countMax 24 is 144 and is refused. ERR_TOTAL_SITES, before anything renders.",
+     "usefulRelationships": "Each field carries its own sensor, curve and drive. Three fields is the point where extent stops improving and is a reasonable default ceiling for a composition rather than a texture.",
+     "evidence": {
+      "sweeps": [
+       "vc-fieldcount",
+       "vc-x-budget-fields"
+      ],
+      "sheets": [
+       "vc-fieldcount.png",
+       "vc-x-budget-fields-seed101.png"
+      ]
+     }
+    },
+    {
+     "name": "palette, groundMode, PALETTE_SHIFT",
+     "visualRole": "One colour per field plus the ground. Same shape as the recursion runtime and the same trap.",
+     "measured": [
+      "A gradient ground dominates the frame: ink120 FLAT 0.059, LINEAR 0.696, RADIAL 0.915, BANDED 0.060. RADIAL leaves almost nothing that is not ground.",
+      "PALETTE_SHIFT moved ink120 from 0.059 to 0.057 and left distinct fills at 2.0 -- it rotates which stop a field takes, per token and per field, and does not widen the picture's colour count.",
+      "Distinct fills track fieldCount: 1-2 fields give 2.0, 3-4 give 3.0-4.0, 5-6 give 4.0."
+     ],
+     "failureModes": "Colour is never market-driven. A brief asking for a colour to change under stress cannot be served.",
+     "usefulRelationships": "The number of colours in the picture is the number of FIELDS, not the number of palette stops. If a brief needs four colours it needs four fields.",
+     "evidence": {
+      "sweeps": [
+       "vc-ground",
+       "vc-flags",
+       "vc-fieldcount"
+      ],
+      "sheets": [
+       "vc-ground.png"
+      ]
+     }
+    },
+    {
+     "name": "fields[n].drive x sensor x curve",
+     "visualRole": "The market binding. One structural dimension per field, and eight to choose from.",
+     "measuredAcrossTheReviewRing": {
+      "$note": "ink120 delta neutral-to-stress at sensor=DRAWDOWN, curve=LINEAR, over 2 seeds, with the filled control and the stroked control side by side.",
+      "SIZE": "0.121 filled, 0.081 stroked -- the loudest",
+      "SPREAD": "0.114 filled, 0.056 stroked",
+      "COUNT": "0.074 filled, 0.048 stroked",
+      "SYMMETRY": "0.072 filled, 0.077 stroked",
+      "JITTER": "0.017 filled, 0.000 stroked",
+      "DEPTH": "0.001 filled, 0.000 stroked",
+      "TWIST": "0.001 filled, 0.002 stroked",
+      "WEIGHT": "0.000 filled and 6 of 6 BYTE-IDENTICAL state pairs; 0.096 stroked. WEIGHT writes stroke-width and nothing else, so on a filled field it is a binding that draws no difference."
+     },
+     "sensorSeparation": {
+      "$note": "byte-identical state pairs out of 3 pairings, drive=COUNT, one seed",
+      "DRAWDOWN": "0 of 3 -- separates neutral from stress",
+      "RECOVERY": "1 of 3 -- separates recovery only; neutral and stress are identical",
+      "STRESS": "1 of 3 -- stress and recovery identical",
+      "VOLATILITY": "1 of 3 -- stress and recovery identical",
+      "VOLUME_TIER": "1 of 3 -- neutral and stress identical",
+      "EPOCH": "1 of 3 -- neutral and stress identical",
+      "LIQUIDITY": "0 of 3 but ink deltas of 0.001 to 0.007 -- a slow constant",
+      "FLOW_BIAS": "3 of 3 -- DEAD",
+      "QUOTE_VOLUME": "3 of 3 -- DEAD"
+     },
+     "curve": "At drive=COUNT, LOG2 opens the neutral frame at 20 elements against LINEAR's 5, because LOG2 maps a per-mille of 10 to 562. It is the anti-blank-tile curve AND the anti-response curve at once: its ink delta is 0.022 against LINEAR's 0.060. EASE and STEP both produced 2 of 6 identical state pairs.",
+     "usefulRelationships": "One field on DRAWDOWN and one on RECOVERY is the minimum for three distinguishable states. Headroom is the second condition: at countMin 6 the ink delta runs 0.000 at countMax 8, then 0.008, 0.025, 0.033, 0.051 at 12, 20, 30 and 40.",
+     "evidence": {
+      "sweeps": [
+       "vc-drive",
+       "vc-drive-stroked",
+       "vc-drive-sensor",
+       "vc-drive-headroom",
+       "vc-curve",
+       "vc-drive-size-recovery"
+      ],
+      "sheets": [
+       "vc-drive-thumb120.png",
+       "vc-drive-stroked-thumb120.png",
+       "vc-drive-sensor-thumb120.png",
+       "vc-drive-headroom-thumb120.png"
+      ]
+     }
+    }
+   ]
+  }
+ },
+ "contradictions": [
+  {
+   "id": "X-01",
+   "priorClaim": "`sizeMax` is ignored by three layouts: STACK, LINEFIELD and BURST. (VECTOR_COMPOSITION_V1.md failure mode 3)",
+   "measured": "Across sizeMax 4 -> 64 at 13 elements: STACK is flat at 0.054 (ignores it, as claimed). SUBDIVIDE is flat at 0.007 and is NOT on the published list. LINEFIELD moves 0.071 -> 0.266 and BURST moves 0.028 -> 0.136, so both DO respond, contrary to the claim.",
+   "verdict": "The published list is wrong in both directions -- it omits a layout that ignores sizeMax and names two that do not.",
+   "evidence": "sweep `vc-x-layout-size`"
+  },
+  {
+   "id": "X-02",
+   "priorClaim": "`DRIVE_CONTRACT` is the loud drive; a compass template on RECOVERY->CONTRACT measured a neutral-to-recovery response of 20.4 against DRIVE_DEPTH's 1.3. (SENSOR_MOVEMENT.md)",
+   "measured": "Under a single QUAD rule on SQUARE, CONTRACT moved ink120 by 0.000 across the review ring at every contraction ceiling from 30 to 90 and at every one of the nine visual sensors, while SPREAD moved it by 0.184.",
+   "verdict": "BOTH are true and the prior claim needs its condition stated. Contraction's raster loudness is PRODUCTION-DEPENDENT: it moves EXTENT only under RING and BRANCH (0.88 -> 0.99 and 0.82 -> 0.88 across contraction 20 -> 90) and is flat at 0.79 under QUAD, TRI, INSCRIBE and BSP. The compass template is RING- and INSCRIBE-based with a large root; the atlas baseline is not. Carry the claim as 'CONTRACT is loud under the outward productions', never as a property of the parameter.",
+   "evidence": "sweeps `gr-drive-contract`, `gr-drive-headroom`, `gr-x-rule-contraction`"
+  },
+  {
+   "id": "X-03",
+   "priorClaim": "`R.root` is seed-drawn over 40..104 and is the single largest per-token coverage lever.",
+   "measured": "CONFIRMED and sharpened. DRIVE_SPREAD, which is the only way to reach root size from the market, is the only recursion drive with a large raster signature -- ink120 0.100 / 0.284 / 0.111 across the ring, a delta of 0.184 against 0.000 for the other five. But the seed shape is a comparable per-token lever in the other direction: 0.399 for SQUARE against 0.060 for CROSS at identical root.",
+   "verdict": "Both are large levers and they multiply. A CROSS token at a small seed-drawn root is the near-blank tile the reviewer kept finding.",
+   "evidence": "sweeps `gr-drive`, `gr-shape`, `gr-setsize`"
+  },
+  {
+   "id": "X-04",
+   "priorClaim": "`INSCRIBE` puts children at the parent's centre so CONTRACT moves nesting and never extent.",
+   "measured": "CONFIRMED exactly. Across contraction 20 -> 90 under INSCRIBE, extentX is 0.79 at every value while ink120 moves only 0.377 -> 0.389. Under RING the same sweep runs 0.88 -> 0.99.",
+   "evidence": "sweep `gr-x-rule-contraction`, sheet gr-x-rule-contraction-seed101.png"
+  },
+  {
+   "id": "X-05",
+   "priorClaim": "`DRIVE_DEPTH` is loud on paper and quiet on a raster (1.3 at 120px).",
+   "measured": "CONFIRMED and strengthened. Pinning depthMin == depthMax and sweeping 1 -> 6 multiplies drawn elements by 30 and moves ink120 by 0.004. Across the whole (contraction, depthMax) grid, ink is constant down every depth column and varies only across contraction.",
+   "newFinding": "Worse than quiet: with depthMin held at 1, raising depthMax alone changed NOTHING at all -- 4.3 elements and 0.397 ink at every value 1 through 6, for every production. The commonly written form `depthMin: 1, depthMax: 4` does not draw four levels.",
+   "evidence": "sweeps `gr-depthmax`, `gr-depth-pinned`, `gr-x-contraction-depth`, `gr-x-rule-depth`"
+  },
+  {
+   "id": "X-06",
+   "priorClaim": "`SUBDIVIDE` depth caps at level 4, so no sensor/curve pair yields three distinct subdivision levels.",
+   "measured": "Not contradicted, and a larger fact sits above it: SUBDIVIDE is the sparsest layout in the runtime (ink120 0.007 at RECT against GRID's 0.072) and it ignores sizeMax entirely, so the depth cap is not the binding constraint on it.",
+   "evidence": "sweeps `vc-x-layout-primitive`, `vc-x-layout-size`"
+  },
+  {
+   "id": "X-07",
+   "priorClaim": "A device driven on SIZE by RECOVERY vanishes under stress.",
+   "measured": "CONFIRMED and quantified: ink120 0.005 / 0.005 / 0.156 across neutral / stress / recovery. It vanishes in TWO states of three, not one -- RECOVERY reads 10 per mille at neutral as well as 0 under stress, and `size`'s bytecode floor is 2. The mirror binding, SIZE by DRAWDOWN, reads 0.005 / 0.179 / 0.010.",
+   "evidence": "sweep `vc-drive-size-recovery`, sheet vc-drive-size-recovery-thumb120.png"
+  },
+  {
+   "id": "X-08",
+   "priorClaim": "FLOW_BIAS reads 500/500/500 and QUOTE_VOLUME 687/687/687 -- dead.",
+   "measured": "CONFIRMED at the picture rather than at the sensor table: both produced byte-identical frames on all three state pairings, in both runtimes.",
+   "newFinding": "Four more sensors are half-dead on this fixture ring and the halves differ. STRESS and VOLATILITY cannot separate stress from recovery; VOLUME_TIER and EPOCH cannot separate neutral from stress. Only DRAWDOWN separates the first pairing and only RECOVERY the second, which is why the two-binding rule is not a style preference.",
+   "evidence": "sweeps `vc-drive-sensor`, `gr-drive-contract`"
+  },
+  {
+   "id": "X-09",
+   "priorClaim": "`SHAPE_CROSS` carries no area.",
+   "measured": "CONFIRMED with the full ordering it was missing. ink120 by seed shape at identical settings: SQUARE 0.399, CIRCLE 0.316, HEX 0.265, DIAMOND 0.224, TRIANGLE 0.162, CROSS 0.060. CROSS is 15% of SQUARE, and TRIANGLE at 41% is the second problem the claim never named -- it is also the only shape whose EXTENT is small, 0.52 to 0.62 against 0.69 to 0.79 for the rest.",
+   "evidence": "sweeps `gr-shape`, `gr-x-shape-rule`"
+  },
+  {
+   "id": "X-10",
+   "priorClaim": "(implicit in every configuration the author wrote) a larger `palette` gives the work more colours.",
+   "measured": "FALSE. The rendered document carried exactly 2.0 distinct fills at paletteCount 2, 3, 4, 6, 8 and 10, with ink120 identical to four decimal places throughout. Colour count comes from DEPTH_PALETTE (2.0 -> 5.0), from ruleCount or fieldCount, and from the ground pair.",
+   "evidence": "sweeps `gr-palettecount`, `gr-flags`, `gr-rulecount`, `vc-fieldcount`"
+  },
+  {
+   "id": "X-11",
+   "priorClaim": "(implicit) `variant` is a general sub-mode dial, and `RecursionConfigV1`'s own struct comment calls it 'branch spread angle, shape detail'.",
+   "measured": "There is no shape detail. Under QUAD, variant 0 through 7 produced identical elements, ink, extent and edge density; under BRANCH it moved edge density 0.033 -> 0.049. In the vector runtime, across all twelve layouts with RECT, variant 0 through 7 produced identical numbers -- it is a per-PRIMITIVE control that only ELLIPSE, NGON and POLYLINE read, and under NGON it wraps at 6.",
+   "evidence": "sweeps `gr-variant`, `gr-variant-branch`, `vc-x-layout-variant`, `vc-variant-ngon`, `vc-variant-ellipse`"
+  }
+ ],
+ "quickReference": {
+  "$note": "The shortest true summary. Every line is measured; the sweeps are named above.",
+  "GEOMETRIC_RECURSION_V1": [
+   "Coverage is decided by shape and stroke, not by depth or branch.",
+   "Extent is decided by the production: RING and BRANCH throw the work outward, the other four do not.",
+   "Depth is nearly free of visual effect and expensive in budget. Pin it with depthMin == depthMax unless it is the drive.",
+   "Symmetry is free coverage and an inescapable mandala.",
+   "paletteCount does nothing. DEPTH_PALETTE and a second rule are the colour controls.",
+   "A gradient ground makes the ground the loudest thing in the frame.",
+   "Only DRIVE_SPREAD is loud at 120px. PRUNE and ROTATE are dead at their default values.",
+   "The node budget refuses branch 3 above depth 4 and branch 4 above depth 3."
+  ],
+  "VECTOR_COMPOSITION_V1": [
+   "sizeMax is density, spreadMax is scale, and they are close to orthogonal. Count multiplies with size.",
+   "Twelve layouts, about six distinct pictures. GRID, LATTICE, TILING and WAVE are one of them.",
+   "STACK and SUBDIVIDE ignore sizeMax entirely.",
+   "The seed reaches nothing categorical: layout, primitive, variant, symmetry and stroke are project constants. Per-token variety must come from the scalars and from PALETTE_SHIFT.",
+   "Symmetry roughly triples coverage for free and is also a project constant, so it cannot carry variety.",
+   "WEIGHT is invisible on a filled field. TWIST and DEPTH are invisible at 120px on any field.",
+   "A SIZE-driven field is blank whenever its sensor is low, because size's floor is 2.",
+   "Widening countMin..countMax makes the neutral composition thinner, not richer.",
+   "The site budget is paid at countMax across all fields: 120 total, 40 per field."
+  ]
+ },
+ "howToUseThis": [
+  "BEFORE ACCEPTING A BRIEF: check its nouns and its prohibitions against `whatItCanDepict`. Six of seven briefs in the failing corpus needed something in the `cannot` list, and no amount of revision reached them.",
+  "BEFORE RENDERING: evaluate every market binding's reachable range symbolically -- floor, ceiling, the three fixture readings through the curve -- and refuse a binding whose resolved values are equal. This needs no chain call and would have caught two of the seven shipped collections outright.",
+  "BEFORE RENDERING: price the market response at the WORST member of every declared set, the way the render budget already prices gas at the dearest.",
+  "WHEN A CRITIQUE ARRIVES: classify each prescribed action EXECUTABLE / NEAREST-SUBSTITUTE / REFUSED-BY-MEDIUM against this file. Send the refusals back as facts about the runtime instead of attempting them; recolour-and-swap is what attempting them looks like.",
+  "AFTER EVERY CHANGE: re-render every axis, not the one the critique named. Five of the seven runs traded one axis for another and the trade was invisible from inside the axis being fixed."
+ ]
+}

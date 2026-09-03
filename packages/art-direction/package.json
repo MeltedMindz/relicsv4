@@ -1,0 +1,24 @@
+{
+  "name": "@relics/art-direction",
+  "version": "1.0.0",
+  "private": true,
+  "description": "What happens BEFORE a runtime config exists: is this brief representable by the Wave-1 catalog at all, what is the art direction, which parameters does the measured atlas say to reach for, and which seeds is the author allowed to see. Authors nothing on chain and judges no picture.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./atlas": "./src/atlas.js",
+    "./capabilities": "./src/capabilities.js",
+    "./admission": "./src/admission.js",
+    "./direction": "./src/direction.js",
+    "./seeds": "./src/seeds.js",
+    "./binding": "./src/binding.js",
+    "./author": "./src/author.js",
+    "./critique": "./src/critique.js",
+    "./acceptance": "./src/acceptance.js"
+  },
+  "files": ["src", "vendor", "README.md"],
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test test/*.test.mjs" }
+}
