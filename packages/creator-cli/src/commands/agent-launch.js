@@ -643,7 +643,12 @@ export async function cmdBroadcast(name, workspace, flags, json, ctx) {
 
   // ---- WRITE INTENT BEFORE THE BYTES LEAVE ------------------------------------------------------
   const predict = await phaseBody(workspace, "PREDICT");
-  const nonce = await made.client.getTransactionCount({ address: signerAddress });
+  // `latest` STATED, NOT DEFAULTED. This is the nonce the launch reserves, and it is also the
+  // baseline `decideResend` compares the PENDING nonce against — so it has to be the MINED count,
+  // or an in-flight transaction would already be "past" the baseline before this launch is sent.
+  // viem defaults to `latest`; saying so is cheap, and this exact default going unstated in the
+  // guard is what let a pending transaction read as "nothing left".
+  const nonce = await made.client.getTransactionCount({ address: signerAddress, blockTag: "latest" });
   let totalLaunches = null;
   try { totalLaunches = String(await made.client.readContract({ address: profile.contracts.launchpadFactory, abi: sdk.FACTORY_ABI(), functionName: "totalLaunches" })); } catch { /* corroboration only */ }
   try {

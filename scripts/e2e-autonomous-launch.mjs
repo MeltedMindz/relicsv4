@@ -869,7 +869,9 @@ export async function runAutonomousLaunch(options = {}) {
     if (gasLimit > policy.maxTransactionGas) {
       throw new HarnessFailure(`a 20% headroom over the ${simulated.gasEstimate} estimate is ${gasLimit}, above policy.maxTransactionGas ${policy.maxTransactionGas}`);
     }
-    const nonce = await client.getTransactionCount({ address: signerAddress });
+    // `latest` stated rather than defaulted: this is the MINED nonce the launch reserves, and the
+    // baseline `decideResend` compares the pending nonce against. See broadcastGuard.ts.
+    const nonce = await client.getTransactionCount({ address: signerAddress, blockTag: "latest" });
     const built = build({
       chainId: selectedChainId,
       from: signerAddress,
