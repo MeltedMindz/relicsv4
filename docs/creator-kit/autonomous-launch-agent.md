@@ -447,7 +447,10 @@ on the closed union: the GRANT guard's seventeen (`NO_AUTHORIZATION`, `AUTHORIZA
 `LAUNCH_PARAMS_FIELD_COUNT_WRONG`, `RECIPIENT_NOT_AUTHORIZED`, `ANTISNIPE_NOT_AUTHORIZED`,
 `ROYALTY_EXCEEDS_AUTHORIZATION`, `RUNTIME_NOT_AUTHORIZED`, `REQUEST_FROM_NOT_SIGNER_KEY`) and the
 ART SELECTOR guard's four (`ART_SELECTOR_MALFORMED`, `ART_SELECTOR_NOT_APPROVED`,
-`ART_RUNTIME_NOT_ALLOWED_BY_POLICY`, `ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`). Thirty-four in total. Widening the thirteen would be a
+`ART_RUNTIME_NOT_ALLOWED_BY_POLICY`, `ART_RUNTIME_NOT_ACTIVE_ON_CHAIN`). The total is not restated
+here: `packages/creator-cli/test/human-setup.test.mjs` PARSES both unions out of their declarations
+and requires every member to carry a remedy, so the list above is checked against the source rather
+than trusted, and a count typed into this paragraph would only ever be right until the next code. Widening the thirteen would be a
 cross-package contract change; keeping a guard's codes local is the precedent the grant guard set,
 and the codes still reach the agent verbatim.
 

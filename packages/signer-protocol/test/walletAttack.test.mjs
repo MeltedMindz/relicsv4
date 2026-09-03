@@ -1,11 +1,18 @@
 // SPDX-License-Identifier: MIT
 // ================================================================================================
-// THE WALLET ATTACK SUITE — thirty things the signer must refuse.
+// THE WALLET ATTACK SUITE — the things the signer must refuse.
 //
-// THE COUNT MOVES AND THE NUMBERS BELOW ARE NOT RENUMBERED WHEN IT DOES. A control's number is how
-// a finding refers to it; renumbering would silently repoint every reference. The historical
-// measurements in the comments ("removing `worstCase > ceiling` left all 22 controls green") are
-// dated records of what was true when they were taken and are deliberately NOT restated upward.
+// THE COUNT IS NOT WRITTEN HERE, and it used to be. "thirty things the signer must refuse" was true
+// on the day it was typed and is the same shape of claim as the "22/22 attack controls" that was
+// still being reported after the suite had grown past 22. `npm run signer:mutate` counts the tests
+// that actually ran and prints `SIGNER_WALLET_ATTACK_CONTROLS=<n>` beside its mutation totals;
+// `npm run agent:controls` reads that line rather than restating it.
+//
+// A CONTROL'S NUMBER IS NOT ITS INDEX, AND CONTROLS ARE NOT RENUMBERED WHEN THE SET GROWS. The
+// number is how a finding refers to a control; renumbering would silently repoint every reference.
+// The historical measurements in the comments ("removing `worstCase > ceiling` left all 22 controls
+// green") are dated records of what was true when they were taken and are deliberately NOT restated
+// upward.
 //
 // WHAT THIS FILE CANNOT PROVE, AND WHERE THAT LIVES INSTEAD. Its signer's POLICY bounds several of
 // the same quantities the GRANT bounds — chain, native value, creatorRecipient — and the grant runs

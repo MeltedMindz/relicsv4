@@ -519,4 +519,25 @@ const grant = MUTATIONS.filter((m) => m.grantGuard);
 const grantCaught = grant.filter((m) => (table.find((t) => t.id === m.id)?.red.length ?? 0) > 0).length;
 console.log(`\nMUTATIONS=${MUTATIONS.length} SURVIVED=${survived}`);
 console.log(`SIGNER_GRANT_GUARD_MUTATIONS=${grantCaught}/${grant.length}_CAUGHT`);
+
+// THE SUITE'S OWN SIZES ARE COUNTED HERE AND RESTATED NOWHERE.
+//
+// "22/22 attack controls" was reported long after the suite had grown past 22, in the ordinary way:
+// a number written into prose stops tracking the thing it describes, and the prose keeps sounding
+// authoritative. So the counts are derived from the baseline TAP output — which is the set of tests
+// that ACTUALLY RAN in this process, not a regex over a source file that might not have been
+// executed — and every doc that used to carry a figure now points at these lines instead.
+{
+  const attack = [...baselineTestNames].filter((n) => /^\d+ /.test(n)).length;
+  const grantControls = [...baselineTestNames].filter((n) => /^G-\d+ /.test(n)).length;
+  const lifecycle = [...baselineTestNames].filter((n) => /^L-\d+ /.test(n)).length;
+  if (attack < 20 || grantControls < 10 || lifecycle < 5) {
+    console.error(`INPUT FLOOR: counted ${attack} wallet attacks, ${grantControls} grant controls, ${lifecycle} lifecycle controls; the baseline did not run the suites these numbers describe`);
+    process.exit(1);
+  }
+  console.log(`SIGNER_WALLET_ATTACK_CONTROLS=${attack}`);
+  console.log(`SIGNER_GRANT_ISOLATION_CONTROLS=${grantControls}`);
+  console.log(`SIGNER_GRANT_LIFECYCLE_CONTROLS=${lifecycle}`);
+  console.log(`SIGNER_TESTS_IN_BASELINE=${baselineTestNames.size}`);
+}
 process.exit(survived === 0 ? 0 : 1);

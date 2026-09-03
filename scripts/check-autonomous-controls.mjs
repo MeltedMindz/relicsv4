@@ -106,7 +106,13 @@ control("signer refuses arbitrary transactions (mutation count read from the har
   if (!grant) return "signer:mutate printed no SIGNER_GRANT_GUARD_MUTATIONS line; the grant guard is the protected boundary and its coverage must be reported, not assumed";
   if (grant[1] !== grant[2]) return `only ${grant[1]} of ${grant[2]} grant-guard mutations were caught`;
   if (Number(grant[2]) === 0) return "the harness reports ZERO grant-guard mutations; an empty subject set is not a pass";
-  console.log(`        (${ran} mutations, ${grant[2]} of them on the grant guard, 0 survivors)`);
+  // THE SUITE SIZES ARE READ OUT OF THE RUN TOO, for the same reason the mutation count is: the
+  // figure "22/22 attack controls" was still being reported after the suite had grown past 22.
+  const attack = /SIGNER_WALLET_ATTACK_CONTROLS=(\d+)/.exec(lastSuiteOutput);
+  const lifecycle = /SIGNER_GRANT_LIFECYCLE_CONTROLS=(\d+)/.exec(lastSuiteOutput);
+  if (!attack || !lifecycle) return "signer:mutate printed no SIGNER_WALLET_ATTACK_CONTROLS / SIGNER_GRANT_LIFECYCLE_CONTROLS line; suite sizes must be reported by the run, not restated";
+  if (Number(lifecycle[1]) === 0) return "ZERO grant LIFECYCLE controls ran; the spend half of the grant is the half that was missing entirely, and a fixture that sets the counter by hand does not cover it";
+  console.log(`        (${ran} mutations, ${grant[2]} of them on the grant guard, 0 survivors; ${attack[1]} wallet attacks, ${lifecycle[1]} grant-lifecycle controls)`);
   return true;
 });
 control("metadata fetch-back mismatch, gateway URI and digest conflation are refused", () => runSuite("launch:test", ["--test", "packages/launch-sdk/test/metadata.test.mjs"]));

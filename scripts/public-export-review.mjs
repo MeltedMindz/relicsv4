@@ -105,7 +105,63 @@ for (const { status, path } of added) {
   }
 }
 
-console.log(`PRIVATE_MONOREPO_FILES_COPIED_VERBATIM=${verbatim.length}`);
+// ------------------------------------------------------------------------------------------------
+// TEST_KEY_LEAK_LOCATIONS — DERIVED FROM THE WHOLE TRACKED TREE, NOT FROM THE DIFF.
+//
+// THIS NUMBER WAS REPORTED AS ZERO AND IT IS NOT ZERO. There is one first-party location in this
+// repository that holds a private key: `packages/signer-protocol/test/helpers.mjs`, which carries
+// anvil's default account #0 so a fork harness can produce a real signature. The private monorepo
+// holds several more of the same key. THERE IS NO EXPOSURE — that key is derived from the published
+// "test test … junk" mnemonic, is documented by anvil and hardhat, appears in millions of
+// repositories, and is the first address any sweeper drains — but "no exposure" is a different
+// statement from "no locations", and publishing the second one when you mean the first is how a
+// real key eventually gets counted as zero too.
+//
+// SO THE NUMBER IS COUNTED, EVERY TIME, FROM `git ls-files`. The pass above only reads files CHANGED
+// against the base, which is why it could report a zero that was true of the diff and false of the
+// repository. Recognition is by DIGEST, so a REAL key in the same file is not covered by this
+// counter and is still a violation — and no key material enters this scanner in order to look for
+// key material.
+{
+  const tracked = execSync(`git -C ${ROOT} ls-files`, { encoding: "utf8" }).split("\n").filter(Boolean);
+  if (tracked.length === 0) {
+    console.error("  INPUT FLOOR: `git ls-files` returned nothing, so TEST_KEY_LEAK_LOCATIONS would be a zero nobody measured");
+    violations++;
+  }
+  const locations = [];
+  let scanned = 0;
+  for (const rel of tracked) {
+    if (/\.(png|jpg|jpeg|gif|svg|relics|gz|woff2?|pdf|ico)$/i.test(rel)) continue;
+    const abs = join(ROOT, rel);
+    if (!existsSync(abs) || statSync(abs).isDirectory()) continue;
+    let text;
+    try { text = readFileSync(abs, "utf8"); } catch { continue; }
+    scanned++;
+    const lines = text.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      for (const candidate of lines[i].match(/0x[0-9a-fA-F]{64}/g) ?? []) {
+        const digest = createHash("sha256").update(candidate.toLowerCase()).digest("hex");
+        if (!ANVIL_TEST_KEY_SHA256.has(digest)) continue;
+        locations.push({ path: rel, line: i + 1, marked: TEST_ONLY_MARK.test(text) });
+      }
+    }
+  }
+  if (scanned < 50) {
+    console.error(`  INPUT FLOOR: only ${scanned} tracked text files were read; this count is specified over the whole tree`);
+    violations++;
+  }
+  console.log(`\nTEST_KEY_LEAK_LOCATIONS=${locations.length}  (world-known anvil default keys, recognised by digest; NO exposure — see the note in this script. NEVER report this as 0 unless it counted 0.)`);
+  for (const l of locations) console.log(`    ${l.path}:${l.line}${l.marked ? "" : "   <- NOT in a file carrying the TEST ONLY marking"}`);
+  const unmarked = locations.filter((l) => !l.marked);
+  if (unmarked.length > 0) {
+    console.error(`  VIOLATION  ${unmarked.length} anvil test key location(s) sit in files with no TEST ONLY marking; the allowance must not spread silently into non-test code`);
+    violations += unmarked.length;
+  }
+  console.log(`TEST_KEY_LOCATIONS_WITHOUT_TEST_ONLY_MARKING=${unmarked.length}`);
+  console.log(`TEST_KEY_LEAK_EXPOSURE=NONE  (published mnemonic, worthless by construction, and the dev keystore adapter refuses every production chain)`);
+}
+
+console.log(`\nPRIVATE_MONOREPO_FILES_COPIED_VERBATIM=${verbatim.length}`);
 for (const v of verbatim) console.log(`    ${v}`);
 console.log(`  (each is PUBLIC_SAFE deterministic protocol math or a published ABI, digest-pinned in VENDOR.json and enforced by npm run launch:parity)`);
 console.log(`\nPUBLIC_SAFE_FILES_ADDED=${publicSafeAdded.length}`);

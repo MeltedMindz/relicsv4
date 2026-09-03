@@ -10,9 +10,25 @@ contain. It is provided so an independent reviewer can verify the repository is 
    explicit allowlist (`PUBLIC_EXPORT_ALLOWLIST.md`), not by copying a private repository and
    removing sensitive files.
 
-2. **No private material.** This repository contains **no** private keys, mnemonics,
-   wallet/keystore files, `.env` values, API keys, RPC credentials, incident reports, private
-   runbooks, or any private `CLAUDE.md` content. **Amended 2026-08-07:** with the RELICS
+2. **No private material.** This repository contains **no** mnemonics, wallet/keystore files,
+   `.env` values, API keys, RPC credentials, incident reports, private runbooks, or any private
+   `CLAUDE.md` content.
+
+   **Amended 2026-09-03 — the one private key, named rather than netted out.** This clause used to
+   read "no private keys", and that was not true. `packages/signer-protocol/test/helpers.mjs` holds
+   **anvil's default account #0 key**, because a fork harness cannot prove a signer signs without
+   one. There is **no exposure**: that key is derived from the published `test test … junk`
+   mnemonic, is documented by both anvil and hardhat, appears in millions of public repositories,
+   is the first address any sweeper drains, and the development keystore adapter that consumes it
+   refuses every production chain structurally. But *no exposure* and *no locations* are different
+   statements, and publishing the second when you mean the first is how a real key eventually gets
+   counted as zero as well. **Do not report this count as 0.** `npm run public:review` derives it
+   from `git ls-files` on every run and prints `TEST_KEY_LEAK_LOCATIONS=<n>` with each path and
+   line, recognises the key by SHA-256 digest so no key material enters the scanner, and refuses
+   any location that is not in a file carrying the `TEST ONLY` marking. Any 64-hex value that is
+   **not** a known anvil digest is still a violation, not a test key.
+
+   **Amended 2026-08-07:** with the RELICS
    operator's explicit authorization, `flagship/` now carries the exact production **hook**
    source (byte-identical to its Etherscan-verified standard-JSON) together with public
    on-chain identifiers (contract addresses, pool id, CREATE2 salt and init-code hash), and
@@ -43,6 +59,9 @@ contain. It is provided so an independent reviewer can verify the repository is 
 ```bash
 # 1) No populated secrets or credential-bearing URLs in tracked files:
 bash scripts/secret-scan.sh
+
+# 1b) And the anvil test-key locations, COUNTED rather than asserted:
+npm run public:review          # prints TEST_KEY_LEAK_LOCATIONS=<n> and every path:line
 docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest dir /repo --config /repo/.gitleaks.toml
 
 # 2) No third-party source is committed (only submodule gitlinks under lib/):
