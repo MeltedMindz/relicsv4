@@ -47,8 +47,16 @@ wallets/
 packages/launch-sdk/dist/
 packages/agent-flow/dist/
 
-# Benchmark render artifacts: PNG contact sheets regenerate from chain via
-# `node scripts/run-art-benchmark.mjs author`. The run records (run.json, critiques,
-# responses, verdicts, report.json) ARE committed -- they are the evidence.
+# Benchmark render artifacts. The DEVELOPMENT sheets regenerate from chain via
+# `node scripts/run-art-benchmark.mjs author`, and no receipt records their digests, so
+# they stay out. The run records (run.json, critiques, responses, verdicts, report.json)
+# ARE committed -- they are the evidence.
+#
+# THE FINAL-REVIEW SHEETS ARE COMMITTED, and used not to be. Every receipt pins the
+# sha256 of each holdout sheet its reviewer looked at, so ignoring them shipped
+# twenty-four receipts naming evidence a checkout could not see -- `npm run
+# kit:artreceipts` found this the first time it ran against a fresh copy of the tree.
+# "It regenerates from chain" is a reproduction path, not a verification one: it needs an
+# RPC, and it re-renders rather than reads. Round one's were committed all along, which is
+# what made the asymmetry easy to miss.
 artifacts/art-benchmark/*/round-*/critic-sheets/
-artifacts/art-benchmark/*/final-review/sheets/
