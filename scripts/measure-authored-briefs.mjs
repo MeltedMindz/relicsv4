@@ -23,7 +23,7 @@ import { authorConfig } from "../packages/art-direction/src/author.js";
 import { encodeConfig } from "../packages/art-review/src/runtimes.js";
 import { resolveRuntime, createRenderer } from "../packages/art-review/src/render.js";
 import { describeValidatorCode } from "../packages/art-review/src/codec/errors.js";
-import { planeOf, inkCoverage, meanDeltaE, STATE_SEPARATION_FLOOR } from "../packages/art-review/src/perceptual.js";
+import { planeOf, inkCoverage, labOfHex, meanDeltaE, STATE_SEPARATION_FLOOR } from "../packages/art-review/src/perceptual.js";
 import { extentOf, componentCount } from "../packages/art-review/src/morphology.js";
 import { FLOORS } from "../packages/art-review/src/objective.js";
 
@@ -82,11 +82,13 @@ for (const b of briefs) {
   }
   const seedDs = [];
   for (let i = 0; i < SEEDS.length; i += 1) for (let j = i + 1; j < SEEDS.length; j += 1) seedDs.push(meanDeltaE(planes.get(`${SEEDS[i]}|neutral`), planes.get(`${SEEDS[j]}|neutral`)));
+  // The DECLARED ground, so a saturated frame does not read as an empty one. See `inkCoverage`.
+  const gl = labOfHex(authored.config.palette[authored.config.groundIx ?? 0]);
   const all = [...planes.values()];
-  const inks = all.map((p) => inkCoverage(p));
-  const exts = SEEDS.map((s) => extentOf(planes.get(`${s}|neutral`)));
-  const comps = { n: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|neutral`)).components)), s: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|stress`)).components)) };
-  const shares = { n: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|neutral`)).largestShare)), s: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|stress`)).largestShare)) };
+  const inks = all.map((p) => inkCoverage(p, 8, gl));
+  const exts = SEEDS.map((s) => extentOf(planes.get(`${s}|neutral`), 8, gl));
+  const comps = { n: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|neutral`), { groundLab: gl }).components)), s: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|stress`), { groundLab: gl }).components)) };
+  const shares = { n: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|neutral`), { groundLab: gl }).largestShare)), s: avg(SEEDS.map((s) => componentCount(planes.get(`${s}|stress`), { groundLab: gl }).largestShare)) };
   const weakest = Math.min(...Object.values(de));
   const row = {
     id: b.id, runtimeId, mechanism: authored.mechanism.mechanism, polarity: authored.mechanism.polarity,

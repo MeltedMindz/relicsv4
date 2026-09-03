@@ -35,7 +35,7 @@ import { fileURLToPath } from "node:url";
 import { encodeConfig } from "../packages/art-review/src/runtimes.js";
 import { resolveRuntime, createRenderer } from "../packages/art-review/src/render.js";
 import { describeValidatorCode } from "../packages/art-review/src/codec/errors.js";
-import { planeOf, inkCoverage, meanDeltaE } from "../packages/art-review/src/perceptual.js";
+import { planeOf, inkCoverage, labOfHex, meanDeltaE } from "../packages/art-review/src/perceptual.js";
 import { extentOf, componentCount } from "../packages/art-review/src/morphology.js";
 import { MECHANISM_PROBE_CANDIDATES } from "../packages/art-direction/src/probe-candidates.js";
 
@@ -98,11 +98,13 @@ async function measureCandidate({ renderer, runtimeId, name, config, note }) {
   const planes = new Map();
   for (const r of rendered) planes.set(`${r.seed}|${r.state}`, await planeOf(r.svg));
 
+  // The DECLARED ground, so a saturated frame does not read as an empty one. See `inkCoverage`.
+  const gl = Array.isArray(config?.palette) ? labOfHex(config.palette[config.groundIx ?? 0]) : null;
   const per = { neutral: [], stress: [], recovery: [] };
   for (const state of states) {
     for (const seed of PROBE_SEEDS) {
       const p = planes.get(`${seed}|${state}`);
-      per[state].push({ seed, ink: inkCoverage(p), ...extentOf(p), ...componentCount(p) });
+      per[state].push({ seed, ink: inkCoverage(p, 8, gl), ...extentOf(p, 8, gl), ...componentCount(p, { groundLab: gl }) });
     }
   }
 

@@ -148,8 +148,29 @@ export function ground({ lab, width, height }) {
  * did. So ink is used ONLY against this package's own floor, calibrated on this pipeline, and any
  * sentence putting the two numbers side by side is comparing two different measurements.
  */
-export function inkCoverage(plane, threshold = 8) {
-  const g = ground(plane);
+/** A creator palette entry, in the same Lab space the planes are measured in. */
+export function labOfHex(hex) {
+  const n = parseInt(String(hex).replace(/^#/, ""), 16);
+  return rgbToLab((n >> 16) & 255, (n >> 8) & 255, n & 255);
+}
+
+/**
+ * THE MODAL GROUND CANNOT TELL AN EMPTY FRAME FROM A FULL ONE, AND THAT COST A MEASUREMENT.
+ *
+ * `ground()` takes the most common quantised colour and calls it the background. On a frame where
+ * the drawing covers more than half the canvas the mode IS the drawing, so the coverage fraction
+ * measures the REMAINDER and a saturated frame reports 0.0% ink — indistinguishable from a blank
+ * one, and reported by BLANK_DETECTION as blank. Measured: a recursion configuration whose
+ * rotational replicas filled the frame came back at 0.000 on a collection-sweep neutral frame that
+ * is the opposite of empty.
+ *
+ * When the caller knows the configuration it knows the ground: `palette[groundIx]`. Passing it
+ * makes this the fraction of the frame that is not the declared background, which is what the
+ * number was always supposed to mean. The modal estimate stays as the fallback for callers that
+ * have a picture and no configuration.
+ */
+export function inkCoverage(plane, threshold = 8, groundLab = null) {
+  const g = groundLab ?? ground(plane);
   const { lab, width, height } = plane;
   let n = 0;
   for (let p = 0; p < width * height * 3; p += 3) {

@@ -1,0 +1,843 @@
+{
+  "briefId": "B09",
+  "axis": "monumental",
+  "title": "BARROW",
+  "phase": "AUTHORED",
+  "objectiveBlockers": [],
+  "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-03T19:03:17.173Z",
+    "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
+    "briefSubstance": {
+      "chars": 675,
+      "words": 102,
+      "distinctWords": 74
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "requiredCapabilities": {
+      "MEDIUM": [],
+      "MOTIF": [
+        "MONUMENT"
+      ],
+      "AESTHETIC": [
+        "MONUMENTAL",
+        "BRUTALIST"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "FRACTURE",
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [],
+    "mechanismAdmission": {
+      "requested": [
+        {
+          "mechanism": "FRACTURE",
+          "statedVotes": 2,
+          "unstated": false,
+          "polarity": "PEAKS_AT_STRESS",
+          "polarityConfidence": 2,
+          "contested": false,
+          "evidence": [
+            {
+              "phrase": "fracture",
+              "direction": "raise",
+              "state": "STRESS",
+              "polarity": "PEAKS_AT_STRESS",
+              "clause": "Under drawdown the mass should fracture"
+            },
+            {
+              "phrase": "members separating",
+              "direction": "raise",
+              "state": null,
+              "polarity": null,
+              "clause": "members separating, the silhouette breaking"
+            },
+            {
+              "phrase": "consolidate",
+              "direction": "lower",
+              "state": "RECOVERY",
+              "polarity": "PEAKS_AT_STRESS",
+              "clause": "and consolidate again in recovery."
+            }
+          ],
+          "votes": 3,
+          "overlapsPrimary": false
+        },
+        {
+          "mechanism": "SEPARATION",
+          "statedVotes": 0,
+          "unstated": true,
+          "polarity": null,
+          "polarityConfidence": 0,
+          "contested": false,
+          "evidence": [
+            {
+              "phrase": "separating",
+              "direction": "raise",
+              "state": null,
+              "polarity": null,
+              "clause": "members separating, the silhouette breaking"
+            }
+          ],
+          "votes": 1,
+          "overlapsPrimary": true
+        },
+        {
+          "mechanism": "DILATION",
+          "statedVotes": 0,
+          "unstated": true,
+          "polarity": null,
+          "polarityConfidence": 0,
+          "contested": false,
+          "evidence": [
+            {
+              "phrase": "larger",
+              "direction": "raise",
+              "state": null,
+              "polarity": null,
+              "clause": "brutalist, solemn, and considerably larger than the frame comfortably holds."
+            }
+          ],
+          "votes": 1,
+          "overlapsPrimary": false
+        }
+      ],
+      "rejected": [],
+      "perRuntime": [
+        {
+          "runtimeId": "GEOMETRIC_RECURSION_V1",
+          "canExpress": [
+            "DILATION"
+          ],
+          "cannotExpress": [
+            {
+              "mechanism": "FRACTURE",
+              "reason": "NOT_EXPRESSIBLE",
+              "detail": "the figure is one connected mass by construction and stays one under every drive: no recursion row the probe measured moved largestShare below 0.95, and law L5 fixes the root at the canvas centre with the children hung off it. A blind reviewer put it exactly: there are no members in them to separate.",
+              "alternative": "VECTOR_COMPOSITION_V1 fractures with DRIVE_SPREAD over a few large members",
+              "overlapsPrimary": false
+            }
+          ],
+          "carriesPrimary": false,
+          "carriesMajority": false,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 1
+        },
+        {
+          "runtimeId": "VECTOR_COMPOSITION_V1",
+          "canExpress": [
+            "FRACTURE",
+            "SEPARATION",
+            "DILATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true,
+          "carriesMajority": true,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 0
+        }
+      ],
+      "viable": [
+        "VECTOR_COMPOSITION_V1"
+      ],
+      "primary": "FRACTURE",
+      "outcome": "ADMITTED",
+      "detail": "1 of 2 runtimes can carry the primary mechanism FRACTURE"
+    },
+    "candidates": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "viable": true,
+        "mechanisms": {
+          "canExpress": [
+            "FRACTURE",
+            "SEPARATION",
+            "DILATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true
+        },
+        "mechanismBlockedBy": [],
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+        "fit": 0,
+        "matchedSignals": []
+      }
+    ],
+    "ranking": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "fit": 0,
+        "concessions": 0,
+        "matchedSignals": []
+      }
+    ],
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "concessions": [],
+    "detail": "1 of 2 Wave-1 templates can carry this brief"
+  },
+  "sentToAuthor": true,
+  "direction": {
+    "schemaVersion": 1,
+    "kind": "ART_DIRECTION",
+    "createdAt": "2026-09-03T19:03:17.175Z",
+    "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
+    "admissionOutcome": "ADMITTED",
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+    "directionHash": "9928c98c369c8b7cc65ccfbbda321a3dc9bf7616664c39411e6607cf420e8dd0",
+    "direction": {
+      "medium": "Vector composition — independent fields of primitives placed about the canvas centre, which commits this to a small number of large members that can read either as one merged silhouette or as several standing pieces.",
+      "motifTranslation": "A barrow restated as a few large blunt masses set about the middle of the frame, overlapping until they merge into a single heavy silhouette, with one narrow ochre member laid across them as a seam; the weight is carried by the size of the masses rather than by any accumulation of detail.",
+      "composition": "The mass reaches the edges of the frame on every side and reads as larger than the frame comfortably holds, cropped by the border rather than contained by it, with barely any clear ground around it in the consolidated state.",
+      "focalHierarchy": "The single merged silhouette dominates absolutely; the ochre seam is the one secondary event and gives the mass a reading; there is no fine texture beneath them, because texture would make the monument look built rather than quarried.",
+      "density": "Heavy — most of the frame carries ink in the consolidated state, built from a few large members rather than many small ones, so that at browse size the coverage reads as one solid object.",
+      "negativeSpace": "In the consolidated state the ground is a thin dark surround; as the mass comes apart the dark enters between the members and becomes the fault lines through the monument, so the emptiness is structural rather than decorative.",
+      "paletteIntent": "Charcoal and iron build the mass over a near-black ground with a single ochre seam laid across it; three colours in all, the ground flat and only barely distinguishable from the charcoal so the silhouette stays dominant.",
+      "rhythm": "Very little repetition — a few large members at uneven intervals, deliberately unmetrical so the monument reads as one quarried thing rather than as an assembly; it is a mass seen head on, with no ring, no rosette and no turning about a hub.",
+      "variationStrategy": "Two tokens differ first in the silhouette the merged masses make, then in where the ochre seam crosses that silhouette, and last in the relative sizes of the members underneath it.",
+      "marketTransformation": "Under drawdown the mass fractures and its silhouette breaks, so the monument stands in several pieces there. In recovery those pieces consolidate again and the mass reads once more as one continuous silhouette. The magnitude the market moves is how many pieces the monument stands in, and under drawdown it is at its most broken.",
+      "identityAnchors": "Every seed and every state keeps the same few large members, the same charcoal-and-iron-over-near-black with one ochre seam, the same frame-filling weight and the same blunt coarse mass; it must read as one monument under three conditions.",
+      "thumbnailIntent": "At 120px the work reads as one heavy dark shape crossed by a single ochre seam, filling most of the frame, and what a viewer can judge at that size is whether that shape is one thing or several."
+    },
+    "fields": [
+      "medium",
+      "motifTranslation",
+      "composition",
+      "focalHierarchy",
+      "density",
+      "negativeSpace",
+      "paletteIntent",
+      "rhythm",
+      "variationStrategy",
+      "marketTransformation",
+      "identityAnchors",
+      "thumbnailIntent"
+    ],
+    "containsRuntimeConfig": false
+  },
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeBytes": 24455,
+  "rounds": [
+    {
+      "round": 1,
+      "configHash": "cbe9606a9dc27e33a011b1da203953eba3b40bfa3a323dedc842eb065f8efe73",
+      "configBytes": "0x5643563101000002030426282b4a4f550f1113b07d3a0307000302000207073e8000000701000200020606357a100000000103010005211e741800000f426172726f77205265737461746564ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "SCATTER",
+            "primitive": "RECT",
+            "sizeMax": 62,
+            "spreadMax": 128,
+            "symmetry": "NONE",
+            "countMin": 7,
+            "countMax": 7,
+            "paletteIx": 3,
+            "stroke": false,
+            "variant": 0,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR"
+          },
+          {
+            "layout": "SCATTER",
+            "primitive": "CIRCLE",
+            "sizeMax": 53,
+            "spreadMax": 122,
+            "symmetry": "NONE",
+            "countMin": 6,
+            "countMax": 6,
+            "paletteIx": 0,
+            "variant": 2,
+            "stroke": false,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR"
+          },
+          {
+            "layout": "GRID",
+            "primitive": "RECT",
+            "sizeMax": 30,
+            "spreadMax": 116,
+            "symmetry": "NONE",
+            "countMin": 5,
+            "countMax": 33,
+            "paletteIx": 1,
+            "variant": 3,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#26282b",
+          "#4a4f55",
+          "#0f1113",
+          "#b07d3a"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 2,
+        "groundIx2": 3,
+        "flags": [],
+        "title": "Barrow Restated"
+      },
+      "intent": {
+        "densityTarget": "MODERATE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "BROKEN",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "STRUCTURE",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DEFAULT",
+          "value": "MODERATE",
+          "detail": "the direction's density/negativeSpace/thumbnailIntent did not name a densityTarget",
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "reaches the edges"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": [
+            {
+              "option": "COMPACT",
+              "phrase": "contained",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "focalMode": {
+          "source": "DEFAULT",
+          "value": "SINGLE_DOMINANT",
+          "detail": "the direction's focalHierarchy/composition did not name a focalMode",
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "BROKEN",
+          "evidence": [
+            "uneven"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": [
+            {
+              "option": "RADIAL",
+              "phrase": "ring",
+              "why": "negated in its own clause"
+            },
+            {
+              "option": "RADIAL",
+              "phrase": "rosette",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "SOLID",
+          "evidence": [
+            "silhouette",
+            "masses",
+            "weight",
+            "mass"
+          ],
+          "score": 4,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "STRUCTURE",
+          "evidence": [
+            "fractures",
+            "breaks"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "mechanism": {
+        "ok": true,
+        "mechanism": "FRACTURE",
+        "polarity": "PEAKS_AT_STRESS",
+        "drive": "SPREAD",
+        "curve": "LINEAR",
+        "sensor": "DRAWDOWN",
+        "requires": {
+          "pinnedCount": true,
+          "fewLargeMembers": true,
+          "minFields": 3,
+          "spreadCeiling": true,
+          "secondSensorRegister": true
+        },
+        "detail": "A FEW LARGE members and a LINEAR curve. Linear is what makes this fracture rather than dilation: it leaves the neutral reading at 20 per mille, so the members resolve near the spread floor and OVERLAP INTO ONE MASS, and the stress reading of 900 pulls them to the frame. LOG2 lifts neutral to 326 and the mass is already broken before the market does anything.",
+        "evidence": {
+          "row": "FRAC-a-3field",
+          "componentsByState": "1.0 neutral -> 2.875 stress",
+          "largestShareByState": "1.000 -> 0.895",
+          "weakestPairing": 3.64,
+          "blankSeeds": 0,
+          "mixedSensorRow": {
+            "row": "FRAC-e-mixed",
+            "weakestPairing": 6.149
+          }
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "fractures",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "Under drawdown the mass fractures and its silhouette breaks, so the monument stands in several pieces there."
+          },
+          {
+            "phrase": "consolidate",
+            "direction": "lower",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "In recovery those pieces consolidate again and the mass reads once more as one continuous silhouette."
+          },
+          {
+            "phrase": "broken",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "and under drawdown it is at its most broken."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"fractures\", \"consolidate\", \"broken\"",
+        "otherSensor": "RECOVERY",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 128,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 20,
+                "resolved": 18
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 900,
+                "resolved": 116
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 80,
+                "resolved": 24
+              }
+            },
+            "resolved": [
+              18,
+              116,
+              24
+            ],
+            "span": 98,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 18 / 116 / 24 across neutral / stress / recovery (span 98 of 112)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 122,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 20,
+                "resolved": 18
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 900,
+                "resolved": 111
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 80,
+                "resolved": 24
+              }
+            },
+            "resolved": [
+              18,
+              111,
+              24
+            ],
+            "span": 93,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 18 / 111 / 24 across neutral / stress / recovery (span 93 of 106)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 5,
+            "ceiling": 33,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 14
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 5
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 31
+              }
+            },
+            "resolved": [
+              14,
+              5,
+              31
+            ],
+            "span": 26,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 14 / 5 / 31 across neutral / stress / recovery (span 26 of 28)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout SCATTER from rhythmMode=BROKEN; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "3 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 62 from densityTarget=MODERATE, raised because FRACTURE needs members large enough to overlap into one mass",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry NONE (a project constant, so it carries no per-token variety); count PINNED because the drive is not COUNT and a moving count would be a second mechanism nobody asked for",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "4 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism FRACTURE PEAKS_AT_STRESS -> drive SPREAD <- DRAWDOWN/LINEAR, with the last field on RECOVERY so all three states separate. A FEW LARGE members and a LINEAR curve. Linear is what makes this fracture rather than dilation: it leaves the neutral reading at 20 per mille, so the members resolve near the spread floor and OVERLAP INTO ONE MASS, and the stress reading of 900 pulls them to the frame. LOG2 lifts neutral to 326 and the mass is already broken before the market does anything.",
+          "evidence": {
+            "row": "FRAC-a-3field",
+            "componentsByState": "1.0 neutral -> 2.875 stress",
+            "largestShareByState": "1.000 -> 0.895",
+            "weakestPairing": 3.64,
+            "blankSeeds": 0,
+            "mixedSensorRow": {
+              "row": "FRAC-e-mixed",
+              "weakestPairing": 6.149
+            }
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "55befc25beb66f2dd031ecf925f72104d7c9b47f6ed2fd561f58946b940e1134",
+          "bytes": 160071
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "cac80c4d69af50331b01b5e6f6f68a0233daaead52c36291688a4090af6914a4",
+          "bytes": 68240
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "f5145865099dc67bffba83e21b3b292121754bc4d1d8cae478e807a9aa565a73",
+          "bytes": 157862
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "23b7307bdec87ef058877c81fba71e67bb17e6c89098df19965dc2c3ed0b7f1e",
+          "bytes": 67488
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "9d2a9b3c19389cbedbb9711f1969ad6eefbf1c4ca0fcf9e517e02e0e4915ab0f",
+          "bytes": 28133
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.32,
+        "inkMin": 0.168,
+        "stateDeMean": 8.39,
+        "stateDeMin": 4.32,
+        "seedDeMean": 8.08,
+        "seedDeMin": 2.83
+      }
+    }
+  ]
+}

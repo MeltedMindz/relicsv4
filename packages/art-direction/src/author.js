@@ -174,7 +174,31 @@ export const STAGE_PARAMETERS = Object.freeze({
 const rx = (s) => new RegExp(s, "i");
 
 /** An explicitly described graded ground. Nothing else turns the gradient on. */
-const GRADED_GROUND = /\b(gradient|graded|glow\w*|vignette|radiant|luminous\s+ground|light\s+falls?|halo\s+of\s+light)\b/i;
+const GRADED_GROUND = /\b(gradient|graded|glow\w*|vignette|radiant|luminous\s+ground|light\s+falls?|halo\s+of\s+light)\b/gi;
+
+/**
+ * Does the direction ask for a graded ground — READING THE NEGATION.
+ *
+ * The atlas measures a gradient ground as the single loudest thing available (ink120 FLAT 0.399 ->
+ * RADIAL 0.882) and says plainly that it "makes the ground the loudest thing in the frame", so
+ * this is an opt-in. It was matched with a bare pattern, and two directions that say the OPPOSITE
+ * in as many words turned it on:
+ *
+ *   "the ground is a single flat dark, unmodulated, so that weight is read against it and NEVER
+ *    against a GRADED wash"
+ *   "the base visible only at the partings and held flat RATHER THAN GRADED"
+ *
+ * Both were then authored with a radial gradient between the ground and a working colour, which
+ * is the loudest control in the runtime pointed at the one thing the direction reserved for
+ * nothing. `deriveIntent` has read negation since the first round; this line had not.
+ */
+function wantsGradedGround(direction) {
+  const text = String(direction.paletteIntent ?? "");
+  for (const m of text.matchAll(GRADED_GROUND)) {
+    if (!negatedAt(text, m.index)) return true;
+  }
+  return false;
+}
 
 /**
  * THE INTENT VOCABULARY — eight closed decisions, each with a STATED default.
@@ -493,6 +517,34 @@ function titleFrom(direction) {
   return (title || "Relic").slice(0, 32);
 }
 
+
+/**
+ * A palette index that is NOT the ground, and preferably not one already in use.
+ *
+ * THE THIRD TIME A REGISTER WAS PAINTED IN THE BACKGROUND COLOUR. `PALETTE_SHIFT` rotated a field
+ * onto the ground index; `DEPTH_PALETTE` walked onto it; and the recursion runtime's second rule
+ * was HANDED it by an expression that said so outright —
+ *
+ *     ixCap === groundIx ? groundIx : (groundIx === 0 ? Math.min(2, ixCap) : 0)
+ *
+ * On a three-stop palette whose ground is the last entry, `ixCap === groundIx` is true and the
+ * second rule takes the ground. Measured: `<g fill="#14161a">` at opacity 0.92 drawn over the
+ * first rule's gold, on a frame whose background is #14161a — ink 0.000, an entirely empty tile
+ * that the runtime accepts, the validator accepts, and every seed of the collection carries.
+ *
+ * There is no configuration in which a register painted in the ground colour is what an author
+ * meant, so this refuses rather than falls back to it: a palette with no non-ground entry cannot
+ * be authored against at all, and saying so is better than drawing nothing.
+ */
+function nonGroundIndex(paletteLength, groundIx, avoid = []) {
+  const options = [];
+  for (let i = 0; i < paletteLength; i += 1) if (i !== groundIx) options.push(i);
+  if (options.length === 0) {
+    throw new Error(`PALETTE_HAS_NO_FIGURE_COLOUR: every one of the ${paletteLength} stops is the ground index ${groundIx}. A register painted in the ground colour draws an empty tile.`);
+  }
+  return options.find((i) => !avoid.includes(i)) ?? options[0];
+}
+
 /**
  * A recorded write.
  *
@@ -657,9 +709,18 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   // QUAD AT BRANCH 2 IS A FACE ON EVERY SEED, in the atlas's own words, and it is "the single most
   // repeated subject complaint in the review corpus". Branch is chosen at 3 wherever QUAD is in
   // the set, which the node budget admits up to depthMax 4.
+  // A PRODUCTION UNDER WHICH CONTRACTION MOVES EXTENT IS ALSO WHAT MAKES THE SEED'S CONTRACTION
+  // DRAW VISIBLE. Contraction is a ceiling the seed picks under, and the atlas measures it as flat
+  // in extent under QUAD, TRI, INSCRIBE and BSP and as 0.88 -> 0.99 under RING and BRANCH — so on
+  // a set without one of those two, two tokens that drew the same shape and production differ only
+  // by an ink delta of 0.02 across the whole contraction range, which is the colliding pair the
+  // hundred-seed sweep finds. Measured on a single rule: the same configuration with BRANCH added
+  // to a three-member set read 12.789 mean / 2.423 min seed separation against 11.145 / 1.979.
+  // COMPACT is the one composition that may not have it: those productions run off the frame by
+  // construction, and a brief asking for a form held clear of every edge is asking for neither.
   const ruleByExtent = {
-    COMPACT: wantsRadial ? ["INSCRIBE", "TRI"] : ["INSCRIBE", "QUAD", "TRI"],
-    MODERATE: ["QUAD", "TRI", "INSCRIBE"],
+    COMPACT: wantsRadial ? ["INSCRIBE", "TRI", "QUAD"] : ["INSCRIBE", "QUAD", "TRI"],
+    MODERATE: wantsRadial ? ["QUAD", "TRI", "INSCRIBE", "RING"] : ["QUAD", "TRI", "INSCRIBE", "BRANCH"],
     EXPANSIVE: wantsRadial ? ["RING", "TRI", "QUAD"] : ["BRANCH", "TRI", "QUAD"],
   };
   let ruleSet = (ruleByExtent[intent.extentTarget] ?? ["QUAD", "TRI"]).filter((r) => r !== "BSP");
@@ -679,18 +740,29 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   // debris entirely so each token is one silhouette in an empty frame". A second rule IS the
   // orbiting debris. Measured: a single SPREAD-driven rule reads ns 10.932 / nr 11.209 / sr 19.955
   // with 1.6 components and largestShare 0.997 — one object, three states, no debris.
-  // A SINGLE STROKED RULE IS TOO THIN TO BE A COLLECTION. Stroke is the loudest coverage control
-  // in the runtime — measured 0.399 filled against 0.121 stroked — so a lone stroked rule sits at
-  // a third of the coverage a lone filled one does, and a DILATION binding then puts it at the
-  // spread floor in its low state on top of that: measured ink 0.031 on one frame of thirty-six,
-  // under the blank floor. Two stroked rules measured 0.375 mean / 0.199 min on the same ring.
-  const singleForm = intent.focalMode === "SINGLE_DOMINANT" && intent.densityTarget === "SPARSE" && intent.strokeMode !== "LINEWORK";
-  const ruleN = singleForm ? 1 : 2;
+  // TWO RULES, ALWAYS, AND THE SECOND ONE IS NOT DEBRIS.
+  //
+  // A SINGLE RULE CANNOT CARRY A COLLECTION. The seed's whole categorical draw is one shape, one
+  // production and one symmetry, so a lone rule with four shapes, three productions and no
+  // rotational symmetry offers TWELVE distinct figures — and a ten-thousand-token collection drawn
+  // from twelve moulds contains identical pairs by arithmetic. Measured on the hundred-seed sweep:
+  // the closest pair of a single-rule configuration read 1.075 and 1.091 dE against a floor of
+  // 1.2, on two briefs whose per-seed MEAN was a healthy 8.6 and 9.8. A second rule draws its own
+  // shape and production independently, which multiplies the space rather than adding to it.
+  //
+  // WHY THE PREVIOUS ROUND WAS RIGHT TO REMOVE IT AND WRONG ABOUT WHY. B05's reviewer called the
+  // second register "roughly thirty loose shards" and "a core plus a composition, not one form
+  // plus emptiness", and the answer taken was to delete the rule. But the atlas is explicit that
+  // "rules are layers over one shared centre, and they compose rather than bury" — a second rule
+  // becomes debris when its PRODUCTION throws children outward, and RING and BRANCH are the only
+  // two that do. An inner register restricted to INSCRIBE and TRI, whose children sit at the
+  // parent's own centre and at its edge midpoints, composes into the same silhouette.
+  const ruleN = 2;
   set("FOCAL_HIERARCHY", "ruleCount", ruleN);
   const contraction = session.consult("rules[n].contraction");
   const contractionCeiling = { SINGLE_DOMINANT: 82, LAYERED: 70, EVEN_FIELD: 55 }[intent.focalMode];
   set("FOCAL_HIERARCHY", "rules[0].contraction", mechanism?.drive === "CONTRACT" ? 90 : contractionCeiling);
-  notes.push({ stage: "FOCAL_HIERARCHY", why: `${ruleN} rule(s); contraction is a CEILING over floor 20 (law L1)${singleForm ? ". One rule because the direction asks for a single form in an empty frame, and a second rule is the debris a reviewer named" : ""}`, consulted: [ruleCount.parameter, contraction.parameter] });
+  notes.push({ stage: "FOCAL_HIERARCHY", why: `${ruleN} rules; contraction is a CEILING over floor 20 (law L1). The second is an INNER register, not a satellite: a lone rule offers the seed twelve distinct figures and a hundred-seed sweep found colliding pairs at 1.075 dE`, consulted: [ruleCount.parameter, contraction.parameter] });
 
   // ---- 3. NEGATIVE SPACE --------------------------------------------------------------------
   const branchPrune = session.consult("rules[n].branch and rules[n].prune");
@@ -713,18 +785,26 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
 
   // ---- 5. SECONDARY STRUCTURE ---------------------------------------------------------------
   if (ruleN === 2) {
-    set("SECONDARY_STRUCTURE", "rules[1].shapeSet", [shapeSet[1] ?? shapeSet[0], shapeSet[0]]);
-    set("SECONDARY_STRUCTURE", "rules[1].ruleSet", ruleSet.length > 1 ? [ruleSet[1], ruleSet[0]] : ruleSet);
+    // ITS OWN THREE SHAPES, so the seed draws this register independently of the primary and the
+    // categorical space multiplies instead of adding.
+    set("SECONDARY_STRUCTURE", "rules[1].shapeSet", shapeSet.slice(1).length >= 2 ? shapeSet.slice(1) : shapeSet);
+    // INSCRIBE AND TRI ONLY: the two productions whose children stay inside the parent's own
+    // footprint (extentX 0.60 each, the tightest in the runtime). RING and BRANCH place children
+    // at a radius equal to the parent's size and are what turns a second register into satellites.
+    set("SECONDARY_STRUCTURE", "rules[1].ruleSet", ["INSCRIBE", "TRI"]);
     set("SECONDARY_STRUCTURE", "rules[1].contraction", 90);
     set("SECONDARY_STRUCTURE", "rules[1].branch", 2);
     set("SECONDARY_STRUCTURE", "rules[1].prune", pruneMaskFor(2, intent.densityTarget));
     set("SECONDARY_STRUCTURE", "rules[1].symSet", symSet.slice(0, 2));
     set("SECONDARY_STRUCTURE", "rules[1].rotation", intent.rhythmMode === "BROKEN" ? 40 : 18);
-    set("SECONDARY_STRUCTURE", "rules[1].paletteIx", ixCap === groundIx ? groundIx : (groundIx === 0 ? Math.min(2, ixCap) : 0));
+    set("SECONDARY_STRUCTURE", "rules[1].paletteIx", nonGroundIndex(pal0.palette.length, groundIx, [accentIx]));
     set("SECONDARY_STRUCTURE", "rules[1].variant", 1);
     set("SECONDARY_STRUCTURE", "rules[1].stroke", intent.strokeMode === "LINEWORK");
+    // ITS OWN DEPTH RANGE, seed-drawn, which is a third independent categorical draw on this
+    // register. The node budget is taken at depthMax across both rules, so it stays under the
+    // primary's.
     set("SECONDARY_STRUCTURE", "rules[1].depthMin", 2);
-    set("SECONDARY_STRUCTURE", "rules[1].depthMax", 3);
+    set("SECONDARY_STRUCTURE", "rules[1].depthMax", 4);
     notes.push({ stage: "SECONDARY_STRUCTURE", why: "a second rule is the runtime's real colour control (paletteCount does nothing) and its only route to two registers" });
   }
 
@@ -735,9 +815,9 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   const pal = session.consult("palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2");
   const { palette, namedInDirection } = pal0;
   set("PALETTE", "palette", palette);
-  set("PALETTE", "groundMode", GRADED_GROUND.test(direction.paletteIntent ?? "") ? "RADIAL" : "FLAT");
+  set("PALETTE", "groundMode", wantsGradedGround(direction) ? "RADIAL" : "FLAT");
   set("PALETTE", "groundIx", groundIx);
-  set("PALETTE", "groundIx2", ixCap === groundIx ? groundIx : Math.min(groundIx + 1, ixCap));
+  set("PALETTE", "groundIx2", wantsGradedGround(direction) ? nonGroundIndex(pal0.palette.length, groundIx) : groundIx);
   set("PALETTE", "rules[0].paletteIx", accentIx);
   // DEPTH_PALETTE WALKS THE INDEX BY ONE PER LEVEL AND THE WALK CAN REACH THE GROUND INDEX.
   //
@@ -768,7 +848,7 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   // between 0.044 and 0.138. Four to six is the same three distinct enclosure counts with the
   // floor raised, and the node budget admits it at branch 2.
   set("DETAIL", "rules[0].depthMin", seedVariesDepth ? depthPin : depthPin);
-  set("DETAIL", "rules[0].depthMax", seedVariesDepth ? Math.min(6, depthPin + 2) : depthPin);
+  set("DETAIL", "rules[0].depthMax", seedVariesDepth ? Math.min(5, depthPin + 1) : depthPin);
   set("DETAIL", "rules[0].stroke", intent.strokeMode === "LINEWORK");
   set("DETAIL", "rules[0].variant", attempt === 0 ? 0 : 2);
   set("DETAIL", "title", titleFrom(direction));
@@ -975,7 +1055,12 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
     const sLo = Math.max(4, Math.round(sBase / 3));
     set("SECONDARY_STRUCTURE", `fields[${i}].countMin`, sWide ? sLo : sBase);
     set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, sWide ? Math.min(34, Math.max(sBase, sLo + (req.countRangeAtLeast ?? 18))) : sBase);
-    set("SECONDARY_STRUCTURE", `fields[${i}].paletteIx`, (() => { const c = []; for (let k = 0; k <= ixCap; k += 1) if (k !== groundIx) c.push(k); return c.length ? c[(i - 1) % c.length] : groundIx; })());
+    set("SECONDARY_STRUCTURE", `fields[${i}].paletteIx`, (() => {
+      const c = [];
+      for (let k = 0; k < pal0.palette.length; k += 1) if (k !== groundIx) c.push(k);
+      if (c.length === 0) throw new Error(`PALETTE_HAS_NO_FIGURE_COLOUR: every stop is the ground index ${groundIx}`);
+      return c[(i - 1) % c.length];
+    })());
     set("SECONDARY_STRUCTURE", `fields[${i}].variant`, i + 1);
     set("SECONDARY_STRUCTURE", `fields[${i}].stroke`, req.strokedField ? true : intent.strokeMode === "LINEWORK");
   }
@@ -985,9 +1070,9 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   const pal = session.consult("palette, groundMode, PALETTE_SHIFT");
   const { palette, namedInDirection } = pal0;
   set("PALETTE", "palette", palette);
-  set("PALETTE", "groundMode", GRADED_GROUND.test(direction.paletteIntent ?? "") ? "RADIAL" : "FLAT");
+  set("PALETTE", "groundMode", wantsGradedGround(direction) ? "RADIAL" : "FLAT");
   set("PALETTE", "groundIx", groundIx);
-  set("PALETTE", "groundIx2", ixCap === groundIx ? groundIx : Math.min(groundIx + 1, ixCap));
+  set("PALETTE", "groundIx2", wantsGradedGround(direction) ? nonGroundIndex(pal0.palette.length, groundIx) : groundIx);
   set("PALETTE", "fields[0].paletteIx", accentIx);
   // PALETTE_SHIFT IS NEVER ELECTED, AND THIS IS THE ROOT CAUSE OF THE BLANK TOKENS.
   //

@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-03T19:07:35.422Z",
+  "finishedAt": "2026-09-03T19:07:37.214Z",
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "floors": {
+    "ink": 0.04,
+    "seedDiversityMean": 3,
+    "seedDiversityMin": 1.2,
+    "stateSeparation": 3.8,
+    "structuralRole": 1.5,
+    "renderGas": 10000000,
+    "collectionSeeds": 100
+  },
+  "pass": false,
+  "unknown": false,
+  "checks": [
+    {
+      "id": "CONFIG_LEGAL",
+      "ok": true,
+      "detail": "validateConfigV1 returned code 0",
+      "measured": {
+        "code": 0
+      }
+    },
+    {
+      "id": "REVIEW_RING_RENDERS",
+      "ok": true,
+      "detail": "all 36 review renders returned ok",
+      "measured": {
+        "rendered": 36
+      }
+    },
+    {
+      "id": "DETERMINISM",
+      "ok": true,
+      "detail": "the same request returned the same bytes on a second call",
+      "measured": {
+        "cells": 3
+      }
+    },
+    {
+      "id": "COLLECTION_SWEEP",
+      "ok": true,
+      "detail": "100 seeds rendered, none refused",
+      "measured": {
+        "seeds": 100,
+        "failures": 0
+      }
+    },
+    {
+      "id": "DUPLICATE_BYTES",
+      "ok": true,
+      "detail": "100 distinct documents across 100 seeds",
+      "measured": {
+        "distinct": 100,
+        "of": 100
+      }
+    },
+    {
+      "id": "DUPLICATE_PERCEPTUAL",
+      "ok": false,
+      "detail": "the closest pair of seeds differs by 1.036 dE (floor 1.2)",
+      "measured": {
+        "minPairDeltaE": 1.036,
+        "pairs": 120
+      }
+    },
+    {
+      "id": "SEED_DIVERSITY",
+      "ok": false,
+      "detail": "seeds differ by 12.261 dE on average and 1.036 at the closest pair (floors 3 / 1.2)",
+      "measured": {
+        "meanDeltaE": 12.261,
+        "minDeltaE": 1.036
+      }
+    },
+    {
+      "id": "BLANK_DETECTION",
+      "ok": false,
+      "detail": "12 of 52 sampled frames are below the 4% floor; the emptiest is collection sweep at neutral, covering 0.0%. 10 of them are review-ring frames that VANISH in a market state the token survives elsewhere: stress",
+      "measured": {
+        "minInk": 0,
+        "meanInk": 0.2011,
+        "frames": 52,
+        "emptiestState": "neutral",
+        "vanishingFrames": 10
+      }
+    },
+    {
+      "id": "STATE_IDENTITY_EXACT",
+      "ok": true,
+      "detail": "all 36 state pairings are byte-distinct",
+      "measured": {
+        "pairings": 36,
+        "identical": 0
+      }
+    },
+    {
+      "id": "PERCEPTUAL_SEPARATION",
+      "ok": true,
+      "detail": "the weakest state pairing is ns at 5.837 dE (floor 3.8)",
+      "measured": {
+        "ns": 5.837,
+        "nr": 7.962,
+        "sr": 13.16,
+        "weakestPairing": "ns"
+      }
+    },
+    {
+      "id": "STRUCTURAL_ROLE",
+      "ok": true,
+      "detail": "all 2 declared rules change the picture when removed (weakest 3.513 dE, floor 1.5)",
+      "measured": {
+        "units": 2,
+        "findings": [
+          {
+            "unit": 0,
+            "measured": 3.513,
+            "detail": "draws"
+          },
+          {
+            "unit": 1,
+            "measured": 11.595,
+            "detail": "draws"
+          }
+        ]
+      }
+    },
+    {
+      "id": "RENDER_GAS",
+      "ok": true,
+      "detail": "the most expensive sampled render costs 523,405 gas (portable budget 10,000,000)",
+      "measured": {
+        "worstGas": 523405,
+        "cell": {
+          "seed": 212,
+          "state": "stress"
+        }
+      }
+    }
+  ]
+}

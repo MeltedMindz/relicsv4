@@ -1,0 +1,834 @@
+{
+  "briefId": "B10",
+  "axis": "delicate",
+  "title": "FILIGREE",
+  "phase": "AUTHORED",
+  "objectiveBlockers": [],
+  "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-03T19:06:12.408Z",
+    "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
+    "briefSubstance": {
+      "chars": 660,
+      "words": 111,
+      "distinctWords": 79
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "LINEWORK",
+        "RADIAL_SYSTEM",
+        "PER_TOKEN_SYMMETRY_VARIATION"
+      ],
+      "MOTIF": [],
+      "AESTHETIC": [
+        "MONUMENTAL",
+        "DELICATE"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [
+      {
+        "id": "PER_TOKEN_SYMMETRY_VARIATION",
+        "class": "MEDIUM",
+        "severity": "SOFT",
+        "what": "tokens that differ from each other in their symmetry order",
+        "citations": {},
+        "positiveCitation": {},
+        "noteCitation": {
+          "VECTOR_COMPOSITION_V1": "symmetry"
+        },
+        "occurrences": 1,
+        "evidence": [
+          {
+            "sentence": "Tokens differ in the symmetry of the figure and in how far its threads extend.",
+            "pattern": "/\\btokens?\\s+(differ|vary|var\\w+)\\b[^.]{0,80}\\bsymmetr\\w+\\b/i"
+          }
+        ],
+        "blockedFor": [
+          "VECTOR_COMPOSITION_V1"
+        ]
+      }
+    ],
+    "mechanismAdmission": {
+      "requested": [
+        {
+          "mechanism": "DILATION",
+          "statedVotes": 1,
+          "unstated": false,
+          "polarity": "PEAKS_AT_RECOVERY",
+          "polarityConfidence": 1,
+          "contested": false,
+          "evidence": [
+            {
+              "phrase": "expanding",
+              "direction": "raise",
+              "state": null,
+              "polarity": null,
+              "clause": "The market should act by expanding and contracting the figure's reach:"
+            },
+            {
+              "phrase": "contracting",
+              "direction": "lower",
+              "state": null,
+              "polarity": null,
+              "clause": "The market should act by expanding and contracting the figure's reach:"
+            },
+            {
+              "phrase": "draws in",
+              "direction": "lower",
+              "state": "STRESS",
+              "polarity": "PEAKS_AT_RECOVERY",
+              "clause": "it opens out in recovery and draws in under stress."
+            }
+          ],
+          "votes": 3,
+          "overlapsPrimary": false
+        },
+        {
+          "mechanism": "SEPARATION",
+          "statedVotes": 2,
+          "unstated": false,
+          "polarity": "PEAKS_AT_RECOVERY",
+          "polarityConfidence": 2,
+          "contested": false,
+          "evidence": [
+            {
+              "phrase": "opens out",
+              "direction": "raise",
+              "state": "RECOVERY",
+              "polarity": "PEAKS_AT_RECOVERY",
+              "clause": "it opens out in recovery and draws in under stress."
+            },
+            {
+              "phrase": "draws in",
+              "direction": "lower",
+              "state": "STRESS",
+              "polarity": "PEAKS_AT_RECOVERY",
+              "clause": "it opens out in recovery and draws in under stress."
+            }
+          ],
+          "votes": 2,
+          "overlapsPrimary": true
+        }
+      ],
+      "rejected": [],
+      "perRuntime": [
+        {
+          "runtimeId": "GEOMETRIC_RECURSION_V1",
+          "canExpress": [
+            "DILATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true,
+          "carriesMajority": true,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 0
+        },
+        {
+          "runtimeId": "VECTOR_COMPOSITION_V1",
+          "canExpress": [
+            "DILATION",
+            "SEPARATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true,
+          "carriesMajority": true,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 0
+        }
+      ],
+      "viable": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ],
+      "primary": "DILATION",
+      "outcome": "ADMITTED",
+      "detail": "2 of 2 runtimes can carry the primary mechanism DILATION"
+    },
+    "candidates": [
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "viable": true,
+        "mechanisms": {
+          "canExpress": [
+            "DILATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true
+        },
+        "mechanismBlockedBy": [],
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "one self-similar figure, centred, built by repeating a production on itself over up to 6 levels, drawn in regular primitives, optionally replicated by a symmetry order, over a flat or gradient ground",
+        "fit": 4,
+        "matchedSignals": [
+          "LINEWORK",
+          "RADIAL_SYSTEM"
+        ]
+      },
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "viable": true,
+        "mechanisms": {
+          "canExpress": [
+            "DILATION",
+            "SEPARATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true
+        },
+        "mechanismBlockedBy": [],
+        "blockedBy": [],
+        "concessions": [
+          {
+            "id": "PER_TOKEN_SYMMETRY_VARIATION",
+            "what": "tokens that differ from each other in their symmetry order",
+            "citation": "symmetry"
+          }
+        ],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+        "fit": 3,
+        "matchedSignals": [
+          "LINEWORK",
+          "RADIAL_SYSTEM"
+        ]
+      }
+    ],
+    "ranking": [
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "fit": 4,
+        "concessions": 0,
+        "matchedSignals": [
+          "LINEWORK",
+          "RADIAL_SYSTEM"
+        ]
+      },
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "fit": 3,
+        "concessions": 1,
+        "matchedSignals": [
+          "LINEWORK",
+          "RADIAL_SYSTEM"
+        ]
+      }
+    ],
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "concessions": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "id": "PER_TOKEN_SYMMETRY_VARIATION",
+        "what": "tokens that differ from each other in their symmetry order",
+        "citation": "symmetry"
+      }
+    ],
+    "detail": "2 of 2 Wave-1 templates can carry this brief; 1 demand(s) were detected and none of them blocks all candidates"
+  },
+  "sentToAuthor": true,
+  "direction": {
+    "schemaVersion": 1,
+    "kind": "ART_DIRECTION",
+    "createdAt": "2026-09-03T19:06:12.411Z",
+    "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
+    "admissionOutcome": "ADMITTED",
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "templateId": "GEOMETRIC_RECURSION_V1/compass",
+    "directionHash": "663fdf7e6a3eeeb39e66145334f9fad85cd91f0a91c046cca5ce869db0de8e81",
+    "direction": {
+      "medium": "Geometric recursion — one centred self-similar figure built by repeating a production on itself, which commits this to a single connected thread figure rather than to independent scattered marks.",
+      "motifTranslation": "Filigree restated as one radial self-similar figure whose production hangs finer and finer members off each preceding one, drawn entirely at hairline weight so the figure reads as thread laid about a middle rather than as any filled or solid form.",
+      "composition": "The figure is centred and its outermost threads reach close to the frame's edges, so the work fills the frame with its span while staying open enough that the dark reads through it everywhere.",
+      "focalHierarchy": "Nothing dominates by mass, deliberately, since nothing here is solid at all; the innermost orders of the figure are the closest woven and act as a centre of gravity, and every outer order is progressively lighter texture.",
+      "density": "Very light — a small fraction of the frame carries ink, all of it hairline, so the work looks provisional and as though a breath could disturb it.",
+      "negativeSpace": "The dark reads through the whole figure as well as around it, so the emptiness is inside the work rather than only outside it, and it is what keeps the threads reading as threads instead of as a woven screen.",
+      "paletteIntent": "Bone and pale slate carry the threads over a dark ground, two cool working colours with the contrast kept low so the lines read as thread rather than as structure; the ground is flat and holds them.",
+      "rhythm": "Radial and regular — the same fine member recurs about the middle at an even angular interval and again at each finer order; the brief asks for a radial figure outright, so the rotational reading is the intended one here.",
+      "variationStrategy": "Two tokens differ first in the rotational symmetry of the figure about its middle, then in how far its threads extend from that middle, and last in how many orders of finer members it carries.",
+      "marketTransformation": "In recovery the whole figure expands and its threads reach further from the middle, so its span is greatest there. Under stress the same figure shrinks and its threads sit closer to the centre. The magnitude the market moves is the overall span of the one figure, and in recovery it grows to its widest.",
+      "identityAnchors": "Every seed and every state keeps the hairline weight, the radial construction about one centre, the bone-and-pale-slate-over-dark relationship, and the low contrast that makes the work read as fragile.",
+      "thumbnailIntent": "At 120px the work reads as a pale radial thread figure on a dark ground, its outline legible while its individual threads are not, and the change a viewer can judge at that size is how far the figure spans."
+    },
+    "fields": [
+      "medium",
+      "motifTranslation",
+      "composition",
+      "focalHierarchy",
+      "density",
+      "negativeSpace",
+      "paletteIntent",
+      "rhythm",
+      "variationStrategy",
+      "marketTransformation",
+      "identityAnchors",
+      "thumbnailIntent"
+    ],
+    "containsRuntimeConfig": false
+  },
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeBytes": 23909,
+  "rounds": [
+    {
+      "round": 1,
+      "configHash": "23bedf2eec69a2eda6a5e4a7bba93570324553bd9ad90209a49483b157e18675",
+      "configBytes": "0x475256310204000001030f1113d9d2c259636b021d1301030104030303370c037100001506020201020204025a1201510100001146696c6967726565205265737461746564ff",
+      "config": {
+        "rules": [
+          {
+            "shapeSet": [
+              "CIRCLE",
+              "HEX",
+              "DIAMOND",
+              "SQUARE"
+            ],
+            "ruleSet": [
+              "RING",
+              "TRI",
+              "QUAD"
+            ],
+            "contraction": 55,
+            "branch": 3,
+            "prune": 3,
+            "symSet": [
+              "NONE",
+              "ROT3",
+              "ROT6"
+            ],
+            "rotation": 12,
+            "paletteIx": 1,
+            "depthMin": 3,
+            "depthMax": 3,
+            "stroke": true,
+            "variant": 0,
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "shapeSet": [
+              "HEX",
+              "DIAMOND",
+              "SQUARE"
+            ],
+            "ruleSet": [
+              "INSCRIBE",
+              "TRI"
+            ],
+            "contraction": 90,
+            "branch": 2,
+            "prune": 1,
+            "symSet": [
+              "NONE",
+              "ROT3"
+            ],
+            "rotation": 18,
+            "paletteIx": 2,
+            "variant": 1,
+            "stroke": true,
+            "depthMin": 2,
+            "depthMax": 4,
+            "drive": "CONTRACT",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2"
+          }
+        ],
+        "ruleCount": 2,
+        "palette": [
+          "#0f1113",
+          "#d9d2c2",
+          "#59636b"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 1,
+        "flags": [
+          "OUTLINE"
+        ],
+        "title": "Filigree Restated"
+      },
+      "intent": {
+        "densityTarget": "MODERATE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "EVEN_FIELD",
+        "rhythmMode": "RADIAL",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "LINEWORK",
+        "marketAxis": "SCALE",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DEFAULT",
+          "value": "MODERATE",
+          "detail": "the direction's density/negativeSpace/thumbnailIntent did not name a densityTarget",
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "fills the frame"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": []
+        },
+        "focalMode": {
+          "source": "DIRECTION",
+          "value": "EVEN_FIELD",
+          "evidence": [
+            "nothing dominates"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "focalHierarchy",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "RADIAL",
+          "evidence": [
+            "radial",
+            "rotational"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [
+            "REGULAR:1"
+          ],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "LINEWORK",
+          "evidence": [
+            "hairline",
+            "outline"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [
+            "SOLID:1"
+          ],
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": [
+            {
+              "option": "SOLID",
+              "phrase": "filled",
+              "why": "negated in its own clause"
+            },
+            {
+              "option": "SOLID",
+              "phrase": "solid",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "SCALE",
+          "evidence": [
+            "expands",
+            "shrinks",
+            "grows"
+          ],
+          "score": 3,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "mechanism": {
+        "ok": true,
+        "mechanism": "DILATION",
+        "polarity": "PEAKS_AT_RECOVERY",
+        "drive": "SPREAD",
+        "curve": "LOG2",
+        "sensor": "RECOVERY",
+        "requires": {},
+        "detail": "DRIVE_SPREAD sets the ROOT SIZE from the sensor, so the whole self-similar figure scales as one object. Its floor is the bytecode constant 40 of 256, which is a small figure and never a blank.",
+        "evidence": {
+          "row": "GR-dilate-SPREAD-REC",
+          "weakestPairing": 10.932,
+          "extentByState": "0.648 neutral / 0.365 stress / 0.842 recovery",
+          "components": "1.625 -> 1.375, largestShare 0.997 -> 0.997",
+          "blankSeeds": 0
+        },
+        "alternatives": [
+          {
+            "drive": "CONTRACT",
+            "curve": "LOG2"
+          }
+        ],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "expands",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "In recovery the whole figure expands and its threads reach further from the middle, so its span is greatest there."
+          },
+          {
+            "phrase": "shrinks",
+            "direction": "lower",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "Under stress the same figure shrinks and its threads sit closer to the centre."
+          },
+          {
+            "phrase": "grows",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "and in recovery it grows to its widest."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"expands\", \"shrinks\", \"grows\"",
+        "otherSensor": "DRAWDOWN",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "atlas": {
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "rules[n].shapeSet",
+          "rules[n].ruleSet",
+          "ruleCount",
+          "rules[n].contraction",
+          "rules[n].branch and rules[n].prune",
+          "rules[n].symSet",
+          "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+          "rules[n].depthMin / depthMax",
+          "rules[n].stroke and the OUTLINE flag",
+          "rules[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "ruleCount",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+            "facets": [
+              "lowHighBehaviour",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "rules[n].drive x sensor x curve",
+            "facets": [
+              "lowHighBehaviour",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "rules[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "rule[0]",
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": null,
+            "floor": null,
+            "ceiling": null,
+            "readings": null,
+            "resolved": null,
+            "span": null,
+            "verdict": "UNKNOWN",
+            "detail": "reachability not computable: no floor recorded for the dimension DRIVE_SPREAD moves. Render is the only evidence available for this binding.",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "rule[1]",
+            "drive": "CONTRACT",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2",
+            "parameter": "contraction",
+            "floor": 20,
+            "ceiling": 90,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 42
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 88
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 58
+              }
+            },
+            "resolved": [
+              42,
+              88,
+              58
+            ],
+            "span": 46,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 42 / 88 / 58 across neutral / stress / recovery (span 46 of 70)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 2,
+          "reachable": 1,
+          "provablyDead": 0,
+          "unknown": 1
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [
+          {
+            "unit": "rule[0]",
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "detail": "reachability not computable: no floor recorded for the dimension DRIVE_SPREAD moves. Render is the only evidence available for this binding."
+          }
+        ],
+        "refuse": false,
+        "detail": "1 of 2 bindings proven reachable, 1 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "shapeSet from densityTarget=MODERATE; the atlas ranks seed shape second-loudest at 120px and CROSS is excluded on every path",
+          "consulted": "rules[n].shapeSet"
+        },
+        {
+          "stage": "SILHOUETTE",
+          "why": "ruleSet from extentTarget=EXPANSIVE; BSP excluded on every path (law L3: inert under PRUNE/ROTATE)",
+          "consulted": "rules[n].ruleSet"
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "2 rules; contraction is a CEILING over floor 20 (law L1). The second is an INNER register, not a satellite: a lone rule offers the seed twelve distinct figures and a hundred-seed sweep found colliding pairs at 1.075 dE",
+          "consulted": [
+            "ruleCount",
+            "rules[n].contraction"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "branch 3 because QUAD at branch 2 draws a face on every seed (atlas, gr-rule failure modes); prune mask avoids all-ones (law L2)",
+          "consulted": "rules[n].branch and rules[n].prune"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symSet NONE/ROT3/ROT6 — rotational replication is elected ONLY where the direction asks for a radial figure, because the atlas records ROT3/ROT6 as unavoidably a rosette and six of twelve blind reviews read the round-one work as one",
+          "consulted": "rules[n].symSet"
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "a second rule is the runtime's real colour control (paletteCount does nothing) and its only route to two registers"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "2 colour(s) named in the direction; DEPTH_PALETTE carries colour because paletteCount is measured inert",
+          "consulted": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "depth pinned at 3; stroke=LINEWORK is the loudest control at 120px",
+          "consulted": [
+            "rules[n].depthMin / depthMax",
+            "rules[n].stroke and the OUTLINE flag"
+          ]
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism DILATION PEAKS_AT_RECOVERY -> drive SPREAD <- RECOVERY/LOG2. DRIVE_SPREAD sets the ROOT SIZE from the sensor, so the whole self-similar figure scales as one object. Its floor is the bytecode constant 40 of 256, which is a small figure and never a blank.",
+          "evidence": {
+            "row": "GR-dilate-SPREAD-REC",
+            "weakestPairing": 10.932,
+            "extentByState": "0.648 neutral / 0.365 stress / 0.842 recovery",
+            "components": "1.625 -> 1.375, largestShare 0.997 -> 0.997",
+            "blankSeeds": 0
+          },
+          "consulted": "rules[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "bedf17053546338c5191705e8fe1e4a71650d03cef113251c2d322aef31cd2d9",
+          "bytes": 386921
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "6d98c544827df17d49d262c0b07812e62abbe04be4c7455af8f7fd84ffadca5b",
+          "bytes": 128822
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "11e6f4c692aaff7a8c9ab3ee4ee1a812e338cea972e72d82d87cd0c0bf829a3d",
+          "bytes": 382241
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "e4bb5c8811bcf7f759cbefb42b4f2f00243706ac1831fa4710c2eb9109d45a82",
+          "bytes": 121336
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "1729f50b15e1c6e0943faacd32473b15e868def11d9b1d4d4ba58d6b9d334f3e",
+          "bytes": 30374
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.326,
+        "inkMin": 0.132,
+        "stateDeMean": 9.41,
+        "stateDeMin": 4.65,
+        "seedDeMean": 12.67,
+        "seedDeMin": 5.01
+      }
+    }
+  ]
+}

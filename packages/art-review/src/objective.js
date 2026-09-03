@@ -21,7 +21,7 @@
 // five for five.
 // ================================================================================================
 import { MARKET_STATES, REVIEW_SEEDS, collectionSeeds } from "./market.js";
-import { STATE_SEPARATION_FLOOR, inkCoverage, meanDeltaE, planeOf } from "./perceptual.js";
+import { STATE_SEPARATION_FLOOR, inkCoverage, labOfHex, meanDeltaE, planeOf } from "./perceptual.js";
 import { runtimeFor } from "./runtimes.js";
 
 // ------------------------------------------------------------------------------------------------
@@ -35,8 +35,12 @@ import { runtimeFor } from "./runtimes.js";
 // a different configuration.
 // ------------------------------------------------------------------------------------------------
 export const FLOORS = Object.freeze({
-  /** Emptiest sampled frame, as a fraction that is drawing rather than ground.
-   *  MEASURED 2026-08-30 on chain 1: compass 0.208 · alluvium 0.282. */
+  /** Emptiest sampled frame, as a fraction that is drawing rather than the DECLARED ground.
+   *  MEASURED 2026-08-30 on chain 1 against the modal ground: compass 0.208 · alluvium 0.282.
+   *  RE-MEASURED against the declared ground, twelve review seeds at neutral on chain 8453:
+   *  compass 0.570 mean / 0.253 min · alluvium 0.430 / 0.221. The floor is unchanged and still
+   *  sits an order of magnitude under both, so nothing was lowered to accommodate the new method
+   *  — it is reported here so a later reader can see the method changed and the floor did not. */
   ink: 0.04,
   /** Mean pairwise dE between two SEEDS at browse size — the diversity `idol` failed on.
    *  MEASURED: compass 22.808 · alluvium 17.984. */
@@ -123,6 +127,10 @@ export async function runObjectiveBattery({ renderer, runtimeId, config, configB
   const rt = runtimeFor(runtimeId);
   const checks = [];
   const started = nowIso();
+  // THE DECLARED GROUND, not the modal one. See `inkCoverage`: on a frame the drawing more than
+  // half covers, the mode IS the drawing and a saturated frame reports as blank.
+  const groundHex = Array.isArray(config?.palette) ? config.palette[config.groundIx ?? 0] : null;
+  const groundLab = groundHex ? labOfHex(groundHex) : null;
 
   // ---- 1. the runtime's own verdict on the bytes ------------------------------------------------
   const legality = await renderer.validateConfig(configBytes);
@@ -229,8 +237,8 @@ export async function runObjectiveBattery({ renderer, runtimeId, config, configB
   // different fixes.
   const ringPlanes = new Map();
   for (const r of ring) ringPlanes.set(`${r.seed}|${r.state}`, await planeOf(r.svg));
-  const sweepInks = subPlanes.map((p) => ({ ink: inkCoverage(p), state: "neutral", where: "collection sweep" }));
-  const ringInks = [...ringPlanes.entries()].map(([k, p]) => ({ ink: inkCoverage(p), state: k.split("|")[1], where: `review ring seed ${k.split("|")[0]}` }));
+  const sweepInks = subPlanes.map((p) => ({ ink: inkCoverage(p, 8, groundLab), state: "neutral", where: "collection sweep" }));
+  const ringInks = [...ringPlanes.entries()].map(([k, p]) => ({ ink: inkCoverage(p, 8, groundLab), state: k.split("|")[1], where: `review ring seed ${k.split("|")[0]}` }));
   const allInks = [...sweepInks, ...ringInks];
   const emptiest = allInks.reduce((a, b) => (a.ink <= b.ink ? a : b));
   const minInk = emptiest.ink;

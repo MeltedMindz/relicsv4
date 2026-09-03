@@ -37,8 +37,8 @@ import { ground } from "./perceptual.js";
  * fraction about what counts as drawing would produce an extent for pixels the ink number says are
  * background.
  */
-export function inkMask(plane, threshold = 8) {
-  const g = ground(plane);
+export function inkMask(plane, threshold = 8, groundLab = null) {
+  const g = groundLab ?? ground(plane);
   const { lab, width, height } = plane;
   const mask = new Uint8Array(width * height);
   for (let i = 0, p = 0; i < width * height; i += 1, p += 3) {
@@ -57,8 +57,8 @@ export function inkMask(plane, threshold = 8) {
  * A blank plane returns zeros and `empty: true` rather than NaN. A caller that treats an empty
  * frame as extent 0 is right; one that divides by it is not, and NaN would let it.
  */
-export function extentOf(plane, threshold = 8) {
-  const { mask, width, height } = inkMask(plane, threshold);
+export function extentOf(plane, threshold = 8, groundLab = null) {
+  const { mask, width, height } = inkMask(plane, threshold, groundLab);
   let minX = width;
   let minY = height;
   let maxX = -1;
@@ -105,8 +105,8 @@ export function extentOf(plane, threshold = 8) {
  * it would make the number track the renderer instead of the picture — the same class of mistake
  * as the corner-sampled background measure this project already caught.
  */
-export function componentCount(plane, { threshold = 8, minPixels = 4 } = {}) {
-  const { mask, width, height } = inkMask(plane, threshold);
+export function componentCount(plane, { threshold = 8, minPixels = 4, groundLab = null } = {}) {
+  const { mask, width, height } = inkMask(plane, threshold, groundLab);
   const seen = new Uint8Array(width * height);
   const stack = new Int32Array(width * height);
   let components = 0;

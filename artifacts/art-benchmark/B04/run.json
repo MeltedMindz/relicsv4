@@ -1,0 +1,822 @@
+{
+  "briefId": "B04",
+  "axis": "pure-abstract",
+  "title": "INTERVAL",
+  "phase": "AUTHORED",
+  "objectiveBlockers": [],
+  "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-03T19:02:57.974Z",
+    "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+    "briefSubstance": {
+      "chars": 706,
+      "words": 113,
+      "distinctWords": 82
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "VECTOR_COMPOSITION",
+        "ALL_OVER_FIELD"
+      ],
+      "MOTIF": [],
+      "AESTHETIC": [],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION",
+        "DENSITY_CHANGE"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [
+      {
+        "id": "ALL_OVER_FIELD",
+        "class": "MEDIUM",
+        "severity": "HARD",
+        "what": "an all-over field with no dominant element, rather than a figure on a ground",
+        "citations": {},
+        "positiveCitation": {
+          "GEOMETRIC_RECURSION_V1": "one self-similar figure, centred"
+        },
+        "noteCitation": {},
+        "occurrences": 1,
+        "evidence": [
+          {
+            "sentence": "The composition should be balanced without being symmetrical, with an even distribution and no single dominant element — an all-over field rather than a figure on a ground.",
+            "pattern": "/\\ball[- ]over\\s+(field|composition|pattern|arrangement)\\b/i"
+          }
+        ],
+        "blockedFor": [
+          "GEOMETRIC_RECURSION_V1"
+        ]
+      }
+    ],
+    "mechanismAdmission": {
+      "requested": [
+        {
+          "mechanism": "SUBTRACTION",
+          "statedVotes": 2,
+          "unstated": false,
+          "polarity": "PEAKS_AT_STRESS",
+          "polarityConfidence": 2,
+          "contested": false,
+          "evidence": [
+            {
+              "phrase": "more marks",
+              "direction": "raise",
+              "state": "STRESS",
+              "polarity": "PEAKS_AT_STRESS",
+              "clause": "more marks under drawdown, fewer in recovery, or the reverse"
+            },
+            {
+              "phrase": "fewer",
+              "direction": "lower",
+              "state": "RECOVERY",
+              "polarity": "PEAKS_AT_STRESS",
+              "clause": "more marks under drawdown, fewer in recovery, or the reverse"
+            }
+          ],
+          "votes": 2,
+          "overlapsPrimary": false
+        }
+      ],
+      "rejected": [],
+      "perRuntime": [
+        {
+          "runtimeId": "GEOMETRIC_RECURSION_V1",
+          "canExpress": [],
+          "cannotExpress": [
+            {
+              "mechanism": "SUBTRACTION",
+              "reason": "NOT_EXPRESSIBLE",
+              "detail": "the only drive that changes how many things are drawn is DEPTH, and it changes the DOCUMENT rather than the picture: the atlas measures thirty times the elements for +0.004 ink120, and the probe measures the browse-size difference between neutral and recovery at 0.348 dE against a floor of 3.8.",
+              "alternative": "VECTOR_COMPOSITION_V1 subtracts with DRIVE_COUNT over a creator-owned floor",
+              "overlapsPrimary": false
+            }
+          ],
+          "carriesPrimary": false,
+          "carriesMajority": false,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 1
+        },
+        {
+          "runtimeId": "VECTOR_COMPOSITION_V1",
+          "canExpress": [
+            "SUBTRACTION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true,
+          "carriesMajority": true,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 0
+        }
+      ],
+      "viable": [
+        "VECTOR_COMPOSITION_V1"
+      ],
+      "primary": "SUBTRACTION",
+      "outcome": "ADMITTED",
+      "detail": "1 of 2 runtimes can carry the primary mechanism SUBTRACTION"
+    },
+    "candidates": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "viable": true,
+        "mechanisms": {
+          "canExpress": [
+            "SUBTRACTION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true
+        },
+        "mechanismBlockedBy": [],
+        "blockedBy": [],
+        "concessions": [],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+        "fit": 3,
+        "matchedSignals": [
+          "VECTOR_COMPOSITION"
+        ]
+      }
+    ],
+    "ranking": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "fit": 3,
+        "concessions": 0,
+        "matchedSignals": [
+          "VECTOR_COMPOSITION"
+        ]
+      }
+    ],
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "concessions": [],
+    "detail": "1 of 2 Wave-1 templates can carry this brief; 1 demand(s) were detected and none of them blocks all candidates"
+  },
+  "sentToAuthor": true,
+  "direction": {
+    "schemaVersion": 1,
+    "kind": "ART_DIRECTION",
+    "createdAt": "2026-09-03T19:02:57.976Z",
+    "briefSha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+    "admissionOutcome": "ADMITTED",
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+    "directionHash": "ed58b619f6fc1a0111bc365c7bffd8dcad01b9c6744dff2f4375faf7db16b69f",
+    "direction": {
+      "medium": "Vector composition — independent fields of primitives placed about the canvas centre, which commits this to an even population of small repeated marks whose only content is the spacing between them.",
+      "motifTranslation": "No subject at all, restated as several registers of identical small marks distributed evenly across the frame at differing spacings, so that what a viewer reads is the relationship between one mark and its neighbours and nothing that can be given a name.",
+      "composition": "The marks reach the edges on all four sides and continue as though the frame were a window onto a larger field, balanced without being mirrored, with no privileged region and no arrival point anywhere in the frame.",
+      "focalHierarchy": "Nothing dominates, deliberately — this is an all-over field, and a dominant element would hand the eye a subject when the whole point is that there is none; every mark is of equal rank and the reading is of the population as a whole.",
+      "density": "Moderately dense and even at browse size — enough marks that the field reads as populated everywhere, with coverage held uniform across the frame so that differences read as spacing rather than as pooling.",
+      "negativeSpace": "The emptiness is distributed rather than pooled — it sits between every pair of marks in varying amounts and gathers into neither a margin nor a void, so the ground reads as the interval itself and carries the whole content of the work.",
+      "paletteIntent": "A narrow tonal range of close values over a dark ground, two or three near neighbours only, chosen so that colour difference stays quiet and spacing keeps the viewer's whole attention.",
+      "rhythm": "Even but unmetrical — the marks recur at close to a constant frequency across the frame while the exact spacing varies locally, so a viewer feels a pulse and can find no beat to count; the distribution runs across the frame rather than turning about a centre.",
+      "variationStrategy": "Two tokens differ first in how many marks populate the field, then in where those marks fall across the frame, and last in the tonal step between one register and another, which is the least noticeable of the three.",
+      "marketTransformation": "Under drawdown more marks enter the field and it becomes busier; in recovery fewer of them remain and the field thins out. The magnitude the market moves is how many marks the field carries, and under drawdown more of them are present.",
+      "identityAnchors": "Every seed and every state keeps the all-over even distribution, the narrow close-valued tonal range over a dark ground, the identical mark shape, and the refusal of any nameable subject.",
+      "thumbnailIntent": "At 120px the work reads as an even population of small marks across the whole frame with no figure and no arrival point, and what a viewer registers is simply how crowded the field is."
+    },
+    "fields": [
+      "medium",
+      "motifTranslation",
+      "composition",
+      "focalHierarchy",
+      "density",
+      "negativeSpace",
+      "paletteIntent",
+      "rhythm",
+      "variationStrategy",
+      "marketTransformation",
+      "identityAnchors",
+      "thumbnailIntent"
+    ],
+    "containsRuntimeConfig": false
+  },
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeBytes": 24455,
+  "rounds": [
+    {
+      "round": 1,
+      "configHash": "e518a21098a5446e82f876f6eae928c80f2aaf451c349e489f8500151cf860c5",
+      "configBytes": "0x564356310100000001040f11138d8b86b07d3ad9d2c2030000030201000a1e1a800000040101020100091b167a10000500020301000c221274180000105375626a656374205265737461746564ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "GRID",
+            "primitive": "RECT",
+            "sizeMax": 26,
+            "spreadMax": 128,
+            "symmetry": "NONE",
+            "countMin": 10,
+            "countMax": 30,
+            "paletteIx": 3,
+            "stroke": false,
+            "variant": 0,
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "STACK",
+            "primitive": "CIRCLE",
+            "sizeMax": 22,
+            "spreadMax": 122,
+            "symmetry": "NONE",
+            "countMin": 9,
+            "countMax": 27,
+            "paletteIx": 1,
+            "variant": 2,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "LINEFIELD",
+            "primitive": "RECT",
+            "sizeMax": 18,
+            "spreadMax": 116,
+            "symmetry": "NONE",
+            "countMin": 12,
+            "countMax": 34,
+            "paletteIx": 2,
+            "variant": 3,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#0f1113",
+          "#8d8b86",
+          "#b07d3a",
+          "#d9d2c2"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 1,
+        "flags": [],
+        "title": "Subject Restated"
+      },
+      "intent": {
+        "densityTarget": "DENSE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "EVEN_FIELD",
+        "rhythmMode": "REGULAR",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "NARROW"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "DENSE",
+          "evidence": [
+            "dense",
+            "crowded"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [
+            "MODERATE:1"
+          ],
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "on all four sides"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": [
+            {
+              "option": "COMPACT",
+              "phrase": "margin",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "focalMode": {
+          "source": "DIRECTION",
+          "value": "EVEN_FIELD",
+          "evidence": [
+            "nothing dominates",
+            "all-over"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "focalHierarchy",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DEFAULT",
+          "value": "REGULAR",
+          "detail": "the direction's rhythm/composition did not name a rhythmMode",
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DIRECTION",
+          "value": "RESTRAINED",
+          "evidence": [
+            "narrow",
+            "close values"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "paletteIntent"
+          ],
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DEFAULT",
+          "value": "SOLID",
+          "detail": "the direction's medium/motifTranslation/paletteIntent/thumbnailIntent did not name a strokeMode",
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "DENSITY",
+          "evidence": [
+            "fewer",
+            "thins"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DIRECTION",
+          "value": "NARROW",
+          "evidence": [
+            "narrow"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "variationStrategy",
+            "identityAnchors"
+          ],
+          "rejected": []
+        }
+      },
+      "mechanism": {
+        "ok": true,
+        "mechanism": "SUBTRACTION",
+        "polarity": "PEAKS_AT_STRESS",
+        "drive": "COUNT",
+        "curve": "LOG2",
+        "sensor": "DRAWDOWN",
+        "requires": {
+          "minFields": 2,
+          "countRangeAtLeast": 18
+        },
+        "detail": "countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+        "evidence": {
+          "row": "VC-subtract-3field",
+          "weakestPairing": 8.317,
+          "ink": "0.351 mean / 0.055 min",
+          "extent": 0.956,
+          "blankSeeds": 0,
+          "singleFieldControl": {
+            "row": "VC-subtract-COUNT-REC",
+            "blankSeeds": 7,
+            "inkMin": 0.013
+          }
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "more marks",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "Under drawdown more marks enter the field and it becomes busier;"
+          },
+          {
+            "phrase": "fewer",
+            "direction": "lower",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "in recovery fewer of them remain and the field thins out."
+          },
+          {
+            "phrase": "more of them",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "and under drawdown more of them are present."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"more marks\", \"fewer\", \"more of them\"",
+        "otherSensor": "RECOVERY",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 10,
+            "ceiling": 30,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 16
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 29
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 21
+              }
+            },
+            "resolved": [
+              16,
+              29,
+              21
+            ],
+            "span": 13,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 16 / 29 / 21 across neutral / stress / recovery (span 13 of 20)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "COUNT",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 9,
+            "ceiling": 27,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 14
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 26
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 18
+              }
+            },
+            "resolved": [
+              14,
+              26,
+              18
+            ],
+            "span": 12,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 14 / 26 / 18 across neutral / stress / recovery (span 12 of 18)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 12,
+            "ceiling": 34,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 19
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 12
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 33
+              }
+            },
+            "resolved": [
+              19,
+              12,
+              33
+            ],
+            "span": 21,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 19 / 12 / 33 across neutral / stress / recovery (span 21 of 22)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout GRID from rhythmMode=REGULAR; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "3 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 26 from densityTarget=DENSE",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry NONE (a project constant, so it carries no per-token variety); count range widened because COUNT is the drive and the range IS the response",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "0 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism SUBTRACTION PEAKS_AT_STRESS -> drive COUNT <- DRAWDOWN/LOG2, with the last field on RECOVERY so all three states separate. countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+          "evidence": {
+            "row": "VC-subtract-3field",
+            "weakestPairing": 8.317,
+            "ink": "0.351 mean / 0.055 min",
+            "extent": 0.956,
+            "blankSeeds": 0,
+            "singleFieldControl": {
+              "row": "VC-subtract-COUNT-REC",
+              "blankSeeds": 7,
+              "inkMin": 0.013
+            }
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "bd73bd928574dcfb93248d60869b22eed49b495bdadc425395d66d8466d21ed6",
+          "bytes": 338734
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "54e73ebd2a3391df91abe619c755b6ca862ad8c3d196a61c873d8e183a1223eb",
+          "bytes": 135855
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "7919b52b52280580ae0b3fdd265df0d3c816007820d5e487cdfed21f93826256",
+          "bytes": 332778
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "2b40213c0e6e924637d46f288a6c268ac70c0bbac1b25ba12463522a9c654f1f",
+          "bytes": 137113
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "a24364d4a872533bad4d4f3a2e8519f31b61978bd46071a103ea55bddb408caf",
+          "bytes": 53617
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.593,
+        "inkMin": 0.343,
+        "stateDeMean": 10.97,
+        "stateDeMin": 3.67,
+        "seedDeMean": 18.91,
+        "seedDeMin": 8.73
+      }
+    }
+  ]
+}

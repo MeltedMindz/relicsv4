@@ -1,0 +1,793 @@
+{
+  "briefId": "B08",
+  "axis": "mechanical",
+  "title": "ESCAPEMENT",
+  "phase": "AUTHORED",
+  "objectiveBlockers": [],
+  "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-03T19:03:11.902Z",
+    "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
+    "briefSubstance": {
+      "chars": 683,
+      "words": 106,
+      "distinctWords": 73
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "RECURSIVE_GEOMETRY",
+        "RADIAL_SYSTEM",
+        "PER_TOKEN_SYMMETRY_VARIATION"
+      ],
+      "MOTIF": [
+        "MACHINE"
+      ],
+      "AESTHETIC": [
+        "DELICATE"
+      ],
+      "MARKET_TRANSFORMATION": [],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [
+      {
+        "id": "PER_TOKEN_SYMMETRY_VARIATION",
+        "class": "MEDIUM",
+        "severity": "SOFT",
+        "what": "tokens that differ from each other in their symmetry order",
+        "citations": {},
+        "positiveCitation": {},
+        "noteCitation": {
+          "VECTOR_COMPOSITION_V1": "symmetry"
+        },
+        "occurrences": 1,
+        "evidence": [
+          {
+            "sentence": "Tokens differ in the order of rotational symmetry and in how many rings they carry.",
+            "pattern": "/\\btokens?\\s+(differ|vary|var\\w+)\\b[^.]{0,80}\\bsymmetr\\w+\\b/i"
+          }
+        ],
+        "blockedFor": [
+          "VECTOR_COMPOSITION_V1"
+        ]
+      }
+    ],
+    "mechanismAdmission": {
+      "requested": [
+        {
+          "mechanism": "SEPARATION",
+          "statedVotes": 1,
+          "unstated": false,
+          "polarity": "PEAKS_AT_STRESS",
+          "polarityConfidence": 1,
+          "contested": false,
+          "evidence": [
+            {
+              "phrase": "spreading apart",
+              "direction": "raise",
+              "state": null,
+              "polarity": null,
+              "clause": "its members spreading apart and the rings separating"
+            },
+            {
+              "phrase": "tighten",
+              "direction": "lower",
+              "state": "RECOVERY",
+              "polarity": "PEAKS_AT_STRESS",
+              "clause": "and tighten again as conditions settle."
+            }
+          ],
+          "votes": 2,
+          "overlapsPrimary": false
+        }
+      ],
+      "rejected": [],
+      "perRuntime": [
+        {
+          "runtimeId": "GEOMETRIC_RECURSION_V1",
+          "canExpress": [],
+          "cannotExpress": [
+            {
+              "mechanism": "SEPARATION",
+              "reason": "NOT_EXPRESSIBLE",
+              "detail": "there is no interval to open. Every production places children at a fixed relation to their parent, and the only parameter that changes that relation is contraction, which under QUAD/TRI shrinks the children rather than moving them apart — the probe measures the component count FALLING under stress (2.125 -> 1.25) where separation would raise it.",
+              "alternative": "VECTOR_COMPOSITION_V1 separates with DRIVE_SPREAD at a pinned count",
+              "overlapsPrimary": false
+            }
+          ],
+          "carriesPrimary": false,
+          "carriesMajority": false,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 1
+        },
+        {
+          "runtimeId": "VECTOR_COMPOSITION_V1",
+          "canExpress": [
+            "SEPARATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true,
+          "carriesMajority": true,
+          "distinctMechanisms": 1,
+          "cannotExpressCount": 0
+        }
+      ],
+      "viable": [
+        "VECTOR_COMPOSITION_V1"
+      ],
+      "primary": "SEPARATION",
+      "outcome": "ADMITTED",
+      "detail": "1 of 2 runtimes can carry the primary mechanism SEPARATION"
+    },
+    "candidates": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "viable": true,
+        "mechanisms": {
+          "canExpress": [
+            "SEPARATION"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true
+        },
+        "mechanismBlockedBy": [],
+        "blockedBy": [],
+        "concessions": [
+          {
+            "id": "PER_TOKEN_SYMMETRY_VARIATION",
+            "what": "tokens that differ from each other in their symmetry order",
+            "citation": "symmetry"
+          }
+        ],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground",
+        "fit": 2,
+        "matchedSignals": [
+          "RADIAL_SYSTEM",
+          "MACHINE"
+        ]
+      }
+    ],
+    "ranking": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "fit": 2,
+        "concessions": 1,
+        "matchedSignals": [
+          "RADIAL_SYSTEM",
+          "MACHINE"
+        ]
+      }
+    ],
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "concessions": [
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "id": "PER_TOKEN_SYMMETRY_VARIATION",
+        "what": "tokens that differ from each other in their symmetry order",
+        "citation": "symmetry"
+      }
+    ],
+    "detail": "1 of 2 Wave-1 templates can carry this brief; 1 demand(s) were detected and none of them blocks all candidates"
+  },
+  "sentToAuthor": true,
+  "direction": {
+    "schemaVersion": 1,
+    "kind": "ART_DIRECTION",
+    "createdAt": "2026-09-03T19:03:11.904Z",
+    "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
+    "admissionOutcome": "ADMITTED",
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+    "directionHash": "95bbdf470c50bdbd55fd180faa25abd438ab39d9488021968e9df8872ba8cd3e",
+    "direction": {
+      "medium": "Vector composition — independent fields of primitives placed about the canvas centre, which commits this to concentric registers of repeated fine members turned about a common hub.",
+      "motifTranslation": "An escapement restated as nested rings of fine radial members set about a shared middle, each ring carrying the same member repeated at a regular angular interval, so the work reads as rotational logic with no gear tooth, hand, numeral or dial marking drawn anywhere in it.",
+      "composition": "The outermost ring reaches close to the edges of the frame on all sides, the mechanism sized to occupy the frame squarely rather than to sit as a small instrument adrift in a large empty field.",
+      "focalHierarchy": "The largest ring dominates and sets the instrument's scale; the inner rings are secondary and carry the mechanism's reading; the finest radial members are texture and register as precision rather than as countable parts.",
+      "density": "Light to moderate — well under half the frame carries ink, the whole drawing carried in fine line so the work reads as engineering rather than as mass, with the dark plainly present between the rings.",
+      "negativeSpace": "The dark ground occupies the annular bands between one ring and the next and the wedges between radial members, so the emptiness is the mechanism's clearance and is doing the work of making it look machined.",
+      "paletteIntent": "Brass and slate carry the line over a dark ground, two working colours only, the brass reserved for the members that set the instrument's beat and the ground held flat behind all of them.",
+      "rhythm": "Strictly rotational — the same member recurs at an even angular interval around each ring, and the rings themselves recur at diminishing radii; this brief asks for the rotational idiom outright, so a ring structure about a hub is the correct reading here rather than an accident.",
+      "variationStrategy": "Two tokens differ first in how many rings the mechanism carries and how far those rings sit from the hub, then in the size of the members strung along each ring, and last in the tonal balance of brass against slate. The angular order about the hub is one constant the whole collection shares, so it is a signature of the project and not an axis on which one token departs from another.",
+      "marketTransformation": "Under volatility the mechanism loosens and its members spread apart, so the interval between the rings is widest there. As conditions settle the rings tighten again and the members close back toward one another. The magnitude the market moves is the interval between rings, and volatility widens it furthest.",
+      "identityAnchors": "Every seed and every state keeps the concentric ring construction about one hub, the fine line weight, the brass-and-slate-over-dark relationship, the constant angular order, and the total absence of any literal instrument marking.",
+      "thumbnailIntent": "At 120px the work reads as a set of concentric fine rings about a bright hub, precise and instrument-like, and the change a viewer can judge at that size is how much dark shows in the annular bands."
+    },
+    "fields": [
+      "medium",
+      "motifTranslation",
+      "composition",
+      "focalHierarchy",
+      "density",
+      "negativeSpace",
+      "paletteIntent",
+      "rhythm",
+      "variationStrategy",
+      "marketTransformation",
+      "identityAnchors",
+      "thumbnailIntent"
+    ],
+    "containsRuntimeConfig": false
+  },
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeBytes": 24455,
+  "rounds": [
+    {
+      "round": 1,
+      "configHash": "90a13d6b2096a6e76c28eb84dcb79418e087c3eee871dfb0e3584802040b11e3",
+      "configBytes": "0x564356310100000001030f11139c7f3d59636b030b000102010218181c8005000906010201021414187a15000806020301000a2214741d0000134573636170656d656e74205265737461746564ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "BURST",
+            "primitive": "RECT",
+            "sizeMax": 28,
+            "spreadMax": 128,
+            "symmetry": "ROT6",
+            "countMin": 24,
+            "countMax": 24,
+            "paletteIx": 1,
+            "stroke": false,
+            "variant": 0,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "ORBIT",
+            "primitive": "ARC",
+            "sizeMax": 24,
+            "spreadMax": 122,
+            "symmetry": "ROT6",
+            "countMin": 20,
+            "countMax": 20,
+            "paletteIx": 1,
+            "variant": 2,
+            "stroke": false,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "RADIAL",
+            "primitive": "ARC",
+            "sizeMax": 20,
+            "spreadMax": 116,
+            "symmetry": "ROT6",
+            "countMin": 10,
+            "countMax": 34,
+            "paletteIx": 2,
+            "variant": 3,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#0f1113",
+          "#9c7f3d",
+          "#59636b"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 1,
+        "flags": [],
+        "title": "Escapement Restated"
+      },
+      "intent": {
+        "densityTarget": "MODERATE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "RADIAL",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "MODERATE",
+          "evidence": [
+            "moderate"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "reaches close to the edges"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": []
+        },
+        "focalMode": {
+          "source": "DEFAULT",
+          "value": "SINGLE_DOMINANT",
+          "detail": "the direction's focalHierarchy/composition did not name a focalMode",
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "RADIAL",
+          "evidence": [
+            "rotational",
+            "ring",
+            "rings"
+          ],
+          "score": 3,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DEFAULT",
+          "value": "SOLID",
+          "detail": "the direction's medium/motifTranslation/paletteIntent/thumbnailIntent did not name a strokeMode",
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DEFAULT",
+          "value": "DENSITY",
+          "detail": "the direction's marketTransformation did not name a marketAxis",
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "mechanism": {
+        "ok": true,
+        "mechanism": "SEPARATION",
+        "polarity": "PEAKS_AT_STRESS",
+        "drive": "SPREAD",
+        "curve": "LOG2",
+        "sensor": "DRAWDOWN",
+        "requires": {
+          "pinnedCount": true,
+          "minFields": 2
+        },
+        "detail": "spread is the half-extent a site may sit at from the canvas centre, and its floor of 16 is a visible tight cluster rather than a blank — which is what makes it safe on RECOVERY where SIZE is not. The count must be PINNED (countMin == countMax) or the work is subtracting at the same time and the reviewer cannot tell which mechanism it is watching.",
+        "evidence": {
+          "row": "SEP-3field-fix",
+          "weakestPairing": 14.416,
+          "extentByState": "0.957 neutral / 0.968 stress / 0.995 recovery",
+          "components": "5.625 -> 2.625",
+          "blankSeeds": 0
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "loosens",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "Under volatility the mechanism loosens and its members spread apart, so the interval between the rings is widest there."
+          },
+          {
+            "phrase": "tighten",
+            "direction": "lower",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "As conditions settle the rings tighten again and the members close back toward one another."
+          },
+          {
+            "phrase": "widens",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "The magnitude the market moves is the interval between rings, and volatility widens it furthest."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"loosens\", \"tighten\", \"widens\"",
+        "otherSensor": "RECOVERY",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 128,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 52
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 125
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 77
+              }
+            },
+            "resolved": [
+              52,
+              125,
+              77
+            ],
+            "span": 73,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 52 / 125 / 77 across neutral / stress / recovery (span 73 of 112)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 122,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 50
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 119
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 74
+              }
+            },
+            "resolved": [
+              50,
+              119,
+              74
+            ],
+            "span": 69,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 50 / 119 / 74 across neutral / stress / recovery (span 69 of 106)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 10,
+            "ceiling": 34,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 17
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 10
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 33
+              }
+            },
+            "resolved": [
+              17,
+              10,
+              33
+            ],
+            "span": 23,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 17 / 10 / 33 across neutral / stress / recovery (span 23 of 24)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout BURST from rhythmMode=RADIAL; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "3 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 28 from densityTarget=MODERATE",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry ROT6 (a project constant, so it carries no per-token variety); count PINNED because the drive is not COUNT and a moving count would be a second mechanism nobody asked for",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "2 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism SEPARATION PEAKS_AT_STRESS -> drive SPREAD <- DRAWDOWN/LOG2, with the last field on RECOVERY so all three states separate. spread is the half-extent a site may sit at from the canvas centre, and its floor of 16 is a visible tight cluster rather than a blank — which is what makes it safe on RECOVERY where SIZE is not. The count must be PINNED (countMin == countMax) or the work is subtracting at the same time and the reviewer cannot tell which mechanism it is watching.",
+          "evidence": {
+            "row": "SEP-3field-fix",
+            "weakestPairing": 14.416,
+            "extentByState": "0.957 neutral / 0.968 stress / 0.995 recovery",
+            "components": "5.625 -> 2.625",
+            "blankSeeds": 0
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "2d6ba08664d3d03bfa0ebb4670e324597c5894e7f8b5f6bc67e71b166b43f38a",
+          "bytes": 543381
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "c0a15c641d49739bb6e86be3bcdd2e2ca5d4a6bf13f9195efe28345ee4bf23b5",
+          "bytes": 169298
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "a90eaf45544ded5c79a1b9e5ab526a4903438be40ad8d7ffc0e4fc1e6217c352",
+          "bytes": 632448
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "802b408b946f50a9ed8b9a0b991402560b558d31220404bfef89dc75dc4e560f",
+          "bytes": 196921
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "90c2d981db48911ea0dfa387d775135e15cfa25347c46f188bf29403d6e1b6f4",
+          "bytes": 155903
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.434,
+        "inkMin": 0.298,
+        "stateDeMean": 14.76,
+        "stateDeMin": 8.76,
+        "seedDeMean": 9.86,
+        "seedDeMin": 5.41
+      }
+    }
+  ]
+}

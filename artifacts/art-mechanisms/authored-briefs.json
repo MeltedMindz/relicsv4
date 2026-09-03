@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T19:01:30.720Z",
+  "generatedAt": "2026-09-03T19:09:38.758Z",
   "seeds": [
     500003,
     508194,
@@ -34,8 +34,8 @@
         "min": 4.515
       },
       "ink": {
-        "mean": 0.597,
-        "min": 0.359
+        "mean": 0.687,
+        "min": 0.429
       },
       "extent": {
         "mean": 0.994,
@@ -43,11 +43,11 @@
       },
       "components": {
         "neutral": 1.917,
-        "stress": 3
+        "stress": 1.167
       },
       "largestShare": {
         "neutral": 0.989,
-        "stress": 0.692
+        "stress": 0.999
       },
       "blankFrames": 0,
       "floors": {
@@ -76,7 +76,7 @@
         "min": 5.113
       },
       "ink": {
-        "mean": 0.518,
+        "mean": 0.592,
         "min": 0.203
       },
       "extent": {
@@ -84,12 +84,12 @@
         "min": 0.758
       },
       "components": {
-        "neutral": 3.25,
+        "neutral": 1.833,
         "stress": 1.917
       },
       "largestShare": {
-        "neutral": 0.859,
-        "stress": 0.975
+        "neutral": 0.987,
+        "stress": 0.974
       },
       "blankFrames": 0,
       "floors": {
@@ -108,30 +108,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 6.33,
-        "nr": 3.903,
-        "sr": 4.925
+        "ns": 8.09,
+        "nr": 5.006,
+        "sr": 6.414
       },
-      "weakest": 3.903,
+      "weakest": 5.006,
       "seedDe": {
-        "mean": 13.67,
-        "min": 6.261
+        "mean": 17.481,
+        "min": 7.33
       },
       "ink": {
-        "mean": 0.483,
-        "min": 0.301
+        "mean": 0.497,
+        "min": 0.11
       },
       "extent": {
-        "mean": 0.919,
-        "min": 0.65
+        "mean": 0.915,
+        "min": 0.542
       },
       "components": {
-        "neutral": 5.667,
-        "stress": 4.167
+        "neutral": 2.083,
+        "stress": 1.75
       },
       "largestShare": {
-        "neutral": 0.936,
-        "stress": 0.865
+        "neutral": 0.99,
+        "stress": 0.992
       },
       "blankFrames": 0,
       "floors": {
@@ -160,7 +160,7 @@
         "min": 5.778
       },
       "ink": {
-        "mean": 0.561,
+        "mean": 0.615,
         "min": 0.279
       },
       "extent": {
@@ -168,12 +168,12 @@
         "min": 0.717
       },
       "components": {
-        "neutral": 2.167,
-        "stress": 2.167
+        "neutral": 1.75,
+        "stress": 1.833
       },
       "largestShare": {
-        "neutral": 0.911,
-        "stress": 0.901
+        "neutral": 0.993,
+        "stress": 0.986
       },
       "blankFrames": 0,
       "floors": {
@@ -192,30 +192,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 9.362,
-        "nr": 8.391,
-        "sr": 17.635
+        "ns": 6.58,
+        "nr": 7.746,
+        "sr": 13.628
       },
-      "weakest": 8.391,
+      "weakest": 6.58,
       "seedDe": {
-        "mean": 9.005,
-        "min": 3.075
+        "mean": 7.994,
+        "min": 3.256
       },
       "ink": {
-        "mean": 0.261,
-        "min": 0.058
+        "mean": 0.317,
+        "min": 0.074
       },
       "extent": {
-        "mean": 0.633,
+        "mean": 0.663,
         "min": 0.583
       },
       "components": {
-        "neutral": 1.083,
-        "stress": 1.167
+        "neutral": 1,
+        "stress": 1
       },
       "largestShare": {
-        "neutral": 0.999,
-        "stress": 0.999
+        "neutral": 1,
+        "stress": 1
       },
       "blankFrames": 0,
       "floors": {
@@ -244,16 +244,16 @@
         "min": 6.87
       },
       "ink": {
-        "mean": 0.58,
-        "min": 0.34
+        "mean": 0.592,
+        "min": 0.341
       },
       "extent": {
         "mean": 0.946,
         "min": 0.833
       },
       "components": {
-        "neutral": 2.417,
-        "stress": 8.583
+        "neutral": 2.333,
+        "stress": 8.5
       },
       "largestShare": {
         "neutral": 0.975,
@@ -286,7 +286,7 @@
         "min": 6.915
       },
       "ink": {
-        "mean": 0.56,
+        "mean": 0.585,
         "min": 0.236
       },
       "extent": {
@@ -294,12 +294,12 @@
         "min": 0.717
       },
       "components": {
-        "neutral": 2.167,
-        "stress": 2
+        "neutral": 2.083,
+        "stress": 1.917
       },
       "largestShare": {
         "neutral": 0.985,
-        "stress": 0.984
+        "stress": 0.985
       },
       "blankFrames": 0,
       "floors": {
@@ -328,20 +328,20 @@
         "min": 5.714
       },
       "ink": {
-        "mean": 0.485,
-        "min": 0.276
+        "mean": 0.5,
+        "min": 0.278
       },
       "extent": {
         "mean": 0.824,
         "min": 0.65
       },
       "components": {
-        "neutral": 3.167,
-        "stress": 2.917
+        "neutral": 3.5,
+        "stress": 1.5
       },
       "largestShare": {
-        "neutral": 0.989,
-        "stress": 0.983
+        "neutral": 0.986,
+        "stress": 0.999
       },
       "blankFrames": 0,
       "floors": {
@@ -370,7 +370,7 @@
         "min": 4.338
       },
       "ink": {
-        "mean": 0.301,
+        "mean": 0.309,
         "min": 0.114
       },
       "extent": {
@@ -383,7 +383,7 @@
       },
       "largestShare": {
         "neutral": 0.836,
-        "stress": 0.81
+        "stress": 0.802
       },
       "blankFrames": 0,
       "floors": {
@@ -402,30 +402,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 8.862,
-        "nr": 10.857,
-        "sr": 12.373
+        "ns": 8.427,
+        "nr": 10.321,
+        "sr": 11.5
       },
-      "weakest": 8.862,
+      "weakest": 8.427,
       "seedDe": {
-        "mean": 10.709,
-        "min": 4.884
+        "mean": 10.334,
+        "min": 5.057
       },
       "ink": {
-        "mean": 0.278,
-        "min": 0.07
+        "mean": 0.293,
+        "min": 0.087
       },
       "extent": {
-        "mean": 0.785,
+        "mean": 0.744,
         "min": 0.617
       },
       "components": {
-        "neutral": 1.583,
-        "stress": 3.5
+        "neutral": 1,
+        "stress": 1.583
       },
       "largestShare": {
-        "neutral": 0.985,
-        "stress": 0.934
+        "neutral": 1,
+        "stress": 0.931
       },
       "blankFrames": 0,
       "floors": {
@@ -454,7 +454,7 @@
         "min": 4.411
       },
       "ink": {
-        "mean": 0.319,
+        "mean": 0.32,
         "min": 0.137
       },
       "extent": {
@@ -467,7 +467,7 @@
       },
       "largestShare": {
         "neutral": 0.842,
-        "stress": 0.839
+        "stress": 0.838
       },
       "blankFrames": 0,
       "floors": {
@@ -486,30 +486,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 12.127,
-        "nr": 10.631,
-        "sr": 22.66
+        "ns": 8.465,
+        "nr": 8.556,
+        "sr": 15.953
       },
-      "weakest": 10.631,
+      "weakest": 8.465,
       "seedDe": {
-        "mean": 9.524,
-        "min": 2.735
+        "mean": 11.411,
+        "min": 1.919
       },
       "ink": {
-        "mean": 0.299,
-        "min": 0.058
+        "mean": 0.383,
+        "min": 0.104
       },
       "extent": {
-        "mean": 0.675,
+        "mean": 0.734,
         "min": 0.583
       },
       "components": {
         "neutral": 1,
-        "stress": 1.5
+        "stress": 1.083
       },
       "largestShare": {
         "neutral": 1,
-        "stress": 0.996
+        "stress": 1
       },
       "blankFrames": 0,
       "floors": {
