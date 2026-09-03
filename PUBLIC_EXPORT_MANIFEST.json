@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 1320,
+  "fileCount": 1793,
   "files": [
     {
       "path": ".env.example",
@@ -56,7 +56,7 @@
     },
     {
       "path": ".github/workflows/autonomous-launch.yml",
-      "sha256": "e966791c63fecf729ec755ee58cb0a6e0998fe55e11bb8bfbdc671ec615c4f7c",
+      "sha256": "878f9466946fcebd5dfa4cdf5430b12b8046fc54330419638b2af605a39c44d1",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -70,7 +70,7 @@
     },
     {
       "path": ".github/workflows/creator-kit.yml",
-      "sha256": "07d6b77ef2c0bb3fdde15b0dc80f00eb16ff7309c615dddca804c705b27fa3aa",
+      "sha256": "dbfa5050b82cf0431fd22b6e89c7f1e219569b88fefbc3c95c363edc1c8d69c8",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -105,7 +105,7 @@
     },
     {
       "path": ".gitignore",
-      "sha256": "9f0303956b9583c70623f7f1912277b073117206cb25fd15d0ad89a4f882b7f9",
+      "sha256": "74405ce3486584f5f435f1cbec3b59040b5a2a2cbc3cfd7f74c5bf9aa56fdb35",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -119,7 +119,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "2a487938498f8c8544ff2a7f32f895b4224a353324a631895dccc0ed358f5bd3",
+      "sha256": "e07bc6207b30f8bb0ff0269def1f2f083e5f83fcc0e958c7892820fa34858bc5",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -154,7 +154,7 @@
     },
     {
       "path": "NO_PRIVATE_DATA_ATTESTATION.md",
-      "sha256": "a4e64eb5e7ed2508202a0f46b5e8fe3affd4fd893729d368164e9309325e3b8e",
+      "sha256": "da896993608dd44aa6edd174d3b54c933f8155d142352be797285fd54f03183b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -168,7 +168,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "e8ea23bfbe5e7ba69ddd5b8dcb1b3cc2e47a0537559b5bf0170c862b7e49a22d",
+      "sha256": "ff3c48b51d0d5b41032b3cc4e06db7454f7f1777579824a2f3b1c2931d969721",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -358,6 +358,3051 @@
     {
       "path": "apps/web/tsconfig.json",
       "sha256": "2fc4d8087513d3c084421614f35d2b904680909961644deccbbecf8a9e00adfa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "c201386d4f9c583f91b2d3f134e3d70adae44d85ff6a6209cc53b130ccd04224",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/brief.md",
+      "sha256": "f21c9ce65ea09963f56ed7d56acd7c7f728d358a4efb9e943b43af1218909cc6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/description.json",
+      "sha256": "fc087d4124ed2a53b535c820ba4de566a49287031b7ec5ecaaa3f90336d910b7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "e9d29c55b9acb1466784a097d51d1f9acfb1120f491925d948fff3b4701f8aa1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "989e39124b5eac7ffdef5e43de9edc4dd0ecbba56c2f0211820acbe42183ad23",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/sheets/holdout-single-512.png",
+      "sha256": "913b2dee0011c6ff2e142b9f57d252a15ddc5647e6b79be8e553613837285fa3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/sheets/holdout-states-120.png",
+      "sha256": "01f4edc31b059d1023e7f9402927b4fa09baeb0880e93306e5cbc0c3f9ea4438",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/sheets/holdout-states-256.png",
+      "sha256": "50a7344d2438e3af3e2f7ef0eb75e6509af00ee24492951dfd02aa23a618e126",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/final-review/verdict.json",
+      "sha256": "6aa19025e52bea76fc74405cdc0a04c1f27838d5da20a3eb243f9589ec8217ca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/critic-prompt.md",
+      "sha256": "0fc1d09e6800883b54569c9e602c5652b59df2dff0c5d90e3ed377449ccf147a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "e442bbdb6724480725dfb7e5d5c8a442ef93c8325df33e8dbe5e4a6598cb2c4a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "99e56a8cb920a319f93ddd6ec97112851d5b857de7ed4b9f7eca41eb2f6ff3e5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "d5a19e9a75430956b6dae690b09a103a4595218d13f15eeddb96bf5ccc820d54",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "7177b0d69eed24030dde180f20a75a05ceab4766f9ebe2de818435d66afe5b80",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "f4910dc60d827ed77edd5a67eb9f3c39c91176b5ed499059278f7bcb7936cad7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/critique.json",
+      "sha256": "fbff88386af9086f62745dd5733b338efa72bba8798e3dd7c42afc2b84c4abae",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/round-1/response.json",
+      "sha256": "2fb415d2cf89b09f6463247567600e1a1e3983c4f647cff9c5338ee6b7b0f45e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B01/run.json",
+      "sha256": "e7211f7c3c4fe6bfbac949b5a4fcf89b3d9dcd16e32989ddfa722dfe3e75e523",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "2d7cd44f796f9ad9a8dcf8892fa8e37ee965a3b4a86aea041e63ab496ea8c5e6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/brief.md",
+      "sha256": "21fd2fe33f9fc214ba618a7e2042407a051a20184319f2bcc574fa5ec53f4f3b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/description.json",
+      "sha256": "7b421167c1f852588108e6f435a030278c0ef97f4d132403fd47c4c73161fbff",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "5df92fe12bfe717a570e111ed385b6ad94e0beb12dcc8f5c632cd5dfc3433340",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "65ed17104197ae2099ece46e05fd5e90544a97d8c2f3254e80ddd08b82fce0f3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/sheets/holdout-single-512.png",
+      "sha256": "15fe7b595a521731533d3fe24e1054a793dfdfc875717bc3b96df5b0aa7df8c8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/sheets/holdout-states-120.png",
+      "sha256": "42c74405378e4537147c514db05a33c5203cd49954fbf8f7f40979852b7df08d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/sheets/holdout-states-256.png",
+      "sha256": "2f8afbac9f6f8fe4cdd0db6e24f851c0e98b263af04a78ebe7ec6968cc5cf777",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/final-review/verdict.json",
+      "sha256": "b9925c5c94ee08cf723a92de8d585b665d6e0d4585aa5ef57822a8e8167bf483",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/critic-prompt.md",
+      "sha256": "00ecbd48d56344d7057bc3e9314f538e22ec69c195f5a72a803d87230409e281",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "b0ed5144fa7479811dd4d43d05180423babb40cd5d4d18e6d22eaabf61584cc0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "1b58b87c35e5aece99ef7897efb361bcf11a5aa1eabea41225832860450a6ef2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "834e8c3d26dc9ee9bcc6977f3b37e6498dab3a3e32328d32bf8f5bb63fa94d77",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "b985c31346ab73bad7a6a0d74a7bad6c4fd53a59651f8abcf3c3e1702a001953",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "75b0c915284765b695de170eb5ddd01f154e9e8f003b7977be536ea90ec9fb58",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/critique.json",
+      "sha256": "53f73dbf7541163719595b263da50a493c131c5f7274ce873035ab8c2b24a95b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/round-1/response.json",
+      "sha256": "a0d4f2489725df3679fd2b25763402202fa011622d13bb86c8fcc64b71d17181",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B02/run.json",
+      "sha256": "e89a23c77d78cdf1ba5efa01d28bd6a25dd792c5f07fcb40dc756df9afc8a509",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "e9590c4990683c4bea1b7025d881818279163c823f901d4e37e526bcd1feb184",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/brief.md",
+      "sha256": "676e48a22c78fc0866b0be0c4cfb400d05be62f4837312c9fa8e00a81e5ac9ce",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/description.json",
+      "sha256": "a6500c1cc21f29dacdce267fb3750242c25fb580e3942d402abc2f999c9068ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "215c7ee845b891a8ff4c83f05b7c819efaa7e1b1777a9ac8f570b6d893aaa9c7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "8fbea1e3dda6ed498c557b693cbfa8075b9563a081b10256c85773fa79548a38",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/sheets/holdout-single-512.png",
+      "sha256": "001568bdba1e3420941e7e82d18f8a2d03326343f4a43ccb8349e19ccfc45933",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/sheets/holdout-states-120.png",
+      "sha256": "39cbba257c2eb3a34b1324efc09750426f06391e2a6e3fcdb2ea962e3517d893",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/sheets/holdout-states-256.png",
+      "sha256": "b3a872843ebba39f724ffebc9df4154e55d9b0753f6594d94bd1cfa45d8a551f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/final-review/verdict.json",
+      "sha256": "4ec671cb6637d9d57d36bd97fa4b073810ce6de73504831052569db7ec3beeca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/critic-prompt.md",
+      "sha256": "00146c5bb850d7d083f7d1a5583786ed1fd99581e779f276da6a14254ba98362",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "e0c4b0489c79ad8610deaa37bf998257af06223e33c7c86513cbb62d33a02a84",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "4674c575f38baf509492393df8e47994e909cd19dd5355f57317c4b9338bc86f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "c4dc1ee9357f9ea63b73e8b7af85b8aa4c8871f0037cdc01ea7c9634f07cfc3f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "19498f80c718f9c8229432295590761814f4d9c0f033b838049384eeeda7c246",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "e29449033596c0de4d6fa1c0817600cce617f6e41769561c93dbd78b3c961210",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/critique.json",
+      "sha256": "90e48dba0e54fe80deafd6a8a84ffed9f0e68ef5980461715e09e5c6ed8188c7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/round-1/response.json",
+      "sha256": "d2877a7b19a459a93fad32fabfcb685c8b5d339b9e5652db3929307002b1972a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B03/run.json",
+      "sha256": "886abd6f0a7ec6a921799fe8dfb4e2d19d37775e4d4cac3d026bc1250404d51b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "b7c513172501d98293f98599c29fedc7bfd7e2634a4140da557b5a949f9fa5bb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/brief.md",
+      "sha256": "338d0a8732ec2c2532252158cdcd07a377d3cb24df88dc2cc4ce0e45d0ceecf4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/description.json",
+      "sha256": "482e9de678b15d2cb960f791f132a32291c51cc01d41b9bca3cce4ac597d269f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "a7ca38b7b79f22d0047a986ef002e2b07ed3750bd2098156b6b67aa2fe98d73e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "ba0800901e29118f25c43c99f9c38bd7e38b55e0c914a7b0d35c97c374e737d1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/sheets/holdout-single-512.png",
+      "sha256": "d5c216e5cc7aaa51941a8a8d7a8e2e7278c4d5a1bd90ba8517018dcc7ef8aff6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/sheets/holdout-states-120.png",
+      "sha256": "f7a23f92ad3d797509789c201db63af11983432b74fc1ae27ca3cb15c09c8623",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/sheets/holdout-states-256.png",
+      "sha256": "bf424876f43a44246df0c9193dae9263e47486d9bfb4a9b3e2c51628aaba9546",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/final-review/verdict.json",
+      "sha256": "e53b785aad10c7647ed74118abc97ee2c05a2b87b544d8a50c7712f9deb6d58b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/critic-prompt.md",
+      "sha256": "bb899c307ede0f27477e48f69a6408911fcea53208ab3c41b014daf900ca2f0e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "77a8bf77c9ef563d42594424f3f5abc0a75e093f503acb34eff97a51a579a054",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "a924654d5c01745c285cad98dad27e0bdbdfd47653288af0c2b4fed3b0b026ca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "5c3bf7eaa6b0569e2bdbf73e04b5575c154f0ed8d5a5fa01044d10e548a8b85d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "8c31e0298a199ce38f87d84f975025d913c01537f3d198c4d45bfb91b601de24",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "dbc91ee3d7d35b6c9a1fcd119fbd08af0179ca08f98374a8fb7eb8c9c2d02c47",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/critique.json",
+      "sha256": "f6b2eaa46d1879a28cfbd6a1e6e856418937c459a8bd8bc846498dcd1b7c2ad9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/round-1/response.json",
+      "sha256": "2fa067cfd4d594de3774c6cee5aa24e4524d13a6100eda1a0bedde78248bfad9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B04/run.json",
+      "sha256": "a6e1cf33124c05b013bf5f653133d400b0ed22408f152795a98be7effc71cd9d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "e6370a151f767026d078e789e50e50448a61bf852540296fcd29160dcbaffa7f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/brief.md",
+      "sha256": "c9da22109bbe14424b91a91e32acf51ba403f18ca7fc14c77c430e0342c7daf1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/description.json",
+      "sha256": "40f1c3a49b45531e21aa4e543990b820aa7560d346e2b60802e33bc52e930883",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "da8ef608b980a194168c46618ad340a60413587e4cd341226861dcdecb3be970",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "e3b6dae1e04ac0122fe66143409c1628b9b3263a4d0ff2eaa39b8ded8d98066d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/sheets/holdout-single-512.png",
+      "sha256": "d92c1658cea7d4d0e6c86a7501515bbcca0bb06a0ac80bce796cdfe08628350a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/sheets/holdout-states-120.png",
+      "sha256": "0f58079c603bed89f896dfc41d86c3a9da46dcac11cb75d0d767b93f51ce82dc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/sheets/holdout-states-256.png",
+      "sha256": "11652f0fb8bfc4eddba3535d7466a4ec40a8f01de448d9fff740ca9ae24a391e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/final-review/verdict.json",
+      "sha256": "03e68a43b840c63247b6d31efe88cb40d11771f0069403cadf52b5822f938a7e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/critic-prompt.md",
+      "sha256": "418754f514c293518911990dd00d5a1923e6e3b31e28902c5b3dab69da2eaa94",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "40275dc624b4c2c1329539f1b6c7dae128c17b204324da822f41939433dbec67",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "a6630c8771dbb28efd907f66fd13b9f869dccdb18da296831b6f4db5cbc590f2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "17db875422994e29a5236f4f39ac4df76ddb825bc40570e793e9abdec6d193ff",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "1a2178f2f7a3caa6b3e8a41fe2a73f107495dbd06c68c12d62138a03ef404819",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "ca15ce5e9dc03bf111855451418dcf3c31e2af1cd5dc29c6bf98e1147f478f8b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/critique.json",
+      "sha256": "0ea8bd194cc008daeb2b0b6e5293ae61de70a9628ebcf461296cc38e34335d87",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/round-1/response.json",
+      "sha256": "d42d98324de376cd22d600c474e1719aeb9672d17a12ed3017cd96dbf8c322d8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B05/run.json",
+      "sha256": "0620d789a76da814744504cd48be0da6ba04584b948187757fe88c1b0e1d22d8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "bcb24942fb1c25883d100ac49022a00d7d63db16f0d5b024ea075da3961cc666",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/brief.md",
+      "sha256": "52fd0dd35c42740a9a648f9940d1d7d9729738e72daa0d9891bf13a3b0d40ca8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/description.json",
+      "sha256": "85d9ce1924b7f85aaa204989dfced64d0524efcb8e69ed6e4f8abfa5bbc9adee",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "2f9ee402946c3aa3c961a52122105ebbb176ea23e064390acb3b4a6c07998d9e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "63f7b109a024de4de9d619aabee378e9b25aeef9afac704d9dd79c83ff3b6516",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/sheets/holdout-single-512.png",
+      "sha256": "704000933baca9971813ce621026b389eafc1b744a37e2cdebe536dce30d3a8d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/sheets/holdout-states-120.png",
+      "sha256": "5228c0cfa1a022e6b44868e24e36d3b6265910f901f691c67fb73f54dec812f5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/sheets/holdout-states-256.png",
+      "sha256": "fefc0bae4d0582c64ca4854ffa473975ed0473861034cd1fc49bf5dab360f5b6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/final-review/verdict.json",
+      "sha256": "c3bc2e4c6e5ceed2121d1e6a0e5b2af0c2836fd1e327d823da2416a1bd9dcaa8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/critic-prompt.md",
+      "sha256": "8dc784072ee8454f5bb1bf186a2a0ec3f380b6b1730f418863846cda710adfb8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "6b5d90c119970f58ce4517562f0a2cddfed38252a0589a8363d1bc87232a4ccf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "844ecd3709103bca476cf834ed2536c1963d77f344cba49129fda0a5a2cbb503",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "a3a5010c2103a7477355fcc7cf4be751737c1a9c478cdbe7506247bdf1d99503",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "c13bbb01ac0181ea92566c601adcdcb03508aff2954a344db39286a2f72c9ac0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "582d7052f04a9bdeed2294e2fd7d8942fb977c6c03666404145c58b849bed7ff",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/critique.json",
+      "sha256": "7e89013cc6049f02cf576339c10d6e38d2f4732700845d7173e27c9f91ff6a42",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/round-1/response.json",
+      "sha256": "385f8ce31090f7372a0499412cdb78ce89155b78e82744dcc2cc778bae92ba06",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B06/run.json",
+      "sha256": "9a9ef04f117717d28216ceff84438363b40fa467e2e4279251477a6ff7fd107a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "7ce06cd87e8482eb04f9d9f02452b4005260ad129a9ab4d2cc2e9da71293f0c9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/brief.md",
+      "sha256": "5b55ca772fae1aa6637aec89671ad4969a9a554553bfc579feda75462e9398be",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/description.json",
+      "sha256": "efda6d06a77c231909cfaf4bff262f70176dc67b9a536d569d866ac55ddf4099",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "4c4b9becffd65f6cc870d32b8465c9bbe878a18edab709da21ebd6652daf91c0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "99da5d9a4079ca2ba20a6ba7e6bf1f911031937a9ec8904a95179e5221742789",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/sheets/holdout-single-512.png",
+      "sha256": "f5e512bb93837c97dc1174aa765422ebecd2d9f61e9fa55cd01fabcc45c87b61",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/sheets/holdout-states-120.png",
+      "sha256": "5abb132e456569f1aac8fa9f396528950f3d83e179c49464305508c6f6820926",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/sheets/holdout-states-256.png",
+      "sha256": "869f5f030e34ba1b4aced7546808bf2bf5facfb6a7c1ea1a8d66cc8ff1342b36",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/final-review/verdict.json",
+      "sha256": "23fbd39669461c61566b5f5234948bb4972743a3daa7e98b432847a0fb9d23ce",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/critic-prompt.md",
+      "sha256": "8a85f6ac2d3530fc97a7b1fade5ea0519f1146961344fd78cbe68d71bc0f6c6c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "93652fd2f6a9d22e872bd525f040b472393b5e7c37c57a36090aa2be6aa1d8ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "d37b3d781975c24c81dcb8c77d9091e033702a698fa14bf057038b60f3ac7d5c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "df3ea9d61c520e3b7c5785975ac4858f4bbfe4f7d975f7e06e3e3652b5239c23",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "0d506dc66fa8d59fd819a24d685ac6594db4c4231a1a9cb9c20abd96453586df",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "0c06f004acd9d38db7997248bacbecd8da195e63058b78408f1cf99808be1e32",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/critique.json",
+      "sha256": "fcc56ae7241c8c850b6c5092854ae0bb70b7f9e3502bb3e8e1a26bc52f2240f5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/round-1/response.json",
+      "sha256": "0a88e092b8632e8aaf101cb5f4e75d343c63a957ddebe5bf9923bb65bbdf655d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B07/run.json",
+      "sha256": "4ece724197f4809b5fe30f3ce816073fd29f72dc01f5257fca8ea96b365b1778",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "a835a23dcccfa9b7e28fa2df8ef504bc3c89c82ed2e1178365b7e01b13e6ee4c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/brief.md",
+      "sha256": "b7c24ebf7fb1b6bdc77124eb98b90892845aed8d14b699f9dc82faf5b498adc6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/description.json",
+      "sha256": "4d99b2ba3b651e4784d943cd0cc33b853efa723c8dc32b33fa793fa0ee3e4370",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "bceaccf1537232a3f61ec4f5ba8a90a0d5b1b29a5cbd7c94d74a1ec25a9fe5b1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "9a274f68554e81474afbd1c5122037dcc886e6c4b6266412a9a3b9ba9867f327",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/sheets/holdout-single-512.png",
+      "sha256": "1e2817cfe687a637013fe991819fab559e040e9449681eb8336ea6761a14a364",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/sheets/holdout-states-120.png",
+      "sha256": "c76d857b10f0b7eada4ccbfee55c7a5e405634fadda370744a8d49e2f17d94dc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/sheets/holdout-states-256.png",
+      "sha256": "202f87e8eea8bd6e61c516bfec07a8bbb92bab53dc31b25653fd6b71c3a2b588",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/final-review/verdict.json",
+      "sha256": "50286a986456858f531a25ce7efdec68f09635767f5ca5c09da9d98ec54f3d78",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/critic-prompt.md",
+      "sha256": "f191f191f0c44ead6794e2faab13b459d88cc3d52a01c0188b25719841418924",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "06643e9ac592fd37bc1ff1a2370cf9b9716b3dd3fc3807d633c6f867aeec5903",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "efddfb7452da01f8f9794b4807c558f525652f9b94fd1e5256d88a9df32aeb79",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "71dbdb4edadc7bce0d1aaf21a5dcd0aafcdc938767a225856a443034aeea89c1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "785783772376c5c75646a863999084a1e2d9121fa6a687da4c50dc4bd9bd8165",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "e24fd37a63f46f77a1eb30119f2e5ccc81f03093a48788beb9f5390f251a8ce4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/critique.json",
+      "sha256": "b25235d3466a3ee36b06d3e35e81342b0bafa6dcd832a4b0c88a2e6db5ea160a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/round-1/response.json",
+      "sha256": "6188664887e6da0cb6361aeb2aae397bfe2bcb31abf51e1395c998075a06a68c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B08/run.json",
+      "sha256": "cdf4607faf2e97919643afa26290d4582dd8b7cbde3db2c2c43bc5935a95f7c0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "6d1832e7f01379fe52d1b5344e0c07c0929405b88188621b6cb54112eac41822",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/brief.md",
+      "sha256": "7e1ce242ef0c46fc6b0e67a3107572835aff03444b0292cbb8893f2404a362fb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/description.json",
+      "sha256": "bb5e9224634f4c7d2853291250ae4009e8711da8e2d516ceb5e7624ad245e6d2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "1efd492da7dea51d52a74bf4df4719761012b1b7368906510793b7830cd1dabb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "4942bd35760039b13b55aaeca3058d039d7e2a07b36ff3f568dd2abf715d135f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/sheets/holdout-single-512.png",
+      "sha256": "2bed6b9a07bfcab9d73ee169f0c9501e4e88dc8d5d99f3a4adbc9819c0b084a3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/sheets/holdout-states-120.png",
+      "sha256": "4a83488ea6e60c1ba31bc9d81ea0ef8c616ac8bda1c146a3eea3106f0990d154",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/sheets/holdout-states-256.png",
+      "sha256": "2faf88f0205573779143e993beff51335efe978d5b70c7ab8396ab00e98e216f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/final-review/verdict.json",
+      "sha256": "96b53c4b3ad3c9346f7a753c4857c08367da257a315042e8309ed80ada772f76",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/critic-prompt.md",
+      "sha256": "4402cac392ce6a1edace1aae41782474295ac130a927911ff002939f2e20a5e5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "08245d38e6ae8e12b6b0bdc8c1bb96046d0795c13ebd2b0d4cca83d5a4ba0279",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "5792006814b1fff061d9babe5bb71ccf9a826416e321902ec51e6d3e999f83cf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "a345cfb3961b0ef96b82a2887dc35a0d6d8afda7a7d0c889e295db69cf2447bf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "cb99bb0902ac02aeee0b2b2a4c1a5fe6c4c568244dae868f2ecafc00679c45a8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "91e6fedd98acc67eab0ed468a7b280e8465ef6e1b4181ea5bde4197efcb7f179",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/critique.json",
+      "sha256": "607d4f853176bbbf5dacc4daceac07ec74769a4720145a59872634092f0600f7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/round-1/response.json",
+      "sha256": "27e67de0afd4cf6157c73e1893191e9f57bb192d6fcec2ba1bfe904f466b4f62",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B09/run.json",
+      "sha256": "80a56d2da11d174b386a71eb36171472d5cf4081e857a06af1af424e0717ec15",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "caab44fe0a113b0bf39e8f4a17e469ec7643ce5dbcb0de6dce67901fdd21feac",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/brief.md",
+      "sha256": "a5c411175c9d39736d90c90995f0d4d3a79f1a33c80245fb14b645154eab0f1b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/description.json",
+      "sha256": "c1c45b7770fd003c2d8d66aaa8544e3f2cab52909ed324986ba8b7cbb275144a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "908fdeac8b875bede61bdfa67e697826548d854bc647e06ef1c5d956d9825a2a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "42e3e530282db39787c47b2aba50fb87e73e8d35148be027ec5ba23182c46615",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/sheets/holdout-single-512.png",
+      "sha256": "7fbdb86a7c13d6b75bafb11c7abebdfc93c10c04912249e4bc3ebedb8759dcc3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/sheets/holdout-states-120.png",
+      "sha256": "84e4f800ee635c5c36ab37c99043c75eb75ff27745e9c916d232e7811cfbaa10",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/sheets/holdout-states-256.png",
+      "sha256": "5df15f0cfed6bfd92983ca8ddfcb4de305c600f6aaeb431befa8e4f51ffe7102",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/final-review/verdict.json",
+      "sha256": "1c1914a76409cf67d3bc13af3a835d8ac0e9f8067b355142e7381ba32bb1ecc8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/critic-prompt.md",
+      "sha256": "5de4c9f227bb14e4daa6a5d8eeaeffad8f36f7f46df9f7cc03d35817bd5d8532",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "a1ae62ccea4320a32fe27ab26c4d91f9f715bc25b34b92ab05303ac11e81a39f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "4f73a3dcede808a93bfbf16c8a2f5dc37d02aeb040dbafaff26ebb96d3824087",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "0ccb06de41ab17731ffc5b5d8669dec138657d7187b8c255ce739e7f725eaf01",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "378160f4f94b850872ee448fc930ab9ea49fdc1b30e58f20c8d86d04926b6ca4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "276198935f2437560d8a9422f1518321ab45291cce3edb9c9bda082b3cee9efe",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/critique.json",
+      "sha256": "4b9fc59004accb84ad0b2c98e46db311b8cbb0a2c65ca7cb68e99716df86af55",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/round-1/response.json",
+      "sha256": "e4f4a85efbdb6e49439141ab7dcefd3730a21dc127803a5529003a6293a14fc5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B10/run.json",
+      "sha256": "4a89d9103b22d34aa3e70faf39ac986747a71a9492733d9497adfa7f24c443e7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "dd44ac951f4b10fa10490cc849c5614baf662fb299e3b8b47e08e5cc6c98a209",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/brief.md",
+      "sha256": "6bb570cfcc7c338f4c1fdd76938ba5d2512ad6f49d07cf9bfca489307229d8f2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/description.json",
+      "sha256": "cb141df807598b6def15931334b3e310a8c2f9dc969c2c13f8ec7ac00bcbc1b9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "ca319c58c62a431ad1c4acb45bc80da563de8d85d81b1c216b4e29d30b5c5457",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "9d06269022ffef1094bd38c6ffc1d4a3c6400c651b7c751179bba8415a92c054",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/sheets/holdout-single-512.png",
+      "sha256": "218881933f6c43779e3cd4c9ee57a98df122e715205a5a4cf5e80bffbadd79c3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/sheets/holdout-states-120.png",
+      "sha256": "01c3f93316b4b44f7d3453a110e1ba51f3e6287376a760b5536c74cecfa1ec54",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/sheets/holdout-states-256.png",
+      "sha256": "097bf6f965c32a7023df70cf1adf71402a6839cbf0e443debd80f6061a5a4228",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/final-review/verdict.json",
+      "sha256": "2f5e3719004f4ae373bc547cc46ed9cf849718cfc6f67cbe43c6d16dd44a2a19",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/critic-prompt.md",
+      "sha256": "2861c60723f6e6b78ef985b642bff1d8a54a0e717ec6f14f10b2bcba5687dea6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "45ec2042eccc24c4ce42665a3b9bd764d3fd40267a84e11cf7cbfaff4c6f55da",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "68403f97f9068ce1f65e81d47171ffaecddcb5b850a1c435a517c3bd53b50738",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "c3f1330122d3f3c7cbabe5d4e63f37e3e494e87ff5c6c1ccb5a7062c7e6df5f8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "bda481be442de70202493aa3b0324a3b5ffe9d6f3eb617c7d53ff8ba6d75c6c8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "bd168dc10a39f31694f3923f142dba36abd12eb0740ca1c857b349bc5e301037",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/critique.json",
+      "sha256": "1436820f5cbf451de140579a097c7c78472645248f543c7493caa20368817586",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/round-1/response.json",
+      "sha256": "af3d735a1dbe6e2eefa2d780a3da6d36fd3c63036c41ba18415dbc2728d2a508",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B11/run.json",
+      "sha256": "5525c5b9a2ab01633f400c495195d061692a781a8ed71aecfbb638ba35bf3062",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "3df00fe7863f00a6635aa8ca7bcc2362e0cf2df2072ad49739fd64784f11aa18",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/brief.md",
+      "sha256": "416b754c1e06659a202dba0a9aebe2cb44a6aa3b23a355cd722cd4f8c1e86d0f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/description.json",
+      "sha256": "223635bd4df88c293378c0fd230a72825357afdc796e9c0c44a8d58d4c9993cb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "dbce47aeb64ba1148a19cc904f45911f061cfaaf426cdf3cb33c2c985e21f7f2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "2344c23842aeeffa5126c62b9b4ad2bcb276d6a4718f399221007c44352995ce",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/sheets/holdout-single-512.png",
+      "sha256": "1ec94edefa90ab0b98527c586ed3b8906137ac4abe466aedfa6db22474e53caa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/sheets/holdout-states-120.png",
+      "sha256": "fe3baa6e012e6c75c7a6e882870272e2abfbbad23270060f77a0f5d21e0745cd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/sheets/holdout-states-256.png",
+      "sha256": "e498a14eae1c17ee4908963269379c041388e2f2c2cb32266c3b3b272b1b1524",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/final-review/verdict.json",
+      "sha256": "d7a5784419299b70214069f7e83bd247afc54938a57df0d218af48add578a366",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/critic-prompt.md",
+      "sha256": "c0e96bf7e0797949c76233dc25378313dde40ce26469fac0ef9f6f0230664850",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/critic-sheets/dev-seeds-120.png",
+      "sha256": "5fe58ee5bd3158d23b7824fb2f253fa2d48a8f324ed886726e38ef884807897a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/critic-sheets/dev-seeds-256.png",
+      "sha256": "0ee4435f9659b758c824b03149d69b10f3b5336042b5b29fb5e1908e46202921",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/critic-sheets/dev-single-512.png",
+      "sha256": "52dbda2e252017d91582a99839849bfddf11afd17c7437da7a13ec74953c6b63",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/critic-sheets/dev-states-120.png",
+      "sha256": "e88fef28db89bf39a3c1ce59e1f33aa9a0c153b6323217d43383226aa0cc2f57",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/critic-sheets/dev-states-256.png",
+      "sha256": "ec89e1b65acd00aa851a5f486efe6cb3af76e4bbf975914da7b3b21296931d24",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/critique.json",
+      "sha256": "c0540c38f93cd77799dd868aa98f219415bcce53d1aa87ba23af430092c66dd7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/round-1/response.json",
+      "sha256": "2a07e8c2566d2f3008dee7ea2172d4b8789dac478e7384de88cc2079679023ca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/B12/run.json",
+      "sha256": "3f092ac2a38025a3f41737e134447fc6b1fb3774a43cbc4e429ea214a1c57997",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/README.md",
+      "sha256": "a3a169bfaa733e772d1b4ab46b772863586edd3258c7041f18278a9b4c193fd5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/directions.json",
+      "sha256": "7b893637753aa6801615afe71faca308430753a80466084a5cc0d9e4fe922237",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round1/report.json",
+      "sha256": "5c153fb4b81a65112d6f6c92bed5be962a9290ea7c638fd80bc49fb9aa7695d8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "c59fd68e6e94520a378fdcb1b89f1a1b293310966b3ba60444fd0e051ee8f4bc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/brief.md",
+      "sha256": "682713ed3290e0629dbf2a67488d05d5ff4ca952a265dcac8b12b7dde5db81ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/description.json",
+      "sha256": "717305b77081e481241f97e17def945e45844a0a716a06e35b2062b3df644cc2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/reviewer-prompt.md",
+      "sha256": "7c8d5ec8713123a50987a08ab86c82a0ae75027477b9be362632922375212f5c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "2d761825b3cea577809ab2a784a906cb2e4a9cba4a2cb2120d115ec7f24448d3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "edaf49d925513ded01a7ec8d48fb36a7489ad7d2980b14a30714b123ad75ac3d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/sheets/holdout-single-512.png",
+      "sha256": "d707a52e43b9a432f10799c6064851a3900f7d728d20020b1a676b246cbadfac",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/sheets/holdout-states-120.png",
+      "sha256": "4cfaaacec43979010d3d81a02a773d2dd07e470ff29ee6f2b8e4afcf820bbf64",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/sheets/holdout-states-256.png",
+      "sha256": "55c502f93227073d5bc3f6dee41ef209c31190f484da86651763a1bb1fd6a7ba",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/final-review/verdict.json",
+      "sha256": "58f5cc537133d3cba3750e9479303ef85902ad9543081dfd3fd3130a43a0f682",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/round-1/critic-prompt.md",
+      "sha256": "4abd340d01734622d0d2f813b2a7a18c9179b4f5e5799adce3a112d903f93f95",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/round-1/critique.json",
+      "sha256": "5c6853e21441293c4011f9ab17442a9c75ca0d89355959c7e2da403dd688adae",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/round-1/objective.json",
+      "sha256": "90959f0e1104a1144ade863b8cdc87b72da5eabd4f28f7d2e3c4f05643e29853",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/round-1/response.json",
+      "sha256": "20a3741bb7a5879ed69344938bd580f923227815aae1d7122fbc9b5c36c64c5c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/round-2/objective-at-freeze.json",
+      "sha256": "cb814b343313adf493bacf6581b2a8de097e3dc1fdbc26dce27a958148183e95",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/round-2/objective.json",
+      "sha256": "2487aa184906f8063f78e2d60a00cc12d941251c58e308bb4c19a7e270c42b5b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B01/run.json",
+      "sha256": "cbce02277a273bd0fb84d27a7f7b00221d5fd7c46de21118d8fad33ae8c9e2fd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "87c4c523cbaece34220aa65a947532163435df919d319f0963b3954642d283d2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/brief.md",
+      "sha256": "df9dffb0063045953c04dfac8f69e90751dd7af4464165bbbbb9a58cdcee2337",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/description.json",
+      "sha256": "eaa460940350581a963f7eea7189d6ef2d7a06169e7b89b3d6917bb56853d83e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/reviewer-prompt.md",
+      "sha256": "a446a3f47652e5aee1e342f365cff19d3f7cfa71cc910ebd298c8303b9878ab4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "65cc663f0cdfc3d65b5cc5da5ac6854c111cd752cdf458df214797f3aa73ccf0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "7e0bee79844f417235d580907ae82becb4390977c6a4d5c99d41d7a090c28809",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/sheets/holdout-single-512.png",
+      "sha256": "5f10229c1d1d59e1653781b43c8b4f1b81d42b7eda2f94e8709f27f18413f06f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/sheets/holdout-states-120.png",
+      "sha256": "a000831ceabf9e048893fac13e5bf4ee6634867776e9137d2c23c8bfefd42e49",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/sheets/holdout-states-256.png",
+      "sha256": "940664b3fd9372d7d2eeb55bb20d436ecc0b00f7f02f4a957e7ab68d14fca101",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/final-review/verdict.json",
+      "sha256": "1a84515d84a389cfa24a40fb2b34f7522b1880db65a48bc66e661a621d9033a7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/round-1/critic-prompt.md",
+      "sha256": "93aae1d31b01fd09cedfc185333e073fa1faa9795b0f73840313a3d09eb61c03",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/round-1/critique.json",
+      "sha256": "fc456bc3f0016511cf31f2da24d4d7a2d22d622b944bd16055e15cc18f4c94f5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/round-1/objective.json",
+      "sha256": "c7b549a93df0a91284701a7c9e06be2cdb3f42d19335ad7d9dfd7a56976ef80d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/round-1/response.json",
+      "sha256": "41c2680cb38e98058c50d364ff2840f52a5c4ab70ebc58012869bd851d6f7f50",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/round-2/objective-at-freeze.json",
+      "sha256": "fae8168d6086f7495b360ba91a37d1daa10c824ce0052d74400b62a74778c166",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/round-2/objective.json",
+      "sha256": "b2b0fd976a9deaabdaf63bac78831c266e408c839e735d83e7ffc097fde7ce73",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B02/run.json",
+      "sha256": "0c9624fe0f9212fee817a5f07e4a9b7022b25c4be11d4aeea8d0aa97eae67346",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "8f0583dc5e11da8b41cb30f4673a4fb9a66861ad50ba6968c894f150a7a61bf7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/brief.md",
+      "sha256": "36c766ba051a2c28f5b9aa7a0c2705ef4edf72dfd51a45a717b05a0932532292",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/description.json",
+      "sha256": "644f5975dce820ded798322da1c26fe1d4cf1da17bdd989cd0a3b8fb6019afc0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/reviewer-prompt.md",
+      "sha256": "941750edc0f70b7e7dee8bba603c7f764daf8247070431732318f9285ae4c1fa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "3fa925f7ce4f528fbd409bb30569621e2a84bb3442dec7b42b34d63a21903b0c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "a526e1f05e27d62429ae4c1d86b7f271d0e94d131af25a5b556147b45be7b2b1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/sheets/holdout-single-512.png",
+      "sha256": "f0c8f309b48b56f6869f18f4555ad16effd25adf6598e73dc8156b9405690d11",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/sheets/holdout-states-120.png",
+      "sha256": "7388064acabd7d3e6c2baa9706a63d07f590e2ce29170046c4ec469ac668247e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/sheets/holdout-states-256.png",
+      "sha256": "069849e7e3800f56b25b75116618814a70dd455a00cc27c97db752606d0c1470",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/final-review/verdict.json",
+      "sha256": "8a465900a9729c191ce9edd63167ef16bd1aa5fba1a6d49f7a9676776eae1e32",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/round-1/critic-prompt.md",
+      "sha256": "336a847b9df09e2b9857f65a6d51b93e6b3d3ef8704317559d81900a2eac603a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/round-1/critique.json",
+      "sha256": "57627c688191ef63a74846dce48a05bb79a6e8e9cf38dbea6669b365e6cc96a0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/round-1/objective.json",
+      "sha256": "0f99a2a96ca1fe511f3f7b832a18f1595bdd695823ba3ee4e7058349bf106729",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/round-1/response.json",
+      "sha256": "24274b0a28e29a6a2880fe347ee4d8c53026e7d1fd19d8154f914e023974f044",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/round-2/objective-at-freeze.json",
+      "sha256": "43111497adc0a440f1df6a539d7d7bb6bb9e7676324c7b604779a536f54ae667",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/round-2/objective.json",
+      "sha256": "6145ca516d9509b5ed810a20d4a070f89e8635317482589e430eed615bab0045",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B03/run.json",
+      "sha256": "c981763f293f254f88920db421d812a7aeae6e550f675e38d3fb4f22366b8102",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "c72fe71bb4b6acb5b204359425a2231c19bdce68fe2fc41a60e11c9e2d8427e8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/brief.md",
+      "sha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/description.json",
+      "sha256": "fb7cdf68f469a9cdebdf42d11a24112c3c0704690e7be25c918087ec046aea7a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/reviewer-prompt.md",
+      "sha256": "b1f73336af5ad507088cb3f902982d696a720ae7525fe9b33d5484c587403aca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "3f2c6cb70a879fd75b29a033d42511b2daf3e6df3ea0b36e6b86dc1d18ecfb89",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "96999366f42b200c117cf714bafc61a5484fa40666a4e12c08694df4fd5a0e08",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/sheets/holdout-single-512.png",
+      "sha256": "af8270614c96d208d4e3e71e1059c0c5c20a50d20c24da16479dc7cdfc624183",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/sheets/holdout-states-120.png",
+      "sha256": "90fdde3550e66eafbab8a1fc65ceb897497499f0679f3e776b1924cc96eb7073",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/sheets/holdout-states-256.png",
+      "sha256": "3052eea6a0c1ce2367e546b3e5f6e735e783cb8b62994b50e3c2ef97e59b6111",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/final-review/verdict.json",
+      "sha256": "2f6d4a226714a4a978500db10491647c1b3b8adc5274aafaa74686f85848821c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/round-1/critic-prompt.md",
+      "sha256": "ccd9c6efb1fb0c97bb4f0c22e526131ff54be04764d9a27b0ef789969cb3329e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/round-1/critique.json",
+      "sha256": "0eab8ab6e51dcbefd26a4658ffe6bda307d28330847d47090cffcfa95dda46cf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/round-1/objective.json",
+      "sha256": "d460d336e446d52bd6b27ffbec6d65bf8fd9d431617a1c8a48e9d5cde9351fef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/round-1/response.json",
+      "sha256": "1b4b99764364d38a649389e4a3f7df1597b577a559145f6e0079170db0ddf05b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/round-2/objective-at-freeze.json",
+      "sha256": "088933e7761d3f9ba20a561af3db36426506f5c3304a73651f86b2291cbc153b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/round-2/objective.json",
+      "sha256": "21fc03713d3d8af24be1c572efa46674bced50277c6d0521fba2dad4bcb87f14",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B04/run.json",
+      "sha256": "619493a6025a8ccf5014ca338e067fb675023dd0a124386bb39b1e0125074898",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "8fc1b88a9b25dd08b230190d7f37dcccceeec1017ba0498f87defb811ee0f0d3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/brief.md",
+      "sha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/description.json",
+      "sha256": "e7bc14b851409548bb65cbfe1d13a7105ee03ae169dc4796d8b20e89078b3e3f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/reviewer-prompt.md",
+      "sha256": "367c29b2affd83e1dea5bb0dd74fd32fe0d4fae3716f04cd8c7b74717d54311e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "d8308c2952df328c241e2cb7e51d3dd9c895472c81d739fd6f713cf56dbc6104",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "3d5bbd0e24127d97c20ad3498c886899371844da62da57e4780946d97bf50d05",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/sheets/holdout-single-512.png",
+      "sha256": "c6f00427495134968b6e878bcc8c0a0f19355f16f67cb0442588b5bfb9341634",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/sheets/holdout-states-120.png",
+      "sha256": "48b4d76e26239f01315a3c42aa481fe7da5e16895746d5ef4fecbc21128c9bf7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/sheets/holdout-states-256.png",
+      "sha256": "ce3b83fa763812e1cf482a0465fc79bb3875ef565b2523fd89e7bede63ecf992",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/final-review/verdict.json",
+      "sha256": "a2e104042febdf6977a752629556dbbdd4f779664f6f085fe65857341841e904",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/round-1/critic-prompt.md",
+      "sha256": "89d10282a27598fccca0714dc6c34eaa1034496de097f541a78e4031f1963c5f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/round-1/critique.json",
+      "sha256": "ca14c5035f7defcbb76925be3597ccf7d46146ef2b7216f2d40c986bcb2772b7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/round-1/objective.json",
+      "sha256": "456fe17c121e11e8512538ff0af91390a2cb9f652c7c7d39d48990c78fe8e745",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/round-1/response.json",
+      "sha256": "af8f417364db32d3b9338b9c6c0ee3bcce5f54f5388b05e5432ae5fe68dc711e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/round-2/objective-at-freeze.json",
+      "sha256": "dcc803ef275c30b063ad238745a04e643ed9ee6d765660903a00ad7c7f3d08e9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/round-2/objective.json",
+      "sha256": "db113aa8007eddab8ef3cf2826947592456bd3e7649f88242b996f75e9c8aa3f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B05/run.json",
+      "sha256": "8443472b5f3f3d5d483b6bce659b54c3cc845357572d68a7fa2909218b4443fd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "0a948806c9e86878f47beb202e3bb6af5a2434e04eacc15745da33e0e17902b0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/brief.md",
+      "sha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/description.json",
+      "sha256": "3ff775a41ef3aae52d201fd5283c89e9f9f2606ebcfde61013af2dda4e396631",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/reviewer-prompt.md",
+      "sha256": "4814a831c787fda2b52de8fecbb3ab18177fa385f5c856e34f3093d3f76f7fd5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "f237f4be5a0208c97a9cf2fb62e29474757994d654501c4ad970e26e0fe865fe",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "452bbf0ba5c9124a5ffa3cd76b6bdfe3d270d3577b9f1ad1d5e2ebd5ca358de7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/sheets/holdout-single-512.png",
+      "sha256": "6a5c632da9959c7dce1a273e192b2eeb550189c9e13323fd4d870f2839eb8b54",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/sheets/holdout-states-120.png",
+      "sha256": "663f28fdea6761b07877da8dc2126b16ba3de56db49cee332eb9ae3e19451b55",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/sheets/holdout-states-256.png",
+      "sha256": "8d57d6323c46cd139980f1eb17720ac5874bcd39a1391c5a94379f5000645ebf",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/final-review/verdict.json",
+      "sha256": "1e122a81d5dfa66cf95c02d4b351157dd6905ffecbe20ca8a76d33fccc0eb5a5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/round-1/critic-prompt.md",
+      "sha256": "a56562eb4d2f0ecdc8e1c313aee8ee30d374186867996c209ee9b273e319b7de",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/round-1/critique.json",
+      "sha256": "5ef1d8e8abac1d833935ebdf1599d5d496001bc0c672aa19553a99623b08ed65",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/round-1/objective.json",
+      "sha256": "90538b68d0f2313e7808ea886f8c9af8fe602bbc1fdd2e60d622fab62c231fb0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/round-1/response.json",
+      "sha256": "ba35a0f7d9c562ac9778541c08558ce7997b506e3348443667aef638dbda3bf0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/round-2/objective-at-freeze.json",
+      "sha256": "e95d70a22deb39a3348976bb1c3fe09c8099cd266dcfa072ba09d6038b96ce34",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/round-2/objective.json",
+      "sha256": "e1ab6d3d33f90592ef97b2876759f1c5ee87130d72b97e75241b738534548389",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B06/run.json",
+      "sha256": "ef4a06ca70222ecfc31c82a03cedb861ab616d804ca1a7e74afcb6fd01010063",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "4130d064b6bdb69e684c2524770cacc51d5f1d9206ec8195ae33c2e550dd36d2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/brief.md",
+      "sha256": "ee37cb8dce1333e24ca49f4ecb27f486b2efd2180755bf54d7e6e754ea51edc1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/description.json",
+      "sha256": "74cd58a12c228431038b6f18a3ada22b7f682a3be3cf74c59fe8b6641fee6b8b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/reviewer-prompt.md",
+      "sha256": "f9ea2cc1b696b5b6271de63fdc2ad4f775d034c733b1ae31a69d2d6fe95d6afa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "94b0b5b1f95307ed272528100d98347b776f7a88f4e748f0a3a1099928c1802b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "bdb2952078ae4509671f87454bf76d3c2ca5584faca2ba97ccba13824c1ca202",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/sheets/holdout-single-512.png",
+      "sha256": "3b1dee23a7aee2c0115a760d41ae074e22af58f3660fd0a73b205de1455d61a4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/sheets/holdout-states-120.png",
+      "sha256": "b65a0e045e27fbfc911d48c005250ffce870328d8f52ebf7a8cbf1ca4497f2ad",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/sheets/holdout-states-256.png",
+      "sha256": "13dcafe4509c55f9f9084b8d9a3eabacec3ce210e4c3735381235347e6b80a71",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/final-review/verdict.json",
+      "sha256": "9853a8a2b2309f5e6f4c483a3c6d8dadd7b9fd293c120b4d54def89bd3267a9f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/round-1/critic-prompt.md",
+      "sha256": "e2fa7cdd0eb3b948afa8f30533e1989b95a38b4f898bc5c90577f6bad71775b8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/round-1/critique.json",
+      "sha256": "00e2adfa2d4d36ca3261588546cb7e084f6842bbe83c728fcd3caeed45855c52",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/round-1/objective.json",
+      "sha256": "21bd87536fb4d616abee152dad4808bb03d6ec26c545e588695b00d61e018c27",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/round-1/response.json",
+      "sha256": "45741c14bb4417cb16df2b2e6998191fbc3831ea3d230ed2f69ae422535a9295",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/round-2/objective-at-freeze.json",
+      "sha256": "146e1a6e90f4b6a125fe073cdee25d46d4803f102801bc60eb1a07ba74419689",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/round-2/objective.json",
+      "sha256": "b0eed2d742bf29d8131601415972c13cdda898280f49f1cd1e9bb8fa8f978bea",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B07/run.json",
+      "sha256": "751080d06ccdf3035ac453925b79a226691c72ac0f572dbce9c23a9c58cabe24",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "8ea9e925d8bff598bfc197df1ee9b8f014c06a335079306e3347a6c5b4c91f3a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/brief.md",
+      "sha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/description.json",
+      "sha256": "8c6cc9c851740f08008a2a6815d999bfbc05c36e2d20db827fb517c2a80b412b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/reviewer-prompt.md",
+      "sha256": "41e838a7b39673f2b2f4a88c414ccd11683bc5ee44ae19e3233d488df89d4744",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "db45a3f7a485ba911e07e29e6306bec0275b7ce8e830353d7696098da86e060d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "583315ef0314fec22aad4d3ff22a59179009655a0f99939cc034b72dec66a625",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/sheets/holdout-single-512.png",
+      "sha256": "4d8329081c6d81544a875eb34363ed0bb71d4b579940b3358057a8c933061e84",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/sheets/holdout-states-120.png",
+      "sha256": "adb7bb83fa10f3ed24bf1ee60476a2f040ed2c223762593f256b5cbc321b4e07",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/sheets/holdout-states-256.png",
+      "sha256": "92623e229b9d2b31d7c25c601f8c439054ab4ba9c58b0f3f48cb8c9897291b9d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/final-review/verdict.json",
+      "sha256": "c953e11b1481e684b1140442ff5663459d29f6e42213b3f2fb270e7bf3ff9815",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/round-1/critic-prompt.md",
+      "sha256": "9d4d07a1657ede9413caaeda0c394b0a1a11938afc5df26d125c26e3534ce348",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/round-1/critique.json",
+      "sha256": "c5b90446bb3a56a2a432f01aaa8571b59313bf66995389e399f4f240c1a94dce",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/round-1/objective.json",
+      "sha256": "bfc01003d6d3081671d1b5d36f38e2d259649bf871081c6ea688ac54d848b930",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/round-1/response.json",
+      "sha256": "1c9bb394c9688b38166ad8e85f788c39c46e833f2ecb67d9fd94a7f1938ce6dc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/round-2/objective-at-freeze.json",
+      "sha256": "f40512acbaee804bb80f446ca918aba44bbc3e97164ffaebec8b66b030296cc2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/round-2/objective.json",
+      "sha256": "c5c3b3c31a19f75a16e121aed9b4393f210753493a78b2f47cfa5a630fe24066",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B08/run.json",
+      "sha256": "5ddea54f6326b1af5c21327f73c363da6d4c8190e1e489bf3e11af83380bcece",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "7de81b0fd727ad509e2435147dabd0dbd2efbd7ade1ccf81418f1d3714d125a9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/brief.md",
+      "sha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/description.json",
+      "sha256": "1c2c9e1490b6235e59bf3b55a4c6b2c2b37ad5c62c246d63365a683961bd81c9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/reviewer-prompt.md",
+      "sha256": "b77a97fadbb79252f0741eb0b2ecb5b45921b3b3270d19deea3a1ab8ae700b05",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "33543118324a0242bbc00e98acfdbe8c7b9f417b148c0d57526c472a41d334e8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "f069b3aeb6845b313040439f040ff697d45583be563285d584c115867a190d50",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/sheets/holdout-single-512.png",
+      "sha256": "cd899e24f15f5b068be26969370bf772eadf285def3fda1408ab1ab3eac9ccc3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/sheets/holdout-states-120.png",
+      "sha256": "234a4e696433cbdd92daf32e3d8bd03beb87767c5a965195b2bec2c06978da08",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/sheets/holdout-states-256.png",
+      "sha256": "1621cb14edddb765ae3b56591188bed79c3255c388dc2ad292e98b1ca41ae062",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/final-review/verdict.json",
+      "sha256": "4b193c2186ff13714560dc1d4b0cc13ca4ee748c732bda9842ec3c2351efd019",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/round-1/critic-prompt.md",
+      "sha256": "82306f3808877fcdeb1258f7784f66e3b8535e9d3f1bf28f41a55756bdb3993a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/round-1/critique.json",
+      "sha256": "5723e6422c5b30fdd480cc77638f2eab9c6556fbd38623ac4fa3f208b8dfb01b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/round-1/objective.json",
+      "sha256": "f85a696318caaa4402b4377f9f1cea3e4b25579bb079f84086723a08ad2e08c6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/round-1/response.json",
+      "sha256": "6aa5b0864a4e125030ab085b3486b8f25cf841efeb1c0b62e28716285a545d2e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/round-2/objective-at-freeze.json",
+      "sha256": "ef0fe2942f894a10236ab6c82907dc5fd8b29f886c6020904339d5814bdbcffd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/round-2/objective.json",
+      "sha256": "2544aaffaa9ba71a87ab96522174f6ff9da99c0b66abc08724223541ca2e880b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B09/run.json",
+      "sha256": "84d8d1f5ef4e0114b5c1694c3601c8f4c8f1aea67c8e04bd0bda8d5a1e4a438d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "8f77d38ec13ec00d05dfedfd5ef73e14cdacc7994be1c9e9d14155899afcab52",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/brief.md",
+      "sha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/description.json",
+      "sha256": "407e80a2421841bf2685f2c3190149963e7565847751f1e4d6afc4df7b2b307e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/reviewer-prompt.md",
+      "sha256": "d95518c7b6996ac7b29e530e740bb6d43d1cc7d70a19a99c28dec0cfc68a4e58",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "f276ad4605ab3c9a6b8ffd57df67a34ac19e29d5ae8038c0c7d7c0960e75687c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "4461d37fe2767b8f21034cd512999886db94e969bcce4359f2b6d76691418fe9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/sheets/holdout-single-512.png",
+      "sha256": "8ba5c23e8dc5b0f772ade728427621eb60c60cd210796b01ab267041b82b06a6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/sheets/holdout-states-120.png",
+      "sha256": "b9a48a2511eb3d18efbd14966f41b32868d6649012649f67160b35b85aa2c784",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/sheets/holdout-states-256.png",
+      "sha256": "a8fc81fd846e57a7f6eb64503e6821767d5aec9200ff6ea797a2cf9cad118081",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/final-review/verdict.json",
+      "sha256": "31f6a945a9436b79ee4d9aefb0583ba38d988ac58b82055ba014f9194d5aea80",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/round-1/critic-prompt.md",
+      "sha256": "af5a31cb89edfd236369d18f99e88a9b2b191ef721ba8fb57e23a9a3f22094d8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/round-1/critique.json",
+      "sha256": "aeb2ffb384d575a4101665153b958b4ac4b21feb4c4a93a9735cc0cda3e54b77",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/round-1/objective.json",
+      "sha256": "83c8918a72fe398f9f69baf815789e1481c2cc34ac18dbe0bddd499f83b9c760",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/round-1/response.json",
+      "sha256": "c11bdf21b4fbcea84cc81c1b7588d17ad0b37a0557e1e226e7e2396ddf4e4017",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/round-2/objective-at-freeze.json",
+      "sha256": "112b13edc29d7313b0f618a5ed407343b94a871f7a46bea2397f99910a8dc80a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/round-2/objective.json",
+      "sha256": "c7ba7d702c2be4dd04a90ac74b4af34f781986108eb8996918444ef5434ae35f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B10/run.json",
+      "sha256": "f05b0b4d98bc8071baf9fdfa177988697a5d1cbb0f0d844900400cd203a371a2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "8c825287bea244c0dbf30e852974f045b85acb19b252bab825b5711de84d2b2e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/brief.md",
+      "sha256": "6c6700e88bf407cd39449d9657748f7012fea3e9f9be92837d2a020005358475",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/description.json",
+      "sha256": "c0b450dfdf6cd01ce6f84aa2135a051d2bb4c66534bcc3e76c8c54de81f32dc6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/reviewer-prompt.md",
+      "sha256": "67bcefbb71c615efc8cfb818e483b1173d4b5dbd1db84d4bce78389e46774730",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "9b31db561aa802a37e7c3898410efda7f17fa674d0637c438c95e452a264fca9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "5f059e3b92e262ae23324cfb8cb1ea9be6ee49e093b4a11fb1697c74ff01d17d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/sheets/holdout-single-512.png",
+      "sha256": "eae52d41e14e77d80b03ac2ba0084dbe76b5b6a19a5a38fe7c8d9fe02eb7d743",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/sheets/holdout-states-120.png",
+      "sha256": "f87bac300a8f3c29d9ccd0342694ebd35bb16a7998ceea8357b09db18cefe50b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/sheets/holdout-states-256.png",
+      "sha256": "fe8cfebd3a7790b74d6cf90a40d3c02bbd4d7ecfe637f114a2f31036ca88b8ce",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/final-review/verdict.json",
+      "sha256": "3395b91335e3353629d1be8693e867a4a0cf438b75209357aa0fa7ef029813db",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/round-1/critic-prompt.md",
+      "sha256": "9609817c10b77301b2d018ef24b5bc9261d2f314f03cc60eabffa0162a0f4046",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/round-1/critique.json",
+      "sha256": "38057908c4d56b14c3d4337ac35b7f186e8261355f52007ea70ff123e772ef1d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/round-1/objective.json",
+      "sha256": "27cb8b88617e98065f4df7e1213d83f1609fb8c7b0b5d911d3a9aa29c4548007",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/round-1/response.json",
+      "sha256": "82d55bbc08eaa40d6a35e43770390e1fe2d010b7404070820607573791ec78d1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/round-2/objective-at-freeze.json",
+      "sha256": "87cf0d9053cd15d7b0ea30448d6d6f4253eb2e288c201c33bd366df869e4ffde",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/round-2/objective.json",
+      "sha256": "1506d3b60f31b15c652290c49eea1c83e6c7f39322fa02d535e8c0eabf44e449",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B11/run.json",
+      "sha256": "215ebc077ba6e37827706208d60fd48af2316bd737a040d70a85c75104372f77",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "8b8bb80843af468d5604eb293d11b944b44560c7e4be1c82e4a270fda10ffac0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/brief.md",
+      "sha256": "3a3eb44732a3d5accda9ebb0cbe0c6218712f9812abb04a03f695012e7fc5271",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/description.json",
+      "sha256": "2c356627154cfa39ede0d240bf351b0275b9bb41af6697d5c3e0f27e9b34cd81",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/reviewer-prompt.md",
+      "sha256": "359c4b6aec0dae660960cf626a8893912c1efe7e9ec05fd78b16a00cc30be967",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/sheets/holdout-seeds-120.png",
+      "sha256": "5837ee8fdb0cbf14463dd1feb0d118e727fe1e591f98240eba2a5af0a5a76857",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/sheets/holdout-seeds-256.png",
+      "sha256": "c1a4d65693fb419e9f279a9a4cba66ca6464e4ec686e9c8b59d834613b2fe2d3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/sheets/holdout-single-512.png",
+      "sha256": "550c8cffd8635401cf16e11dbd1b33b60529b8896ab3efc85eca25778561e1ae",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/sheets/holdout-states-120.png",
+      "sha256": "82cb46bdc59f629623428b833144e3c3f1cfbafed0d11311b15dceaab648e65d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/sheets/holdout-states-256.png",
+      "sha256": "92a8aef226c0405d0c6260022eccd81278d5b117b434ebbf24edd3450ad2bff4",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/final-review/verdict.json",
+      "sha256": "7dd8de50dcaa79c3bd01176a59c1e24a6200cbe2c9ceaacb9dcf8513cea582d5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/round-1/critic-prompt.md",
+      "sha256": "d81ed51de24b7e7bd198454ac3690b8df5d5d6aaeb1d99fdd9ffd80a224bacab",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/round-1/critique.json",
+      "sha256": "6d12a250f1066bb7f1da2d99f8756c115404d29af2e2a49cd6ce172a8b5c1f32",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/round-1/objective.json",
+      "sha256": "a240cb8b8fa955d10ad06f83b22b768c390c9eac3156189a56833a4412daec91",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/round-1/response.json",
+      "sha256": "2f46b6d204d36b7bdae27bd5ad8e558ae853dbf36f232ab6a1fd385bc4c24bdc",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/round-2/objective-at-freeze.json",
+      "sha256": "937e10780c299503e5752a5eaf3e4adbd4af3521035c7317af7f22919c7e84b9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/round-2/objective.json",
+      "sha256": "3a42758473407d397f1ea14fc44038f03dae44bb5e0d22c3cba03805b16b7bc5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/B12/run.json",
+      "sha256": "eef8af0ba783bde8c983697fbfad6677faad29c4dce88003b63ac00437291559",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/ROUND-1-AUTHOR-CHANGES.md",
+      "sha256": "33479c851df2ede01d5764310c40d3b6e1f534bbbbc98be5f43c9c0e2ed48da9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/ROUND-2-FINDINGS.md",
+      "sha256": "5ff09c628e91a3fd2e534f76d4437f07a445558b86436631ed3abbd06b6b0918",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/directions.json",
+      "sha256": "cf8f2596142bd070651751bbd46ab130d405b7059a778e546c2e59e176797ce8",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark/report.json",
+      "sha256": "320be4f8f9ccd3d73957d909a4b7bb2774231b349524b981eab996ee335372e9",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/authored-briefs.json",
+      "sha256": "913656f017f2d3e7224bbaa545040e564760b4cbbbc38de18d0ff93cac8cbffd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/iteration-fracture.json",
+      "sha256": "637a18f4be9d35d1b097ea9787b3db92f5de5449b41a61adfed53e0b1785e35d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/iteration-fracture2.json",
+      "sha256": "73922e203357e029e498a78384ce83dadb5400bc27c8246131f5d97baa91a15e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/iteration-fracture3.json",
+      "sha256": "95f6533d7f6a73145efedcc8b52d15fb601c7c649f3413e0b2d485a524ac87a6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/iteration-gr-diversity.json",
+      "sha256": "b7a7f95d9ddbf926cf7ae60b8b9bb3e5d4dd4538f70838573068d57f3a6955d2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/iteration-gr-seed.json",
+      "sha256": "7ae41d6f06252cb6ec8e227c87f95c42ef1ec33ad6dc6757ab0e39ec386b8168",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/iteration-gr-seed2.json",
+      "sha256": "e777b2703d3b015d2cfd7238915cf45d774f79db6d96c27e33d9e913d2f36336",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-mechanisms/mechanism-probe.json",
+      "sha256": "50cb58c02e08bd45a048cf574c077d98ce361256ff263cebbed1fee959fdcb2a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -567,14 +3612,14 @@
     },
     {
       "path": "docs/creator-kit/README.md",
-      "sha256": "128da210b14e96175eae7def02b9ff1793d9559a726f25c02a5738ad25ed0206",
+      "sha256": "0c28af91e3c790b6fceb02f3502166467eb3176958b3047e98d3092961a37cc7",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "docs/creator-kit/autonomous-launch-agent.md",
-      "sha256": "ba04baa54274834b5c44228be9ae673c92e826e818373a31dcd9b930e4f9e6eb",
+      "sha256": "11062984edc1b19a804fbfb0697d0ec982a23263be5c40c50c6ec1d5e8c47f1f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -609,7 +3654,7 @@
     },
     {
       "path": "docs/creator-kit/getting-started.md",
-      "sha256": "8a4275f9c9854b9f0946a0ac156627314480be71f018d59399bff2e00ab1effe",
+      "sha256": "ce57169e8582131654500fc5482c28cc052854b6a81eece7099b3ba4cb3e2c6f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6097,14 +9142,14 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "f5d0859880c7df4cd5c79021006db7a8a98814b7358703a09b838d70e57ea1d4",
+      "sha256": "7136e261e0f0a1b83319f0520bb9bc0bdf0c737adb99712318d144097f840a73",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "package.json",
-      "sha256": "39faebd6811422f12315d03245c86a768ca0549946eddd6daf35fe3d4ad474b3",
+      "sha256": "9627ba19ac3b30cbf3a2bad66e8806c7b07b8ce151b824c721939916b2dae993",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6118,7 +9163,7 @@
     },
     {
       "path": "packages/agent-flow/src/broadcastGuard.ts",
-      "sha256": "c533161e038e0825cb62ea35ed68f7177d2f7578f73150a22b08e669998de582",
+      "sha256": "2c50fad96a90aecc3d2399ba1e01793f2f743b8f2dac67711f9581d017b64c6b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6154,6 +9199,181 @@
     {
       "path": "packages/agent-flow/tsconfig.json",
       "sha256": "59e1d8c8de6fd2d27ffc3db1c75f78e19816c5bfc6f3ce5fca4c17824d72ba80",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/package.json",
+      "sha256": "85c0191a9803279c273892f57123087f58d5bdde7d0cc06a40d5ff5c1e20db2c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/rounds/QUARANTINE.md",
+      "sha256": "6c8cdd22fb85743906d93c6415da79758206cd38e0e69c2a83a253d9ae818580",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/rounds/README.md",
+      "sha256": "878adb21b627d9d9ec0f2c8bb09e2912d61be8be7be5da87475211911119d009",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/rounds/registry.json",
+      "sha256": "955cdc472167b47d07a58980faf11267328fdf49c82f9cb8e4d6c59641ce2f10",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/acceptance.js",
+      "sha256": "2a1e24f7fcb235f7992e15ee1176eb2e5c573bc01cf5da88fdb424deb3442003",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/admission.js",
+      "sha256": "6e484bacc9b6d2e97a12e3393261f945f3a287d0ce9716ea8b640116321fd97b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/atlas.js",
+      "sha256": "42520c9c2f59a071ce1f73a1816519e9d84d42e5926faab27cf45d67248bb2ed",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/author.js",
+      "sha256": "b1284c4a5d9cb83e3ee54e8192e6a724545d4a016ab748e768e37cbf04728007",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/binding.js",
+      "sha256": "25c5a21e676da1ace44573a9bcdf465579052d5050a954dc9053fcc01c3ac0dd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/capabilities.js",
+      "sha256": "3a8b26fc236c11aaa9780947b915c78af0d6f3fe54217db01ec639d7300cc771",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/critique.js",
+      "sha256": "04b5a5de8ae598663e8422aa76285b31d1afb0611ccc63ce1d0dee18efe52f06",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/direction.js",
+      "sha256": "d743334f02759534521433a944b0aca207e03b7bc6c11c23d95e1aac82837f22",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/holdout.js",
+      "sha256": "3432daa9f76d2562722ef95133659296baa7da7d56865cbf47704131f5a5575f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/index.js",
+      "sha256": "2c90a9f39905009027e1d147aaf0aabb9b856a1d009fc3209a24793c1ea557d7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/mechanism.js",
+      "sha256": "f3210c79ba43d7af0c23f9fbf181d7dc73e84a749c187a3f96fe7b8963a89ca6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/probe-candidates.js",
+      "sha256": "f1b23199da3663deb4fb49900c20d56c0e283a79933a4c1dc929f612d8d8bfb7",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/src/seeds.js",
+      "sha256": "2b51bfc4d221b52ad09cb2e5453544677a468e9c53f7931a81cc8c21c7a16edd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/test/art-direction.test.mjs",
+      "sha256": "409b7bb3de24a7be0e4d0b4d42ef3ad2500a7bb37314016b2c0e53de112c3944",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/test/author.test.mjs",
+      "sha256": "1958b84d8a980481e2aad5b6ff232c7c7161b7c1a6f32de26cc89c054a917f91",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/test/fixtures/benchmark-briefs.json",
+      "sha256": "0622039016d6dfc86d69b7e89e69580bba7bbea5c6a1225735e0bc2648d5e659",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/test/fixtures/impossible-briefs.json",
+      "sha256": "96ef4e282961182bc0f00c6a31d366c82bfa930bf96ace5d2231588488983d0f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/test/holdout.test.mjs",
+      "sha256": "749f07f50bbcb975bd7f670fc32b40e8a8a7c7f447b87e90e8e9e783a4fe601d",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/test/mechanism.test.mjs",
+      "sha256": "2ac5d2067920c7cc0b9b3e7140a0e11fd2815f8fff4213b68d596c8c306e36be",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/vendor/AUTHORING_GUIDANCE.json",
+      "sha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/art-direction/vendor/VENDOR.json",
+      "sha256": "6f6848fd852ddf014adea43c40907a21c15d920792fd4af8f3c73559e99278b5",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6257,6 +9477,13 @@
       "publicSafe": true
     },
     {
+      "path": "packages/art-review/src/finalReview.js",
+      "sha256": "bf17cfebb2c4dc9b78426e59ea4db88d668a3d992970643dff5a8e7180ee3dfa",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "packages/art-review/src/index.js",
       "sha256": "dc404440bea02bb4daa271e7f18ed0dcf49ba882a2bd9b9739a654921f43e2c0",
       "provenance": "original-clean-room",
@@ -6265,7 +9492,7 @@
     },
     {
       "path": "packages/art-review/src/loop.js",
-      "sha256": "a638dbda98f749935ca7784639f03f10f927721061309b6899346195033894fb",
+      "sha256": "0a6f1edf516ff99160bb3a1221497aada9a36375248fa455d3edc1c002e1e924",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6278,8 +9505,15 @@
       "publicSafe": true
     },
     {
+      "path": "packages/art-review/src/morphology.js",
+      "sha256": "c510b38cfecb6a55750c94741e47e388dca1e1ee66eefad55f8d53f60450b558",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "packages/art-review/src/objective.js",
-      "sha256": "b098f3fbb19ace4a08a29594718da16eaf851da08f2846fb07e71fd0bb13e60e",
+      "sha256": "6e8bb1aff14f6c4c0545add92e960fc3439bd662543400c2dd291ad598c7fda8",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6293,7 +9527,7 @@
     },
     {
       "path": "packages/art-review/src/perceptual.js",
-      "sha256": "f9b61ad5ad967d382288a5417131f1438c382d05bce59837a7bbbc0805bf5d16",
+      "sha256": "3bcc8faf946adabd238863a435e13eb5773893fdbee83e32252685984f950a07",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6307,7 +9541,7 @@
     },
     {
       "path": "packages/art-review/src/receipt.js",
-      "sha256": "da2a311d9e6e133a3f07e2dcbc769a9d1c6840bec137b92869de6607cd46b1b1",
+      "sha256": "0c6255471a0f219dd18a47250e37ab58167b068f269ec85b3178899255a91fe4",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6341,8 +9575,15 @@
       "publicSafe": true
     },
     {
+      "path": "packages/art-review/test/gate.test.mjs",
+      "sha256": "8aab1c04e476a2165d3d51d1ca0d7a4303f807ad2569f63c72d0be5621f65c63",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "packages/art-review/test/loop.test.mjs",
-      "sha256": "0e8f4ffa9165026448f88d40ddaeb32a41247ad224e9988fbaab861bc77166e1",
+      "sha256": "313a7d5204c7f1e1b0ef3fd45f04b20bfc0ba68f7985d8107b1788e2970ceb37",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6363,7 +9604,7 @@
     },
     {
       "path": "packages/creator-cli/src/cli.js",
-      "sha256": "97358a6c6ffd0fa5ccf0f87c15bd3febe7912be4f41181392c24b1ac361a041a",
+      "sha256": "fcee16d0e012ccb957ce4f3afa9979a4ce9013de7891b93b43a315bd6b1994b3",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6377,7 +9618,7 @@
     },
     {
       "path": "packages/creator-cli/src/commands/agent-launch.js",
-      "sha256": "162e82aa32621c45065b35c733b08ffa36842486cecf61db35027e07e554557d",
+      "sha256": "236fbadc71bd342b6ff727e452fc5b4bd0953c349d76589c63ca2f723c079b76",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6391,7 +9632,7 @@
     },
     {
       "path": "packages/creator-cli/src/commands/agent-remedies.js",
-      "sha256": "8e0e77686ec77bd8a2abcea827814267cd08abf0a6e3f9d12ebc3b27125e970d",
+      "sha256": "a0f6f2aa74aafb885cc3dc7579163cd6789fd36b414aa1965c39d64caeb1d767",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6433,7 +9674,7 @@
     },
     {
       "path": "packages/creator-cli/src/commands/init.js",
-      "sha256": "70692e2128001253fe0285ac61c3e4274b84a648601338e1cf45d20c0a0b5a5b",
+      "sha256": "57d6a4f0403c9dfdc642d0fd0b63603c57dac61f6af3a4d636f5d83e9f49897c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -6503,7 +9744,7 @@
     },
     {
       "path": "packages/creator-cli/src/report.js",
-      "sha256": "36e4b38d81aa37bd586e7481a75706d2229dd3fbc7e85fc845c0be013221d118",
+      "sha256": "75263cc2458824a1bdd3e90864d6d4678755fb2b65455e45abb66857bb3c6714",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7195,6 +10436,13 @@
       "publicSafe": true
     },
     {
+      "path": "packages/creator-cli/test/init-location.test.mjs",
+      "sha256": "19f222f26389bacd37bd3cde2cdbc2bb7b83917dffdc33ba27371b3bf7b88f40",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "packages/creator-cli/test/preview-drift.test.mjs",
       "sha256": "b271f83e7a4ad6d82387b56b49cf694b68799122c646d148ca4188e24dcb4c5b",
       "provenance": "original-clean-room",
@@ -7294,7 +10542,7 @@
     },
     {
       "path": "packages/launch-sdk/src/chains.ts",
-      "sha256": "de5105563d6489058b67997b6b1eda86955640e1931f4380dbebde1740711401",
+      "sha256": "0da2c41151e8f8053a69c35d56bba52e96b7aa9dffa3df1dbb66f6d930c34c46",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -7526,6 +10774,13 @@
     {
       "path": "packages/launch-sdk/test/metadata.test.mjs",
       "sha256": "6cdbc590702dfc72f228dfb3040baa156388840052df7c9336b3616f49efd34e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/launch-sdk/test/rpcErrorBody.test.mjs",
+      "sha256": "e3af454144c647e80d05e8d4b7d9c55929b700823dbc9f1284a0833a72faf937",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8295,7 +11550,7 @@
     },
     {
       "path": "packages/signer-protocol/src/authorization.ts",
-      "sha256": "d5bcdc4ac2376be5f7d5a98367e4664892c71d7aac6338dd0a13c4ec4984e354",
+      "sha256": "b70c1321f88a15c92a2a48e698487f46524abcdf44402cdb542ac9689c17854e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8309,14 +11564,14 @@
     },
     {
       "path": "packages/signer-protocol/src/grantGuard.ts",
-      "sha256": "f5d17c1b3765b3ff32d01162cc996e11a7ba45e4b302e19286ca6882c705d9a7",
+      "sha256": "33409be7069d69368df0a5d58c74361d49d134a5e8cc0bc01b0a7a2b005129ee",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/signer-protocol/src/index.ts",
-      "sha256": "e8fa0f0f0b89bf263c6175d7e0cf01f843074cfb3758ad496fbfc60bae979f68",
+      "sha256": "5add53efb19e227aec725bcaff2c00b0c79ee07a3a94ab1969a9d5768f5cea2e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8330,7 +11585,7 @@
     },
     {
       "path": "packages/signer-protocol/src/policyGuard.ts",
-      "sha256": "30c9758e6f73deef9fa0349b24d25c53ef31b7c6bda8151e482bdccc5a4c5fa3",
+      "sha256": "aa70fdf131e89cda8db1965b076a0a578c0b9490fdde8e282af2c9036791f229",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8371,6 +11626,20 @@
       "publicSafe": true
     },
     {
+      "path": "packages/signer-protocol/test/grantGuard.test.mjs",
+      "sha256": "98268991ba68b4f33eaf8f054251eab91d50b3c3969c157012bac1f2e97e7def",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "packages/signer-protocol/test/grantLifecycle.test.mjs",
+      "sha256": "82f8330c9ff506c78b63929059e3a0b71d8f0d74d56929670150be8e90c1566e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "packages/signer-protocol/test/helpers.mjs",
       "sha256": "f23dd139452c5a052c8781a57a8e35d5384c0cd35f4b7b4ec5954956195b9fc7",
       "provenance": "original-clean-room",
@@ -8379,14 +11648,14 @@
     },
     {
       "path": "packages/signer-protocol/test/mutate.mjs",
-      "sha256": "9385f4ea48130dddf999cc570ab678cd406230b1724a6a210284a58cb7c51d85",
+      "sha256": "439723d2ade95b9dfcab18f5f1392418283ca321edc504529d36ab12640c5443",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "packages/signer-protocol/test/policyGuard.test.mjs",
-      "sha256": "db347ca09c80f88e75a9096ea128e8da4f590472644498e903941151450dbb2a",
+      "sha256": "35d1af997c7089b65abb3454b03c0682937b9f2945a3fff98d38415f9c83126a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8400,7 +11669,7 @@
     },
     {
       "path": "packages/signer-protocol/test/walletAttack.test.mjs",
-      "sha256": "c492f05f95f03cc16b51241bf84b75bc8a2a10c85fb792609c424b04c3fded82",
+      "sha256": "064e28ac72e64594391a89514e0845403b9214600885ed7db6a84f47e0a5bc0f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8756,22 +12025,29 @@
       "publicSafe": true
     },
     {
+      "path": "scripts/check-art-receipts.mjs",
+      "sha256": "ac5bd080b269b0a4e6e98fbbff7c39d328f3e297167f92ea5a81ddf11d60e2dd",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "scripts/check-art-review.mjs",
-      "sha256": "fe7091f1e5e5c3badaf19a0cde1d4932eff59c7e8089f726b9a501b27f5cbeb6",
+      "sha256": "6fe05e874629ce647e1ad734cb92434183c4ff1e3c2de9caeccb44b96e980821",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "scripts/check-autonomous-controls.mjs",
-      "sha256": "d24ea76ba4fbbc4ac05f23afa1ae45f6a961c4bc4a16dd4a79ea733ac73e79ad",
+      "sha256": "bb22d817138b7d978422245257031a13f298eacbc42d1c3ec111c8dbfbed5c0c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "scripts/check-ci-gates.mjs",
-      "sha256": "4c4cdcc8482974068451fefad14805ba0648d57ce44f1b4aecd172d956022fea",
+      "sha256": "5a6924591fa0307c0f7d7f1cfdc36e38e46baaff654c3c63421466e8c63fd2a6",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8826,6 +12102,13 @@
       "publicSafe": true
     },
     {
+      "path": "scripts/check-resume-pending-window.mjs",
+      "sha256": "01ee465242f787adca8a8f16837c3e0535cb2c21803014809ea5822af7d051a3",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "scripts/check-schema-parity.mjs",
       "sha256": "7cb90592d6c3072246fd4b24842ac9e3bdfa2cc939fdcd1e38d57807187494bf",
       "provenance": "original-clean-room",
@@ -8869,14 +12152,14 @@
     },
     {
       "path": "scripts/e2e-autonomous-launch.mjs",
-      "sha256": "6c5e69bd2ba0e613d4836d3fab7232ecefa7cbdacce9a5a4c0316d6d5c0fd0df",
+      "sha256": "0dc4de2058e1e0d33a683024c67fc97dd0048b304f29ed5fe12f221ecb9a9b7f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "scripts/e2e-crash-resume.mjs",
-      "sha256": "57f69aa90601fae6ac102c901ec541cf7740dcd52478dcfda74f8dca114a03a6",
+      "sha256": "61256929adc4a75f311feb9d406b3a344b081b91ef7d6762e5748b9db5799d5d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8890,7 +12173,7 @@
     },
     {
       "path": "scripts/e2e-wave1-runtime.mjs",
-      "sha256": "313a5201550868f3771dd92c80e3e4b24b9967680910243a6099d6c306e5656d",
+      "sha256": "a40ebed4706c297c760ed6a85f920c7f28586e7505bfbd174827e1ab17f3195e",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8931,8 +12214,22 @@
       "publicSafe": true
     },
     {
+      "path": "scripts/measure-authored-briefs.mjs",
+      "sha256": "ac3f953a19ebe4a5fab3e86d2b7f6a0c6b5b9af88b11e5c8c39c5651dfe217f1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "scripts/postinstall-build.mjs",
       "sha256": "6829a18b21112ff3f40bf26be6f3953a7310cc7e0737ed94925a4c5ca1097117",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "scripts/probe-art-mechanisms.mjs",
+      "sha256": "fc672aab464633c447ff2e229a4bd7f2185035ac595b22d17677f800890d3346",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8946,7 +12243,14 @@
     },
     {
       "path": "scripts/public-export-review.mjs",
-      "sha256": "68780aa66130bf43a74f12481c23ae4d93043aea3702b6870b83fa7e6889b803",
+      "sha256": "729d513df384d991eff0faf58be9431f3f2893d3b224f078c0c0cef3521eb3d5",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "scripts/run-art-benchmark.mjs",
+      "sha256": "5614fefad20e26dcb65acd6337efac7eb2d13a0a89a9d8cb26eea065752d714d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8954,6 +12258,13 @@
     {
       "path": "scripts/secret-scan.sh",
       "sha256": "d64c2cc6188e4a903aaec44c5fe63d20098b409a1d2dc616daf8d84c82052e7b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "scripts/sync-art-atlas.mjs",
+      "sha256": "8716aeb13b4f7207d7ba792d04e22592ac276f0bf339c27dcb3bdad48d74eeea",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -8974,21 +12285,21 @@
     },
     {
       "path": "scripts/test-readme-quickstart.mjs",
-      "sha256": "cf1998e58de948659751c3f88f6ef08e23a33ad860a63b5da786135965c80009",
+      "sha256": "6cf1da4cffa391006e179dc4be4adeb77cea50a95e730a91ad480a150128b370",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "scripts/verify-fresh-clone.mjs",
-      "sha256": "14ea9ae172f999d6a940740d49614d16f9f30b6ec027163f13f36e8cf579b948",
+      "sha256": "0db76131ff0f23802589d3d3fbfc4a17ccbfd35d6fe1feca82ff9696da484d5a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
     },
     {
       "path": "scripts/verify-gates-fail.mjs",
-      "sha256": "d280b23367f38f293dfd6da9ac68f6fe314175d8aaf4250edac6c62137296891",
+      "sha256": "063421375e3eccd0f4d212943779cf4ae2d0c3de6480ee679354b7923d8c89b4",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
