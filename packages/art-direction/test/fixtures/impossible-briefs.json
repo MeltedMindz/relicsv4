@@ -1,0 +1,85 @@
+{
+  "$comment": [
+    "THE ADMISSION CONTROL SET — briefs that MUST be refused, and briefs that MUST NOT be.",
+    "",
+    "This is deliberately a separate file from benchmark-briefs.json. A refusal is not a blind PASS,",
+    "so mixing an unrepresentable brief into the benchmark would let the admission gate inflate the",
+    "score by turning work it declined into a success. These are scored on their own terms: did the",
+    "gate refuse what it should, and -- the half that is easy to forget -- did it admit what it should.",
+    "",
+    "THE MUST-ALLOW HALF IS THE IMPORTANT HALF. A false refusal is invisible: it produces no renders,",
+    "no critique and no verdict, so nothing downstream ever contradicts it, and a gate that refuses",
+    "everything reports a perfect record. Every must-allow entry here names a quality the runtimes",
+    "genuinely have and that a nervous keyword scan would refuse anyway.",
+    "",
+    "`blocks` names the demand each must-catch brief is expected to trip. It is an expectation about",
+    "THIS vocabulary, not a claim about the brief -- if the atlas is re-measured and a limit lifts,",
+    "the corresponding row should be removed rather than the gate widened to keep catching it."
+  ],
+  "frozenAt": "2026-09-03",
+  "schemaVersion": 1,
+  "mustCatch": [
+    {
+      "id": "X01",
+      "blocks": "HORIZON_OR_GROUND_PLANE",
+      "text": "A wide open landscape rendered as a meditation on distance. A low horizon line divides the frame, with layered strata of sediment receding toward a vanishing point beneath a pale and empty sky. Quiet, restrained, and built entirely from banding."
+    },
+    {
+      "id": "X02",
+      "blocks": "LEGIBLE_GLYPH",
+      "text": "An instrument face carrying tick marks and numerals around its rim, with the letter R at the centre, spelling the project name in a precise engraved lettering. Delicate linework, dense detail, quiet and archival in tone across the whole piece."
+    },
+    {
+      "id": "X03",
+      "blocks": "FIGURATIVE_SUBJECT",
+      "text": "A photorealistic portrait of a human figure, lifelike and carefully modelled, centred against a plain and quiet ground of restrained ochre. The modelling must read as skin, cloth and bone rather than as pattern, and the sitter should remain recognisable at every size."
+    },
+    {
+      "id": "X04",
+      "blocks": "STATE_DRIVEN_COLOUR",
+      "text": "A dense field of scattered marks arranged in concentric rings, layered and organic in feeling throughout. Under drawdown the palette shifts to a colder blue, and the whole work reddens as volatility rises. Otherwise the composition stays quiet and evenly weighted."
+    },
+    {
+      "id": "X05",
+      "blocks": "OFF_CENTRE_SUBJECT",
+      "text": "A single heavy mass weighted to the lower left of the frame, deliberately off-centre and unbalanced, with the remaining space left empty. The composition follows the rule of thirds, and the tension of that placement is the entire subject of the work."
+    },
+    {
+      "id": "X06",
+      "blocks": "NON_SQUARE_ASPECT",
+      "text": "A tall portrait format canvas, considerably higher than it is wide, carrying a nested column of diminishing forms. The aspect ratio is essential to the reading: the vertical proportion is what makes the stacking feel like ascent rather than mere repetition."
+    }
+  ],
+  "mustAllow": [
+    {
+      "id": "A01",
+      "why": "atmosphere words are not capability demands",
+      "text": "A monumental, brutalist, sacred object: heavy, solemn and archaeological, weathered by time into something austere. Sparse and centred, with generous emptiness. Under stress it fractures; in recovery it consolidates and deepens again across the frame."
+    },
+    {
+      "id": "A02",
+      "why": "abstraction OF a thing is not a demand to depict the thing",
+      "text": "A botanical abstraction: the suggestion of a frond, the memory of a leaf, never anything literal. Fine radiating linework, delicate and sparse, growth as pure logic. Under recovery the branching extends; under stress it retracts to an armature."
+    },
+    {
+      "id": "A03",
+      "why": "a brief agreeing with the runtime's limits must not be refused by them",
+      "text": "A centred figure with no horizon, no ground plane and no legible text of any kind. Nothing figurative, nothing representational. Pure geometry, quiet and restrained, with the market acting only on the density of the structure across the frame."
+    },
+    {
+      "id": "A04",
+      "why": "geological and sediment vocabulary is a motif, not a landscape demand",
+      "text": "Sediment and strata as pure pattern: horizontal banding at varying pitch, dense and layered, one bed deposited over another. A core sample rather than a scene. Under drawdown the beds thin and fewer survive across the whole section."
+    },
+    {
+      "id": "A05",
+      "why": "machine vocabulary without literal parts is expressible",
+      "text": "A mechanism abstracted to its rotational logic: nested rings and radial members, precise and instrument-like, with no gear teeth and no dial markings anywhere. Under volatility the rings separate and spread; as conditions settle they close again."
+    },
+    {
+      "id": "A06",
+      "why": "market transformation in density or structure is exactly what the runtimes do",
+      "text": "The market is the subject. Under stress the work is sparse, broken and open; in recovery it is dense, whole and closed, with neutral sitting visibly between them. Identity must hold: the same token stays the same token in all three states."
+    }
+  ]
+}

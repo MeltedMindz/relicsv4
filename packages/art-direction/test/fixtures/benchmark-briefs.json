@@ -1,0 +1,102 @@
+{
+  "$comment": [
+    "THE FROZEN BENCHMARK SET. Twelve briefs, committed BEFORE the harness was run against them.",
+    "",
+    "WHY FROZEN, AND WHY IN ITS OWN COMMIT. The thing being measured is whether a pipeline can take",
+    "an unseen commission and produce art a blind reviewer accepts. If the briefs can be edited after",
+    "a result is seen, that measurement is worthless -- and the edit that destroys it is not a",
+    "dishonest one, it is the entirely reasonable 'this brief was ambiguous, let me clarify it'. So the",
+    "set is frozen by commit order: this file lands first, the run happens second, and git says which.",
+    "",
+    "NO EXPECTED ANSWER IS RECORDED, deliberately. `expected` is absent rather than null-filled: the",
+    "harness must not be able to score itself, and a recorded runtime would also pre-empt the",
+    "admission step's own recommendation. This matches the arrangement the kit already uses for its",
+    "selector corpus in packages/template-catalog/test/fixtures/blind-briefs.json.",
+    "",
+    "COVERAGE IS DECLARED PER BRIEF, so a reader can check the balance rather than take it on trust:",
+    "architectural, botanical-abstraction, geological-layered, pure-abstract, minimal, dense, organic,",
+    "mechanical, monumental, delicate, market-heavy, market-light. Twelve axes, twelve briefs, each",
+    "brief carrying one axis as its primary.",
+    "",
+    "EVERY BRIEF HERE IS INTENDED TO BE REPRESENTABLE by the two-template Wave-1 catalog. That is not",
+    "a thumb on the scale -- it is what the benchmark is for. Whether an IMPOSSIBLE brief is correctly",
+    "refused is a different question with a different fixture (impossible-briefs.json), because a",
+    "refusal is not a blind PASS and mixing the two would let a refusal inflate the score."
+  ],
+  "frozenAt": "2026-09-03",
+  "schemaVersion": 1,
+  "briefs": [
+    {
+      "id": "B01",
+      "axis": "architectural",
+      "title": "ARCADE",
+      "text": "# Brief — ARCADE\n\nAn architecture of repeated bays, seen head on and flattened into pure structure. The subject is the rhythm of supports: a colonnade abstracted until only interval and weight remain, with no depth cue and no perspective. Each bay is the same member at a different scale, nested inward toward the centre of the frame.\n\nThe work should feel engineered rather than drawn — regular, load-bearing, and slightly severe. Restrained palette: iron and ash over a near-black ground, with one warm accent marking the innermost bay.\n\nUnder drawdown the structure should lose members and the interval widen, as though bays were being removed from the run. In recovery the colonnade fills back in and the nesting deepens."
+    },
+    {
+      "id": "B02",
+      "axis": "botanical-abstraction",
+      "title": "FROND",
+      "text": "# Brief — FROND\n\nA botanical abstraction: the suggestion of a frond unfurling, never a literal leaf. What is wanted is the logic of growth — a stem that divides, and divides again, each division smaller and turned slightly from the last. Fine linework throughout, delicate rather than heavy, with generous emptiness around the form.\n\nThe palette is quiet: moss and bone over a dark ground, with the drawing carried in line rather than in mass.\n\nGrowth is the subject, so recovery should extend the branching and multiply its divisions, while stress retracts the form back toward a bare armature. Tokens should differ in how far the growth has gone."
+    },
+    {
+      "id": "B03",
+      "axis": "geological-layered",
+      "title": "BEDDING",
+      "text": "# Brief — BEDDING\n\nSediment as pure pattern. Horizontal banding at varying pitch, one bed deposited over another, dense and stacked, filling the frame edge to edge with no single element dominating. This is a core sample, not a landscape: there is no sky, no horizon and no ground plane, only the section itself.\n\nEarth palette — umber, ochre, sand and a cold slate band — over a dark base. Bands should differ in thickness and in weight so the eye reads a sequence rather than a texture.\n\nUnder drawdown the beds should thin and fewer of them survive; in recovery the sequence thickens and more beds return. Tokens differ in how many beds they carry and how evenly they are spaced."
+    },
+    {
+      "id": "B04",
+      "axis": "pure-abstract",
+      "title": "INTERVAL",
+      "text": "# Brief — INTERVAL\n\nNo subject at all. This is a study in interval and division: a field of marks whose only content is the relationship between them. Nothing here depicts anything, and nothing should invite a viewer to name it.\n\nThe composition should be balanced without being symmetrical, with an even distribution and no single dominant element — an all-over field rather than a figure on a ground. Palette narrow and tonal, close values, so that the differences read as spacing rather than as colour.\n\nThe market should act on the density of the field: more marks under drawdown, fewer in recovery, or the reverse — but visibly, at browse size. Tokens differ in the count and placement of their marks."
+    },
+    {
+      "id": "B05",
+      "axis": "minimal",
+      "title": "STELE",
+      "text": "# Brief — STELE\n\nOne form, centred, and almost nothing else. Minimal and austere, with the emptiness around the mass doing as much work as the mass itself. The frame should feel mostly empty and deliberately so, the single form held well clear of every edge.\n\nA quiet, spare palette: two values and a ground, no more. Nothing decorative, nothing incidental, no texture that is not structural.\n\nThe market should change the form's scale rather than its complexity — it contracts under drawdown and expands again in recovery — so that the work reads as one object breathing rather than as a composition rearranging itself. Tokens differ chiefly in the silhouette of the single form."
+    },
+    {
+      "id": "B06",
+      "axis": "dense",
+      "title": "THICKET",
+      "text": "# Brief — THICKET\n\nDense to the point of near-saturation. A crowded, teeming, intricate field that fills the frame with incident and rewards a long look. There should be no rest anywhere in the composition — the eye finds structure at every scale, and the overall impression is of profusion rather than of arrangement.\n\nWarm and dark: rust, copper and umber piled over a near-black ground, with values close enough that the density reads as mass rather than as pattern.\n\nUnder stress the thicket should thin dramatically and open up, and in recovery it should close again — the difference between the two states must be obvious at browse size, not a subtle shift. Tokens differ in density and structure."
+    },
+    {
+      "id": "B07",
+      "axis": "organic",
+      "title": "COLONY",
+      "text": "# Brief — COLONY\n\nAn organic growth: a colony of cells radiating from a shared centre, each generation budding from the last. The feeling should be biological rather than geometric, even though the construction is regular — accretion, not design.\n\nRounded forms, clustered and overlapping, in verdigris and bone over deep ink. The palette should feel damp and mineral rather than bright.\n\nGrowth and retreat are the whole market story: recovery pushes the colony outward and multiplies its members, stress pulls it back toward the centre and reduces it. The change should be plainly visible at thumbnail size. Tokens differ in how far the colony has spread and how densely it has packed."
+    },
+    {
+      "id": "B08",
+      "axis": "mechanical",
+      "title": "ESCAPEMENT",
+      "text": "# Brief — ESCAPEMENT\n\nA mechanism, abstracted. Nested rings and radial members, precise and instrument-like, with the regularity of something machined rather than grown. Think of the geometry of an escapement without any of its literal parts — no gear teeth, no hands, no numerals, no dial markings. Only the rotational logic.\n\nBrass and slate over a dark ground, with the drawing carried in fine line so the whole reads as engineering rather than as mass.\n\nUnder volatility the mechanism should loosen — its members spreading apart and the rings separating — and tighten again as conditions settle. Tokens differ in the order of rotational symmetry and in how many rings they carry."
+    },
+    {
+      "id": "B09",
+      "axis": "monumental",
+      "title": "BARROW",
+      "text": "# Brief — BARROW\n\nMonumental and heavy. A single massive form that commands the frame and reads as immovable — brutalist, solemn, and considerably larger than the frame comfortably holds. The weight is the subject.\n\nThe mass should be built from a few large members rather than many small ones, so that at browse size it reads as one silhouette. Charcoal and iron with a single ochre seam, over near-black.\n\nUnder drawdown the mass should fracture — members separating, the silhouette breaking — and consolidate again in recovery. It must remain recognisably the same object in all three states; this is one monument under different conditions, not three different monuments."
+    },
+    {
+      "id": "B10",
+      "axis": "delicate",
+      "title": "FILIGREE",
+      "text": "# Brief — FILIGREE\n\nDelicate, fine and fragile. Hairline linework arranged in a radial figure, light enough that the work feels provisional — as though it could be disturbed. Nothing heavy, nothing solid, no filled mass anywhere.\n\nPale and cool: bone and pale slate over a dark ground, the contrast kept low so the lines read as thread rather than as structure.\n\nThe market should act by expanding and contracting the figure's reach: it opens out in recovery and draws in under stress. Because the work is so light, the change must be carried by the geometry rather than by weight. Tokens differ in the symmetry of the figure and in how far its threads extend."
+    },
+    {
+      "id": "B11",
+      "axis": "market-heavy",
+      "title": "REGIME",
+      "text": "# Brief — REGIME\n\nThe market is the subject. This work should be almost unrecognisable between conditions: what a viewer sees under drawdown and what they see in recovery should read as two different weathers over the same terrain. The transformation is the point, and it must be unmistakable at 120 pixels.\n\nUnder stress the work should be sparse, broken and cold; in recovery it should be dense, whole and warm. Neutral sits visibly between them. Slate and iron at one end, ochre and copper at the other.\n\nWhat must NOT change is identity: the same token must remain the same token across all three states. A work that becomes a different object under drawdown has been replaced, not transformed."
+    },
+    {
+      "id": "B12",
+      "axis": "market-light",
+      "title": "RELIQUARY",
+      "text": "# Brief — RELIQUARY\n\nA still, contemplative object that barely acknowledges the market at all. The work should feel settled and permanent — something that has already finished happening. Quiet, centred, and unhurried.\n\nA container form: concentric enclosure, one boundary inside another, with a small dense centre held at the middle. Gold and umber over deep ink, sparing, with most of the frame given to the dark.\n\nThe market may register, but only faintly — a slight tightening or loosening of the enclosure, nothing that a casual viewer would notice at thumbnail size. Do not manufacture drama. What varies between tokens is the number of enclosures and the character of the centre they hold."
+    }
+  ]
+}
