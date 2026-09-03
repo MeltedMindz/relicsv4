@@ -1,0 +1,83 @@
+{
+ "schemaVersion": 1,
+ "kind": "AUTHOR_RESPONSE",
+ "respondsTo": "B03",
+ "criticId": "critic-B03",
+ "note": "Round 1 produced five systematic changes to the author rather than twelve per-project patches, because twelve critics working blind of each other named the same defects. Each finding is answered individually and names the parameters that actually moved.",
+ "responses": [
+  {
+   "findingId": "centered-figure-not-section",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].symSet",
+    "fields[0].symmetry"
+   ],
+   "expectedVisualEffect": "The bilateral axis is gone, so no seed reads as a body, a mask or a crown. Rotational orders and NONE carry the symmetry instead, and the per-seed silhouette range widens because the set spans NONE through ROT6.",
+   "preserve": [
+    "the centred construction",
+    "the palette and the dark ground"
+   ]
+  },
+  {
+   "findingId": "mirrored-ornament-limbs",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].symSet",
+    "fields[0].symmetry"
+   ],
+   "expectedVisualEffect": "The bilateral axis is gone, so no seed reads as a body, a mask or a crown. Rotational orders and NONE carry the symmetry instead, and the per-seed silhouette range widens because the set spans NONE through ROT6.",
+   "preserve": [
+    "the centred construction",
+    "the palette and the dark ground"
+   ]
+  },
+  {
+   "findingId": "seed-collapse-at-120",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].shapeSet",
+    "rules[0].ruleSet",
+    "rules[0].symSet"
+   ],
+   "expectedVisualEffect": "The seed draws from three shapes, three productions and three symmetry orders instead of near-identical members, so the twelve tokens separate at 120px rather than clustering into families.",
+   "preserve": [
+    "the project's single silhouette family \u2014 variation must not become incoherence"
+   ]
+  },
+  {
+   "findingId": "state-read-by-ornament-not-beds",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].sensor",
+    "rules[0].curve",
+    "rules[1].sensor",
+    "fields[0].sensor",
+    "fields[0].curve",
+    "fields[1].sensor",
+    "fields[2].sensor"
+   ],
+   "expectedVisualEffect": "Stress becomes the sparsest state and recovery the fullest, with neutral between them. RECOVERY reads 20/0/820 per mille across the ring where DRAWDOWN read 20/900/80, so the response now points the way the brief describes instead of the reverse.",
+   "preserve": [
+    "the amplitude of the response, which was already the right size and only pointed the wrong way",
+    "token identity across the three states"
+   ]
+  },
+  {
+   "findingId": "hollow-planks-and-absent-slate",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "fields[1].spreadMax",
+    "fields[2].spreadMax",
+    "fields[1].stroke",
+    "fields[2].stroke",
+    "rules[1].contraction",
+    "rules[1].stroke"
+   ],
+   "expectedVisualEffect": "Secondary members stay inside the primary's reach and are filled rather than hollow, so they read as subordinate structure instead of as detached debris or crate slats.",
+   "preserve": [
+    "the two-register hierarchy",
+    "the primary field's scale"
+   ]
+  }
+ ]
+}

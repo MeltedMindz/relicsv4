@@ -2,7 +2,7 @@
   "briefId": "B12",
   "axis": "market-light",
   "title": "RELIQUARY",
-  "phase": "AUTHORED",
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "3a3eb44732a3d5accda9ebb0cbe0c6218712f9812abb04a03f695012e7fc5271",
   "admission": {
     "schemaVersion": 1,
@@ -518,5 +518,72 @@
         "seedDeMin": 3.73
       }
     }
-  ]
+  ],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "e5ad94bc16f8dc33ee9eb1d8cbb523d0f7255840d0d0de2a8c6517b60c8b6861",
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "2344c23842aeeffa5126c62b9b4ad2bcb276d6a4718f399221007c44352995ce",
+        "bytes": 120817
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "dbce47aeb64ba1148a19cc904f45911f061cfaaf426cdf3cb33c2c985e21f7f2",
+        "bytes": 51929
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "e498a14eae1c17ee4908963269379c041388e2f2c2cb32266c3b3b272b1b1524",
+        "bytes": 149283
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "fe3baa6e012e6c75c7a6e882870272e2abfbbad23270060f77a0f5d21e0745cd",
+        "bytes": 63162
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "1ec94edefa90ab0b98527c586ed3b8906137ac4abe466aedfa6db22474e53caa",
+        "bytes": 18024
+      }
+    ],
+    "inputHashes": [
+      "2344c23842aeeffa5126c62b9b4ad2bcb276d6a4718f399221007c44352995ce",
+      "dbce47aeb64ba1148a19cc904f45911f061cfaaf426cdf3cb33c2c985e21f7f2",
+      "e498a14eae1c17ee4908963269379c041388e2f2c2cb32266c3b3b272b1b1524",
+      "fe3baa6e012e6c75c7a6e882870272e2abfbbad23270060f77a0f5d21e0745cd",
+      "1ec94edefa90ab0b98527c586ed3b8906137ac4abe466aedfa6db22474e53caa"
+    ],
+    "measurements": {
+      "inkMean": 0.227,
+      "inkMin": 0.074,
+      "stateDeMean": 6.95,
+      "stateDeMin": 2.07,
+      "seedDeMean": 10.49,
+      "seedDeMin": 3.12
+    },
+    "frozenAt": "2026-09-03T17:51:56.913Z"
+  }
 }

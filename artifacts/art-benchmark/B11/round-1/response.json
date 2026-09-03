@@ -1,0 +1,91 @@
+{
+ "schemaVersion": 1,
+ "kind": "AUTHOR_RESPONSE",
+ "respondsTo": "B11",
+ "criticId": "critic-B11",
+ "note": "Round 1 produced five systematic changes to the author rather than twelve per-project patches, because twelve critics working blind of each other named the same defects. Each finding is answered individually and names the parameters that actually moved.",
+ "responses": [
+  {
+   "findingId": "state-order-inverted",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].sensor",
+    "rules[0].curve",
+    "rules[1].sensor",
+    "fields[0].sensor",
+    "fields[0].curve",
+    "fields[1].sensor",
+    "fields[2].sensor"
+   ],
+   "expectedVisualEffect": "Stress becomes the sparsest state and recovery the fullest, with neutral between them. RECOVERY reads 20/0/820 per mille across the ring where DRAWDOWN read 20/900/80, so the response now points the way the brief describes instead of the reverse.",
+   "preserve": [
+    "the amplitude of the response, which was already the right size and only pointed the wrong way",
+    "token identity across the three states"
+   ]
+  },
+  {
+   "findingId": "neutral-recovery-collapse",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].sensor",
+    "rules[0].curve",
+    "rules[1].sensor",
+    "fields[0].sensor",
+    "fields[0].curve",
+    "fields[1].sensor",
+    "fields[2].sensor"
+   ],
+   "expectedVisualEffect": "Stress becomes the sparsest state and recovery the fullest, with neutral between them. RECOVERY reads 20/0/820 per mille across the ring where DRAWDOWN read 20/900/80, so the response now points the way the brief describes instead of the reverse.",
+   "preserve": [
+    "the amplitude of the response, which was already the right size and only pointed the wrong way",
+    "token identity across the three states"
+   ]
+  },
+  {
+   "findingId": "copper-not-in-reserve",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "groundMode",
+    "groundIx",
+    "groundIx2"
+   ],
+   "expectedVisualEffect": "The ground returns to a flat dark field, so it stops being the brightest thing in the frame and the drawing reads against it.",
+   "preserve": [
+    "the palette's hues, which were correct; only their roles were wrong"
+   ]
+  },
+  {
+   "findingId": "identity-anchor-drops-under-stress",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "fields[1].spreadMax",
+    "fields[2].spreadMax",
+    "fields[1].stroke",
+    "fields[2].stroke",
+    "rules[1].contraction",
+    "rules[1].stroke"
+   ],
+   "expectedVisualEffect": "Secondary members stay inside the primary's reach and are filled rather than hollow, so they read as subordinate structure instead of as detached debris or crate slats.",
+   "preserve": [
+    "the two-register hierarchy",
+    "the primary field's scale"
+   ]
+  },
+  {
+   "findingId": "hairline-frame-and-sub-pixel-debris",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].stroke",
+    "rules[1].stroke",
+    "fields[0].stroke",
+    "fields[1].stroke",
+    "fields[2].stroke"
+   ],
+   "expectedVisualEffect": "Members render as filled mass rather than as hairline outline, so weight reads at browse size and the interior stops showing ground through it.",
+   "preserve": [
+    "the centred single figure",
+    "the hue pairing"
+   ]
+  }
+ ]
+}

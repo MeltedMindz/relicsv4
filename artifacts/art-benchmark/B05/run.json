@@ -2,7 +2,7 @@
   "briefId": "B05",
   "axis": "minimal",
   "title": "STELE",
-  "phase": "AUTHORED",
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
   "admission": {
     "schemaVersion": 1,
@@ -572,5 +572,72 @@
         "seedDeMin": 2.75
       }
     }
-  ]
+  ],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "c963b485d4fab05ca6c008e48051fbedc4dcf26b2fa306cf92af7cc412151bac",
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "e3b6dae1e04ac0122fe66143409c1628b9b3263a4d0ff2eaa39b8ded8d98066d",
+        "bytes": 97700
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "da8ef608b980a194168c46618ad340a60413587e4cd341226861dcdecb3be970",
+        "bytes": 40833
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "11652f0fb8bfc4eddba3535d7466a4ec40a8f01de448d9fff740ca9ae24a391e",
+        "bytes": 140101
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "0f58079c603bed89f896dfc41d86c3a9da46dcac11cb75d0d767b93f51ce82dc",
+        "bytes": 59002
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "d92c1658cea7d4d0e6c86a7501515bbcca0bb06a0ac80bce796cdfe08628350a",
+        "bytes": 23426
+      }
+    ],
+    "inputHashes": [
+      "e3b6dae1e04ac0122fe66143409c1628b9b3263a4d0ff2eaa39b8ded8d98066d",
+      "da8ef608b980a194168c46618ad340a60413587e4cd341226861dcdecb3be970",
+      "11652f0fb8bfc4eddba3535d7466a4ec40a8f01de448d9fff740ca9ae24a391e",
+      "0f58079c603bed89f896dfc41d86c3a9da46dcac11cb75d0d767b93f51ce82dc",
+      "d92c1658cea7d4d0e6c86a7501515bbcca0bb06a0ac80bce796cdfe08628350a"
+    ],
+    "measurements": {
+      "inkMean": 0.147,
+      "inkMin": 0.048,
+      "stateDeMean": 1.68,
+      "stateDeMin": 0.54,
+      "seedDeMean": 8.42,
+      "seedDeMin": 2.06
+    },
+    "frozenAt": "2026-09-03T17:51:39.629Z"
+  }
 }

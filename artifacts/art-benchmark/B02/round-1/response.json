@@ -1,0 +1,93 @@
+{
+ "schemaVersion": 1,
+ "kind": "AUTHOR_RESPONSE",
+ "respondsTo": "B02",
+ "criticId": "critic-B02",
+ "note": "Round 1 produced five systematic changes to the author rather than twelve per-project patches, because twelve critics working blind of each other named the same defects. Each finding is answered individually and names the parameters that actually moved.",
+ "responses": [
+  {
+   "findingId": "no-branching-recursion",
+   "disposition": "REJECT_WITH_REASON",
+   "reason": "The vector runtime places fields of primitives about the canvas centre; it has no parent-to-child production and cannot divide a member into smaller members. Branching recursion is REFUSED_BY_MEDIUM here. This is a routing error rather than a configuration error: the brief's subject is division, which is the recursion runtime's whole construction, and admission scored it to vector on its linework vocabulary."
+  },
+  {
+   "findingId": "line-becomes-mass",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "fields[1].spreadMax",
+    "fields[2].spreadMax",
+    "fields[1].stroke",
+    "fields[2].stroke",
+    "rules[1].contraction",
+    "rules[1].stroke"
+   ],
+   "expectedVisualEffect": "Secondary members stay inside the primary's reach and are filled rather than hollow, so they read as subordinate structure instead of as detached debris or crate slats.",
+   "preserve": [
+    "the two-register hierarchy",
+    "the primary field's scale"
+   ]
+  },
+  {
+   "findingId": "state-mapping-inverted",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "rules[0].sensor",
+    "rules[0].curve",
+    "rules[1].sensor",
+    "fields[0].sensor",
+    "fields[0].curve",
+    "fields[1].sensor",
+    "fields[2].sensor"
+   ],
+   "expectedVisualEffect": "Stress becomes the sparsest state and recovery the fullest, with neutral between them. RECOVERY reads 20/0/820 per mille across the ring where DRAWDOWN read 20/900/80, so the response now points the way the brief describes instead of the reverse.",
+   "preserve": [
+    "the amplitude of the response, which was already the right size and only pointed the wrong way",
+    "token identity across the three states"
+   ]
+  },
+  {
+   "findingId": "seed-axis-collapse-at-120",
+   "disposition": "PARTIALLY_ACCEPT",
+   "parameters": [
+    "rules[0].shapeSet",
+    "rules[0].ruleSet",
+    "rules[0].symSet"
+   ],
+   "expectedVisualEffect": "The seed draws from three shapes, three productions and three symmetry orders instead of near-identical members, so the twelve tokens separate at 120px rather than clustering into families.",
+   "preserve": [
+    "the project's single silhouette family \u2014 variation must not become incoherence"
+   ],
+   "reason": "The vector runtime's seed reaches nothing categorical -- layout, primitive, variant and symmetry are all project constants -- so per-token variety can only come from the scalars and a palette rotation. The count and size ranges are widened; a categorical silhouette difference per seed is not available in this medium."
+  },
+  {
+   "findingId": "frame-occupancy-and-clipping",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "fields[1].spreadMax",
+    "fields[2].spreadMax",
+    "fields[1].stroke",
+    "fields[2].stroke",
+    "rules[1].contraction",
+    "rules[1].stroke"
+   ],
+   "expectedVisualEffect": "Secondary members stay inside the primary's reach and are filled rather than hollow, so they read as subordinate structure instead of as detached debris or crate slats.",
+   "preserve": [
+    "the two-register hierarchy",
+    "the primary field's scale"
+   ]
+  },
+  {
+   "findingId": "contrast-floor-vs-ground",
+   "disposition": "ACCEPT",
+   "parameters": [
+    "groundMode",
+    "groundIx",
+    "groundIx2"
+   ],
+   "expectedVisualEffect": "The ground returns to a flat dark field, so it stops being the brightest thing in the frame and the drawing reads against it.",
+   "preserve": [
+    "the palette's hues, which were correct; only their roles were wrong"
+   ]
+  }
+ ]
+}

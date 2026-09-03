@@ -74,7 +74,17 @@ export const CRITIQUE_FLOOR = Object.freeze({ minFindingChars: 30, minWhatWorks:
  * could act on either.
  */
 const VAGUE_CHANGE = /^(?:\W*)(?:improve|strengthen|enhance|refine|polish|fix|address|rework|reconsider|tighten|balance|adjust|tweak|clean\s+up|make\s+it\s+(?:better|nicer|stronger|more\s+\w+))\b[^.]{0,40}$/i;
-const ACTION_DIRECTION = /\b(increase|decrease|raise|lower|widen|narrow|add|remove|drop|replace|swap|declare|pin|unpin|shift|reduce|extend|shorten|darken|lighten|separate|merge|move|set|bind|unbind|elect|spread|contract|thicken|thin|more|fewer|larger|smaller|toward|from\s+\w+\s+to)\b/i;
+// WIDENED ONCE, WITH THE EVIDENCE. A critic wrote "Grow the outermost generation until the
+// figure's extent reaches 85-90% of frame width ... halve the stroke width at each successive
+// generation ... and clamp the figure's bounding box inside the viewBox" -- three verbs, a
+// magnitude and a destination, which is about as executable as a critique gets. It was refused,
+// because the list held `increase` and `reduce` but not `grow`, `halve` or `clamp`.
+//
+// The rule is about whether a change has a DIRECTION, not about vocabulary, so the fix is to add
+// the verbs rather than to relax the rule. The must-reject fixtures were re-run against the
+// widened pattern afterwards and still fail: widening a gate without checking what it now lets
+// through is how a gate becomes decorative.
+const ACTION_DIRECTION = /\b(increase|decrease|raise|lower|widen|narrow|add|remove|drop|replace|swap|declare|pin|unpin|shift|reduce|extend|shorten|darken|lighten|separate|merge|move|set|bind|unbind|elect|spread|contract|thicken|thin|grow|shrink|halve|double|clamp|constrain|bound|restrict|invert|reverse|flip|reserve|withhold|fill|stroke|centre|center|align|more|fewer|larger|smaller|toward|from\s+\w+\s+to)\b/i;
 
 /**
  * Validate a development critique.
