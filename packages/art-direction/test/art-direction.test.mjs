@@ -10,7 +10,8 @@
 // ================================================================================================
 
 import { strict as assert } from "node:assert";
-import { mkdtempSync, rmSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -22,7 +23,10 @@ import { assertCapabilityMappingCurrent, detectImpossibleDemands, runtimeCanExpr
 import { admitBrief, impossibleCommissionsSentToAuthor, WAVE1_CATALOG } from "../src/admission.js";
 import { shipCatalog } from "../../template-catalog/src/select.js";
 import { DIRECTION_FIELDS, validateDirection } from "../src/direction.js";
-import { AUTHORING_SEEDS, DEVELOPMENT_REVIEW_SEEDS, FINAL_HOLDOUT_SEEDS, assertSeedGroupsDisjoint, holdoutLeak, seedsVisibleTo } from "../src/seeds.js";
+import { AUTHORING_SEEDS, DEVELOPMENT_REVIEW_SEEDS, assertSeedGroupsDisjoint, deriveHoldoutSeeds, holdoutLeak, seedsVisibleTo } from "../src/seeds.js";
+
+/** A holdout for the fixtures. The real one is derived from a salt that is not in this repository. */
+const FIXTURE_HOLDOUT = deriveHoldoutSeeds({ roundId: "art-direction-unit-fixture", salt: "fixture-salt-not-a-real-round" });
 import { checkBindings } from "../src/binding.js";
 import { authorConfig, deriveIntent } from "../src/author.js";
 import { assertBoundedChange, validateCritique, validateResponse } from "../src/critique.js";
@@ -65,12 +69,12 @@ function acceptanceFixture(overrides = {}) {
       blinded: true,
       describedBeforeBrief: true,
       seedGroup: "FINAL_HOLDOUT_SEEDS",
-      seeds: [...FINAL_HOLDOUT_SEEDS],
+      seeds: [...FIXTURE_HOLDOUT],
       states: ["neutral", "stress", "recovery"],
       configHashAtUnblind: null,
       visualDescription: "a compact nested mass",
     },
-    seedGroups: { authorSawHoldout: false },
+    seedGroups: { authorSawHoldout: false, holdoutIntegrity: "HELD" },
     ...overrides,
   });
 }
@@ -78,6 +82,34 @@ function acceptanceFixture(overrides = {}) {
 function inWorkspace(fn) {
   const ws = mkdtempSync(join(tmpdir(), "art-direction-"));
   try { return fn(ws); } finally { rmSync(ws, { recursive: true, force: true }); }
+}
+
+/**
+ * Write a receipt AND the reviewer document its verdict is bound to.
+ *
+ * The verdict may not attest to itself, so a fixture that writes only the receipt now produces an
+ * unbound one — correctly refused, and useless for testing anything else. `plant` writes the
+ * reviewer's `final-review/verdict.json` first, then pins its bytes into the receipt, which is
+ * exactly what the harness does.
+ */
+function plant(ws, overrides = {}) {
+  const record = acceptanceFixture(overrides);
+  const doc = {
+    reviewerId: record.finalReview.reviewerId,
+    verdict: record.finalReview.verdict,
+    describedBeforeBrief: record.finalReview.describedBeforeBrief,
+    reasoning: "a fixture reviewer's reasoning, long enough to be a document rather than a flag",
+  };
+  const bytes = Buffer.from(`${JSON.stringify(doc, null, 2)}\n`);
+  mkdirSync(join(ws, "final-review"), { recursive: true });
+  writeFileSync(join(ws, "final-review", "verdict.json"), bytes);
+  record.finalReview.verdictDocument = {
+    path: join("final-review", "verdict.json"),
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+    verdictField: "verdict",
+  };
+  writeArtAcceptance(ws, record);
+  return record;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -232,16 +264,28 @@ test("a direction may not re-promise a capability admission recorded as a conces
 // ---------------------------------------------------------------------------------------------
 
 test("the seed populations are disjoint, including against art-review's own", () => {
-  const r = assertSeedGroupsDisjoint();
-  assert.equal(r.totalDistinct, 148);
+  const open = assertSeedGroupsDisjoint();
+  assert.equal(open.totalDistinct, 136);
+  assert.equal(open.holdoutChecked, false, "a run with no salt has not checked the holdout, and must not say it has");
+  const withHoldout = assertSeedGroupsDisjoint(undefined, { finalHoldout: FIXTURE_HOLDOUT });
+  assert.equal(withHoldout.totalDistinct, 148);
+  assert.equal(withHoldout.holdoutChecked, true);
 });
 
 test("the author cannot be shown a holdout seed", () => {
   assert.deepEqual(seedsVisibleTo("AUTHOR"), [...AUTHORING_SEEDS]);
-  const leak = holdoutLeak("AUTHOR", FINAL_HOLDOUT_SEEDS);
-  assert.ok(leak.leaks && leak.includesFinalHoldout.length === FINAL_HOLDOUT_SEEDS.length);
+  const leak = holdoutLeak("AUTHOR", FIXTURE_HOLDOUT, { finalHoldout: FIXTURE_HOLDOUT });
+  assert.ok(leak.leaks && leak.includesFinalHoldout.length === FIXTURE_HOLDOUT.length);
   assert.equal(holdoutLeak("AUTHOR", DEVELOPMENT_REVIEW_SEEDS).leaks, true, "even the critic's seeds are not the author's");
   assert.equal(holdoutLeak("AUTHOR", AUTHORING_SEEDS).leaks, false);
+});
+
+test("an unsupplied holdout is UNKNOWN, never an empty leak list", () => {
+  // `includesFinalHoldout: []` would read as "no holdout seeds leaked" on the strength of never
+  // having looked. That is the shape of every vacuous pass this repository has caught.
+  const blind = holdoutLeak("AUTHOR", FIXTURE_HOLDOUT);
+  assert.equal(blind.leaks, true);
+  assert.equal(blind.includesFinalHoldout, "UNKNOWN");
 });
 
 // ---------------------------------------------------------------------------------------------
@@ -367,7 +411,7 @@ test("one criticism may not move twenty fields", () => {
 
 test("a well-formed receipt verifies", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture());
+    plant(ws);
     const v = verifyArtAcceptance(ws, { configBytes: "0x4752563102", briefText: GOOD_BRIEF, runtimeId: "GEOMETRIC_RECURSION_V1" });
     assert.equal(v.accepted, true, v.detail);
   });
@@ -375,7 +419,7 @@ test("a well-formed receipt verifies", () => {
 
 test("MUTATION: ART_ACCEPTANCE_INVALIDATED_BY_CONFIG_CHANGE — one byte voids it", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture());
+    plant(ws);
     const v = verifyArtAcceptance(ws, { configBytes: "0x4752563103", briefText: GOOD_BRIEF });
     assert.equal(v.accepted, false);
     assert.equal(v.reasonCode, "ART_ACCEPTANCE_INVALIDATED");
@@ -385,7 +429,7 @@ test("MUTATION: ART_ACCEPTANCE_INVALIDATED_BY_CONFIG_CHANGE — one byte voids i
 
 test("MUTATION: the brief moving voids it too", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture());
+    plant(ws);
     const v = verifyArtAcceptance(ws, { configBytes: "0x4752563102", briefText: `${GOOD_BRIEF} And one more sentence.` });
     assert.equal(v.reasonCode, "ART_ACCEPTANCE_INVALIDATED");
     assert.ok(v.invalidatedBy.some((i) => i.facet === "BRIEF"));
@@ -394,7 +438,7 @@ test("MUTATION: the brief moving voids it too", () => {
 
 test("MUTATION: the runtime bytecode moving voids it", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture());
+    plant(ws);
     const v = verifyArtAcceptance(ws, { configBytes: "0x4752563102", runtimeCodeHash: "0xfeed" });
     assert.ok(v.invalidatedBy.some((i) => i.facet === "RUNTIME_CODE"));
   });
@@ -403,10 +447,10 @@ test("MUTATION: the runtime bytecode moving voids it", () => {
 test("MUTATION: FIRST_LEGAL_CONFIG_ACCEPTED_WITHOUT_REVIEW — a passing battery is not acceptance", () => {
   inWorkspace((ws) => {
     // Legal, renders, every objective check green, and NO final verdict.
-    writeArtAcceptance(ws, acceptanceFixture({
+    plant(ws, {
       objective: { pass: true, checks: [{ id: "CONFIG_LEGAL", ok: true }, { id: "SEED_DIVERSITY", ok: true }, { id: "PERCEPTUAL_SEPARATION", ok: true }] },
       finalReview: { reviewerId: null, verdict: null, blinded: null, describedBeforeBrief: null, seedGroup: null },
-    }));
+    });
     const v = verifyArtAcceptance(ws, { configBytes: "0x4752563102" });
     assert.equal(v.accepted, false);
     assert.equal(v.reasonCode, "ART_NOT_ACCEPTED");
@@ -415,21 +459,21 @@ test("MUTATION: FIRST_LEGAL_CONFIG_ACCEPTED_WITHOUT_REVIEW — a passing battery
 
 test("MUTATION: a verdict taken on non-holdout seeds is refused", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture({
+    plant(ws, {
       finalReview: { reviewerId: "r", verdict: "PASS", blinded: true, describedBeforeBrief: true, seedGroup: "AUTHORING_SEEDS" },
-    }));
+    });
     assert.equal(verifyArtAcceptance(ws, { configBytes: "0x4752563102" }).reasonCode, "FINAL_REVIEW_NOT_BLINDED");
   });
 });
 
 test("MUTATION: a config change after unblinding is refused with its own reason code", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture({
+    plant(ws, {
       finalReview: {
         reviewerId: "r", verdict: "PASS", blinded: true, describedBeforeBrief: true,
         seedGroup: "FINAL_HOLDOUT_SEEDS", configHashAtUnblind: "0".repeat(64),
       },
-    }));
+    });
     const v = verifyArtAcceptance(ws, { configBytes: "0x4752563102" });
     assert.equal(v.reasonCode, "FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND");
   });
@@ -437,19 +481,19 @@ test("MUTATION: a config change after unblinding is refused with its own reason 
 
 test("MUTATION: a reviewer who also critiqued is refused", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture({
+    plant(ws, {
       rounds: [{ round: 1, criticId: "same-agent", critique: { findings: [{ id: "f1" }] }, response: { responses: [{ findingId: "f1", disposition: "ACCEPT" }] } }],
       finalReview: { reviewerId: "same-agent", verdict: "PASS", blinded: true, describedBeforeBrief: true, seedGroup: "FINAL_HOLDOUT_SEEDS" },
-    }));
+    });
     assert.equal(verifyArtAcceptance(ws, { configBytes: "0x4752563102" }).reasonCode, "FINAL_REVIEW_ROLE_COLLISION");
   });
 });
 
 test("MUTATION: an unanswered finding blocks acceptance", () => {
   inWorkspace((ws) => {
-    writeArtAcceptance(ws, acceptanceFixture({
+    plant(ws, {
       rounds: [{ round: 1, criticId: "critic-a", critique: { findings: [{ id: "f1" }, { id: "f2" }] }, response: { responses: [{ findingId: "f1", disposition: "ACCEPT" }] } }],
-    }));
+    });
     assert.equal(verifyArtAcceptance(ws, { configBytes: "0x4752563102" }).reasonCode, "CRITIQUE_WITHOUT_AUTHOR_RESPONSE");
   });
 });

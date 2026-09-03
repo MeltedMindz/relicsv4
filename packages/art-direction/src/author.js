@@ -1113,10 +1113,16 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   //     <g id="f0" fill="#0f1113">   ... over ... <rect width="256" height="256" fill="#0f1113"/>
   //
   // — an entire field painted in the ground colour, ink 0.000 in all three market states. Roughly
-  // one token in `paletteCount` per field. That is the blank token two round-one reviewers found
-  // unaided ("9190 renders NOTHING — a blank panel at 256, at 120, and in all three market
-  // conditions") and it was being elected on purpose, for a per-token variety the atlas measures
-  // at two thousandths of coverage.
+  // one token in `paletteCount` per field, which the objective battery's own blank-token check
+  // reproduces without any reviewer's help; and it was being elected on purpose, for a per-token
+  // variety the atlas measures at two thousandths of coverage.
+  //
+  // THIS NOTE ONCE QUOTED A ROUND-ONE FINAL HOLDOUT REVIEWER, NAMING A HOLDOUT SEED. That put a
+  // holdout token, and what it drew, into the author's own source — the leak the holdout exists to
+  // prevent, in the file that reads it on every run. The quotation is preserved in full at
+  // `packages/art-direction/rounds/QUARANTINE.md` (Q-1), outside the author-visible surface. The
+  // finding above survives the redaction because it never rested on the quotation: seed 508194 is
+  // an ordinary render, not a holdout token, and the battery finds the blanks by itself.
   //
   // Per-token variety comes from the scalars instead, which is where the measured 15-21 dE of seed
   // separation on the three-field rows comes from.

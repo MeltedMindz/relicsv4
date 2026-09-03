@@ -1,0 +1,44 @@
+{
+  "$schema": "https://relics.wtf/schema/holdout-round-registry-1.json",
+  "schemaVersion": 1,
+  "note": "The holdout round registry. Reviewer-side: it is deliberately OUTSIDE the author-visible source surface defined in packages/art-direction/src/holdout.js. A round is registered here BEFORE authoring begins, carrying only saltCommitment; seedsDigest is filled in when the round is unblinded and the salt is revealed. Nothing in this file names a seed.",
+  "rounds": [
+    {
+      "roundId": "wave1-benchmark-rounds-1-and-2",
+      "coversBenchmarkRounds": [
+        "artifacts/art-benchmark-round1",
+        "artifacts/art-benchmark"
+      ],
+      "derivation": "LEGACY_ARITHMETIC_V0",
+      "integrity": "COMPROMISED",
+      "seedsDigest": "388c5cfc76a1f5c1cbc1426cfe8525a41bc05989a47798df1fb85518e6da09e6",
+      "saltCommitment": null,
+      "detail": "One holdout set served BOTH completed benchmark rounds, byte for byte. It was not derived from a salt at all: packages/art-direction/src/seeds.js computed it from an arithmetic generator written out in the module the author imports. The two rounds are therefore not distinguishable by their holdout, which is why they share one registry entry rather than having one each.",
+      "compromise": {
+        "classification": "HOLDOUT_COMPUTABLE_FROM_AUTHOR_VISIBLE_SOURCE",
+        "affectsRounds": [
+          "round 1",
+          "round 2"
+        ],
+        "evidence": [
+          {
+            "kind": "GENERATOR_IN_AUTHOR_VISIBLE_SOURCE",
+            "file": "packages/art-direction/src/seeds.js",
+            "asOfCommit": "7078bce5",
+            "detail": "FINAL_HOLDOUT_SEEDS was generated from a base and a stride declared in the same module author.js imports, four lines below the sentence 'THE AUTHOR NEVER SEES THEM'. Anyone reading the file computes the twelve. This affects both rounds and is the primary compromise."
+          },
+          {
+            "kind": "REVIEWER_QUOTATION_IN_AUTHOR_VISIBLE_SOURCE",
+            "file": "packages/art-direction/src/author.js",
+            "line": 1117,
+            "introducedIn": "e67f73690bd7b46fa9b235b02aee93311282a1a1",
+            "introducedAt": "2026-09-03T11:47:14-07:00",
+            "detail": "A round-one FINAL holdout reviewer's sentence was quoted verbatim in the author's own source, naming one holdout seed and describing what that token rendered as, beside the parameter change it motivated. Round two's verdicts were taken at 2026-09-03T12:59:28-07:00, after that commit, so round two was authored with round one's holdout partially unblinded. The quotation is preserved at packages/art-direction/rounds/QUARANTINE.md; the seed number was removed from author.js on 2026-09-03."
+          }
+        ],
+        "consequence": "BLIND_PASS = 0/12 in both rounds. No configuration was ACCEPTED under the compromised holdout — all twenty-four final verdicts are REFUSE, so no false PASS was produced. But the 0/12 cannot be re-scored clean, because a clean score would require a holdout the author had not been exposed to, and that means a fresh round. See artifacts/art-benchmark/ROUND-2-FINDINGS.md.",
+        "reScoreableWithoutAFreshRound": false
+      }
+    }
+  ]
+}

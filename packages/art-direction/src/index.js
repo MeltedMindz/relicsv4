@@ -11,6 +11,7 @@
 //   atlas       what each parameter measurably does, so a value is chosen rather than guessed
 //   binding     does the claimed market response resolve to different numbers -- arithmetic, no chain
 //   seeds       who is allowed to see which tokens, so a final verdict is not an overfit
+//   holdout     whether the author-visible source NAMES this round's holdout, measured not asserted
 //   author      composition first: silhouette, focus, space, rhythm, secondary, palette, detail, market
 //   critique    a development critic that is not the author, and a structured response to it
 //   acceptance  the receipt binding all of the above to the exact bytes a launch would commit
@@ -24,6 +25,7 @@ export * from "./capabilities.js";
 export * from "./admission.js";
 export * from "./direction.js";
 export * from "./seeds.js";
+export * from "./holdout.js";
 export * from "./binding.js";
 export * from "./author.js";
 export * from "./critique.js";

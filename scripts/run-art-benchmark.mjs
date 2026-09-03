@@ -45,7 +45,8 @@ import { fileURLToPath } from "node:url";
 import { admitBrief } from "../packages/art-direction/src/admission.js";
 import { validateDirection, directionRecord } from "../packages/art-direction/src/direction.js";
 import { authorConfig } from "../packages/art-direction/src/author.js";
-import { AUTHORING_SEEDS, DEVELOPMENT_REVIEW_SEEDS, FINAL_HOLDOUT_SEEDS, assertSeedGroupsDisjoint, marketResponseClaimed } from "../packages/art-direction/src/seeds.js";
+import { AUTHORING_SEEDS, DEVELOPMENT_REVIEW_SEEDS, assertNoHoldoutLeak, assertSeedGroupsDisjoint, finalHoldoutSeeds, holdoutSeedsDigest, marketResponseClaimed } from "../packages/art-direction/src/seeds.js";
+import { roundIntegrityForSeeds, scanAuthorVisibleSourceForHoldout } from "../packages/art-direction/src/holdout.js";
 import { validateCritique, validateResponse, assertBoundedChange, criticPrompt } from "../packages/art-direction/src/critique.js";
 import { encodeConfig, decodeConfig } from "../packages/art-review/src/runtimes.js";
 import { REVIEW_SEEDS, collectionSeeds } from "../packages/art-review/src/market.js";
@@ -104,7 +105,20 @@ function loadDirections() {
  * the published programme's verdicts were all really settled there; the 256px sheet exists so a
  * reviewer can check whether what it is seeing at 120 is detail or mush.
  */
-async function renderSheets({ renderer, configBytes, seeds, states, outDir, label }) {
+async function renderSheets({ renderer, configBytes, seeds, states, outDir, label, role, finalHoldout = null }) {
+  // THE CONTAINMENT API HAS A PRODUCTION CALLER, AND THIS IS IT.
+  //
+  // `seedsVisibleTo` / `holdoutLeak` existed for two rounds with zero callers outside their own
+  // unit test, which is why nothing noticed that the holdout was computable from the source they
+  // were guarding. Every sheet this harness writes now passes through the role table on its way to
+  // disk: a development sheet built from the wrong seed group, or a holdout render handed to the
+  // critic, throws here rather than being reviewed.
+  //
+  // `finalHoldout` is null in the author and revise phases ON PURPOSE — those phases must not be
+  // able to resolve the holdout at all, and `holdoutLeak` reports `includesFinalHoldout: "UNKNOWN"`
+  // rather than an empty list, which is the honest answer for a check that was never in a position
+  // to look.
+  assertNoHoldoutLeak(role, seeds, { finalHoldout, context: `${label} sheets` });
   mkdirSync(outDir, { recursive: true });
   const records = {};
   for (const seed of seeds) {
@@ -170,13 +184,41 @@ async function gateOn({ renderer, runtimeId, config, configBytes, briefId, phase
   return { battery, blocked };
 }
 
-function assertBatterySeedsAreNotBenchmarkSeeds() {
-  const groups = new Set([...AUTHORING_SEEDS, ...DEVELOPMENT_REVIEW_SEEDS, ...FINAL_HOLDOUT_SEEDS]);
+/**
+ * The battery must not render a benchmark seed.
+ *
+ * `holdout` is now an ARGUMENT rather than a module constant, because the holdout is derived per
+ * round from a salt that is not in this repository. Passing none checks the two open groups only,
+ * and the return value says so — `holdoutChecked: false` is not the same claim as a clean check,
+ * and a caller that has the seeds in hand (only `phaseHoldout` does) must pass them.
+ */
+function assertBatterySeedsAreNotBenchmarkSeeds(holdout = null) {
+  const groups = new Set([...AUTHORING_SEEDS, ...DEVELOPMENT_REVIEW_SEEDS, ...(holdout ?? [])]);
   const overlap = [...REVIEW_SEEDS, ...collectionSeeds(FLOORS.collectionSeeds)].filter((s) => groups.has(s));
   if (overlap.length) {
     throw new Error(`OBJECTIVE_BATTERY_SEED_LEAK: the battery renders ${overlap.join(", ")}, which are benchmark seeds. Running it would put holdout or development frames into the author's reach.`);
   }
-  return { ok: true };
+  return { ok: true, holdoutChecked: Boolean(holdout) };
+}
+
+/**
+ * THE ROUND, RESOLVED.
+ *
+ * `RELICS_ART_HOLDOUT_ROUND_ID` names the round; the salt comes from the environment and is never
+ * in the repository. Both are required and neither has a default — the previous mechanism's whole
+ * defect was that the holdout could be computed from the source, so a fallback here would rebuild
+ * it. A `holdout` run with no salt refuses before it renders anything.
+ */
+function resolveRound() {
+  const roundId = String(process.env.RELICS_ART_HOLDOUT_ROUND_ID ?? "").trim();
+  if (!roundId) {
+    throw new Error(
+      "HOLDOUT_ROUND_UNNAMED: set RELICS_ART_HOLDOUT_ROUND_ID. The holdout is per round and a round " +
+      "must be named before it can be committed to in packages/art-direction/rounds/registry.json.",
+    );
+  }
+  const seeds = finalHoldoutSeeds({ roundId });
+  return { roundId, seeds, seedsDigest: holdoutSeedsDigest(seeds) };
 }
 
 async function rendererFor(runtimeId, url) {
@@ -228,7 +270,7 @@ async function phaseAuthor() {
 
     const states = ["neutral", "stress", "recovery"];
     const dev = blocked.length === 0
-      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states, outDir: join(dir, "round-1", "critic-sheets"), label: "dev" })
+      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states, outDir: join(dir, "round-1", "critic-sheets"), label: "dev", role: "DEVELOPMENT_CRITIC" })
       : { ok: true, artifacts: [], renders: 0, measurements: null };
     if (!dev.ok) throw new Error(`${brief.id}: ${dev.detail}`);
 
@@ -311,7 +353,7 @@ async function phaseRevise() {
     const { battery, blocked } = await gateOn({ renderer, runtimeId: run.runtimeId, config: after, configBytes, briefId: brief.id, phase: `revise round ${next}` });
     writeJson(join(dir, `round-${next}`, "objective.json"), battery);
     const dev = blocked.length === 0
-      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states: ["neutral", "stress", "recovery"], outDir: join(dir, `round-${next}`, "critic-sheets"), label: "dev" })
+      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states: ["neutral", "stress", "recovery"], outDir: join(dir, `round-${next}`, "critic-sheets"), label: "dev", role: "DEVELOPMENT_CRITIC" })
       : { ok: true, artifacts: [], renders: 0, measurements: null };
     if (!dev.ok) throw new Error(`${brief.id}: ${dev.detail}`);
 
@@ -381,7 +423,7 @@ async function phaseReauthor() {
     const { battery, blocked } = await gateOn({ renderer, runtimeId: run.runtimeId, config: after, configBytes, briefId: brief.id, phase: `reauthor round ${next}` });
     writeJson(join(dir, `round-${next}`, "objective.json"), battery);
     const dev = blocked.length === 0
-      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states: ["neutral", "stress", "recovery"], outDir: join(dir, `round-${next}`, "critic-sheets"), label: "dev" })
+      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states: ["neutral", "stress", "recovery"], outDir: join(dir, `round-${next}`, "critic-sheets"), label: "dev", role: "DEVELOPMENT_CRITIC" })
       : { ok: true, artifacts: [], renders: 0, measurements: null };
     if (!dev.ok) throw new Error(`${brief.id}: ${dev.detail}`);
 
@@ -412,7 +454,15 @@ async function phaseReauthor() {
 // PHASE: holdout — the ONLY phase that renders FINAL_HOLDOUT_SEEDS
 // ---------------------------------------------------------------------------------------------
 async function phaseHoldout() {
-  assertBatterySeedsAreNotBenchmarkSeeds();
+  // THE SALT IS RESOLVED FIRST, BEFORE A RENDERER EXISTS.
+  //
+  // A run that cannot resolve the round refuses here, having done nothing. The alternative — reach
+  // the render and fall back to something the source can compute — is the compromise this
+  // mechanism replaces.
+  const round = resolveRound();
+  assertBatterySeedsAreNotBenchmarkSeeds(round.seeds);
+  assertSeedGroupsDisjoint(undefined, { finalHoldout: round.seeds });
+  console.log(`holdout round ${round.roundId} resolved: 12 seeds, digest ${round.seedsDigest.slice(0, 12)} (the seeds themselves are not printed)`);
   const url = rpcUrl();
   const renderers = {};
   const briefsById = Object.fromEntries(readJson(BRIEFS).briefs.map((b) => [b.id, b]));
@@ -442,8 +492,9 @@ async function phaseHoldout() {
     }
 
     const out = await renderSheets({
-      renderer, configBytes: last.configBytes, seeds: FINAL_HOLDOUT_SEEDS,
+      renderer, configBytes: last.configBytes, seeds: round.seeds,
       states: ["neutral", "stress", "recovery"], outDir: join(dir, "final-review", "sheets"), label: "holdout",
+      role: "FINAL_REVIEWER", finalHoldout: round.seeds,
     });
     if (!out.ok) throw new Error(`${brief.id}: ${out.detail}`);
 
@@ -457,15 +508,17 @@ async function phaseHoldout() {
       caseId: brief.id,
       sheetDir: `artifacts/art-benchmark/${brief.id}/final-review/sheets`,
       sheets: out.artifacts.map((a) => a.name),
-      seedCount: FINAL_HOLDOUT_SEEDS.length,
+      seedCount: round.seeds.length,
       states: ["neutral", "stress", "recovery"],
     });
     writeFileSync(join(dir, "final-review", "reviewer-prompt.md"), prompt);
 
     run.finalReviewInput = {
       seedGroup: "FINAL_HOLDOUT_SEEDS",
+      roundId: round.roundId,
+      seedsDigest: round.seedsDigest,
       reviewerPromptSha256: finalReviewPromptHash(prompt),
-      seeds: [...FINAL_HOLDOUT_SEEDS],
+      seeds: [...round.seeds],
       states: ["neutral", "stress", "recovery"],
       marketResponseClaimed: marketResponseClaimed(briefsById[brief.id].text),
       configHashAtUnblind: last.configHash,
@@ -580,6 +633,44 @@ function phaseReport() {
   writeJson(join(OUT, "report.json"), { generatedAt: new Date().toISOString(), rows, blindPass: pass.length, total: rows.length, byRuntime, mutatedAfterUnblind: mutated.length, humanArtInterventions: hai, blockedByObjectiveBattery: blockedRows.map((r) => ({ id: r.id, blockers: r.objectiveBlockers })) });
 }
 
+/**
+ * `authorSawHoldout`, MEASURED. It used to be the literal `false`.
+ *
+ * Two independent readings, and neither substitutes for the other:
+ *
+ *   REGISTRY   what packages/art-direction/rounds/registry.json says about the round these seeds
+ *              belong to. This is the historical fact — a round whose holdout was in author-visible
+ *              source AT THE TIME is compromised forever, and deleting the leak afterwards does not
+ *              un-author the work. Seeds that match no registered round are UNKNOWN, never HELD.
+ *
+ *   LIVE SCAN  whether the holdout appears in author-visible source RIGHT NOW. This is the
+ *              regression guard: it is what a mutation moves, and what a future round is graded on.
+ *
+ * The receipt carries `authorSawHoldout` = the registry's answer when it has one, otherwise the
+ * scan's, and records both so a reader can see which is which. There is deliberately no branch in
+ * which an unknown becomes a false.
+ */
+function measuredSeedGroups(seeds) {
+  const registry = roundIntegrityForSeeds(seeds);
+  const scan = scanAuthorVisibleSourceForHoldout({ seeds });
+  const authorSawHoldout = typeof registry.authorSawHoldout === "boolean" ? registry.authorSawHoldout : scan.authorSawHoldout;
+  return {
+    authorSawHoldout,
+    authoring: "AUTHORING_SEEDS",
+    development: "DEVELOPMENT_REVIEW_SEEDS",
+    final: "FINAL_HOLDOUT_SEEDS",
+    roundId: registry.roundId,
+    holdoutIntegrity: registry.integrity,
+    holdoutDetail: registry.detail,
+    holdoutSeedsDigest: holdoutSeedsDigest(seeds),
+    liveLeakScan: {
+      scannedFiles: scan.scannedFiles,
+      occurrences: scan.occurrences.length,
+      files: [...new Set(scan.occurrences.map((o) => `${o.file}:${o.line}`))].slice(0, 20),
+    },
+  };
+}
+
 // ---------------------------------------------------------------------------------------------
 // PHASE: receipt -- bind everything to the exact bytes, once a verdict exists
 // ---------------------------------------------------------------------------------------------
@@ -637,14 +728,18 @@ async function phaseReceipt() {
         inputHashes: run.finalReviewInput.inputHashes,
         visualDescription: existsSync(join(dir, "final-review", "description.json"))
           ? JSON.stringify(readJson(join(dir, "final-review", "description.json"))) : null,
+        // THE VERDICT'S ANCHOR OUTSIDE THE RECEIPT. Path relative to the workspace, plus the
+        // sha256 of the reviewer's own document. Without this the receipt's verdict attests to
+        // itself and one word makes it a PASS.
+        verdictDocument: { path: join("final-review", "verdict.json"), sha256: sha256(readFileSync(vPath)), verdictField: "verdict" },
       },
-      seedGroups: { authorSawHoldout: false, authoring: "AUTHORING_SEEDS", development: "DEVELOPMENT_REVIEW_SEEDS", final: "FINAL_HOLDOUT_SEEDS" },
+      seedGroups: measuredSeedGroups(run.finalReviewInput.seeds),
     });
     writeArtAcceptance(dir, record);
     const check = verifyArtAcceptance(dir, { configBytes: last.configBytes, briefText: briefsById[brief.id].text, runtimeId: run.runtimeId });
     const flags = acceptanceFlags(dir);
     built += 1;
-    console.log(`${brief.id} ${verdict.verdict.padEnd(6)} receipt ${check.accepted ? "ACCEPTED" : check.reasonCode} | atlas ${flags.AUTHOR_USES_RUNTIME_PARAMETER_ATLAS} | blinded ${flags.FINAL_REVIEW_BLINDED} | describedFirst ${flags.VISUAL_DESCRIPTION_BEFORE_BRIEF_COMPARISON} | unanswered ${flags.CRITIQUE_WITHOUT_AUTHOR_RESPONSE} | mutatedAfterUnblind ${flags.FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND}`);
+    console.log(`${brief.id} ${verdict.verdict.padEnd(6)} receipt ${check.accepted ? "ACCEPTED" : check.reasonCode} | atlas ${flags.AUTHOR_USES_RUNTIME_PARAMETER_ATLAS} | blinded ${flags.FINAL_REVIEW_BLINDED} | describedFirst ${flags.VISUAL_DESCRIPTION_BEFORE_BRIEF_COMPARISON} | unanswered ${flags.CRITIQUE_WITHOUT_AUTHOR_RESPONSE} | mutatedAfterUnblind ${flags.FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND} | holdoutSeenByAuthor ${flags.FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING} | verdictBound ${flags.FINAL_REVIEW_VERDICT_BOUND_TO_REVIEW_DOCUMENT}`);
   }
   console.log(`\nreceipts built: ${built}`);
 }

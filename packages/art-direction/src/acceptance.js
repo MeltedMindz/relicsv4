@@ -44,6 +44,28 @@ import { dirname, join } from "node:path";
 
 export const ART_ACCEPTANCE_PATH = join(".relics-agent", "receipts", "art-acceptance.json");
 
+/**
+ * THE VERDICT MAY NOT ATTEST TO ITSELF.
+ *
+ * Before this, `finalReview.verdict` was a string inside the receipt and nothing else. Flipping it
+ * to PASS made `verifyArtAcceptance` return `accepted: true`, because every other field the
+ * verification consulted lived in the same file and moved with it. That is a receipt attesting to
+ * its own conclusion.
+ *
+ * So the verdict is now BOUND to the reviewer's own document — `final-review/verdict.json`, a
+ * separate file carrying the reviewer's per-axis prose and reasoning. The receipt records that
+ * file's path and sha256, and the verification re-reads it: the recorded verdict must equal the
+ * document's verdict, and the document's bytes must still hash to what the receipt pinned.
+ *
+ * WHAT THIS DOES AND DOES NOT REACH. Editing the receipt alone is caught. Editing the document
+ * alone is caught. Editing both is caught, because the receipt's pinned digest no longer matches.
+ * Rewriting the receipt, the document AND the pinned digest together is a wholesale forgery of the
+ * review record, which no self-contained artifact set can refuse — what it cannot do is happen by
+ * a one-word edit, and the reviewer's reasoning has to be rewritten with it, in prose a person can
+ * read against the sheets.
+ */
+export const VERDICT_DOCUMENT_PATH = join("final-review", "verdict.json");
+
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
 
 /** Canonical JSON with sorted keys, so a hash does not depend on insertion order. */
@@ -66,6 +88,11 @@ export const ACCEPTANCE_REASON_CODES = Object.freeze([
   "FINAL_REVIEW_NOT_BLINDED",
   "FINAL_REVIEW_ROLE_COLLISION",
   "CRITIQUE_WITHOUT_AUTHOR_RESPONSE",
+  "FINAL_REVIEW_HOLDOUT_COMPROMISED",
+  "FINAL_REVIEW_VERDICT_UNBOUND",
+  "FINAL_REVIEW_VERDICT_DOCUMENT_MISSING",
+  "FINAL_REVIEW_VERDICT_DOCUMENT_ALTERED",
+  "FINAL_REVIEW_VERDICT_SELF_ATTESTED",
 ]);
 
 /**
@@ -151,6 +178,17 @@ export function buildArtAcceptance({
       configHashAtUnblind: finalReview?.configHashAtUnblind ?? null,
       inputHashes: finalReview?.inputHashes ?? null,
       visualDescriptionHash: finalReview?.visualDescription ? sha256(finalReview.visualDescription) : null,
+      // THE VERDICT'S ANCHOR OUTSIDE THIS FILE. See VERDICT_DOCUMENT_PATH above. `null` here is not
+      // a neutral omission — `verifyArtAcceptance` refuses an unbound verdict — so a caller that
+      // cannot name the reviewer's document gets a receipt that cannot be accepted, which is the
+      // correct outcome for a verdict with no evidence beside it.
+      verdictDocument: finalReview?.verdictDocument
+        ? {
+          path: finalReview.verdictDocument.path,
+          sha256: finalReview.verdictDocument.sha256,
+          verdictField: finalReview.verdictDocument.verdictField ?? "verdict",
+        }
+        : null,
       hash: hashOf(finalReview ?? null),
     },
 
@@ -178,6 +216,52 @@ export function readArtAcceptance(workspace) {
   if (!existsSync(p)) return { ok: false, reasonCode: "NO_ART_ACCEPTANCE", detail: `no receipt at ${ART_ACCEPTANCE_PATH}` };
   try { return { ok: true, record: JSON.parse(readFileSync(p, "utf8")) }; }
   catch (err) { return { ok: false, reasonCode: "ART_ACCEPTANCE_UNREADABLE", detail: err.message }; }
+}
+
+/**
+ * Re-read the reviewer's own verdict document and check the receipt against it.
+ *
+ * Four distinct refusals, because "there is nothing to check against", "the evidence is gone",
+ * "the evidence was edited" and "the receipt disagrees with the evidence" are four different
+ * things and only the last one is a forged verdict. Returning one code for all four would make the
+ * gate's message useless in exactly the case someone is investigating.
+ */
+export function verifyVerdictBinding(workspace, record) {
+  const vd = record?.finalReview?.verdictDocument;
+  if (!vd || !vd.path || !vd.sha256) {
+    return {
+      ok: false,
+      reasonCode: "FINAL_REVIEW_VERDICT_UNBOUND",
+      detail:
+        "the receipt records a verdict with no reviewer document behind it. A verdict that only exists " +
+        "inside the receipt attests to itself: flipping the word is the whole forgery. Bind it to " +
+        `${VERDICT_DOCUMENT_PATH}.`,
+    };
+  }
+  const abs = join(workspace, vd.path);
+  if (!existsSync(abs)) {
+    return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_DOCUMENT_MISSING", detail: `the receipt binds its verdict to ${vd.path}, which does not exist. The evidence the receipt names is not there.` };
+  }
+  const bytes = readFileSync(abs);
+  const now = createHash("sha256").update(bytes).digest("hex");
+  if (now !== vd.sha256) {
+    return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_DOCUMENT_ALTERED", detail: `${vd.path} hashes to ${now} and the receipt pinned ${vd.sha256}. The reviewer's document changed after the receipt was written.` };
+  }
+  let doc;
+  try { doc = JSON.parse(bytes.toString("utf8")); }
+  catch (err) { return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_DOCUMENT_ALTERED", detail: `${vd.path} did not parse: ${err.message}` }; }
+  const field = vd.verdictField ?? "verdict";
+  if (doc?.[field] !== record.finalReview.verdict) {
+    return {
+      ok: false,
+      reasonCode: "FINAL_REVIEW_VERDICT_SELF_ATTESTED",
+      detail: `the receipt says the final verdict was ${JSON.stringify(record.finalReview.verdict)} and ${vd.path} says ${JSON.stringify(doc?.[field])}. The receipt does not get to decide this.`,
+    };
+  }
+  if (doc?.reviewerId !== undefined && record.finalReview.reviewerId !== undefined && doc.reviewerId !== record.finalReview.reviewerId) {
+    return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_SELF_ATTESTED", detail: `the receipt names reviewer ${JSON.stringify(record.finalReview.reviewerId)} and ${vd.path} names ${JSON.stringify(doc.reviewerId)}.` };
+  }
+  return { ok: true, reasonCode: "FINAL_REVIEW_VERDICT_BOUND", detail: `${vd.path} at ${now.slice(0, 12)} says ${JSON.stringify(doc[field])}`, document: doc };
 }
 
 /**
@@ -222,6 +306,38 @@ export function verifyArtAcceptance(workspace, { configBytes, briefText, runtime
 
   // THE VERDICT ITSELF MUST BE SOUND, not merely present.
   const fr = r.finalReview ?? {};
+
+  // ---- THE VERDICT IS NOT ALLOWED TO ATTEST TO ITSELF ----------------------------------------
+  //
+  // This clause runs BEFORE the verdict is read, on purpose. Checking `fr.verdict === "PASS"`
+  // first and only then asking whether the verdict is bound would let a receipt whose verdict is
+  // REFUSE skip the binding check entirely — and the binding is exactly what a forger would drop
+  // while flipping the word.
+  const bound = verifyVerdictBinding(workspace, r);
+  if (!bound.ok) {
+    return { accepted: false, reasonCode: bound.reasonCode, detail: bound.detail, invalidatedBy: [], record: r };
+  }
+
+  // ---- A COMPROMISED HOLDOUT IS NOT A HOLDOUT -------------------------------------------------
+  //
+  // `seedGroups.authorSawHoldout` is now MEASURED (see `holdout.js`) rather than written. A `true`
+  // means the round's holdout seeds were found in author-visible source; the verdict was taken on
+  // tokens the author had been exposed to, and it is not a blind verdict. An unmeasured value is
+  // refused for the same reason a missing one is: an unread fact is never an agreeing fact.
+  const sawHoldout = r.seedGroups?.authorSawHoldout;
+  if (sawHoldout !== false) {
+    return {
+      accepted: false,
+      reasonCode: "FINAL_REVIEW_HOLDOUT_COMPROMISED",
+      detail:
+        sawHoldout === true
+          ? `the holdout for round ${r.seedGroups?.roundId ?? "(unnamed)"} was present in author-visible source, so the final verdict was not taken blind: ${r.seedGroups?.holdoutDetail ?? "see packages/art-direction/rounds/registry.json"}`
+          : `seedGroups.authorSawHoldout is ${JSON.stringify(sawHoldout)} — it was never measured, and an unmeasured holdout is not a held-out one.`,
+      invalidatedBy: [],
+      record: r,
+    };
+  }
+
   if (fr.verdict !== "PASS") {
     return { accepted: false, reasonCode: "ART_NOT_ACCEPTED", detail: `the final review returned ${fr.verdict ?? "no verdict"}`, invalidatedBy: [], record: r };
   }
@@ -278,6 +394,7 @@ export function acceptanceFlags(workspace) {
       VISUAL_DESCRIPTION_BEFORE_BRIEF_COMPARISON: "UNKNOWN",
       FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING: "UNKNOWN",
       FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND: "UNKNOWN",
+      FINAL_REVIEW_VERDICT_BOUND_TO_REVIEW_DOCUMENT: "UNKNOWN",
       detail: read.detail,
     };
   }
@@ -292,8 +409,14 @@ export function acceptanceFlags(workspace) {
     CRITIQUE_WITHOUT_AUTHOR_RESPONSE: unanswered,
     FINAL_REVIEW_BLINDED: r.finalReview?.blinded === true ? "YES" : "NO",
     VISUAL_DESCRIPTION_BEFORE_BRIEF_COMPARISON: r.finalReview?.describedBeforeBrief === true ? "YES" : "NO",
-    FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING: r.seedGroups?.authorSawHoldout === true ? "YES" : "NO",
+    // THREE-VALUED ON PURPOSE. This read `=== true ? "YES" : "NO"`, so a receipt that never
+    // measured the thing published NO — the strongest possible answer — on the strength of an
+    // absent field. Every value that is not a literal boolean is UNKNOWN now, and UNKNOWN is not a
+    // zero.
+    FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING:
+      r.seedGroups?.authorSawHoldout === true ? "YES" : r.seedGroups?.authorSawHoldout === false ? "NO" : "UNKNOWN",
     FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND:
       r.finalReview?.configHashAtUnblind && r.finalReview.configHashAtUnblind !== r.acceptedConfigHash ? "YES" : "NO",
+    FINAL_REVIEW_VERDICT_BOUND_TO_REVIEW_DOCUMENT: verifyVerdictBinding(workspace, r).ok ? "YES" : "NO",
   };
 }
