@@ -1007,6 +1007,16 @@ export async function runAutonomousLaunch(options = {}) {
     log("  intent written BEFORE the bytes leave — a crash from here on is answerable by the chain");
 
     await assertLocalAnvil(rpcUrl, client);
+
+    // STOP THE MINER BEFORE THE SEND, when asked. Without this the crash-resume proof cannot enter
+    // the state it is about: anvil automines one block per transaction, so by the time the process
+    // is killed the launch is MINED — the nonce has moved and the predicted token has code, and the
+    // resume answers ALREADY_LAUNCHED for reasons that do not exist in the window a real crash
+    // leaves. With the miner stopped the transaction is ACCEPTED and unmined, which is the window.
+    if (options.stallMempool) {
+      await client.request({ method: "evm_setAutomine", params: [false] });
+      log("  [stall-mempool] the miner is stopped; the send will be accepted and left in the pool");
+    }
     const txHash = await client.request({ method: "eth_sendRawTransaction", params: [signed.rawTransaction] });
 
     // THE CRASH POINT. `--crash-after-send` kills this process between the send returning and the
@@ -1169,6 +1179,7 @@ function parseArgs(argv) {
     else if (a === "--keep-node") out.keepNode = true;
     else if (a === "--keep-workspace") out.keepWorkspace = true;
     else if (a === "--crash-after-send") out.crashAfterSend = true;
+    else if (a === "--stall-mempool") out.stallMempool = true;
     else if (a === "--help" || a === "-h") out.help = true;
     else throw new HarnessFailure(`unknown flag ${a}`);
   }
@@ -1189,6 +1200,7 @@ if (invokedDirectly) {
         "  --keep-node           leave anvil running when the run ends",
         "  --keep-workspace      do not delete a temp workspace on success",
         "  --crash-after-send    SIGKILL between the send and recording the hash (crash-resume proof)",
+        "  --stall-mempool       stop the miner just before the send, so the crash leaves the tx PENDING",
         "",
         "Needs anvil on PATH and E2E_FORK_RPC_URL (or ETHEREUM_RPC_URL / MAINNET_RPC_URL).",
         "",

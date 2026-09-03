@@ -52,7 +52,10 @@ jobs:
         # knowing anything about this repository. Two next-actions named subcommands nobody wrote.
         run: npm run agent:commands
 
-      - name: the twenty-one adversarial controls
+      - name: the adversarial controls (the gate reports how many ran; this label does not)
+        # THE COUNT IS NOT RESTATED HERE. It said "twenty-one" while the gate ran more, which is the
+        # ordinary way a step's own description stops describing it. The gate prints
+        # AUTONOMOUS_AGENT_NEGATIVE_CONTROLS=<passed>/<total> and enforces its own floor.
         run: npm run agent:controls
 
       - name: the signer refuses everything it should, proven by mutation
@@ -78,6 +81,17 @@ jobs:
           export PATH="$HOME/.foundry/bin:$PATH"
           foundryup
           npm run e2e:wave1:controls
+
+      - name: a crash that leaves the launch IN THE MEMPOOL does not permit a resend
+        # NEEDS NO FORK AND NO CREDENTIAL, so unlike the step above this one always runs. It starts a
+        # plain anvil with the miner STOPPED, sends a real transaction, and takes the resume decision
+        # while the transaction is genuinely pending — the state every other question in the guard
+        # answers "no launch" about, honestly, and the one a duplicate launch comes out of. The
+        # controls arm breaks the guard in the shipped source and requires the proof to go red.
+        run: |
+          export PATH="$HOME/.foundry/bin:$PATH"
+          npm run e2e:resume:pending
+          npm run e2e:resume:pending:controls
 
       - name: the full MODE B rehearsal, and the crash that must not launch twice
         # THE DOCUMENTED PROOFS, RUN. Both are named in the launch-agent guide under "Running the

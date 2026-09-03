@@ -38,7 +38,18 @@ try {
   const repo = join(dir, "repo");
   if (!existsSync(repo)) { fail("the clone produced no repo directory"); process.exit(1); }
 
-  run("npm install", "npm install --no-audit --no-fund", { cwd: repo, timeout: 1_800_000 });
+  // `npm ci`, NEVER `npm install`, AND THAT IS THE POINT OF THIS LINE.
+  //
+  // `npm install` REPAIRS a lockfile that has fallen behind package.json — silently, in passing,
+  // as a side effect of installing. So this gate ran green for as long as a workspace package was
+  // missing from package-lock.json, while `.github/workflows/autonomous-launch.yml` opened every
+  // job with `npm ci` and was red at the same SHA. A fresh-clone check that installs differently
+  // from CI is not checking the clone CI gets.
+  //
+  // Measured 2026-09-03 at 7078bce5: `npm ci` in a clean clone answered
+  // "Missing: @relics/art-direction@1.0.0 from lock file" and exited non-zero, and this gate said
+  // nothing.
+  run("npm ci (the same install CI performs; a stale lockfile FAILS here rather than being repaired)", "npm ci --no-audit --no-fund", { cwd: repo, timeout: 1_800_000 });
 
   // ---- MODE A, exactly as the README documents it -------------------------------------------
   run("relics --version", "node packages/creator-cli/bin/relics.js --version", { cwd: repo });

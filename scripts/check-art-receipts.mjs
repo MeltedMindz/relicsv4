@@ -50,6 +50,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { ART_ACCEPTANCE_PATH, verifyVerdictBinding, acceptanceFlags } from "../packages/art-direction/src/acceptance.js";
+import { ACCEPTANCE_PATH, verifyVerdictDocumentBinding } from "../packages/art-review/src/receipt.js";
 import { AUTHOR_VISIBLE_ROOTS, roundIntegrityForSeeds, readRoundRegistry, scanAuthorVisibleSourceForHoldout } from "../packages/art-direction/src/holdout.js";
 import { holdoutSeedsDigest } from "../packages/art-direction/src/seeds.js";
 
@@ -188,7 +189,30 @@ export function verifyCase(c) {
     }
   }
 
-  // ---- 6. THE PUBLISHED FLAGS AGREE WITH THE RECEIPT -------------------------------------------
+  // ---- 6. THE OTHER RECEIPT KIND, IF THIS CASE HAS ONE -----------------------------------------
+  //
+  // `@relics/art-review`'s `art-review.json` is a different record answering a different question,
+  // and its verdict had the same self-attesting shape. No committed case carries one today, so this
+  // clause is forward-looking BY CONSTRUCTION rather than by omission — and it is not counted
+  // toward the input floor, because a floor satisfied by a file kind nobody has written yet is not
+  // a floor. What it does is make the day one appears the day it is checked.
+  const reviewReceipt = join(c.dir, ACCEPTANCE_PATH);
+  if (existsSync(reviewReceipt)) {
+    let rr;
+    try { rr = readJson(reviewReceipt); }
+    catch (err) { fail("ART_REVIEW_RECEIPT_UNREADABLE", `${c.id}: ${err.message}`); rr = null; }
+    if (rr) {
+      const rb = verifyVerdictDocumentBinding({
+        workspace: c.dir,
+        document: rr.verdictDocument,
+        expectedVerdict: rr.verdict,
+        expectedReviewerId: rr.reviewerId,
+      });
+      if (!rb.ok) fail(rb.reasonCode, `${c.id} (${ACCEPTANCE_PATH}): ${rb.detail}`);
+    }
+  }
+
+  // ---- 7. THE PUBLISHED FLAGS AGREE WITH THE RECEIPT -------------------------------------------
   const flags = acceptanceFlags(c.dir);
   if (flags.FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING === "NO" && r.seedGroups?.holdoutIntegrity !== "HELD") {
     fail("FLAG_STRONGER_THAN_EVIDENCE", `${c.id}: the flag publishes NO while the round's integrity is ${JSON.stringify(r.seedGroups?.holdoutIntegrity)}.`);

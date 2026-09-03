@@ -1136,8 +1136,20 @@ npm run e2e:wave1:controls   # the same harness with the wiring broken three way
                              # registry read replaced by a plausible constant. Each must turn it
                              # red, because a valid picture from the wrong runtime is not success.
 npm run e2e:autonomous       # the full MODE B rehearsal, through broadcast, on the same fork
-npm run signer:test          # every signer control, including the thirty wallet attacks and the
-                             # fifteen that isolate the grant guard from the shape guard
+npm run e2e:resume:pending   # THE CRASH WINDOW, HELD OPEN. A plain anvil with the miner STOPPED, a
+                             # real transaction really accepted, and the resume decision taken while
+                             # it is genuinely pending. Needs anvil and NOTHING else — no fork, no
+                             # credential — so this is the crash-resume evidence that runs on every
+                             # push. It also re-runs the same reading with the pending question
+                             # BLINDED and requires SAFE_TO_SEND there, which is what makes the
+                             # first answer evidence about the pending nonce rather than about
+                             # something else refusing
+npm run e2e:resume:pending:controls  # deletes the pending-nonce question from the shipped source,
+                             # recompiles, and requires the proof above to go red; and does the same
+                             # to the arm that keeps an unaccountable in-flight nonce UNKNOWN
+npm run signer:test          # every signer control, including the wallet attacks, the ones that
+                             # isolate the grant guard from the shape guard, and the grant LIFECYCLE
+                             # (sign, then sign again). The counts are printed by the run, not here
 npm run signer:mutate        # breaks each guard ONE CHECK AT A TIME in the real source and requires
                              # a NAMED test to go red for each, after a GREEN baseline. It prints
                              # MUTATIONS=/SURVIVED= and SIGNER_GRANT_GUARD_MUTATIONS=n/n_CAUGHT, and

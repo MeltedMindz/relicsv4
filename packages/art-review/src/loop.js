@@ -346,7 +346,20 @@ async function settle({ workspace, renderer, runtimeAddress, chainId, ceiling, t
   }
 
   const sheetManifest = JSON.parse(readFileSync(join(workspace, ART_REVIEW_DIR, `round-${last.round}`, "sheets", "manifest.json"), "utf8"));
+
+  // THE ACCEPTING ROUND'S OWN VERDICT DOCUMENT, WHICH THIS PROCESS ONLY EVER READ.
+  //
+  // `last.verdict` is a string this function is holding in memory, and writing it into the receipt
+  // beside every field the verification consults is how a receipt comes to attest to its own
+  // verdict. The reviewer wrote `packet/verdict.json`; the receipt now pins its bytes, and
+  // `verifyAcceptance` re-reads it. Path relative to the workspace, so the pair travels together.
+  const verdictRel = join(ART_REVIEW_DIR, `round-${last.round}`, "packet", "verdict.json");
   const record = buildAcceptanceRecord({
+    verdictDocument: {
+      path: verdictRel,
+      sha256: createHash("sha256").update(readFileSync(join(workspace, verdictRel))).digest("hex"),
+      verdictField: "verdict",
+    },
     runtimeId: art.doc.runtimeId,
     templateId: templateId ?? art.doc.templateId ?? null,
     chainId,

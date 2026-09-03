@@ -14,7 +14,7 @@
 // all is a FAILURE, never a skip — an unrun control must never read as a passed one.
 // ================================================================================================
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, rmSync, mkdirSync, readFileSync } from "node:fs";
+import { mkdtempSync, writeFileSync, rmSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -231,7 +231,70 @@ await controlAsync("a crash after broadcast does NOT permit a resend", async () 
     readContract: async () => { throw new Error("rpc down"); },
   };
   const u = await flow.decideResend(unreachable, intent, { factoryAbi });
-  return u.verdict === "UNKNOWN_DO_NOT_SEND" ? true : `an unreachable endpoint scored ${u.verdict}; guessing here costs a duplicate launch`;
+  if (u.verdict !== "UNKNOWN_DO_NOT_SEND") return `an unreachable endpoint scored ${u.verdict}; guessing here costs a duplicate launch`;
+
+  // ---- AND THE WINDOW THE GUARD ACTUALLY EXISTS FOR ---------------------------------------------
+  //
+  // Accepted into the mempool, hash lost before it reached disk. Every question above answers "no
+  // launch" HONESTLY — the MINED nonce has not moved, the predicted token has no code, no hash was
+  // recorded — and the launch is in flight. That combination scored SAFE_TO_SEND until 2026-09-03.
+  // `npm run e2e:resume:pending` proves this against a real node with the miner stopped; this is the
+  // same state as a fixture, so the always-run gate covers it too.
+  const inFlight = {
+    getTransactionReceipt: async () => null,
+    getTransaction: async () => null,
+    getTransactionCount: async ({ blockTag }) => (blockTag === "pending" ? 8 : 7),
+    getCode: async () => "0x",
+    readContract: async () => 0n,
+    request: async () => { throw new Error("this endpoint does not enumerate the pending pool"); },
+  };
+  const w = await flow.decideResend(inFlight, intent, { factoryAbi });
+  if (w.verdict === "SAFE_TO_SEND") return "a transaction sitting in the mempool scored SAFE_TO_SEND; this is the duplicate launch the guard is for";
+
+  // And it is a reading of the PENDING nonce, not of anything else: with the pool quiet, the same
+  // client says SAFE_TO_SEND. Without this the arm above is satisfied by refusing everything.
+  const quiet = { ...inFlight, getTransactionCount: async () => 7 };
+  const q = await flow.decideResend(quiet, intent, { factoryAbi });
+  return q.verdict === "SAFE_TO_SEND" ? true : `with nothing in flight the verdict is ${q.verdict}; the pending-nonce arm would be a constant`;
+});
+
+control("an UNRESOLVED broadcast intent is never silently overwritten", () => {
+  // A second `writeIntent` used to replace whatever was on disk — including a `txHash` that had
+  // already been recorded — leaving a resume asking the chain about the wrong launch. A workspace
+  // with an unanswered send in it is not a workspace another send may start from.
+  const ws = mkdtempSync(join(tmpdir(), "relics-intent-"));
+  try {
+    const base = {
+      launchPlanHash: `0x${"11".repeat(32)}`, buildHash: `0x${"22".repeat(32)}`, dataHash: keccak256(CALLDATA),
+      chainId: 1, factory: "0x25003C3EBC2036CfE9E4037d4e7E6F840a06522E", signer: "0x00000000000000000000000000000000000000A2",
+      nonceAtIntent: 7,
+      predicted: { projectToken: "0x00000000000000000000000000000000000000A3", projectCollection: "0x00000000000000000000000000000000000000A4", artHook: "0x00000000000000000000000000000000000000A5", poolId: `0x${"00".repeat(32)}` },
+      totalLaunchesAtIntent: null,
+    };
+    flow.writeIntent(ws, base);
+    flow.recordIntentTxHash(ws, `0x${"ab".repeat(32)}`);
+
+    let threw = null;
+    try { flow.writeIntent(ws, { ...base, launchPlanHash: `0x${"33".repeat(32)}`, dataHash: `0x${"44".repeat(32)}` }); }
+    catch (err) { threw = err; }
+    if (!threw) return "a second launch overwrote an intent that had a recorded tx hash and nothing had confirmed it";
+    if (flow.readIntent(ws).txHash !== `0x${"ab".repeat(32)}`) return "the recorded tx hash was lost";
+
+    // And a RESOLVED intent may be superseded — otherwise the refusal is a wedge rather than a guard,
+    // and a workspace could never launch twice even after the chain had answered.
+    flow.resolveIntent(ws, "PROVEN_NOT_SENT", "the chain was asked and this launch never left");
+    const next = flow.writeIntent(ws, { ...base, launchPlanHash: `0x${"33".repeat(32)}`, dataHash: `0x${"44".repeat(32)}` });
+    if (next.launchPlanHash !== `0x${"33".repeat(32)}`) return "a resolved intent could not be superseded";
+    if (flow.readIntent(ws).txHash !== undefined) return "the superseding intent inherited the previous one's tx hash";
+
+    // The journal is written temp-then-rename, so no partial or leftover file may remain beside it.
+    const dir = join(ws, ".relics-agent");
+    const stray = readdirSync(dir).filter((f) => f.includes(".tmp-") || f.includes(".new-"));
+    if (stray.length > 0) return `the journal left ${stray.join(", ")} behind; an atomic write cleans up after itself`;
+    return true;
+  } finally {
+    rmSync(ws, { recursive: true, force: true });
+  }
 });
 control("an incomplete quote inventory refuses instead of falling back to the wrapped native", () => {
   const inv = {

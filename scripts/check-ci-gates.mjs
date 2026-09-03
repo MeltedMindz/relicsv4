@@ -116,7 +116,13 @@ const REQUIRED_GATES = [
   // a sharper lesson: neither ran anywhere, and `e2e:autonomous` was failing at SIGNED on a fresh
   // clone — it wrote no authorization while the signer server requires one — with nothing to say so.
   { id: "AUTONOMOUS_FULL_LAUNCH_E2E", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:autonomous" },
-  { id: "BROADCAST_CRASH_RESUME_E2E", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:resume" },
+  { id: "BROADCAST_CRASH_RESUME_E2E", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:resume\n" },
+  // The PENDING window, which the fork rehearsal above could not enter until 2026-09-03: it runs
+  // against an automining node, so it observed a MINED launch and answered ALREADY_LAUNCHED for
+  // reasons a real crash does not leave behind. This one stops the miner. It needs neither a fork
+  // nor a credential, so it is the crash-resume evidence that actually runs on every push.
+  { id: "RESUME_PENDING_WINDOW", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:resume:pending\n" },
+  { id: "RESUME_PENDING_WINDOW_CONTROLS", workflow: "autonomous-launch.yml", job: "launch-semantics", needle: "npm run e2e:resume:pending:controls" },
 
   // --- docs ---
   { id: "DOC_LINKS", workflow: "docs.yml", job: "links", needle: "npm run docs:links" },

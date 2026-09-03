@@ -15,7 +15,14 @@
 // makes a function pretend: the process is destroyed, so no `finally`, no flush and no handler can
 // tidy up after it. What is left on disk is exactly what a real crash leaves.
 //
-// AND THE ANSWER COMES FROM THE CHAIN. `decideResend` asks four independent questions and refuses a
+// AND THE CRASH LEAVES THE TRANSACTION PENDING, WHICH IT DID NOT USED TO. Anvil automines one block
+// per transaction, so this proof used to observe a MINED launch: the nonce had moved and the
+// predicted token had code, and the resume answered ALREADY_LAUNCHED for reasons that do not exist
+// in the window a real crash leaves. The child now runs with `--stall-mempool`, which stops the
+// miner immediately before the send — so the state on the other side of the SIGKILL is the one the
+// guard was written for, and the run ASSERTS that it is before reading any verdict.
+//
+// AND THE ANSWER COMES FROM THE CHAIN. `decideResend` asks five independent questions and refuses a
 // resend on any positive evidence, refuses on any UNANSWERABLE question, and permits one only when
 // every question was answered and all say no. This script asserts the verdict, and then asserts the
 // thing the verdict is FOR: that nothing was sent. The signer's nonce and the factory's launch
@@ -77,7 +84,7 @@ function runToCrash({ workspace, nodeUrl }) {
   return new Promise((resolveP) => {
     const child = spawn(
       process.execPath,
-      [LAUNCH_SCRIPT, "--workspace", workspace, "--reuse-node", nodeUrl, "--crash-after-send"],
+      [LAUNCH_SCRIPT, "--workspace", workspace, "--reuse-node", nodeUrl, "--crash-after-send", "--stall-mempool"],
       { cwd: REPO_ROOT, stdio: ["ignore", "pipe", "pipe"], env: { ...process.env } },
     );
     let stderr = "";
@@ -96,6 +103,8 @@ async function main() {
     BROADCAST_CRASH_DUPLICATE_TX: "UNKNOWN",
     CRASH_WAS_REAL: "NO",
     CRASH_INTENT_WITHOUT_TX_HASH: "NO",
+    CRASH_LEFT_TX_PENDING: "UNKNOWN",
+    RESUME_VERDICT_IN_PENDING_WINDOW: "UNKNOWN",
     RESUME_VERDICT: "UNKNOWN",
     RESUME_TRANSACTIONS_SENT: "UNKNOWN",
     RESUME_LAUNCHED_EVENTS: "UNKNOWN",
@@ -143,6 +152,39 @@ async function main() {
     log(`  intent: launchPlanHash ${intent.launchPlanHash}, nonceAtIntent ${intent.nonceAtIntent}, NO txHash`);
     log(`  receipts on disk: ${phases.join(" -> ")}`);
     log("  a naive resume looking only at these files would sign and send again.");
+
+    // ---- 2b. THE WINDOW ITSELF, ASSERTED BEFORE ANY VERDICT IS READ --------------------------------
+    //
+    // A crash-resume proof that runs against a mined transaction is a proof about a different state.
+    // So the state is measured first: the MINED nonce must NOT have moved, the PENDING nonce must
+    // have, and the predicted token must still hold no code. If the transaction turns out to be
+    // mined, this run has not entered the window and says so rather than passing.
+    phase("THE PENDING WINDOW");
+    const minedNonce = await client.getTransactionCount({ address: getAddress(intent.signer), blockTag: "latest" });
+    const pendingNonce = await client.getTransactionCount({ address: getAddress(intent.signer), blockTag: "pending" });
+    const predictedCode = await client.getCode({ address: getAddress(intent.predicted.projectToken) }).catch(() => null);
+    const inWindow = minedNonce === intent.nonceAtIntent && pendingNonce > intent.nonceAtIntent && (!predictedCode || predictedCode === "0x");
+    summary.CRASH_LEFT_TX_PENDING = inWindow ? "YES" : "NO";
+    log(`  mined nonce ${minedNonce} (reserved ${intent.nonceAtIntent}), pending nonce ${pendingNonce}, predicted token code ${predictedCode && predictedCode !== "0x" ? "present" : "absent"}`);
+    if (!inWindow) {
+      throw new ProofFailure(
+        `the crash did not leave the transaction pending (mined nonce ${minedNonce} vs reserved ${intent.nonceAtIntent}, pending ${pendingNonce}). ` +
+          `Without --stall-mempool taking effect this proof observes a MINED launch, which is not the state a real crash leaves.`,
+      );
+    }
+
+    // The verdict IN the window. Every question except the pending nonce answers "no launch"
+    // honestly here, which is precisely why the pending nonce has to be one of the questions.
+    const pendingDecision = await decideResend(client, intent, { factoryAbi: FACTORY_ABI() });
+    summary.RESUME_VERDICT_IN_PENDING_WINDOW = pendingDecision.verdict;
+    for (const e of pendingDecision.evidence) log(`  ${e.landed === null ? "?" : e.landed ? "YES" : "no "} [${e.strength}] ${e.question} — ${e.answer}`);
+    if (pendingDecision.verdict === "SAFE_TO_SEND") {
+      throw new ProofFailure("decideResend says SAFE_TO_SEND while the launch is sitting in the mempool. This is the duplicate launch, exactly.");
+    }
+
+    // Now let it land, so the rest of the proof reads a confirmed launch.
+    await client.request({ method: "evm_setAutomine", params: [true] });
+    await client.request({ method: "anvil_mine", params: ["0x1"] });
 
     // ---- 3. the chain's answer -------------------------------------------------------------------
     phase("RESUME");

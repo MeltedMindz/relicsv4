@@ -421,6 +421,13 @@ const mutations = [];
     const bytes = encodeConfig(runtimeId, cfg);
     const brief = "# Brief\n\nA control brief, for a mutation proof.\n";
     mkdirSync(join(ws, ".relics-agent", "receipts"), { recursive: true });
+    // THE REVIEWER'S OWN DOCUMENT, because the verdict is no longer allowed to attest to itself.
+    // A record carrying a bare `verdict: "SHIP"` is refused outright now, so a fixture that omits
+    // this has no green baseline and every mutation below scores as caught for the wrong reason.
+    const packetDir = join(ws, ".relics-agent", "art-review", "round-1", "packet");
+    mkdirSync(packetDir, { recursive: true });
+    const verdictBytes = Buffer.from(`${JSON.stringify({ reviewerId: "mutation-control", verdict: "SHIP", axes: {} }, null, 2)}\n`);
+    writeFileSync(join(packetDir, "verdict.json"), verdictBytes);
     const record = {
       schemaVersion: 1, kind: "ART_VISUAL_ACCEPTANCE", accepted: true, verdict: "SHIP",
       runtimeId, templateId: RUNTIMES[runtimeId].templateId, chainId: 1,
@@ -428,6 +435,11 @@ const mutations = [];
       briefSha256: sha256(brief),
       acceptedConfigHash: (await import("../packages/art-review/src/receipt.js")).configHashOf(bytes),
       reviewerId: "mutation-control", rounds: [{ round: 1 }],
+      verdictDocument: {
+        path: join(".relics-agent", "art-review", "round-1", "packet", "verdict.json"),
+        sha256: sha256(verdictBytes),
+        verdictField: "verdict",
+      },
     };
     writeFileSync(join(ws, ".relics-agent", "receipts", "art-review.json"), JSON.stringify(record));
 
@@ -462,6 +474,21 @@ const mutations = [];
     // evidence about another sitting at the same id.
     const m5 = verifyAcceptance(ws, { configBytes: bytes, briefText: brief, runtimeId, templateId: record.templateId, runtimeAddress: "0x0000000000000000000000000000000000000009" });
     mutations.push(["the runtime address", !m5.accepted && m5.invalidatedBy.some((i) => i.facet === "RUNTIME_ADDRESS")]);
+
+    // THE VERDICT ITSELF. Flipping the word in the receipt used to be the entire forgery: every
+    // other field the verifier consults lived in the same file and moved with it.
+    const flipped = { ...record, verdict: "REVISE" };
+    writeFileSync(join(ws, ".relics-agent", "receipts", "art-review.json"), JSON.stringify(flipped));
+    const m6 = verifyAcceptance(ws, { configBytes: bytes, briefText: brief, runtimeId, templateId: record.templateId, runtimeAddress: record.runtimeAddress });
+    mutations.push(["the verdict, against the reviewer's own document", m6.reasonCode === "ART_ACCEPTANCE_VERDICT_SELF_ATTESTED"]);
+
+    // AND DROPPING THE BINDING, which is how a forger passes a gate that only compares two fields
+    // when both are present.
+    writeFileSync(join(ws, ".relics-agent", "receipts", "art-review.json"), JSON.stringify({ ...record, verdictDocument: null }));
+    const m7 = verifyAcceptance(ws, { configBytes: bytes, briefText: brief, runtimeId, templateId: record.templateId, runtimeAddress: record.runtimeAddress });
+    mutations.push(["the verdict binding, removed entirely", m7.reasonCode === "ART_ACCEPTANCE_VERDICT_UNBOUND"]);
+
+    writeFileSync(join(ws, ".relics-agent", "receipts", "art-review.json"), JSON.stringify(record));
 
     // AND THE CONTROL IN THE OTHER DIRECTION: unchanged inputs still verify, so the four refusals
     // above are the mutation working rather than the verifier refusing everything.

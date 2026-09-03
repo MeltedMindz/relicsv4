@@ -625,6 +625,10 @@ export async function cmdBroadcast(name, workspace, flags, json, ctx) {
       }, { json });
       return decision.verdict === "ALREADY_LAUNCHED" ? EXIT.OK : EXIT.BLOCKED;
     }
+    // SAFE_TO_SEND, and the CHAIN is what said so. Settle the old intent with that answer before a
+    // new one is opened: `writeIntent` refuses to overwrite an unresolved intent, because a silent
+    // overwrite is how a recorded tx hash gets erased by the next attempt.
+    flow.resolveIntent(workspace, "PROVEN_NOT_SENT", decision.detail);
   }
 
   const signerUrl = process.env.RELICS_SIGNER_URL;
@@ -642,12 +646,19 @@ export async function cmdBroadcast(name, workspace, flags, json, ctx) {
   const nonce = await made.client.getTransactionCount({ address: signerAddress });
   let totalLaunches = null;
   try { totalLaunches = String(await made.client.readContract({ address: profile.contracts.launchpadFactory, abi: sdk.FACTORY_ABI(), functionName: "totalLaunches" })); } catch { /* corroboration only */ }
-  flow.writeIntent(workspace, {
-    launchPlanHash: build.request.launchPlanHash, buildHash: build.buildHash, dataHash: build.request.dataHash,
-    chainId, factory: profile.contracts.launchpadFactory, signer: signerAddress, nonceAtIntent: nonce,
-    predicted: { projectToken: predict.projectToken, projectCollection: predict.projectCollection, artHook: predict.artHook, poolId: predict.poolId },
-    totalLaunchesAtIntent: totalLaunches,
-  });
+  try {
+    flow.writeIntent(workspace, {
+      launchPlanHash: build.request.launchPlanHash, buildHash: build.buildHash, dataHash: build.request.dataHash,
+      chainId, factory: profile.contracts.launchpadFactory, signer: signerAddress, nonceAtIntent: nonce,
+      predicted: { projectToken: predict.projectToken, projectCollection: predict.projectCollection, artHook: predict.artHook, poolId: predict.poolId },
+      totalLaunchesAtIntent: totalLaunches,
+    });
+  } catch (err) {
+    // AN OPEN INTENT IS A REASON TO STOP, NOT A FILE TO REPLACE. Reaching here means a send may
+    // already have left this workspace and nothing has established what happened to it.
+    emit(name, { success: false, errors: [`${err instanceof Error ? err.message : String(err)}`], nextActions: ["BLOCKED"] }, { json });
+    return EXIT.BLOCKED;
+  }
 
   try {
     const result = await signer.sign(request);

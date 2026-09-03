@@ -184,8 +184,19 @@ test("an acceptance is void when one per cent of one field moves", () => {
     const bytes = encodeConfig(runtimeId, cfg);
     const brief = "# Brief\n\nA control.\n";
     mkdirSync(join(ws, ".relics-agent", "receipts"), { recursive: true });
+    // THE VERDICT IS BOUND TO THE REVIEWER'S OWN DOCUMENT, so a fixture has to write one. A
+    // receipt carrying only the word SHIP attested to its own verdict and is now refused outright.
+    const packetDir = join(ws, ".relics-agent", "art-review", "round-1", "packet");
+    mkdirSync(packetDir, { recursive: true });
+    const verdictBytes = Buffer.from(`${JSON.stringify({ reviewerId: "t", verdict: "SHIP", axes: {} }, null, 2)}\n`);
+    writeFileSync(join(packetDir, "verdict.json"), verdictBytes);
+    const verdictDocument = {
+      path: join(".relics-agent", "art-review", "round-1", "packet", "verdict.json"),
+      sha256: createHash("sha256").update(verdictBytes).digest("hex"),
+      verdictField: "verdict",
+    };
     writeFileSync(join(ws, ".relics-agent", "receipts", "art-review.json"), JSON.stringify({
-      schemaVersion: 1, accepted: true, verdict: "SHIP", runtimeId,
+      schemaVersion: 1, accepted: true, verdict: "SHIP", runtimeId, verdictDocument,
       briefSha256: createHash("sha256").update(brief).digest("hex"),
       acceptedConfigHash: configHashOf(bytes), reviewerId: "t", rounds: [{ round: 1 }],
     }));
@@ -196,6 +207,43 @@ test("an acceptance is void when one per cent of one field moves", () => {
     assert.equal(after.accepted, false);
     assert.equal(after.reasonCode, "ART_ACCEPTANCE_INVALIDATED");
     assert.ok(after.invalidatedBy.some((i) => i.facet === "ART_CONFIG"));
+
+    // MUTATION: THE VERDICT MAY NOT ATTEST TO ITSELF.
+    //
+    // `art-review.json` carried a bare `verdict: "SHIP"` and every other field the verification
+    // consults lived in the same file, so the word was the whole claim. Three edits, three
+    // distinct refusals: flip the receipt, flip the reviewer's document, remove the binding.
+    const receiptPath = join(ws, ".relics-agent", "receipts", "art-review.json");
+    const asWritten = JSON.parse(readFileSync(receiptPath, "utf8"));
+
+    writeFileSync(receiptPath, JSON.stringify({ ...asWritten, verdict: "REVISE" }));
+    assert.equal(
+      verifyAcceptance(ws, { configBytes: bytes, briefText: brief, runtimeId }).reasonCode,
+      "ART_ACCEPTANCE_VERDICT_SELF_ATTESTED",
+      "the receipt disagreeing with the reviewer's document must be refused as a forged verdict, not as a REVISE",
+    );
+
+    writeFileSync(receiptPath, JSON.stringify(asWritten));
+    writeFileSync(join(packetDir, "verdict.json"), Buffer.from(`${JSON.stringify({ reviewerId: "t", verdict: "SHIP", axes: {}, edited: true }, null, 2)}\n`));
+    assert.equal(
+      verifyAcceptance(ws, { configBytes: bytes, briefText: brief, runtimeId }).reasonCode,
+      "ART_ACCEPTANCE_VERDICT_DOCUMENT_ALTERED",
+    );
+
+    writeFileSync(join(packetDir, "verdict.json"), verdictBytes);
+    writeFileSync(receiptPath, JSON.stringify({ ...asWritten, verdictDocument: null }));
+    assert.equal(
+      verifyAcceptance(ws, { configBytes: bytes, briefText: brief, runtimeId }).reasonCode,
+      "ART_ACCEPTANCE_VERDICT_UNBOUND",
+      "dropping the binding must refuse, or dropping it is how a forger passes",
+    );
+
+    writeFileSync(receiptPath, JSON.stringify(asWritten));
+    rmSync(join(packetDir, "verdict.json"));
+    assert.equal(
+      verifyAcceptance(ws, { configBytes: bytes, briefText: brief, runtimeId }).reasonCode,
+      "ART_ACCEPTANCE_VERDICT_DOCUMENT_MISSING",
+    );
   } finally {
     rmSync(ws, { recursive: true, force: true });
   }

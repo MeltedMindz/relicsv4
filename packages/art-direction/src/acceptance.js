@@ -42,6 +42,8 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
+import { verifyVerdictDocumentBinding } from "../../art-review/src/receipt.js";
+
 export const ART_ACCEPTANCE_PATH = join(".relics-agent", "receipts", "art-acceptance.json");
 
 /**
@@ -221,47 +223,29 @@ export function readArtAcceptance(workspace) {
 /**
  * Re-read the reviewer's own verdict document and check the receipt against it.
  *
- * Four distinct refusals, because "there is nothing to check against", "the evidence is gone",
- * "the evidence was edited" and "the receipt disagrees with the evidence" are four different
- * things and only the last one is a forged verdict. Returning one code for all four would make the
- * gate's message useless in exactly the case someone is investigating.
+ * ONE IMPLEMENTATION, AND IT IS NOT THIS ONE. `@relics/art-review`'s
+ * `verifyVerdictDocumentBinding` does the work; this function only supplies the field names and
+ * the reason codes this receipt kind reports. Both receipt kinds had the same defect and a second
+ * hash check maintained by different code agrees until the day it does not — and on that day it is
+ * deciding whether a permanent art binding may proceed.
  */
 export function verifyVerdictBinding(workspace, record) {
-  const vd = record?.finalReview?.verdictDocument;
-  if (!vd || !vd.path || !vd.sha256) {
-    return {
-      ok: false,
-      reasonCode: "FINAL_REVIEW_VERDICT_UNBOUND",
-      detail:
-        "the receipt records a verdict with no reviewer document behind it. A verdict that only exists " +
-        "inside the receipt attests to itself: flipping the word is the whole forgery. Bind it to " +
-        `${VERDICT_DOCUMENT_PATH}.`,
-    };
+  const bound = verifyVerdictDocumentBinding({
+    workspace,
+    document: record?.finalReview?.verdictDocument,
+    expectedVerdict: record?.finalReview?.verdict,
+    expectedReviewerId: record?.finalReview?.reviewerId,
+    codes: {
+      unbound: "FINAL_REVIEW_VERDICT_UNBOUND",
+      missing: "FINAL_REVIEW_VERDICT_DOCUMENT_MISSING",
+      altered: "FINAL_REVIEW_VERDICT_DOCUMENT_ALTERED",
+      selfAttested: "FINAL_REVIEW_VERDICT_SELF_ATTESTED",
+    },
+  });
+  if (!bound.ok && bound.reasonCode === "FINAL_REVIEW_VERDICT_UNBOUND") {
+    return { ...bound, detail: `${bound.detail} Bind it to ${VERDICT_DOCUMENT_PATH}.` };
   }
-  const abs = join(workspace, vd.path);
-  if (!existsSync(abs)) {
-    return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_DOCUMENT_MISSING", detail: `the receipt binds its verdict to ${vd.path}, which does not exist. The evidence the receipt names is not there.` };
-  }
-  const bytes = readFileSync(abs);
-  const now = createHash("sha256").update(bytes).digest("hex");
-  if (now !== vd.sha256) {
-    return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_DOCUMENT_ALTERED", detail: `${vd.path} hashes to ${now} and the receipt pinned ${vd.sha256}. The reviewer's document changed after the receipt was written.` };
-  }
-  let doc;
-  try { doc = JSON.parse(bytes.toString("utf8")); }
-  catch (err) { return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_DOCUMENT_ALTERED", detail: `${vd.path} did not parse: ${err.message}` }; }
-  const field = vd.verdictField ?? "verdict";
-  if (doc?.[field] !== record.finalReview.verdict) {
-    return {
-      ok: false,
-      reasonCode: "FINAL_REVIEW_VERDICT_SELF_ATTESTED",
-      detail: `the receipt says the final verdict was ${JSON.stringify(record.finalReview.verdict)} and ${vd.path} says ${JSON.stringify(doc?.[field])}. The receipt does not get to decide this.`,
-    };
-  }
-  if (doc?.reviewerId !== undefined && record.finalReview.reviewerId !== undefined && doc.reviewerId !== record.finalReview.reviewerId) {
-    return { ok: false, reasonCode: "FINAL_REVIEW_VERDICT_SELF_ATTESTED", detail: `the receipt names reviewer ${JSON.stringify(record.finalReview.reviewerId)} and ${vd.path} names ${JSON.stringify(doc.reviewerId)}.` };
-  }
-  return { ok: true, reasonCode: "FINAL_REVIEW_VERDICT_BOUND", detail: `${vd.path} at ${now.slice(0, 12)} says ${JSON.stringify(doc[field])}`, document: doc };
+  return bound.ok ? { ...bound, reasonCode: "FINAL_REVIEW_VERDICT_BOUND" } : bound;
 }
 
 /**
