@@ -96,6 +96,12 @@ const REQUIRED_GATES = [
   // The art-direction layer ran in no workflow at all until this was added — the brief-admission
   // gate, the mechanism vocabulary and the direction schema were all enforced by nothing.
   { id: "ART_DIRECTION_TESTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artdirection" },
+  // The holdout containment and the receipt gate. Both findings were "the mechanism exists and
+  // nothing runs it": the containment API had zero production callers, and twenty-four committed
+  // receipts were read by no gate, no workflow and no CLI. Wiring them here is half the repair.
+  { id: "HOLDOUT_CONTAINMENT_TESTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:holdout" },
+  { id: "ART_RECEIPTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artreceipts" },
+  { id: "ART_RECEIPTS_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artreceipts:controls" },
   { id: "TEMPLATE_STATUS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus" },
   { id: "TEMPLATE_STATUS_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus:controls" },
   { id: "KIT_GATES_SELFTEST", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:gates:selftest" },

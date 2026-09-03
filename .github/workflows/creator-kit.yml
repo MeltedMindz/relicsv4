@@ -167,6 +167,28 @@ jobs:
         # network: it reads the frozen briefs and the committed measurements.
         run: npm run kit:artdirection
 
+      - name: the holdout is held out, and the receipts are read
+        # TWO FINDINGS, ONE STEP, because they are the same claim from opposite ends.
+        #
+        # The holdout half: FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING was a hardcoded `false` and
+        # the holdout was an arithmetic sequence in the module the author imports, reused byte for
+        # byte across both completed rounds. It is now derived per round from a salt that is not in
+        # this repository, and `authorSawHoldout` is MEASURED by scanning author-visible source for
+        # the round's seeds. Planting one back into author.js turns
+        # `NO HOLDOUT SEED OF A COMPLETED ROUND APPEARS IN AUTHOR-VISIBLE SOURCE` red.
+        #
+        # The receipt half: twenty-four acceptance receipts were committed and NOTHING READ THEM,
+        # and a receipt attested to its own verdict -- flipping one word to PASS produced
+        # accepted=true. Every verdict is now bound to the reviewer's own document, every sheet the
+        # reviewer looked at is re-hashed, and the gate refuses to report success on zero receipts.
+        #
+        # Controls first, then the gate: a controls failure must not hide what the gate would have
+        # found. The controls are eleven mutations and each must be caught by name.
+        run: |
+          npm run kit:holdout
+          npm run kit:artreceipts:controls
+          npm run kit:artreceipts
+
       - name: no gate passes on zero input
         # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
         # is the only evidence that the rest of this file means anything. It existed, it worked,

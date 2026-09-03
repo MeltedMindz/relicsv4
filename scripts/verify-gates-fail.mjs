@@ -82,6 +82,35 @@ const GATES = [
     why: "a launch-proving command runs without a visual acceptance, which is the whole defect this loop exists to close",
   },
   {
+    gate: "kit:artreceipts",
+    sees: "the twenty-four committed acceptance receipts, and the artifacts each one names",
+    // THE DEFECT IN ONE EDIT. Before the verdict was bound to the reviewer's own document, flipping
+    // this word made `verifyArtAcceptance` return accepted=true and no gate anywhere noticed,
+    // because no gate read the receipts at all. The mutation is deliberately the smallest possible
+    // one — a single string in a single receipt — because that is exactly the size of the forgery
+    // the binding has to refuse.
+    mutate: (root) => {
+      const p = join(root, "artifacts/art-benchmark/B01/.relics-agent/receipts/art-acceptance.json");
+      const r = JSON.parse(readFileSync(p, "utf8"));
+      r.finalReview.verdict = "PASS";
+      writeFileSync(p, `${JSON.stringify(r, null, 2)}\n`);
+    },
+    why: "a committed receipt's verdict is flipped to PASS without the reviewer's document moving with it",
+  },
+  {
+    gate: "kit:holdout",
+    sees: "author-visible source, scanned for the seeds a completed round's final reviewer judged",
+    // The leak that actually happened, re-created: a holdout reviewer's finding pasted into the
+    // author's own source, naming a holdout seed. The seed is READ OUT of the scratch tree's own
+    // receipt rather than written here, because a literal in this file would be the same leak.
+    mutate: (root) => {
+      const receipt = JSON.parse(readFileSync(join(root, "artifacts/art-benchmark/B01/.relics-agent/receipts/art-acceptance.json"), "utf8"));
+      const seed = receipt.finalReview.seeds[0];
+      append(join(root, "packages/art-direction/src/author.js"), `\n// a final reviewer noted that seed ${seed} came back blank.\n`);
+    },
+    why: "a holdout seed is quoted into the author's own source, which is how round two was authored against round one's holdout",
+  },
+  {
     gate: "kit:templates",
     sees: "every shipped starter template, exported for real",
     mutate: (root) => edit(join(root, "packages/creator-cli/templates/minimal/relics.config.json"), '"backingModel": "FULL_PARITY"', '"backingModel": "PARTIAL_PARITY"'),
