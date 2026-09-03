@@ -460,6 +460,24 @@ over-budget native value is refused `TOTAL_GAS_COST_EXCEEDS_AUTHORIZATION` rathe
 `VALUE_EXCEEDS_POLICY`. Both codes still exist and both still fire when the grant's own bound is
 looser than the policy's; they are simply not the ones an agent will usually see.
 
+**And it shadows in the other direction too.** The `creatorRecipient` inside the calldata is checked
+by the SHAPE guard in phase two and again by the GRANT in phase three, so there the earlier guard is
+the policy's: a redirected recipient is refused `RECIPIENT_NOT_POLICY_RECIPIENT`, and
+`RECIPIENT_NOT_AUTHORIZED` is what you see only when the grant is narrower than the policy. Do not
+read the order as "the grant always answers first" — it answers first for the questions phase one
+asks, and last for the questions phase three asks.
+
+**Shadowing is a testing problem before it is a reporting one.** A guard that is backstopped by
+another guard cannot be proven by a refusal, because deleting it leaves the request refused anyway.
+Measured 2026-09-03 on the real source: removing phase one's `if (!state.ok)` — the first of two
+byte-identical copies, which is exactly what a single-match replace removes — left all eighty-six
+controls in the signer package GREEN. The three shadowed checks (chain, native value, recipient) are
+therefore proven in `packages/signer-protocol/test/grantGuard.test.mjs`, against a signer whose
+POLICY is deliberately WIDER than its GRANT so that only the grant can refuse; and the three that
+cannot be separated over a socket at all — each phase's `checkAuthorization` result, and phase
+three's LaunchParams decode, which the shape guard already decoded — are proven by direct unit tests
+on the exported functions.
+
 **No approved build is not "no constraints".** Without one there is nothing to compare the hashes
 or the target against, so every other check would pass vacuously. It is refused, and it is refused
 first.
@@ -475,11 +493,15 @@ says nothing about whether the request was acceptable. Reporting "the sidecar wa
    them signs. Every capability added at this boundary is a capability a compromised agent
    inherits. RC6 needs no separate metadata signature — the launch calldata **is** the creator's
    authorization of the whole configuration — so there is nothing else to ask for.
-2. **It does not check `goal`, `allowBroadcast` or `requireSimulation`.** Those are orchestrator
-   gates that decide whether a request should ever be built. There is no refusal code for them, and
-   inventing one would put a code in the signer's vocabulary that an agent's exhaustive handling
-   does not know. A `BUILD_ONLY` run refuses upstream by never producing an approved build, which
-   arrives here as `NO_APPROVED_BUILD`.
+2. **It does not check the POLICY's `goal`, `allowBroadcast` or `requireSimulation`.** Those are
+   orchestrator gates that decide whether a request should ever be built. There is no refusal code
+   for them, and inventing one would put a code in the signer's vocabulary that an agent's
+   exhaustive handling does not know. A `BUILD_ONLY` run refuses upstream by never producing an
+   approved build, which arrives here as `NO_APPROVED_BUILD`.
+   **The GRANT's `allowBroadcast` is a different field and it IS checked**, in exactly one place,
+   and it answers `BROADCAST_NOT_AUTHORIZED` — which is why that code is among the sixteen above.
+   The policy is a statement about a shape; the grant is a statement about authority, and the
+   signer holds the creator to the second one.
 3. **It runs the guard before delegating, never after.** On a refusal the inner adapter's `sign` is
    never called, so a wrapped hardware wallet never sees a request the policy rejects and never
    gets a chance to prompt a human to approve one. A guard that ran afterwards would be a report,
@@ -1114,7 +1136,24 @@ npm run e2e:wave1:controls   # the same harness with the wiring broken three way
                              # registry read replaced by a plausible constant. Each must turn it
                              # red, because a valid picture from the wrong runtime is not success.
 npm run e2e:autonomous       # the full MODE B rehearsal, through broadcast, on the same fork
+npm run signer:test          # every signer control, including the thirty wallet attacks and the
+                             # fifteen that isolate the grant guard from the shape guard
+npm run signer:mutate        # breaks each guard ONE CHECK AT A TIME in the real source and requires
+                             # a NAMED test to go red for each, after a GREEN baseline. It prints
+                             # MUTATIONS=/SURVIVED= and SIGNER_GRANT_GUARD_MUTATIONS=n/n_CAUGHT, and
+                             # `agent:controls` reads those numbers out of it rather than restating
+                             # them. Three things stop the run rather than scoring it: an anchor
+                             # that no longer matches the source, an anchor whose occurrence count
+                             # has changed, and an `expect` naming a test that does not exist.
 ```
+
+**Why the harness runs the suite under TAP.** It has to know that the EXPECTED test went red, not
+merely that something did. Under node's default reporter a passing test prints its own name
+(`✔ 18 an EXPIRED authorization is refused`), so a substring check against the output was true
+whether the test passed or failed — measured on this repository, all fifty-three `expect` strings
+were present in a fully green run, which means the only condition actually being enforced was
+"something, somewhere, is red". TAP prints `not ok N - <name>` for failures alone, and the failing
+set is parsed out of those lines.
 
 Both Wave-1 commands need `anvil` on PATH and an Ethereum endpoint to fork from
 (`E2E_FORK_RPC_URL`, `ETHEREUM_RPC_URL` or `MAINNET_RPC_URL`; the chain profile's public fallback
