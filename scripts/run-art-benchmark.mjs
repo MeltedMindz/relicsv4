@@ -55,6 +55,7 @@ import { describeValidatorCode } from "../packages/art-review/src/codec/errors.j
 import { grid, rasterize } from "../packages/art-review/src/raster.js";
 import { planeOf, inkCoverage, meanDeltaE } from "../packages/art-review/src/perceptual.js";
 import { runObjectiveBattery, blockingFailures } from "../packages/art-review/src/objective.js";
+import { finalReviewPrompt, finalReviewPromptHash } from "../packages/art-review/src/finalReview.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "artifacts", "art-benchmark");
@@ -369,8 +370,24 @@ async function phaseHoldout() {
     });
     if (!out.ok) throw new Error(`${brief.id}: ${out.detail}`);
 
+    // THE INSTRUCTION IS GENERATED, HASHED AND WRITTEN BESIDE THE SHEETS.
+    //
+    // Round one derived FINAL_REVIEW_BLINDED from a field the reviewer set in its own verdict, so
+    // the claim rested on the testimony of the thing being measured. Twelve reviewers now get a
+    // byte-identical instruction that lives in the repository, and its hash is in the run record.
+    writeFileSync(join(dir, "final-review", "brief.md"), briefsById[brief.id].text);
+    const prompt = finalReviewPrompt({
+      caseId: brief.id,
+      sheetDir: `artifacts/art-benchmark/${brief.id}/final-review/sheets`,
+      sheets: out.artifacts.map((a) => a.name),
+      seedCount: FINAL_HOLDOUT_SEEDS.length,
+      states: ["neutral", "stress", "recovery"],
+    });
+    writeFileSync(join(dir, "final-review", "reviewer-prompt.md"), prompt);
+
     run.finalReviewInput = {
       seedGroup: "FINAL_HOLDOUT_SEEDS",
+      reviewerPromptSha256: finalReviewPromptHash(prompt),
       seeds: [...FINAL_HOLDOUT_SEEDS],
       states: ["neutral", "stress", "recovery"],
       marketResponseClaimed: marketResponseClaimed(briefsById[brief.id].text),
