@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T19:54:21.700Z",
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "chainId": 8453,
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+  "acceptedConfigHash": "f55e69d71854b69640f59aa1b07288b0b3443865eff7ee399ff1c40a92fb7cf5",
+  "acceptedConfigBytes": 70,
+  "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "LINEWORK",
+        "RADIAL_SYSTEM",
+        "PER_TOKEN_SYMMETRY_VARIATION"
+      ],
+      "MOTIF": [],
+      "AESTHETIC": [
+        "MONUMENTAL",
+        "DELICATE"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [
+      "PER_TOKEN_SYMMETRY_VARIATION"
+    ],
+    "hash": "5b8342d5d3d0882db2ba0668157e114c502ec11e49e5157436bad8daa0a073cb"
+  },
+  "direction": {
+    "hash": "663fdf7e6a3eeeb39e66145334f9fad85cd91f0a91c046cca5ce869db0de8e81",
+    "createdAt": "2026-09-03T19:11:12.460Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "rules[n].shapeSet",
+      "rules[n].ruleSet",
+      "ruleCount",
+      "rules[n].contraction",
+      "rules[n].branch and rules[n].prune",
+      "rules[n].symSet",
+      "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+      "rules[n].depthMin / depthMax",
+      "rules[n].stroke and the OUTLINE flag",
+      "rules[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "ruleCount",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "rules[n].drive x sensor x curve",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": [
+      "rules[n].drive x sensor x curve"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B10",
+      "configHash": "6761819a7eba297f14cfb20ecf1c3fc9e7a71e0abb705b4860a6901fe76b4283",
+      "critiqueHash": "5e72e02919bbef259dddec4b711559c1c1777a6563c9fb76a48df7e3420bce75",
+      "findings": [
+        "hairline-weight-lost",
+        "density-far-over-brief",
+        "contrast-split-not-low",
+        "enclosing-frame-reads-as-structure",
+        "detached-satellites-break-the-single-figure",
+        "filled-mass-present",
+        "order-gradient-flat-and-depth-collapses",
+        "radial-rhythm-absent-on-half-the-collection",
+        "state-change-swaps-identity-instead-of-scaling",
+        "market-direction-inverted-on-5396",
+        "seed-span-swamps-the-market-span"
+      ],
+      "dispositions": [
+        {
+          "findingId": "hairline-weight-lost",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "density-far-over-brief",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "contrast-split-not-low",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "enclosing-frame-reads-as-structure",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "detached-satellites-break-the-single-figure",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "filled-mass-present",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "order-gradient-flat-and-depth-collapses",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "radial-rhythm-absent-on-half-the-collection",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "state-change-swaps-identity-instead-of-scaling",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "market-direction-inverted-on-5396",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "seed-span-swamps-the-market-span",
+          "disposition": "PARTIALLY_ACCEPT"
+        }
+      ],
+      "responseHash": "a6012cc64ee0989c67205f255307d10e3f63647bab4e6bd6f5ec230c3a3a1343",
+      "boundedChange": null
+    },
+    {
+      "round": 2,
+      "criticId": null,
+      "configHash": "f55e69d71854b69640f59aa1b07288b0b3443865eff7ee399ff1c40a92fb7cf5",
+      "critiqueHash": null,
+      "findings": [],
+      "dispositions": [],
+      "responseHash": null,
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B10",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "f55e69d71854b69640f59aa1b07288b0b3443865eff7ee399ff1c40a92fb7cf5",
+    "inputHashes": [
+      "4461d37fe2767b8f21034cd512999886db94e969bcce4359f2b6d76691418fe9",
+      "f276ad4605ab3c9a6b8ffd57df67a34ac19e29d5ae8038c0c7d7c0960e75687c",
+      "a8fc81fd846e57a7f6eb64503e6821767d5aec9200ff6ea797a2cf9cad118081",
+      "b9a48a2511eb3d18efbd14966f41b32868d6649012649f67160b35b85aa2c784",
+      "8ba5c23e8dc5b0f772ade728427621eb60c60cd210796b01ab267041b82b06a6"
+    ],
+    "visualDescriptionHash": "30cae99012f2f5b2495ae5c5c700e8561bca646c5347d1712db7eec8a85cace4",
+    "hash": "41429ba8ae9bf6dd49ef4641c1dd1fea028451b97adf701a9bf2e8f14ab1c2e1"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}

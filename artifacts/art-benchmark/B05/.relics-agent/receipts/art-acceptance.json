@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T19:54:21.691Z",
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "chainId": 8453,
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+  "acceptedConfigHash": "e1b504ff0ba5179fab7d129ee9302c8ac7ef3eeef544b943792fc62a2ae8e109",
+  "acceptedConfigBytes": 70,
+  "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "requiredCapabilities": {
+      "MEDIUM": [],
+      "MOTIF": [
+        "ARCHITECTURE",
+        "MONUMENT"
+      ],
+      "AESTHETIC": [
+        "SPARSE",
+        "QUIET"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "8edc917196686c3781ac4141c1c9a177bbcbfa9a3bf0cc81ee48cb4e28294a64"
+  },
+  "direction": {
+    "hash": "7f69997f7f90788ea26c1f06b5fb125cfe09bc89e78d629f9358c7b7c583adc1",
+    "createdAt": "2026-09-03T19:10:51.393Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "rules[n].shapeSet",
+      "rules[n].ruleSet",
+      "ruleCount",
+      "rules[n].contraction",
+      "rules[n].branch and rules[n].prune",
+      "rules[n].symSet",
+      "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+      "rules[n].depthMin / depthMax",
+      "rules[n].stroke and the OUTLINE flag",
+      "rules[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "ruleCount",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "rules[n].drive x sensor x curve",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": [
+      "rules[n].drive x sensor x curve"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B05",
+      "configHash": "376baf3991ce94594be55f2edb5d2a8e7fc8d4cee4a891713cc215e33dfa3f16",
+      "critiqueHash": "e4fdc7a17e02070d092ba0953505e6ca12cadb80a198d1aba81e12d4c753dba8",
+      "findings": [
+        "edge-bleed-destroys-the-margin",
+        "ink-far-above-austerity",
+        "state-moves-complexity-not-only-scale",
+        "detached-satellites-break-the-single-mass",
+        "no-verticality-nothing-stands",
+        "alpha-stacking-makes-five-values-not-two",
+        "pale-slab-acts-as-a-second-ground",
+        "figure-drifts-off-the-frame-centre"
+      ],
+      "dispositions": [
+        {
+          "findingId": "edge-bleed-destroys-the-margin",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "ink-far-above-austerity",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "state-moves-complexity-not-only-scale",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "detached-satellites-break-the-single-mass",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "no-verticality-nothing-stands",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "alpha-stacking-makes-five-values-not-two",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "pale-slab-acts-as-a-second-ground",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "figure-drifts-off-the-frame-centre",
+          "disposition": "REJECT_WITH_REASON"
+        }
+      ],
+      "responseHash": "69931ee3925c385cb845236f75eea89d6f4e510914d5768d82a542625c07f8f6",
+      "boundedChange": null
+    },
+    {
+      "round": 2,
+      "criticId": null,
+      "configHash": "e1b504ff0ba5179fab7d129ee9302c8ac7ef3eeef544b943792fc62a2ae8e109",
+      "critiqueHash": null,
+      "findings": [],
+      "dispositions": [],
+      "responseHash": null,
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B05",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "e1b504ff0ba5179fab7d129ee9302c8ac7ef3eeef544b943792fc62a2ae8e109",
+    "inputHashes": [
+      "3d5bbd0e24127d97c20ad3498c886899371844da62da57e4780946d97bf50d05",
+      "d8308c2952df328c241e2cb7e51d3dd9c895472c81d739fd6f713cf56dbc6104",
+      "ce3b83fa763812e1cf482a0465fc79bb3875ef565b2523fd89e7bede63ecf992",
+      "48b4d76e26239f01315a3c42aa481fe7da5e16895746d5ef4fecbc21128c9bf7",
+      "c6f00427495134968b6e878bcc8c0a0f19355f16f67cb0442588b5bfb9341634"
+    ],
+    "visualDescriptionHash": "b00e85a4cce16bf3d35b12e7d3c3cec8968ad9c51924fc72c1a19b6dd5006b8e",
+    "hash": "c4f1bd68522e81cb0ce47e42fc726d5739b502a0296858775b0c2c338e7f8140"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}

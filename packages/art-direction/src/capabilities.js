@@ -199,6 +199,18 @@ export const IMPOSSIBLE_DEMANDS = Object.freeze([
       rx(String.raw`\b(colou?r|palette|hue|tone)s?\b[^.]{0,60}\b(shift|change|darken|redden|cool|warm|drain|bleed|desaturat\w+|turn)\w*\b[^.]{0,40}\b(market|stress|drawdown|crash|volatil\w+|recovery|regime)\b`),
       rx(String.raw`\b(market|stress|drawdown|crash|volatil\w+|recovery|regime)\b[^.]{0,60}\b(colou?r|palette|hue)s?\b[^.]{0,30}\b(shift|change|darken|redden|cool|warm|drain|desaturat\w+|turn)\w*\b`),
       rx(String.raw`\bgoes?\s+(red|blue|grey|gray|black|cold|warm)\s+(under|during|in)\s+\w*\s*(stress|drawdown|crash)\b`),
+      // A COLOUR AXIS CAN BE STATED WITHOUT A VERB, AS TWO POLES, AND B11 STATED IT THAT WAY.
+      //
+      // "Under stress the work should be sparse, broken and COLD; in recovery it should be dense,
+      // whole and WARM. ... Slate and iron at one end, ochre and copper at the other." Not one of
+      // the three patterns above fires on it: there is no shift, no change, no turn — the
+      // temperature is an adjective attached to a state and the hues are named as endpoints. The
+      // brief was admitted, authored, rendered and refused, and its reviewer refused it on exactly
+      // that axis: "under drawdown this collection glows copper; in recovery it goes to iron."
+      // A demand for state-driven colour is what it is whether or not a verb carries it.
+      rx(String.raw`\b(under|during|in)\s+(stress|drawdown|volatil\w+|recovery|a\s+crash)\b[^.]{0,80}\b(cold|cool|warm|warmer|cooler|colder|red|blue|amber|copper|ochre|slate|iron|grey|gray)\b`),
+      rx(String.raw`\b(cold|cool|warm|warmer|cooler|colder)\b[^.]{0,40}\b(in|under|during)\s+(recovery|stress|drawdown|volatil\w+)\b`),
+      rx(String.raw`\b(at\s+one\s+end|at\s+the\s+other\s+end)\b[^.]{0,60}\b(at\s+the\s+other|at\s+one\s+end)\b`),
     ],
     notWhen: [rx(String.raw`\b(no|not|without|avoid|never)\b[^.]{0,40}\bcolou?r\b[^.]{0,30}\b(shift|change)\b`)],
   }),

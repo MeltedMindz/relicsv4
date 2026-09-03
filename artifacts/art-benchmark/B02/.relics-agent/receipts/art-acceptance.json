@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T19:54:21.686Z",
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "chainId": 8453,
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+  "acceptedConfigHash": "4c00b5511ddcccbccc5639ad794615d659635a8efe0e42389b36a291957e88fc",
+  "acceptedConfigBytes": 58,
+  "briefSha256": "df9dffb0063045953c04dfac8f69e90751dd7af4464165bbbbb9a58cdcee2337",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "LINEWORK"
+      ],
+      "MOTIF": [
+        "BOTANICAL"
+      ],
+      "AESTHETIC": [
+        "SPARSE",
+        "MONUMENTAL",
+        "DELICATE",
+        "QUIET"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION",
+        "DENSITY_CHANGE"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "f1de13171ba6760579873e79f0655d44397d019b15c4c88362362b9a162265ea"
+  },
+  "direction": {
+    "hash": "0ceb387282458d5d226960dcd4d7757b327da4a94c1167f98fc7dff673386ff6",
+    "createdAt": "2026-09-03T19:10:39.587Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "fields[n].layout",
+      "fields[n].primitive",
+      "fields[n].sizeMax",
+      "fieldCount, and the site budget",
+      "fields[n].spreadMax",
+      "fields[n].symmetry",
+      "fields[n].countMin / countMax",
+      "palette, groundMode, PALETTE_SHIFT",
+      "fields[n].stroke and the OUTLINE flag",
+      "fields[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "fields[n].layout",
+        "facets": [
+          "failureMode"
+        ]
+      },
+      {
+        "parameter": "fieldCount, and the site budget",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].symmetry",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, groundMode, PALETTE_SHIFT",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].stroke and the OUTLINE flag",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "fields[n].drive x sensor x curve",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": [
+      "fields[n].drive x sensor x curve"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B02",
+      "configHash": "7cf41e366faee334b9a4ccd8d3faef4d0fe43fda9e2d1f475b3cb9ff80903d47",
+      "critiqueHash": "0cca1c124f90faf5b06dcec2905c5ac6d21c89852d755b2f83b46ccbd1d90b6b",
+      "findings": [
+        "line-not-mass",
+        "ink-over-budget",
+        "no-division-ladder",
+        "bone-rim-is-a-ring",
+        "market-inverted",
+        "third-colour-and-tone-stack",
+        "members-merge-at-browse",
+        "figure-ground-inverted-on-some-seeds"
+      ],
+      "dispositions": [
+        {
+          "findingId": "line-not-mass",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "ink-over-budget",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "no-division-ladder",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "bone-rim-is-a-ring",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "market-inverted",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "third-colour-and-tone-stack",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "members-merge-at-browse",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "figure-ground-inverted-on-some-seeds",
+          "disposition": "PARTIALLY_ACCEPT"
+        }
+      ],
+      "responseHash": "0bc93da0e1bada4dd644c0feac6061b8ed10337b94717cefd052efadc6add3ec",
+      "boundedChange": null
+    },
+    {
+      "round": 2,
+      "criticId": null,
+      "configHash": "4c00b5511ddcccbccc5639ad794615d659635a8efe0e42389b36a291957e88fc",
+      "critiqueHash": null,
+      "findings": [],
+      "dispositions": [],
+      "responseHash": null,
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B02",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "4c00b5511ddcccbccc5639ad794615d659635a8efe0e42389b36a291957e88fc",
+    "inputHashes": [
+      "7e0bee79844f417235d580907ae82becb4390977c6a4d5c99d41d7a090c28809",
+      "65cc663f0cdfc3d65b5cc5da5ac6854c111cd752cdf458df214797f3aa73ccf0",
+      "940664b3fd9372d7d2eeb55bb20d436ecc0b00f7f02f4a957e7ab68d14fca101",
+      "a000831ceabf9e048893fac13e5bf4ee6634867776e9137d2c23c8bfefd42e49",
+      "5f10229c1d1d59e1653781b43c8b4f1b81d42b7eda2f94e8709f27f18413f06f"
+    ],
+    "visualDescriptionHash": "f05a9c2ecf6db5275f8abf1cf00808731c21c851e76ec8d21a8695d86bceb4d3",
+    "hash": "a4cbaf3856142f29afc4df2b1f796c7ce4436d001aca9f9500389a485e4aefbc"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}

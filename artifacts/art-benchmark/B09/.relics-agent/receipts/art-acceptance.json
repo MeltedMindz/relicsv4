@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T19:54:21.697Z",
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "chainId": 8453,
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+  "acceptedConfigHash": "3bfcffe2fdf5b7461a12a38448928cea7c941bda800bb95f8e84af08602e9bdd",
+  "acceptedConfigBytes": 77,
+  "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "requiredCapabilities": {
+      "MEDIUM": [],
+      "MOTIF": [
+        "MONUMENT"
+      ],
+      "AESTHETIC": [
+        "MONUMENTAL",
+        "BRUTALIST"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "FRACTURE",
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "9ddbedc5c132f8dc8c17ffd6eb1c2ad93863b49e7788b308b015afd97d0e23e1"
+  },
+  "direction": {
+    "hash": "9928c98c369c8b7cc65ccfbbda321a3dc9bf7616664c39411e6607cf420e8dd0",
+    "createdAt": "2026-09-03T19:11:08.903Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "fields[n].layout",
+      "fields[n].primitive",
+      "fields[n].sizeMax",
+      "fieldCount, and the site budget",
+      "fields[n].spreadMax",
+      "fields[n].symmetry",
+      "fields[n].countMin / countMax",
+      "palette, groundMode, PALETTE_SHIFT",
+      "fields[n].stroke and the OUTLINE flag",
+      "fields[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "fields[n].layout",
+        "facets": [
+          "failureMode"
+        ]
+      },
+      {
+        "parameter": "fieldCount, and the site budget",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].symmetry",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, groundMode, PALETTE_SHIFT",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].stroke and the OUTLINE flag",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "fields[n].drive x sensor x curve",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": [
+      "fields[n].drive x sensor x curve"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B09",
+      "configHash": "a251a803188b1828e8885f59c8aaf31dc13ecd9e9e46659a2008cfb607252bea",
+      "critiqueHash": "69764090dee9b740b104e0d73d5bac911278d4e20498d2303a0e873d629a94de",
+      "findings": [
+        "member-count-and-scale",
+        "frame-fill-and-crop",
+        "flat-mass-not-alpha-stack",
+        "hub-and-rosette",
+        "ochre-seam-absent-or-blob",
+        "stress-depletes-instead-of-fracturing",
+        "stress-inverts-focal-hierarchy",
+        "state-introduces-new-primitives",
+        "palette-drifts-cool-and-pale"
+      ],
+      "dispositions": [
+        {
+          "findingId": "member-count-and-scale",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "frame-fill-and-crop",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "flat-mass-not-alpha-stack",
+          "disposition": "REJECT_WITH_REASON"
+        },
+        {
+          "findingId": "hub-and-rosette",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "ochre-seam-absent-or-blob",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "stress-depletes-instead-of-fracturing",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "stress-inverts-focal-hierarchy",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "state-introduces-new-primitives",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "palette-drifts-cool-and-pale",
+          "disposition": "ACCEPT"
+        }
+      ],
+      "responseHash": "413125c65caf9a1ad6b9ca244a2c0edcd2e6d81381694e83a940a39e35ae01fe",
+      "boundedChange": null
+    },
+    {
+      "round": 2,
+      "criticId": null,
+      "configHash": "3bfcffe2fdf5b7461a12a38448928cea7c941bda800bb95f8e84af08602e9bdd",
+      "critiqueHash": null,
+      "findings": [],
+      "dispositions": [],
+      "responseHash": null,
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B09",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "3bfcffe2fdf5b7461a12a38448928cea7c941bda800bb95f8e84af08602e9bdd",
+    "inputHashes": [
+      "f069b3aeb6845b313040439f040ff697d45583be563285d584c115867a190d50",
+      "33543118324a0242bbc00e98acfdbe8c7b9f417b148c0d57526c472a41d334e8",
+      "1621cb14edddb765ae3b56591188bed79c3255c388dc2ad292e98b1ca41ae062",
+      "234a4e696433cbdd92daf32e3d8bd03beb87767c5a965195b2bec2c06978da08",
+      "cd899e24f15f5b068be26969370bf772eadf285def3fda1408ab1ab3eac9ccc3"
+    ],
+    "visualDescriptionHash": "d861af682b526227900c7d90f2db3c0dde92c0a32712b8824ef222af7d3779b4",
+    "hash": "92f4fedeb7472df71e7840c2ff816df5b91d5a9245b16e4ec16636a1b9eb2888"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}

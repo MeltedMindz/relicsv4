@@ -98,6 +98,52 @@ export function extentOf(plane, threshold = 8, groundLab = null) {
 }
 
 /**
+ * How much of the drawing reaches the CORNERS and the EDGE of the frame.
+ *
+ * THE THIRD SHAPE QUESTION, AND ROUND TWO IS WHY IT IS HERE. Five of twelve final blind reviewers
+ * refused work whose bounding-box extent measures 0.52 to 0.99 with the same sentence: "a centred
+ * heap floating in empty black with dead corners", "a small centred patch of slats in wide empty
+ * margins", "every token sits in a clear black margin". `extentOf` cannot see it — a bounding box
+ * says how far the drawing reaches in x and y and says nothing about the region between.
+ *
+ * Measured on the twelve accepted configurations, six seeds each: corner occupancy runs 0.000 to
+ * 0.130 against overall coverage of 0.18 to 0.66, and FOUR of the twelve put literally nothing in
+ * any corner or on any edge while reporting an extent of 0.52 to 0.71.
+ *
+ * IT IS A MEASURE AND NOT A FLOOR, deliberately. A brief asking for a form held well clear of every
+ * edge wants this number at zero, and one asking for a section that fills the frame edge to edge
+ * wants it high; which is right is the brief's business. What was missing was any way to say the
+ * number at all.
+ *
+ * THE CAUSE IS STRUCTURAL AND WORTH KNOWING BEFORE READING IT AS A BUG. Both runtimes place their
+ * marks within a half-extent about the canvas centre, so the reachable region is a DISC inscribed
+ * in a square frame and the corners are outside it for every polar and scatter layout. A cell grid
+ * reaches them and measures highest here (0.130); a radial one cannot and measures zero.
+ */
+export function cornerOccupancy(plane, { threshold = 8, groundLab = null, cornerFraction = 0.21, edgePixels = 4 } = {}) {
+  const { mask, width, height } = inkMask(plane, threshold, groundLab);
+  const q = Math.round(width * cornerFraction);
+  let corner = 0;
+  let cornerTotal = 0;
+  let edge = 0;
+  let edgeTotal = 0;
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const inCorner = (x < q || x >= width - q) && (y < q || y >= height - q);
+      const onEdge = x < edgePixels || x >= width - edgePixels || y < edgePixels || y >= height - edgePixels;
+      if (inCorner) { cornerTotal += 1; if (mask[y * width + x]) corner += 1; }
+      if (onEdge) { edgeTotal += 1; if (mask[y * width + x]) edge += 1; }
+    }
+  }
+  return {
+    cornerInk: Number((corner / cornerTotal).toFixed(4)),
+    edgeInk: Number((edge / edgeTotal).toFixed(4)),
+    cornerPixels: cornerTotal,
+    edgePixels: edgeTotal,
+  };
+}
+
+/**
  * How many separate pieces the drawing is in, ignoring specks.
  *
  * FOUR-CONNECTED, and `minPixels` defaults to 4 of 14,400. At browse size a single stray pixel is

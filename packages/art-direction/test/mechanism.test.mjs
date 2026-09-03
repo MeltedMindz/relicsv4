@@ -206,3 +206,33 @@ test("every mechanism declares the magnitude the market moves", () => {
     assert.ok(MECHANISMS[id].measuredBy.length > 10, `${id}: nothing says how it would be measured`);
   }
 });
+
+test("a colour axis stated as two poles is a state-driven colour, and B11 states it that way", async () => {
+  // Round two's twelfth refusal. Both runtimes' capability statements refuse state-driven colour
+  // by name, and the detector required a verb — shift, change, turn, darken. B11's brief carries
+  // no verb: the temperature is an adjective attached to a state and the hues are named as
+  // endpoints. It was admitted, authored, rendered and refused, and its blind reviewer refused it
+  // on exactly that axis: "under drawdown this collection glows copper; in recovery it goes to
+  // iron." The brief was unsatisfiable by either Wave-1 runtime before the first render.
+  const { detectImpossibleDemands } = await import("../src/capabilities.js");
+  const { admitBrief } = await import("../src/admission.js");
+  const b = BRIEFS.find((x) => x.id === "B11");
+  assert.ok(detectImpossibleDemands(b.text).some((d) => d.id === "STATE_DRIVEN_COLOUR"), "B11's colour axis is not detected");
+  assert.equal(admitBrief(b.text).outcome, "BRIEF_NOT_REPRESENTABLE_BY_CURRENT_WAVE1_CATALOG");
+});
+
+test("a palette named without a market state is not a state-driven colour", async () => {
+  // The must-allow half, and it is the half that matters: this file's own header says a false
+  // refusal is invisible because a refused brief produces no renders and no verdict. Every one of
+  // these is a real sentence from one of the twelve frozen briefs.
+  const { detectImpossibleDemands } = await import("../src/capabilities.js");
+  for (const text of [
+    "Restrained palette: iron and ash over a near-black ground, with one warm accent marking the innermost bay.",
+    "Warm and dark: rust, copper and umber piled over a near-black ground, with values close enough that the density reads as mass rather than as pattern.",
+    "A quiet, spare palette: two values and a ground, no more. Nothing decorative, nothing incidental.",
+    "Brass and slate over a dark ground, with the drawing carried in fine line so the whole reads as engineering rather than as mass.",
+    "Pale and cool: bone and pale slate over a dark ground, the contrast kept low so the lines read as thread rather than as structure.",
+  ]) {
+    assert.ok(!detectImpossibleDemands(text).some((d) => d.id === "STATE_DRIVEN_COLOUR"), `falsely refused: ${text.slice(0, 60)}`);
+  }
+});

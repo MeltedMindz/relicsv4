@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 import { admitBrief } from "../src/admission.js";
 import { authorConfig, deriveIntent, resolveMechanism } from "../src/author.js";
-import { SENSOR_FOR_POLARITY } from "../src/mechanism.js";
+import { COUNTER_REGISTER, SENSOR_FOR_POLARITY } from "../src/mechanism.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..", "..");
@@ -29,14 +29,29 @@ const DIRECTIONS_PATH = join(ROOT, "artifacts", "art-benchmark", "directions.jso
 function authoredCases() {
   if (!existsSync(DIRECTIONS_PATH)) return null;
   const directions = JSON.parse(readFileSync(DIRECTIONS_PATH, "utf8")).directions;
+  // A BRIEF THE CATALOG REFUSES HAS NO AUTHORED CONFIGURATION, AND THAT IS THE POINT OF THE GATE.
+  // B11 is one: its brief asks for slate and iron under stress against ochre and copper in
+  // recovery, which is a state-driven colour and is on both runtimes' refusal lists. It is skipped
+  // here rather than authored, and `an unadmitted brief reaches no author` asserts it.
   return BRIEFS.map((b) => {
     const admission = admitBrief(b.text);
+    if (!admission.admitted) return { id: b.id, admitted: false, outcome: admission.outcome };
     const runtimeId = admission.recommended.split("/")[0];
-    return { id: b.id, runtimeId, direction: directions[b.id], authored: authorConfig({ runtimeId, direction: directions[b.id] }) };
-  });
+    return { id: b.id, admitted: true, runtimeId, direction: directions[b.id], authored: authorConfig({ runtimeId, direction: directions[b.id] }) };
+  }).filter((c) => c.admitted);
 }
 
 const CASES = authoredCases();
+
+test("an unadmitted brief reaches no author", () => {
+  const refused = BRIEFS.map((b) => ({ id: b.id, a: admitBrief(b.text) })).filter((x) => !x.a.admitted);
+  assert.ok(refused.length >= 1, "no frozen brief is refused at admission, which would make the gate unexercised by this fixture");
+  for (const r of refused) {
+    assert.equal(r.a.recommended, undefined, `${r.id}: a refused brief must recommend nothing`);
+    assert.ok((r.a.blockers ?? []).length > 0, `${r.id}: a refusal must name what was asked for that nothing here can draw`);
+  }
+  assert.ok(CASES.every((c) => c.admitted), "authoredCases must not author a refused brief");
+});
 const unitsOf = (config) => config.rules ?? config.fields;
 
 test("no register is ever painted in the ground colour", { skip: CASES ? false : "no directions on disk" }, () => {
@@ -75,10 +90,17 @@ test("the market binding on unit 0 is the mechanism's, not a default", { skip: C
   }
 });
 
-test("both DRAWDOWN and RECOVERY appear among the bindings, which is the atlas's stated minimum for three states", { skip: CASES ? false : "no directions on disk" }, () => {
+test("a second sensor answers the pairing the primary leaves ambiguous, and it is the declared counter-register", { skip: CASES ? false : "no directions on disk" }, () => {
+  // THE ATLAS'S RULE OF THUMB WAS "ONE ON DRAWDOWN AND ONE ON RECOVERY" AND IT IS NOT THE RULE
+  // ANY MORE. Six of twelve development critics found that arrangement growing exactly where the
+  // mechanism's story says the work should thin. The requirement it was a proxy for survives —
+  // three states must separate — and it is met by a counter-register on a sensor that reads the
+  // same at neutral and stress and rises in recovery.
   for (const c of CASES) {
-    const sensors = new Set(unitsOf(c.authored.config).map((u) => u.sensor));
-    assert.ok(sensors.has("DRAWDOWN") && sensors.has("RECOVERY"), `${c.id}: bindings use only ${[...sensors].join(", ")}; the neutral-to-recovery pairing is what fails without both`);
+    const sensors = unitsOf(c.authored.config).map((u) => u.sensor);
+    assert.ok(new Set(sensors).size >= 2, `${c.id}: every binding is on ${sensors[0]}, so one market pairing has nothing answering it`);
+    assert.equal(sensors[sensors.length - 1], COUNTER_REGISTER.sensor, `${c.id}: the last register is on ${sensors[sensors.length - 1]}, not the declared counter-register`);
+    assert.equal(sensors[0], c.authored.mechanism.sensor, `${c.id}: the primary register is not on the mechanism's sensor`);
   }
 });
 

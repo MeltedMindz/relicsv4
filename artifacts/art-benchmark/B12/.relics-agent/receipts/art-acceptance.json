@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-03T19:54:21.703Z",
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "chainId": 8453,
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+  "acceptedConfigHash": "7548d1cee04a2f9672339bc20297edff4b52b3e1936feddc43239189d41df1de",
+  "acceptedConfigBytes": 71,
+  "briefSha256": "3a3eb44732a3d5accda9ebb0cbe0c6218712f9812abb04a03f695012e7fc5271",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "RADIAL_SYSTEM"
+      ],
+      "MOTIF": [
+        "MONUMENT"
+      ],
+      "AESTHETIC": [
+        "SPARSE",
+        "DENSE",
+        "QUIET"
+      ],
+      "MARKET_TRANSFORMATION": [],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "bf8f4365b3ba9db3a867b99bfacfebcbf9e5986307a9f0fc781767ef06e2be26"
+  },
+  "direction": {
+    "hash": "27fd3882333b0f147f754176e8239218b54c96e08c674b62cb831da121adf418",
+    "createdAt": "2026-09-03T19:11:19.702Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "rules[n].shapeSet",
+      "rules[n].ruleSet",
+      "ruleCount",
+      "rules[n].contraction",
+      "rules[n].branch and rules[n].prune",
+      "rules[n].symSet",
+      "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+      "rules[n].depthMin / depthMax",
+      "rules[n].stroke and the OUTLINE flag",
+      "rules[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "ruleCount",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "rules[n].drive x sensor x curve",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": [
+      "rules[n].drive x sensor x curve"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": "critic-B12",
+      "configHash": "fc8355ff46fe9ea829a36370cd046c27287230054d3f4dc84259584a3e26f7a1",
+      "critiqueHash": "ef6784b5205fb64dc747172df2006ac65b072165b73400ae3110f64e31911a03",
+      "findings": [
+        "fill-erases-the-dark-between-boundaries",
+        "figure-crowds-the-frame",
+        "centre-drifts-and-figure-crops",
+        "satellite-fragments-break-the-one-figure",
+        "focal-hierarchy-is-inverted",
+        "rotation-jitter-breaks-the-concentric-rhythm",
+        "market-rewrites-the-figure"
+      ],
+      "dispositions": [
+        {
+          "findingId": "fill-erases-the-dark-between-boundaries",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "figure-crowds-the-frame",
+          "disposition": "ACCEPT"
+        },
+        {
+          "findingId": "centre-drifts-and-figure-crops",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "satellite-fragments-break-the-one-figure",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "focal-hierarchy-is-inverted",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "rotation-jitter-breaks-the-concentric-rhythm",
+          "disposition": "PARTIALLY_ACCEPT"
+        },
+        {
+          "findingId": "market-rewrites-the-figure",
+          "disposition": "PARTIALLY_ACCEPT"
+        }
+      ],
+      "responseHash": "e5ef7d997d88d96af77bdf92d30b18e3decf6cbf08a113758909a38680e1cfd6",
+      "boundedChange": null
+    },
+    {
+      "round": 2,
+      "criticId": null,
+      "configHash": "7548d1cee04a2f9672339bc20297edff4b52b3e1936feddc43239189d41df1de",
+      "critiqueHash": null,
+      "findings": [],
+      "dispositions": [],
+      "responseHash": null,
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B12",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "7548d1cee04a2f9672339bc20297edff4b52b3e1936feddc43239189d41df1de",
+    "inputHashes": [
+      "c1a4d65693fb419e9f279a9a4cba66ca6464e4ec686e9c8b59d834613b2fe2d3",
+      "5837ee8fdb0cbf14463dd1feb0d118e727fe1e591f98240eba2a5af0a5a76857",
+      "92a8aef226c0405d0c6260022eccd81278d5b117b434ebbf24edd3450ad2bff4",
+      "82cb46bdc59f629623428b833144e3c3f1cfbafed0d11311b15dceaab648e65d",
+      "550c8cffd8635401cf16e11dbd1b33b60529b8896ab3efc85eca25778561e1ae"
+    ],
+    "visualDescriptionHash": "bac467ac4bf694c46a8819993adf1677cd1b49f625c20f2d2594a0833a3585d7",
+    "hash": "3d732a21c776f7695f3c1a5328c53f6821a45aaf5578d1217faf01d2ebc88b62"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS"
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}
