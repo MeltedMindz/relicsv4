@@ -261,27 +261,33 @@ npm install
 # 1. see what you can start from
 npm run kit -- templates
 
-# 2. scaffold a project
-npm run kit -- init my-project --template minimal
+# 2. scaffold a project — OUTSIDE this checkout. `../` is doing real work here.
+npm run kit -- init ../my-project --template minimal
 
 # 3. open the local studio on 127.0.0.1 — render any seed, drag the market sliders
-npm run kit -- dev my-project
+npm run kit -- dev ../my-project
 
 # 4. write deterministic SVGs and a contact sheet
-npm run kit -- preview my-project --count 8
+npm run kit -- preview ../my-project --count 8
 
 # 5. sweep a wide seed range for failures, blanks and duplicate traits
-npm run kit -- test-seeds my-project --count 100
+npm run kit -- test-seeds ../my-project --count 100
 
 # 6. run every check the importer will run. Writes nothing.
-npm run kit -- validate my-project
+npm run kit -- validate ../my-project
 
 # 7. validate, then write the bundle
-npm run kit -- export my-project --output my-project.relics
+npm run kit -- export ../my-project --output ../my-project.relics
 
 # read a bundle someone sent you — without executing its generator
-npm run kit -- inspect my-project.relics
+npm run kit -- inspect ../my-project.relics
 ```
+
+**Your project is yours, and it does not belong in this repository.** `relics init` writes
+wherever you point it, so point it outside: a project scaffolded at the repo root shows up as
+untracked files in `git status`, is not covered by `.gitignore`, and gets swept into a commit by
+the next `git add -A` anybody runs here. The CLI warns you when a target lands inside the checkout;
+`../my-project` is the form that does not.
 
 Four more exist and none of them is part of the loop: `doctor` checks that this machine can run
 the kit and contacts nothing; `status` prints the deployment record and which chains take a

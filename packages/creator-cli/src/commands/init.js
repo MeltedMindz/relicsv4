@@ -6,7 +6,7 @@
 // complete project that `validate`, `preview` and `export` already understand.
 
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { bold, cyan, dim, green, red, yellow, heading } from "../report.js";
 import { ART_RUNTIME_IDS, LAUNCHABLE_ART_RUNTIMES, reviewedProtocolTemplateIds } from "../schema.js";
@@ -29,6 +29,53 @@ const TEMPLATES_DIR = fileURLToPath(new URL("../../templates/", import.meta.url)
  * is why the art catalog is a separate list that `init` refuses outright (see `catalogRefusal`).
  */
 export const DEFAULT_TEMPLATE_ID = "minimal";
+
+/**
+ * The kit checkout this CLI is running from, or `null` when it cannot be established.
+ *
+ * DERIVED FROM THIS MODULE'S OWN LOCATION, never from `process.cwd()`. A creator runs `relics init`
+ * from wherever they happen to be standing, and the question being asked is not "where am I" but
+ * "does this project land inside the repository that ships this CLI". The two `existsSync` checks
+ * are what stop a vendored or relocated copy from naming an unrelated directory as the checkout and
+ * warning about a hazard that is not there — a false alarm here teaches people to ignore the real
+ * one.
+ *
+ * @returns {string | null}
+ */
+export function kitCheckoutRoot() {
+  const candidate = resolve(fileURLToPath(new URL("../../../../", import.meta.url)));
+  if (!existsSync(join(candidate, "package.json"))) return null;
+  if (!existsSync(join(candidate, "packages", "creator-cli"))) return null;
+  return candidate;
+}
+
+/**
+ * Does `root` land inside the kit checkout?
+ *
+ * WHY THIS IS WORTH A WARNING. `relics init` writes wherever it is pointed, and pointing it at a
+ * bare name writes into the repository: the project shows up as untracked files in `git status`, is
+ * not covered by `.gitignore`, and is swept into a commit by the next `git add -A` anyone runs.
+ * The creator's work product is not a change to this repository, and the failure is silent — the
+ * scaffold succeeds, exit 0, and nobody finds out until the diff.
+ *
+ * A WARNING RATHER THAN A REFUSAL, deliberately. Someone may have a reason to scaffold here — a
+ * fixture, a throwaway, a checkout that is not a git repository at all — and a hard stop on a
+ * directory choice would be the CLI overruling a creator about their own filesystem. What it must
+ * not do is stay quiet.
+ *
+ * Path containment is answered with `relative`, not `startsWith`: `/tmp/kit-notes` is not inside
+ * `/tmp/kit`, and a string prefix says it is. An empty relative path means the target IS the
+ * checkout root, which is inside it for this purpose.
+ *
+ * @param {string} root absolute, already resolved
+ * @param {string | null} [kitRoot]
+ * @returns {boolean}
+ */
+export function landsInsideKitCheckout(root, kitRoot = kitCheckoutRoot()) {
+  if (!kitRoot) return false;
+  const rel = relative(kitRoot, root);
+  return !rel.startsWith("..") && !isAbsolute(rel);
+}
 
 /**
  * Every shipped template, with the runtime it targets and whether that runtime can currently be
@@ -232,6 +279,19 @@ export function initProject(target, options = {}) {
   console.log(`    ${dim("$")} relics export ${target} --output ${symbol.toLowerCase()}.relics`);
   console.log("");
   console.log(yellow("  set earnings.creatorRecipient in relics.config.json before exporting — the placeholder address is not yours."));
+
+  // SAID AT THE MOMENT IT HAPPENS, not only in a document the reader may not have opened. This is
+  // the one thing about `init` that is wrong and looks right: the command succeeds, prints a path,
+  // exits 0, and has just put the creator's project inside somebody else's git repository.
+  const kitRoot = kitCheckoutRoot();
+  if (landsInsideKitCheckout(root, kitRoot)) {
+    const here = relative(kitRoot ?? "", root) || ".";
+    console.log("");
+    console.log(yellow(`  this project is INSIDE the kit checkout, at ${here}`));
+    console.log(dim("  It is untracked, not covered by .gitignore, and the next `git add -A` in this repository"));
+    console.log(dim("  commits it. Your project is your work product, not a change to this repo — scaffold outside:"));
+    console.log(`    ${dim("$")} relics init ../${here.split(/[/\\]/).pop()} --template ${templateId}`);
+  }
   if (!template.launchable) {
     console.log("");
     console.log(yellow(`  ${template.runtime} is an approved runtime that no launch binds and renders.`));

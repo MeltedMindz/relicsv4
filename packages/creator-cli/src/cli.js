@@ -127,7 +127,7 @@ async function dispatch(command, positional, flags, root) {
   switch (command) {
     case "init":
       if (!positional[0]) {
-        console.error(red("relics: init needs a directory, e.g. `relics init my-project`"));
+        console.error(red("relics: init needs a directory, e.g. `relics init ../my-project`"));
         return 1;
       }
       return initProject(positional[0], { template: flags.template, name: flags.name, symbol: flags.symbol, force: flags.force });

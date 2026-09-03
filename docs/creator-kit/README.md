@@ -7,12 +7,16 @@ an exported bundle, in about twenty minutes. **Want an agent to do the writing? 
 [Create with an agent](./create-with-an-agent.md).**
 
 ```bash
-npm run kit -- init my-project --template market-responsive
-npm run kit -- dev my-project              # local studio on 127.0.0.1
-npm run kit -- validate my-project         # every check; writes nothing
-npm run kit -- export my-project --output my-project.relics
+npm run kit -- init ../my-project --template market-responsive   # OUTSIDE this checkout
+npm run kit -- dev ../my-project           # local studio on 127.0.0.1
+npm run kit -- validate ../my-project      # every check; writes nothing
+npm run kit -- export ../my-project --output ../my-project.relics
 npm run kit:status                         # bundled deployment record + launch state
 ```
+
+The `../` is deliberate: a project scaffolded inside this repository is untracked, ungitignored,
+and one `git add -A` away from being committed here. The CLI warns when a target lands inside the
+checkout.
 
 Import `my-project.relics` in the RELICS Launchpad creator app. It derives the same bundle hash,
 config hash and component hashes the CLI printed, and the draft arrives filled in — art, traits,

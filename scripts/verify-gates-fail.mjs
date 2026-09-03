@@ -125,8 +125,19 @@ const GATES = [
   {
     gate: "kit:readme",
     sees: "the commands written in README.md, executed",
-    mutate: (root) => edit(join(root, "README.md"), "npm run kit -- init my-project --template minimal", "npm run kit -- init my-project --template no-such-template"),
+    mutate: (root) => edit(join(root, "README.md"), "npm run kit -- init ../my-project --template minimal", "npm run kit -- init ../my-project --template no-such-template"),
     why: "the quickstart names a template the kit does not ship",
+  },
+  {
+    gate: "kit:readme",
+    sees: "WHERE the quickstart's scaffold lands, not only whether it runs",
+    // The harness maps the README's project token into a temp directory, which is right — a
+    // documentation test must not write into the repository. It also means the gate cannot see
+    // where the DOCUMENTED path would have landed, and that blind spot shipped: the README taught
+    // `init my-project` while AGENTS.md §2 marked that exact form bad, and this gate was green
+    // throughout. Restoring the old line has to turn it red.
+    mutate: (root) => edit(join(root, "README.md"), "npm run kit -- init ../my-project --template minimal", "npm run kit -- init my-project --template minimal"),
+    why: "the quickstart scaffolds a creator's project INSIDE this checkout",
   },
   {
     gate: "docs:links",
