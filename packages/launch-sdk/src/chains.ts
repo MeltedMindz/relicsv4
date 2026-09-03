@@ -40,10 +40,42 @@ export interface ChainProfile {
  */
 const NATIVE_SYMBOL: Record<number, string> = { 1: "ETH", 8453: "ETH", 4663: "ETH", 56: "BNB" };
 const RPC_ENV_KEY: Record<number, string> = { 1: "ETHEREUM_RPC_URL", 8453: "BASE_RPC_URL", 4663: "ROBINHOOD_RPC_URL", 56: "BNB_RPC_URL" };
+/**
+ * PUBLIC READ FALLBACKS — CHOSEN BY `eth_call`, NEVER BY `eth_chainId`.
+ *
+ * A liveness ping is not a measurement of usability, and on two of these chains that gap was the
+ * whole defect. Measured 2026-09-03 against the RC6 factory `0x25003C3E…`, one `launchAccess()`
+ * `eth_call` per endpoint:
+ *
+ *   * `https://eth.drpc.org` (chain 1, retired here) and `https://base.drpc.org` both answer
+ *     `eth_chainId` in milliseconds and then answer a real `eth_call` with
+ *     `{"error":{"code":30,"message":"Request timeout on the free plan, please upgrade to paid
+ *     plan"}}`. A creator with no credential could ping them forever and never read state.
+ *   * `https://cloudflare-eth.com` returns that shape at **HTTP 200** — a JSON-RPC error body under
+ *     a success status. A client that reads only the transport status scores it as a successful
+ *     read and then has to invent a meaning for a missing result. This is the JSON-RPC form of the
+ *     Cloudflare-interstitial lesson: absence of an HTTP error is not the presence of an answer.
+ *     viem refuses it correctly — `clients/transports/http.js` throws `RpcRequestError` whenever
+ *     the decoded body carries `error`, before any status is consulted — which is why every reader
+ *     in this package reports UNKNOWN rather than a fabricated value. See `readLaunchAccess`.
+ *   * `https://rpc.robinhoodchain.com` (chain 4663, retired here) does not resolve at all: its TLS
+ *     handshake fails `tlsv1 unrecognized name`, so the host serves no such name. Chain 4663 was
+ *     therefore unreadable from the public kit entirely.
+ *   * `https://mainnet.base.org` (chain 8453, retired here) SERVES ONE `eth_call` AND THEN STOPS.
+ *     It answered `launchAccess()` on a cold probe and then refused the next twenty with
+ *     `{"code":-32016,"message":"over rate limit"}` at HTTP 429, so `getChainCapability` came back
+ *     with `launchAccess` UNKNOWN and the runtime registry read as 1 of 3 entries. A fallback that
+ *     survives a single call and not a discovery pass is not a fallback; the endpoint has to be
+ *     chosen against the whole read, not against one of them.
+ *
+ * The three below each returned a real `launchAccess()` word on that measurement. They are still
+ * rate-limited by nature and are never what a production run should rely on; `resolveRpc` reports
+ * `PUBLIC_FALLBACK` as the source so a preflight can say so.
+ */
 const PUBLIC_FALLBACK: Record<number, string | null> = {
-  1: "https://eth.drpc.org",
-  8453: "https://mainnet.base.org",
-  4663: "https://rpc.robinhoodchain.com",
+  1: "https://ethereum-rpc.publicnode.com",
+  8453: "https://base-rpc.publicnode.com",
+  4663: "https://rpc.mainnet.chain.robinhood.com",
   56: null,
 };
 
