@@ -1,0 +1,60 @@
+{
+  "criticId": "critic-B11",
+  "whatWorks": [
+    "The density axis is correct and it is unmistakable at 120px. In the state sheet the stress row is plainly open and broken and the recovery row closes into a continuous mass, and the dark genuinely enters between the members as the work comes apart rather than sitting as a fixed margin around a figure. This is the hardest thing the brief asks for and it is already delivered; nothing in the fixes below may be paid for by narrowing it.",
+    "The single common dark ground is held across all twelve seeds and all three states, and the members are translucent so that overlap accumulates value where they stack. That accumulation is what makes the recovery frames read as one merged mass rather than as a heap of separate tiles, and it is the mechanism the settled condition depends on.",
+    "The runtime can already put the warm register in the dominant position: 6444 gives ochre a large member at the bottom of the frame and 5658 seats a broad ochre square behind the pale circle. That matters because it proves the temperature problem below is a question of which state the warm extent is bound to, not a capability the medium lacks."
+  ],
+  "findings": [
+    {
+      "id": "temperature-inverted",
+      "whatFails": "The temperature axis runs backwards. In the 120px state sheet the stress row is the warm row -- 5134 stress carries two large saturated ochre squares and 5396 stress a big copper block -- while the recovery row is monochrome slate, with 5003 recovery showing no warm mark at all.",
+      "why": "The brief asks for cold under drawdown and warm in recovery, slate and iron at one end and ochre and copper at the other. Delivering the opposite means the instant reading at browse size tells a viewer the market is recovering at exactly the moment it is breaking, which is worse than no temperature signal.",
+      "specificChange": "Invert which register carries the frame: bind ochre and copper extent to recovery so recovery holds the largest warm coverage of the three states, and reduce warm extent to its smallest non-zero value under stress so slate and iron carry the broken frame.",
+      "keep": "Keep both registers present in every state and keep the one common dark ground. Keep the hue and saturation of the ochre exactly as authored, since at 120px it already reads strongly enough to carry a frame -- only the state it dominates should move."
+    },
+    {
+      "id": "neutral-reads-as-recovery",
+      "whatFails": "Neutral and recovery are the same picture at browse size. In the 120px state sheet 5003 neutral and 5003 recovery are both dense grey square clumps at near-identical coverage, and 5396's two frames part only by a small ochre fleck, so the three rows read as two conditions rather than three.",
+      "why": "The brief requires neutral to sit visibly between the two ends. Parked on top of recovery it makes the middle of the range unreadable and spends a third of the transformation on nothing; the run's own weakest pairing is neutral-to-recovery at 5.327 dE against 9.58 for both others.",
+      "specificChange": "Set neutral to the midpoint of both moving axes -- put its member separation and its warm extent halfway between the stress and recovery values instead of at recovery's -- so that coverage and temperature each step in three visibly even increments across the row.",
+      "keep": "Keep the stress and recovery endpoints exactly where they are. The spread between those two is already unmistakable at 120px and must not be narrowed to make room for the middle state."
+    },
+    {
+      "id": "members-swapped-under-stress",
+      "whatFails": "Under stress the members are replaced rather than separated. 5134 neutral holds one pale circle among squares; 5134 stress holds three large dark circles that appear in no other state while most squares are gone. 5265's two horizontal bands in neutral become an unrelated mid-frame scatter under stress.",
+      "why": "The direction permits only the distance between members and the balance of the two registers to move, and the brief states outright that a work which becomes a different object under drawdown has been replaced rather than transformed. Substituting circles for squares and changing the member count breaks the identity anchor.",
+      "specificChange": "Hold the member set constant across all three states -- keep every member's shape, index, size and angle fixed -- and drive stress only by increasing the distance between those same members, rather than by swapping squares for circles or dropping members out of the frame.",
+      "keep": "Keep the magnitude of the coverage change. The members must still travel far enough apart that the dark visibly enters between them, so this fix belongs to the member set and not to the size of the movement."
+    },
+    {
+      "id": "no-dominant-member",
+      "whatFails": "Several seeds have no member that dominates anything. The 512px single is roughly twenty-five translucent tiles at one scale and one value laid into three bands, and 5265 and 6313 read the same way at 120px -- there is no member a viewer could name the token by.",
+      "why": "The direction asks for one large member dominating in every state, secondary members carrying the transformation, and the finest marks as texture that drops out first. A uniform field of same-size tiles delivers no hierarchy at all, and it is also not the few large members the medium was committed to.",
+      "specificChange": "Grow one member per seed to roughly twice the width of the next largest and raise its value clearly above the field, and reduce the count of full-scale tiles so a seed carries a few large members plus small texture marks instead of twenty-five members at one size.",
+      "keep": "Keep the translucent overlap and the value that accumulates where members stack, since that is what makes recovery read as one continuous mass. Keep the small marks present as texture rather than deleting them to make room for the dominant member."
+    },
+    {
+      "id": "stress-retreats-from-edges",
+      "whatFails": "Stress abandons the border. 5396 stress and 5265 stress sit inside a wide empty margin with the top and bottom of the frame untouched, while the same seeds' neutral and recovery frames run to the edges, so the sparseness is being spent on reach instead of on separation.",
+      "why": "The direction requires the work to reach the edges of the frame in every state so that a change in how many pieces it stands in registers at the border as well as at the centre. A stress frame that shrinks inward reads as a smaller work rather than a broken one, which is the wrong sentence entirely.",
+      "specificChange": "Spread the outermost stress members outward until the drawn extent touches all four borders in every state, and take the reduction in coverage out of member scale and member count in the interior rather than out of the figure's reach.",
+      "keep": "Keep the interior emptiness of the stress frames. The dark between the members is the visible measure of the transformation, so extending the reach must not be paid for by refilling the middle of the frame."
+    },
+    {
+      "id": "metrical-placement",
+      "whatFails": "Placement falls into a beat in two distinct ways. Seed 5658 draws an evenly spaced ring of small squares right around the frame perimeter, and 5265 and the 512px single lay their members into three parallel horizontal bands separated by clear empty gutters.",
+      "why": "The direction is explicit that the rhythm is loose and unmetrical, a few large members at uneven intervals with no fixed beat, and never a ring or a rosette. A perimeter ring and a banded stack both hand the eye a pattern to read where it should be reading a market condition.",
+      "specificChange": "Remove the evenly spaced perimeter placement that produces 5658's ring, and break the horizontal banding by shifting each member's centre off its row by a seeded amount, so intervals between members are uneven along both axes and no two neighbours share a spacing.",
+      "keep": "Keep the full-frame spread the banded seeds already achieve -- 5265 does reach both the left and right borders -- so unmetrical placement must not be bought back by pulling every member into a central clump."
+    },
+    {
+      "id": "silhouette-family-undifferentiated",
+      "whatFails": "At 120px the twelve seeds are told apart mainly by where the small ochre fleck sits. 5003, 5789, 5920 and 6051 are each a grey square cluster around a pale blob with one orange mark, and the merged silhouettes they make in the settled state are the same rounded clump.",
+      "why": "The direction orders variation as silhouette first, member count second, and the cool-warm balance last. That order is inverted here: the warm accent is doing the identifying work while the silhouette, which is the thing required to persist through all three conditions, barely varies from seed to seed.",
+      "specificChange": "Widen the seeded range of the merged silhouette so the settled mass takes plainly different outlines across seeds -- tall, wide, L-shaped, split in two -- and increase the seeded spread of member count, so two tokens stay distinguishable with the warm accent removed entirely.",
+      "keep": "Keep the silhouette differences that already exist and already persist across states: 5265's banded spread and 6444's single large mass are genuinely different objects. Keep the warm accent as the last-order difference rather than deleting it once silhouette carries identity."
+    }
+  ],
+  "overall": "The density half of this brief is already delivered, and delivered well: at 120px the stress row is plainly open and broken, the recovery row closes into a single continuous mass, and the dark really does enter between the members as the work comes apart. Almost everything layered on top of that is either inverted or missing. The temperature axis runs backwards, with stress as the warm frame and recovery as the cold one, which is the first thing a viewer reads and currently the wrong thing to tell them; neutral has collapsed onto recovery so three conditions arrive as two; and stress does not separate the members so much as replace them, introducing large dark circles that exist in no other state and breaking the identity anchor the brief calls non-negotiable. Beneath those sits a hierarchy problem that explains the rest: many seeds are a uniform field of twenty-five same-size translucent tiles with no member large enough to name the token by, which is also why the twelve are distinguished at browse size by the position of a small orange fleck rather than by silhouette. Rebind the registers and place neutral at the true midpoint first, hold the member set constant across states second, and give each seed one dominant member third -- the coverage transformation that already works will carry everything else."
+}

@@ -332,6 +332,83 @@ async function phaseRevise() {
 }
 
 // ---------------------------------------------------------------------------------------------
+// PHASE: reauthor — the author answers its critique by being changed, and re-authors
+//
+// WHY THIS IS NOT `revise`. `revise` applies a PATCH written into the author's response, which is a
+// per-project edit made by hand. That is a human art intervention, and this lane's whole claim is
+// that there are none: `HUMAN_ART_INTERVENTIONS=0`. Every finding a critique raises is either a
+// capability the AUTHOR lacks — in which case the author is changed and every future brief gets the
+// same fix — or a refusal of the medium, in which case the response says so and nothing moves.
+//
+// So this phase re-runs `authorConfig` against the SAME direction with the CHANGED author, appends
+// the result as the next round, and checks the diff against the parameters the response named. The
+// bounded-change check is the same one `revise` runs; what differs is who wrote the new bytes.
+// ---------------------------------------------------------------------------------------------
+async function phaseReauthor() {
+  const url = rpcUrl();
+  const directions = loadDirections();
+  const renderers = {};
+  for (const brief of loadBriefs()) {
+    const dir = caseDir(brief.id);
+    const runPath = join(dir, "run.json");
+    if (!existsSync(runPath)) continue;
+    const run = readJson(runPath);
+    if (run.phase === "ADMISSION") continue;
+    const roundNo = run.rounds.length;
+    const cPath = join(dir, `round-${roundNo}`, "critique.json");
+    const rPath = join(dir, `round-${roundNo}`, "response.json");
+    if (!existsSync(cPath) || !existsSync(rPath)) { console.log(`${brief.id} SKIP: no critique/response for round ${roundNo}`); continue; }
+
+    const critique = readJson(cPath);
+    const response = readJson(rPath);
+    const cv = validateCritique(critique);
+    if (!cv.ok) throw new Error(`${brief.id}: critique invalid — ${cv.problems.join("; ")}`);
+    const rv = validateResponse(critique, response);
+    if (!rv.ok) throw new Error(`${brief.id}: response invalid — ${rv.problems.join("; ")}`);
+
+    const before = run.rounds[roundNo - 1].config;
+    const authored = authorConfig({ runtimeId: run.runtimeId, direction: directions[brief.id] });
+    const after = authored.config;
+    const bounded = assertBoundedChange({ before, after, response });
+
+    const configBytes = encodeConfig(run.runtimeId, after);
+    renderers[run.runtimeId] ??= await rendererFor(run.runtimeId, url);
+    const { renderer } = renderers[run.runtimeId];
+    const v = await renderer.validateConfig(configBytes);
+    if (!v.legal) throw new Error(`${brief.id}: re-authored config rejected — ${JSON.stringify(describeValidatorCode(run.runtimeId, v.code))}`);
+
+    const next = roundNo + 1;
+    const { battery, blocked } = await gateOn({ renderer, runtimeId: run.runtimeId, config: after, configBytes, briefId: brief.id, phase: `reauthor round ${next}` });
+    writeJson(join(dir, `round-${next}`, "objective.json"), battery);
+    const dev = blocked.length === 0
+      ? await renderSheets({ renderer, configBytes, seeds: DEVELOPMENT_REVIEW_SEEDS, states: ["neutral", "stress", "recovery"], outDir: join(dir, `round-${next}`, "critic-sheets"), label: "dev" })
+      : { ok: true, artifacts: [], renders: 0, measurements: null };
+    if (!dev.ok) throw new Error(`${brief.id}: ${dev.detail}`);
+
+    run.rounds[roundNo - 1].critique = critique;
+    run.rounds[roundNo - 1].response = response;
+    run.rounds[roundNo - 1].boundedChange = bounded;
+    run.rounds.push({
+      round: next, configHash: sha256(configBytes), configBytes, config: after,
+      producedBy: "REAUTHORED_BY_THE_CHANGED_AUTHOR",
+      mechanism: authored.mechanism, intent: authored.intent, intentDerivation: authored.intentDerivation,
+      atlas: authored.atlas, bindings: authored.bindings, notes: authored.notes,
+      objective: { pass: battery.pass, blocked: blocked.map((b) => b.id), checks: battery.checks.map((c) => ({ id: c.id, ok: c.ok })) },
+      sheets: dev.artifacts.map((a) => ({ name: a.name, sha256: a.sha256, bytes: a.bytes })),
+      measurements: dev.measurements,
+    });
+    run.phase = blocked.length === 0 ? "REAUTHORED" : "BLOCKED_BY_OBJECTIVE_BATTERY";
+    run.objectiveBlockers = blocked;
+    writeJson(runPath, run);
+    console.log(
+      `${brief.id} round ${next}: ${blocked.length ? `BLOCKED ${blocked.map((b) => b.id).join(",")}` : `ink ${dev.measurements.inkMean} state ${dev.measurements.stateDeMean} seed ${dev.measurements.seedDeMean}`} ` +
+      `| ${bounded.counts.moved} params moved, ${bounded.counts.unnamed} unnamed`,
+    );
+    if (bounded.counts.unnamed > 0) console.log(`    unnamed: ${bounded.unnamed.map((u) => u.parameter).join(", ")}`);
+  }
+}
+
+// ---------------------------------------------------------------------------------------------
 // PHASE: holdout — the ONLY phase that renders FINAL_HOLDOUT_SEEDS
 // ---------------------------------------------------------------------------------------------
 async function phaseHoldout() {
@@ -517,6 +594,6 @@ async function phaseReceipt() {
   console.log(`\nreceipts built: ${built}`);
 }
 
-const phases = { author: phaseAuthor, revise: phaseRevise, holdout: phaseHoldout, receipt: phaseReceipt, report: async () => phaseReport() };
+const phases = { author: phaseAuthor, revise: phaseRevise, reauthor: phaseReauthor, holdout: phaseHoldout, receipt: phaseReceipt, report: async () => phaseReport() };
 if (!phases[phase]) { console.error(`unknown phase "${phase}"; one of ${Object.keys(phases).join(", ")}`); process.exit(2); }
 await phases[phase]();

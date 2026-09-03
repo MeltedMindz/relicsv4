@@ -42,7 +42,7 @@
 
 import { createAtlasSession, loudnessRanking, quickReference } from "./atlas.js";
 import { checkBindings } from "./binding.js";
-import { SENSOR_FOR_POLARITY, mechanismsRequestedBy, realisationFor } from "./mechanism.js";
+import { COUNTER_REGISTER, SENSOR_FOR_POLARITY, mechanismsRequestedBy, realisationFor } from "./mechanism.js";
 
 /**
  * The direction fields a market mechanism is read out of, and why only these two.
@@ -865,14 +865,14 @@ function authorRecursion({ set, session, intent, direction, mechanism, attempt, 
   set("MARKET_BEHAVIOUR", "rules[0].sensor", mechanism.sensor);
   set("MARKET_BEHAVIOUR", "rules[0].curve", mechanism.curve);
   if (ruleN === 2) {
-    // THE SECOND REGISTER TAKES THE OTHER SENSOR, ALWAYS. The atlas states it as the minimum for
-    // three distinguishable states and the probe measured what happens without it: every binding
-    // on DRAWDOWN leaves the neutral-to-recovery pairing at 326 against 552 per mille, and three
-    // candidate rows came back under the 3.8 floor on that pairing alone.
-    const other = mechanism.sensor === "RECOVERY" ? "DRAWDOWN" : "RECOVERY";
+    // THE INNER REGISTER TAKES THE COUNTER SENSOR, WHICH IS NOT THE OTHER OF THE PAIR.
+    // See `COUNTER_REGISTER`: bound to DRAWDOWN it grows precisely where the primary mechanism is
+    // meant to be shrinking, and six of twelve critics named that inversion. VOLUME_TIER reads the
+    // same at neutral and stress and rises in recovery, so it can only ever answer the pairing the
+    // primary leaves ambiguous.
     set("MARKET_BEHAVIOUR", "rules[1].drive", "CONTRACT");
-    set("MARKET_BEHAVIOUR", "rules[1].sensor", other);
-    set("MARKET_BEHAVIOUR", "rules[1].curve", "LOG2");
+    set("MARKET_BEHAVIOUR", "rules[1].sensor", COUNTER_REGISTER.sensor);
+    set("MARKET_BEHAVIOUR", "rules[1].curve", COUNTER_REGISTER.curve);
   }
   notes.push({
     stage: "MARKET_BEHAVIOUR",
@@ -954,7 +954,19 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   // seed draws beneath from a floor of 2, so the number here is the top of a distribution: at 22
   // half the tokens draw under 12, which at 120px is a three-pixel element. The rows that cleared
   // every floor sit at 26-28 on the primary.
-  const sizeByDensity = { SPARSE: 24, MODERATE: 28, DENSE: 34 }[intent.densityTarget];
+  // THE DENSITY TARGETS ARE CALIBRATED AGAINST MEASURED COVERAGE, AND THEY WERE TOO HIGH.
+  //
+  // The objective battery bounds coverage from BELOW and nothing bounds it from above, so a brief
+  // asking for restraint got the same frame as one asking for saturation and five of twelve
+  // development critics said so with a number: "mean ink 66.9% against a direction that asks for
+  // well under a third", "52.5% mean ink against a direction asking for well under half", "42%
+  // where the direction requires the dark to be the larger part", "35% and the emptiest sampled
+  // frame is still 12%, an order of magnitude above the brief's small fraction".
+  //
+  // Measured against the declared ground on this pipeline, the two shipped templates read 0.570
+  // (compass) and 0.430 (alluvium) — both of them emphatic works. A sparse brief has to land well
+  // under alluvium, not beside compass. The three targets are now roughly 0.20 / 0.35 / 0.55.
+  const sizeByDensity = { SPARSE: 16, MODERATE: 22, DENSE: 30 }[intent.densityTarget];
   // WHEN COUNT IS THE DRIVE, COUNT CARRIES THE DENSITY AND SIZE MUST LEAVE ROOM FOR IT.
   //
   // sizeMax and count MULTIPLY — the atlas's own (sizeMax, count) grid runs from 0.002 to 0.461, a
@@ -1002,7 +1014,7 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   // when anything else is the drive the count must be PINNED, or the work is subtracting at the
   // same time as it separates and no reviewer can tell which mechanism it is watching. Both are
   // requirements recorded in the mechanism table rather than preferences.
-  const base = req.fewLargeMembers ? 7 : { SPARSE: 18, MODERATE: 24, DENSE: 30 }[intent.densityTarget];
+  const base = req.fewLargeMembers ? 7 : { SPARSE: 12, MODERATE: 20, DENSE: 30 }[intent.densityTarget];
   const wide = mechanism.drive === "COUNT";
   // WHEN COUNT IS THE DRIVE, THE DENSITY TARGET IS THE FULL STATE AND NOT THE MIDDLE ONE.
   //
@@ -1130,31 +1142,48 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
       continue;
     }
     if (last && (req.secondSensorRegister || fields >= 2)) {
-      // THE REGISTER THAT ANSWERS THE OTHER SENSOR, AND IT NEEDS REAL HEADROOM OF ITS OWN.
+      // THE COUNTER-REGISTER, WHICH SEPARATES RECOVERY WITHOUT FIGHTING THE MECHANISM.
       //
-      // SIZE is legal here only on DRAWDOWN, whose curved reading never falls to zero; on RECOVERY
-      // the safe drive is COUNT, whose floor the author owns. Either way this register is not a
-      // decoration — it is the whole reason the third market pairing separates, and a first cut
-      // gave it a thirteen-wide count range and measured the neutral-to-recovery pairing at 1.833.
-      // Widened to 6..34 the same construction measured 14.540.
+      // It was bound to the OTHER of DRAWDOWN and RECOVERY, which is the atlas's rule of thumb for
+      // three distinguishable states and is also how a composition ends up growing exactly where
+      // its primary mechanism is meant to be thinning. Six of twelve development critics reported
+      // that inversion on work whose primary binding is arithmetically correct — "stress is the
+      // heaviest, largest state", "under stress the fine beds vanish and survivors get fatter",
+      // "stress is the sparsest state and recovery the busiest, exactly backwards".
       //
-      // ON A FRACTURE COMPOSITION IT IS ALSO A DIFFERENT KIND OF THING FROM THE MASS. The fracture
-      // fields are a few large members that pile into one silhouette; this register is a field
-      // behind them that fills in as the market heals, so it takes a cell layout and an ordinary
-      // element size rather than the mass's.
-      const d = other === "DRAWDOWN" ? "SIZE" : "COUNT";
-      set("MARKET_BEHAVIOUR", `fields[${i}].drive`, d);
-      set("MARKET_BEHAVIOUR", `fields[${i}].sensor`, other);
-      set("MARKET_BEHAVIOUR", `fields[${i}].curve`, "LOG2");
+      // `COUNTER_REGISTER` is VOLUME_TIER, which reads IDENTICALLY at neutral and stress on this
+      // fixture ring and rises in recovery. It cannot add to the state the mechanism is about. The
+      // drive is always COUNT, whose floor the author owns; SIZE is reserved for the mechanisms
+      // whose story growth actually is.
+      set("MARKET_BEHAVIOUR", `fields[${i}].drive`, "COUNT");
+      set("MARKET_BEHAVIOUR", `fields[${i}].sensor`, COUNTER_REGISTER.sensor);
+      set("MARKET_BEHAVIOUR", `fields[${i}].curve`, COUNTER_REGISTER.curve);
+      const d = "COUNT";
       if (req.fewLargeMembers) {
         set("SECONDARY_STRUCTURE", `fields[${i}].layout`, wantsRadial ? "ORBIT" : "GRID");
-        set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, 30);
-        set("SECONDARY_STRUCTURE", `fields[${i}].spreadMax`, Math.max(96, spreadMax - 12));
+        // Larger than an ordinary counter-register, because on a fracture composition this field
+        // is the ONLY thing separating recovery from neutral: the mass itself sits near the spread
+        // floor in both. At 26 the pairing measured 3.744 against a floor of 3.8.
+        set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, 32);
       }
+      // THE COUNTER-REGISTER IS HELD INSIDE THE PRIMARY'S REACH, and it is the ONLY field that is.
+      // Tapering every secondary inward cost the composition its extent — measured 0.878 against
+      // 0.962 — but a register whose whole job is a quiet recovery signal is exactly the one that
+      // reads as debris when it lands outside the work: five of twelve critics named loose marks
+      // in the margin, "orphan squares", "detached specks", "satellites", "reading as rendering
+      // errors at 120px". The two registers that carry the composition still reach the frame.
+      set("SECONDARY_STRUCTURE", `fields[${i}].spreadMax`, Math.max(40, Math.round(spreadMax * 0.7)));
       if (d === "COUNT") {
-        const floor = Math.max(5, Math.round(base * 0.4));
+        // ITS AMPLITUDE IS SCALED TO THE COMPOSITION, NOT FIXED. A flat 5..33 range put the
+        // counter-register's element count above the primary's on every sparse brief, so the
+        // quiet signal was the loudest field in the frame — which is half of why five critics
+        // measured coverage far above what their directions asked for.
+        const floor = Math.max(4, Math.round(base * 0.4));
         set("SECONDARY_STRUCTURE", `fields[${i}].countMin`, floor);
-        set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, Math.min(34, floor + 28));
+        // ON A FRACTURE COMPOSITION IT IS THE WHOLE RECOVERY SIGNAL and is scaled to the register
+        // rather than to the mass. Fracture's own fields carry five to seven pinned members, so
+        // scaling this one to that base leaves the neutral-to-recovery pairing at 3.3 dE.
+        set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, Math.min(34, floor + (req.fewLargeMembers ? 30 : Math.max(10, base))));
       }
       continue;
     }

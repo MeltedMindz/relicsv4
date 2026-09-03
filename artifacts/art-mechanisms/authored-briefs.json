@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T19:09:38.758Z",
+  "generatedAt": "2026-09-03T19:21:56.274Z",
   "seeds": [
     500003,
     508194,
@@ -24,29 +24,29 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 9.272,
-        "nr": 4.567,
-        "sr": 5.857
+        "ns": 8.139,
+        "nr": 5.53,
+        "sr": 6.473
       },
-      "weakest": 4.567,
+      "weakest": 5.53,
       "seedDe": {
-        "mean": 9.917,
-        "min": 4.515
+        "mean": 7.75,
+        "min": 3.384
       },
       "ink": {
-        "mean": 0.687,
-        "min": 0.429
+        "mean": 0.655,
+        "min": 0.412
       },
       "extent": {
-        "mean": 0.994,
-        "min": 0.958
+        "mean": 0.984,
+        "min": 0.917
       },
       "components": {
-        "neutral": 1.917,
+        "neutral": 2.667,
         "stress": 1.167
       },
       "largestShare": {
-        "neutral": 0.989,
+        "neutral": 0.983,
         "stress": 0.999
       },
       "blankFrames": 0,
@@ -66,30 +66,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 11.656,
-        "nr": 5.559,
-        "sr": 12.063
+        "ns": 12.14,
+        "nr": 5.956,
+        "sr": 13.647
       },
-      "weakest": 5.559,
+      "weakest": 5.956,
       "seedDe": {
-        "mean": 19.853,
-        "min": 5.113
+        "mean": 18.261,
+        "min": 3.709
       },
       "ink": {
-        "mean": 0.592,
-        "min": 0.203
+        "mean": 0.549,
+        "min": 0.17
       },
       "extent": {
-        "mean": 0.952,
-        "min": 0.758
+        "mean": 0.954,
+        "min": 0.792
       },
       "components": {
-        "neutral": 1.833,
-        "stress": 1.917
+        "neutral": 1.083,
+        "stress": 1.667
       },
       "largestShare": {
-        "neutral": 0.987,
-        "stress": 0.974
+        "neutral": 0.999,
+        "stress": 0.977
       },
       "blankFrames": 0,
       "floors": {
@@ -108,30 +108,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 8.09,
-        "nr": 5.006,
-        "sr": 6.414
+        "ns": 5.601,
+        "nr": 6.737,
+        "sr": 7.857
       },
-      "weakest": 5.006,
+      "weakest": 5.601,
       "seedDe": {
-        "mean": 17.481,
-        "min": 7.33
+        "mean": 15.865,
+        "min": 4.611
       },
       "ink": {
-        "mean": 0.497,
-        "min": 0.11
+        "mean": 0.422,
+        "min": 0.092
       },
       "extent": {
-        "mean": 0.915,
-        "min": 0.542
+        "mean": 0.872,
+        "min": 0.533
       },
       "components": {
-        "neutral": 2.083,
-        "stress": 1.75
+        "neutral": 3,
+        "stress": 2.333
       },
       "largestShare": {
-        "neutral": 0.99,
-        "stress": 0.992
+        "neutral": 0.97,
+        "stress": 0.979
       },
       "blankFrames": 0,
       "floors": {
@@ -150,30 +150,30 @@
       "sensor": "DRAWDOWN",
       "curve": "LOG2",
       "de": {
-        "ns": 10.379,
-        "nr": 6.699,
-        "sr": 10.145
+        "ns": 4.332,
+        "nr": 5.393,
+        "sr": 5.955
       },
-      "weakest": 6.699,
+      "weakest": 4.332,
       "seedDe": {
-        "mean": 21.481,
-        "min": 5.778
+        "mean": 20.628,
+        "min": 6.119
       },
       "ink": {
-        "mean": 0.615,
-        "min": 0.279
+        "mean": 0.578,
+        "min": 0.252
       },
       "extent": {
-        "mean": 0.957,
+        "mean": 0.946,
         "min": 0.717
       },
       "components": {
-        "neutral": 1.75,
-        "stress": 1.833
+        "neutral": 2.583,
+        "stress": 2.333
       },
       "largestShare": {
-        "neutral": 0.993,
-        "stress": 0.986
+        "neutral": 0.976,
+        "stress": 0.974
       },
       "blankFrames": 0,
       "floors": {
@@ -192,21 +192,21 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 6.58,
-        "nr": 7.746,
-        "sr": 13.628
+        "ns": 6.87,
+        "nr": 7.743,
+        "sr": 14.513
       },
-      "weakest": 6.58,
+      "weakest": 6.87,
       "seedDe": {
-        "mean": 7.994,
-        "min": 3.256
+        "mean": 8.13,
+        "min": 3.502
       },
       "ink": {
-        "mean": 0.317,
-        "min": 0.074
+        "mean": 0.31,
+        "min": 0.069
       },
       "extent": {
-        "mean": 0.663,
+        "mean": 0.661,
         "min": 0.583
       },
       "components": {
@@ -234,30 +234,30 @@
       "sensor": "DRAWDOWN",
       "curve": "LOG2",
       "de": {
-        "ns": 15.268,
-        "nr": 8.32,
-        "sr": 15.289
+        "ns": 10.925,
+        "nr": 8.472,
+        "sr": 12.119
       },
-      "weakest": 8.32,
+      "weakest": 8.472,
       "seedDe": {
-        "mean": 13.607,
-        "min": 6.87
+        "mean": 12.015,
+        "min": 6.586
       },
       "ink": {
-        "mean": 0.592,
-        "min": 0.341
+        "mean": 0.486,
+        "min": 0.274
       },
       "extent": {
-        "mean": 0.946,
-        "min": 0.833
+        "mean": 0.876,
+        "min": 0.75
       },
       "components": {
-        "neutral": 2.333,
-        "stress": 8.5
+        "neutral": 3.167,
+        "stress": 11.333
       },
       "largestShare": {
-        "neutral": 0.975,
-        "stress": 0.876
+        "neutral": 0.972,
+        "stress": 0.809
       },
       "blankFrames": 0,
       "floors": {
@@ -276,30 +276,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 7.605,
-        "nr": 4.707,
-        "sr": 6.827
+        "ns": 5.667,
+        "nr": 6.792,
+        "sr": 8.855
       },
-      "weakest": 4.707,
+      "weakest": 5.667,
       "seedDe": {
-        "mean": 21.451,
-        "min": 6.915
+        "mean": 19.776,
+        "min": 5.519
       },
       "ink": {
-        "mean": 0.585,
-        "min": 0.236
+        "mean": 0.552,
+        "min": 0.235
       },
       "extent": {
-        "mean": 0.954,
+        "mean": 0.946,
         "min": 0.717
       },
       "components": {
-        "neutral": 2.083,
-        "stress": 1.917
+        "neutral": 2.583,
+        "stress": 2.417
       },
       "largestShare": {
-        "neutral": 0.985,
-        "stress": 0.985
+        "neutral": 0.976,
+        "stress": 0.974
       },
       "blankFrames": 0,
       "floors": {
@@ -318,30 +318,30 @@
       "sensor": "DRAWDOWN",
       "curve": "LOG2",
       "de": {
-        "ns": 14.278,
-        "nr": 6.324,
-        "sr": 11.333
+        "ns": 12.01,
+        "nr": 5.78,
+        "sr": 9.618
       },
-      "weakest": 6.324,
+      "weakest": 5.78,
       "seedDe": {
-        "mean": 10.74,
-        "min": 5.714
+        "mean": 7.891,
+        "min": 3.801
       },
       "ink": {
-        "mean": 0.5,
-        "min": 0.278
+        "mean": 0.423,
+        "min": 0.207
       },
       "extent": {
-        "mean": 0.824,
+        "mean": 0.757,
         "min": 0.65
       },
       "components": {
         "neutral": 3.5,
-        "stress": 1.5
+        "stress": 3.333
       },
       "largestShare": {
-        "neutral": 0.986,
-        "stress": 0.999
+        "neutral": 0.981,
+        "stress": 0.992
       },
       "blankFrames": 0,
       "floors": {
@@ -360,30 +360,30 @@
       "sensor": "DRAWDOWN",
       "curve": "LINEAR",
       "de": {
-        "ns": 8.875,
-        "nr": 5.798,
-        "sr": 9.669
+        "ns": 5.354,
+        "nr": 4.23,
+        "sr": 6.955
       },
-      "weakest": 5.798,
+      "weakest": 4.23,
       "seedDe": {
-        "mean": 9.691,
-        "min": 4.338
+        "mean": 7.9,
+        "min": 2.592
       },
       "ink": {
-        "mean": 0.309,
-        "min": 0.114
+        "mean": 0.246,
+        "min": 0.127
       },
       "extent": {
-        "mean": 0.778,
+        "mean": 0.664,
         "min": 0.492
       },
       "components": {
-        "neutral": 4.25,
-        "stress": 3.583
+        "neutral": 2.917,
+        "stress": 3.167
       },
       "largestShare": {
-        "neutral": 0.836,
-        "stress": 0.802
+        "neutral": 0.83,
+        "stress": 0.812
       },
       "blankFrames": 0,
       "floors": {
@@ -402,30 +402,30 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 8.427,
-        "nr": 10.321,
-        "sr": 11.5
+        "ns": 8.403,
+        "nr": 10.425,
+        "sr": 11.654
       },
-      "weakest": 8.427,
+      "weakest": 8.403,
       "seedDe": {
-        "mean": 10.334,
-        "min": 5.057
+        "mean": 10.509,
+        "min": 5.103
       },
       "ink": {
-        "mean": 0.293,
-        "min": 0.087
+        "mean": 0.274,
+        "min": 0.08
       },
       "extent": {
         "mean": 0.744,
         "min": 0.617
       },
       "components": {
-        "neutral": 1,
+        "neutral": 1.083,
         "stress": 1.583
       },
       "largestShare": {
-        "neutral": 1,
-        "stress": 0.931
+        "neutral": 0.999,
+        "stress": 0.839
       },
       "blankFrames": 0,
       "floors": {
@@ -444,30 +444,30 @@
       "sensor": "DRAWDOWN",
       "curve": "LINEAR",
       "de": {
-        "ns": 9.322,
-        "nr": 5.684,
-        "sr": 9.91
+        "ns": 6.276,
+        "nr": 4.254,
+        "sr": 7.656
       },
-      "weakest": 5.684,
+      "weakest": 4.254,
       "seedDe": {
-        "mean": 9.698,
-        "min": 4.411
+        "mean": 8.009,
+        "min": 2.849
       },
       "ink": {
-        "mean": 0.32,
-        "min": 0.137
+        "mean": 0.257,
+        "min": 0.127
       },
       "extent": {
-        "mean": 0.778,
+        "mean": 0.664,
         "min": 0.492
       },
       "components": {
-        "neutral": 4.083,
-        "stress": 3.583
+        "neutral": 2.75,
+        "stress": 3.5
       },
       "largestShare": {
-        "neutral": 0.842,
-        "stress": 0.838
+        "neutral": 0.868,
+        "stress": 0.86
       },
       "blankFrames": 0,
       "floors": {
@@ -486,18 +486,18 @@
       "sensor": "RECOVERY",
       "curve": "LOG2",
       "de": {
-        "ns": 8.465,
-        "nr": 8.556,
-        "sr": 15.953
+        "ns": 8.722,
+        "nr": 8.574,
+        "sr": 17.058
       },
-      "weakest": 8.465,
+      "weakest": 8.574,
       "seedDe": {
-        "mean": 11.411,
-        "min": 1.919
+        "mean": 11.625,
+        "min": 2.17
       },
       "ink": {
-        "mean": 0.383,
-        "min": 0.104
+        "mean": 0.372,
+        "min": 0.079
       },
       "extent": {
         "mean": 0.734,

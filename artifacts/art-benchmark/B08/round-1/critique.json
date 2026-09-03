@@ -1,0 +1,69 @@
+{
+  "criticId": "critic-B08",
+  "whatWorks": [
+    "The two-colour relationship is right: warm brass against cool slate over a flat near-black ground, and the two hues stay separable on every one of the twelve seeds at 120px. Keep exactly these two working colours and this ground value.",
+    "No literal instrument part appears anywhere in the sheet — no gear tooth, no hand, no numeral, no dial marking, on any seed or in any market state. That constraint is fully honoured and must survive every change listed below.",
+    "The rotational idiom is unmistakable and it is the correct reading for this brief: every seed is one figure turned about a single hub with strictly even angular repetition, centred and squarely framed rather than sitting adrift as a small instrument in a large empty field.",
+    "Seed 5265, and the 512px render of it, already carries two legible concentric registers at different radii — an inner brass one and an outer slate one. That two-register construction is the thing to generalise across the collection, not to discard.",
+    "The silhouette survives the downscale from 256px to 120px without turning to mush: the outer contour holds and the brass-slate split still reads at browse size, which is the size that settles these decisions."
+  ],
+  "findings": [
+    {
+      "id": "solid-hub-mass",
+      "whatFails": "On ten of the twelve seeds the centre is a single opaque brass disc covering roughly the inner half of the frame — 5003, 5134, 5527, 5658, 6051 and 6313 are a solid coin with a fringe attached to it, and no ground shows anywhere inside that coin. Every member is a filled shape rather than a stroked one, so there is no line weight in the picture at all.",
+      "why": "The direction asks for light-to-moderate density, well under half the frame carrying ink, with the whole drawing carried in fine line so it reads as engineering rather than as mass. A filled centre is the exact opposite of that reading, and this run's own sweep puts mean inked area at 52.5 percent of frame with the emptiest of 52 sampled frames still at 33.1 percent — over half the collection is mass, not line.",
+      "specificChange": "Remove the filled hub entirely and replace every filled member with an unfilled stroked outline at a constant hairline width — about 1px at the 256px render and never above 1.5px — so the dark ground reads through the middle of the figure; target mean inked area below 0.35 of frame with no single frame above 0.45.",
+      "keep": "Keep the figure sized to fill the frame and keep the bright brass reading at the centre: the hub must still be the brightest thing in the picture, made now of stroked members converging on it rather than of a filled disc."
+    },
+    {
+      "id": "no-annular-clearance",
+      "whatFails": "There are no readable annular bands anywhere. Within a ring the members overlap each other by most of their width into a continuous imbricated shingle, and where a second ring does exist it butts straight up against the first, so at 120px every seed reads as one mass with a ragged fringe instead of as nested rings separated by dark.",
+      "why": "negativeSpace names the dark ground in the annular bands and in the wedges between radial members as the thing doing the work of making the mechanism look machined, and thumbnailIntent says the change a viewer judges at 120px is how much dark shows in those bands. With the bands closed there is literally nothing at browse size for the market state to move.",
+      "specificChange": "Widen the radial gap between consecutive rings until the dark band between them is at least as wide as a member is long, and reduce the member count per ring until neighbouring members within a ring stop touching — leave a dark wedge of at least a third of the angular pitch between one member and the next.",
+      "keep": "Keep the concentric construction about one hub and the strictly even angular interval within each ring. This is about opening gaps, not about disturbing the regular spacing, which already reads correctly."
+    },
+    {
+      "id": "organic-member-form",
+      "whatFails": "The member is a tapered, hooked crescent that thins to a point, and every one of them curls the same way about the hub, so each seed carries a visible pinwheel chirality. At 512px on 5265 the members read as feathers, petals or claws; at 120px the twelve read as sunflowers and sea anemones.",
+      "why": "The brief asks for the regularity of something machined rather than grown, and for an escapement abstracted down to its rotational logic. A tapered hook with a handed curl is a growth form, and it is the single strongest thing currently pulling this work away from instrument and toward organism.",
+      "specificChange": "Replace the tapered hooked crescent with a constant-width member — either a straight radial bar or a plain concentric arc segment — with square flat-cut ends and no thinning along its length, and remove the handed curl so members sit on true radii or true concentric arcs instead of spiralling.",
+      "keep": "Keep the members repeating at an even angular interval around each ring and keep them as fine independent primitives. The fix is to the member silhouette, not to the repetition, which is already right."
+    },
+    {
+      "id": "brass-as-field-not-beat",
+      "whatFails": "Brass is doing the work of a large filled field rather than of a line — it is the single biggest area in almost every frame. Where translucent brass overlaps slate, or overlaps itself, the blend produces olive, ochre and muddy brown intermediates, plainly visible in the slabs of 5396 and in the stress rectangles of 5003 and 5134, so more than two colours are on screen.",
+      "why": "paletteIntent permits two working colours only, holds the ground flat behind all of them, and reserves the brass for the members that set the instrument's beat. A brass field is not a beat, and alpha-blended intermediates are a third and fourth colour arriving by accident rather than by election.",
+      "specificChange": "Reserve brass for one designated ring of members and stroke every other ring in slate, and set member opacity to fully opaque so overlapping strokes can no longer mix a third tone; hold the ground at one flat dark value behind every ring.",
+      "keep": "Keep the exact brass and slate hues and the near-black ground. The hue pair and its contrast at 120px are working and must not be re-picked while the roles are being reassigned."
+    },
+    {
+      "id": "stress-adds-mass",
+      "whatFails": "Stress makes the figure heavier rather than looser. On 5003, 5134 and 5396 the brass centre inflates under stress and swallows more of the frame, and the run's own sweep names neutral as the emptiest state — so the dark is at its widest in neutral, not in stress, which is where the brief puts it.",
+      "why": "marketTransformation says the mechanism loosens under volatility, that the interval between rings is widest there, and that this interval is the magnitude the market moves. A state that adds ink under volatility inverts the reading a viewer is being taught, and an inverted signal is worse than a signal that does not move at all.",
+      "specificChange": "Invert the sign of the stress response so stress increases the radial interval between rings and the angular gap between members, and therefore lowers inked area — the ordering to hit, measured as inked fraction of frame, is stress emptiest, neutral in the middle, recovery densest.",
+      "keep": "Keep the magnitude of the change. The states are currently easy to tell apart and that separation must survive the reversal, rather than being traded away for a correct direction at a smaller amplitude."
+    },
+    {
+      "id": "state-signal-not-ring-interval",
+      "whatFails": "What visibly moves between states is the diameter of the brass centre and the scatter of loose members flung outside the figure, not the interval between rings. On 5003 and 5134 the neutral and recovery cells are close to interchangeable at 120px, and 5265 moves the opposite way from 5003 under the same state, so one market condition does not produce one gesture across seeds.",
+      "why": "The direction names a single magnitude for the market to move — the interval between rings — and identityAnchors requires every state to keep the same construction. A signal carried by hub diameter and by stray outlying members is not that magnitude, and one whose sign flips from seed to seed cannot be learned by a viewer at all.",
+      "specificChange": "Bind the state to one parameter, the radial spacing between consecutive rings, and drive it monotonically — recovery tightest, neutral middle, stress widest — with the same sign and the same proportional step on every seed; remove the state's effect on hub diameter and on scattered outlying members.",
+      "keep": "Keep all three states byte-distinct, and keep ring count, member shape and angular order fixed across a seed's three states so the only thing a viewer sees change is the clearance."
+    },
+    {
+      "id": "angular-order-not-constant",
+      "whatFails": "The order of rotational symmetry varies widely across the sheet — 5396 turns roughly ten arms, 5003 around twenty, 5265 more than twenty — while the number of rings and their radii barely vary at all. The result is that ten of the twelve seeds read as the same object at 120px with a different fringe count.",
+      "why": "variationStrategy makes the angular order the one constant the whole collection shares, a signature rather than an axis, and puts the first variation on how many rings the mechanism carries and how far they sit from the hub. This work has the two swapped: it varies on the axis meant to be fixed and is fixed on the axis meant to vary. The brief's passing line about tokens differing in rotational order and the direction's line about it being a constant cannot both hold, and the direction is what this work is held to.",
+      "specificChange": "Pin the angular order to one collection-wide value on every seed, and move the seed variation onto ring count — a range of roughly two to five rings — and onto the radii those rings sit at, with member size as the secondary axis and the brass-against-slate balance as the last.",
+      "keep": "Keep the current seed-to-seed distinctness. The collection must not collapse into twelve identical figures once the angular order is pinned, which is exactly why ring count and ring radii have to start carrying the variation before that pin lands."
+    },
+    {
+      "id": "slab-member-outlier",
+      "whatFails": "Seed 5396 is drawn from a different vocabulary altogether: its members are broad axis-aligned rectangular slabs rather than radial members, they overlap into translucent brown blocks, and the figure sits noticeably smaller in its cell than the other eleven. Beside the rest of the sheet it does not read as the same project.",
+      "why": "identityAnchors requires every seed to keep the concentric ring construction, the fine line weight and the same member language. A primitive that shows up on one seed in twelve is not variation within a collection, it is a second collection; and the shrunken figure also breaks the composition rule that the outermost ring reaches close to the frame edges on all sides.",
+      "specificChange": "Remove the rectangular slab primitive from the member set so every seed draws from the single arc-or-bar vocabulary, and extend 5396's outermost ring until it reaches the same fraction of frame width as the other seeds, around 90 percent.",
+      "keep": "Keep whatever gives 5396 its low angular order and its comparatively wide members as a legitimate point in the collection's range. The seed should stay recognisably itself once it is redrawn in the shared member language."
+    }
+  ],
+  "overall": "The rotational logic is here and the palette is here; what is missing is the line. The runtime is currently drawing a filled organism rather than a stroked mechanism — an opaque brass coin ringed by tapered, one-way-curling crescents that overlap into a continuous shingle, with the dark ground present only outside the figure and nowhere inside it. That one fact, fill instead of stroke and mass instead of clearance, is upstream of most of the rest: the annular bands and the wedges the brief calls the mechanism's clearance have nowhere to appear, and with them closed there is nothing at 120px for the market state to move. So the state ends up carried by hub diameter instead of ring interval, and carried in the wrong direction, adding mass under volatility where the brief asks for loosening. The two variation axes are swapped as well — angular order, which the direction names as the collection's constant, is what varies most, while ring count and radii, which are meant to carry the variation, barely move. Round one is worth spending on the member and the gap: unfilled hairline strokes, square-ended constant-width members on true radii, and real dark between ring and ring and between member and member. The palette, the centring, the strict angular repetition and the complete absence of any literal instrument part are all correct and should not be touched while that happens."
+}

@@ -144,6 +144,42 @@ export const SENSOR_FOR_POLARITY = Object.freeze({
  * The arithmetic itself lives in `binding.js`, and `assertSensorReadingsAgreeWithBinding()` checks
  * these against it rather than letting two tables drift.
  */
+/**
+ * THE COUNTER-REGISTER SENSOR: the one that separates recovery without fighting the mechanism.
+ *
+ * WHY IT IS NOT DRAWDOWN, WHICH IS WHAT IT WAS. A composition needs its three states to separate,
+ * and the atlas's rule of thumb — one unit on DRAWDOWN and one on RECOVERY — delivers that. What
+ * it also delivers, when the primary mechanism's story is about STRESS, is a second register that
+ * grows exactly where the primary is meant to be thinning. Six of twelve development critics
+ * reported the same thing in their own words on work whose primary binding is arithmetically
+ * correct:
+ *
+ *   "stress is the heaviest, largest state and recovery is near-identical to neutral"        (B01)
+ *   "under stress the fine beds vanish and survivors get fatter"                             (B03)
+ *   "stress is the sparsest state and recovery the busiest, exactly backwards"               (B04)
+ *   "stress carries MORE bright ink than neutral in all four state rows"                     (B07)
+ *   "stress inflates the brass centre and neutral is the emptiest state"                     (B08)
+ *   "stress is the warm row where the brief demands cold under drawdown"                     (B11)
+ *
+ * Measured on chain, element counts at neutral / stress / recovery on a 6..36 count range:
+ *
+ *     DRAWDOWN / LOG2      22 / 32 / 26      rises under stress
+ *     RECOVERY / LOG2      22 /  6 / 32      falls to the floor under stress
+ *     VOLUME_TIER / LOG2   30 / 30 / 32      SILENT under stress, speaks in recovery
+ *
+ * That third row is the whole answer. `VOLUME_TIER` reads identically at neutral and stress on
+ * this fixture ring — the published sensor table records it as 0.00 dE on that pairing, which is
+ * usually a reason to refuse a binding — and it is exactly what a counter-register needs: it can
+ * add nothing to the state the mechanism is about, and it separates the one the mechanism leaves
+ * ambiguous. A sensor that is dead on one pairing is not a dead sensor; it is a sensor with one
+ * pairing, and the honest use of it is the pairing it has.
+ *
+ * LINEAR rather than LOG2, because the curve is compressing a reading that already sits high:
+ * 267 and 467 per mille map to 764 and 863 through LOG2 (an amplitude of 99) and stay at 267 and
+ * 467 through LINEAR (an amplitude of 200).
+ */
+export const COUNTER_REGISTER = Object.freeze({ sensor: "VOLUME_TIER", curve: "LINEAR" });
+
 export const CURVED_READINGS = Object.freeze({
   "DRAWDOWN/LOG2": Object.freeze({ neutral: 326, stress: 981, recovery: 552 }),
   "RECOVERY/LOG2": Object.freeze({ neutral: 326, stress: 0, recovery: 964 }),

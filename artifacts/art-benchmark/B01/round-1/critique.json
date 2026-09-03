@@ -1,0 +1,68 @@
+{
+  "criticId": "critic-B01",
+  "whatWorks": [
+    "The member vocabulary itself is right. Every mark is a hard-edged, flat-filled rectangular bar with no gradient, no stroke wobble and no drawn texture, which is exactly the engineered-rather-than-drawn register the brief asks for. Whatever changes about placement, do not soften these edges or introduce a painterly mark.",
+    "The palette is genuinely disciplined and achromatic: iron and ash values only, with real near-black surviving in the frame corners on every one of the twelve seeds. No stray hue has crept in anywhere, so the two-working-values half of the palette intent is already intact and only the reserved accent is missing from it.",
+    "Seed identity is real and legible at 256px. The twelve read as twelve, and the harness corroborates it at a mean of 10.095 dE with a closest pair of 5.197 against a floor of 1.2. This is the axis this medium loses most easily, so none of the structural fixes below may be bought by collapsing the seeds toward one another.",
+    "The market is visibly doing work at browse size. The stress row is unmistakable against neutral in all four seeds on the 120px state sheet, and the harness reads that pairing at 8.809 dE. The magnitude of movement is already earned; the findings below ask for it to be redirected, not for more of it."
+  ],
+  "findings": [
+    {
+      "id": "no-nested-registers",
+      "whatFails": "Nothing in any of the twelve seeds is a concentric rectangular outline. The members are individual bars set at arbitrary rotations that cross one another: 5003 and 6313 read as scattered planks, 5265 as a fan opening from a hub in the upper left. No register steps inward from the frame toward the middle anywhere on the sheet.",
+      "why": "The motif translation is the whole subject of the work, a colonnade restated as concentric rectangular outlines with each register the same upright-and-lintel unit at a finer scale than the one outside it. Free rotation also reintroduces the diagonal, which reads as perspective, and that is precisely the depth cue the brief forbids anywhere in the frame.",
+      "specificChange": "Replace the free-rotation placement with a fixed set of axis-aligned concentric rectangular registers, rotation pinned to zero for every member, each register inset from the one outside it by a constant step, so the nesting runs from the border inward to a single innermost bay.",
+      "keep": "The hard-edged flat-filled bar as the only mark, and the achromatic iron-and-ash values. This is a change to where members are placed and how they are oriented, never a change to what a member is."
+    },
+    {
+      "id": "warm-accent-absent",
+      "whatFails": "There is no warm mark anywhere in the corpus. All twelve seeds and all three market states are entirely achromatic, so the eye has no point of arrival and settles instead on whichever overlap patch happens to be brightest, which lands somewhere different in every seed.",
+      "why": "The focal hierarchy names the warm innermost bay as the single point of arrival, and the identity anchors list the same single warm mark at the innermost bay as one of four things every seed and every state must keep. Its absence is not a shortfall in emphasis; the anchor is simply not drawn at all.",
+      "specificChange": "Add one warm accent value, a low-chroma ember or amber sitting close to the iron in lightness but clearly apart in hue, and reserve it for the innermost register alone, leaving every other register iron or ash.",
+      "keep": "The two-value iron-and-ash relationship across all outer registers and the flat near-black ground. The accent must stay a single reserved mark and must not become a third general drawing colour spread through the run."
+    },
+    {
+      "id": "modulated-blob-ground",
+      "whatFails": "A large lumpy translucent grey mass sits behind the bars in every seed, overlapping rounded lobes that read as an amoeba or a cloud, so the actual ground survives only in the frame corners. The 512px render shows it plainly: a soft blobby silhouette carrying most of the mid-grey in the picture.",
+      "why": "The palette intent requires the ground to be a single flat dark, unmodulated, so that weight is read against it, and the negative-space direction requires the near-black to survive as the measured interval between one bay and the next. A soft graded backdrop breaks both, and it is why ink measures 69% of frame on average against the roughly half the density direction names.",
+      "specificChange": "Remove the rounded-lobe backdrop field entirely, dropping its element count to zero rather than lowering its opacity, so flat near-black shows between every member and overall ink falls toward the fifty percent the density direction names.",
+      "keep": "The number and the weight of the bars themselves. This correction is subtraction of the backdrop, not thinning of the supports, and the run must still read as load-bearing once the ground goes black."
+    },
+    {
+      "id": "figure-floats-as-island",
+      "whatFails": "The drawing sits as a centred vertical oval with black margin on all four sides. Seeds 5396, 5920, 6182 and 6444 are the clearest, a compact clump well inside the frame, and in no seed does an outermost member meet the border squarely along its length.",
+      "why": "The composition direction is explicit that the structure reaches the edges of the frame on every side with the outermost bay meeting the border squarely, and that the work never sits as a small island in dead space. An arcade that stops short of the frame reads as an object photographed rather than as a run of bays continuing past the view.",
+      "specificChange": "Extend the outermost register until its four sides meet or cross the frame border on all four edges, then inset each successive register inward from it by the register step, so the nesting is measured from the border rather than from the figure's own bounding box.",
+      "keep": "The single common middle that the registers step toward, and the centred symmetry of the nesting. Reaching the edges must not turn the work into an off-centre or arbitrarily cropped composition."
+    },
+    {
+      "id": "market-direction-inverted",
+      "whatFails": "Stress is the heaviest state rather than the sparsest. On the 120px state sheet the stress row swells to fill more of the frame, the bars thicken, and the whole cell lightens, in all four seeds. Recovery meanwhile is nearly indistinguishable from neutral, with 5265 and 5134 hard to tell apart between those two rows at browse size.",
+      "why": "The market transformation requires the opposite ordering: under drawdown bays are removed from the run and the interval widens, and in recovery the colonnade fills back in and the nesting steps deeper toward the middle. The harness reads the same imbalance from the other side, at 8.809 dE neutral-to-stress against 4.401 neutral-to-recovery, barely over its floor.",
+      "specificChange": "Invert the market binding so member and register count falls below neutral under drawdown and rises above it in recovery, and shift the larger share of the travel onto the neutral-to-recovery half so that pairing becomes the strong one rather than the weakest.",
+      "keep": "The total amount of movement already achieved between the extreme states. The market is visibly doing work at 120px, and that budget should be redistributed across the three states rather than reduced."
+    },
+    {
+      "id": "no-metrical-interval",
+      "whatFails": "Within a single seed the gaps between neighbouring bars are all different and the bars are unrelated in angle, so no even pitch is ever established. Seed 5658 is the clearest case: eight bars, eight different intervals and eight different rotations, reading as a heap rather than as a run of supports.",
+      "why": "The rhythm direction asks for the same upright member repeated at an even interval across each register, with the pitch changing only as the bays step inward. Repetition at an irregular interval is not metre; the viewer cannot count it, so the work reads as accumulation instead of as engineered repetition seen head on.",
+      "specificChange": "Set each register's member positions from a single pitch value held constant within that register, spacing members at exact multiples of that step, and constrain the pitch so it changes only between one register and the next rather than between neighbouring members.",
+      "keep": "Seed-to-seed difference in how many bays the run carries and how deep the nesting steps. Regularising the interval inside a seed must not flatten the differences between seeds; the variation moves onto the declared axis, it does not disappear."
+    },
+    {
+      "id": "orphan-margin-squares",
+      "whatFails": "Small detached squares are scattered in the black margin outside the main mass in several seeds, most visibly 5003, 5396, 5789 and 5920, and some are clipped by the frame edge. They belong to no run, sit at no interval, and read as confetti or debris drifting around the figure.",
+      "why": "The negative-space direction requires the ground to be measured space held between members rather than leftover margin around a floating figure, and these marks make the margin look exactly like margin. They also cut against the focal hierarchy, in which the thinnest marks are texture that must never compete with the run of supports, by placing texture outside the run entirely.",
+      "specificChange": "Repurpose that third field from scattered free-floating squares into the lintel and fine-member texture inside the registers, binding its placement to the register geometry, and remove any element permitted to land outside the outermost bay.",
+      "keep": "The field itself as a live, measurable contributor: the harness records it changing the picture by 5.585 dE when removed. Re-aim it at the arcade's texture role rather than deleting it, so the work keeps a third structural register."
+    },
+    {
+      "id": "thumbnail-reads-as-tangle",
+      "whatFails": "At 120px all twelve seeds collapse into one first impression, a pale scribble over a grey lump. 5003, 5527, 6051 and 6313 are hard to tell apart there, and 5396, 5920 and 6444 form a second near-identical compact-clump family, so the sheet reads as two motifs rather than as twelve tokens of one.",
+      "why": "The thumbnail intent asks that at 120px the work read as a nested run of rectangular outlines stepping inward to one warm mark, with engineered repetition seen well before any fine member becomes legible. Nothing about the arcade currently survives the reduction, and the 120px sheet is the size at which the collection is actually browsed.",
+      "specificChange": "Make register count and nesting depth the loudest seed variable at browse size, widening the spread so the sparsest and densest seeds differ by several whole registers, and verify the result on the 120px sheet itself rather than on the pairwise dE number.",
+      "keep": "The seed separation already measured, with a closest pair at 5.197 dE, held as a floor rather than traded away while the registers are being regularised into a common structure."
+    }
+  ],
+  "overall": "The bar itself, the palette discipline and the seed separation are sound; almost everything else in the picture belongs to a different work than the one the brief describes. What is on the sheet is a heap of rotated planks over a soft grey blob, a scatter composition with a modulated backdrop, where the direction asks for axis-aligned concentric bays stepping inward from the border to a single warm mark, at an even pitch, over flat near-black. Work it in that order: take out the blob field first, because it is what turns the ground into a wash and pushes ink to 69% of frame, and because every later judgement is easier to make against real black; then pin rotation to zero and rebuild placement as concentric registers anchored to the frame edge with a constant pitch inside each register; then reserve the warm accent for the innermost bay alone; and last invert the market binding so drawdown removes bays and recovery adds them, moving travel onto the neutral-to-recovery pairing that currently sits nearest its floor. Note that every mechanical gate in this round already passes, including ink, seed diversity, exact and perceptual state separation, structural role and gas, so none of this will be caught by re-running the harness. That is the situation to be careful about here: the numbers are green and the picture is not the brief, so judge the next round on the 120px sheets."
+}
