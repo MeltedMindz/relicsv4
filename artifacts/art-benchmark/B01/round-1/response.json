@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B01",
+  "criticId": "critic-B01",
+  "note": "Everything answered here is a change to the AUTHOR -- the machine that turns an art direction into runtime bytes -- and not a patch to this project's configuration, because a hand-written patch would be a human art intervention and this lane's whole claim is that there are none.",
+  "responses": [
+    {
+      "findingId": "no-nested-registers",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "Both halves of this are refused by the medium. Rotation is not a creator parameter in VECTOR_COMPOSITION_V1: the angle of a member comes from the layout and the seed, and there is no per-element orientation control anywhere in the schema, so 'rotation pinned to zero for every member' is not an instruction the runtime can take. Concentric registers inset from one another by a constant step needs per-element coordinates and a quantised inset, and the runtime's own capability statement names 'per-element coordinates' and 'a fixed row pitch or any quantised spacing' as things it cannot do. A field is a count of primitives placed about the canvas centre by one of twelve layouts; it is not a frame that can be stepped inward from the border. There is no configuration of this runtime that draws nested rectangular outlines, and pretending otherwise would spend a round chasing a picture the bytecode has no path to."
+    },
+    {
+      "findingId": "warm-accent-absent",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "The finding is correct that the corpus is entirely achromatic, and the runtime can hold a warm stop -- but not the thing asked for. paletteIx is ONE constant per field, so every member of a field is one colour; there is no per-element or per-position colour, and there is no innermost register for an accent to be reserved to, because the nesting the direction describes is itself not expressible (see no-nested-registers). 'One warm mark at the innermost bay' would therefore have to become 'one of the three fields is entirely warm', which is a different picture from the one the direction names. Separately and just as decisively: none of the three round-1 author changes reaches palette derivation, so nothing in the palette moves next round. Adding an ember stop to this project by hand would be a per-project art edit, which is the one thing this lane may not do."
+    },
+    {
+      "findingId": "modulated-blob-ground",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Two corrections to the diagnosis first, because they decide what can be done. The ground is already a single flat near-black -- groundMode is FLAT and groundIx points at #0f1113 -- so there is no backdrop field to delete. The lumpy grey mass is field 1, twenty overlapping iron circles on a STACK layout, and it looks translucent because opacity is written per element by the runtime from the token's seed. Alpha is named in this runtime's own cannot list and no creator parameter reaches it, so raising the fill to opaque is refused. Dropping the field's count to zero is also refused: field count is an author-wide constant, never fewer than two, because a single field carrying a driven count blanked seven seeds of eight. What the coverage recalibration does instead is make the mass much smaller.",
+      "parameters": [
+        "fields[1].sizeMax",
+        "fields[1].countMin",
+        "fields[1].countMax",
+        "fields[0].sizeMax",
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[2].sizeMax"
+      ],
+      "expectedVisualEffect": "The iron circle field drops from a size ceiling of 22 to 19 and from twenty pinned members to seventeen, and the two rectangle fields come down with it (26 to 22 and 18 to 15), so the grey lump shrinks and flat near-black reappears between members across the middle of the frame rather than only in the corners. Overall ink should fall from the measured 69 per cent toward the half-frame the density direction names. It will still be a mass of overlapping circles, not an absence: the field is reduced, never removed, and the tonal stacking at every crossing survives untouched.",
+      "preserve": [
+        "the flat near-black ground: groundMode stays FLAT and groundIx stays #0f1113, both unmoved",
+        "the bars as the load-bearing register -- field 0 keeps its GRID layout, its RECT primitive and its own count range, and thins only slightly (8..26 to 7..25)",
+        "the achromatic iron-and-ash palette, which does not move at all",
+        "the measured seed separation, closest pair 5.197 dE, which no parameter here is traded against"
+      ]
+    },
+    {
+      "findingId": "figure-floats-as-island",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "The runtime cannot reach the border on purpose. 'frame bleed' and 'an element that fills the frame' are both named in its cannot list, and spreadMax -- the only reach control -- clamps a site's CENTRE, not its extent, and is a CEILING the seed draws beneath from a floor of 16. So a field cannot be made to meet the frame squarely; it can only be given permission to land near it, which field 0 and field 1 already have at 128 and 122, the top of the range. There is no inset parameter and no border anchor, so 'measure the nesting from the border rather than from the figure's bounding box' has nothing to bind to. One thing should be said plainly rather than discovered next round: the only reach parameter that moves at all is the third register's, and it moves INWARD, from 116 to 90, for the reason given under orphan-margin-squares. The margin will be tidier, not smaller."
+    },
+    {
+      "findingId": "market-direction-inverted",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The third register stops taking its member SIZE from drawdown and starts taking its member COUNT from VOLUME_TIER, which reads 30 / 30 / 32 across neutral / stress / recovery on this fixture ring. So the bars stop thickening under stress -- that swelling was this field growing exactly where the primary mechanism is meant to be thinning -- and the stress cell becomes the sparsest of the three, with field 0's count falling to its floor. Recovery gains twice over: field 0's count runs to its ceiling and the third register adds a few more marks, so the neutral-to-recovery pairing should stop sitting near its 3.8 floor at 4.401 dE and become the strong one. Prediction to check on the 120px state sheet: stress is now visibly the emptiest row, not the fullest.",
+      "preserve": [
+        "the total amount of movement between the extreme states -- no count range is narrowed, the third register's widens from 7..25 to 8..28",
+        "the SEPARATION mechanism the direction asks for: field 1 keeps drive SPREAD on DRAWDOWN, so the interval between surviving supports still widens under stress",
+        "field 0's primary binding, COUNT on RECOVERY at LOG2, which was already arithmetically right and is untouched",
+        "seed separation at 120px, closest pair 5.197 dE"
+      ]
+    },
+    {
+      "findingId": "no-metrical-interval",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "This is the first entry in the runtime's own cannot list: 'a fixed row pitch or any quantised spacing'. There is no pitch parameter. A layout decides where sites go and the seed applies per-site jitter to them, and neither the pitch nor the jitter amplitude is exposed, so members cannot be spaced at exact multiples of a held step and a pitch cannot be made to change between registers rather than between neighbours. The nearest thing the runtime has is the cell-grid family -- GRID, LATTICE, TILING, WAVE -- which is regular in construction but still jittered per site, and field 0 is already on GRID. Offering that as metre would be claiming a capability we do not have; the viewer still cannot count it."
+    },
+    {
+      "findingId": "orphan-margin-squares",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The marks in the margin are real and they are the third register, and its reach is exactly what puts them there: it was running to the full spread ceiling, so its sites could land as far out as the two registers that carry the composition. That half is fixed. The other half of the prescription is refused: 'binding its placement to the register geometry' is a cross-field conditional, which the runtime names in its cannot list, and there is no per-element coordinate to bind. Fields cannot see each other's draws -- each one draws its own scalars from its own seed byte -- so this register cannot be made into lintel texture inside another field's members. It stays an independent register that is now held inside the work rather than outside it.",
+      "parameters": [
+        "fields[2].spreadMax",
+        "fields[2].countMin",
+        "fields[2].countMax",
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve"
+      ],
+      "expectedVisualEffect": "The third register's reach drops from 116 to 90, which is 0.7 of the primary's, so its sites can no longer sit outside the two registers that touch the frame. The detached squares in the black margin of 5003, 5396, 5789 and 5920, and the ones clipped by the frame edge, should be gone -- every mark should now fall inside the hull of the drawing. It is the only field held inward; fields 0 and 1 stay at 128 and 122 so the work does not shrink.",
+      "preserve": [
+        "the field itself as a live, measurable contributor -- it keeps its own count range, which widens from 7..25 to 8..28, and now carries the recovery signal, so the work keeps a third structural register",
+        "the reach of the two registers that carry the composition, unchanged at 128 and 122",
+        "the hard-edged flat-filled bar as the only mark: primitive, layout, stroke and palette index all stay put"
+      ]
+    },
+    {
+      "findingId": "thumbnail-reads-as-tangle",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Nesting depth is not a quantity this runtime has, so it cannot be made the loudest seed variable -- there are three fields and a field has no depth. Nor can the seeded count spread be widened much: field 0's span stays 18 members wide (7..25) and field 1's count is pinned by construction, so the sparsest and densest seeds will not come to differ by several whole registers. What is actually being attacked is the other half of the diagnosis -- that the twelve collapse into 'a pale scribble over a grey lump'. The lump is coverage, and coverage is what the density recalibration takes down. Marks that do not overlap are marks a viewer can count at browse size, so the expectation is that the twelve separate because there is real black between the members, not because the count spread grew.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[1].sizeMax",
+        "fields[1].countMin",
+        "fields[1].countMax",
+        "fields[2].sizeMax",
+        "fields[2].spreadMax",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "Every field's size ceiling comes down (26/22/18 to 22/19/15) and the counts come with them, so at 120px each cell should read as separable marks over near-black instead of one pale scribble over a continuous grey mass. The two families the critic names -- 5003/5527/6051/6313 and 5396/5920/6444 -- should stop reading as two motifs, because what currently makes them look alike is the fused silhouette rather than the marks inside it. What will NOT have changed is how many members each seed carries relative to its neighbours; if the twelve still read as two families after the ink falls, that is evidence the seed spread itself is too narrow and not that this change failed.",
+      "preserve": [
+        "the measured seed separation as a floor, closest pair 5.197 dE -- no field is being collapsed toward a common structure and no seeded scalar range is narrowed except where coverage demands it",
+        "the market movement already earned at 8.809 dE between neutral and stress, redistributed rather than reduced",
+        "the achromatic palette and the flat near-black ground, neither of which moves"
+      ]
+    }
+  ]
+}

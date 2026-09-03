@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B06",
+  "criticId": "critic-B06",
+  "note": "The changes answered here are changes to the AUTHOR — the machine that turns an art direction into runtime bytes — and not patches written for this project, because a hand-written configuration edit would be a human art intervention and this lane's claim is that there are none. Where the round-1 author change does not reach a finding, the response says plainly which parameter carries it and that it does not move, rather than promising a fix that nothing makes.",
+  "responses": [
+    {
+      "findingId": "margin-not-crop",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "Both halves of this change are named in VECTOR_COMPOSITION_V1's cannot list: 'frame bleed' and 'an element that fills the frame'. There is no way to generate a site outside the viewBox and let the frame clip it, and there is no centre bias to remove either — every one of the twelve layouts places its sites about the canvas centre within a spread half-extent, by construction. spreadMax is that half-extent ceiling, and the two registers that carry the composition already hold 128 and 122, the top of the legal range; the one reach that moves this round moves inward, deliberately, because a register landing outside the work reads as debris at 120px."
+    },
+    {
+      "findingId": "marks-too-large-and-countable",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The size ceilings come down, but by about an eighth rather than the fourfold shrink asked for, and the counts cannot rise at all. This runtime's site budget is 120 sites across the whole configuration and 40 per field, so 'several hundred marks' is unreachable at any legal setting; and the mechanism read from the direction pins countMin == countMax on the two carrying registers, so a count that also moved would be a second market mechanism nobody asked for.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax"
+      ],
+      "expectedVisualEffect": "The largest slab drops from roughly a third of the frame toward a quarter and the whole coarse-to-fine ladder comes down with it, so the marks read smaller against the frame; they will still be individually countable, and a token will still carry a few dozen of them rather than hundreds.",
+      "preserve": [
+        "the angular rectangular mark vocabulary and the rotation that gives the fringe its fan",
+        "the coarse-to-fine size ladder across the three registers"
+      ]
+    },
+    {
+      "findingId": "flat-interior-plateau",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The alpha half is refused outright: 'alpha' is in this runtime's cannot list, per-element opacity is written by the runtime from the token's seed, and no creator parameter lowers it — so overlaps will keep resolving as one flat opaque area rather than as distinct value steps. The extra registers are expressible, since a configuration may declare up to six fields, but fieldCount does not move this round, so the picture keeps three registers against the five or six the direction describes. What does move is where the finest register lands.",
+      "parameters": [
+        "fields[2].spreadMax",
+        "fields[2].sizeMax"
+      ],
+      "expectedVisualEffect": "The finest register's reach drops from 116 to 90, so its marks fall inside the area the two larger registers already cover instead of ringing the mass's edge; the interior should pick up a scattering of smaller marks where it is currently an unbroken copper plateau.",
+      "preserve": [
+        "the massed, continuous reading — the interior must gain incident without breaking into scattered confetti",
+        "the coarse marks staying legible as a loose armature under the finer texture"
+      ]
+    },
+    {
+      "findingId": "one-colour-not-three",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Stated first because it decides the rest: neither parameter named below moves this round. The second half of the change is refused by the medium — the seed reaches nothing categorical in this runtime, so 'which of the three carries the coarsest register per seed' cannot be a per-token draw; paletteIx is a creator constant, and the one rotation that exists, PALETTE_SHIFT, is never elected because its walk includes the ground index and paints whole fields in the background colour. The first half is genuinely reachable, since palette is a creator parameter and any three values can be declared, but the round-1 author change did not touch the palette derivation.",
+      "parameters": [
+        "palette",
+        "fields[1].paletteIx"
+      ],
+      "expectedVisualEffect": "No visible change on this axis: the three working values and the gap between the copper and the near-black ground will read exactly as they do now, and the coarsest register will be carried by the same colour on all twelve seeds.",
+      "preserve": [
+        "the warm rust/copper/umber-over-near-black family, unchanged in hue",
+        "the near-black ground at its current darkness — nothing lifts the ground toward the ink"
+      ]
+    },
+    {
+      "findingId": "disc-halo-reads-as-hub",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Loose marks in the margin are the finding the author change was made for, but the register it holds inside the primary's reach is the third one, not the disc register: the discs are field 1, whose reach stays at 122, and its primitive stays CIRCLE, so the round mark family remains a separate species from the angular slabs. There is also no ring or annulus placement to remove — field 1's layout is a cell grid, and what reads as a necklace is that grid's outermost sites plus the third register's marks landing outside the mass.",
+      "parameters": [
+        "fields[2].spreadMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax"
+      ],
+      "expectedVisualEffect": "The marks that currently float free in the black come inside the mass, so there should be visibly fewer detached specks in the margin, and the discs themselves shrink against the frame; they will still be round and still sit around the mass's perimeter.",
+      "preserve": [
+        "the dark tonal register the discs supply — marks near the ground in value that build depth in the pile",
+        "the size contrast between that register and the coarse slabs"
+      ]
+    },
+    {
+      "findingId": "recovery-does-not-close",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The register that made recovery look like a shuffle of neutral is rebound. It read the market through RECOVERY, collapsing to its floor at stress and surging at recovery against the primary, and it now reads a sensor that is flat between neutral and stress. But recovery will not become the tightest packing. The mechanism is read from the direction's own words — the members spread apart under volatility — and its sensor reads 326 / 981 / 552 per mille at neutral / stress / recovery, so the interval at recovery necessarily sits between neutral's and stress's. Ordering the three states with recovery tightest would mean changing which sensor the primary carries, which is a mechanism decision the direction settles rather than a parameter this round moves.",
+      "parameters": [
+        "fields[2].sensor",
+        "fields[2].curve"
+      ],
+      "expectedVisualEffect": "The third register will carry roughly the same number of marks in all three states instead of collapsing at stress and surging at recovery, so what separates the three cells becomes the interval between marks rather than how many there are; recovery will still read slightly looser than neutral rather than closing tighter than it.",
+      "preserve": [
+        "the stress opening at its current strength — it must not be traded away to buy the recovery difference",
+        "the silhouette family and the colour constant across the three states"
+      ]
+    },
+    {
+      "findingId": "seed-variation-degenerates",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "A per-seed coverage floor is not expressible in this schema. Every numeric is a CEILING and the floor beneath it is a constant in the bytecode — sizeMax floors at 2, spreadMax at 16 — so the author can lower the top of a per-token distribution and can never raise its bottom, which is exactly what clamping the loosest seed upward would require. The count range is already pinned by the mechanism on the two carrying registers, so it cannot be narrowed further either. What the round-1 change does is lower the top of the size draw, which shortens the long bars that make the degenerate seeds look like a different project.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax"
+      ],
+      "expectedVisualEffect": "The seeds that currently draw a handful of very long bars will draw shorter ones, so the two outlier tokens move toward the rest of the sheet; no seed will be held above a coverage floor, so a thin token is still reachable and the sparse cells will not all fill in.",
+      "preserve": [
+        "the seed-to-seed distinctness at 120px — the twelve must stay separable",
+        "the differences being carried by packing tightness and the coarse-to-fine mix"
+      ]
+    }
+  ]
+}

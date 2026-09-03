@@ -2,8 +2,7 @@
   "briefId": "B07",
   "axis": "organic",
   "title": "COLONY",
-  "phase": "AUTHORED",
-  "objectiveBlockers": [],
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "ee37cb8dce1333e24ca49f4ecb27f486b2efd2180755bf54d7e6e754ea51edc1",
   "admission": {
     "schemaVersion": 1,
@@ -842,7 +841,869 @@
         "stateDeMin": 4.76,
         "seedDeMean": 18.46,
         "seedDeMin": 9.04
+      },
+      "critique": {
+        "criticId": "critic-B07",
+        "whatWorks": [
+          "The ground and the green are right, and they are the hardest part of this brief to get. The deep ink is flat, cold and dark enough to sit behind everything, and the verdigris is a genuinely damp mineral green — desaturated, slightly grey-blue, never a bright or candy green. The bone is a warm off-white rather than pure white, so the two working colours already sit in the damp mineral register the paletteIntent asks for. No fix below should touch these three values.",
+          "The soft overlapping ellipses that make the green mass are the one place the colony reading already exists. At 512px (dev-single-512) and on seeds 5134, 6444 and 5265 their union produces a lobed, budded outer contour where two or three rounded bodies visibly bulge past each other — that is exactly the rounded-mark-overlapping-its-neighbour relationship the motifTranslation wants, just at one enormous scale instead of several. The primitive and the overlap rule are correct; only their count and size are wrong.",
+          "Seed differentiation is real and survives the thumbnail. At 120px the twelve cells are plainly twelve different tokens — 5265's swept fan, 5396's tight compact knot, 5658's wide crossing sprawl and 6444's narrow vertical column are unmistakable from one another, and none of them looks like a recolour of its neighbour. Whatever is done about the market axis must not flatten this seed-to-seed spread to buy it.",
+          "The work already reads as one family with a single centred mass and a consistent sense of scale, so the collection hangs together as a grid rather than as twelve unrelated experiments. The centre-anchored construction the direction depends on is present in the code path — the accretion has an origin, it simply has no generations yet."
+        ],
+        "findings": [
+          {
+            "id": "bar-primitive-not-rounded",
+            "whatFails": "The dominant mark in every seed is a long thin rectangular slab, not a rounded cell. At 512px a single bone bar runs nearly the full height of the frame, and at 120px the whole collection reads as pale sticks or scratches thrown across a green blob — 5003, 5658 and 6313 read as pick-up-sticks with no cell in them at all. The only rounded forms present are the two or three huge background ellipses, which are ground, not members.",
+            "why": "The brief opens on rounded forms clustered and overlapping, and identityAnchors names the rounded mark as a thing every seed and every state must keep. A hard-edged slab with an aspect ratio of ten or twenty to one is the opposite mark: it reads as a cut or a strut, geometric and architectural, which is precisely the geometric feeling the brief says to avoid in favour of the biological.",
+            "specificChange": "Replace the elongated bone slab primitive with a rounded member — a circle, a soft ellipse or a fully rounded capsule — and clamp every member's aspect ratio to at most 2:1 so no mark can elongate into a bar again. Shrink the maximum member diameter to roughly a quarter of the frame width so that no single mark can span the composition; the size that used to belong to one slab should be spent on many small round bodies instead.",
+            "keep": "Keep the bone-over-verdigris value relationship and the translucent overlap: where two bone marks cross today the blend produces a lighter core, and that layering is what will make a packed inner group read as denser than the growing edge. Keep the irregular, non-radial angular placement too — the marks should not snap into a rotated pattern about a hub when they become round."
+          },
+          {
+            "id": "no-generational-registers",
+            "whatFails": "There are only two layers in the picture: one background field of two or three oversized verdigris ellipses, and one foreground field of bone slabs. There is no sequence of registers stepping outward, no register that is finer than the one inside it, and no visible growing edge. The scattered grey squares on 5920, 6051 and 5396 sit outside the mass but are the same size as each other and unrelated in shape to anything inner, so they read as debris rather than as a later generation.",
+            "why": "The direction's rhythm is recurrence by generation — the same rounded mark repeating at a finer scale in each successive register — and its focalHierarchy depends on three distinct tiers: a packed inner group as the origin, middle generations carrying the body, and loose outer marks as texture. With two layers and no scale progression there is no accretion to read; the picture is a figure on a ground, which is a designed arrangement rather than a growth.",
+            "specificChange": "Add four to five concentric generations placed at increasing radius from the shared centre, and set member radius to decay by roughly 0.7 per generation while member count grows by roughly 1.6 per generation, so each register is finer and more numerous than the one inside it. Bind the placement radius so that consecutive generations overlap by about a fifth of a member diameter, and jitter each member's angle so the registers never line up into rings.",
+            "keep": "Keep the single shared centre the current composition already has, and keep the overlap between neighbouring bodies — the generations must interpenetrate where they meet. Do not let the generation structure become visible as concentric rings or as a hub-and-spoke rosette; the logic is regular but the placement must stay irregular."
+          },
+          {
+            "id": "stress-reads-heavier-not-fewer",
+            "whatFails": "The market axis is inverted at one end and dead at the other. In dev-states-120 the stress cell carries more bright ink than neutral in all four seeds — 5134 stress and 5396 stress both show a larger, brighter bone mass that swallows more of the green than neutral does — while neutral and recovery are close to indistinguishable at that size in every one of the four rows. A browser comparing the three states sees the colony get heavier under stress and sees nothing at all happen in recovery.",
+            "why": "marketTransformation is explicit that the magnitude the market moves is how many cells the colony carries, that recovery holds the highest member count and stress the fewest, and that the change is plainly visible at thumbnail size. Getting the direction backwards at the stress end is worse than getting nothing, because a viewer reading the piece learns the wrong story; a dead neutral-to-recovery leg means half the axis carries no information.",
+            "specificChange": "Bind member count directly and monotonically to the market magnitude — set stress to roughly 40 percent of the neutral member count and recovery to roughly 160 percent of it — and remove every other market-driven coupling, so mark size, opacity, spread radius and palette are pinned identical across the three states. Verify at 120px that the three cells rank by ink coverage in the order stress, neutral, recovery and never invert.",
+            "keep": "Keep the change large enough to survive the thumbnail: the current stress and neutral cells do differ visibly, and that magnitude of difference is worth preserving even though its sign is wrong. Do not solve the inversion by shrinking the whole market response until the three states become quiet variations of each other."
+          },
+          {
+            "id": "state-change-is-displacement-not-population",
+            "whatFails": "What actually varies between the three states is placement, not population. In 5265 the whole bone fan translates and rotates bodily between neutral and stress; in 5396 the green ellipse slides down-left and the bone knot moves with it; in 5134 the mass shifts down and re-forms. The token stops looking like the same token — 5134 stress could plausibly be sold as a different seed from 5134 neutral rather than as the same colony under pressure.",
+            "why": "identityAnchors requires every state to keep the accretion outward from one shared middle, which means a state change is something that happens to a colony, not a re-roll of where the colony is. When the market moves the composition instead of the member count, the collection loses the ability to say anything about the market at all: a viewer cannot tell a state change from a seed change, so neither reads.",
+            "specificChange": "Pin the placement seed across the three states so that generation k's members land at the same angles and radii in neutral, stress and recovery, and remove the state-driven translation, rotation and rescale of the whole composition entirely. Let the market add members to the outermost generations in recovery and remove members from those same outer generations in stress, so the inner packed group is identical in all three and the change is visibly a growing or retreating edge.",
+            "keep": "Keep the three states clearly distinguishable at 120px — this fix must not be executed by making them converge. Keep the per-seed character too: 5265 must still be the swept seed and 5396 the compact one in every state, which is exactly what pinning the placement seed buys."
+          },
+          {
+            "id": "centre-floats-margins-dead",
+            "whatFails": "The mass is a tall vertical capsule parked in the middle of a square frame, so nearly every seed at 120px carries wide bands of empty ink down the left and right sides — 5920, 5396, 6444 and 5134 all leave roughly a quarter of the frame width dark and untouched on each side. The green never once reaches the left or right edge, and the growth is anisotropic: it spreads freely up and down and is cut off horizontally.",
+            "why": "The composition direction asks for the colony to build from the middle out until its outermost generation meets the edges of the frame, so the border crops a spreading growth rather than containing a small object floating in dead space. What is on screen is the failure case that sentence names: a contained object with a margin around it. It also flattens the variationStrategy, since how far the colony has spread cannot be the first axis of difference when every token stops at the same vertical envelope.",
+            "specificChange": "Extend the outermost generation's placement radius past the frame's half-diagonal so its members are clipped by all four edges, and equalise the horizontal and vertical spread radius so the growth is isotropic instead of a vertical capsule. Widen the per-seed range of the overall spread radius so that some tokens crop hard at the edges and others stop short, making spread the first readable difference between two tokens.",
+            "keep": "Keep the density falloff from the middle outward — the frame edge should be cropping a sparse growing edge, not a filled square, so coverage must still ease off toward the border. Keep the mass centred: reaching the edges is a matter of extent, not of moving the origin off centre."
+          },
+          {
+            "id": "no-interstitial-ink",
+            "whatFails": "Inside the form there is no deep ink at all. The verdigris ellipses fuse into one continuous silhouette with no dark between them, and the bone slabs merge into a single pale mass where they cross, so at 512px the picture is two solid shapes rather than many bodies. Every bit of ink in the frame is a margin outside the object; on 5265 and 6444 the green is one unbroken field from top to bottom.",
+            "why": "negativeSpace states that the deep ink shows between the rounded members and around the growing edge, and that this dark is what keeps the members reading as individual cells — interstitial space doing structural work rather than a margin. Without it the density direction cannot be satisfied either: the brief wants a little over half the frame carrying ink and a mass that reads as biological, and a fused silhouette reads as a filled shape at any coverage.",
+            "specificChange": "Reduce member size relative to the spacing between placements so neighbours touch or overlap only slightly instead of fusing, targeting roughly 55 to 65 percent ink coverage in the packed inner group and less further out. Separate members further by drawing each with a deep-ink gap or outline at its boundary so the ground reads through between bodies even where two of them overlap.",
+            "keep": "Keep the overlap itself — the destination is separated-but-touching, not isolated dots scattered on a field, and the members must still bulge past each other where they meet. Keep the current heaviest-at-the-middle reading, so the interstitial dark should open up toward the growing edge rather than appearing uniformly across the whole mass."
+          },
+          {
+            "id": "grey-third-colour",
+            "whatFails": "A third, desaturated grey value is doing a large amount of the work: the long bars on 5003, 5658, 6051 and 6313 and the scattered small squares on 5920 and 5396 are neutral grey, neither verdigris nor bone. On seeds 5003 and 5658 grey plus bone is the entire image and no verdigris appears at all, so those two tokens carry none of the collection's colour identity and read at 120px as monochrome next to their ten green neighbours.",
+            "why": "paletteIntent names exactly two working colours over the ground, and identityAnchors requires every seed and every state to keep the verdigris-and-bone-over-deep-ink relationship. A grey ramp between the ink and the bone is a third value that muddies the damp mineral cast, and a seed that renders with zero verdigris is a straight identity-anchor failure rather than a variation within the palette.",
+            "specificChange": "Remove the grey ramp entirely so every member is drawn in either verdigris or bone, and declare a per-seed verdigris floor — at least a third of the inked area must be verdigris — so that no seed can render colourless. Where a value between ink and bone is needed for depth, reach it by lowering the opacity of verdigris over the ground rather than by adding a neutral hue.",
+            "keep": "Keep the damp mineral cast and the flat dark ground exactly as they are: the correction here is deleting a third hue, not brightening or saturating the two that remain. Keep the value range as well — the picture currently reads across a wide light-to-dark span, and that range should be rebuilt from verdigris and bone alone."
+          }
+        ],
+        "overall": "The palette is already right and the medium is capable of the brief, but the mark and the market axis are both the wrong thing. What is on screen is a figure-on-ground composition — two or three enormous verdigris ellipses fused into one lobed silhouette, with long hard-edged bone slabs thrown across them — where the brief asks for many small rounded members accumulating outward in successive finer generations. Because there is only one scale of mark and only two layers, none of the focal hierarchy, the generational rhythm or the interstitial negative space can exist yet, and the frame contains a centred vertical capsule with dead margins instead of cropping a spreading growth. The market response is the more urgent of the two problems: at 120px stress currently reads as more ink rather than fewer cells and recovery is indistinguishable from neutral, and what does change between states is the position of the whole arrangement, which means a viewer cannot separate a state change from a seed change. The route through all of it is the same single move — spend the area currently held by a handful of huge primitives on many small round ones, arranged in four or five generations from the shared centre, and let the market decide only how many members the outer generations carry. The verdigris and bone over deep ink, the soft overlapping contour of the green, and the strong seed-to-seed differences at thumbnail size are what must come out the other side unchanged."
+      },
+      "response": {
+        "schemaVersion": 1,
+        "kind": "AUTHOR_RESPONSE",
+        "respondsTo": "B07",
+        "criticId": "critic-B07",
+        "note": "The changes answered here are changes to the AUTHOR — the machine that turns an art direction into runtime bytes — and not patches written for this project, because a hand-written configuration edit would be a human art intervention and this lane's claim is that there are none. Where the round-1 author change does not reach a finding, the response says plainly which parameter carries it and that it does not move, rather than promising a fix that nothing makes.",
+        "responses": [
+          {
+            "findingId": "bar-primitive-not-rounded",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Stated first because it decides the rest: the parameter named below does not move this round. The mark's shape family is a creator parameter and both CIRCLE and ELLIPSE are in this runtime's primitive vocabulary, so a rounded member is genuinely expressible — but the round-1 author change does not touch fields[n].primitive, so the bone register stays a rectangle. The remainder of the change is refused by the medium in any case: there is no per-member aspect-ratio parameter, so a mark cannot be clamped to 2:1; sizeMax is a single number and the runtime derives the rectangle's proportions from it and the seed.",
+            "parameters": [
+              "fields[0].primitive",
+              "fields[2].primitive"
+            ],
+            "expectedVisualEffect": "No change to the mark this round: the dominant bone member will still read as an elongated slab rather than as a rounded cell, and the only rounded forms in the frame will still be the verdigris field's circles.",
+            "preserve": [
+              "the bone-over-verdigris value relationship and the lighter core where two bone marks cross",
+              "the irregular, non-radial placement — the marks must not snap into a rotated pattern about a hub"
+            ]
+          },
+          {
+            "findingId": "no-generational-registers",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The placement half is refused. This runtime has no per-element coordinates, spreadMax is a half-extent ceiling the seed draws beneath rather than a settable radius, and there is no way to bind consecutive generations to overlap by a fifth of a member diameter or to jitter a member's angle. The half about more and finer registers is expressible — a configuration may declare six fields — but fieldCount does not move this round, so the picture keeps three registers rather than the four or five asked for. What does move is the population and the reach of the finest one.",
+            "parameters": [
+              "fields[2].countMin",
+              "fields[2].countMax",
+              "fields[2].spreadMax"
+            ],
+            "expectedVisualEffect": "The finest register carries up to 34 marks instead of 27 and its reach drops from 116 to 90, so it lands inside the two larger registers rather than around them — one more populated tier inside the mass instead of debris outside it. There will still be three tiers, not five, and they will not step outward in concentric generations.",
+            "preserve": [
+              "the single shared centre the composition already has",
+              "the overlap between neighbouring bodies — generations must interpenetrate where they meet, and must not become concentric rings"
+            ]
+          },
+          {
+            "findingId": "stress-reads-heavier-not-fewer",
+            "disposition": "ACCEPT",
+            "parameters": [
+              "fields[2].drive",
+              "fields[2].sensor",
+              "fields[2].curve",
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "Stress stops being the brightest cell. The register that grew under stress no longer grows there — it is rebound to a sensor that reads the same at neutral and stress and rises only in recovery — and it now drives population instead of mark size, so no field in the composition rescales its members with the market and every field moves the same quantity. At 120px the three cells should rank stress, neutral, recovery by how much bone ink they carry, and the neutral-to-recovery leg should carry a difference it does not have today.",
+            "preserve": [
+              "the magnitude of the state change — it must still survive the thumbnail rather than being shrunk to quiet variations of one another",
+              "the seed-to-seed spread at 120px"
+            ]
+          },
+          {
+            "findingId": "state-change-is-displacement-not-population",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "One of the two things the finding sees moving is removed: the third register drove mark SIZE from the market and now drives population, so after this round no field rescales its members between states. The other is not reachable. There is no placement seed to pin and no per-element coordinates in this runtime — a layout derives its sites from the count it is given, so changing how many members a field carries necessarily re-lays the sites it carries them at. The runtime has no way to add members to an outer generation without moving the ones already placed, which is the mechanism this change describes.",
+            "parameters": [
+              "fields[2].drive",
+              "fields[2].sensor",
+              "fields[2].curve"
+            ],
+            "expectedVisualEffect": "Between states the members keep their size — nothing swells or shrinks — and what changes is how many there are; the arrangement will still re-lay itself as the count moves, so a token will not hold its members at fixed angles and radii across the three cells.",
+            "preserve": [
+              "the three states clearly distinguishable at 120px — this must not be executed by making them converge",
+              "the per-seed character: the swept seed stays swept and the compact seed stays compact in every state"
+            ]
+          },
+          {
+            "findingId": "centre-floats-margins-dead",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "'Frame bleed' and 'an element that fills the frame' are both named in this runtime's cannot list, so members cannot be pushed past the half-diagonal and clipped by all four edges. There is nothing anisotropic to equalise either: spreadMax is a single isotropic half-extent about the canvas centre, one number rather than a horizontal and a vertical radius, and the composition's carrying registers already hold 128 and 122, the top of the legal range. The per-seed spread range is already maximal, because spreadMax is a ceiling the seed draws beneath from a floor of 16 — and the one reach that moves this round moves inward on purpose, since a register landing outside the work reads as debris."
+          },
+          {
+            "findingId": "no-interstitial-ink",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Drawing each member with a deep-ink gap or outline at its boundary is refused: stroke is a boolean fill-or-outline choice per field, not a second colour drawn around a filled member, and 'stroke width as a creator choice' is in this runtime's cannot list, so a hairline dark separation cannot be asked for at any width. Member size relative to spacing is reachable through sizeMax, but sizeMax does not move on this composition — count is the market drive here, so the size ceiling is already held down to leave the count its headroom. What does move is where the finest register lands and how many marks it carries.",
+            "parameters": [
+              "fields[2].spreadMax",
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The finest register moves inside the two larger ones and carries more marks, so small marks fall between the big fused shapes instead of scattering outside them; the verdigris silhouette itself will still fuse into one continuous field rather than resolving into separate touching bodies.",
+            "preserve": [
+              "the overlap itself — the destination is separated-but-touching, not isolated dots on a field",
+              "the heaviest-at-the-middle reading, with the dark opening toward the growing edge"
+            ]
+          },
+          {
+            "findingId": "grey-third-colour",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "There is no grey to remove. This configuration declares three palette stops — verdigris, bone and the near-black ground — and every field draws one of them; the greys the finding names are the runtime compositing bone and verdigris at a per-element opacity it writes from the token's seed. 'Alpha' is in this runtime's cannot list and no creator parameter reaches opacity, so neither deleting those intermediates nor reaching a mid value by lowering the opacity of verdigris is available: they are the same missing control asked for in opposite directions. A per-seed verdigris floor is refused the same way — paletteIx is a creator constant and the seed reaches nothing categorical here, so a token cannot be made to carry a minimum share of one colour."
+          }
+        ]
+      },
+      "boundedChange": {
+        "ok": true,
+        "moved": [
+          {
+            "parameter": "fields[2].spreadMax",
+            "from": 116,
+            "to": 90,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMin",
+            "from": 9,
+            "to": 12,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMax",
+            "from": 27,
+            "to": 34,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].drive",
+            "from": "SIZE",
+            "to": "COUNT",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].sensor",
+            "from": "DRAWDOWN",
+            "to": "VOLUME_TIER",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].curve",
+            "from": "LOG2",
+            "to": "LINEAR",
+            "named": true
+          }
+        ],
+        "unnamed": [],
+        "counts": {
+          "moved": 6,
+          "named": 6,
+          "unnamed": 0
+        },
+        "detail": "6 parameter(s) moved, all of them named in the author's response"
+      }
+    },
+    {
+      "round": 2,
+      "configHash": "2b002ff26c933c79472cfddc94abf8ba7d63c6d6dd20e3a901ec8542055a2f5b",
+      "configBytes": "0x564356310100000202034e7d6ed9d2c214161a030000010301000a1e1a800000040100030100091b167a10000500010000000c22125a1800000f436f6c6f6e79205265737461746564ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "GRID",
+            "primitive": "RECT",
+            "sizeMax": 26,
+            "spreadMax": 128,
+            "symmetry": "NONE",
+            "countMin": 10,
+            "countMax": 30,
+            "paletteIx": 1,
+            "stroke": false,
+            "variant": 0,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "STACK",
+            "primitive": "CIRCLE",
+            "sizeMax": 22,
+            "spreadMax": 122,
+            "symmetry": "NONE",
+            "countMin": 9,
+            "countMax": 27,
+            "paletteIx": 0,
+            "variant": 2,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "LINEFIELD",
+            "primitive": "RECT",
+            "sizeMax": 18,
+            "spreadMax": 90,
+            "symmetry": "NONE",
+            "countMin": 12,
+            "countMax": 34,
+            "paletteIx": 1,
+            "variant": 3,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#4e7d6e",
+          "#d9d2c2",
+          "#14161a"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 2,
+        "groundIx2": 2,
+        "flags": [],
+        "title": "Colony Restated"
+      },
+      "producedBy": "REAUTHORED_BY_THE_CHANGED_AUTHOR",
+      "mechanism": {
+        "ok": true,
+        "mechanism": "SUBTRACTION",
+        "polarity": "PEAKS_AT_RECOVERY",
+        "drive": "COUNT",
+        "curve": "LOG2",
+        "sensor": "RECOVERY",
+        "requires": {
+          "minFields": 2,
+          "countRangeAtLeast": 18
+        },
+        "detail": "countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+        "evidence": {
+          "row": "VC-subtract-3field",
+          "weakestPairing": 8.317,
+          "ink": "0.351 mean / 0.055 min",
+          "extent": 0.956,
+          "blankSeeds": 0,
+          "singleFieldControl": {
+            "row": "VC-subtract-COUNT-REC",
+            "blankSeeds": 7,
+            "inkMin": 0.013
+          }
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "multiplies",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "In recovery the colony multiplies and more cells are present in every generation, so the number of members is at its highest there."
+          },
+          {
+            "phrase": "reduces",
+            "direction": "lower",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "Under stress the colony reduces and fewer of its cells remain."
+          },
+          {
+            "phrase": "more of them",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "and in recovery more of them return."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"multiplies\", \"reduces\", \"more of them\"",
+        "otherSensor": "DRAWDOWN",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "intent": {
+        "densityTarget": "DENSE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "REGULAR",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "DENSE",
+          "evidence": [
+            "packed"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "meets the edges",
+            "border crops"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": [
+            {
+              "option": "COMPACT",
+              "phrase": "margin",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "focalMode": {
+          "source": "DEFAULT",
+          "value": "SINGLE_DOMINANT",
+          "detail": "the direction's focalHierarchy/composition did not name a focalMode",
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "REGULAR",
+          "evidence": [
+            "repeats at",
+            "regular"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [
+            "BROKEN:1"
+          ],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DEFAULT",
+          "value": "SOLID",
+          "detail": "the direction's medium/motifTranslation/paletteIntent/thumbnailIntent did not name a strokeMode",
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "DENSITY",
+          "evidence": [
+            "multiplies",
+            "fewer"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 10,
+            "ceiling": 30,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 16
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 10
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 29
+              }
+            },
+            "resolved": [
+              16,
+              10,
+              29
+            ],
+            "span": 19,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 16 / 10 / 29 across neutral / stress / recovery (span 19 of 20)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 9,
+            "ceiling": 27,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 14
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 9
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 26
+              }
+            },
+            "resolved": [
+              14,
+              9,
+              26
+            ],
+            "span": 17,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 14 / 9 / 26 across neutral / stress / recovery (span 17 of 18)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 12,
+            "ceiling": 34,
+            "readings": {
+              "neutral": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 17
+              },
+              "stress": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 17
+              },
+              "recovery": {
+                "perMille": 467,
+                "curved": 467,
+                "resolved": 22
+              }
+            },
+            "resolved": [
+              17,
+              17,
+              22
+            ],
+            "span": 5,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 17 / 17 / 22 across neutral / stress / recovery (span 5 of 22)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout GRID from rhythmMode=REGULAR; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "3 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 26 from densityTarget=DENSE",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry NONE (a project constant, so it carries no per-token variety); count range widened because COUNT is the drive and the range IS the response",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "3 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism SUBTRACTION PEAKS_AT_RECOVERY -> drive COUNT <- RECOVERY/LOG2, with the last field on DRAWDOWN so all three states separate. countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+          "evidence": {
+            "row": "VC-subtract-3field",
+            "weakestPairing": 8.317,
+            "ink": "0.351 mean / 0.055 min",
+            "extent": 0.956,
+            "blankSeeds": 0,
+            "singleFieldControl": {
+              "row": "VC-subtract-COUNT-REC",
+              "blankSeeds": 7,
+              "inkMin": 0.013
+            }
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "5cd117d9bef852810c71141da44bae9c86636539a2eb49e5d3f9c9669c0ec817",
+          "bytes": 294401
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "a1a6fea0dd2154321491168937f8fba0fc97aba4f3cbe17d6087941f6b34a781",
+          "bytes": 119089
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "fa8f401e5c0f75a5a64a609190fe8a7be15ce5448a0ffc14f4741e61811f4412",
+          "bytes": 292537
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "644a3e7eece8145c60436290f80f090926a7bf9e1e4ce9f26cf2876aa5b5b5dc",
+          "bytes": 120247
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "ba3e077b77d43701d19a3f335c7909e55afbfa841c3432137b4e5ebfa016877c",
+          "bytes": 46757
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.535,
+        "inkMin": 0.338,
+        "stateDeMean": 5.61,
+        "stateDeMin": 2.69,
+        "seedDeMean": 16.62,
+        "seedDeMin": 7.31
       }
     }
-  ]
+  ],
+  "objectiveBlockers": [],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "reviewerPromptSha256": "f9ea2cc1b696b5b6271de63fdc2ad4f775d034c733b1ae31a69d2d6fe95d6afa",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "2b002ff26c933c79472cfddc94abf8ba7d63c6d6dd20e3a901ec8542055a2f5b",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "bdb2952078ae4509671f87454bf76d3c2ca5584faca2ba97ccba13824c1ca202",
+        "bytes": 247236
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "94b0b5b1f95307ed272528100d98347b776f7a88f4e748f0a3a1099928c1802b",
+        "bytes": 100078
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "13dcafe4509c55f9f9084b8d9a3eabacec3ce210e4c3735381235347e6b80a71",
+        "bytes": 252777
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "b65a0e045e27fbfc911d48c005250ffce870328d8f52ebf7a8cbf1ca4497f2ad",
+        "bytes": 101419
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "3b1dee23a7aee2c0115a760d41ae074e22af58f3660fd0a73b205de1455d61a4",
+        "bytes": 40662
+      }
+    ],
+    "inputHashes": [
+      "bdb2952078ae4509671f87454bf76d3c2ca5584faca2ba97ccba13824c1ca202",
+      "94b0b5b1f95307ed272528100d98347b776f7a88f4e748f0a3a1099928c1802b",
+      "13dcafe4509c55f9f9084b8d9a3eabacec3ce210e4c3735381235347e6b80a71",
+      "b65a0e045e27fbfc911d48c005250ffce870328d8f52ebf7a8cbf1ca4497f2ad",
+      "3b1dee23a7aee2c0115a760d41ae074e22af58f3660fd0a73b205de1455d61a4"
+    ],
+    "measurements": {
+      "inkMean": 0.448,
+      "inkMin": 0.261,
+      "stateDeMean": 5.28,
+      "stateDeMin": 1.96,
+      "seedDeMean": 16.58,
+      "seedDeMin": 5.71
+    },
+    "frozenAt": "2026-09-03T19:47:45.030Z"
+  }
 }

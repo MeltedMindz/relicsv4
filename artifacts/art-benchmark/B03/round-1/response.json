@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B03",
+  "criticId": "critic-B03",
+  "note": "Everything answered here is a change to the AUTHOR -- the machine that turns an art direction into runtime bytes -- and not a patch to this project's configuration, because a hand-written patch would be a human art intervention and this lane's whole claim is that there are none.",
+  "responses": [
+    {
+      "findingId": "radial-fan-dominates-the-stack",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Both verbs in the prescription are refused by the medium. Rotation is not a creator parameter: the angle of a member comes from the layout and the seed, and there is no per-element orientation control anywhere in the schema, so the slabs cannot be laid flat. Giving each slab its own y position is 'per-element coordinates', named in this runtime's own cannot list -- a field is a count of primitives placed about the canvas centre by a layout, and a site's coordinates are not addressable. It is also worth correcting the diagnosis: no polar layout is elected here. The three layouts are STACK, GRID and LINEFIELD, all cell-family, so there is no radial placement to replace. The fan is LINEFIELD's known clumping plus seeded rotation. What does move is this field's reach and its market role, and both cut against its dominance.",
+      "parameters": [
+        "fields[2].spreadMax",
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The ochre slab field's reach falls from 116 to 90, inside the two registers that carry the section, so the slabs should stop crossing the frame corner to corner as a diagonal X on 5003, 5658 and 6313. It also stops being the SIZE-driven register, so it no longer fattens into the loudest thing in the frame under drawdown, and its population rises (12..34 from 9..27) so it reads as a run of flat members rather than a few large splayed ones. It will still be rotated and still centred: if 5265 and 5527 still read as a fan next round, that is the seeded rotation, and no parameter reaches it.",
+      "preserve": [
+        "the slabs themselves and their weight -- fields[2].sizeMax stays at 18, so the members keep their thickness and nothing is deleted or flattened to one pitch",
+        "the bed field untouched: fields 0 and 1 keep their layouts, primitives, sizes, counts and market bindings entirely",
+        "the four-colour earth palette and the flat dark base"
+      ]
+    },
+    {
+      "findingId": "section-does-not-fill-the-frame",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "Every clause of this asks for something the runtime names in its own cannot list. 'Start it left of x=0 and end it right of the frame width' is frame bleed and per-element coordinates; a bed running the full width is 'an element that fills the frame'; and 'spread the bed y positions across the full frame height' is again per-element coordinates -- there is no x, no y and no width in this schema. The only reach control is spreadMax, which is a radius ceiling about the canvas centre that clamps a site's CENTRE rather than its extent, and which the seed draws beneath from a floor of 16, so a bed cannot be made to terminate outside the picture. Fields 0 and 1 already carry 128 and 122, the top of the range. Something should be said plainly rather than discovered on the next sheet: the one reach parameter that moves this round moves INWARD, the ochre field from 116 to 90, so the dark margin will be tidier and not smaller. This brief's density direction and this runtime are pulling against each other, and the round-1 change set was a coverage CEILING, which does nothing for a frame that is under-covered."
+    },
+    {
+      "findingId": "discs-are-off-motif",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The disc field cannot be removed and its primitive cannot be swapped. Field count is an author-wide constant and never fewer than two, because a single field carrying a driven count blanked seven seeds of eight; and primitive is a per-field creator constant that none of the three round-1 author changes reaches, so replacing CIRCLE with a short RECT for this one brief would be a per-project art edit. What does happen is the second half of the prescription -- spending more of the budget on beds -- though it arrives as a raised population on the ochre rectangle register rather than as ink taken from the discs. The umber value survives in the palette, but it cannot be reassigned to some of the beds: paletteIx is one constant per field, so a field's members are all one colour and there is no per-element colour to hand umber to.",
+      "parameters": [
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The ochre flat-rectangle register's count goes from 9..27 to 12..34, so every seed and every market state carries more wide flat members and the discs become a smaller share of what is in the frame. Expect the halo of nine or ten discs on 6444 to sit behind a denser run of rectangles rather than around a small glyph. The discs themselves will still be there, still circles, still drawn in umber: this reduces their prominence and does not remove the primitive the brief never asked for.",
+      "preserve": [
+        "the darker umber value as a member of the earth palette -- palette and every paletteIx are unmoved, so removing prominence does not narrow the palette to ochre and grey",
+        "the horizontal bed field at full strength: fields 0 and 1 do not move at all",
+        "the seed variation in bed count and spacing evenness, which is carried by ranges that are not narrowed"
+      ]
+    },
+    {
+      "findingId": "drawdown-thickens-instead-of-thinning",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The thickness response is not inverted, it is REMOVED, and that is a deliberate difference. After this change no field takes its size from the market: the ochre register moves from drive SIZE on DRAWDOWN to drive COUNT on VOLUME_TIER, and the two bed fields were already drive COUNT. Driving size DOWN under drawdown instead of up is available in principle and is refused on measured grounds -- DRIVE_SIZE's resolved floor is the bytecode constant 2, so a size-driven field is invisible whenever its sensor reads low, measured at ink120 0.005 / 0.005 / 0.156 across the three states, a blank frame in two states of three. The ordering the finding actually asks for is delivered by count alone, which is the half already working.",
+      "parameters": [
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "Stress should stop being the heaviest state. The surviving marks no longer fatten -- the one field that was fattening them is now bound to VOLUME_TIER, which reads 30 / 30 / 32 across neutral / stress / recovery, so it adds nothing under drawdown -- while fields 0 and 1 keep falling to their count floors there. Expect 5134 and 5265 at 120px to stop reading as near-solid ochre masses under stress and to read as thin, open, streaked sections instead, with total ink ordering stress below neutral below recovery and recovery clearly the densest of the three.",
+      "preserve": [
+        "the bed-count response exactly as it is: fields 0 and 1 keep drive COUNT, sensor RECOVERY, curve LOG2 and their 10..30 and 9..27 ranges, so the count keeps falling under stress and returning in recovery",
+        "the thickness ladder between fields, since no sizeMax moves on this project -- 26 / 22 / 18 stand",
+        "the four working colours and the flat dark base in all three states"
+      ]
+    },
+    {
+      "findingId": "cold-band-is-never-the-thick-one",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "A colour bound to the single thickest bed in each seed needs three things the runtime names in its own cannot list at once: per-element colour, a per-seed parameter table, and a cross-field conditional. paletteIx is ONE constant per field, so a field's members are all one colour and thickness is a seeded scalar the colour cannot follow -- 'one cold band among the warm ones' can only ever be 'one of the three fields is entirely slate', which is a different picture. A per-seed floor of at least one slate member in every state is the same refusal from the other side: the seed reaches nothing categorical in this runtime. Making the slate bluer is expressible -- palette holds five creator-chosen stops and #59636b is already one of them, unpointed-at -- but none of the three round-1 author changes reaches palette derivation, so nothing in the palette moves next round, and choosing a colder grey for this one brief by hand would be the per-project art edit this lane exists to avoid."
+    },
+    {
+      "findingId": "translucent-overlaps-mud-the-partings",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "Opacity is written per element by the runtime from the token's seed. 'alpha' is named in this runtime's own cannot list, no creator parameter reaches it, and neither VectorConfigV1 nor the author exposes it, so 'raise every bed's fill to fully opaque' is not an instruction the medium can take. Stacking order already works the way the finding wants -- fields draw in order, so a later field is drawn over an earlier one -- but the marks are translucent as they land, so a crossing reads as two colours mixing rather than as one bed covering another, and that will still be true next round. Adding discrete darker and lighter umber, ochre and sand stops instead is expressible in the palette, but no round-1 author change reaches palette derivation, so promising it here would be promising a hand edit. The only real lever against tonal muddling is fewer overlaps, which is a density decision, and this brief's density direction asks for the great majority of the frame to carry ink -- so it is not one that can be pulled here without contradicting the direction."
+    },
+    {
+      "findingId": "banding-absent-in-a-third-of-seeds",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Half of this is already banked and the finding may not know it: countMin IS the resolved count floor and it is one of only two dimensions in either runtime with a floor the author owns rather than the bytecode, so no seed in any market state can already fall below 10, 9 and 9 members on the three fields. A register cannot be absent. The other half is refused: 'a floor high enough that even the sparsest seed carries beds from top border to bottom' is an EXTENT guarantee, not a count one, and extent is the seed's own draw beneath spreadMax with no floor parameter -- plus frame bleed and per-element coordinates are both refused, so a bed cannot be made to reach a border. And binding seed variation to spacing evenness or to the thick-bed colour once a floor is met is a cross-field conditional and a per-seed table, neither of which exists. What actually moves is one floor.",
+      "parameters": [
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The ochre register's floor rises from 9 to 12 and its ceiling from 27 to 34, so the sparsest seeds gain three guaranteed members and the densest gain seven possible ones. Expect 5527, 6182, 6444 and 5265 -- the four the critic reads as a scribble, a glyph and a cluster of ticks -- to carry visibly more flat ochre members at both sizes. They will not necessarily become sections: what makes them read as a section is banding that spans the frame, and that is extent rather than count, so if they still fail to read as sections next round the count floor was not the binding constraint.",
+      "preserve": [
+        "the real spread between crowded and sparse seeds -- fields 0 and 1 keep their 10..30 and 9..27 ranges untouched, so the primary variation axis is not compressed, and the third register's own span widens rather than narrows",
+        "the bed field's thickness and pitch variation, since no sizeMax and no layout moves",
+        "the four working colours and the flat dark base"
+      ]
+    },
+    {
+      "findingId": "fine-beds-vanish-at-browse-size",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "There is no thickness floor to raise. Resolved size is 2 + (sizeMax - 2) * v / 1000, so the thin end is the bytecode constant 2 and sizeMax is a CEILING the seed draws beneath; VectorConfigV1 has no sizeMin and no clamp on the thin end of the distribution, so 'raise the minimum bed thickness to two pixels at 120px' is not expressible. Carrying the lost pitch in the parting heights is the same refusal from the other side, because a parting is not an object -- it is whatever ground is left between two marks, and there is no spacing parameter. What does move is one real source of sub-pixel marks, and it is the worst one, because it applies to every seed at once rather than to unlucky draws.",
+      "parameters": [
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve"
+      ],
+      "expectedVisualEffect": "The ochre register stops taking its size from DRAWDOWN. A SIZE-driven field resolves to the constant 2 whenever its sensor reads low, which is a sub-pixel mark at 120px in whole market states rather than on unlucky seeds -- measured at ink120 0.005 in two states of three. After this its size is seed-drawn only and its members hold a consistent weight across neutral, stress and recovery. The per-seed thin draw remains: the pale ticks that carry 5265 at 256px and vanish at 120px are field 0's own low size draws, and nothing here reaches them.",
+      "preserve": [
+        "the thickness contrast between the thinnest and thickest beds: no sizeMax moves on this project, so 26 / 22 / 18 stand and the section is not flattened toward one weight",
+        "the bed-count response on fields 0 and 1, untouched",
+        "the four working colours and the flat dark base"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T19:28:11.268Z",
+  "generatedAt": "2026-09-03T19:48:21.045Z",
   "rows": [
     {
       "id": "B01",
@@ -7,12 +7,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "be511f7c9e213395fcee42b518b7ad2d86c29685225f78992f12ca70b14adbb3"
+      "configHashAtUnblind": "b7cccac277ca2125a7ffde3a25d27f16cf7a64f72e25c406e8cfe5f4588ec576",
+      "acceptedConfigHash": "b7cccac277ca2125a7ffde3a25d27f16cf7a64f72e25c406e8cfe5f4588ec576"
     },
     {
       "id": "B02",
@@ -20,12 +20,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "7cf41e366faee334b9a4ccd8d3faef4d0fe43fda9e2d1f475b3cb9ff80903d47"
+      "configHashAtUnblind": "4c00b5511ddcccbccc5639ad794615d659635a8efe0e42389b36a291957e88fc",
+      "acceptedConfigHash": "4c00b5511ddcccbccc5639ad794615d659635a8efe0e42389b36a291957e88fc"
     },
     {
       "id": "B03",
@@ -33,12 +33,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "32ce169e149ef2405f29d4fac5275747586addade7d48fc4cf38ea2a23e4f0eb"
+      "configHashAtUnblind": "467bedba95f0a1b399872a97d2599614061cfcf1d5f2e5656401ba6a159ef22a",
+      "acceptedConfigHash": "467bedba95f0a1b399872a97d2599614061cfcf1d5f2e5656401ba6a159ef22a"
     },
     {
       "id": "B04",
@@ -46,12 +46,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "4a1c83b853580481450ce77da5425368ea93936d54d24df233275111442e8f00"
+      "configHashAtUnblind": "e2546977e5db7c85349b223d4c7c5cca298cbf6abe01d985fb1c78bcae562088",
+      "acceptedConfigHash": "e2546977e5db7c85349b223d4c7c5cca298cbf6abe01d985fb1c78bcae562088"
     },
     {
       "id": "B05",
@@ -59,12 +59,12 @@
       "outcome": "ADMITTED",
       "runtime": "GEOMETRIC_RECURSION_V1",
       "template": "GEOMETRIC_RECURSION_V1/compass",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "376baf3991ce94594be55f2edb5d2a8e7fc8d4cee4a891713cc215e33dfa3f16"
+      "configHashAtUnblind": "e1b504ff0ba5179fab7d129ee9302c8ac7ef3eeef544b943792fc62a2ae8e109",
+      "acceptedConfigHash": "e1b504ff0ba5179fab7d129ee9302c8ac7ef3eeef544b943792fc62a2ae8e109"
     },
     {
       "id": "B06",
@@ -72,12 +72,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "955a8f1e3794bbf4841994c52c452625ceebc036bc4a517bf2727c130db7946d"
+      "configHashAtUnblind": "157970ea24a9d37343dc616b304806615e994d44bbd22373521abee58c9e48dd",
+      "acceptedConfigHash": "157970ea24a9d37343dc616b304806615e994d44bbd22373521abee58c9e48dd"
     },
     {
       "id": "B07",
@@ -85,12 +85,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "2be0250078f7e9af33e67f6144ee3817be11fdb82c49a02f4ea64c1b8083b6b0"
+      "configHashAtUnblind": "2b002ff26c933c79472cfddc94abf8ba7d63c6d6dd20e3a901ec8542055a2f5b",
+      "acceptedConfigHash": "2b002ff26c933c79472cfddc94abf8ba7d63c6d6dd20e3a901ec8542055a2f5b"
     },
     {
       "id": "B08",
@@ -98,12 +98,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "a63d0f7756bbb1fd7bd3a9e578c75cd64c81ce0bf1f35e4abfe4901eac08ee63"
+      "configHashAtUnblind": "14a50df13a026e34c9cc4c738bf640f4f7b53d5a3036a75dc44edf61cb4f7c19",
+      "acceptedConfigHash": "14a50df13a026e34c9cc4c738bf640f4f7b53d5a3036a75dc44edf61cb4f7c19"
     },
     {
       "id": "B09",
@@ -111,12 +111,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "a251a803188b1828e8885f59c8aaf31dc13ecd9e9e46659a2008cfb607252bea"
+      "configHashAtUnblind": "3bfcffe2fdf5b7461a12a38448928cea7c941bda800bb95f8e84af08602e9bdd",
+      "acceptedConfigHash": "3bfcffe2fdf5b7461a12a38448928cea7c941bda800bb95f8e84af08602e9bdd"
     },
     {
       "id": "B10",
@@ -124,12 +124,12 @@
       "outcome": "ADMITTED",
       "runtime": "GEOMETRIC_RECURSION_V1",
       "template": "GEOMETRIC_RECURSION_V1/compass",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "6761819a7eba297f14cfb20ecf1c3fc9e7a71e0abb705b4860a6901fe76b4283"
+      "configHashAtUnblind": "f55e69d71854b69640f59aa1b07288b0b3443865eff7ee399ff1c40a92fb7cf5",
+      "acceptedConfigHash": "f55e69d71854b69640f59aa1b07288b0b3443865eff7ee399ff1c40a92fb7cf5"
     },
     {
       "id": "B11",
@@ -137,12 +137,12 @@
       "outcome": "ADMITTED",
       "runtime": "VECTOR_COMPOSITION_V1",
       "template": "VECTOR_COMPOSITION_V1/alluvium",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "fbfc46d462f08fd7db8edcbe79cbe1dfcbe7b8250e2092a1dccb8fcdfacf9eb7"
+      "configHashAtUnblind": "33fba7c254f7cf47a0fca6346ad62f4f7b137858c65291839e2d97183d2df99f",
+      "acceptedConfigHash": "33fba7c254f7cf47a0fca6346ad62f4f7b137858c65291839e2d97183d2df99f"
     },
     {
       "id": "B12",
@@ -150,12 +150,12 @@
       "outcome": "ADMITTED",
       "runtime": "GEOMETRIC_RECURSION_V1",
       "template": "GEOMETRIC_RECURSION_V1/compass",
-      "rounds": 1,
-      "verdict": "AUTHORED",
+      "rounds": 2,
+      "verdict": "AWAITING",
       "objectiveBlockers": [],
       "reviewerId": null,
-      "configHashAtUnblind": null,
-      "acceptedConfigHash": "fc8355ff46fe9ea829a36370cd046c27287230054d3f4dc84259584a3e26f7a1"
+      "configHashAtUnblind": "7548d1cee04a2f9672339bc20297edff4b52b3e1936feddc43239189d41df1de",
+      "acceptedConfigHash": "7548d1cee04a2f9672339bc20297edff4b52b3e1936feddc43239189d41df1de"
     }
   ],
   "blindPass": 0,
@@ -163,9 +163,9 @@
   "byRuntime": {},
   "mutatedAfterUnblind": 0,
   "humanArtInterventions": {
-    "value": 12,
+    "value": 0,
     "checked": 12,
-    "detail": "12 accepted configuration(s) do not reproduce from the author: B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12"
+    "detail": "all 12 accepted configurations reproduce byte for byte from the author and their own art direction"
   },
   "blockedByObjectiveBattery": []
 }

@@ -946,7 +946,16 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   // field draws its own seed byte for every scalar, so the reach and the coverage of the whole are
   // the MAXIMUM over the fields, and a second and third register is the only thing standing
   // between a low size draw and an empty tile. Hierarchy comes from size, not from field count.
-  const minimalComposition = intent.extentTarget === "COMPACT" && intent.densityTarget === "SPARSE";
+  // A SPARSE COMPOSITION TAKES TWO REGISTERS, NOT THREE, AND THE BATTERY IS WHAT SETTLED IT.
+  //
+  // Three fields is the answer to the blank frame: one field at the spread ceiling reads extent
+  // 0.752 with three blank seeds of twenty-four, three read 0.962 with none. But a palette has one
+  // ground and typically two working colours, so on a sparse composition the third register shares
+  // a colour with the first, sits inside its reach, and carries eight small marks over ground the
+  // first has already covered — and its ablation moved the picture 1.201 dE against a
+  // structural-role floor of 1.5. That is the battery saying the configuration declares a field it
+  // does not have, and it is right: the honest fix is to declare two.
+  const minimalComposition = intent.densityTarget === "SPARSE";
   const fields = Math.max(req.minFields ?? 2, minimalComposition ? 2 : 3);
   set("FOCAL_HIERARCHY", "fieldCount", fields);
   // FRACTURE wants a FEW LARGE members; everything else wants the calibrated density.
@@ -966,7 +975,11 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   // Measured against the declared ground on this pipeline, the two shipped templates read 0.570
   // (compass) and 0.430 (alluvium) — both of them emphatic works. A sparse brief has to land well
   // under alluvium, not beside compass. The three targets are now roughly 0.20 / 0.35 / 0.55.
-  const sizeByDensity = { SPARSE: 16, MODERATE: 22, DENSE: 30 }[intent.densityTarget];
+  // SPARSE WAS TAKEN TOO FAR: at a ceiling of 16 the third register's ablation moved the picture
+  // less than the structural-role floor of 1.5 dE, which is the battery correctly saying that a
+  // field that faint is a field the configuration is lying about having. 18 is the smallest
+  // ceiling at which every declared register still earns its place.
+  const sizeByDensity = { SPARSE: 18, MODERATE: 22, DENSE: 30 }[intent.densityTarget];
   // WHEN COUNT IS THE DRIVE, COUNT CARRIES THE DENSITY AND SIZE MUST LEAVE ROOM FOR IT.
   //
   // sizeMax and count MULTIPLY — the atlas's own (sizeMax, count) grid runs from 0.002 to 0.461, a
@@ -1053,7 +1066,11 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
   for (let i = 1; i < fields; i += 1) {
     set("SECONDARY_STRUCTURE", `fields[${i}].layout`, req.fewLargeMembers ? chosenLayout : secondaries[(i - 1) % secondaries.length]);
     set("SECONDARY_STRUCTURE", `fields[${i}].primitive`, family === "POLAR" ? "ARC" : (intent.strokeMode === "LINEWORK" ? (i === 1 ? "LINE" : "POLYLINE") : (i === 1 ? "CIRCLE" : "RECT")));
-    set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, Math.max(14, Math.round((req.fewLargeMembers ? 62 : sizeMax) * (i === 1 ? 0.85 : 0.7))));
+    // THE FLOOR IS 18, NOT 14, BECAUSE THE BATTERY FOUND WHAT 14 BUYS. On a sparse composition the
+    // third register came out at a size ceiling of 14 and its ablation moved the picture less than
+    // the structural-role floor of 1.5 dE — which is the battery saying, correctly, that a field
+    // that faint is a field the configuration is claiming to have and does not.
+    set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, Math.max(18, Math.round((req.fewLargeMembers ? 62 : sizeMax) * (i === 1 ? 0.85 : 0.7))));
     // NOT TAPERED INWARD. The previous cut held each secondary 14 units inside the one before it,
     // reasoning that a secondary reaching further than its primary reads as debris. Measured, that
     // taper costs the whole composition its reach: extent 0.878 against 0.962 untapered, and an
@@ -1164,7 +1181,7 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
         // Larger than an ordinary counter-register, because on a fracture composition this field
         // is the ONLY thing separating recovery from neutral: the mass itself sits near the spread
         // floor in both. At 26 the pairing measured 3.744 against a floor of 3.8.
-        set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, 32);
+        set("SECONDARY_STRUCTURE", `fields[${i}].sizeMax`, 38);
       }
       // THE COUNTER-REGISTER IS HELD INSIDE THE PRIMARY'S REACH, and it is the ONLY field that is.
       // Tapering every secondary inward cost the composition its extent — measured 0.878 against
@@ -1178,12 +1195,21 @@ function authorVector({ set, session, intent, direction, mechanism, attempt, not
         // counter-register's element count above the primary's on every sparse brief, so the
         // quiet signal was the loudest field in the frame — which is half of why five critics
         // measured coverage far above what their directions asked for.
-        const floor = Math.max(4, Math.round(base * 0.4));
+        // ITS FLOOR IS THE COMPOSITION'S GUARANTEE, and it was four. On a fracture composition the
+        // two mass registers draw their element sizes from a bytecode floor of 2, so a seed that
+        // draws small on both leaves this register as the only thing in the frame — and at four
+        // elements of seed-drawn size it was not enough: one neutral frame of a hundred came back
+        // at 2.9% ink against the 4% floor.
+        const floor = Math.max(req.fewLargeMembers ? 10 : 4, Math.round(base * 0.4));
         set("SECONDARY_STRUCTURE", `fields[${i}].countMin`, floor);
         // ON A FRACTURE COMPOSITION IT IS THE WHOLE RECOVERY SIGNAL and is scaled to the register
         // rather than to the mass. Fracture's own fields carry five to seven pinned members, so
         // scaling this one to that base leaves the neutral-to-recovery pairing at 3.3 dE.
-        set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, Math.min(34, floor + (req.fewLargeMembers ? 30 : Math.max(10, base))));
+        // The per-field site ceiling is 40 and the fracture composition's own two registers spend
+        // only thirteen of the hundred-and-twenty total, so this one may take the room: raising
+        // its floor to ten without raising its ceiling cost the neutral-to-recovery pairing 4.230
+        // -> 3.784, under the floor.
+        set("SECONDARY_STRUCTURE", `fields[${i}].countMax`, Math.min(req.fewLargeMembers ? 38 : 34, floor + (req.fewLargeMembers ? 28 : Math.max(10, base))));
       }
       continue;
     }

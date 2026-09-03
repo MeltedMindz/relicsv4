@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B10",
+  "criticId": "critic-B10",
+  "note": "Round 1 changed the AUTHOR, not this project's configuration: the counter-register's sensor, its reach and count scaling, and the coverage ceiling all moved in the machine that turns a direction into bytes. Nobody hand-wrote a patch for this brief, because a hand-written patch would be exactly the human art intervention this lane claims it has none of.",
+  "responses": [
+    {
+      "findingId": "hairline-weight-lost",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "GEOMETRIC_RECURSION_V1 has a fill/stroke flag and no stroke-width control of any kind. The width of a stroked member is written by the runtime, no creator parameter reaches it, and no drive writes one, so the base width cannot be moved from about 2% of frame width to 0.4% and it cannot be halved at each successive order, because there is no per-order width either. This configuration is already stroke-only on both rules with the OUTLINE flag set; what a viewer reads as rope rather than thread is the runtime's own width, and there is nothing the author can set that answers it. Every other finding here that leans on the thinner line is answered without it."
+    },
+    {
+      "findingId": "density-far-over-brief",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "rules[0].shapeSet",
+        "rules[1].shapeSet",
+        "rules[0].symSet",
+        "rules[1].symSet",
+        "rules[0].branch",
+        "rules[1].branch",
+        "rules[0].prune",
+        "rules[1].prune"
+      ],
+      "expectedVisualEffect": "Ink falls well below the roughly 26% mean and the heaviest seeds stop reading as woven medallions or stamped seals. Shape is the largest single lever on coverage in this runtime and symmetry is the cheapest, so narrowing both sets drops coverage and narrows the seed-to-seed spread at the same time: 6444, 5920 and 5527 come down toward 6182 rather than 6182 coming up, and the dark reads through the interiors of 5134, 5920 and 6444 instead of only around their outsides.",
+      "preserve": [
+        "the figure's span: the reduction is taken from shape, symmetry order and child count, never from contraction under RING, which is the control that would shrink the figure itself",
+        "the innermost orders as the closest-woven part of the picture"
+      ]
+    },
+    {
+      "findingId": "contrast-split-not-low",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "palette"
+      ],
+      "expectedVisualEffect": "Bone comes down and slate comes up into a narrow band against the ground, so neither working colour shouts and neither nearly disappears. The slate rosette on 5265 becomes as present as the bone square over it, and the figure reads as two threads of similar weight rather than as a hard frame with something faint inside it.",
+      "preserve": [
+        "the ground exactly as it is: groundMode stays FLAT and groundIx does not move, so the flat dark field stays at the bottom of the value range",
+        "the warm-bone against cool-slate hue relationship: this is a value change, not a desaturation of the two colours into one"
+      ]
+    },
+    {
+      "findingId": "enclosing-frame-reads-as-structure",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "SQUARE and CIRCLE can leave the outer rule's shape set, and because shape is drawn per RULE the second rule can keep SQUARE and HEX for exactly the interior members this finding asks to keep. What cannot happen is the removal of a large enclosing member as such: the root node of every rule is always drawn, and 'a per-element deletion' is on this runtime's refusal list, so one largest outline will always be present. It becomes a hexagon or a diamond thrown outward by the production rather than an axis-aligned mat, which is the reading the finding is actually against.",
+      "parameters": [
+        "rules[0].shapeSet",
+        "rules[0].ruleSet",
+        "rules[0].contraction",
+        "rules[1].shapeSet"
+      ],
+      "expectedVisualEffect": "The big bone square around 5265 and the bone circle around 5789 are gone. The outermost thing in the frame becomes the outer order's own radiating members reaching toward the edges, so the recursive figure stops being a small object placed inside a border.",
+      "preserve": [
+        "the small square and hexagon as interior members at recursive scale, which stay in the second rule's shape set",
+        "the outward reach of the outermost order, which the coarse rule keeps carrying"
+      ]
+    },
+    {
+      "findingId": "detached-satellites-break-the-single-figure",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Every member in this runtime already descends from the central production. There is no placement rule that emits a member at an absolute position, so there is nothing of that kind to remove. What produces the satellites is the finer rule reaching past the coarse one, and RING and BRANCH placing children at a radius equal to the parent's own size; the finer rule can be held inside the coarse rule's reach by its production and its contraction, which is the author change. There is no ink-centroid clamp and no fitting pass: RING and BRANCH exceed the root's footprint by construction and the runtime clamps a coordinate rather than the shape, so a 0.02 centroid guarantee is not something this runtime can offer.",
+      "parameters": [
+        "rules[1].ruleSet",
+        "rules[1].contraction",
+        "rules[1].branch",
+        "rules[1].prune"
+      ],
+      "expectedVisualEffect": "The clusters hanging at upper-left and mid-right on 5265, and the ones on 5527, 5658 and 6444, come back inside the figure: the finer rule's children sit within the coarse rule's reach instead of beside it, so each frame holds one connected figure and 5265's ink centroid moves back toward the middle from +0.08.",
+      "preserve": [
+        "the small-square member as a fine-order motif where it hangs off a parent, rather than deleting the finest marks",
+        "the outward reach of the outermost order, which stays with the coarse rule"
+      ]
+    },
+    {
+      "findingId": "filled-mass-present",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "There is no fill to remove. rules[0].stroke and rules[1].stroke are both already true and the document already carries the OUTLINE flag, so every primitive in this configuration is stroke-only and the runtime reports a single distinct fill. What reads as a filled pale dot at 120px is a small stroked circle whose stroke width the runtime writes, and stroke width is not a creator control, so it cannot be thinned until the interior shows. The adjacent move that is available is to stop drawing discs at all and to raise the child-to-parent ratio so the smallest members are large enough for the ground to read through their outlines.",
+      "parameters": [
+        "rules[0].shapeSet",
+        "rules[1].contraction"
+      ],
+      "expectedVisualEffect": "The pale dots inside 6051's small circles disappear because CIRCLE leaves the shape set, and the densest interiors on 5396 and 5920 open up as the smallest members grow relative to their parents, so no region of the interior reads as a solid chip. 5789's nested squares stop reading as a filled plate at 120px.",
+      "preserve": [
+        "the members themselves and their positions: 6051's ring of small circles survives as the same radial rhythm in outline",
+        "the innermost orders as the visual centre of gravity, carried by weave density rather than by mass"
+      ]
+    },
+    {
+      "findingId": "order-gradient-flat-and-depth-collapses",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Two of the three halves are real and one is not. The member-scale gradient is contraction, which is the child-to-parent ratio applied at every level and compounding, so a figure whose orders step down in scale is directly settable. The order floor is depthMin, and depthMin == depthMax is the only way to pin depth in this runtime. The stroke-width taper is refused outright, since there is no width control at any scope. The finding should also know what the extra orders buy at browse size: DEPTH moves the document thirtyfold and the 120px picture by 0.348 dE against a floor of 3.8, so more orders is a change in the file far more than in the raster.",
+      "parameters": [
+        "rules[0].contraction",
+        "rules[1].contraction",
+        "rules[1].depthMin",
+        "rules[1].depthMax",
+        "rules[0].branch",
+        "rules[1].branch"
+      ],
+      "expectedVisualEffect": "No seed renders as a single outline with a stub: 6182, 5658 and 6313 gain their missing generations, and each generation is a clear step smaller than the one that produced it, so the scale ladder reads outward. The width ladder will not: every order is drawn at the same runtime-written stroke width, and 6444's outermost members will stop being the largest without becoming the finest.",
+      "preserve": [
+        "the interior weave of 5134 and 5920, which already reads as the closest-woven part of its figure",
+        "the reduced ink budget: the added orders are paid for by the shape and symmetry narrowing, not by spending coverage"
+      ]
+    },
+    {
+      "findingId": "radial-rhythm-absent-on-half-the-collection",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Dropping NONE from the symmetry sets guarantees every token carries a rotational order about the single centre, and RING places its children at even angular intervals about that centre, so the arbitrary overlapping quadrilaterals can be removed by set membership rather than by a new placement rule. What cannot be given is the range: the runtime's symmetry vocabulary is fixed at NONE, MIRROR_X, MIRROR_Y, QUAD, ROT3 and ROT6, so there is no ROT5, ROT7 or ROT12 and a per-seed order drawn from about 5 to 12 is not expressible. The widest honest spread is the rotational orders the schema names.",
+      "parameters": [
+        "rules[0].symSet",
+        "rules[1].symSet",
+        "rules[0].ruleSet"
+      ],
+      "expectedVisualEffect": "5265, 5527 and 5789 stop reading as arbitrary overlapping quadrilaterals and gain a visible angular order about the centre, and 6313's uneven three-child placement becomes regular, so all twelve carry a symmetry a viewer can read at 120px. The orders present will be the runtime's own three rather than a 5-to-12 spread.",
+      "preserve": [
+        "the radial reading already achieved on 5003, 5134, 5396, 5920 and 6444",
+        "symmetry order still varying across seeds rather than every seed converging on one order"
+      ]
+    },
+    {
+      "findingId": "state-change-swaps-identity-instead-of-scaling",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "rules[1].depthMin",
+        "rules[1].depthMax",
+        "rules[1].drive",
+        "rules[1].sensor",
+        "rules[1].curve"
+      ],
+      "expectedVisualEffect": "Symmetry order and recursive order count stop moving with the market. symSet is seed-drawn and never bindable, and depth is pinned by depthMin == depthMax, so the stressed token is the same construction drawn at a smaller radius rather than a simpler figure: 5003 stress stays a ten-point star instead of becoming a plain hexagon, and 5134 stress keeps its outer orders instead of collapsing to bare concentric hexagons.",
+      "preserve": [
+        "the size change itself and its magnitude: DRIVE_SPREAD stays on the coarse rule, and it is the only recursion drive with a large raster signature at 120px",
+        "the seed's own symmetry and order count as token facts rather than market facts"
+      ]
+    },
+    {
+      "findingId": "market-direction-inverted-on-5396",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The inversion is answered at the author rather than on one seed. The second register had been bound to the other of DRAWDOWN and RECOVERY, which grows exactly where the primary thins; it is now VOLUME_TIER, which reads identically at neutral and stress on the fixture ring and rises only in recovery, so no rule can push span up under stress any more. The centroid clamp cannot be given: there is no centre parameter, the figure is centred by construction, an off-centre subject is on the refusal list, and what looks like migration toward a corner is the seed's symmetry draw plus a production that throws children past the root footprint.",
+      "parameters": [
+        "rules[1].sensor",
+        "rules[1].curve",
+        "rules[1].drive"
+      ],
+      "expectedVisualEffect": "Span decreases monotonically from recovery through neutral to stress on every seed including 5396, whose stress cell stops measuring wider than its neutral, and the split into a pale star cluster at upper-left with detached slate squares at lower-right goes with the second register's reach being held inside the first's.",
+      "preserve": [
+        "recovery as the widest state on every seed",
+        "5396's neutral figure, which is one of the better radial compositions in the set and is not redesigned"
+      ]
+    },
+    {
+      "findingId": "seed-span-swamps-the-market-span",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The seed's span spread is a consequence of the sets it draws from, and those are the author's: shape moves extentX from SQUARE's 0.79 down to TRIANGLE's 0.52, production from RING's 0.85-0.99 down to INSCRIBE's 0.60, and ROT3 and ROT6 lift extentX to 0.90 under every production. Narrowing those sets narrows the neutral-span band, and that is executable. A hard bounding-box clamp at 0.92 is not: there is no clamp, no inset and no fitting pass, and RING and BRANCH exceed the root footprint by construction with the runtime clamping a coordinate rather than the shape. Seeds landing at 0.996 can be made rare; they cannot be made impossible.",
+      "parameters": [
+        "rules[0].shapeSet",
+        "rules[0].ruleSet",
+        "rules[0].symSet",
+        "rules[0].contraction",
+        "rules[1].symSet"
+      ],
+      "expectedVisualEffect": "Neutral spans converge into a narrow band, so no seed is born smaller than another seed under stress and 6182's neutral figure stops being narrower than 5134's stressed one. 5527 and 6444, which currently sit at 0.996 and are cut by the frame edge, come inside it on the great majority of draws and regain headroom for recovery to expand into.",
+      "preserve": [
+        "the market's full span excursion, roughly the 1.7x 5003 currently achieves, since that is the signal being protected",
+        "the seeds structurally distinct from one another, with the freed distinctness loaded onto symmetry order and order count"
+      ]
+    }
+  ]
+}

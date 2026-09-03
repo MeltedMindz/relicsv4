@@ -2,8 +2,7 @@
   "briefId": "B09",
   "axis": "monumental",
   "title": "BARROW",
-  "phase": "AUTHORED",
-  "objectiveBlockers": [],
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
   "admission": {
     "schemaVersion": 1,
@@ -837,7 +836,959 @@
         "stateDeMin": 4.32,
         "seedDeMean": 8.08,
         "seedDeMin": 2.83
+      },
+      "critique": {
+        "criticId": "critic-B09",
+        "whatWorks": [
+          "The ground is exactly right and must not be touched: a flat, unmodulated near-black that carries no gradient, no vignette and no second dark value anywhere across the twelve seeds, so nothing in the background competes with the drawn members. Every fix below should be made without introducing any modulation into the ground.",
+          "The primitive vocabulary is the correct KIND of shape. Blunt quadrilaterals with no ornament, no line work, no internal detail, no strokes and no small decorative marks -- the members are the right species for a quarried blunt mass, and the problems below are all about their size, count, opacity and placement rather than about the shape itself. Do not replace the quadrilateral with something more articulated.",
+          "There is exactly one accent hue and it is the correct ochre. No second accent has crept in anywhere across twelve seeds and thirty-six state cells, so the three-colour discipline of the palette intent is being honoured in count even where it is not honoured in value. Keep the single-accent rule absolutely.",
+          "Seed variation is real and legible at 120px: no two of the twelve read as the same token, and the differences are visible at browse size rather than only under magnification. Seed 5265 and seed 6182 could never be confused. This is hard to get and easy to lose while consolidating members -- whatever collapses the scatter into a few large masses must not collapse the twelve into one.",
+          "The market axis has the right SIGN even though it has the wrong mechanism. Recovery is genuinely the densest, most merged, most continuous state (5003 recovery and 5265 recovery are the two most monument-like cells on the entire sheet) and stress is the most broken-up. The ordering neutral-to-stress-to-recovery is correct; only the way the transformation is achieved is wrong."
+        ],
+        "findings": [
+          {
+            "id": "member-count-and-scale",
+            "whatFails": "Every seed is a scatter of roughly twenty to thirty quadrilaterals that are all within about a factor of two of the same size, and each one occupies perhaps a tenth of the frame width. At 120px seeds 5003, 6051, 5920 and 5789 read as confetti or as a pile of gravel, not as a monument. There is no member anywhere on the sheet that is large enough to be read as a mass in its own right, except the single outlier at 6444.",
+            "why": "The direction commits to 'a few large blunt masses' and the density note says the coverage must be 'built from a few large members rather than many small ones, so that at browse size the coverage reads as one solid object'. Twenty-five equal small squares is the exact failure mode both clauses were written to exclude: the weight is being sought through accumulation of detail, which the focal-hierarchy note explicitly forbids, instead of through the size of the masses.",
+            "specificChange": "Reduce the member count to between three and six per seed and grow each survivor so the smallest spans at least 40% of the frame width and the largest spans more than 100% of it. Set the scale distribution so the largest member is at least three times the area of the smallest, rather than the near-uniform sizing on the sheet now, since the direction names relative member size as the third variation axis and it currently carries no variation at all.",
+            "keep": "Keep the blunt quadrilateral as the only member shape and keep the slight per-member rotation, which is what stops the masses reading as a diagram of axis-aligned boxes. Keep the seed-to-seed legibility noted above: three to six large members must still produce twelve distinguishable tokens, so the placement entropy that currently lives in the scatter has to be moved into the silhouette rather than deleted."
+          },
+          {
+            "id": "frame-fill-and-crop",
+            "whatFails": "On eleven of twelve seeds the drawn material sits in the middle of the frame with a wide band of empty ground on at least two sides, and often on all four. Seed 5396 leaves roughly the outer fifth of the frame empty all the way round; seed 5658 is almost entirely ground with a small central object; seed 5920 floats clear of every edge. Nothing is cropped by the border anywhere except at 6444.",
+            "why": "The composition clause requires that the mass 'reaches the edges of the frame on every side and reads as larger than the frame comfortably holds, cropped by the border rather than contained by it, with barely any clear ground around it'. What the sheet shows is the precise inverse: an object comfortably contained by the frame with generous clear ground around it. The brief's central adjective, 'considerably larger than the frame comfortably holds', is not being attempted.",
+            "specificChange": "Extend the member placement envelope past the viewBox on all four sides so the union of the members overruns every edge and at least two members are visibly cut by the border, and raise consolidated ink coverage from the roughly 30% mean the objective records toward 65-75% of the frame in the neutral and recovery states. Move the placement radius outward rather than scaling the whole composition up about the centre, which would preserve the floating-island reading at a larger size.",
+            "keep": "Keep the ground as a thin dark surround rather than eliminating it entirely -- the negative-space clause asks for a thin dark surround in the consolidated state, not for zero ground. Keep the near-black ground value itself unchanged while coverage rises, so the silhouette gains area without the background gaining lightness."
+          },
+          {
+            "id": "flat-mass-not-alpha-stack",
+            "whatFails": "The members are drawn at low opacity and stacked, so every overlap produces a new tonal step. Seed 5265 at 512px shows five or six distinct grey values inside what should be one mass, with every member's outline visible straight through the members in front of it. The result is a lattice of crossing translucent edges rather than a silhouette, and at 120px this reads as a granular texture across the whole object.",
+            "why": "The focal-hierarchy clause says 'there is no fine texture beneath them, because texture would make the monument look built rather than quarried'. Alpha-stacked overlaps ARE that texture -- they are the visual signature of assembly, showing the viewer every seam and every part boundary. The medium note also asks that independent fields read 'either as one merged silhouette or as several standing pieces', and translucent stacking gives neither: it gives a transparent scaffold in which every piece is simultaneously visible and merged.",
+            "specificChange": "Raise member fill opacity to fully opaque and draw the members with flat fills at two values only, charcoal and iron, so that overlapping members merge into a single unbroken shape instead of accumulating tonal steps. Where depth reading is needed, separate the two values between members rather than relying on alpha, and remove any per-member opacity variation entirely.",
+            "keep": "Keep the overlap itself -- the direction requires masses 'overlapping until they merge into a single heavy silhouette', so members must still intersect heavily. Only the transparency goes; the intersection geometry is correct and is what will produce the merged silhouette once the fills are opaque."
+          },
+          {
+            "id": "hub-and-rosette",
+            "whatFails": "Several seeds arrange their members as a ring turning about a centre. Seed 5658 is a soft dark disc with an ochre polygon behind it and small squares set at regular angular intervals all the way round the frame; seed 6182 is a disc with an ochre starburst radiating out from behind it and squares ringing it; seeds 5527, 5003 and 6051 all place a large soft circle at the centre with quadrilaterals distributed around it. The ochre in 6182 and 5658 is itself a radiating rosette.",
+            "why": "The rhythm clause forbids this by name: 'it is a mass seen head on, with no ring, no rosette and no turning about a hub'. It also asks for 'a few large members at uneven intervals, deliberately unmetrical'. The angular distribution around a central disc is metrical and rotational, and the ochre starburst is literally a rosette. A hub-and-ring arrangement also reads as a mechanism or an emblem rather than as a quarried mass, which is the opposite of the motif.",
+            "specificChange": "Remove the radial placement rule and the central circular primitive, and replace the angular distribution with unmetrical offsets along a single dominant axis so members sit at uneven intervals with no shared centre and no rotational relationship. Replace the ochre starburst with the single narrow seam described in the next finding, so nothing in the composition radiates from a point.",
+            "keep": "Keep the heavy central concentration of mass -- the composition should still be weighted toward the middle of the frame, since the direction places the masses 'about the middle of the frame'. It is the rotational ORDER that must go, not the central weight. Keep the member overlap density at the centre that the ring arrangement currently produces."
+          },
+          {
+            "id": "ochre-seam-absent-or-blob",
+            "whatFails": "The ochre is not a seam. Where it appears it is a filled polygon or a soft glow sitting behind and among the squares -- a patch at 5003, a wedge at 5134, a starburst at 6182, a broad field along the bottom edge at 6444. And on several seeds it is effectively absent: seed 5265 at 512px carries no ochre at all, and seeds 6313 and 5789 carry a few ochre pixels visible only under magnification. At 120px, five of the twelve seeds show no ochre a viewer would notice.",
+            "why": "The thumbnail intent says that at 120px 'the work reads as one heavy dark shape crossed by a single ochre seam'. The motif calls for 'one narrow ochre member laid across them as a seam' and the identity anchors require that ochre in EVERY seed and EVERY state. A seed with no visible ochre has lost one of the three declared colours and one of the two things a viewer is supposed to be able to read at browse size. A blob is also not a seam: a seam has length and direction and gives the mass a reading, which a patch cannot do.",
+            "specificChange": "Declare the ochre as a mandatory single elongated member with an aspect ratio of at least 6:1, present in every seed and every state, drawn on top of the charcoal and iron masses rather than behind them, and long enough to cross the whole silhouette and be cut by the frame at both ends. Bind the second variation axis to where that seam crosses the silhouette, as the variation strategy specifies, so the seam's placement varies while its presence never does.",
+            "keep": "Keep the ochre hue exactly as it is -- the colour itself is right and is the one palette value on the sheet that needs no correction. Keep it as the only accent: no second warm colour, and no ochre outlines or ochre-tinted members elsewhere in the mass."
+          },
+          {
+            "id": "stress-depletes-instead-of-fracturing",
+            "whatFails": "Stress removes members rather than separating them. Seed 5265 under stress is a nearly empty frame holding three faint grey squares and one soft circle -- the objective's own blank check records the emptiest frame at 4.1% ink against a 4% floor, and it names stress as the state that produced it. Seeds 5003 and 5396 lose roughly two thirds of their members under stress. The remaining pieces are not the neutral pieces moved apart; they are a different, smaller set in different places.",
+            "why": "The market transformation says 'the mass fractures and its silhouette breaks, so the monument stands in several pieces there', and 'the magnitude the market moves is how many pieces the monument stands in'. Fracture conserves material: the same mass, split. Deletion does not. The identity anchors demand 'the same few large members' and 'the same frame-filling weight' in every state, so a stress cell that is 4% ink is no longer recognisably the same object -- at 120px seed 5265 under stress reads as an empty frame, which is a failure of identity, not a depiction of drawdown.",
+            "specificChange": "Hold the member set fixed across all three states and drive the transformation by translating the same members apart along fracture vectors, increasing separation distance under stress and contracting it toward zero in recovery, so total drawn area stays roughly constant while the silhouette breaks into more pieces. Set a hard floor on stress ink at no less than 50% of that seed's neutral coverage so no state can approach the blank frame.",
+            "keep": "Keep the direction of the axis, which is already correct: stress most broken, recovery most continuous, neutral between them. Keep the magnitude of perceptual separation between states that the objective records, so that making the states conserve material does not make them converge into three cells that look alike."
+          },
+          {
+            "id": "stress-inverts-focal-hierarchy",
+            "whatFails": "Under stress the ochre becomes the largest and brightest thing in the frame. Seed 5134 stress is dominated by two big saturated ochre squares that are the first and second things the eye reaches; seed 5003 stress leads with an ochre square; seed 5396 stress has the ochre as the brightest element with an extra ochre square isolated near the corner. Meanwhile the charcoal members have thinned out, so the accent is competing with a depleted mass and winning.",
+            "why": "The focal-hierarchy clause is unconditional: 'the single merged silhouette dominates absolutely; the ochre seam is the one secondary event'. It does not say the seam may take the lead in one state. The identity anchors also require the same charcoal-and-iron-over-near-black relationship in every state, and a state in which ochre is the dominant colour has changed the palette relationship rather than the monument's condition. As it stands, stress does not read as one monument breaking; it reads as a different, warmer object.",
+            "specificChange": "Clamp the ochre's drawn area to no more than about 8% of total ink in every state and hold that cap constant across neutral, stress and recovery, so the seam cannot grow as the mass thins. Keep the seam's width fixed and let only its position and the fracture beneath it respond to the market, rather than letting the accent's size or saturation carry any part of the state signal.",
+            "keep": "Keep the ochre fully visible under stress -- capping it must not be implemented by fading it out, because the identity anchors require the seam in every state and the thumbnail intent requires it be legible at 120px. It should stay the same narrow, saturated seam it is in neutral; only its dominance goes."
+          },
+          {
+            "id": "state-introduces-new-primitives",
+            "whatFails": "Large soft dark circles appear in the stress row and essentially nowhere else. Seeds 5003, 5134, 5265 and 5396 all grow one or more big blurred discs under stress that have no counterpart in their neutral or recovery cells. Combined with the member re-roll noted above, the neutral and stress cells of the same seed do not share a recognisable arrangement: 5134 neutral and 5134 stress have no member in common that a viewer could track from one to the other.",
+            "why": "The identity anchors require that 'every seed and every state keeps the same few large members ... the same blunt coarse mass; it must read as one monument under three conditions'. A primitive kind that exists only in one state is a fourth element of the vocabulary that arrives with the market, so the viewer sees three different objects rather than one object in three conditions. Soft blurred discs also contradict 'blunt coarse mass' -- they are the softest and roundest thing on the sheet in a direction that asks for blunt and quarried.",
+            "specificChange": "Remove the soft circular primitive entirely and draw the same set of blunt quadrilateral members in all three states, so that a viewer can trace an individual member from the neutral cell into the stress cell and back into recovery. Bind the state response to member position and separation only, leaving member count, member shape and member size identical across the three cells of any one seed.",
+            "keep": "Keep the per-state distinctness the objective measures -- removing the circles must not make stress and neutral converge, which is why the fracture displacement in the previous finding has to be doing the work before the circles are taken away. Keep recovery as the most consolidated of the three."
+          },
+          {
+            "id": "palette-drifts-cool-and-pale",
+            "whatFails": "The members read as cool blue-grey slate rather than charcoal and iron, and there is almost no value separation between them: across seed 5789 and seed 5920 every member sits within a narrow band of the same middling blue-grey, so nothing reads as a darker charcoal mass against a lighter iron one. At the other end, seed 6444 is a single very pale near-white square filling most of the frame, far lighter than any iron value and a clear outlier against the other eleven.",
+            "why": "The palette intent names 'charcoal and iron ... over a near-black ground', which is a neutral-to-warm dark pair, and asks that the ground be 'only barely distinguishable from the charcoal so the silhouette stays dominant'. A uniform cool slate at mid value gives neither the charcoal nor the iron, so the mass loses the internal value reading the direction allocates to it, and it separates too far from the ground. The pale 6444 breaks the identity anchor that every seed keeps the same charcoal-and-iron relationship.",
+            "specificChange": "Shift the member fills off blue toward neutral-warm dark, setting charcoal close to the ground value so the silhouette edge stays quiet, and separating iron from it by a clear step so the two member values are distinguishable at 120px. Clamp maximum member lightness so no member can render as pale as seed 6444 does, and widen the charcoal-to-iron interval while keeping both below mid grey.",
+            "keep": "Keep the three-colour discipline and the near-black ground exactly as they are. Keep the ground barely separated from the darkest member value -- darkening the members must not be achieved by lightening the ground, which would put a visible edge around the whole silhouette and cost the mass its monumentality."
+          }
+        ],
+        "overall": "This is a scatter, and the brief asks for a monolith. Almost every finding here descends from one decision: the work is seeking weight through the accumulation of two dozen small, equal, translucent quadrilaterals, when the direction states twice over that weight must come from the size of a few large masses and explicitly forbids the texture that accumulation produces. Fix that first -- three to six opaque members, each large enough to be cropped by the frame, overlapping into one silhouette -- and the frame-fill failure, the alpha-lattice texture and the hub-and-ring arrangement all resolve together, because none of them survives a composition built from four masses instead of twenty-five. The ochre is the second job: it is currently a blob or a starburst, it is missing outright on several seeds, and it takes over the frame under stress, where the direction has it as a narrow secondary seam laid across the mass in every seed and every state. The third is the market axis, which has the right sign and the wrong mechanism: stress is deleting the monument rather than fracturing it, to the point where one stress cell sits at the blank-detection floor and reads as an empty frame at browse size. Conserve the members across states and let separation distance carry the signal. What must not be lost in any of this is the flat near-black ground, the single correct ochre hue, the blunt unornamented shape vocabulary, and the genuine seed-to-seed distinctness at 120px -- that last one is the easiest thing to break while consolidating twenty-five members into four, so the entropy currently living in the scatter needs to be relocated into the silhouette rather than removed."
+      },
+      "response": {
+        "schemaVersion": 1,
+        "kind": "AUTHOR_RESPONSE",
+        "respondsTo": "B09",
+        "criticId": "critic-B09",
+        "note": "Round 1 changed the AUTHOR, not this project's configuration: the counter-register's sensor, its reach and count scaling, and the coverage ceiling all moved in the machine that turns a direction into bytes. Nobody hand-wrote a patch for this brief, because a hand-written patch would be exactly the human art intervention this lane claims it has none of.",
+        "responses": [
+          {
+            "findingId": "member-count-and-scale",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Count and size are both real controls: countMin == countMax pins how many elements a field draws, sizeMax is the coverage lever and nothing else in this runtime moves ink as far, and because each field carries its own sizeMax a stepped size hierarchy across the three registers is directly expressible. Two halves are not. An element that fills the frame is refused by name, so no member can span more than 100% of frame width. And the size ratio BETWEEN two members of the SAME field is written per site by the runtime from the token seed, not declared by the author, so 'the largest at least three times the area of the smallest' can be arranged across fields and not inside one.",
+            "parameters": [
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[1].countMin",
+              "fields[1].countMax",
+              "fields[2].countMin",
+              "fields[2].countMax",
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax"
+            ],
+            "expectedVisualEffect": "Each seed drops from roughly twenty-five near-equal tiles to a handful of members whose sizes are plainly stepped between the three registers, so at 120px seeds 5003, 6051, 5920 and 5789 read as a few masses rather than as gravel. The largest member will take a large fraction of the frame and will still sit inside it.",
+            "preserve": [
+              "RECT as the only member shape: the blunt quadrilateral is not replaced with anything more articulated",
+              "the per-site rotation and jitter the runtime writes, which is what stops the masses reading as a diagram of axis-aligned boxes",
+              "seed-to-seed legibility at 120px: the count reduction is paid for out of the smallest register rather than out of what separates the twelve tokens"
+            ]
+          },
+          {
+            "findingId": "frame-fill-and-crop",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Coverage and reach are separate, near-orthogonal controls here and both can rise: sizeMax carries ink, spreadMax carries how far from the canvas centre a site may sit. What cannot happen is the crop. The primary field's spreadMax already stands at its 128 ceiling, the runtime clamps a site's CENTRE rather than its extent, and both 'frame bleed' and 'an element that fills the frame' are on this runtime's refusal list, so a union of members that overruns every edge and is visibly cut by the border is not reachable. 65-75% ink is also above the measured ceiling: the whole runtime saturates near 0.39-0.46 at browse size.",
+            "parameters": [
+              "fields[1].spreadMax",
+              "fields[2].spreadMax",
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[0].countMin",
+              "fields[1].countMin",
+              "fields[2].countMin"
+            ],
+            "expectedVisualEffect": "The clear ground shrinks to a thin surround on most seeds: members from all three registers now reach the border instead of floating clear of it as 5396, 5658 and 5920 do, and coverage rises well above the roughly 30% mean the objective recorded. Few or no members will be cut by the frame.",
+            "preserve": [
+              "the flat near-black ground: groundMode, groundIx and groundIx2 do not move, so the silhouette gains area without the background gaining lightness",
+              "a thin dark surround rather than zero ground, as the negative-space clause asks"
+            ]
+          },
+          {
+            "findingId": "flat-mass-not-alpha-stack",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "Opacity is not a creator parameter in this runtime. 'alpha' is on VECTOR_COMPOSITION_V1's own refusal list, per-element opacity is written by the runtime from the token's seed, and VectorConfigV1 exposes no alpha field at all. So members cannot be made fully opaque, per-member opacity variation cannot be removed, and the tonal step at every crossing cannot be flattened into one silhouette. The only lever on how many tonal steps appear is the number of overlaps, which is a density decision and is answered under the count and coverage findings; it is not the fix this finding asks for and it should not be reported as one."
+          },
+          {
+            "findingId": "hub-and-rosette",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The rotational ORDER is reachable and the shared centre is not. Primitive and layout are creator constants that can both be changed: the soft central disc goes when the circle field stops drawing CIRCLE, and the even angular and row regularity goes when the metrical cell-grid field moves to a layout measured sparse and irregular. But law L5 holds unconditionally here: all twelve layouts place their sites about the canvas centre, per-element coordinates are refused by name, and there is no inset and no placement parameter. 'No shared centre' and 'unmetrical offsets along a single dominant axis' are therefore not instructions this runtime can take.",
+            "parameters": [
+              "fields[1].primitive",
+              "fields[1].variant",
+              "fields[2].layout",
+              "fields[1].layout"
+            ],
+            "expectedVisualEffect": "The soft dark disc at the middle of 5658, 5527, 5003 and 6051 disappears, and the ring of small squares at regular angular intervals is replaced by an irregular scatter, so no seed reads as a rosette, an emblem or a mechanism. The members still concentrate about the middle of the frame.",
+            "preserve": [
+              "the heavy central concentration of mass, which in this runtime is a property of the medium rather than a choice",
+              "the member overlap density at the centre that the current arrangement produces"
+            ]
+          },
+          {
+            "findingId": "ochre-seam-absent-or-blob",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Mandatory presence and elongation are both expressible. countMin == countMax == 1 pins the ochre field to exactly one element in every seed and every state, so a seed with no visible ochre becomes impossible; fields are drawn as layers, so which field carries the accent decides whether it sits over the mass or behind it; and an elongated primitive exists, since LINE is always stroked and ELLIPSE reads its variant as the axis ratio. What cannot be declared is a 6:1 aspect on a quadrilateral, because element extent comes from sizeMax with no aspect control, and a seam long enough to be cut by the frame at both ends, because frame bleed is refused.",
+            "parameters": [
+              "fields[0].primitive",
+              "fields[0].variant",
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[0].sizeMax",
+              "fields[0].paletteIx",
+              "fields[2].paletteIx"
+            ],
+            "expectedVisualEffect": "Exactly one ochre member appears in all twelve seeds and all thirty-six state cells, elongated rather than square or blobby, drawn over the charcoal and iron rather than behind them, and findable at 120px on 5265, 6313 and 5789, which currently show none. It will not cross the whole silhouette edge to edge.",
+            "preserve": [
+              "the ochre hue exactly as authored: only which field carries it, how many there are and how it is drawn move",
+              "ochre as the only accent, with no second warm colour and no ochre-tinted members elsewhere in the mass"
+            ]
+          },
+          {
+            "findingId": "stress-depletes-instead-of-fracturing",
+            "disposition": "ACCEPT",
+            "parameters": [
+              "fields[2].countMin",
+              "fields[2].countMax",
+              "fields[2].sensor",
+              "fields[2].curve",
+              "fields[2].drive",
+              "fields[2].spreadMax",
+              "fields[0].drive",
+              "fields[1].drive"
+            ],
+            "expectedVisualEffect": "The member set stops changing between the three cells of a seed. The same elements are drawn at neutral, stress and recovery and only the distance between them moves, so 5265 under stress reads as the neutral object pulled apart rather than as three faint squares in an empty frame, and stress ink stays near neutral instead of falling to the 4.1% the blank check recorded. The count register that was deleting members now reads identically at neutral and stress and rises only in recovery.",
+            "preserve": [
+              "the direction of the axis, which is already correct: stress most broken, recovery most continuous, neutral between them",
+              "the magnitude of perceptual separation between states, now carried by separation distance rather than by deletion"
+            ]
+          },
+          {
+            "findingId": "stress-inverts-focal-hierarchy",
+            "disposition": "ACCEPT",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[0].drive",
+              "fields[0].sensor"
+            ],
+            "expectedVisualEffect": "The ochre stops being the largest and brightest thing in any frame. Its drawn area is set by a pinned count and a small sizeMax and is carried by a drive that moves position rather than area, so it is the same narrow accent in neutral, stress and recovery while the charcoal mass keeps the lead. 5134 stress no longer opens on two big saturated ochre squares.",
+            "preserve": [
+              "the ochre fully visible under stress: the cap is bought with size and count and never by fading, and there is no alpha lever to fade it with in any case",
+              "the ochre's hue and saturation, which are correct and are not touched"
+            ]
+          },
+          {
+            "findingId": "state-introduces-new-primitives",
+            "disposition": "ACCEPT",
+            "parameters": [
+              "fields[1].primitive",
+              "fields[1].variant",
+              "fields[1].drive",
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The large soft dark discs vanish from the stress row of 5003, 5134, 5265 and 5396. Primitive is a creator constant the market never reaches, so once the circle field draws quadrilaterals no state can introduce a fourth element kind, and with the counts pinned a viewer can trace an individual member from the neutral cell into stress and back into recovery.",
+            "preserve": [
+              "the per-state distinctness the objective measures: the separation is moved onto member spread before the circles are taken away, not after",
+              "recovery as the most consolidated of the three states"
+            ]
+          },
+          {
+            "findingId": "palette-drifts-cool-and-pale",
+            "disposition": "ACCEPT",
+            "parameters": [
+              "palette",
+              "fields[1].paletteIx",
+              "fields[2].paletteIx"
+            ],
+            "expectedVisualEffect": "The two member values leave the cool blue-grey band. The darker sits close to the ground so the silhouette edge stays quiet, the lighter is a clear step above it and readable as a separate value at 120px, and neither renders as pale as the near-white square on 6444. Both stay below mid grey.",
+            "preserve": [
+              "the three-colour discipline and the near-black ground: groundIx and groundIx2 do not move, so the members are darkened without the ground being lightened",
+              "the ground barely separated from the darkest member value, so no visible edge appears around the whole silhouette"
+            ]
+          }
+        ]
+      },
+      "boundedChange": {
+        "ok": true,
+        "moved": [
+          {
+            "parameter": "fields[2].sizeMax",
+            "from": 30,
+            "to": 38,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].spreadMax",
+            "from": 116,
+            "to": 90,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMin",
+            "from": 5,
+            "to": 10,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMax",
+            "from": 33,
+            "to": 38,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].sensor",
+            "from": "RECOVERY",
+            "to": "VOLUME_TIER",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].curve",
+            "from": "LOG2",
+            "to": "LINEAR",
+            "named": true
+          }
+        ],
+        "unnamed": [],
+        "counts": {
+          "moved": 6,
+          "named": 6,
+          "unnamed": 0
+        },
+        "detail": "6 parameter(s) moved, all of them named in the author's response"
+      }
+    },
+    {
+      "round": 2,
+      "configHash": "3bfcffe2fdf5b7461a12a38448928cea7c941bda800bb95f8e84af08602e9bdd",
+      "configBytes": "0x5643563101000002020426282b4a4f550f1113b07d3a0307000302000207073e8000000701000200020606357a10000000010000000a26265a1800000f426172726f77205265737461746564ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "SCATTER",
+            "primitive": "RECT",
+            "sizeMax": 62,
+            "spreadMax": 128,
+            "symmetry": "NONE",
+            "countMin": 7,
+            "countMax": 7,
+            "paletteIx": 3,
+            "stroke": false,
+            "variant": 0,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR"
+          },
+          {
+            "layout": "SCATTER",
+            "primitive": "CIRCLE",
+            "sizeMax": 53,
+            "spreadMax": 122,
+            "symmetry": "NONE",
+            "countMin": 6,
+            "countMax": 6,
+            "paletteIx": 0,
+            "variant": 2,
+            "stroke": false,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR"
+          },
+          {
+            "layout": "GRID",
+            "primitive": "RECT",
+            "sizeMax": 38,
+            "spreadMax": 90,
+            "symmetry": "NONE",
+            "countMin": 10,
+            "countMax": 38,
+            "paletteIx": 1,
+            "variant": 3,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#26282b",
+          "#4a4f55",
+          "#0f1113",
+          "#b07d3a"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 2,
+        "groundIx2": 2,
+        "flags": [],
+        "title": "Barrow Restated"
+      },
+      "producedBy": "REAUTHORED_BY_THE_CHANGED_AUTHOR",
+      "mechanism": {
+        "ok": true,
+        "mechanism": "FRACTURE",
+        "polarity": "PEAKS_AT_STRESS",
+        "drive": "SPREAD",
+        "curve": "LINEAR",
+        "sensor": "DRAWDOWN",
+        "requires": {
+          "pinnedCount": true,
+          "fewLargeMembers": true,
+          "minFields": 3,
+          "spreadCeiling": true,
+          "secondSensorRegister": true
+        },
+        "detail": "A FEW LARGE members and a LINEAR curve. Linear is what makes this fracture rather than dilation: it leaves the neutral reading at 20 per mille, so the members resolve near the spread floor and OVERLAP INTO ONE MASS, and the stress reading of 900 pulls them to the frame. LOG2 lifts neutral to 326 and the mass is already broken before the market does anything.",
+        "evidence": {
+          "row": "FRAC-a-3field",
+          "componentsByState": "1.0 neutral -> 2.875 stress",
+          "largestShareByState": "1.000 -> 0.895",
+          "weakestPairing": 3.64,
+          "blankSeeds": 0,
+          "mixedSensorRow": {
+            "row": "FRAC-e-mixed",
+            "weakestPairing": 6.149
+          }
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "fractures",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "Under drawdown the mass fractures and its silhouette breaks, so the monument stands in several pieces there."
+          },
+          {
+            "phrase": "consolidate",
+            "direction": "lower",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "In recovery those pieces consolidate again and the mass reads once more as one continuous silhouette."
+          },
+          {
+            "phrase": "broken",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "and under drawdown it is at its most broken."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"fractures\", \"consolidate\", \"broken\"",
+        "otherSensor": "RECOVERY",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "intent": {
+        "densityTarget": "MODERATE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "BROKEN",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "STRUCTURE",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DEFAULT",
+          "value": "MODERATE",
+          "detail": "the direction's density/negativeSpace/thumbnailIntent did not name a densityTarget",
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "reaches the edges"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": [
+            {
+              "option": "COMPACT",
+              "phrase": "contained",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "focalMode": {
+          "source": "DEFAULT",
+          "value": "SINGLE_DOMINANT",
+          "detail": "the direction's focalHierarchy/composition did not name a focalMode",
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "BROKEN",
+          "evidence": [
+            "uneven"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": [
+            {
+              "option": "RADIAL",
+              "phrase": "ring",
+              "why": "negated in its own clause"
+            },
+            {
+              "option": "RADIAL",
+              "phrase": "rosette",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "SOLID",
+          "evidence": [
+            "silhouette",
+            "masses",
+            "weight",
+            "mass"
+          ],
+          "score": 4,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "STRUCTURE",
+          "evidence": [
+            "fractures",
+            "breaks"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 128,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 20,
+                "resolved": 18
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 900,
+                "resolved": 116
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 80,
+                "resolved": 24
+              }
+            },
+            "resolved": [
+              18,
+              116,
+              24
+            ],
+            "span": 98,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 18 / 116 / 24 across neutral / stress / recovery (span 98 of 112)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LINEAR",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 122,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 20,
+                "resolved": 18
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 900,
+                "resolved": 111
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 80,
+                "resolved": 24
+              }
+            },
+            "resolved": [
+              18,
+              111,
+              24
+            ],
+            "span": 93,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 18 / 111 / 24 across neutral / stress / recovery (span 93 of 106)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 10,
+            "ceiling": 38,
+            "readings": {
+              "neutral": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 17
+              },
+              "stress": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 17
+              },
+              "recovery": {
+                "perMille": 467,
+                "curved": 467,
+                "resolved": 23
+              }
+            },
+            "resolved": [
+              17,
+              17,
+              23
+            ],
+            "span": 6,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 17 / 17 / 23 across neutral / stress / recovery (span 6 of 28)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout SCATTER from rhythmMode=BROKEN; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "3 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 62 from densityTarget=MODERATE, raised because FRACTURE needs members large enough to overlap into one mass",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry NONE (a project constant, so it carries no per-token variety); count PINNED because the drive is not COUNT and a moving count would be a second mechanism nobody asked for",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "4 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism FRACTURE PEAKS_AT_STRESS -> drive SPREAD <- DRAWDOWN/LINEAR, with the last field on RECOVERY so all three states separate. A FEW LARGE members and a LINEAR curve. Linear is what makes this fracture rather than dilation: it leaves the neutral reading at 20 per mille, so the members resolve near the spread floor and OVERLAP INTO ONE MASS, and the stress reading of 900 pulls them to the frame. LOG2 lifts neutral to 326 and the mass is already broken before the market does anything.",
+          "evidence": {
+            "row": "FRAC-a-3field",
+            "componentsByState": "1.0 neutral -> 2.875 stress",
+            "largestShareByState": "1.000 -> 0.895",
+            "weakestPairing": 3.64,
+            "blankSeeds": 0,
+            "mixedSensorRow": {
+              "row": "FRAC-e-mixed",
+              "weakestPairing": 6.149
+            }
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "772ee6feef94549ef337ad06a76c2216f49ed503b972b3e7c404bfc9a9da2f80",
+          "bytes": 140646
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "24b71c878b362ca285e2e0ee5e4b847dbdce4fb8cd0cfb661af5fab6c84b925c",
+          "bytes": 59658
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "b6ccf8bcfda6a36f2beef846cc07b070560d2fc6680feb421b259bb2ab637b1a",
+          "bytes": 157311
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "3043bfdabae95a0939d6d3029d5c404c9a0bbaa5fa692ef75343ab756d0efc08",
+          "bytes": 66932
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "5f36849c09fba9170426c64f2601db53188711a619b0c1b342d5eb6831c64352",
+          "bytes": 26179
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.319,
+        "inkMin": 0.161,
+        "stateDeMean": 3.55,
+        "stateDeMin": 0.23,
+        "seedDeMean": 7.26,
+        "seedDeMin": 2.34
       }
     }
-  ]
+  ],
+  "objectiveBlockers": [],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "reviewerPromptSha256": "b77a97fadbb79252f0741eb0b2ecb5b45921b3b3270d19deea3a1ab8ae700b05",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "3bfcffe2fdf5b7461a12a38448928cea7c941bda800bb95f8e84af08602e9bdd",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "f069b3aeb6845b313040439f040ff697d45583be563285d584c115867a190d50",
+        "bytes": 119776
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "33543118324a0242bbc00e98acfdbe8c7b9f417b148c0d57526c472a41d334e8",
+        "bytes": 50098
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "1621cb14edddb765ae3b56591188bed79c3255c388dc2ad292e98b1ca41ae062",
+        "bytes": 135592
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "234a4e696433cbdd92daf32e3d8bd03beb87767c5a965195b2bec2c06978da08",
+        "bytes": 57556
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "cd899e24f15f5b068be26969370bf772eadf285def3fda1408ab1ab3eac9ccc3",
+        "bytes": 20904
+      }
+    ],
+    "inputHashes": [
+      "f069b3aeb6845b313040439f040ff697d45583be563285d584c115867a190d50",
+      "33543118324a0242bbc00e98acfdbe8c7b9f417b148c0d57526c472a41d334e8",
+      "1621cb14edddb765ae3b56591188bed79c3255c388dc2ad292e98b1ca41ae062",
+      "234a4e696433cbdd92daf32e3d8bd03beb87767c5a965195b2bec2c06978da08",
+      "cd899e24f15f5b068be26969370bf772eadf285def3fda1408ab1ab3eac9ccc3"
+    ],
+    "measurements": {
+      "inkMean": 0.178,
+      "inkMin": 0.035,
+      "stateDeMean": 4.56,
+      "stateDeMin": 0.96,
+      "seedDeMean": 5.77,
+      "seedDeMin": 1.59
+    },
+    "frozenAt": "2026-09-03T19:47:53.114Z"
+  }
 }

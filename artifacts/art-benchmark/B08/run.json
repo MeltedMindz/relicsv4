@@ -2,8 +2,7 @@
   "briefId": "B08",
   "axis": "mechanical",
   "title": "ESCAPEMENT",
-  "phase": "AUTHORED",
-  "objectiveBlockers": [],
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
   "admission": {
     "schemaVersion": 1,
@@ -787,7 +786,927 @@
         "stateDeMin": 8.76,
         "seedDeMean": 9.86,
         "seedDeMin": 5.41
+      },
+      "critique": {
+        "criticId": "critic-B08",
+        "whatWorks": [
+          "The two-colour relationship is right: warm brass against cool slate over a flat near-black ground, and the two hues stay separable on every one of the twelve seeds at 120px. Keep exactly these two working colours and this ground value.",
+          "No literal instrument part appears anywhere in the sheet — no gear tooth, no hand, no numeral, no dial marking, on any seed or in any market state. That constraint is fully honoured and must survive every change listed below.",
+          "The rotational idiom is unmistakable and it is the correct reading for this brief: every seed is one figure turned about a single hub with strictly even angular repetition, centred and squarely framed rather than sitting adrift as a small instrument in a large empty field.",
+          "Seed 5265, and the 512px render of it, already carries two legible concentric registers at different radii — an inner brass one and an outer slate one. That two-register construction is the thing to generalise across the collection, not to discard.",
+          "The silhouette survives the downscale from 256px to 120px without turning to mush: the outer contour holds and the brass-slate split still reads at browse size, which is the size that settles these decisions."
+        ],
+        "findings": [
+          {
+            "id": "solid-hub-mass",
+            "whatFails": "On ten of the twelve seeds the centre is a single opaque brass disc covering roughly the inner half of the frame — 5003, 5134, 5527, 5658, 6051 and 6313 are a solid coin with a fringe attached to it, and no ground shows anywhere inside that coin. Every member is a filled shape rather than a stroked one, so there is no line weight in the picture at all.",
+            "why": "The direction asks for light-to-moderate density, well under half the frame carrying ink, with the whole drawing carried in fine line so it reads as engineering rather than as mass. A filled centre is the exact opposite of that reading, and this run's own sweep puts mean inked area at 52.5 percent of frame with the emptiest of 52 sampled frames still at 33.1 percent — over half the collection is mass, not line.",
+            "specificChange": "Remove the filled hub entirely and replace every filled member with an unfilled stroked outline at a constant hairline width — about 1px at the 256px render and never above 1.5px — so the dark ground reads through the middle of the figure; target mean inked area below 0.35 of frame with no single frame above 0.45.",
+            "keep": "Keep the figure sized to fill the frame and keep the bright brass reading at the centre: the hub must still be the brightest thing in the picture, made now of stroked members converging on it rather than of a filled disc."
+          },
+          {
+            "id": "no-annular-clearance",
+            "whatFails": "There are no readable annular bands anywhere. Within a ring the members overlap each other by most of their width into a continuous imbricated shingle, and where a second ring does exist it butts straight up against the first, so at 120px every seed reads as one mass with a ragged fringe instead of as nested rings separated by dark.",
+            "why": "negativeSpace names the dark ground in the annular bands and in the wedges between radial members as the thing doing the work of making the mechanism look machined, and thumbnailIntent says the change a viewer judges at 120px is how much dark shows in those bands. With the bands closed there is literally nothing at browse size for the market state to move.",
+            "specificChange": "Widen the radial gap between consecutive rings until the dark band between them is at least as wide as a member is long, and reduce the member count per ring until neighbouring members within a ring stop touching — leave a dark wedge of at least a third of the angular pitch between one member and the next.",
+            "keep": "Keep the concentric construction about one hub and the strictly even angular interval within each ring. This is about opening gaps, not about disturbing the regular spacing, which already reads correctly."
+          },
+          {
+            "id": "organic-member-form",
+            "whatFails": "The member is a tapered, hooked crescent that thins to a point, and every one of them curls the same way about the hub, so each seed carries a visible pinwheel chirality. At 512px on 5265 the members read as feathers, petals or claws; at 120px the twelve read as sunflowers and sea anemones.",
+            "why": "The brief asks for the regularity of something machined rather than grown, and for an escapement abstracted down to its rotational logic. A tapered hook with a handed curl is a growth form, and it is the single strongest thing currently pulling this work away from instrument and toward organism.",
+            "specificChange": "Replace the tapered hooked crescent with a constant-width member — either a straight radial bar or a plain concentric arc segment — with square flat-cut ends and no thinning along its length, and remove the handed curl so members sit on true radii or true concentric arcs instead of spiralling.",
+            "keep": "Keep the members repeating at an even angular interval around each ring and keep them as fine independent primitives. The fix is to the member silhouette, not to the repetition, which is already right."
+          },
+          {
+            "id": "brass-as-field-not-beat",
+            "whatFails": "Brass is doing the work of a large filled field rather than of a line — it is the single biggest area in almost every frame. Where translucent brass overlaps slate, or overlaps itself, the blend produces olive, ochre and muddy brown intermediates, plainly visible in the slabs of 5396 and in the stress rectangles of 5003 and 5134, so more than two colours are on screen.",
+            "why": "paletteIntent permits two working colours only, holds the ground flat behind all of them, and reserves the brass for the members that set the instrument's beat. A brass field is not a beat, and alpha-blended intermediates are a third and fourth colour arriving by accident rather than by election.",
+            "specificChange": "Reserve brass for one designated ring of members and stroke every other ring in slate, and set member opacity to fully opaque so overlapping strokes can no longer mix a third tone; hold the ground at one flat dark value behind every ring.",
+            "keep": "Keep the exact brass and slate hues and the near-black ground. The hue pair and its contrast at 120px are working and must not be re-picked while the roles are being reassigned."
+          },
+          {
+            "id": "stress-adds-mass",
+            "whatFails": "Stress makes the figure heavier rather than looser. On 5003, 5134 and 5396 the brass centre inflates under stress and swallows more of the frame, and the run's own sweep names neutral as the emptiest state — so the dark is at its widest in neutral, not in stress, which is where the brief puts it.",
+            "why": "marketTransformation says the mechanism loosens under volatility, that the interval between rings is widest there, and that this interval is the magnitude the market moves. A state that adds ink under volatility inverts the reading a viewer is being taught, and an inverted signal is worse than a signal that does not move at all.",
+            "specificChange": "Invert the sign of the stress response so stress increases the radial interval between rings and the angular gap between members, and therefore lowers inked area — the ordering to hit, measured as inked fraction of frame, is stress emptiest, neutral in the middle, recovery densest.",
+            "keep": "Keep the magnitude of the change. The states are currently easy to tell apart and that separation must survive the reversal, rather than being traded away for a correct direction at a smaller amplitude."
+          },
+          {
+            "id": "state-signal-not-ring-interval",
+            "whatFails": "What visibly moves between states is the diameter of the brass centre and the scatter of loose members flung outside the figure, not the interval between rings. On 5003 and 5134 the neutral and recovery cells are close to interchangeable at 120px, and 5265 moves the opposite way from 5003 under the same state, so one market condition does not produce one gesture across seeds.",
+            "why": "The direction names a single magnitude for the market to move — the interval between rings — and identityAnchors requires every state to keep the same construction. A signal carried by hub diameter and by stray outlying members is not that magnitude, and one whose sign flips from seed to seed cannot be learned by a viewer at all.",
+            "specificChange": "Bind the state to one parameter, the radial spacing between consecutive rings, and drive it monotonically — recovery tightest, neutral middle, stress widest — with the same sign and the same proportional step on every seed; remove the state's effect on hub diameter and on scattered outlying members.",
+            "keep": "Keep all three states byte-distinct, and keep ring count, member shape and angular order fixed across a seed's three states so the only thing a viewer sees change is the clearance."
+          },
+          {
+            "id": "angular-order-not-constant",
+            "whatFails": "The order of rotational symmetry varies widely across the sheet — 5396 turns roughly ten arms, 5003 around twenty, 5265 more than twenty — while the number of rings and their radii barely vary at all. The result is that ten of the twelve seeds read as the same object at 120px with a different fringe count.",
+            "why": "variationStrategy makes the angular order the one constant the whole collection shares, a signature rather than an axis, and puts the first variation on how many rings the mechanism carries and how far they sit from the hub. This work has the two swapped: it varies on the axis meant to be fixed and is fixed on the axis meant to vary. The brief's passing line about tokens differing in rotational order and the direction's line about it being a constant cannot both hold, and the direction is what this work is held to.",
+            "specificChange": "Pin the angular order to one collection-wide value on every seed, and move the seed variation onto ring count — a range of roughly two to five rings — and onto the radii those rings sit at, with member size as the secondary axis and the brass-against-slate balance as the last.",
+            "keep": "Keep the current seed-to-seed distinctness. The collection must not collapse into twelve identical figures once the angular order is pinned, which is exactly why ring count and ring radii have to start carrying the variation before that pin lands."
+          },
+          {
+            "id": "slab-member-outlier",
+            "whatFails": "Seed 5396 is drawn from a different vocabulary altogether: its members are broad axis-aligned rectangular slabs rather than radial members, they overlap into translucent brown blocks, and the figure sits noticeably smaller in its cell than the other eleven. Beside the rest of the sheet it does not read as the same project.",
+            "why": "identityAnchors requires every seed to keep the concentric ring construction, the fine line weight and the same member language. A primitive that shows up on one seed in twelve is not variation within a collection, it is a second collection; and the shrunken figure also breaks the composition rule that the outermost ring reaches close to the frame edges on all sides.",
+            "specificChange": "Remove the rectangular slab primitive from the member set so every seed draws from the single arc-or-bar vocabulary, and extend 5396's outermost ring until it reaches the same fraction of frame width as the other seeds, around 90 percent.",
+            "keep": "Keep whatever gives 5396 its low angular order and its comparatively wide members as a legitimate point in the collection's range. The seed should stay recognisably itself once it is redrawn in the shared member language."
+          }
+        ],
+        "overall": "The rotational logic is here and the palette is here; what is missing is the line. The runtime is currently drawing a filled organism rather than a stroked mechanism — an opaque brass coin ringed by tapered, one-way-curling crescents that overlap into a continuous shingle, with the dark ground present only outside the figure and nowhere inside it. That one fact, fill instead of stroke and mass instead of clearance, is upstream of most of the rest: the annular bands and the wedges the brief calls the mechanism's clearance have nowhere to appear, and with them closed there is nothing at 120px for the market state to move. So the state ends up carried by hub diameter instead of ring interval, and carried in the wrong direction, adding mass under volatility where the brief asks for loosening. The two variation axes are swapped as well — angular order, which the direction names as the collection's constant, is what varies most, while ring count and radii, which are meant to carry the variation, barely move. Round one is worth spending on the member and the gap: unfilled hairline strokes, square-ended constant-width members on true radii, and real dark between ring and ring and between member and member. The palette, the centring, the strict angular repetition and the complete absence of any literal instrument part are all correct and should not be touched while that happens."
+      },
+      "response": {
+        "schemaVersion": 1,
+        "kind": "AUTHOR_RESPONSE",
+        "respondsTo": "B08",
+        "criticId": "critic-B08",
+        "note": "The changes answered here are changes to the AUTHOR — the machine that turns an art direction into runtime bytes — and not patches written for this project, because a hand-written configuration edit would be a human art intervention and this lane's claim is that there are none. Where the round-1 author change does not reach a finding, the response says plainly which parameter carries it and that it does not move, rather than promising a fix that nothing makes.",
+        "responses": [
+          {
+            "findingId": "solid-hub-mass",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The coverage half is the change the author was given: nothing bounded coverage from above, and the 52.5% mean this finding quotes is one of the five measurements that produced the ceiling, so the size and count targets come down on every register. The line half is refused. A hairline at a stated width is not available — 'stroke width as a creator choice' is in this runtime's cannot list — and while fields[n].stroke does choose outline against fill, the round-1 change does not move it, so the members stay filled shapes this round.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[1].countMin",
+              "fields[1].countMax"
+            ],
+            "expectedVisualEffect": "Every member's size ceiling falls about a fifth and each ring carries a few fewer members, so the brass centre should stop closing into an unbroken disc on every seed and ground should begin to show inside the figure; mean inked area should come down from the measured 52.5%, while the members remain filled rather than becoming outlines.",
+            "preserve": [
+              "the figure sized to fill the frame",
+              "the bright brass reading at the centre — the hub must still be the brightest thing in the picture"
+            ]
+          },
+          {
+            "findingId": "no-annular-clearance",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Fewer and smaller members per ring is exactly what the coverage recalibration does, and the third register's reach drops from 116 to 90, which opens ground between it and the one inside it. Sizing that gap is not reachable: spreadMax is a ceiling the seed draws beneath rather than a ring radius, so the distance between two rings is a per-token draw and cannot be set against a member's length, and there is no angular-pitch or per-member clearance parameter — the wedge between one member and the next is whatever the layout and the count leave.",
+            "parameters": [
+              "fields[2].spreadMax",
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[1].countMin",
+              "fields[1].countMax",
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "Members within a ring should stop overlapping by most of their width, so the continuous shingle breaks into separable marks, and a band of ground should open between the outer register and the one inside it; the gaps will vary from token to token rather than holding a stated proportion of the member length.",
+            "preserve": [
+              "the concentric construction about one hub",
+              "the strictly even angular interval within each ring"
+            ]
+          },
+          {
+            "findingId": "organic-member-form",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Stated first because it decides the rest: the parameter named below does not move this round. fields[n].primitive is what carries the member's shape family and the round-1 change does not touch it, so the crescents stay crescents. The remainder would not be reachable even if it did move: there is no taper, end-cap or chirality control anywhere in the schema, stroke width is not a creator choice in this runtime, and 'per-element coordinates' is in its cannot list — so a member cannot be placed on a true radius and its handedness cannot be removed, because the angle a member sits at comes from the layout and the seed.",
+            "parameters": [
+              "fields[1].primitive",
+              "fields[2].primitive"
+            ],
+            "expectedVisualEffect": "No change to the member silhouette this round: the tapered hooked crescent and its one-way curl will read exactly as they do now, and the seeds will still read as sunflowers and anemones rather than as escapement teeth.",
+            "preserve": [
+              "members repeating at an even angular interval around each ring",
+              "members staying fine independent primitives rather than merging into a shape"
+            ]
+          },
+          {
+            "findingId": "brass-as-field-not-beat",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Brass stops being quite so large an area, because the size and count recalibration comes down on both brass registers — but it is not reserved to one ring: paletteIx is a creator constant that this round does not move, so two of the three registers still draw in brass. The olive and ochre intermediates cannot be removed at all. They are the runtime compositing brass over slate at a per-element opacity written from the token's seed; 'alpha' is in this runtime's cannot list and there is no opacity parameter to set to fully opaque.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[1].sizeMax",
+              "fields[1].countMin",
+              "fields[1].countMax"
+            ],
+            "expectedVisualEffect": "The brass area shrinks against the frame, so brass reads less as the single biggest field and more as marks; the muddy olive and brown at every brass-over-slate and brass-over-brass crossing will remain exactly as it is, and more than two colours will still be on screen.",
+            "preserve": [
+              "the exact brass and slate hues and the near-black ground",
+              "their contrast at 120px — the hue pair must not be re-picked while the roles move"
+            ]
+          },
+          {
+            "findingId": "stress-adds-mass",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The register that read the market through RECOVERY — collapsing at stress and surging at recovery against the mechanism — is rebound to a sensor that is flat between neutral and stress, and the coverage ceiling brings the whole sheet down from the measured 52.5%. But the stress-end inversion on THIS case is not the counter-register's doing, and the round-1 change does not reverse it. The primary binding is SEPARATION on SPREAD, read from the direction's own words that the members spread apart under volatility and the interval is widest there, and its sensor reads 326 / 981 / 552 per mille at neutral / stress / recovery. Widening the spread reduces how much the members overlap one another, so it raises the union of inked area rather than lowering it — which is why the battery measured neutral, the tightest state, as the emptiest of 52 frames. Making stress the emptiest frame would mean reading the direction's magnitude as coverage rather than as interval, which is a mechanism decision the direction settles and not a parameter this round moves.",
+            "parameters": [
+              "fields[2].sensor",
+              "fields[2].curve",
+              "fields[2].countMin",
+              "fields[2].countMax",
+              "fields[2].sizeMax"
+            ],
+            "expectedVisualEffect": "The loose outlying members stop being what changes between neutral and stress, and the sheet carries less ink overall than the measured 52.5%; the interval between rings will still be widest at stress, and stress may still be the frame carrying the most inked area, because separating members reveals more of each of them than it hides.",
+            "preserve": [
+              "the magnitude of the change — the three states must stay easy to tell apart rather than converging",
+              "the concentric ring construction in all three states"
+            ]
+          },
+          {
+            "findingId": "state-signal-not-ring-interval",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The scattered outlying members stop carrying the signal: the third register is pulled inside the primary's reach and rebound to a sensor that does not move between neutral and stress, so on that pairing the only thing answering the market is the radial spacing the primary drives — which is already the single magnitude this finding asks for, since SPREAD is literally the half-extent a site may sit at from the centre. Two things are not reached. The composition still carries two market-driven registers rather than one, because the last field answers the sensor the mechanism does not use so that all three states separate at all. And there is no hub diameter to unbind: the bright centre is not a drawn hub but where members pile at the spread floor, so it necessarily tightens and loosens with the very parameter the finding wants bound.",
+            "parameters": [
+              "fields[2].spreadMax",
+              "fields[2].sensor",
+              "fields[2].curve",
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "Between neutral and stress a seed should differ by the spacing of its rings and by little else — no flung outliers appearing and disappearing — and every seed should move that spacing in the same direction, so one market condition produces one gesture across the sheet instead of opposite ones on different seeds.",
+            "preserve": [
+              "all three states byte-distinct",
+              "ring count, member shape and angular order fixed across a seed's three states, so the only thing that changes is the clearance"
+            ]
+          },
+          {
+            "findingId": "angular-order-not-constant",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "The angular order is already the collection's constant and cannot be anything else. fields[n].symmetry is a creator constant, it is ROT6 on all three registers, and the seed reaches nothing categorical in this runtime — so every token turns the same order, and what varies between the seeds is how many elements each field draws under its count ceiling, not the symmetry. Moving the variation onto ring count is refused for the same reason: fieldCount is a creator constant, a token cannot draw a different number of registers, and 'a per-seed parameter table' is in this runtime's cannot list. The ring radii already vary per seed, because spreadMax is a ceiling the seed draws beneath from a floor of 16."
+          },
+          {
+            "findingId": "slab-member-outlier",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "There is no per-seed member set to prune. This runtime declares one primitive per field as a creator constant and the seed reaches nothing categorical, so all twelve seeds draw the same vocabulary — the slabs on that seed are the same field-0 rectangle every other seed draws, at a high size and low count draw rather than a second primitive. That seed's reach cannot be extended on its own either: 'a per-seed parameter table' is in the cannot list, so no token can be given its own radius. What the round-1 change does is narrow the top of the size draw that produced the outlier.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[0].countMin",
+              "fields[0].countMax"
+            ],
+            "expectedVisualEffect": "The seed that currently draws the broadest slabs draws narrower ones, because the top of the size draw falls about a fifth, so that token should sit closer to the other eleven; it will still be the seed with the widest members and the smallest figure, because that is where its seed bytes fall.",
+            "preserve": [
+              "whatever gives that seed its low angular order and comparatively wide members, as a legitimate point in the collection's range"
+            ]
+          }
+        ]
+      },
+      "boundedChange": {
+        "ok": true,
+        "moved": [
+          {
+            "parameter": "fields[0].sizeMax",
+            "from": 28,
+            "to": 22,
+            "named": true
+          },
+          {
+            "parameter": "fields[0].countMin",
+            "from": 24,
+            "to": 20,
+            "named": true
+          },
+          {
+            "parameter": "fields[0].countMax",
+            "from": 24,
+            "to": 20,
+            "named": true
+          },
+          {
+            "parameter": "fields[1].sizeMax",
+            "from": 24,
+            "to": 19,
+            "named": true
+          },
+          {
+            "parameter": "fields[1].countMin",
+            "from": 20,
+            "to": 17,
+            "named": true
+          },
+          {
+            "parameter": "fields[1].countMax",
+            "from": 20,
+            "to": 17,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].sizeMax",
+            "from": 20,
+            "to": 18,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].spreadMax",
+            "from": 116,
+            "to": 90,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMin",
+            "from": 10,
+            "to": 8,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMax",
+            "from": 34,
+            "to": 28,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].sensor",
+            "from": "RECOVERY",
+            "to": "VOLUME_TIER",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].curve",
+            "from": "LOG2",
+            "to": "LINEAR",
+            "named": true
+          }
+        ],
+        "unnamed": [],
+        "counts": {
+          "moved": 12,
+          "named": 12,
+          "unnamed": 0
+        },
+        "detail": "12 parameter(s) moved, all of them named in the author's response"
+      }
+    },
+    {
+      "round": 2,
+      "configHash": "14a50df13a026e34c9cc4c738bf640f4f7b53d5a3036a75dc44edf61cb4f7c19",
+      "configBytes": "0x564356310100000000030f11139c7f3d59636b030b00010201021414168005000906010201021111137a1500080602000000081c125a1d0000134573636170656d656e74205265737461746564ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "BURST",
+            "primitive": "RECT",
+            "sizeMax": 22,
+            "spreadMax": 128,
+            "symmetry": "ROT6",
+            "countMin": 20,
+            "countMax": 20,
+            "paletteIx": 1,
+            "stroke": false,
+            "variant": 0,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "ORBIT",
+            "primitive": "ARC",
+            "sizeMax": 19,
+            "spreadMax": 122,
+            "symmetry": "ROT6",
+            "countMin": 17,
+            "countMax": 17,
+            "paletteIx": 1,
+            "variant": 2,
+            "stroke": false,
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "RADIAL",
+            "primitive": "ARC",
+            "sizeMax": 18,
+            "spreadMax": 90,
+            "symmetry": "ROT6",
+            "countMin": 8,
+            "countMax": 28,
+            "paletteIx": 2,
+            "variant": 3,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#0f1113",
+          "#9c7f3d",
+          "#59636b"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 0,
+        "flags": [],
+        "title": "Escapement Restated"
+      },
+      "producedBy": "REAUTHORED_BY_THE_CHANGED_AUTHOR",
+      "mechanism": {
+        "ok": true,
+        "mechanism": "SEPARATION",
+        "polarity": "PEAKS_AT_STRESS",
+        "drive": "SPREAD",
+        "curve": "LOG2",
+        "sensor": "DRAWDOWN",
+        "requires": {
+          "pinnedCount": true,
+          "minFields": 2
+        },
+        "detail": "spread is the half-extent a site may sit at from the canvas centre, and its floor of 16 is a visible tight cluster rather than a blank — which is what makes it safe on RECOVERY where SIZE is not. The count must be PINNED (countMin == countMax) or the work is subtracting at the same time and the reviewer cannot tell which mechanism it is watching.",
+        "evidence": {
+          "row": "SEP-3field-fix",
+          "weakestPairing": 14.416,
+          "extentByState": "0.957 neutral / 0.968 stress / 0.995 recovery",
+          "components": "5.625 -> 2.625",
+          "blankSeeds": 0
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "loosens",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "Under volatility the mechanism loosens and its members spread apart, so the interval between the rings is widest there."
+          },
+          {
+            "phrase": "tighten",
+            "direction": "lower",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "As conditions settle the rings tighten again and the members close back toward one another."
+          },
+          {
+            "phrase": "widens",
+            "direction": "raise",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_STRESS",
+            "clause": "The magnitude the market moves is the interval between rings, and volatility widens it furthest."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"loosens\", \"tighten\", \"widens\"",
+        "otherSensor": "RECOVERY",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "intent": {
+        "densityTarget": "MODERATE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "RADIAL",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "MODERATE",
+          "evidence": [
+            "moderate"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "reaches close to the edges"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": []
+        },
+        "focalMode": {
+          "source": "DEFAULT",
+          "value": "SINGLE_DOMINANT",
+          "detail": "the direction's focalHierarchy/composition did not name a focalMode",
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "RADIAL",
+          "evidence": [
+            "rotational",
+            "ring",
+            "rings"
+          ],
+          "score": 3,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DEFAULT",
+          "value": "SOLID",
+          "detail": "the direction's medium/motifTranslation/paletteIntent/thumbnailIntent did not name a strokeMode",
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DEFAULT",
+          "value": "DENSITY",
+          "detail": "the direction's marketTransformation did not name a marketAxis",
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 128,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 52
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 125
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 77
+              }
+            },
+            "resolved": [
+              52,
+              125,
+              77
+            ],
+            "span": 73,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 52 / 125 / 77 across neutral / stress / recovery (span 73 of 112)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "SPREAD",
+            "sensor": "DRAWDOWN",
+            "curve": "LOG2",
+            "parameter": "spreadMax",
+            "floor": 16,
+            "ceiling": 122,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 50
+              },
+              "stress": {
+                "perMille": 900,
+                "curved": 981,
+                "resolved": 119
+              },
+              "recovery": {
+                "perMille": 80,
+                "curved": 552,
+                "resolved": 74
+              }
+            },
+            "resolved": [
+              50,
+              119,
+              74
+            ],
+            "span": 69,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 50 / 119 / 74 across neutral / stress / recovery (span 69 of 106)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 8,
+            "ceiling": 28,
+            "readings": {
+              "neutral": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 13
+              },
+              "stress": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 13
+              },
+              "recovery": {
+                "perMille": 467,
+                "curved": 467,
+                "resolved": 17
+              }
+            },
+            "resolved": [
+              13,
+              13,
+              17
+            ],
+            "span": 4,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 13 / 13 / 17 across neutral / stress / recovery (span 4 of 20)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout BURST from rhythmMode=RADIAL; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "3 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 22 from densityTarget=MODERATE",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry ROT6 (a project constant, so it carries no per-token variety); count PINNED because the drive is not COUNT and a moving count would be a second mechanism nobody asked for",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "2 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism SEPARATION PEAKS_AT_STRESS -> drive SPREAD <- DRAWDOWN/LOG2, with the last field on RECOVERY so all three states separate. spread is the half-extent a site may sit at from the canvas centre, and its floor of 16 is a visible tight cluster rather than a blank — which is what makes it safe on RECOVERY where SIZE is not. The count must be PINNED (countMin == countMax) or the work is subtracting at the same time and the reviewer cannot tell which mechanism it is watching.",
+          "evidence": {
+            "row": "SEP-3field-fix",
+            "weakestPairing": 14.416,
+            "extentByState": "0.957 neutral / 0.968 stress / 0.995 recovery",
+            "components": "5.625 -> 2.625",
+            "blankSeeds": 0
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "fcee06af6969636747fa8fc9298c8eff0707ffa05c59dc604f12496ca0e56823",
+          "bytes": 407561
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "1e5272bbf0459652ff7167d87d67891906609f77b476ba51858b34e165901866",
+          "bytes": 130620
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "279485e935fd1daa45e92bdb0986d4576610a2258fcddbe80bec8a72ce2f28f1",
+          "bytes": 510549
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "b24df3cdc0820ee25a0000908e1196777e6f392e9eaf31ad44011822794d4457",
+          "bytes": 164245
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "aa6a73b0973004d6c06491618e08f2cc2e3b568a69dc242f28b9e1c742d00ca2",
+          "bytes": 114444
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.341,
+        "inkMin": 0.281,
+        "stateDeMean": 12.21,
+        "stateDeMin": 6.5,
+        "seedDeMean": 7.41,
+        "seedDeMin": 4.15
       }
     }
-  ]
+  ],
+  "objectiveBlockers": [],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "reviewerPromptSha256": "41e838a7b39673f2b2f4a88c414ccd11683bc5ee44ae19e3233d488df89d4744",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "14a50df13a026e34c9cc4c738bf640f4f7b53d5a3036a75dc44edf61cb4f7c19",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "583315ef0314fec22aad4d3ff22a59179009655a0f99939cc034b72dec66a625",
+        "bytes": 325452
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "db45a3f7a485ba911e07e29e6306bec0275b7ce8e830353d7696098da86e060d",
+        "bytes": 106435
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "92623e229b9d2b31d7c25c601f8c439054ab4ba9c58b0f3f48cb8c9897291b9d",
+        "bytes": 371211
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "adb7bb83fa10f3ed24bf1ee60476a2f040ed2c223762593f256b5cbc321b4e07",
+        "bytes": 124458
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "4d8329081c6d81544a875eb34363ed0bb71d4b579940b3358057a8c933061e84",
+        "bytes": 60716
+      }
+    ],
+    "inputHashes": [
+      "583315ef0314fec22aad4d3ff22a59179009655a0f99939cc034b72dec66a625",
+      "db45a3f7a485ba911e07e29e6306bec0275b7ce8e830353d7696098da86e060d",
+      "92623e229b9d2b31d7c25c601f8c439054ab4ba9c58b0f3f48cb8c9897291b9d",
+      "adb7bb83fa10f3ed24bf1ee60476a2f040ed2c223762593f256b5cbc321b4e07",
+      "4d8329081c6d81544a875eb34363ed0bb71d4b579940b3358057a8c933061e84"
+    ],
+    "measurements": {
+      "inkMean": 0.298,
+      "inkMin": 0.221,
+      "stateDeMean": 13.41,
+      "stateDeMin": 6.73,
+      "seedDeMean": 7.23,
+      "seedDeMin": 3.55
+    },
+    "frozenAt": "2026-09-03T19:47:49.535Z"
+  }
 }

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B05",
+  "criticId": "critic-B05",
+  "note": "The changes answered here are changes to the AUTHOR — the machine that turns an art direction into runtime bytes — and not patches written for this project, because a hand-written configuration edit would be a human art intervention and this lane's claim is that there are none. Where the round-1 author change does not reach a finding, the response says plainly which parameter carries it and that it does not move, rather than promising a fix that nothing makes.",
+  "responses": [
+    {
+      "findingId": "edge-bleed-destroys-the-margin",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "GEOMETRIC_RECURSION_V1 has no bounding-box clamp, no inset, no margin parameter and no way to refuse a render for touching a border ring. The figure roots at the canvas centre and its extent is a property of the elected production rather than a settable number, and the compact set is already elected: INSCRIBE, QUAD and TRI measure extentX 0.60, 0.65 and 0.60, the three tightest in the runtime, while RING (0.85) and BRANCH (0.78) are excluded on this direction. The root scale the SPREAD drive moves runs between a floor and a ceiling fixed in the bytecode, so there is no ladder-top for the author to lower."
+    },
+    {
+      "findingId": "ink-far-above-austerity",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The coverage ceiling this finding asks for was added to the author, and it landed on VECTOR_COMPOSITION_V1's sizeMax. This runtime has no size parameter at all: coverage here is carried by stroke, seed shape, branch and contraction, and the round-1 change moves none of them, so the sheet mean will not fall to the 12-15% asked for. What does move is the inner register's market binding, which redistributes ink between the three states rather than lowering the mean.",
+      "parameters": [
+        "rules[1].sensor",
+        "rules[1].curve"
+      ],
+      "expectedVisualEffect": "At stress the inner articulation stops swelling toward its parent's size and at neutral it grows toward the same reading, so the stress frame stops being the heaviest of the three; the overall darkness of the twelve-seed sheet will look much as it does now, and the emptiest frame will not drop toward the small fraction the direction asks for.",
+      "preserve": [
+        "the mass stays above the 4% blank floor in stress — the smallest state must still be a confident object rather than a speck",
+        "the internal articulation stays legible at 120px"
+      ]
+    },
+    {
+      "findingId": "state-moves-complexity-not-only-scale",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The second market-driven dimension is the inner register's CONTRACT drive, and rebinding it to a sensor that reads the same at neutral and at stress removes it from that pairing, so on that pairing the only thing answering the market is the primary's overall scale — which is what this finding asks for. It cannot be made true of all three states: a rule carries exactly one drive, so rules[1] keeps CONTRACT and still moves between neutral and recovery. And there is no centre offset to pin — the figure roots at the canvas centre at angle 0, there is no placement parameter and no inset, and the apparent translation is the production placing children asymmetrically as the root scale moves. Depth is already constant across the three states; it is a seed range, not a drive.",
+      "parameters": [
+        "rules[1].sensor",
+        "rules[1].curve"
+      ],
+      "expectedVisualEffect": "Between neutral and stress a token will differ by the size of the same figure and little else — the inner generations should keep their proportion instead of appearing and vanishing — while the neutral-to-recovery pair still carries a second, smaller change of internal proportion.",
+      "preserve": [
+        "the measured perceptual separation between states stays above the 3.8 floor",
+        "the per-seed silhouette differences that make the twelve separable at 120px"
+      ]
+    },
+    {
+      "findingId": "detached-satellites-break-the-single-mass",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "There is no per-generation containment or overlap parameter in this runtime. Where a child sits is decided by the elected production — QUAD at the parent's quadrant corners, TRI at its edge midpoints, INSCRIBE at its own centre — and not by an offset a creator can set, so 'centre inside the parent polygon, overlapping it by at least 50%' is not expressible at any setting. Dropping a generation whose rendered area falls under a threshold is a per-element deletion, which this runtime's capability statement refuses by name: nothing can remove one member of a production and keep the rest."
+    },
+    {
+      "findingId": "no-verticality-nothing-stands",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "A non-square aspect is named in this runtime's cannot list, and there is nothing weaker to substitute. The figure has no bounding-box proportion control; all six seed shapes (SQUARE, TRIANGLE, HEX, CIRCLE, DIAMOND, CROSS) are regular and cannot be stretched to 1.4:1; and there is no per-generation offset axis to move onto the vertical, because the direction a child sits from its parent is fixed by the production rather than declared. An upright stele is not a figure this runtime can make out of any combination of its parameters."
+    },
+    {
+      "findingId": "alpha-stacking-makes-five-values-not-two",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "Opacity is written per element by the runtime out of the token's seed and no creator parameter reaches it; 'opaque compositing' is in this runtime's cannot list and the config format exposes no alpha field anywhere. The controls that do exist change which colour a level is drawn in — the stroke flag and DEPTH_PALETTE — never how it composites, so the number of tones in a frame stays a function of how many shapes happen to overlap. Two opaque fills alternating by generation is not a configuration this runtime has."
+    },
+    {
+      "findingId": "pale-slab-acts-as-a-second-ground",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "Both halves are per-generation controls this runtime does not have. Fill against stroke is a flag on the whole RULE, so unfilling the outermost level would hollow every generation of that rule at once rather than leaving the inner ones filled. And there is no parameter that starts the production one level in: depthMin and depthMax set how deep the recursion runs, not which level is drawn first, and the root is always drawn. The outermost level's role as a filled plate cannot be removed while its geometry is kept."
+    },
+    {
+      "findingId": "figure-drifts-off-the-frame-centre",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "This runtime roots the figure at the canvas centre at angle 0, and there is no placement parameter and no inset, so a union bounding box cannot be recentred per seed or per state — 'an off-centre subject' and its correction are the same missing control. The drift the finding describes is a side effect of the production placing children asymmetrically about the root, and the only thing that could change it is the choice of production, which is already the tightest set this direction admits."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B04",
+  "criticId": "critic-B04",
+  "note": "Everything answered here is a change to the AUTHOR -- the machine that turns an art direction into runtime bytes -- and not a patch to this project's configuration, because a hand-written patch would be a human art intervention and this lane's whole claim is that there are none.",
+  "responses": [
+    {
+      "findingId": "centred-mass-not-a-field",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "All three clauses are refused, and the third is the one that decides it. A field cannot be removed: field count is an author-wide constant and never fewer than two, because a single field carrying a driven count blanked seven seeds of eight. Centre-anchored placement cannot be removed from any field: every one of the twelve layouts places sites about the canvas centre by construction, there is no placement parameter and no inset, and 'per-element coordinates' is named in this runtime's own cannot list. And 'no quadrant carries measurably more drawn area than any other' is a constraint on WHERE marks land, which is exactly what the runtime does not expose -- a field is a count, a size ceiling and a radius ceiling about one fixed centre. An all-over field with no privileged region is not a configuration this runtime has; the centred mass the critic is describing is the medium, not a settings mistake, and every round spent chasing it is a round spent on a picture the bytecode has no path to."
+    },
+    {
+      "findingId": "mark-scale-spread",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "The twentyfold spread inside one frame cannot be clamped, because only the top of it is a parameter. Resolved size is 2 + (sizeMax - 2) * v / 1000: sizeMax is a CEILING and the seed draws anywhere beneath it down to the bytecode floor of 2, and VectorConfigV1 has no sizeMin, so a bar that crosses half the canvas and a square a few pixels across are the same field's two draws and no parameter separates them. Removing the long-bar and large-ellipse primitives is a per-field primitive constant, which none of the three round-1 author changes reaches. Nor does the coverage recalibration touch this project: its density target is the dense one, which was already calibrated at the value it holds, so sizeMax stays 26 / 22 / 18 next round. Naming a ceiling here that will not move would be worse than saying so."
+    },
+    {
+      "findingId": "radial-convergence",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "There is no polar layout to replace. The three layouts elected here are GRID, STACK and LINEFIELD, all cell-family; RADIAL, ORBIT, SPIRAL and BURST are not in this configuration, so the fan is not a placement choice. It is the runtime's own seeded per-element rotation, plus LINEFIELD's known clumping, and the angle of a member comes from the layout and the seed with no per-element orientation control anywhere in the schema. The substitute the finding names is refused just as firmly and by the first line of the runtime's cannot list: 'a fixed row pitch or any quantised spacing'. A constant nominal pitch with each mark shifted by a bounded fraction of it is exactly a quantised spacing with jitter, and neither the pitch nor the jitter amplitude is exposed to a creator. LATTICE exists as a layout name but the atlas measures GRID, LATTICE, TILING and WAVE within a few per cent of each other -- four names, one look -- so electing it would change nothing a viewer sees."
+    },
+    {
+      "findingId": "black-pools-into-a-margin",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "'Extend the placement bounds beyond each of the four frame edges and clip at the viewBox' is frame bleed, which this runtime names in its own cannot list along with 'an element that fills the frame'. The only reach control is spreadMax, and it clamps a site's CENTRE rather than its extent, is a radius about the canvas centre rather than four independent edges, and is a ceiling the seed draws beneath from a floor of 16 -- so marks cannot be guaranteed to be cut by the border on all four sides, only permitted to land near it. Fields 0 and 1 already carry 128 and 122, the top of the range, which is where the atlas measures elements landing on the frame boundary. This should be said rather than discovered on the next sheet: the one reach parameter that moves goes INWARD, the orange register from 116 to 90, for the reason given under state-morphs-the-silhouette. The black surround will not shrink next round, and on the outer edge it may read as slightly more continuous."
+    },
+    {
+      "findingId": "market-polarity-inverted",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The finding's stated destination -- 'the busiest frame in each state row must end up being the stress frame' -- is delivered, and the half that is not is worth naming exactly. The orange register is currently bound to RECOVERY at LOG2, which reads 326 / 0 / 964 across neutral / stress / recovery: it empties completely under drawdown, and it is the widest-ranged field in the composition, which is why stress reads as the sparsest frame even though the two grey registers are correctly bound to DRAWDOWN and do rise there. Rebinding it to VOLUME_TIER stops that collapse. What does NOT follow is recovery falling below neutral. DRAWDOWN at LOG2 reads 326 neutral against 552 recovery on this fixture ring, no creator parameter reorders a sensor's readings, and the counter-register rises slightly in recovery by construction, so the ordering after this change is neutral < recovery < stress rather than the recovery < neutral < stress the direction asks for. Half the inversion closes; the other half is a property of the sensor's own readings.",
+      "parameters": [
+        "fields[2].sensor",
+        "fields[2].curve"
+      ],
+      "expectedVisualEffect": "The orange LINEFIELD register moves from RECOVERY/LOG2 to VOLUME_TIER/LINEAR, which reads 30 / 30 / 32 across the three states, so it holds a near-constant population instead of vanishing under drawdown. Expect the stress row to become the BUSIEST of the three on all four seeds -- 5003 should no longer fall to a loose handful of bars, 5396 should no longer collapse to a thin X, 5134 should no longer reduce to a few verticals -- because the two grey registers rise to their count ceilings there and nothing empties against them. Recovery will still be busier than neutral, so if the next state sheet shows stress fullest and recovery second, that is the predicted outcome and not a regression.",
+      "preserve": [
+        "the magnitude at 120px: fields 0 and 1 keep drive COUNT, sensor DRAWDOWN, curve LOG2 and their full 10..30 and 9..27 ranges, so the neutral-to-stress interval that currently reads without effort is not shrunk",
+        "the three states distinct from one another frame by frame -- no count range is narrowed anywhere",
+        "the constant near-black ground across every seed and state: groundMode, groundIx and palette do not move, and a state-driven colour is refused by the runtime outright"
+      ]
+    },
+    {
+      "findingId": "state-morphs-the-silhouette",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Two of the three clauses are already true and the third is refused. Mark position and mark shape are already seed-and-constant only: layout, primitive, variant, symmetry, stroke and paletteIx are all creator constants, position is seeded per-site jitter, and no field here is bound to SIZE or SPREAD, so nothing about shape or placement is market-driven. The strict-subset guarantee is refused -- a state change redraws the field's sites rather than truncating an ordered list, so the sparser state's marks are not a subset of the denser state's, and there is no ordered instance list to index. What remains actionable is the real cause of the silhouette change: the widest-reaching seeded register was also the one whose population swung hardest between states, so the outline moved with it.",
+      "parameters": [
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[2].spreadMax"
+      ],
+      "expectedVisualEffect": "The orange register goes from a population that empties at stress and runs to 34 at recovery to one that holds near 30 in all three states, and its reach comes in from 116 to 90 so its sites sit inside the two grey registers at 128 and 122. Between them, the outer boundary of the work stops being set by the register that swings, so on 5265 the neutral broad fan and the stress hooked comma should converge toward one profile, and 5396's cluster should stop becoming an X. The state difference should be carried by how crowded the two grey registers are and not by what shape the frame makes.",
+      "preserve": [
+        "the neutral-to-stress separation, the strongest of the three pairings: fields 0 and 1 keep their DRAWDOWN/LOG2 binding and their full count ranges, so this is not paid for out of the pairing that is working",
+        "the identical mark shape across states -- primitive, variant, stroke and symmetry are constants and none is market-bound",
+        "the constant near-black ground and the three-family palette, neither of which moves"
+      ]
+    },
+    {
+      "findingId": "chroma-gap-makes-colour-the-subject",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The chroma will not move, and it is important not to imply otherwise. A narrow band of close values is expressible -- palette holds three to five creator-chosen stops and paletteIx is one constant per field -- but none of the three round-1 author changes reaches palette derivation, so the orange #b07d3a and the two neutrals stand exactly as they are next round, and picking a duller orange for this one brief by hand would be the per-project art edit this lane exists to avoid. What does move is the other half of the finding's own diagnosis, which is area rather than hue: the orange is the register that currently reaches furthest, and its reach is being pulled in.",
+      "parameters": [
+        "fields[2].spreadMax"
+      ],
+      "expectedVisualEffect": "The orange register's radius ceiling falls from 116 to 90, so the two grey registers at 128 and 122 become the outermost marks and the orange no longer defines the outer boundary of the figure. Expect its share of the frame to fall and the eye's first landing at 120px to move outward onto the neutrals. It will still be the saturated register against neutrals over near-black, so on 5396 and 6444 a warm shape will very likely still register before the spacing does -- this narrows the area half of the gap and leaves the colour half entirely open.",
+      "preserve": [
+        "the dark ground unchanged in value on every seed and every state: groundMode FLAT, groundIx 0 on #0f1113, none of which moves",
+        "three separable tonal steps -- paletteIx stays 3 / 1 / 2 and the palette is unmoved, so the registers remain tellable apart at 256px and the direction's third variation axis is not deleted",
+        "the market binding on all three fields, which is not traded against this"
+      ]
+    },
+    {
+      "findingId": "identity-rides-on-outline",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The count ranges are already at or near the ratio the finding asks for and they do not move: 10..30 and 9..27 are exactly 3:1, and 12..34 is 2.8:1, so 'widen to at least three to one' has almost nothing left to give and none of the three round-1 changes touches this project's count ranges. Holding the frame-filling extent constant for every seed is refused outright -- extent is the seed's own draw beneath spreadMax and there is no extent floor, so seeds will keep differing in how far they reach. What moves is one contributor to that difference. It is also worth naming a measured fact working against this finding: a driven count spends the calm market near its FLOOR, so a wide range does not produce a wide spread of crowding at neutral in the way the prescription assumes -- widening the range thins the composition rather than varying it.",
+      "parameters": [
+        "fields[2].spreadMax"
+      ],
+      "expectedVisualEffect": "The orange register's radius ceiling falls from 116 to 90, which narrows the range of site radii it can draw from 16..116 to 16..90, so its per-seed contribution to the outline shrinks by roughly a fifth. Expect the silhouettes to converge slightly -- 6051's starburst and 5658's diagonal tangle should lose some of their outer reach -- while crowding does not become the primary separator, because no count range widens. If the twelve still read as twelve different objects rather than twelve samples of one field next round, that is the correct reading and this finding is still open.",
+      "preserve": [
+        "the current degree of seed separability at 120px -- fields 0 and 1 keep spreadMax 128 and 122 and their full count ranges, so nothing that carries the twelve apart is spent",
+        "every count range on the project, none of which is narrowed",
+        "the constant near-black ground and the three-family palette"
+      ]
+    }
+  ]
+}

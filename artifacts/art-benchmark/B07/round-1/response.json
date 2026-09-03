@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B07",
+  "criticId": "critic-B07",
+  "note": "The changes answered here are changes to the AUTHOR — the machine that turns an art direction into runtime bytes — and not patches written for this project, because a hand-written configuration edit would be a human art intervention and this lane's claim is that there are none. Where the round-1 author change does not reach a finding, the response says plainly which parameter carries it and that it does not move, rather than promising a fix that nothing makes.",
+  "responses": [
+    {
+      "findingId": "bar-primitive-not-rounded",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Stated first because it decides the rest: the parameter named below does not move this round. The mark's shape family is a creator parameter and both CIRCLE and ELLIPSE are in this runtime's primitive vocabulary, so a rounded member is genuinely expressible — but the round-1 author change does not touch fields[n].primitive, so the bone register stays a rectangle. The remainder of the change is refused by the medium in any case: there is no per-member aspect-ratio parameter, so a mark cannot be clamped to 2:1; sizeMax is a single number and the runtime derives the rectangle's proportions from it and the seed.",
+      "parameters": [
+        "fields[0].primitive",
+        "fields[2].primitive"
+      ],
+      "expectedVisualEffect": "No change to the mark this round: the dominant bone member will still read as an elongated slab rather than as a rounded cell, and the only rounded forms in the frame will still be the verdigris field's circles.",
+      "preserve": [
+        "the bone-over-verdigris value relationship and the lighter core where two bone marks cross",
+        "the irregular, non-radial placement — the marks must not snap into a rotated pattern about a hub"
+      ]
+    },
+    {
+      "findingId": "no-generational-registers",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The placement half is refused. This runtime has no per-element coordinates, spreadMax is a half-extent ceiling the seed draws beneath rather than a settable radius, and there is no way to bind consecutive generations to overlap by a fifth of a member diameter or to jitter a member's angle. The half about more and finer registers is expressible — a configuration may declare six fields — but fieldCount does not move this round, so the picture keeps three registers rather than the four or five asked for. What does move is the population and the reach of the finest one.",
+      "parameters": [
+        "fields[2].countMin",
+        "fields[2].countMax",
+        "fields[2].spreadMax"
+      ],
+      "expectedVisualEffect": "The finest register carries up to 34 marks instead of 27 and its reach drops from 116 to 90, so it lands inside the two larger registers rather than around them — one more populated tier inside the mass instead of debris outside it. There will still be three tiers, not five, and they will not step outward in concentric generations.",
+      "preserve": [
+        "the single shared centre the composition already has",
+        "the overlap between neighbouring bodies — generations must interpenetrate where they meet, and must not become concentric rings"
+      ]
+    },
+    {
+      "findingId": "stress-reads-heavier-not-fewer",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "Stress stops being the brightest cell. The register that grew under stress no longer grows there — it is rebound to a sensor that reads the same at neutral and stress and rises only in recovery — and it now drives population instead of mark size, so no field in the composition rescales its members with the market and every field moves the same quantity. At 120px the three cells should rank stress, neutral, recovery by how much bone ink they carry, and the neutral-to-recovery leg should carry a difference it does not have today.",
+      "preserve": [
+        "the magnitude of the state change — it must still survive the thumbnail rather than being shrunk to quiet variations of one another",
+        "the seed-to-seed spread at 120px"
+      ]
+    },
+    {
+      "findingId": "state-change-is-displacement-not-population",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "One of the two things the finding sees moving is removed: the third register drove mark SIZE from the market and now drives population, so after this round no field rescales its members between states. The other is not reachable. There is no placement seed to pin and no per-element coordinates in this runtime — a layout derives its sites from the count it is given, so changing how many members a field carries necessarily re-lays the sites it carries them at. The runtime has no way to add members to an outer generation without moving the ones already placed, which is the mechanism this change describes.",
+      "parameters": [
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve"
+      ],
+      "expectedVisualEffect": "Between states the members keep their size — nothing swells or shrinks — and what changes is how many there are; the arrangement will still re-lay itself as the count moves, so a token will not hold its members at fixed angles and radii across the three cells.",
+      "preserve": [
+        "the three states clearly distinguishable at 120px — this must not be executed by making them converge",
+        "the per-seed character: the swept seed stays swept and the compact seed stays compact in every state"
+      ]
+    },
+    {
+      "findingId": "centre-floats-margins-dead",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "'Frame bleed' and 'an element that fills the frame' are both named in this runtime's cannot list, so members cannot be pushed past the half-diagonal and clipped by all four edges. There is nothing anisotropic to equalise either: spreadMax is a single isotropic half-extent about the canvas centre, one number rather than a horizontal and a vertical radius, and the composition's carrying registers already hold 128 and 122, the top of the legal range. The per-seed spread range is already maximal, because spreadMax is a ceiling the seed draws beneath from a floor of 16 — and the one reach that moves this round moves inward on purpose, since a register landing outside the work reads as debris."
+    },
+    {
+      "findingId": "no-interstitial-ink",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Drawing each member with a deep-ink gap or outline at its boundary is refused: stroke is a boolean fill-or-outline choice per field, not a second colour drawn around a filled member, and 'stroke width as a creator choice' is in this runtime's cannot list, so a hairline dark separation cannot be asked for at any width. Member size relative to spacing is reachable through sizeMax, but sizeMax does not move on this composition — count is the market drive here, so the size ceiling is already held down to leave the count its headroom. What does move is where the finest register lands and how many marks it carries.",
+      "parameters": [
+        "fields[2].spreadMax",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The finest register moves inside the two larger ones and carries more marks, so small marks fall between the big fused shapes instead of scattering outside them; the verdigris silhouette itself will still fuse into one continuous field rather than resolving into separate touching bodies.",
+      "preserve": [
+        "the overlap itself — the destination is separated-but-touching, not isolated dots on a field",
+        "the heaviest-at-the-middle reading, with the dark opening toward the growing edge"
+      ]
+    },
+    {
+      "findingId": "grey-third-colour",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "There is no grey to remove. This configuration declares three palette stops — verdigris, bone and the near-black ground — and every field draws one of them; the greys the finding names are the runtime compositing bone and verdigris at a per-element opacity it writes from the token's seed. 'Alpha' is in this runtime's cannot list and no creator parameter reaches opacity, so neither deleting those intermediates nor reaching a mid value by lowering the opacity of verdigris is available: they are the same missing control asked for in opposite directions. A per-seed verdigris floor is refused the same way — paletteIx is a creator constant and the seed reaches nothing categorical here, so a token cannot be made to carry a minimum share of one colour."
+    }
+  ]
+}

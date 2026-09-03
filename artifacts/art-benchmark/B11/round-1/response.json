@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B11",
+  "criticId": "critic-B11",
+  "note": "Round 1 changed the AUTHOR, not this project's configuration: the counter-register's sensor, its reach and count scaling, and the coverage ceiling all moved in the machine that turns a direction into bytes. Nobody hand-wrote a patch for this brief, because a hand-written patch would be exactly the human art intervention this lane claims it has none of.",
+  "responses": [
+    {
+      "findingId": "temperature-inverted",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[0].sensor",
+        "fields[0].curve",
+        "fields[1].sensor",
+        "fields[2].sensor",
+        "fields[2].curve"
+      ],
+      "expectedVisualEffect": "Recovery becomes the warm row and stress the cool one. The warm field's extent is largest in recovery and at its smallest non-zero value under stress, so slate and iron carry the broken frame: 5134 stress loses its two large saturated ochre squares, 5396 stress loses its copper block, and 5003 recovery gains the warm mark it currently has none of. At 120px the temperature now agrees with the market instead of contradicting it.",
+      "preserve": [
+        "both registers present in every state: the warm field keeps a non-zero count floor, so no state loses a colour",
+        "the one common dark ground held across all twelve seeds and all three states",
+        "the ochre's hue and saturation exactly as authored: only the state it dominates moves"
+      ]
+    },
+    {
+      "findingId": "neutral-reads-as-recovery",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "There is no per-state value the author writes. A field carries a sensor and a curve, and the sensor's three readings are protocol facts measured on the fixture ring rather than numbers in the config: over the same range DRAWDOWN reads 22/32/26 elements, RECOVERY reads 22/6/32 and VOLUME_TIER reads 30/30/32. So 'set neutral to the midpoint of both moving axes' is not an instruction the schema can take. What the author can do is choose the sensor and the curve whose measured readings are most evenly spaced, and set each drive's headroom so those readings map to three separated pictures rather than two. Even increments cannot be promised, only a middle state that is no longer parked on an endpoint.",
+      "parameters": [
+        "fields[0].sensor",
+        "fields[0].curve",
+        "fields[1].curve",
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[0].spreadMax",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "Neutral stops sitting on top of recovery: 5003's neutral and recovery cells separate in both coverage and warm extent instead of being two dense grey clumps at near-identical coverage, and 5396's two frames part by more than a small ochre fleck. The weakest pairing should move up off 5.327 dE toward the 9.58 the other two already reach.",
+      "preserve": [
+        "the stress and recovery endpoints exactly where they are: the spread between them is not narrowed to make room for the middle state",
+        "the density axis, which is already unmistakable at 120px and is the hardest thing the brief asks for"
+      ]
+    },
+    {
+      "findingId": "members-swapped-under-stress",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[2].countMin",
+        "fields[2].countMax",
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[1].primitive",
+        "fields[1].drive"
+      ],
+      "expectedVisualEffect": "The same members are drawn in all three cells of a seed and only the distance between them moves. 5134's three large dark circles no longer appear under stress and its squares are not dropped, and 5265's two horizontal bands travel apart rather than being replaced by an unrelated mid-frame scatter, so a viewer can follow an individual member from neutral into stress.",
+      "preserve": [
+        "the magnitude of the coverage change: the members still travel far enough apart that the dark visibly enters between them",
+        "the translucent overlap and the value that accumulates where members stack, which is what makes recovery read as one merged mass"
+      ]
+    },
+    {
+      "findingId": "no-dominant-member",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[1].countMin",
+        "fields[1].countMax",
+        "fields[1].sizeMax",
+        "fields[1].paletteIx",
+        "fields[0].sizeMax",
+        "fields[2].sizeMax",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "One member per token becomes plainly the largest thing in the frame: its field draws a pinned count at a sizeMax clearly above the others and takes a lighter palette entry, while the field of same-size tiles thins behind it. 5265 and 6313 stop reading as roughly twenty-five translucent tiles at one scale and one value, and a viewer has something to name the token by at 120px.",
+      "preserve": [
+        "the translucent overlap and the accumulated value that makes recovery read as one continuous mass",
+        "the small marks kept present as texture rather than deleted to make room for the dominant member"
+      ]
+    },
+    {
+      "findingId": "stress-retreats-from-edges",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "In this runtime separation and reach are the same control. spreadMax is how far from the canvas centre a site may sit, and DRIVE_SPREAD moves exactly that, so a field cannot be made to separate under stress while holding its outer extent fixed: the two are one number. What the author can do is split the job across fields, pinning the reach-carrying field's spreadMax at its ceiling and taking its market response off SPREAD, then moving the state's coverage reduction onto the interior field's size and count. That delivers a border touched in every state and a stress interior that empties, which is the finding's intent, but not by the mechanism it names.",
+      "parameters": [
+        "fields[0].spreadMax",
+        "fields[0].drive",
+        "fields[1].spreadMax",
+        "fields[1].drive",
+        "fields[2].spreadMax",
+        "fields[2].sizeMax",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "5396 stress and 5265 stress stop sitting inside a wide empty margin with the top and bottom of the frame untouched: the outermost members reach the border in all three states, and the sparseness of stress shows as dark entering between members in the interior rather than as a smaller work.",
+      "preserve": [
+        "the interior emptiness of the stress frames: the reach is extended without refilling the middle of the frame",
+        "the dark between the members as the visible measure of the transformation"
+      ]
+    },
+    {
+      "findingId": "metrical-placement",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Layout is the only placement control in this runtime and it is a creator constant, so the beat can be removed by choosing a layout that has none: the cell grids produce rows and even intervals, STACK is the one layout that reads as horizontal bands, and SCATTER is measured sparse and irregular. Those choices are available and they remove the ring and the banding. What cannot be done is the second half literally: shifting each member's centre off its row is per-element coordinates, which is refused by name, and the per-site jitter that does exist is written by the runtime from the seed rather than declared by the author.",
+      "parameters": [
+        "fields[2].layout",
+        "fields[1].layout",
+        "fields[0].layout"
+      ],
+      "expectedVisualEffect": "5658's evenly spaced ring of small squares around the frame perimeter goes, and the three parallel horizontal bands separated by clear empty gutters break up, so intervals between members are uneven along both axes and no seed hands the eye a pattern to read where it should be reading a market condition.",
+      "preserve": [
+        "the full-frame spread the banded seeds already achieve: spreadMax is not reduced, so 5265 still reaches both the left and right borders",
+        "the members themselves and their counts, so unmetrical placement is not bought back by pulling everything into a central clump"
+      ]
+    },
+    {
+      "findingId": "silhouette-family-undifferentiated",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The member-count half is executable and the silhouette half is not. countMin/countMax is one of only two dimensions in either runtime with a creator-owned floor, and widening it gives the seed real spread in element count, at the documented cost of thinner neutral frames, which is why it is widened rather than opened. But the seed reaches nothing categorical in this runtime: layout, primitive, variant, symmetry, stroke and palette index are all creator constants, so all twelve tokens necessarily share one outline family. Tall, wide, L-shaped and split-in-two silhouettes across seeds are not a per-token axis here, and promising them would be promising a per-seed parameter table, which is refused by name.",
+      "parameters": [
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[1].countMin",
+        "fields[1].countMax",
+        "fields[2].countMin",
+        "fields[2].countMax",
+        "fields[0].sizeMax",
+        "fields[1].sizeMax"
+      ],
+      "expectedVisualEffect": "Two tokens stay distinguishable with the warm accent covered: seeds differ in how many members they carry and in how the mass divides between a dominant member and its texture, so 5003, 5789, 5920 and 6051 stop being the same grey square cluster around a pale blob told apart by where one orange mark sits. Their outlines will still belong to one family.",
+      "preserve": [
+        "the silhouette differences that already exist and persist across states: 5265's banded spread and 6444's single large mass stay genuinely different objects",
+        "the warm accent as the last-order difference rather than deleting it once count carries more of the identity"
+      ]
+    }
+  ]
+}

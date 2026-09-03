@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B02",
+  "criticId": "critic-B02",
+  "note": "Everything answered here is a change to the AUTHOR -- the machine that turns an art direction into runtime bytes -- and not a patch to this project's configuration, because a hand-written patch would be a human art intervention and this lane's whole claim is that there are none.",
+  "responses": [
+    {
+      "findingId": "line-not-mass",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The finding is right and it is the largest gap here, and the honest answer is that the density parameters move and the member vocabulary does not. Primitive and the stroke bit are real capabilities -- nine primitives including LINE and POLYLINE, plus fields[n].stroke and the OUTLINE flag -- but none of the three round-1 author changes reaches the stroke-mode derivation, so no field's primitive and no field's stroke bit moves next round. Reaching in to set them for this one brief would be a per-project art edit. Two facts about the medium are worth recording while this stays open: stroke WIDTH is not a creator choice in this runtime, so 'an outline of one thin weight' is not orderable even once the bit flips; and POLYLINE is the sparsest primitive at every layout and the most expensive in the render budget at 11 units a site, so the substitution the finding names is not free.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax",
+        "fields[0].countMax",
+        "fields[1].countMax",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The work stays carried in mass, but far less of it. The primary size ceiling falls from 24 to 16 and the other two from 20 and 17 to 14, which on the measured ink curve is roughly 0.115 to 0.059 per field at constant count. Expect the bone starburst and the moss pile to stop being areas that fill the frame and start being small filled marks over a large dark, which is the nearest thing to a delicate register this configuration can reach. Nothing will be stroked, and if the next sheet still reads as mass rather than line, that is the correct reading and the gap is still open.",
+      "preserve": [
+        "the centred organisation about the canvas centre, which is structural to every layout in this runtime and is not being touched",
+        "the moss #5b6b45 and bone #d9d2c2 hex values exactly as they are -- the palette does not move",
+        "the flat unmodulated dark ground, groundMode FLAT on #0f1113",
+        "the twelve seeds visibly distinct at 120px, which must be re-read on the sheet after the density falls rather than assumed"
+      ]
+    },
+    {
+      "findingId": "ink-over-budget",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax",
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[1].countMin",
+        "fields[1].countMax",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "This is the change the objective battery was missing: it had an ink floor and no ceiling, so a brief asking for restraint got the same frame as one asking for saturation. The size ceilings fall from 24 / 20 / 17 to 16 / 14 / 14 and the counts fall with them rather than compensating (24 to 22, 23 to 22, 23 to 17), which is the second half of the finding. Expect the seeds where the bone field covered nearly the whole frame -- 5003, 5658, 6051, 5789 -- to come back to a drawing over a dark, and 5003 in particular to stop reading as a light ground with a dark rim. Every seed should show more dark than drawing.",
+      "preserve": [
+        "the reach of the two registers that carry the composition: fields 0 and 1 keep spreadMax 128 and 122, so the longest members still run close to the frame edges while the AREA of ink falls -- size and spread are measured near-orthogonal, so coverage can come down without the figure becoming a small island",
+        "the two working colours and the flat dark, none of which moves",
+        "the seed-to-seed spread in element count -- the ranges narrow slightly at the top but no range is pinned"
+      ]
+    },
+    {
+      "findingId": "no-division-ladder",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The descending sizeMax ladder already exists and survives, but it will COMPRESS rather than halve, and that is deliberate: the author holds a floor of 14 on a secondary field because the atlas measures anything below about 10 as a blank tile at 120px, so a ladder that halves from 16 would put the finest register under the browse-size threshold and delete it rather than refine it. The other two halves of the prescription are refused outright. A larger variant does not turn a member: variant is a per-primitive sub-mode that sets nothing at all on RECT and CIRCLE, and there is no per-element orientation control anywhere in the schema. And a field cannot issue from the field above it -- that is a cross-field conditional, which the runtime names in its cannot list; every layout already places about the same canvas centre, which is as close to a common origin as the medium gets.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The three registers go from 24 / 20 / 17 to 16 / 14 / 14, so the step between the primary and the two finer orders is proportionally larger than it is now while the gap between the second and third closes to nothing. Expect two visible scales rather than three, over a much larger dark. The orders will still not be seen to divide from one another; they will be three fields of small marks sharing one centre.",
+      "preserve": [
+        "three fields as three registers -- fieldCount stays 3 and no field is deleted or merged",
+        "the finest register as small repeated marks of one consistent scale: its layout, primitive and size ceiling behaviour are unchanged, and its floor countMin stays 5 so it is never absent",
+        "the two working colours and the dark ground"
+      ]
+    },
+    {
+      "findingId": "bone-rim-is-a-ring",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The prescription names a layout that is not in this configuration. There is no radial or burst field here: the three layouts are LINEFIELD, STACK and GRID, all cell-family, so there is no polar placement to replace and no hub the members are turning about. The rim reading comes from the NGON primitive at a large size ceiling plus the runtime's own seeded per-site jitter, neither of which is a placement choice. And spreadMax cannot make a sector: it is a radius ceiling about the canvas centre, with no angular parameter anywhere in the schema, so narrowing it shrinks the figure evenly in all directions rather than confining members to one side. Widening the spread of member lengths is likewise not available -- the length spread is the seed's own draw between the bytecode floor of 2 and the ceiling.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[0].countMax"
+      ],
+      "expectedVisualEffect": "The bone field's size ceiling falls from 24 to 16 and its count ceiling from 24 to 22, so the sawtooth members become roughly half the area they were. On 5003, 5658, 5789, 5920 and 6051 the spikes should stop meeting end to end, which is what currently closes them into a continuous outline, so the sunburst/cactus silhouette should break open into separate marks. The distribution stays centred and roughly isotropic, so if a ring reading survives at the smaller size it is the seeded jitter and not something a parameter here can reach.",
+      "preserve": [
+        "this field's role as the register that reaches furthest: fields[0].spreadMax stays at 128, the top of the range, so it still establishes the figure's extent",
+        "the bone hex value and the flat dark ground",
+        "three registers, none deleted"
+      ]
+    },
+    {
+      "findingId": "market-inverted",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[2].drive",
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "After this, NO field takes its size from the market: the third register moves from drive SIZE on DRAWDOWN to drive COUNT on VOLUME_TIER, and fields 0 and 1 are already drive COUNT on RECOVERY. So member size is constant across the three states and the only thing the market moves is how many divisions are drawn, which is exactly what the direction names. Expect 5003's fine sawtooth to stop collapsing into two enormous triangles under stress and 5396's squares to stop growing; stress should read as the bare armature, with the two RECOVERY-bound fields at their count floors of 4, and recovery as the fullest branching at 22 and 22. One thing does not go the way the finding asks: the count span is not widened -- the third register's ceiling falls from 23 to 17 as part of the coverage recalibration -- so the extra separation has to come from the third register no longer swelling under stress rather than from a bigger swing.",
+      "preserve": [
+        "the three states clearly separable -- fields 0 and 1 keep their full RECOVERY/LOG2 binding and their count ranges, so the amplitude that currently makes stress unmistakable is not spent",
+        "the same two colours and the same dark in all three states: palette, paletteIx, groundMode and groundIx are all constants and none of them is market-bound, which the runtime enforces by refusing a state-driven colour outright",
+        "member size identical across states, which is what this change buys"
+      ]
+    },
+    {
+      "findingId": "third-colour-and-tone-stack",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "There is no grey to remove and no alpha to raise. The palette holds exactly three stops -- the dark ground #0f1113 and the two working colours, moss #5b6b45 and bone #d9d2c2 -- and the three fields point at stops 2, 1 and 2, so no field is drawing a charcoal or a mid-grey. What the critic is reading as a third and fourth working value, and as four or five distinguishable greens inside one form, is the runtime's per-element opacity: it is written per element from the token's seed, 'alpha' is named in this runtime's own cannot list, and neither VectorConfigV1 nor the author has a parameter that reaches it. Every intermediate tone in the frame is a translucent mark over the dark or over another mark. The only lever that exists at all is fewer overlaps, which is a density decision and is answered under ink-over-budget; it will reduce how often tones stack, and it will not make a single mark opaque."
+    },
+    {
+      "findingId": "members-merge-at-browse",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Half of the prescription is already at its ceiling. spreadMax cannot be raised on the mass fields: field 0 is at 128, the top of the 16..128 range, where the atlas measures elements landing on the frame boundary and being cut by the viewBox, and field 1 is at 122. So the separation has to come entirely from the size side, which is the half that does move. It is also the half the atlas says is the right one -- size and spread are close to orthogonal, size is density and spread is scale -- so shrinking sizeMax at constant spread is precisely 'distribute across the reach instead of piling at the centre'.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax",
+        "fields[0].countMax",
+        "fields[1].countMax",
+        "fields[2].countMax",
+        "fields[2].spreadMax"
+      ],
+      "expectedVisualEffect": "At a size ceiling of 16 instead of 24 each member is roughly half the area it was, while the sites stay spread over the same 128 and 122 radii, so dark should open between adjacent members of the same register at 120px. Expect the 512px frame to stop fusing six or more circles into one amorphous lump, and each 120px cell to read as a spaced population rather than a single continuous blob silhouette. Where members still touch, they will overlap translucently as before -- that part is opacity and is unreachable. One reach parameter does move, and it moves inward: the third register's radius ceiling falls from 116 to 90, so the marks the critic's other finding calls confetti in the empty dark are pulled inside the hull of the drawing rather than scattered further across it.",
+      "preserve": [
+        "the figure centred and its members belonging to one growth: no layout changes, every field still places about the canvas centre, and nothing is scattered",
+        "the reach of the two composition-carrying fields, unchanged at 128 and 122 -- the ONLY field pulled inward is the quiet third register, from 116 to 90, and that is precisely so it stops reading as confetti in the margin",
+        "the two colours and the flat dark"
+      ]
+    },
+    {
+      "findingId": "figure-ground-inverted-on-some-seeds",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "A per-seed clamp of one field against another is a cross-field conditional, which the runtime names in its own cannot list: each field draws its own scalars from its own seed byte and no field can see another's draw, so 'never exceed the primary register on any seed' cannot be expressed. What CAN be expressed is a lower ceiling on every field at once, and that is what moves. One thing must be said plainly because it runs against the finding: countMin on the bone field FALLS, from 6 to 4, as part of the coverage recalibration. countMin is the resolved count floor, so the register still cannot be absent -- but its sparsest draw gets sparser, not denser, and if a seed reads as a near-empty bone register next round that is this, and it is a trade the coverage ceiling made knowingly.",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax",
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[1].countMin",
+        "fields[1].countMax",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The bone field's ceilings come down from sizeMax 24 and countMax 24 to 16 and 22, so on 5003 and 6051 it should no longer be able to fill the frame and reduce the moss form to a dot -- the light stops being the ground. Because all three ceilings fall together, the ORDER of the registers is preserved rather than inverted per seed. Seeds should therefore differ in how much of the frame the growth has covered rather than in which register is present, though absence of a register is bounded by countMin and not eliminated by it.",
+      "preserve": [
+        "the twelve visibly distinct at 120px -- no seeded range is pinned and the variation is not being clamped out, only ceilinged",
+        "countMin as a real creator-owned floor on every field (4, 4 and 5 after the change), which is one of only two dimensions in either runtime with a floor the author owns rather than the bytecode",
+        "the two working colours and the dark ground"
+      ]
+    }
+  ]
+}

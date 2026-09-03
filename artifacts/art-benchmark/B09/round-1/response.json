@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "kind": "AUTHOR_RESPONSE",
+  "respondsTo": "B09",
+  "criticId": "critic-B09",
+  "note": "Round 1 changed the AUTHOR, not this project's configuration: the counter-register's sensor, its reach and count scaling, and the coverage ceiling all moved in the machine that turns a direction into bytes. Nobody hand-wrote a patch for this brief, because a hand-written patch would be exactly the human art intervention this lane claims it has none of.",
+  "responses": [
+    {
+      "findingId": "member-count-and-scale",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Count and size are both real controls: countMin == countMax pins how many elements a field draws, sizeMax is the coverage lever and nothing else in this runtime moves ink as far, and because each field carries its own sizeMax a stepped size hierarchy across the three registers is directly expressible. Two halves are not. An element that fills the frame is refused by name, so no member can span more than 100% of frame width. And the size ratio BETWEEN two members of the SAME field is written per site by the runtime from the token seed, not declared by the author, so 'the largest at least three times the area of the smallest' can be arranged across fields and not inside one.",
+      "parameters": [
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[1].countMin",
+        "fields[1].countMax",
+        "fields[2].countMin",
+        "fields[2].countMax",
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax"
+      ],
+      "expectedVisualEffect": "Each seed drops from roughly twenty-five near-equal tiles to a handful of members whose sizes are plainly stepped between the three registers, so at 120px seeds 5003, 6051, 5920 and 5789 read as a few masses rather than as gravel. The largest member will take a large fraction of the frame and will still sit inside it.",
+      "preserve": [
+        "RECT as the only member shape: the blunt quadrilateral is not replaced with anything more articulated",
+        "the per-site rotation and jitter the runtime writes, which is what stops the masses reading as a diagram of axis-aligned boxes",
+        "seed-to-seed legibility at 120px: the count reduction is paid for out of the smallest register rather than out of what separates the twelve tokens"
+      ]
+    },
+    {
+      "findingId": "frame-fill-and-crop",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Coverage and reach are separate, near-orthogonal controls here and both can rise: sizeMax carries ink, spreadMax carries how far from the canvas centre a site may sit. What cannot happen is the crop. The primary field's spreadMax already stands at its 128 ceiling, the runtime clamps a site's CENTRE rather than its extent, and both 'frame bleed' and 'an element that fills the frame' are on this runtime's refusal list, so a union of members that overruns every edge and is visibly cut by the border is not reachable. 65-75% ink is also above the measured ceiling: the whole runtime saturates near 0.39-0.46 at browse size.",
+      "parameters": [
+        "fields[1].spreadMax",
+        "fields[2].spreadMax",
+        "fields[0].sizeMax",
+        "fields[1].sizeMax",
+        "fields[2].sizeMax",
+        "fields[0].countMin",
+        "fields[1].countMin",
+        "fields[2].countMin"
+      ],
+      "expectedVisualEffect": "The clear ground shrinks to a thin surround on most seeds: members from all three registers now reach the border instead of floating clear of it as 5396, 5658 and 5920 do, and coverage rises well above the roughly 30% mean the objective recorded. Few or no members will be cut by the frame.",
+      "preserve": [
+        "the flat near-black ground: groundMode, groundIx and groundIx2 do not move, so the silhouette gains area without the background gaining lightness",
+        "a thin dark surround rather than zero ground, as the negative-space clause asks"
+      ]
+    },
+    {
+      "findingId": "flat-mass-not-alpha-stack",
+      "disposition": "REJECT_WITH_REASON",
+      "reason": "Opacity is not a creator parameter in this runtime. 'alpha' is on VECTOR_COMPOSITION_V1's own refusal list, per-element opacity is written by the runtime from the token's seed, and VectorConfigV1 exposes no alpha field at all. So members cannot be made fully opaque, per-member opacity variation cannot be removed, and the tonal step at every crossing cannot be flattened into one silhouette. The only lever on how many tonal steps appear is the number of overlaps, which is a density decision and is answered under the count and coverage findings; it is not the fix this finding asks for and it should not be reported as one."
+    },
+    {
+      "findingId": "hub-and-rosette",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "The rotational ORDER is reachable and the shared centre is not. Primitive and layout are creator constants that can both be changed: the soft central disc goes when the circle field stops drawing CIRCLE, and the even angular and row regularity goes when the metrical cell-grid field moves to a layout measured sparse and irregular. But law L5 holds unconditionally here: all twelve layouts place their sites about the canvas centre, per-element coordinates are refused by name, and there is no inset and no placement parameter. 'No shared centre' and 'unmetrical offsets along a single dominant axis' are therefore not instructions this runtime can take.",
+      "parameters": [
+        "fields[1].primitive",
+        "fields[1].variant",
+        "fields[2].layout",
+        "fields[1].layout"
+      ],
+      "expectedVisualEffect": "The soft dark disc at the middle of 5658, 5527, 5003 and 6051 disappears, and the ring of small squares at regular angular intervals is replaced by an irregular scatter, so no seed reads as a rosette, an emblem or a mechanism. The members still concentrate about the middle of the frame.",
+      "preserve": [
+        "the heavy central concentration of mass, which in this runtime is a property of the medium rather than a choice",
+        "the member overlap density at the centre that the current arrangement produces"
+      ]
+    },
+    {
+      "findingId": "ochre-seam-absent-or-blob",
+      "disposition": "PARTIALLY_ACCEPT",
+      "reason": "Mandatory presence and elongation are both expressible. countMin == countMax == 1 pins the ochre field to exactly one element in every seed and every state, so a seed with no visible ochre becomes impossible; fields are drawn as layers, so which field carries the accent decides whether it sits over the mass or behind it; and an elongated primitive exists, since LINE is always stroked and ELLIPSE reads its variant as the axis ratio. What cannot be declared is a 6:1 aspect on a quadrilateral, because element extent comes from sizeMax with no aspect control, and a seam long enough to be cut by the frame at both ends, because frame bleed is refused.",
+      "parameters": [
+        "fields[0].primitive",
+        "fields[0].variant",
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[0].sizeMax",
+        "fields[0].paletteIx",
+        "fields[2].paletteIx"
+      ],
+      "expectedVisualEffect": "Exactly one ochre member appears in all twelve seeds and all thirty-six state cells, elongated rather than square or blobby, drawn over the charcoal and iron rather than behind them, and findable at 120px on 5265, 6313 and 5789, which currently show none. It will not cross the whole silhouette edge to edge.",
+      "preserve": [
+        "the ochre hue exactly as authored: only which field carries it, how many there are and how it is drawn move",
+        "ochre as the only accent, with no second warm colour and no ochre-tinted members elsewhere in the mass"
+      ]
+    },
+    {
+      "findingId": "stress-depletes-instead-of-fracturing",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[2].countMin",
+        "fields[2].countMax",
+        "fields[2].sensor",
+        "fields[2].curve",
+        "fields[2].drive",
+        "fields[2].spreadMax",
+        "fields[0].drive",
+        "fields[1].drive"
+      ],
+      "expectedVisualEffect": "The member set stops changing between the three cells of a seed. The same elements are drawn at neutral, stress and recovery and only the distance between them moves, so 5265 under stress reads as the neutral object pulled apart rather than as three faint squares in an empty frame, and stress ink stays near neutral instead of falling to the 4.1% the blank check recorded. The count register that was deleting members now reads identically at neutral and stress and rises only in recovery.",
+      "preserve": [
+        "the direction of the axis, which is already correct: stress most broken, recovery most continuous, neutral between them",
+        "the magnitude of perceptual separation between states, now carried by separation distance rather than by deletion"
+      ]
+    },
+    {
+      "findingId": "stress-inverts-focal-hierarchy",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[0].sizeMax",
+        "fields[0].countMin",
+        "fields[0].countMax",
+        "fields[0].drive",
+        "fields[0].sensor"
+      ],
+      "expectedVisualEffect": "The ochre stops being the largest and brightest thing in any frame. Its drawn area is set by a pinned count and a small sizeMax and is carried by a drive that moves position rather than area, so it is the same narrow accent in neutral, stress and recovery while the charcoal mass keeps the lead. 5134 stress no longer opens on two big saturated ochre squares.",
+      "preserve": [
+        "the ochre fully visible under stress: the cap is bought with size and count and never by fading, and there is no alpha lever to fade it with in any case",
+        "the ochre's hue and saturation, which are correct and are not touched"
+      ]
+    },
+    {
+      "findingId": "state-introduces-new-primitives",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "fields[1].primitive",
+        "fields[1].variant",
+        "fields[1].drive",
+        "fields[2].countMin",
+        "fields[2].countMax"
+      ],
+      "expectedVisualEffect": "The large soft dark discs vanish from the stress row of 5003, 5134, 5265 and 5396. Primitive is a creator constant the market never reaches, so once the circle field draws quadrilaterals no state can introduce a fourth element kind, and with the counts pinned a viewer can trace an individual member from the neutral cell into stress and back into recovery.",
+      "preserve": [
+        "the per-state distinctness the objective measures: the separation is moved onto member spread before the circles are taken away, not after",
+        "recovery as the most consolidated of the three states"
+      ]
+    },
+    {
+      "findingId": "palette-drifts-cool-and-pale",
+      "disposition": "ACCEPT",
+      "parameters": [
+        "palette",
+        "fields[1].paletteIx",
+        "fields[2].paletteIx"
+      ],
+      "expectedVisualEffect": "The two member values leave the cool blue-grey band. The darker sits close to the ground so the silhouette edge stays quiet, the lighter is a clear step above it and readable as a separate value at 120px, and neither renders as pale as the near-white square on 6444. Both stay below mid grey.",
+      "preserve": [
+        "the three-colour discipline and the near-black ground: groundIx and groundIx2 do not move, so the members are darkened without the ground being lightened",
+        "the ground barely separated from the darkest member value, so no visible edge appears around the whole silhouette"
+      ]
+    }
+  ]
+}

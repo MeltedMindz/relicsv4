@@ -2,8 +2,7 @@
   "briefId": "B03",
   "axis": "geological-layered",
   "title": "BEDDING",
-  "phase": "AUTHORED",
-  "objectiveBlockers": [],
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "36c766ba051a2c28f5b9aa7a0c2705ef4edf72dfd51a45a717b05a0932532292",
   "admission": {
     "schemaVersion": 1,
@@ -848,7 +847,908 @@
         "stateDeMin": 4.06,
         "seedDeMean": 18.28,
         "seedDeMin": 8.64
+      },
+      "critique": {
+        "criticId": "critic-B03",
+        "whatWorks": [
+          "The horizontal bed field itself is right, and it is the part of this that already answers the brief. Where it survives at strength -- 5658, 6051, 5789, 5003 -- the beds are flat wide rectangles at genuinely varying thickness and varying pitch, laid one over another with the dark base showing only as thin partings, and the eye reads a deposited sequence top to bottom rather than an even texture. That field is the work; everything else in the frame is currently arguing with it.",
+          "The colour relationship is already the one the direction asks for. Warm ochre and pale sand beds interrupted by desaturated cool grey beds gives the earth-over-dark reading with a cold note among the warm ones in 5003, 5789, 5920 and 6051, and the colours are held flat with no gradient anywhere in the twelve. The hues do not need reinventing; only their assignment to bed thickness does.",
+          "Seed variation is real and it varies the right quantity. Across the twelve, bed count and the evenness of bed spacing visibly differ -- 6051 carries a crowded regular section, 5396 a sparse widely-parted one -- so the primary and secondary axes of the variation strategy are already being driven by the seed rather than by colour reshuffling.",
+          "Bed count already drops under drawdown. Comparing the neutral and stress rows for 5003 and 5396, the population of fine beds visibly thins out under stress and returns in recovery, so half of the market transformation -- how many beds the section carries -- is genuinely bound and legible at 120px. Only the thickness half is running backwards."
+        ],
+        "findings": [
+          {
+            "id": "radial-fan-dominates-the-stack",
+            "whatFails": "A field of long rotated ochre slabs radiates from a pivot near the frame centre and is the loudest thing in every one of the twelve seeds. In 5265 and 5527 it is an unambiguous fan, splayed from a single point in the upper left, and the 512px single is a plume rather than a section. In 5003, 5658 and 6313 the same slabs cross the frame as a diagonal X over the beds.",
+            "why": "The rhythm direction says this is a stack read top to bottom and never a ring, and the focal hierarchy says nothing dominates because a section is not a scene. A radial placement asserts a centre and a scene, and it makes the diagonals the subject while the horizontal bedding becomes background texture -- the exact inversion of the intended reading.",
+            "specificChange": "Set the rotation of every slab in that field to zero so each one lies horizontal, and replace its radial placement with the same top-to-bottom stacking the bed field already uses: give each slab its own y position drawn from the sequence rather than an angle drawn from a centre. The slabs then become the thick beds of the section instead of a fan laid across it.",
+            "keep": "Keep the slabs themselves and their weight. They are the only marks in the frame carrying real thickness, and the direction wants beds that differ in thickness and weight -- so keep them as the thick members of the sequence rather than deleting them and flattening the section to one pitch."
+          },
+          {
+            "id": "section-does-not-fill-the-frame",
+            "whatFails": "The drawing is inset. Every seed leaves a dark margin at the left and right where the beds stop short, and most leave a substantial black band at the top or bottom -- 6444 is roughly two thirds bare base, 5265 leaves the whole lower left empty, 5920 has an empty strip along the bottom. The mass reads as a centred object sitting on black rather than as a frame cut through material.",
+            "why": "The composition direction says the section fills the frame edge to edge with bands running the full width and stacking from the top border to the bottom, and the density direction says the great majority of the frame carries ink with the dark base showing only as the partings. A centred mass surrounded by base makes the base the ground, which reintroduces exactly the figure-on-emptiness reading the brief refuses.",
+            "specificChange": "Extend every bed's horizontal extent past both frame edges -- start it left of x=0 and end it right of the frame width so no bed terminates inside the picture -- and spread the bed y positions across the full frame height from above the top border to below the bottom one, rather than clustering them about the canvas centre.",
+            "keep": "Keep the uneven vertical pitch. Spreading the beds to the borders must not turn into evenly distributing them: the interval between beds should still change from one part of the sequence to another, and a thick bed should still interrupt a run of thin ones."
+          },
+          {
+            "id": "discs-are-off-motif",
+            "whatFails": "Scattered dark brown circles sit around the drawing in 5134, 5265, 5527, 6182, 6313 and 6444, in some seeds ringing the central mass. In 6444 they form a rough halo of nine or ten discs around a small glyph, and in the 512px single they float in the empty base like bubbles.",
+            "why": "The motif is sediment restated as horizontal banding: wide flat marks read as a deposited sequence. A circle is neither a bed nor a parting, it has no thickness to contribute to the sequence, and a ring of them around the centre reasserts the radial composition the rhythm direction rules out. They are the clearest thing in the frame that no line of the brief asks for.",
+            "specificChange": "Remove the disc field entirely, and spend its ink budget on more beds -- raise the bed count by roughly the number of discs dropped. If a second primitive is needed for texture, replace the circle with a short flat rectangle of partial width, stacked with the others as a lens or a pinch-out within a bed.",
+            "keep": "Keep the darker umber value the discs are drawn in. It is a legitimate member of the earth palette and should reappear as the colour of some beds, so removing the discs removes a shape without narrowing the palette to ochre and grey."
+          },
+          {
+            "id": "drawdown-thickens-instead-of-thinning",
+            "whatFails": "In the stress row the fine beds mostly disappear and the surviving marks get visibly fatter, so stress is the heaviest, most inked, most solid state of the three. At 120px 5134 stress and 5265 stress read as near-solid ochre masses while their neutral and recovery cells read as streaked sections. Recovery is not the fullest state; stress is.",
+            "why": "The market transformation says the beds thin and fewer survive under drawdown, and that the sequence thickens and more beds return in recovery, so the fullest section is the recovered one. As rendered, drawdown is being drawn as consolidation into fewer heavier slabs, which is the opposite reading: a viewer would infer that stress deposits more material.",
+            "specificChange": "Invert the thickness response to the market sensor. Drive per-bed thickness down as drawdown deepens instead of up, so stress carries both fewer beds and thinner ones, and raise both count and thickness in recovery until total ink ordering is stress below neutral below recovery, with recovery clearly the densest of the three.",
+            "keep": "Keep the bed-count response, which is already correct and already legible at 120px. The count must keep falling under stress and returning in recovery; this fix changes the thickness curve only, so that both quantities move the same way instead of cancelling."
+          },
+          {
+            "id": "cold-band-is-never-the-thick-one",
+            "whatFails": "The cool grey only ever appears as the thinnest and faintest beds, sitting underneath the warm ochre mass as background texture, while the thickest marks in every seed are warm ochre. In 5265, 5527, 6182 and 6313 there is no cool bed visible at all, and the 512px single is entirely ochre and umber with no cold note anywhere.",
+            "why": "The focal hierarchy names the thickest cold slate band as the only local emphasis in the section, and the identity anchors require one cold band among the warm ones in every seed and every state. A cold colour applied only to the faintest marks gives the emphasis to the warm field and lets a quarter of the collection lose the palette anchor outright.",
+            "specificChange": "Bind the slate colour to the single thickest bed in each seed rather than to the thin ones, and add a floor of at least one slate bed per seed in every market state so it can never drop out. Make the slate a colder, bluer grey than the current neutral so it separates from the sand beds instead of reading as unsaturated ochre.",
+            "keep": "Keep the warm earths carrying the sequence. Umber, ochre and sand must remain the majority of the beds and the majority of the ink -- the slate is one emphatic band set among them, never a second colour family competing for the frame."
+          },
+          {
+            "id": "translucent-overlaps-mud-the-partings",
+            "whatFails": "The slabs and beds are drawn semi-transparent, so wherever they cross they blend into intermediate brown and the parting between two beds is lost. The centre of 5134, 5527 and 6182 is a continuous mottled wash in which no individual bed can be traced, and pale sand beds passing under ochre slabs turn a muddy mid-tone rather than being occluded.",
+            "why": "The palette intent says four working colours held flat rather than graded, and the negative-space direction says the dark base surviving as partings is exactly what makes the sequence legible as distinct beds rather than as one continuous field of colour. Alpha blending manufactures a continuous gradient of unnamed intermediate colours and dissolves the partings that carry the whole reading.",
+            "specificChange": "Raise every bed's fill to fully opaque and let stacking order do the deposition, so a later bed occludes the one beneath it exactly as one bed of sediment covers another. Where more tonal range is wanted, add discrete darker and lighter members of umber, ochre and sand as their own flat values instead of recovering them from overlap.",
+            "keep": "Keep the overlap and occlusion itself. Beds crossing and cutting one another is what makes this a deposited sequence rather than a stripe pattern -- the fix is that a crossing should read as one bed covering another, not as two colours mixing."
+          },
+          {
+            "id": "banding-absent-in-a-third-of-seeds",
+            "whatFails": "Bedding is not merely weak in some seeds, it is essentially missing. 5527 and 6182 are a centred ochre scribble with a handful of stray ticks, 6444 is a small glyph inside a ring of discs, and 5265 carries only a short cluster of pale ticks near its centre. Four of twelve seeds do not read as a section at all at either size.",
+            "why": "The identity anchors require every seed and every state to keep the horizontal stacking and the full-width bedding -- that is what makes the collection one collection. A variation range whose low end reaches near-zero beds does not vary how many beds the section carries, it varies whether the piece is a section at all, and those seeds have left the brief rather than interpreted it.",
+            "specificChange": "Clamp the low end of the bed-count range so that no seed in any market state can fall below a section that still spans the frame -- set a floor high enough that even the sparsest seed carries beds from top border to bottom -- and bind seed variation to the spacing evenness and the thick-bed colour once the count floor is met.",
+            "keep": "Keep the real spread between crowded and sparse seeds. The difference between 6051's dense stack and 5396's widely-parted one is the primary variation axis the brief names, and raising the floor must not compress every seed toward the same bed count."
+          },
+          {
+            "id": "fine-beds-vanish-at-browse-size",
+            "whatFails": "At 120px the fine beds break up into intermittent dashes or disappear. The pale ticks that carry 5265 at 256px are gone entirely in its 120px cell, and 5396 and 5920 lose most of their thin grey beds, leaving a centred ochre blot on black as the thumbnail reading of a piece whose 256px render is a legible section.",
+            "why": "The thumbnail intent requires that at 120px the work read as a stack of horizontal bands of differing thickness filling the whole frame, with the sequence legible as a sequence before any single bed can be told apart. A bed thinner than a pixel at browse size contributes nothing to that reading and its absence turns the varying pitch into noise.",
+            "specificChange": "Raise the minimum bed thickness to at least two pixels at 120px -- roughly 1.7 percent of frame height -- and clamp the thin end of the thickness range there, carrying the lost fine pitch instead in the parting heights, which can stay small because a dark gap between two opaque beds survives downsampling where a thin bright bed does not.",
+            "keep": "Keep the thickness contrast between the thinnest and thickest beds. Lifting the floor must not flatten the section toward one weight: the thick slate bed should still be several times the thinnest bed, so the eye still reads a sequence rather than a ruled grid."
+          }
+        ],
+        "overall": "The bed field at the heart of this is already the right answer to the brief -- flat opaque-looking horizontal rectangles at varying thickness and varying pitch, warm earths with a cool grey among them, partings of dark base between them -- and where it runs strong, as in 5658 and 6051, the section reads exactly as intended. What is wrong is almost entirely what has been laid on top of it. A field of long rotated slabs radiates from the frame centre and dominates every seed, turning a stack into a fan and a section into a scene, and a field of dark discs rings it with a primitive the brief never asks for; between them they push the bedding into the background and leave the composition as a centred mass floating on black rather than a window cut through material. The fastest route to the brief is subtractive and reorienting rather than additive: flatten the slabs to horizontal and stack them as the thick members of the sequence, delete the discs, run every bed past both frame edges and across the full frame height, and give the cold slate to the thickest bed instead of the faintest. Two further things are running backwards rather than merely being obscured -- drawdown currently thickens the surviving marks so stress is the heaviest state when recovery should be the fullest, and the thinnest beds fall below a pixel at 120px so the browse-size reading collapses to a blot. Fix those five things and the picture that is already inside these renders is a core sample; nothing in this critique asks for a new idea, only for the one that is here to be allowed to fill the frame."
+      },
+      "response": {
+        "schemaVersion": 1,
+        "kind": "AUTHOR_RESPONSE",
+        "respondsTo": "B03",
+        "criticId": "critic-B03",
+        "note": "Everything answered here is a change to the AUTHOR -- the machine that turns an art direction into runtime bytes -- and not a patch to this project's configuration, because a hand-written patch would be a human art intervention and this lane's whole claim is that there are none.",
+        "responses": [
+          {
+            "findingId": "radial-fan-dominates-the-stack",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Both verbs in the prescription are refused by the medium. Rotation is not a creator parameter: the angle of a member comes from the layout and the seed, and there is no per-element orientation control anywhere in the schema, so the slabs cannot be laid flat. Giving each slab its own y position is 'per-element coordinates', named in this runtime's own cannot list -- a field is a count of primitives placed about the canvas centre by a layout, and a site's coordinates are not addressable. It is also worth correcting the diagnosis: no polar layout is elected here. The three layouts are STACK, GRID and LINEFIELD, all cell-family, so there is no radial placement to replace. The fan is LINEFIELD's known clumping plus seeded rotation. What does move is this field's reach and its market role, and both cut against its dominance.",
+            "parameters": [
+              "fields[2].spreadMax",
+              "fields[2].drive",
+              "fields[2].sensor",
+              "fields[2].curve",
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The ochre slab field's reach falls from 116 to 90, inside the two registers that carry the section, so the slabs should stop crossing the frame corner to corner as a diagonal X on 5003, 5658 and 6313. It also stops being the SIZE-driven register, so it no longer fattens into the loudest thing in the frame under drawdown, and its population rises (12..34 from 9..27) so it reads as a run of flat members rather than a few large splayed ones. It will still be rotated and still centred: if 5265 and 5527 still read as a fan next round, that is the seeded rotation, and no parameter reaches it.",
+            "preserve": [
+              "the slabs themselves and their weight -- fields[2].sizeMax stays at 18, so the members keep their thickness and nothing is deleted or flattened to one pitch",
+              "the bed field untouched: fields 0 and 1 keep their layouts, primitives, sizes, counts and market bindings entirely",
+              "the four-colour earth palette and the flat dark base"
+            ]
+          },
+          {
+            "findingId": "section-does-not-fill-the-frame",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "Every clause of this asks for something the runtime names in its own cannot list. 'Start it left of x=0 and end it right of the frame width' is frame bleed and per-element coordinates; a bed running the full width is 'an element that fills the frame'; and 'spread the bed y positions across the full frame height' is again per-element coordinates -- there is no x, no y and no width in this schema. The only reach control is spreadMax, which is a radius ceiling about the canvas centre that clamps a site's CENTRE rather than its extent, and which the seed draws beneath from a floor of 16, so a bed cannot be made to terminate outside the picture. Fields 0 and 1 already carry 128 and 122, the top of the range. Something should be said plainly rather than discovered on the next sheet: the one reach parameter that moves this round moves INWARD, the ochre field from 116 to 90, so the dark margin will be tidier and not smaller. This brief's density direction and this runtime are pulling against each other, and the round-1 change set was a coverage CEILING, which does nothing for a frame that is under-covered."
+          },
+          {
+            "findingId": "discs-are-off-motif",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The disc field cannot be removed and its primitive cannot be swapped. Field count is an author-wide constant and never fewer than two, because a single field carrying a driven count blanked seven seeds of eight; and primitive is a per-field creator constant that none of the three round-1 author changes reaches, so replacing CIRCLE with a short RECT for this one brief would be a per-project art edit. What does happen is the second half of the prescription -- spending more of the budget on beds -- though it arrives as a raised population on the ochre rectangle register rather than as ink taken from the discs. The umber value survives in the palette, but it cannot be reassigned to some of the beds: paletteIx is one constant per field, so a field's members are all one colour and there is no per-element colour to hand umber to.",
+            "parameters": [
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The ochre flat-rectangle register's count goes from 9..27 to 12..34, so every seed and every market state carries more wide flat members and the discs become a smaller share of what is in the frame. Expect the halo of nine or ten discs on 6444 to sit behind a denser run of rectangles rather than around a small glyph. The discs themselves will still be there, still circles, still drawn in umber: this reduces their prominence and does not remove the primitive the brief never asked for.",
+            "preserve": [
+              "the darker umber value as a member of the earth palette -- palette and every paletteIx are unmoved, so removing prominence does not narrow the palette to ochre and grey",
+              "the horizontal bed field at full strength: fields 0 and 1 do not move at all",
+              "the seed variation in bed count and spacing evenness, which is carried by ranges that are not narrowed"
+            ]
+          },
+          {
+            "findingId": "drawdown-thickens-instead-of-thinning",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The thickness response is not inverted, it is REMOVED, and that is a deliberate difference. After this change no field takes its size from the market: the ochre register moves from drive SIZE on DRAWDOWN to drive COUNT on VOLUME_TIER, and the two bed fields were already drive COUNT. Driving size DOWN under drawdown instead of up is available in principle and is refused on measured grounds -- DRIVE_SIZE's resolved floor is the bytecode constant 2, so a size-driven field is invisible whenever its sensor reads low, measured at ink120 0.005 / 0.005 / 0.156 across the three states, a blank frame in two states of three. The ordering the finding actually asks for is delivered by count alone, which is the half already working.",
+            "parameters": [
+              "fields[2].drive",
+              "fields[2].sensor",
+              "fields[2].curve",
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "Stress should stop being the heaviest state. The surviving marks no longer fatten -- the one field that was fattening them is now bound to VOLUME_TIER, which reads 30 / 30 / 32 across neutral / stress / recovery, so it adds nothing under drawdown -- while fields 0 and 1 keep falling to their count floors there. Expect 5134 and 5265 at 120px to stop reading as near-solid ochre masses under stress and to read as thin, open, streaked sections instead, with total ink ordering stress below neutral below recovery and recovery clearly the densest of the three.",
+            "preserve": [
+              "the bed-count response exactly as it is: fields 0 and 1 keep drive COUNT, sensor RECOVERY, curve LOG2 and their 10..30 and 9..27 ranges, so the count keeps falling under stress and returning in recovery",
+              "the thickness ladder between fields, since no sizeMax moves on this project -- 26 / 22 / 18 stand",
+              "the four working colours and the flat dark base in all three states"
+            ]
+          },
+          {
+            "findingId": "cold-band-is-never-the-thick-one",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "A colour bound to the single thickest bed in each seed needs three things the runtime names in its own cannot list at once: per-element colour, a per-seed parameter table, and a cross-field conditional. paletteIx is ONE constant per field, so a field's members are all one colour and thickness is a seeded scalar the colour cannot follow -- 'one cold band among the warm ones' can only ever be 'one of the three fields is entirely slate', which is a different picture. A per-seed floor of at least one slate member in every state is the same refusal from the other side: the seed reaches nothing categorical in this runtime. Making the slate bluer is expressible -- palette holds five creator-chosen stops and #59636b is already one of them, unpointed-at -- but none of the three round-1 author changes reaches palette derivation, so nothing in the palette moves next round, and choosing a colder grey for this one brief by hand would be the per-project art edit this lane exists to avoid."
+          },
+          {
+            "findingId": "translucent-overlaps-mud-the-partings",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "Opacity is written per element by the runtime from the token's seed. 'alpha' is named in this runtime's own cannot list, no creator parameter reaches it, and neither VectorConfigV1 nor the author exposes it, so 'raise every bed's fill to fully opaque' is not an instruction the medium can take. Stacking order already works the way the finding wants -- fields draw in order, so a later field is drawn over an earlier one -- but the marks are translucent as they land, so a crossing reads as two colours mixing rather than as one bed covering another, and that will still be true next round. Adding discrete darker and lighter umber, ochre and sand stops instead is expressible in the palette, but no round-1 author change reaches palette derivation, so promising it here would be promising a hand edit. The only real lever against tonal muddling is fewer overlaps, which is a density decision, and this brief's density direction asks for the great majority of the frame to carry ink -- so it is not one that can be pulled here without contradicting the direction."
+          },
+          {
+            "findingId": "banding-absent-in-a-third-of-seeds",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Half of this is already banked and the finding may not know it: countMin IS the resolved count floor and it is one of only two dimensions in either runtime with a floor the author owns rather than the bytecode, so no seed in any market state can already fall below 10, 9 and 9 members on the three fields. A register cannot be absent. The other half is refused: 'a floor high enough that even the sparsest seed carries beds from top border to bottom' is an EXTENT guarantee, not a count one, and extent is the seed's own draw beneath spreadMax with no floor parameter -- plus frame bleed and per-element coordinates are both refused, so a bed cannot be made to reach a border. And binding seed variation to spacing evenness or to the thick-bed colour once a floor is met is a cross-field conditional and a per-seed table, neither of which exists. What actually moves is one floor.",
+            "parameters": [
+              "fields[2].countMin",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The ochre register's floor rises from 9 to 12 and its ceiling from 27 to 34, so the sparsest seeds gain three guaranteed members and the densest gain seven possible ones. Expect 5527, 6182, 6444 and 5265 -- the four the critic reads as a scribble, a glyph and a cluster of ticks -- to carry visibly more flat ochre members at both sizes. They will not necessarily become sections: what makes them read as a section is banding that spans the frame, and that is extent rather than count, so if they still fail to read as sections next round the count floor was not the binding constraint.",
+            "preserve": [
+              "the real spread between crowded and sparse seeds -- fields 0 and 1 keep their 10..30 and 9..27 ranges untouched, so the primary variation axis is not compressed, and the third register's own span widens rather than narrows",
+              "the bed field's thickness and pitch variation, since no sizeMax and no layout moves",
+              "the four working colours and the flat dark base"
+            ]
+          },
+          {
+            "findingId": "fine-beds-vanish-at-browse-size",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "There is no thickness floor to raise. Resolved size is 2 + (sizeMax - 2) * v / 1000, so the thin end is the bytecode constant 2 and sizeMax is a CEILING the seed draws beneath; VectorConfigV1 has no sizeMin and no clamp on the thin end of the distribution, so 'raise the minimum bed thickness to two pixels at 120px' is not expressible. Carrying the lost pitch in the parting heights is the same refusal from the other side, because a parting is not an object -- it is whatever ground is left between two marks, and there is no spacing parameter. What does move is one real source of sub-pixel marks, and it is the worst one, because it applies to every seed at once rather than to unlucky draws.",
+            "parameters": [
+              "fields[2].drive",
+              "fields[2].sensor",
+              "fields[2].curve"
+            ],
+            "expectedVisualEffect": "The ochre register stops taking its size from DRAWDOWN. A SIZE-driven field resolves to the constant 2 whenever its sensor reads low, which is a sub-pixel mark at 120px in whole market states rather than on unlucky seeds -- measured at ink120 0.005 in two states of three. After this its size is seed-drawn only and its members hold a consistent weight across neutral, stress and recovery. The per-seed thin draw remains: the pale ticks that carry 5265 at 256px and vanish at 120px are field 0's own low size draws, and nothing here reaches them.",
+            "preserve": [
+              "the thickness contrast between the thinnest and thickest beds: no sizeMax moves on this project, so 26 / 22 / 18 stand and the section is not flattened toward one weight",
+              "the bed-count response on fields 0 and 1, untouched",
+              "the four working colours and the flat dark base"
+            ]
+          }
+        ]
+      },
+      "boundedChange": {
+        "ok": true,
+        "moved": [
+          {
+            "parameter": "fields[2].spreadMax",
+            "from": 116,
+            "to": 90,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMin",
+            "from": 9,
+            "to": 12,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMax",
+            "from": 27,
+            "to": 34,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].drive",
+            "from": "SIZE",
+            "to": "COUNT",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].sensor",
+            "from": "DRAWDOWN",
+            "to": "VOLUME_TIER",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].curve",
+            "from": "LOG2",
+            "to": "LINEAR",
+            "named": true
+          }
+        ],
+        "unnamed": [],
+        "counts": {
+          "moved": 6,
+          "named": 6,
+          "unnamed": 0
+        },
+        "detail": "6 parameter(s) moved, all of them named in the author's response"
+      }
+    },
+    {
+      "round": 2,
+      "configHash": "467bedba95f0a1b399872a97d2599614061cfcf1d5f2e5656401ba6a159ef22a",
+      "configBytes": "0x564356310100000000050f11135b4632b07d3ac2ac8259636b030400030301000a1e1a800000000101030100091b167a10000500020000000c22125a18000011536564696d656e74205265737461746564ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "STACK",
+            "primitive": "RECT",
+            "sizeMax": 26,
+            "spreadMax": 128,
+            "symmetry": "NONE",
+            "countMin": 10,
+            "countMax": 30,
+            "paletteIx": 3,
+            "stroke": false,
+            "variant": 0,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "GRID",
+            "primitive": "CIRCLE",
+            "sizeMax": 22,
+            "spreadMax": 122,
+            "symmetry": "NONE",
+            "countMin": 9,
+            "countMax": 27,
+            "paletteIx": 1,
+            "variant": 2,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "LINEFIELD",
+            "primitive": "RECT",
+            "sizeMax": 18,
+            "spreadMax": 90,
+            "symmetry": "NONE",
+            "countMin": 12,
+            "countMax": 34,
+            "paletteIx": 2,
+            "variant": 3,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR"
+          }
+        ],
+        "fieldCount": 3,
+        "palette": [
+          "#0f1113",
+          "#5b4632",
+          "#b07d3a",
+          "#c2ac82",
+          "#59636b"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 0,
+        "flags": [],
+        "title": "Sediment Restated"
+      },
+      "producedBy": "REAUTHORED_BY_THE_CHANGED_AUTHOR",
+      "mechanism": {
+        "ok": true,
+        "mechanism": "SUBTRACTION",
+        "polarity": "PEAKS_AT_RECOVERY",
+        "drive": "COUNT",
+        "curve": "LOG2",
+        "sensor": "RECOVERY",
+        "requires": {
+          "minFields": 2,
+          "countRangeAtLeast": 18
+        },
+        "detail": "countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+        "evidence": {
+          "row": "VC-subtract-3field",
+          "weakestPairing": 8.317,
+          "ink": "0.351 mean / 0.055 min",
+          "extent": 0.956,
+          "blankSeeds": 0,
+          "singleFieldControl": {
+            "row": "VC-subtract-COUNT-REC",
+            "blankSeeds": 7,
+            "inkMin": 0.013
+          }
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "thin",
+            "direction": "lower",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "Under drawdown the beds thin and fewer of them remain;"
+          },
+          {
+            "phrase": "thickens",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "in recovery the sequence thickens and more beds return, so the fullest section is the recovered one."
+          },
+          {
+            "phrase": "more beds",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "The magnitude the market moves is how many beds the section carries, and recovery is where more beds return."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"thin\", \"thickens\", \"more beds\"",
+        "otherSensor": "DRAWDOWN",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "intent": {
+        "densityTarget": "DENSE",
+        "extentTarget": "EXPANSIVE",
+        "focalMode": "EVEN_FIELD",
+        "rhythmMode": "BROKEN",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "DENSE",
+          "evidence": [
+            "dense"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "EXPANSIVE",
+          "evidence": [
+            "edge to edge",
+            "fills the frame"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": []
+        },
+        "focalMode": {
+          "source": "DIRECTION",
+          "value": "EVEN_FIELD",
+          "evidence": [
+            "nothing dominates"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "focalHierarchy",
+            "composition"
+          ],
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DIRECTION",
+          "value": "BROKEN",
+          "evidence": [
+            "interrupts"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": [
+            {
+              "option": "RADIAL",
+              "phrase": "ring",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "SOLID",
+          "evidence": [
+            "weight"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "DENSITY",
+          "evidence": [
+            "fewer",
+            "thickens"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 10,
+            "ceiling": 30,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 16
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 10
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 29
+              }
+            },
+            "resolved": [
+              16,
+              10,
+              29
+            ],
+            "span": 19,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 16 / 10 / 29 across neutral / stress / recovery (span 19 of 20)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 9,
+            "ceiling": 27,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 14
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 9
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 26
+              }
+            },
+            "resolved": [
+              14,
+              9,
+              26
+            ],
+            "span": 17,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 14 / 9 / 26 across neutral / stress / recovery (span 17 of 18)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 2,
+            "unit": "field[2]",
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 12,
+            "ceiling": 34,
+            "readings": {
+              "neutral": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 17
+              },
+              "stress": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 17
+              },
+              "recovery": {
+                "perMille": 467,
+                "curved": 467,
+                "resolved": 22
+              }
+            },
+            "resolved": [
+              17,
+              17,
+              22
+            ],
+            "span": 5,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 17 / 17 / 22 across neutral / stress / recovery (span 5 of 22)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 3,
+          "reachable": 3,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "3 of 3 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout STACK from rhythmMode=BROKEN; primitive RECT (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "3 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 26 from densityTarget=DENSE",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=EXPANSIVE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry NONE (a project constant, so it carries no per-token variety); count range widened because COUNT is the drive and the range IS the response",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "2 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "4 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism SUBTRACTION PEAKS_AT_RECOVERY -> drive COUNT <- RECOVERY/LOG2, with the last field on DRAWDOWN so all three states separate. countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+          "evidence": {
+            "row": "VC-subtract-3field",
+            "weakestPairing": 8.317,
+            "ink": "0.351 mean / 0.055 min",
+            "extent": 0.956,
+            "blankSeeds": 0,
+            "singleFieldControl": {
+              "row": "VC-subtract-COUNT-REC",
+              "blankSeeds": 7,
+              "inkMin": 0.013
+            }
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "3ed2970e1820590fdf66bba507421c1734110937613082f0ec5b8f151838ddb7",
+          "bytes": 216555
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "f2eee0f676184253f0a356756c4bffbb73263eb04693c42c557eebc800fdc252",
+          "bytes": 97917
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "1c1f6a4a30d221e7c303efbe63b6fc36ceba38cf91c76bb18ddc11f42afe1549",
+          "bytes": 208248
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "73861752dbb2d97361f14637c0ac475800f27d3e781018468915090fe91757ce",
+          "bytes": 94474
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "23313dd736c22d5200a29da837eec4c4d8c251145049b3e537d0769f20331665",
+          "bytes": 32571
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.482,
+        "inkMin": 0.263,
+        "stateDeMean": 7.08,
+        "stateDeMin": 0.3,
+        "seedDeMean": 16.25,
+        "seedDeMin": 7.62
       }
     }
-  ]
+  ],
+  "objectiveBlockers": [],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "reviewerPromptSha256": "941750edc0f70b7e7dee8bba603c7f764daf8247070431732318f9285ae4c1fa",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "467bedba95f0a1b399872a97d2599614061cfcf1d5f2e5656401ba6a159ef22a",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "a526e1f05e27d62429ae4c1d86b7f271d0e94d131af25a5b556147b45be7b2b1",
+        "bytes": 162436
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "3fa925f7ce4f528fbd409bb30569621e2a84bb3442dec7b42b34d63a21903b0c",
+        "bytes": 74054
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "069849e7e3800f56b25b75116618814a70dd455a00cc27c97db752606d0c1470",
+        "bytes": 154707
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "7388064acabd7d3e6c2baa9706a63d07f590e2ce29170046c4ec469ac668247e",
+        "bytes": 68878
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "f0c8f309b48b56f6869f18f4555ad16effd25adf6598e73dc8156b9405690d11",
+        "bytes": 18070
+      }
+    ],
+    "inputHashes": [
+      "a526e1f05e27d62429ae4c1d86b7f271d0e94d131af25a5b556147b45be7b2b1",
+      "3fa925f7ce4f528fbd409bb30569621e2a84bb3442dec7b42b34d63a21903b0c",
+      "069849e7e3800f56b25b75116618814a70dd455a00cc27c97db752606d0c1470",
+      "7388064acabd7d3e6c2baa9706a63d07f590e2ce29170046c4ec469ac668247e",
+      "f0c8f309b48b56f6869f18f4555ad16effd25adf6598e73dc8156b9405690d11"
+    ],
+    "measurements": {
+      "inkMean": 0.38,
+      "inkMin": 0.166,
+      "stateDeMean": 6.51,
+      "stateDeMin": 0.97,
+      "seedDeMean": 14.46,
+      "seedDeMin": 5.72
+    },
+    "frozenAt": "2026-09-03T19:47:30.005Z"
+  }
 }

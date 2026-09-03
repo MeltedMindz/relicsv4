@@ -2,8 +2,7 @@
   "briefId": "B05",
   "axis": "minimal",
   "title": "STELE",
-  "phase": "AUTHORED",
-  "objectiveBlockers": [],
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
   "admission": {
     "schemaVersion": 1,
@@ -744,7 +743,767 @@
         "stateDeMin": 0.9,
         "seedDeMean": 8.08,
         "seedDeMin": 2.83
+      },
+      "critique": {
+        "criticId": "critic-B05",
+        "whatWorks": [
+          "The ground is genuinely doing what the direction asks of it: a flat, unmodulated near-black with no gradient, no vignette, no colour and no incidental mark anywhere in it, across all twelve seeds and all three states. That silence is the hardest part of an austere brief to hold and it is already held — do not introduce texture, noise or a second background tone into it.",
+          "The self-similar production genuinely reads in the square/diamond family. At 512px, and in seeds 5265 and 6182, a square gives a rotated diamond gives a smaller square gives a smaller diamond, each turned and reduced by a consistent step. That is the medium visible as itself, and it is the one place the work is unmistakably geometric recursion rather than stacked primitives.",
+          "Silhouette is already carrying the seed difference in the order variationStrategy asks for. At 120px the twelve are separable by outline alone — square (5265), soft circle (6051), flat hexagon (6182), spurred cone (5134), notched square (5527) — and no two of the twelve read as the same object. Whatever else moves, keep silhouette as the first axis of difference.",
+          "The state response is legible at browse size without a caption. For all four state seeds the stress cell is visibly the smallest of the three and recovery the largest, so the contraction-and-expansion reading survives the 120px sheet. The direction of the market mapping is right even where the manner of it is wrong."
+        ],
+        "findings": [
+          {
+            "id": "edge-bleed-destroys-the-margin",
+            "whatFails": "The form is cut by the frame in a large share of cells rather than held clear of it. On the 256 seed sheet, 5527, 5920, 6051, 6444 and 5265 all run their mass into or past the frame edge, and on the state sheet recovery is the worst offender in every one of the four seeds: 5003's diamond has both side corners sliced off, 5134 is cut at top and left, 5265's slab nearly full-bleeds, 5396 is cut at right and bottom.",
+            "why": "composition and negativeSpace both make the empty surround load-bearing — the form must be held well clear of every edge with a generous margin on all four sides, and the brief asks for that emptiness outright. A silhouette that is truncated by the viewBox is no longer a silhouette; the frame becomes a cropping device and the object stops reading as something set down alone in a large room.",
+            "specificChange": "Clamp the figure's union bounding box to at most 70% of the shorter frame dimension in the LARGEST state (recovery), and derive neutral and stress downward from that ceiling rather than upward from neutral, so no state can ever reach the edge. Reject any render whose ink touches the outer 12% border ring of the frame.",
+            "keep": "Keep recovery as the visibly largest of the three states and stress the smallest — the fix is to lower the ceiling the whole ladder hangs from, not to compress the ladder. The measured ordering stress < neutral < recovery must survive at 120px."
+          },
+          {
+            "id": "ink-far-above-austerity",
+            "whatFails": "The frames are not spare. Mean ink over the sampled frames is 35% and the emptiest frame in the entire sweep is still 12%, and it shows: 6051, 6444, 5134 and 5527 are dominated by one enormous mass that leaves only a thin rind of dark at the corners. At 120px the sheet reads as a grid of heavy blobs, not as mostly-empty fields each holding a small object.",
+            "why": "density asks for a small fraction of the frame carrying ink and says the restraint IS the subject; thumbnailIntent asks for a compact centred silhouette on a mostly empty dark field. The objective's 4% BLANK_DETECTION floor only guards the bottom of this axis and nothing at all guards the top, so the work passed while sitting an order of magnitude above where the brief puts it.",
+            "specificChange": "Reduce the base figure scale so neutral lands near 12-15% ink and stress near 6-8%, and add an ink CEILING to the objective at 20% alongside the existing 4% floor so the top of the axis is measured too.",
+            "keep": "Keep the mass above the 4% blank floor in stress — the smallest state must still be a confident object rather than a speck — and keep the internal articulation visible at 120px after the shrink, which means the articulation step must scale with the figure rather than staying at a fixed pixel size."
+          },
+          {
+            "id": "state-moves-complexity-not-only-scale",
+            "whatFails": "Elements appear and disappear between market states instead of the one form simply resizing. Seed 5003 loses its diamond entirely under stress and becomes a plain circle; seed 5134 loses its whole recursive spur chain under stress and also collapses to a plain circle, then regrows it in recovery. Seed 5396 does not merely resize between states, it translates across the frame — upper-right in neutral, low-centre in stress, upper-left in recovery.",
+            "why": "The brief is explicit that the market should change the form's scale rather than its complexity, so that the work reads as one object breathing rather than as a composition rearranging itself, and marketTransformation names overall size as the magnitude the market moves. Dropping a generation is a complexity change and a translation is a rearrangement; both are the failure mode the brief names by name.",
+            "specificChange": "Bind ONLY a single overall scale multiplier to the market sensor and pin recursion depth, child count, rotation step and centre offset to values that are constant across the three states, so the stress frame is the recovery frame scaled down and nothing else.",
+            "keep": "Keep the measured perceptual separation between states above the 3.8 floor — with complexity pinned, the separation must now come from scale magnitude alone, so the scale ratio between stress and recovery needs to be large enough to carry it on its own."
+          },
+          {
+            "id": "detached-satellites-break-the-single-mass",
+            "whatFails": "Several seeds emit matter that is not attached to the mass. Seed 5789 has two isolated specks floating at lower-left, 6313 has a speck below the hexagon, 5134 has a stray dot above its spur, and in 5134 and 5658 the shrinking chain reads as a separate growth budding off a diagonal corner rather than as articulation inside a single stone.",
+            "why": "medium commits this to a single connected mass rather than an arrangement of independent parts, focalHierarchy states outright that there is no secondary element at all, and motifTranslation requires the repeated production to read as the internal articulation of one stone. A floating speck is a second element, and at 120px it reads as dirt on the sheet rather than as intent.",
+            "specificChange": "Constrain each generation so its centre lies inside its parent polygon and its area overlaps the parent by at least 50%, and drop any generation whose rendered area falls below roughly 1% of the frame so no sub-pixel specks are emitted at all.",
+            "keep": "Keep the recursion depth that currently produces the visible chain in 5134 and 5658 — that chain is the clearest evidence of the medium in the whole sheet. Pull it inward onto the mass rather than deleting the levels that make it."
+          },
+          {
+            "id": "no-verticality-nothing-stands",
+            "whatFails": "Nothing in the twelve reads as an upright standing thing. Every seed is a circle, a hexagon, a square or a diamond — radially symmetric or wider than tall — and the only directional gesture in the sheet is the diagonal spur on 5134 and 5658, which points up-left rather than up. The strongest reading at 120px is of a disc or a boulder, not a stele.",
+            "why": "motifTranslation asks for a stele restated as one UPRIGHT self-similar figure, and rhythm is explicit that the recursion is to be read as a vertical standing thing rather than as anything turned about a hub. Radial symmetry plus a rotation-driven production is precisely the hub reading the direction rules out, and it is the single largest gap between this work and its brief.",
+            "specificChange": "Set a vertical aspect bias on the figure so its bounding box is between 1.4:1 and 2:1 taller than wide, and shift the per-generation child offset onto the vertical axis — each child stacking upward from its parent's upper region — instead of driving the production by rotation about a shared centre.",
+            "keep": "Keep the centred placement and the equal left/right margin. Making the figure upright must not turn it into a column that grows off the top of the frame; the vertical extent still lives under the bounding-box ceiling from edge-bleed-destroys-the-margin."
+          },
+          {
+            "id": "alpha-stacking-makes-five-values-not-two",
+            "whatFails": "Translucent shapes stack into many tonal steps rather than two. In the 512 frame there are at least five distinct greys — the pale outer slab, the mid diamond, the darker overlap wedge, the dark inner square, and a near-white sliver at the right edge — and the same soft halo shows in 5003, 5920 and 6444 where overlapping circles produce a graded rim instead of an edge.",
+            "why": "paletteIntent says two values and a ground and no more, one for the mass and one for its articulation, and calls for the silhouette to be the only event anywhere in the frame. Alpha compositing turns every intersection into a new value, so the count of tones in a frame becomes a function of how many shapes happen to overlap — which is incidental, and incidental is what the brief refuses.",
+            "specificChange": "Replace the alpha-blended fills with two opaque fills alternating by generation, one for the mass and one for the articulation, so that exactly two non-ground values appear in any frame regardless of how the shapes overlap.",
+            "keep": "Keep the internal articulation legible after opacity is removed — with alpha gone, the two values must be separated enough in luminance to still read as internal structure at 120px, so the mass must not collapse into one flat cut-out shape."
+          },
+          {
+            "id": "pale-slab-acts-as-a-second-ground",
+            "whatFails": "In 5265, 5527, 5920, 6444 and the 512 single, the outermost generation renders as a large flat pale panel that the smaller shapes sit ON TOP of. It stops reading as the outer level of one figure and starts reading as a second background plate laid over the dark ground, with the recursion happening inside a lit window rather than being the object itself.",
+            "why": "negativeSpace and paletteIntent both require the dark ground to be the only surround and the silhouette to be the only event; focalHierarchy requires the internal articulation to exist only to keep the mass from reading as a flat cut-out. A large uniform pale rectangle is exactly that flat cut-out, and it also inverts the figure-ground relation the brief depends on.",
+            "specificChange": "Remove the fill from the outermost generation so the largest level contributes silhouette and edge only, or start the drawn production one level in from the bounding shape, so the outer boundary reads as the stone's outline rather than as a lit panel behind the work.",
+            "keep": "Keep the outermost level defining the figure's overall silhouette and scale — it is what carries the seed-to-seed outline difference and what the market scale multiplier acts on. Only its role as a filled plate is being removed, not its geometry."
+          },
+          {
+            "id": "figure-drifts-off-the-frame-centre",
+            "whatFails": "The mass is not centred in a substantial share of cells. On the 256 sheet 5920 hangs low and right with its lower shapes spilling past the slab, 5658 sits low-left, 5396 sits high-right, and 5134 rides high. Within the 512 frame the inner squares drift down-left of the outer square's own centre, so even the recursion is not concentric with the figure that holds it.",
+            "why": "composition asks for one form at the centre with a generous margin of empty ground on ALL FOUR sides, and identityAnchors requires every seed and every state to keep one centred form on a large empty dark ground. Unequal margins make the emptiness read as leftover space rather than as the deliberate surround the brief says is doing as much work as the mass.",
+            "specificChange": "Centre the UNION bounding box of every drawn generation on the frame centre, recomputed per seed and per state, instead of centring only the first generation and letting later offsets pull the figure off axis.",
+            "keep": "Keep the per-seed asymmetry of the silhouette itself — the notches, spurs and irregular outlines are the seed identity and must not be symmetrised. It is the placement of the whole figure that is being centred, not the shape of it."
+          }
+        ],
+        "overall": "The runtime is producing a real self-similar production over a genuinely silent dark ground, and at 120px the twelve seeds are separable by outline and the three states are separable by size — so the two hardest structural requirements, distinct silhouettes and a legible market magnitude, are already met. What has not landed is the austerity that is the whole point of this brief. The frames are heavy rather than spare (35% mean ink, with nothing in the objective guarding the top of that axis), the mass repeatedly runs into or past the frame edge and is worst exactly in recovery, and alpha stacking has turned a two-value palette into five or more tones with soft haloes at every intersection. Two failures are more than dosage: the market is changing complexity as well as scale — 5003 and 5134 lose whole elements under stress and 5396 translates across the frame between states, which is the rearranging the brief rules out by name — and nothing in the sheet reads as upright, because a rotation-driven production of circles, hexagons and squares gives a boulder rather than a stele. The order I would work in is scale ceiling and centring first (they are geometry and they fix the margin, the ink and the drift together), then pinning everything but scale to the market so the object breathes instead of reshuffling, then the two-value opaque palette, and only then the vertical bias, which is the largest change and the one most likely to trade away the silhouette diversity that currently works."
+      },
+      "response": {
+        "schemaVersion": 1,
+        "kind": "AUTHOR_RESPONSE",
+        "respondsTo": "B05",
+        "criticId": "critic-B05",
+        "note": "The changes answered here are changes to the AUTHOR — the machine that turns an art direction into runtime bytes — and not patches written for this project, because a hand-written configuration edit would be a human art intervention and this lane's claim is that there are none. Where the round-1 author change does not reach a finding, the response says plainly which parameter carries it and that it does not move, rather than promising a fix that nothing makes.",
+        "responses": [
+          {
+            "findingId": "edge-bleed-destroys-the-margin",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "GEOMETRIC_RECURSION_V1 has no bounding-box clamp, no inset, no margin parameter and no way to refuse a render for touching a border ring. The figure roots at the canvas centre and its extent is a property of the elected production rather than a settable number, and the compact set is already elected: INSCRIBE, QUAD and TRI measure extentX 0.60, 0.65 and 0.60, the three tightest in the runtime, while RING (0.85) and BRANCH (0.78) are excluded on this direction. The root scale the SPREAD drive moves runs between a floor and a ceiling fixed in the bytecode, so there is no ladder-top for the author to lower."
+          },
+          {
+            "findingId": "ink-far-above-austerity",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The coverage ceiling this finding asks for was added to the author, and it landed on VECTOR_COMPOSITION_V1's sizeMax. This runtime has no size parameter at all: coverage here is carried by stroke, seed shape, branch and contraction, and the round-1 change moves none of them, so the sheet mean will not fall to the 12-15% asked for. What does move is the inner register's market binding, which redistributes ink between the three states rather than lowering the mean.",
+            "parameters": [
+              "rules[1].sensor",
+              "rules[1].curve"
+            ],
+            "expectedVisualEffect": "At stress the inner articulation stops swelling toward its parent's size and at neutral it grows toward the same reading, so the stress frame stops being the heaviest of the three; the overall darkness of the twelve-seed sheet will look much as it does now, and the emptiest frame will not drop toward the small fraction the direction asks for.",
+            "preserve": [
+              "the mass stays above the 4% blank floor in stress — the smallest state must still be a confident object rather than a speck",
+              "the internal articulation stays legible at 120px"
+            ]
+          },
+          {
+            "findingId": "state-moves-complexity-not-only-scale",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The second market-driven dimension is the inner register's CONTRACT drive, and rebinding it to a sensor that reads the same at neutral and at stress removes it from that pairing, so on that pairing the only thing answering the market is the primary's overall scale — which is what this finding asks for. It cannot be made true of all three states: a rule carries exactly one drive, so rules[1] keeps CONTRACT and still moves between neutral and recovery. And there is no centre offset to pin — the figure roots at the canvas centre at angle 0, there is no placement parameter and no inset, and the apparent translation is the production placing children asymmetrically as the root scale moves. Depth is already constant across the three states; it is a seed range, not a drive.",
+            "parameters": [
+              "rules[1].sensor",
+              "rules[1].curve"
+            ],
+            "expectedVisualEffect": "Between neutral and stress a token will differ by the size of the same figure and little else — the inner generations should keep their proportion instead of appearing and vanishing — while the neutral-to-recovery pair still carries a second, smaller change of internal proportion.",
+            "preserve": [
+              "the measured perceptual separation between states stays above the 3.8 floor",
+              "the per-seed silhouette differences that make the twelve separable at 120px"
+            ]
+          },
+          {
+            "findingId": "detached-satellites-break-the-single-mass",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "There is no per-generation containment or overlap parameter in this runtime. Where a child sits is decided by the elected production — QUAD at the parent's quadrant corners, TRI at its edge midpoints, INSCRIBE at its own centre — and not by an offset a creator can set, so 'centre inside the parent polygon, overlapping it by at least 50%' is not expressible at any setting. Dropping a generation whose rendered area falls under a threshold is a per-element deletion, which this runtime's capability statement refuses by name: nothing can remove one member of a production and keep the rest."
+          },
+          {
+            "findingId": "no-verticality-nothing-stands",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "A non-square aspect is named in this runtime's cannot list, and there is nothing weaker to substitute. The figure has no bounding-box proportion control; all six seed shapes (SQUARE, TRIANGLE, HEX, CIRCLE, DIAMOND, CROSS) are regular and cannot be stretched to 1.4:1; and there is no per-generation offset axis to move onto the vertical, because the direction a child sits from its parent is fixed by the production rather than declared. An upright stele is not a figure this runtime can make out of any combination of its parameters."
+          },
+          {
+            "findingId": "alpha-stacking-makes-five-values-not-two",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "Opacity is written per element by the runtime out of the token's seed and no creator parameter reaches it; 'opaque compositing' is in this runtime's cannot list and the config format exposes no alpha field anywhere. The controls that do exist change which colour a level is drawn in — the stroke flag and DEPTH_PALETTE — never how it composites, so the number of tones in a frame stays a function of how many shapes happen to overlap. Two opaque fills alternating by generation is not a configuration this runtime has."
+          },
+          {
+            "findingId": "pale-slab-acts-as-a-second-ground",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "Both halves are per-generation controls this runtime does not have. Fill against stroke is a flag on the whole RULE, so unfilling the outermost level would hollow every generation of that rule at once rather than leaving the inner ones filled. And there is no parameter that starts the production one level in: depthMin and depthMax set how deep the recursion runs, not which level is drawn first, and the root is always drawn. The outermost level's role as a filled plate cannot be removed while its geometry is kept."
+          },
+          {
+            "findingId": "figure-drifts-off-the-frame-centre",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "This runtime roots the figure at the canvas centre at angle 0, and there is no placement parameter and no inset, so a union bounding box cannot be recentred per seed or per state — 'an off-centre subject' and its correction are the same missing control. The drift the finding describes is a side effect of the production placing children asymmetrically about the root, and the only thing that could change it is the choice of production, which is already the tightest set this direction admits."
+          }
+        ]
+      },
+      "boundedChange": {
+        "ok": true,
+        "moved": [
+          {
+            "parameter": "rules[1].sensor",
+            "from": "DRAWDOWN",
+            "to": "VOLUME_TIER",
+            "named": true
+          },
+          {
+            "parameter": "rules[1].curve",
+            "from": "LOG2",
+            "to": "LINEAR",
+            "named": true
+          }
+        ],
+        "unnamed": [],
+        "counts": {
+          "moved": 2,
+          "named": 2,
+          "unnamed": 0
+        },
+        "detail": "2 parameter(s) moved, all of them named in the author's response"
+      }
+    },
+    {
+      "round": 2,
+      "configHash": "e1b504ff0ba5179fab7d129ee9302c8ac7ef3eeef544b943792fc62a2ae8e109",
+      "configBytes": "0x475256310200000000040f11138d8b86b07d3ad9d2c2021d0703030104040502520c010100001c06010000020204025a1201010100000e5374656c65205265737461746564ff",
+      "config": {
+        "rules": [
+          {
+            "shapeSet": [
+              "SQUARE",
+              "DIAMOND",
+              "CIRCLE",
+              "HEX"
+            ],
+            "ruleSet": [
+              "INSCRIBE",
+              "QUAD",
+              "TRI"
+            ],
+            "contraction": 82,
+            "branch": 2,
+            "prune": 1,
+            "symSet": [
+              "NONE"
+            ],
+            "rotation": 12,
+            "paletteIx": 3,
+            "depthMin": 4,
+            "depthMax": 5,
+            "stroke": false,
+            "variant": 0,
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "shapeSet": [
+              "DIAMOND",
+              "CIRCLE",
+              "HEX"
+            ],
+            "ruleSet": [
+              "INSCRIBE",
+              "TRI"
+            ],
+            "contraction": 90,
+            "branch": 2,
+            "prune": 1,
+            "symSet": [
+              "NONE"
+            ],
+            "rotation": 18,
+            "paletteIx": 1,
+            "variant": 1,
+            "stroke": false,
+            "depthMin": 2,
+            "depthMax": 4,
+            "drive": "CONTRACT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR"
+          }
+        ],
+        "ruleCount": 2,
+        "palette": [
+          "#0f1113",
+          "#8d8b86",
+          "#b07d3a",
+          "#d9d2c2"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 0,
+        "flags": [],
+        "title": "Stele Restated"
+      },
+      "producedBy": "REAUTHORED_BY_THE_CHANGED_AUTHOR",
+      "mechanism": {
+        "ok": true,
+        "mechanism": "DILATION",
+        "polarity": "PEAKS_AT_RECOVERY",
+        "drive": "SPREAD",
+        "curve": "LOG2",
+        "sensor": "RECOVERY",
+        "requires": {},
+        "detail": "DRIVE_SPREAD sets the ROOT SIZE from the sensor, so the whole self-similar figure scales as one object. Its floor is the bytecode constant 40 of 256, which is a small figure and never a blank.",
+        "evidence": {
+          "row": "GR-dilate-SPREAD-REC",
+          "weakestPairing": 10.932,
+          "extentByState": "0.648 neutral / 0.365 stress / 0.842 recovery",
+          "components": "1.625 -> 1.375, largestShare 0.997 -> 0.997",
+          "blankSeeds": 0
+        },
+        "alternatives": [
+          {
+            "drive": "CONTRACT",
+            "curve": "LOG2"
+          }
+        ],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "contracts",
+            "direction": "lower",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "Under drawdown the whole figure contracts and its reach shrinks."
+          },
+          {
+            "phrase": "expands",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "In recovery it expands again and the single form takes back its full reach."
+          },
+          {
+            "phrase": "grows",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "and in recovery it grows to its largest."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"contracts\", \"expands\", \"grows\"",
+        "otherSensor": "DRAWDOWN",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "intent": {
+        "densityTarget": "SPARSE",
+        "extentTarget": "COMPACT",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "REGULAR",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "SCALE",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "SPARSE",
+          "evidence": [
+            "spare",
+            "austere",
+            "restraint",
+            "empty"
+          ],
+          "score": 4,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DIRECTION",
+          "value": "COMPACT",
+          "evidence": [
+            "margin"
+          ],
+          "score": 1,
+          "tiedWith": [
+            "EXPANSIVE:1"
+          ],
+          "runnerUp": [
+            "EXPANSIVE:1"
+          ],
+          "fields": [
+            "composition",
+            "negativeSpace"
+          ],
+          "rejected": []
+        },
+        "focalMode": {
+          "source": "DEFAULT",
+          "value": "SINGLE_DOMINANT",
+          "detail": "the direction's focalHierarchy/composition did not name a focalMode",
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DEFAULT",
+          "value": "REGULAR",
+          "detail": "the direction's rhythm/composition did not name a rhythmMode",
+          "rejected": []
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "SOLID",
+          "evidence": [
+            "mass",
+            "silhouette"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [
+            "LINEWORK:1"
+          ],
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": [
+            {
+              "option": "SOLID",
+              "phrase": "mass",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "SCALE",
+          "evidence": [
+            "contracts",
+            "shrinks",
+            "expands",
+            "size",
+            "grows"
+          ],
+          "score": 5,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "rules[n].shapeSet",
+          "rules[n].ruleSet",
+          "ruleCount",
+          "rules[n].contraction",
+          "rules[n].branch and rules[n].prune",
+          "rules[n].symSet",
+          "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+          "rules[n].depthMin / depthMax",
+          "rules[n].stroke and the OUTLINE flag",
+          "rules[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "ruleCount",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+            "facets": [
+              "lowHighBehaviour",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "rules[n].drive x sensor x curve",
+            "facets": [
+              "lowHighBehaviour",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "rules[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "rule[0]",
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": null,
+            "floor": null,
+            "ceiling": null,
+            "readings": null,
+            "resolved": null,
+            "span": null,
+            "verdict": "UNKNOWN",
+            "detail": "reachability not computable: no floor recorded for the dimension DRIVE_SPREAD moves. Render is the only evidence available for this binding.",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "rule[1]",
+            "drive": "CONTRACT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR",
+            "parameter": "contraction",
+            "floor": 20,
+            "ceiling": 90,
+            "readings": {
+              "neutral": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 38
+              },
+              "stress": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 38
+              },
+              "recovery": {
+                "perMille": 467,
+                "curved": 467,
+                "resolved": 52
+              }
+            },
+            "resolved": [
+              38,
+              38,
+              52
+            ],
+            "span": 14,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 38 / 38 / 52 across neutral / stress / recovery (span 14 of 70)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 2,
+          "reachable": 1,
+          "provablyDead": 0,
+          "unknown": 1
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [
+          {
+            "unit": "rule[0]",
+            "drive": "SPREAD",
+            "sensor": "RECOVERY",
+            "detail": "reachability not computable: no floor recorded for the dimension DRIVE_SPREAD moves. Render is the only evidence available for this binding."
+          }
+        ],
+        "refuse": false,
+        "detail": "1 of 2 bindings proven reachable, 1 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "shapeSet from densityTarget=SPARSE; the atlas ranks seed shape second-loudest at 120px and CROSS is excluded on every path",
+          "consulted": "rules[n].shapeSet"
+        },
+        {
+          "stage": "SILHOUETTE",
+          "why": "ruleSet from extentTarget=COMPACT; BSP excluded on every path (law L3: inert under PRUNE/ROTATE)",
+          "consulted": "rules[n].ruleSet"
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "2 rules; contraction is a CEILING over floor 20 (law L1). The second is an INNER register, not a satellite: a lone rule offers the seed twelve distinct figures and a hundred-seed sweep found colliding pairs at 1.075 dE",
+          "consulted": [
+            "ruleCount",
+            "rules[n].contraction"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "branch 2 because QUAD at branch 2 draws a face on every seed (atlas, gr-rule failure modes); prune mask avoids all-ones (law L2)",
+          "consulted": "rules[n].branch and rules[n].prune"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symSet NONE — rotational replication is elected ONLY where the direction asks for a radial figure, because the atlas records ROT3/ROT6 as unavoidably a rosette and six of twelve blind reviews read the round-one work as one",
+          "consulted": "rules[n].symSet"
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "a second rule is the runtime's real colour control (paletteCount does nothing) and its only route to two registers"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "0 colour(s) named in the direction; DEPTH_PALETTE carries colour because paletteCount is measured inert",
+          "consulted": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "depth range 2..4, seed-drawn because the direction asks tokens to differ in how many they carry; stroke=SOLID is the loudest control at 120px",
+          "consulted": [
+            "rules[n].depthMin / depthMax",
+            "rules[n].stroke and the OUTLINE flag"
+          ]
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism DILATION PEAKS_AT_RECOVERY -> drive SPREAD <- RECOVERY/LOG2. DRIVE_SPREAD sets the ROOT SIZE from the sensor, so the whole self-similar figure scales as one object. Its floor is the bytecode constant 40 of 256, which is a small figure and never a blank.",
+          "evidence": {
+            "row": "GR-dilate-SPREAD-REC",
+            "weakestPairing": 10.932,
+            "extentByState": "0.648 neutral / 0.365 stress / 0.842 recovery",
+            "components": "1.625 -> 1.375, largestShare 0.997 -> 0.997",
+            "blankSeeds": 0
+          },
+          "consulted": "rules[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "359b1a0b6dce396e50b084d0aab9711b04231943a25dfdb5ea3e4fc2263c4c7e",
+          "bytes": 73419
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "7110791b55410f7fee9ae237497433fc9db045af821929a42c73d6a855c98bc5",
+          "bytes": 32164
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "9d8bed6a8cd8430ca2d19c22f7a6138b9f5c50fb97fb41ffd8bbdcb3fda1f5bb",
+          "bytes": 69105
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "6656f69fbe9e5a6991161bccce327da27e8ecfd268e61acd38e6d8614d61c838",
+          "bytes": 30054
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "424fc9d44eb51f8a84d1d26325755bd0d09ca1756a41e2938427fe7e401a076d",
+          "bytes": 6150
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.335,
+        "inkMin": 0.2,
+        "stateDeMean": 6.35,
+        "stateDeMin": 1.46,
+        "seedDeMean": 8.22,
+        "seedDeMin": 2.84
       }
     }
-  ]
+  ],
+  "objectiveBlockers": [],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "reviewerPromptSha256": "367c29b2affd83e1dea5bb0dd74fd32fe0d4fae3716f04cd8c7b74717d54311e",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "e1b504ff0ba5179fab7d129ee9302c8ac7ef3eeef544b943792fc62a2ae8e109",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "3d5bbd0e24127d97c20ad3498c886899371844da62da57e4780946d97bf50d05",
+        "bytes": 65976
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "d8308c2952df328c241e2cb7e51d3dd9c895472c81d739fd6f713cf56dbc6104",
+        "bytes": 29976
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "ce3b83fa763812e1cf482a0465fc79bb3875ef565b2523fd89e7bede63ecf992",
+        "bytes": 70616
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "48b4d76e26239f01315a3c42aa481fe7da5e16895746d5ef4fecbc21128c9bf7",
+        "bytes": 30896
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "c6f00427495134968b6e878bcc8c0a0f19355f16f67cb0442588b5bfb9341634",
+        "bytes": 11188
+      }
+    ],
+    "inputHashes": [
+      "3d5bbd0e24127d97c20ad3498c886899371844da62da57e4780946d97bf50d05",
+      "d8308c2952df328c241e2cb7e51d3dd9c895472c81d739fd6f713cf56dbc6104",
+      "ce3b83fa763812e1cf482a0465fc79bb3875ef565b2523fd89e7bede63ecf992",
+      "48b4d76e26239f01315a3c42aa481fe7da5e16895746d5ef4fecbc21128c9bf7",
+      "c6f00427495134968b6e878bcc8c0a0f19355f16f67cb0442588b5bfb9341634"
+    ],
+    "measurements": {
+      "inkMean": 0.327,
+      "inkMin": 0.185,
+      "stateDeMean": 7.96,
+      "stateDeMin": 2.1,
+      "seedDeMean": 8.98,
+      "seedDeMin": 1.81
+    },
+    "frozenAt": "2026-09-03T19:47:37.368Z"
+  }
 }

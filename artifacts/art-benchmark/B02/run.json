@@ -2,8 +2,7 @@
   "briefId": "B02",
   "axis": "botanical-abstraction",
   "title": "FROND",
-  "phase": "AUTHORED",
-  "objectiveBlockers": [],
+  "phase": "AWAITING_FINAL_REVIEW",
   "briefSha256": "df9dffb0063045953c04dfac8f69e90751dd7af4464165bbbbb9a58cdcee2337",
   "admission": {
     "schemaVersion": 1,
@@ -822,7 +821,1007 @@
         "stateDeMin": 5.76,
         "seedDeMean": 19.96,
         "seedDeMin": 6.94
+      },
+      "critique": {
+        "criticId": "critic-B02",
+        "whatWorks": [
+          "The ground is a genuinely flat, unmodulated dark and it holds identically across all twelve seeds and all three market states. This is the one direction axis already fully met, and it is the surface any fine line will have to read against, so it must survive every change below unaltered.",
+          "The two hues are the brief's hues. The moss green and the bone-cream are correctly chosen and correctly related to each other and to the dark, and the bone reads as the lighter working colour against the moss at 120px. Keep both hex values exactly as they are; nothing below asks for a recolour.",
+          "The placement logic is centred and the members reach toward the frame edges along the long axis while the short axes stay open on 5134, 6182, 6313 and 6444. What is placed about the centre is wrong, but the decision to organise everything about a single canvas centre is right and should be inherited by whatever replaces the current marks.",
+          "All twelve seeds are visibly different from one another at 120px, and no two read as the same token even at browse size. The seed-to-seed variation machinery is alive and working; the risk in every fix below is that it collapses when density falls, so it must be re-checked at 120px after the density comes down rather than assumed.",
+          "The third register of small squares is a real register of repeated marks at a consistent scale placed about the centre. That is the closest thing in the picture to the direction's finest order of division, and its role in the composition should be kept even though its primitive, its scale relationship and its distribution all have to move."
+        ],
+        "findings": [
+          {
+            "id": "line-not-mass",
+            "whatFails": "Not one mark in any of the seventeen frames is a stroked line. Every element is a solid or translucent fill: the moss form is a pile of filled ellipses, the bone starburst is a filled polygon, and the small register is filled squares. There is no linework of any weight anywhere in the collection.",
+            "why": "The brief asks for fine linework throughout, delicate rather than heavy, and the direction states the drawing is carried in line rather than in mass and that the line must stay the loudest thing in the frame. The work is carried entirely in mass, which is the one thing the paletteIntent and the brief both explicitly rule out. This is the single largest gap between the picture and its direction.",
+            "specificChange": "Replace the filled primitives with the stroke-only ones the medium already carries: move the two mass fields from ELLIPSE and NGON to POLYLINE and LINE, which have no interior and are always stroked whatever the stroke bit says, and set the stroke bit true on any interior primitive that stays. Every register should then be drawn as an outline of one thin weight rather than as an area.",
+            "keep": "Keep the centred placement about the canvas centre and keep the moss and bone hex values unchanged. The line that replaces each mass should occupy the same part of the frame that mass occupied, so the composition's centre of gravity does not move while the medium changes from area to line."
+          },
+          {
+            "id": "ink-over-budget",
+            "whatFails": "The moss mass alone covers roughly half the frame on 5134, 5265, 6313 and 6444, and on 5003, 5658, 6051 and 5789 the bone field covers nearly the whole frame with only a thin dark border left at the edges. Almost no seed shows more dark than drawing, and 5003 shows a light ground with a dark rim.",
+            "why": "The density axis asks for well under a third of the frame carrying ink, sparse and open at browse size, so that the emptiness reads as a deliberate choice. At the current coverage the emptiness has been eliminated rather than chosen, and the negativeSpace axis, which asks the dark to measure how far the growth has run, has nothing left to measure with.",
+            "specificChange": "Reduce sizeMax on both mass fields from their present near-ceiling setting toward the low end of the 2..64 range, targeting a frame where under a third carries ink on the densest seed rather than the emptiest, and lower countMax on the bone field in the same move so a smaller member size is not compensated by more members.",
+            "keep": "Keep the longest members reaching close to the frame's edges on the long axis. The composition axis asks for reach, not for a small island at the middle, so the extent of the figure must survive the drop in coverage even as the area of ink falls."
+          },
+          {
+            "id": "no-division-ladder",
+            "whatFails": "The three registers do not step down in scale and do not issue from a common origin. The bone squares are all the same size as each other, they are the same size on every seed, and they are scattered over the moss mass without any visible relation to a stem or to an order above them. Nothing in the picture divides.",
+            "why": "The motifTranslation and rhythm axes both require that each register repeat the one before it at a finer scale and a turned angle, so the drawing reads as repeated division. The focalHierarchy needs a primary stem register, a secondary first order and a finest texture order. Three fields exist but they are three unrelated decorations rather than three generations of one growth.",
+            "specificChange": "Set a descending sizeMax ladder across the three fields, roughly halving at each step from the primary to the finest, and give each successive field a larger variant so its members sit at a turned angle from the order above. Put all three on layouts organised about the same centre so each order visibly issues from the one before it rather than floating over it.",
+            "keep": "Keep three fields, and keep the finest register as small repeated marks of one consistent scale. The direction wants the finest order felt as fineness rather than counted, so its members should stay uniform and numerous even as the ladder puts them at a much smaller size."
+          },
+          {
+            "id": "bone-rim-is-a-ring",
+            "whatFails": "On 5003, 5658, 5789, 5920 and 6051 the bone field draws a closed sawtooth rim that encircles the moss form, with spikes of equal length on every side and a continuous outline around the whole figure. At 120px those five seeds read as a sunburst or a cactus silhouette, not as anything growing outward.",
+            "why": "The rhythm axis states the repetition is read outward along a stem rather than around a hub, and that it must settle into a branching figure and never into a ring. A rim of equal-length members about a centre is exactly the ring the direction forbids, and it is the dominant impression on nearly half the sheet.",
+            "specificChange": "Replace the rim-forming radial or burst layout on the bone field with one that runs outward along an axis rather than around a centre, and where a radial distribution is kept, narrow spreadMax so the members occupy a sector rather than a full turn and widen the spread of member lengths so the outer ends never close into a continuous outline.",
+            "keep": "Keep the bone field's role as the register that reaches furthest from the centre. The composition axis wants the longest divisions close to the frame's edges, so this field should still be the one that establishes the figure's extent once it stops forming a rim."
+          },
+          {
+            "id": "market-inverted",
+            "whatFails": "Stress is the most visually distinct state and it makes the drawing coarser and larger: on 5003 the fine sawtooth collapses into two enormous triangles that cover more of the frame than neutral did, and on 5396 the squares grow. Recovery is nearly indistinguishable from neutral on 5134, 5265 and 5003, with no visible increase in the number of members.",
+            "why": "The marketTransformation axis says the magnitude the market moves is how many divisions are present: recovery multiplies the divisions and carries the fullest branching, stress retracts toward a bare armature with fewer divisions. The picture moves member size instead of member count, and it moves it in the wrong direction, so a viewer reads stress as growth and recovery as no change.",
+            "specificChange": "Bind each field's drive to COUNT rather than to SIZE or SPREAD, and widen the countMin to countMax span so stress lands near countMin and recovery near countMax. Pick the sensor per field so that the count rises in recovery and falls in stress, and leave member size fixed across the three states so the only thing the market moves is how many divisions are drawn.",
+            "keep": "Keep the three states clearly separable from one another; they currently are, and a change that moves the difference from size to count must not shrink the difference to nothing. Keep the same line weight, the same two colours and the same dark in all three states, as the identityAnchors axis requires."
+          },
+          {
+            "id": "third-colour-and-tone-stack",
+            "whatFails": "Charcoal and mid-grey squares and spikes appear on 5003, 5134, 5265, 5396, 5527, 5789 and 6313, several of them detached from the form and floating in the empty dark as isolated grey confetti. Separately, the translucent moss ellipses stack into four or five distinguishable greens within a single form, and the bone shapes stack into three or four creams.",
+            "why": "The paletteIntent axis allows two working colours only, carried over an unmodulated flat dark, so that no mass competes with the line. The greys are a third and fourth working value, and the stacked translucency turns what should be two flat colours into a tonal gradient, which reintroduces mass as the loudest thing in the frame exactly where the direction says line must be.",
+            "specificChange": "Remove the charcoal and mid-grey entries from every field's paletteIx so each field points at either the moss index or the bone index only, and raise the alpha of the marks to fully opaque so overlapping members no longer accumulate into intermediate tones. Two flat values over the dark, nothing between them.",
+            "keep": "Keep the ground exactly as it is, flat and unmodulated, and keep the moss and bone hex values. This finding removes colours; it must not change the two that remain, and it must not darken or lighten the ground to compensate for the loss of the greys."
+          },
+          {
+            "id": "members-merge-at-browse",
+            "whatFails": "The members of the moss field overlap each other almost completely, piling up at the centre so that on the 512px frame six or more ellipses fuse into one amorphous lump with no dark between any two of them. At 120px every seed reduces to a single continuous blob silhouette and no individual member is separable.",
+            "why": "The negativeSpace axis requires the dark to hold one order of division apart from the next, and the thumbnailIntent asks the work to read at 120px as a figure dividing outward with its orders stepping down in scale. When members fuse there are no visible orders left to hold apart, and the impression that lasts at browse size is a lump rather than fineness.",
+            "specificChange": "Increase spreadMax on the mass fields toward the upper end of the 16..128 range while shrinking sizeMax in the same move, so members distribute across the figure's reach instead of piling at the centre, and target a spacing where dark is visible between adjacent members of the same register at 120px.",
+            "keep": "Keep the figure centred and keep its members belonging to one connected growth. Spreading them must not scatter the marks into unrelated debris across the canvas; the direction wants a single dividing logic issuing from a single stem, not a field of confetti."
+          },
+          {
+            "id": "figure-ground-inverted-on-some-seeds",
+            "whatFails": "On 5003 and 6051 the bone field fills the frame and the moss form is reduced to a small dot near the centre, so the light is the ground and the dark is a rim. On 5265 the bone starburst is absent altogether. Across the sheet the seeds differ in which register is present or dominant, not in how far one growth has run.",
+            "why": "The focalHierarchy axis requires the primary stem register to dominate and the identityAnchors axis requires every seed to keep the same moss-and-bone-over-dark relationship and the same generous dark held around the form. The variationStrategy asks tokens to differ first in how far the branching has run and how many orders they carry. Presence-versus-absence of a whole register is a different collection per seed, not one collection at different extents.",
+            "specificChange": "Clamp the bone field's sizeMax and countMax so it can never exceed the extent or the visual weight of the primary register on any seed, and raise its countMin above zero so the register is never absent. Move the seed-to-seed variation into countMax and into the reach of the longest members, so seeds differ in how far the growth has run rather than in which registers exist.",
+            "keep": "Keep the seeds visibly distinct from one another at 120px. Constraining the range must not flatten the twelve into near-copies; the variation should survive the clamp by moving into extent and count rather than being removed along with the outliers."
+          }
+        ],
+        "overall": "The picture and the brief are describing different objects: the brief asks for a frond suggested in fine line over generous dark, and the sheet shows filled masses of moss and bone covering most of the frame with a scatter of squares over them. The gap is not one of degree. Nothing is stroked, so the medium the brief names is absent entirely; coverage runs at roughly twice the ceiling the density axis sets, so the emptiness that was supposed to describe the growth's extent has been consumed; and the three registers that do exist are unrelated decorations rather than three orders of one division, so no branching logic is legible at any size. Under that, the market response is running backwards, enlarging members under stress and leaving recovery nearly identical to neutral, when the direction says the market should move only how many divisions are drawn. What is genuinely right is the foundation: the flat dark ground, the two chosen hues, the centred organisation, and twelve seeds that are already visibly distinct from one another. The way forward is to keep all four of those and change what is drawn on them, moving from filled area to stroked line, from near-full coverage to under a third, and from three unrelated fields to a descending ladder of three orders issuing from a common centre, then re-reading the 120px sheet to confirm that seed variation and state separation both survived the drop in density."
+      },
+      "response": {
+        "schemaVersion": 1,
+        "kind": "AUTHOR_RESPONSE",
+        "respondsTo": "B02",
+        "criticId": "critic-B02",
+        "note": "Everything answered here is a change to the AUTHOR -- the machine that turns an art direction into runtime bytes -- and not a patch to this project's configuration, because a hand-written patch would be a human art intervention and this lane's whole claim is that there are none.",
+        "responses": [
+          {
+            "findingId": "line-not-mass",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The finding is right and it is the largest gap here, and the honest answer is that the density parameters move and the member vocabulary does not. Primitive and the stroke bit are real capabilities -- nine primitives including LINE and POLYLINE, plus fields[n].stroke and the OUTLINE flag -- but none of the three round-1 author changes reaches the stroke-mode derivation, so no field's primitive and no field's stroke bit moves next round. Reaching in to set them for this one brief would be a per-project art edit. Two facts about the medium are worth recording while this stays open: stroke WIDTH is not a creator choice in this runtime, so 'an outline of one thin weight' is not orderable even once the bit flips; and POLYLINE is the sparsest primitive at every layout and the most expensive in the render budget at 11 units a site, so the substitution the finding names is not free.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[0].countMax",
+              "fields[1].countMax",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The work stays carried in mass, but far less of it. The primary size ceiling falls from 24 to 16 and the other two from 20 and 17 to 14, which on the measured ink curve is roughly 0.115 to 0.059 per field at constant count. Expect the bone starburst and the moss pile to stop being areas that fill the frame and start being small filled marks over a large dark, which is the nearest thing to a delicate register this configuration can reach. Nothing will be stroked, and if the next sheet still reads as mass rather than line, that is the correct reading and the gap is still open.",
+            "preserve": [
+              "the centred organisation about the canvas centre, which is structural to every layout in this runtime and is not being touched",
+              "the moss #5b6b45 and bone #d9d2c2 hex values exactly as they are -- the palette does not move",
+              "the flat unmodulated dark ground, groundMode FLAT on #0f1113",
+              "the twelve seeds visibly distinct at 120px, which must be re-read on the sheet after the density falls rather than assumed"
+            ]
+          },
+          {
+            "findingId": "ink-over-budget",
+            "disposition": "ACCEPT",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[1].countMin",
+              "fields[1].countMax",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "This is the change the objective battery was missing: it had an ink floor and no ceiling, so a brief asking for restraint got the same frame as one asking for saturation. The size ceilings fall from 24 / 20 / 17 to 16 / 14 / 14 and the counts fall with them rather than compensating (24 to 22, 23 to 22, 23 to 17), which is the second half of the finding. Expect the seeds where the bone field covered nearly the whole frame -- 5003, 5658, 6051, 5789 -- to come back to a drawing over a dark, and 5003 in particular to stop reading as a light ground with a dark rim. Every seed should show more dark than drawing.",
+            "preserve": [
+              "the reach of the two registers that carry the composition: fields 0 and 1 keep spreadMax 128 and 122, so the longest members still run close to the frame edges while the AREA of ink falls -- size and spread are measured near-orthogonal, so coverage can come down without the figure becoming a small island",
+              "the two working colours and the flat dark, none of which moves",
+              "the seed-to-seed spread in element count -- the ranges narrow slightly at the top but no range is pinned"
+            ]
+          },
+          {
+            "findingId": "no-division-ladder",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The descending sizeMax ladder already exists and survives, but it will COMPRESS rather than halve, and that is deliberate: the author holds a floor of 14 on a secondary field because the atlas measures anything below about 10 as a blank tile at 120px, so a ladder that halves from 16 would put the finest register under the browse-size threshold and delete it rather than refine it. The other two halves of the prescription are refused outright. A larger variant does not turn a member: variant is a per-primitive sub-mode that sets nothing at all on RECT and CIRCLE, and there is no per-element orientation control anywhere in the schema. And a field cannot issue from the field above it -- that is a cross-field conditional, which the runtime names in its cannot list; every layout already places about the same canvas centre, which is as close to a common origin as the medium gets.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The three registers go from 24 / 20 / 17 to 16 / 14 / 14, so the step between the primary and the two finer orders is proportionally larger than it is now while the gap between the second and third closes to nothing. Expect two visible scales rather than three, over a much larger dark. The orders will still not be seen to divide from one another; they will be three fields of small marks sharing one centre.",
+            "preserve": [
+              "three fields as three registers -- fieldCount stays 3 and no field is deleted or merged",
+              "the finest register as small repeated marks of one consistent scale: its layout, primitive and size ceiling behaviour are unchanged, and its floor countMin stays 5 so it is never absent",
+              "the two working colours and the dark ground"
+            ]
+          },
+          {
+            "findingId": "bone-rim-is-a-ring",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "The prescription names a layout that is not in this configuration. There is no radial or burst field here: the three layouts are LINEFIELD, STACK and GRID, all cell-family, so there is no polar placement to replace and no hub the members are turning about. The rim reading comes from the NGON primitive at a large size ceiling plus the runtime's own seeded per-site jitter, neither of which is a placement choice. And spreadMax cannot make a sector: it is a radius ceiling about the canvas centre, with no angular parameter anywhere in the schema, so narrowing it shrinks the figure evenly in all directions rather than confining members to one side. Widening the spread of member lengths is likewise not available -- the length spread is the seed's own draw between the bytecode floor of 2 and the ceiling.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[0].countMax"
+            ],
+            "expectedVisualEffect": "The bone field's size ceiling falls from 24 to 16 and its count ceiling from 24 to 22, so the sawtooth members become roughly half the area they were. On 5003, 5658, 5789, 5920 and 6051 the spikes should stop meeting end to end, which is what currently closes them into a continuous outline, so the sunburst/cactus silhouette should break open into separate marks. The distribution stays centred and roughly isotropic, so if a ring reading survives at the smaller size it is the seeded jitter and not something a parameter here can reach.",
+            "preserve": [
+              "this field's role as the register that reaches furthest: fields[0].spreadMax stays at 128, the top of the range, so it still establishes the figure's extent",
+              "the bone hex value and the flat dark ground",
+              "three registers, none deleted"
+            ]
+          },
+          {
+            "findingId": "market-inverted",
+            "disposition": "ACCEPT",
+            "parameters": [
+              "fields[2].drive",
+              "fields[2].sensor",
+              "fields[2].curve",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "After this, NO field takes its size from the market: the third register moves from drive SIZE on DRAWDOWN to drive COUNT on VOLUME_TIER, and fields 0 and 1 are already drive COUNT on RECOVERY. So member size is constant across the three states and the only thing the market moves is how many divisions are drawn, which is exactly what the direction names. Expect 5003's fine sawtooth to stop collapsing into two enormous triangles under stress and 5396's squares to stop growing; stress should read as the bare armature, with the two RECOVERY-bound fields at their count floors of 4, and recovery as the fullest branching at 22 and 22. One thing does not go the way the finding asks: the count span is not widened -- the third register's ceiling falls from 23 to 17 as part of the coverage recalibration -- so the extra separation has to come from the third register no longer swelling under stress rather than from a bigger swing.",
+            "preserve": [
+              "the three states clearly separable -- fields 0 and 1 keep their full RECOVERY/LOG2 binding and their count ranges, so the amplitude that currently makes stress unmistakable is not spent",
+              "the same two colours and the same dark in all three states: palette, paletteIx, groundMode and groundIx are all constants and none of them is market-bound, which the runtime enforces by refusing a state-driven colour outright",
+              "member size identical across states, which is what this change buys"
+            ]
+          },
+          {
+            "findingId": "third-colour-and-tone-stack",
+            "disposition": "REJECT_WITH_REASON",
+            "reason": "There is no grey to remove and no alpha to raise. The palette holds exactly three stops -- the dark ground #0f1113 and the two working colours, moss #5b6b45 and bone #d9d2c2 -- and the three fields point at stops 2, 1 and 2, so no field is drawing a charcoal or a mid-grey. What the critic is reading as a third and fourth working value, and as four or five distinguishable greens inside one form, is the runtime's per-element opacity: it is written per element from the token's seed, 'alpha' is named in this runtime's own cannot list, and neither VectorConfigV1 nor the author has a parameter that reaches it. Every intermediate tone in the frame is a translucent mark over the dark or over another mark. The only lever that exists at all is fewer overlaps, which is a density decision and is answered under ink-over-budget; it will reduce how often tones stack, and it will not make a single mark opaque."
+          },
+          {
+            "findingId": "members-merge-at-browse",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "Half of the prescription is already at its ceiling. spreadMax cannot be raised on the mass fields: field 0 is at 128, the top of the 16..128 range, where the atlas measures elements landing on the frame boundary and being cut by the viewBox, and field 1 is at 122. So the separation has to come entirely from the size side, which is the half that does move. It is also the half the atlas says is the right one -- size and spread are close to orthogonal, size is density and spread is scale -- so shrinking sizeMax at constant spread is precisely 'distribute across the reach instead of piling at the centre'.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[0].countMax",
+              "fields[1].countMax",
+              "fields[2].countMax",
+              "fields[2].spreadMax"
+            ],
+            "expectedVisualEffect": "At a size ceiling of 16 instead of 24 each member is roughly half the area it was, while the sites stay spread over the same 128 and 122 radii, so dark should open between adjacent members of the same register at 120px. Expect the 512px frame to stop fusing six or more circles into one amorphous lump, and each 120px cell to read as a spaced population rather than a single continuous blob silhouette. Where members still touch, they will overlap translucently as before -- that part is opacity and is unreachable. One reach parameter does move, and it moves inward: the third register's radius ceiling falls from 116 to 90, so the marks the critic's other finding calls confetti in the empty dark are pulled inside the hull of the drawing rather than scattered further across it.",
+            "preserve": [
+              "the figure centred and its members belonging to one growth: no layout changes, every field still places about the canvas centre, and nothing is scattered",
+              "the reach of the two composition-carrying fields, unchanged at 128 and 122 -- the ONLY field pulled inward is the quiet third register, from 116 to 90, and that is precisely so it stops reading as confetti in the margin",
+              "the two colours and the flat dark"
+            ]
+          },
+          {
+            "findingId": "figure-ground-inverted-on-some-seeds",
+            "disposition": "PARTIALLY_ACCEPT",
+            "reason": "A per-seed clamp of one field against another is a cross-field conditional, which the runtime names in its own cannot list: each field draws its own scalars from its own seed byte and no field can see another's draw, so 'never exceed the primary register on any seed' cannot be expressed. What CAN be expressed is a lower ceiling on every field at once, and that is what moves. One thing must be said plainly because it runs against the finding: countMin on the bone field FALLS, from 6 to 4, as part of the coverage recalibration. countMin is the resolved count floor, so the register still cannot be absent -- but its sparsest draw gets sparser, not denser, and if a seed reads as a near-empty bone register next round that is this, and it is a trade the coverage ceiling made knowingly.",
+            "parameters": [
+              "fields[0].sizeMax",
+              "fields[1].sizeMax",
+              "fields[2].sizeMax",
+              "fields[0].countMin",
+              "fields[0].countMax",
+              "fields[1].countMin",
+              "fields[1].countMax",
+              "fields[2].countMax"
+            ],
+            "expectedVisualEffect": "The bone field's ceilings come down from sizeMax 24 and countMax 24 to 16 and 22, so on 5003 and 6051 it should no longer be able to fill the frame and reduce the moss form to a dot -- the light stops being the ground. Because all three ceilings fall together, the ORDER of the registers is preserved rather than inverted per seed. Seeds should therefore differ in how much of the frame the growth has covered rather than in which register is present, though absence of a register is bounded by countMin and not eliminated by it.",
+            "preserve": [
+              "the twelve visibly distinct at 120px -- no seeded range is pinned and the variation is not being clamped out, only ceilinged",
+              "countMin as a real creator-owned floor on every field (4, 4 and 5 after the change), which is one of only two dimensions in either runtime with a floor the author owns rather than the bytecode",
+              "the two working colours and the dark ground"
+            ]
+          }
+        ]
+      },
+      "boundedChange": {
+        "ok": false,
+        "moved": [
+          {
+            "parameter": "fields[0].sizeMax",
+            "from": 24,
+            "to": 18,
+            "named": true
+          },
+          {
+            "parameter": "fields[0].countMin",
+            "from": 6,
+            "to": 4,
+            "named": true
+          },
+          {
+            "parameter": "fields[0].countMax",
+            "from": 24,
+            "to": 22,
+            "named": true
+          },
+          {
+            "parameter": "fields[1].sizeMax",
+            "from": 20,
+            "to": 18,
+            "named": true
+          },
+          {
+            "parameter": "fields[1].spreadMax",
+            "from": 122,
+            "to": 90,
+            "named": true
+          },
+          {
+            "parameter": "fields[1].countMax",
+            "from": 23,
+            "to": 17,
+            "named": true
+          },
+          {
+            "parameter": "fields[1].sensor",
+            "from": "RECOVERY",
+            "to": "VOLUME_TIER",
+            "named": true
+          },
+          {
+            "parameter": "fields[1].curve",
+            "from": "LOG2",
+            "to": "LINEAR",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].layout",
+            "from": "GRID",
+            "named": false
+          },
+          {
+            "parameter": "fields[2].primitive",
+            "from": "RECT",
+            "named": false
+          },
+          {
+            "parameter": "fields[2].sizeMax",
+            "from": 17,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].spreadMax",
+            "from": 116,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].symmetry",
+            "from": "NONE",
+            "named": false
+          },
+          {
+            "parameter": "fields[2].countMin",
+            "from": 5,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].countMax",
+            "from": 23,
+            "named": true
+          },
+          {
+            "parameter": "fields[2].paletteIx",
+            "from": 2,
+            "named": false
+          },
+          {
+            "parameter": "fields[2].variant",
+            "from": 3,
+            "named": false
+          },
+          {
+            "parameter": "fields[2].stroke",
+            "from": false,
+            "named": false
+          },
+          {
+            "parameter": "fields[2].drive",
+            "from": "SIZE",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].sensor",
+            "from": "DRAWDOWN",
+            "named": true
+          },
+          {
+            "parameter": "fields[2].curve",
+            "from": "LOG2",
+            "named": true
+          },
+          {
+            "parameter": "fieldCount",
+            "from": 3,
+            "to": 2,
+            "named": false
+          }
+        ],
+        "unnamed": [
+          {
+            "parameter": "fields[2].layout",
+            "from": "GRID",
+            "named": false
+          },
+          {
+            "parameter": "fields[2].primitive",
+            "from": "RECT",
+            "named": false
+          },
+          {
+            "parameter": "fields[2].symmetry",
+            "from": "NONE",
+            "named": false
+          },
+          {
+            "parameter": "fields[2].paletteIx",
+            "from": 2,
+            "named": false
+          },
+          {
+            "parameter": "fields[2].variant",
+            "from": 3,
+            "named": false
+          },
+          {
+            "parameter": "fields[2].stroke",
+            "from": false,
+            "named": false
+          },
+          {
+            "parameter": "fieldCount",
+            "from": 3,
+            "to": 2,
+            "named": false
+          }
+        ],
+        "counts": {
+          "moved": 22,
+          "named": 15,
+          "unnamed": 7
+        },
+        "detail": "7 parameter(s) moved that no response named: fields[2].layout, fields[2].primitive, fields[2].symmetry, fields[2].paletteIx, fields[2].variant, fields[2].stroke, fieldCount"
+      }
+    },
+    {
+      "round": 2,
+      "configHash": "4c00b5511ddcccbccc5639ad794615d659635a8efe0e42389b36a291957e88fc",
+      "configBytes": "0x564356310100000000030f11135b6b45d9d2c2020503020301000416128000000401010000000511125a1000000b4c6f6769632046726f6e64ff",
+      "config": {
+        "fields": [
+          {
+            "layout": "LINEFIELD",
+            "primitive": "NGON",
+            "sizeMax": 18,
+            "spreadMax": 128,
+            "symmetry": "NONE",
+            "countMin": 4,
+            "countMax": 22,
+            "paletteIx": 2,
+            "stroke": false,
+            "variant": 0,
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2"
+          },
+          {
+            "layout": "STACK",
+            "primitive": "CIRCLE",
+            "sizeMax": 18,
+            "spreadMax": 90,
+            "symmetry": "NONE",
+            "countMin": 5,
+            "countMax": 17,
+            "paletteIx": 1,
+            "variant": 2,
+            "stroke": false,
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR"
+          }
+        ],
+        "fieldCount": 2,
+        "palette": [
+          "#0f1113",
+          "#5b6b45",
+          "#d9d2c2"
+        ],
+        "groundMode": "FLAT",
+        "groundIx": 0,
+        "groundIx2": 0,
+        "flags": [],
+        "title": "Logic Frond"
+      },
+      "producedBy": "REAUTHORED_BY_THE_CHANGED_AUTHOR",
+      "mechanism": {
+        "ok": true,
+        "mechanism": "SUBTRACTION",
+        "polarity": "PEAKS_AT_RECOVERY",
+        "drive": "COUNT",
+        "curve": "LOG2",
+        "sensor": "RECOVERY",
+        "requires": {
+          "minFields": 2,
+          "countRangeAtLeast": 18
+        },
+        "detail": "countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+        "evidence": {
+          "row": "VC-subtract-3field",
+          "weakestPairing": 8.317,
+          "ink": "0.351 mean / 0.055 min",
+          "extent": 0.956,
+          "blankSeeds": 0,
+          "singleFieldControl": {
+            "row": "VC-subtract-COUNT-REC",
+            "blankSeeds": 7,
+            "inkMin": 0.013
+          }
+        },
+        "alternatives": [],
+        "source": "DIRECTION",
+        "evidenceInDirection": [
+          {
+            "phrase": "multiply",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "In recovery the divisions multiply and more members are drawn along every stem, so the form carries its fullest branching there."
+          },
+          {
+            "phrase": "retracts",
+            "direction": "lower",
+            "state": "STRESS",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "Under stress the drawing retracts toward a bare armature and fewer of its divisions remain."
+          },
+          {
+            "phrase": "more of them",
+            "direction": "raise",
+            "state": "RECOVERY",
+            "polarity": "PEAKS_AT_RECOVERY",
+            "clause": "and in recovery more of them return."
+          }
+        ],
+        "detailOfSource": "read from marketTransformation / thumbnailIntent: \"multiply\", \"retracts\", \"more of them\"",
+        "otherSensor": "DRAWDOWN",
+        "secondary": null,
+        "alsoRequested": []
+      },
+      "intent": {
+        "densityTarget": "SPARSE",
+        "extentTarget": "MODERATE",
+        "focalMode": "SINGLE_DOMINANT",
+        "rhythmMode": "REGULAR",
+        "paletteMode": "RESTRAINED",
+        "strokeMode": "SOLID",
+        "marketAxis": "DENSITY",
+        "variationBreadth": "WIDE"
+      },
+      "intentDerivation": {
+        "densityTarget": {
+          "source": "DIRECTION",
+          "value": "SPARSE",
+          "evidence": [
+            "sparse"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "density",
+            "negativeSpace",
+            "thumbnailIntent"
+          ],
+          "rejected": []
+        },
+        "extentTarget": {
+          "source": "DEFAULT",
+          "value": "MODERATE",
+          "detail": "the direction's composition/negativeSpace did not name a extentTarget",
+          "rejected": [
+            {
+              "option": "COMPACT",
+              "phrase": "island",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "focalMode": {
+          "source": "DEFAULT",
+          "value": "SINGLE_DOMINANT",
+          "detail": "the direction's focalHierarchy/composition did not name a focalMode",
+          "rejected": []
+        },
+        "rhythmMode": {
+          "source": "DEFAULT_ON_TIE",
+          "value": "REGULAR",
+          "evidence": [
+            "regular"
+          ],
+          "score": 1,
+          "tiedWith": [
+            "BROKEN:1"
+          ],
+          "runnerUp": [
+            "BROKEN:1"
+          ],
+          "fields": [
+            "rhythm",
+            "composition"
+          ],
+          "rejected": [
+            {
+              "option": "RADIAL",
+              "phrase": "ring",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "paletteMode": {
+          "source": "DEFAULT",
+          "value": "RESTRAINED",
+          "detail": "the direction's paletteIntent did not name a paletteMode",
+          "rejected": []
+        },
+        "strokeMode": {
+          "source": "DIRECTION",
+          "value": "SOLID",
+          "evidence": [
+            "weight"
+          ],
+          "score": 1,
+          "tiedWith": [],
+          "runnerUp": [],
+          "fields": [
+            "medium",
+            "motifTranslation",
+            "paletteIntent",
+            "thumbnailIntent"
+          ],
+          "rejected": [
+            {
+              "option": "SOLID",
+              "phrase": "mass",
+              "why": "negated in its own clause"
+            }
+          ]
+        },
+        "marketAxis": {
+          "source": "DIRECTION",
+          "value": "DENSITY",
+          "evidence": [
+            "multiply",
+            "fewer"
+          ],
+          "score": 2,
+          "tiedWith": [],
+          "runnerUp": [
+            "STRUCTURE:1"
+          ],
+          "fields": [
+            "marketTransformation"
+          ],
+          "rejected": []
+        },
+        "variationBreadth": {
+          "source": "DEFAULT",
+          "value": "WIDE",
+          "detail": "the direction's variationStrategy/identityAnchors did not name a variationBreadth",
+          "rejected": []
+        }
+      },
+      "atlas": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+        "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+        "freshness": {
+          "fresh": "UNVERIFIED"
+        },
+        "consultedParameters": [
+          "fields[n].layout",
+          "fields[n].primitive",
+          "fields[n].sizeMax",
+          "fieldCount, and the site budget",
+          "fields[n].spreadMax",
+          "fields[n].symmetry",
+          "fields[n].countMin / countMax",
+          "palette, groundMode, PALETTE_SHIFT",
+          "fields[n].stroke and the OUTLINE flag",
+          "fields[n].drive x sensor x curve"
+        ],
+        "consultationCount": 10,
+        "facetsPerConsultation": [
+          "visibleEffect",
+          "lowHighBehaviour",
+          "interactions",
+          "failureMode",
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ],
+        "unmeasuredFacets": [
+          {
+            "parameter": "fields[n].layout",
+            "facets": [
+              "failureMode"
+            ]
+          },
+          {
+            "parameter": "fieldCount, and the site budget",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].symmetry",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "palette, groundMode, PALETTE_SHIFT",
+            "facets": [
+              "safeExpressiveRange",
+              "marketBindingSuitability"
+            ]
+          },
+          {
+            "parameter": "fields[n].stroke and the OUTLINE flag",
+            "facets": [
+              "interactions",
+              "safeExpressiveRange"
+            ]
+          },
+          {
+            "parameter": "fields[n].drive x sensor x curve",
+            "facets": [
+              "failureMode",
+              "safeExpressiveRange"
+            ]
+          }
+        ],
+        "marketBindingConsultations": [
+          "fields[n].drive x sensor x curve"
+        ]
+      },
+      "bindings": {
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "bindings": [
+          {
+            "index": 0,
+            "unit": "field[0]",
+            "drive": "COUNT",
+            "sensor": "RECOVERY",
+            "curve": "LOG2",
+            "parameter": "countMax",
+            "floor": 4,
+            "ceiling": 22,
+            "readings": {
+              "neutral": {
+                "perMille": 20,
+                "curved": 326,
+                "resolved": 9
+              },
+              "stress": {
+                "perMille": 0,
+                "curved": 0,
+                "resolved": 4
+              },
+              "recovery": {
+                "perMille": 820,
+                "curved": 964,
+                "resolved": 21
+              }
+            },
+            "resolved": [
+              9,
+              4,
+              21
+            ],
+            "span": 17,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 9 / 4 / 21 across neutral / stress / recovery (span 17 of 18)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          },
+          {
+            "index": 1,
+            "unit": "field[1]",
+            "drive": "COUNT",
+            "sensor": "VOLUME_TIER",
+            "curve": "LINEAR",
+            "parameter": "countMax",
+            "floor": 5,
+            "ceiling": 17,
+            "readings": {
+              "neutral": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 8
+              },
+              "stress": {
+                "perMille": 267,
+                "curved": 267,
+                "resolved": 8
+              },
+              "recovery": {
+                "perMille": 467,
+                "curved": 467,
+                "resolved": 10
+              }
+            },
+            "resolved": [
+              8,
+              8,
+              10
+            ],
+            "span": 2,
+            "verdict": "REACHABLE",
+            "detail": "resolves to 8 / 8 / 10 across neutral / stress / recovery (span 2 of 12)",
+            "worstMember": {
+              "ok": true,
+              "risky": [],
+              "detail": null
+            }
+          }
+        ],
+        "counts": {
+          "total": 2,
+          "reachable": 2,
+          "provablyDead": 0,
+          "unknown": 0
+        },
+        "respondsToMarket": true,
+        "worstMemberRisks": [],
+        "unprovenBindings": [],
+        "refuse": false,
+        "detail": "2 of 2 bindings proven reachable, 0 unproven (render decides), 0 proven dead"
+      },
+      "notes": [
+        {
+          "stage": "SILHOUETTE",
+          "why": "layout LINEFIELD from rhythmMode=REGULAR; primitive NGON (LINE..CUBIC are always stroked whatever stroke says)",
+          "consulted": [
+            "fields[n].layout",
+            "fields[n].primitive"
+          ]
+        },
+        {
+          "stage": "FOCAL_HIERARCHY",
+          "why": "2 fields (never one: a single field losing members blanked 7 of 8 seeds); sizeMax 18 from densityTarget=SPARSE",
+          "consulted": [
+            "fields[n].sizeMax",
+            "fieldCount, and the site budget"
+          ]
+        },
+        {
+          "stage": "NEGATIVE_SPACE",
+          "why": "spreadMax 128 from extentTarget=MODERATE; measured near-orthogonal to sizeMax, so density is untouched",
+          "consulted": "fields[n].spreadMax"
+        },
+        {
+          "stage": "RHYTHM",
+          "why": "symmetry NONE (a project constant, so it carries no per-token variety); count range widened because COUNT is the drive and the range IS the response",
+          "consulted": [
+            "fields[n].symmetry",
+            "fields[n].countMin / countMax"
+          ]
+        },
+        {
+          "stage": "SECONDARY_STRUCTURE",
+          "why": "1 secondary field(s) at the same reach as the primary — the composition's extent is the MAXIMUM over its fields and each draws its own seed byte, so holding the secondaries inward measured 0.878 extent against 0.962"
+        },
+        {
+          "stage": "PALETTE",
+          "why": "2 colour(s) named; PALETTE_SHIFT elected=false because the seed reaches nothing categorical here",
+          "consulted": "palette, groundMode, PALETTE_SHIFT"
+        },
+        {
+          "stage": "DETAIL",
+          "why": "stroke=SOLID",
+          "consulted": "fields[n].stroke and the OUTLINE flag"
+        },
+        {
+          "stage": "MARKET_BEHAVIOUR",
+          "why": "mechanism SUBTRACTION PEAKS_AT_RECOVERY -> drive COUNT <- RECOVERY/LOG2, with the last field on DRAWDOWN so all three states separate. countMin is one of only two creator-owned floors in either runtime, so the sparse state is as sparse as the author chose and never emptier. It needs at least two fields: run on ONE field the identical binding blanked seven seeds of eight, because a single register losing members leaves nothing behind.",
+          "evidence": {
+            "row": "VC-subtract-3field",
+            "weakestPairing": 8.317,
+            "ink": "0.351 mean / 0.055 min",
+            "extent": 0.956,
+            "blankSeeds": 0,
+            "singleFieldControl": {
+              "row": "VC-subtract-COUNT-REC",
+              "blankSeeds": 7,
+              "inkMin": 0.013
+            }
+          },
+          "consulted": "fields[n].drive x sensor x curve"
+        }
+      ],
+      "objective": {
+        "pass": true,
+        "blocked": [],
+        "checks": [
+          {
+            "id": "CONFIG_LEGAL",
+            "ok": true
+          },
+          {
+            "id": "REVIEW_RING_RENDERS",
+            "ok": true
+          },
+          {
+            "id": "DETERMINISM",
+            "ok": true
+          },
+          {
+            "id": "COLLECTION_SWEEP",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_BYTES",
+            "ok": true
+          },
+          {
+            "id": "DUPLICATE_PERCEPTUAL",
+            "ok": true
+          },
+          {
+            "id": "SEED_DIVERSITY",
+            "ok": true
+          },
+          {
+            "id": "BLANK_DETECTION",
+            "ok": true
+          },
+          {
+            "id": "STATE_IDENTITY_EXACT",
+            "ok": true
+          },
+          {
+            "id": "PERCEPTUAL_SEPARATION",
+            "ok": true
+          },
+          {
+            "id": "STRUCTURAL_ROLE",
+            "ok": true
+          },
+          {
+            "id": "RENDER_GAS",
+            "ok": true
+          }
+        ]
+      },
+      "sheets": [
+        {
+          "name": "dev-seeds-256.png",
+          "sha256": "222e5968b4b1399fd45df3b7e2c009f6baa8e8b941efa6988084a633c41616e1",
+          "bytes": 214387
+        },
+        {
+          "name": "dev-seeds-120.png",
+          "sha256": "e0b11d4b36f39660ff743716a40eb5df6f1e9a07b35929eed11ee0c315b2bad0",
+          "bytes": 91138
+        },
+        {
+          "name": "dev-states-256.png",
+          "sha256": "1f5edd6ff1b2d0440512c546a954dd6a640bcf5e3c407f7d983b6fff9938c573",
+          "bytes": 188479
+        },
+        {
+          "name": "dev-states-120.png",
+          "sha256": "ea6984bddc73b55b4d00a5a0ed000fc7d0c002725b7aed775e8b1451b72dff1d",
+          "bytes": 79664
+        },
+        {
+          "name": "dev-single-512.png",
+          "sha256": "aedd87097c95e6f5aed7aa4fd250c41a0b34f7b2634b79f7413f63b01bf9cb5a",
+          "bytes": 27430
+        }
+      ],
+      "measurements": {
+        "inkMean": 0.454,
+        "inkMin": 0.166,
+        "stateDeMean": 10.88,
+        "stateDeMin": 0.18,
+        "seedDeMean": 22.87,
+        "seedDeMin": 4.85
       }
     }
-  ]
+  ],
+  "objectiveBlockers": [],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "reviewerPromptSha256": "a446a3f47652e5aee1e342f365cff19d3f7cfa71cc910ebd298c8303b9878ab4",
+    "seeds": [
+      9011,
+      9190,
+      9369,
+      9548,
+      9727,
+      9906,
+      10085,
+      10264,
+      10443,
+      10622,
+      10801,
+      10980
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "4c00b5511ddcccbccc5639ad794615d659635a8efe0e42389b36a291957e88fc",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "7e0bee79844f417235d580907ae82becb4390977c6a4d5c99d41d7a090c28809",
+        "bytes": 190974
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "65cc663f0cdfc3d65b5cc5da5ac6854c111cd752cdf458df214797f3aa73ccf0",
+        "bytes": 81008
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "940664b3fd9372d7d2eeb55bb20d436ecc0b00f7f02f4a957e7ab68d14fca101",
+        "bytes": 138947
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "a000831ceabf9e048893fac13e5bf4ee6634867776e9137d2c23c8bfefd42e49",
+        "bytes": 57448
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "5f10229c1d1d59e1653781b43c8b4f1b81d42b7eda2f94e8709f27f18413f06f",
+        "bytes": 25450
+      }
+    ],
+    "inputHashes": [
+      "7e0bee79844f417235d580907ae82becb4390977c6a4d5c99d41d7a090c28809",
+      "65cc663f0cdfc3d65b5cc5da5ac6854c111cd752cdf458df214797f3aa73ccf0",
+      "940664b3fd9372d7d2eeb55bb20d436ecc0b00f7f02f4a957e7ab68d14fca101",
+      "a000831ceabf9e048893fac13e5bf4ee6634867776e9137d2c23c8bfefd42e49",
+      "5f10229c1d1d59e1653781b43c8b4f1b81d42b7eda2f94e8709f27f18413f06f"
+    ],
+    "measurements": {
+      "inkMean": 0.398,
+      "inkMin": 0.177,
+      "stateDeMean": 9.11,
+      "stateDeMin": 0.01,
+      "seedDeMean": 22.91,
+      "seedDeMin": 2.88
+    },
+    "frozenAt": "2026-09-03T19:47:26.243Z"
+  }
 }
