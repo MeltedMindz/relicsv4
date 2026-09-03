@@ -89,6 +89,7 @@ import { verifyReceiptChain, writeIntent, writeReceipt, recordIntentTxHash } fro
 import { SignerRefusedError } from "@relics/signer-protocol";
 const { startSignerServer } = await import(new URL("../packages/signer-protocol/src/signerServer.ts", import.meta.url).href);
 const { createLocalSidecarSigner } = await import(new URL("../packages/signer-protocol/src/adapters/localSidecar.ts", import.meta.url).href);
+const { writeAuthorization } = await import(new URL("../packages/signer-protocol/src/authorization.ts", import.meta.url).href);
 
 // The metadata birth pipeline is NOT re-exported from `@relics/launch-sdk`'s root and the package
 // declares no subpath for it, so it is reached by file path. That is a gap in the package's export
@@ -467,6 +468,21 @@ export async function runAutonomousLaunch(options = {}) {
 
   const workspace = options.workspace ?? mkdtempSync(join(tmpdir(), "relics-e2e-"));
   mkdirSync(workspace, { recursive: true });
+
+  // THE SIGNER STATE DIRECTORY MOVES TO A TEMP HOME, BEFORE ANY MODULE READS IT.
+  //
+  // `relicsHome()` answers `$RELICS_HOME ?? ~/.relics` at CALL time, so setting it here relocates
+  // the authorization this harness is about to write. A harness must not read a real creator's live
+  // grant and must certainly not overwrite it, and a grant written under `~/.relics` would outlive
+  // the run.
+  //
+  // BESIDE THE WORKSPACE, NEVER INSIDE IT, and that is not tidiness. The grant lives under the
+  // SIGNER'S home by design — `relics.agent.json` is the creator's policy and belongs to the
+  // project, the grant is the signer's and does not — and this harness separately asserts that
+  // nothing edited the workspace tree during the run. A `.relics-home` written inside it is a real
+  // mutation of the creator's project directory, and the integrity check was right to report one.
+  const signerHome = mkdtempSync(join(tmpdir(), "relics-e2e-home-"));
+  process.env.RELICS_HOME = signerHome;
 
   let anvil = null;
   let signerServer = null;
@@ -881,6 +897,44 @@ export async function runAutonomousLaunch(options = {}) {
     // ---- 13. POLICY_APPROVED — checked against the FINAL calldata --------------------------------
     phase("POLICY_APPROVED");
     const approvedBuild = { chainId: selectedChainId, factory, policyHash, launchPlanHash: prepared.prepareHash, bundleHash };
+
+    // ---- THE CREATOR'S GRANT, WRITTEN AS `agent setup` WRITES IT --------------------------------
+    //
+    // `signerServer` builds its guard with no options, so `requireGrant` is TRUE and there is no
+    // escape hatch — which is the point of it. A harness that runs without a grant is therefore not
+    // testing production leniently, it is testing a configuration production never has: the run
+    // reaches SIGNED and is refused `NO_AUTHORIZATION`, which is the guard working.
+    //
+    // So the grant is written rather than switched off, and every bound is DERIVED from the policy
+    // this run already parsed. `maxTotalGasCostWei` is the product the creator's own two ceilings
+    // already imply, so this grant cannot authorize a wei more than `relics.agent.json` does — a
+    // number invented here would be a bound nobody chose, which is the thing the total exists to
+    // stop. It is bound to THIS run's freshly generated signer, expires in an hour, and lives in
+    // the workspace's own `RELICS_HOME`.
+    writeAuthorization({
+      version: 1,
+      preset: "SAFE_AUTONOMOUS",
+      mode: "SINGLE_LAUNCH",
+      grantedAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
+      launchesAllowed: 1,
+      launchesUsed: 0,
+      revokedAt: null,
+      signerAddress,
+      creatorRecipient: getAddress(policy.creatorRecipient),
+      allowedChains: [...policy.allowedChains],
+      allowedRuntimes: [...policy.allowedRuntimes],
+      allowedQuoteAssets: "AUTO",
+      allowedAntiSnipeModes: [...policy.allowedAntiSnipeModes],
+      maxRoyaltyBps: policy.maxRoyaltyBps,
+      maxTotalGasCostWei: (policy.maxTransactionGas * policy.maxGasPriceWei).toString(),
+      maxNativeSpendWei: policy.maxNativeSpendWei.toString(),
+      allowBroadcast: policy.allowBroadcast,
+      policyHash,
+      consumedLaunchPlanHashes: [],
+    });
+    log(`  grant SAFE_AUTONOMOUS installed under ${process.env.RELICS_HOME} for ${signerAddress}`);
+
     signerServer = await startSignerServer({
       adapter: createForkOnlySigner({ account: walletAccount, rpcUrl, chainId: selectedChainId }),
       policy,
@@ -923,7 +977,11 @@ export async function runAutonomousLaunch(options = {}) {
     phase("SIGNED");
     let signed;
     try {
-      signed = await sidecar.sign(built.request);
+      // THE SIMULATION GOES WITH THE REQUEST. The grant refuses a signature that is not backed by a
+      // simulation OF THESE BYTES, so passing the request alone is refused `NO_SIMULATION_RECEIPT`
+      // — correctly. `dataHash` comes from the simulated call, not from the built request, because
+      // the guard compares the two and taking both from one side would compare a value with itself.
+      signed = await sidecar.sign(built.request, { ok: true, dataHash: simulated.dataHash, chainId: selectedChainId, blockNumber: String(simulated.blockNumber) });
     } catch (err) {
       if (err instanceof SignerRefusedError) throw new HarnessFailure(`the signer refused: ${err.refusal.code} — ${err.refusal.detail}`);
       throw err;
@@ -1066,6 +1124,9 @@ export async function runAutonomousLaunch(options = {}) {
   } finally {
     if (signerServer) await signerServer.close().catch(() => {});
     if (anvil && !options.keepNode) anvil.child.kill("SIGKILL");
+    // The grant is single-launch, expiring and bound to a per-run key, so it is spent either way —
+    // but leaving an authorization on disk after a test run is not something to rely on expiry for.
+    rmSync(signerHome, { recursive: true, force: true });
   }
 }
 
