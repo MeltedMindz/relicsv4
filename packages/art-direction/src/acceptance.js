@@ -254,10 +254,28 @@ export function verifyVerdictBinding(workspace, record) {
  * `configBytes` is the configuration a launch would actually commit. Everything else is optional
  * and, when absent, the corresponding clause reports UNKNOWN rather than passing — an unread fact
  * is never an agreeing fact.
+ *
+ * ------------------------------------------------------------------------------------------------
+ * `externalVerdict` — THE ANCHOR OUTSIDE THE CASE DIRECTORY (finding CLOSE2-B5)
+ * ------------------------------------------------------------------------------------------------
+ * Everything else this function consults lives in files the receipt itself names and pins. That is
+ * a CLOSED SET, and a closed set can be made consistent: flipping `final-review/verdict.json` to
+ * PASS, flipping the receipt to match and updating the sha256 the receipt pinned is three edits in
+ * two files, and it made this function return `accepted: true` on a REFUSED review.
+ *
+ * So a caller that HAS a record from outside the workspace — the benchmark round's own
+ * `report.json`, written by the harness over all twelve cases — passes it here, and a disagreement
+ * is a refusal by name. `{ verdict, reviewerId, source }`.
+ *
+ * WHEN IT IS ABSENT THE RESULT SAYS SO. `externalAnchor` is `"CHECKED"` or `"NONE"`, never
+ * silently omitted: a creator's own workspace genuinely has no round record, and the honest thing
+ * is to report that the verdict rests on the workspace alone rather than to imply an anchor that
+ * was never supplied. No self-contained artifact set can refuse a wholesale forgery of itself;
+ * what it must not do is claim otherwise.
  */
-export function verifyArtAcceptance(workspace, { configBytes, briefText, runtimeId, runtimeCodeHash } = {}) {
+export function verifyArtAcceptance(workspace, { configBytes, briefText, runtimeId, runtimeCodeHash, externalVerdict } = {}) {
   const read = readArtAcceptance(workspace);
-  if (!read.ok) return { accepted: false, ...read, invalidatedBy: [] };
+  if (!read.ok) return { accepted: false, ...read, invalidatedBy: [], externalAnchor: externalVerdict ? "CHECKED" : "NONE" };
   const r = read.record;
 
   const invalidatedBy = [];
@@ -281,6 +299,7 @@ export function verifyArtAcceptance(workspace, { configBytes, briefText, runtime
   if (invalidatedBy.length) {
     return {
       accepted: false,
+      externalAnchor: externalVerdict ? "CHECKED" : "NONE",
       reasonCode: "ART_ACCEPTANCE_INVALIDATED",
       detail: `the accepted art has changed: ${invalidatedBy.map((i) => i.facet).join(", ")}`,
       invalidatedBy,
@@ -299,7 +318,39 @@ export function verifyArtAcceptance(workspace, { configBytes, briefText, runtime
   // while flipping the word.
   const bound = verifyVerdictBinding(workspace, r);
   if (!bound.ok) {
-    return { accepted: false, reasonCode: bound.reasonCode, detail: bound.detail, invalidatedBy: [], record: r };
+    return { accepted: false, reasonCode: bound.reasonCode, detail: bound.detail, invalidatedBy: [], record: r, externalAnchor: externalVerdict ? "CHECKED" : "NONE" };
+  }
+
+  // ---- THE VERDICT MAY NOT CONTRADICT A RECORD FROM OUTSIDE THE WORKSPACE ----------------------
+  //
+  // Compared against the REVIEWER'S DOCUMENT (`bound.document`, just re-read and re-hashed), never
+  // against the receipt's own copy — otherwise the forger is on both sides of the comparison again.
+  const externalAnchor = externalVerdict ? "CHECKED" : "NONE";
+  if (externalVerdict) {
+    const field = r.finalReview?.verdictDocument?.verdictField ?? "verdict";
+    const documentVerdict = bound.document?.[field];
+    if (externalVerdict.verdict !== undefined && externalVerdict.verdict !== documentVerdict) {
+      return {
+        accepted: false,
+        reasonCode: "FINAL_REVIEW_VERDICT_CONTRADICTS_EXTERNAL_RECORD",
+        detail:
+          `the reviewer's document says ${JSON.stringify(documentVerdict)} and ${externalVerdict.source ?? "the external record"} says ` +
+          `${JSON.stringify(externalVerdict.verdict)}. A receipt does not get to overrule a record written outside its own directory.`,
+        invalidatedBy: [],
+        record: r,
+        externalAnchor,
+      };
+    }
+    if (externalVerdict.reviewerId !== undefined && r.finalReview?.reviewerId !== undefined && externalVerdict.reviewerId !== r.finalReview.reviewerId) {
+      return {
+        accepted: false,
+        reasonCode: "FINAL_REVIEW_VERDICT_CONTRADICTS_EXTERNAL_RECORD",
+        detail: `the receipt names reviewer ${JSON.stringify(r.finalReview.reviewerId)} and ${externalVerdict.source ?? "the external record"} names ${JSON.stringify(externalVerdict.reviewerId)}.`,
+        invalidatedBy: [],
+        record: r,
+        externalAnchor,
+      };
+    }
   }
 
   // ---- A COMPROMISED HOLDOUT IS NOT A HOLDOUT -------------------------------------------------
@@ -313,6 +364,7 @@ export function verifyArtAcceptance(workspace, { configBytes, briefText, runtime
     return {
       accepted: false,
       reasonCode: "FINAL_REVIEW_HOLDOUT_COMPROMISED",
+      externalAnchor,
       detail:
         sawHoldout === true
           ? `the holdout for round ${r.seedGroups?.roundId ?? "(unnamed)"} was present in author-visible source, so the final verdict was not taken blind: ${r.seedGroups?.holdoutDetail ?? "see packages/art-direction/rounds/registry.json"}`
@@ -323,30 +375,31 @@ export function verifyArtAcceptance(workspace, { configBytes, briefText, runtime
   }
 
   if (fr.verdict !== "PASS") {
-    return { accepted: false, reasonCode: "ART_NOT_ACCEPTED", detail: `the final review returned ${fr.verdict ?? "no verdict"}`, invalidatedBy: [], record: r };
+    return { accepted: false, reasonCode: "ART_NOT_ACCEPTED", detail: `the final review returned ${fr.verdict ?? "no verdict"}`, invalidatedBy: [], record: r, externalAnchor };
   }
   if (fr.configHashAtUnblind && fr.configHashAtUnblind !== r.acceptedConfigHash) {
     return {
       accepted: false,
       reasonCode: "FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND",
+      externalAnchor,
       detail: `the final reviewer judged ${fr.configHashAtUnblind} and the accepted configuration is ${r.acceptedConfigHash}. The verdict was taken on different pictures.`,
       invalidatedBy: [{ facet: "POST_UNBLIND_MUTATION", was: fr.configHashAtUnblind, now: r.acceptedConfigHash }],
       record: r,
     };
   }
   if (fr.blinded !== true) {
-    return { accepted: false, reasonCode: "FINAL_REVIEW_NOT_BLINDED", detail: "the final review was not conducted blind", invalidatedBy: [], record: r };
+    return { accepted: false, reasonCode: "FINAL_REVIEW_NOT_BLINDED", detail: "the final review was not conducted blind", invalidatedBy: [], record: r, externalAnchor };
   }
   if (fr.describedBeforeBrief !== true) {
-    return { accepted: false, reasonCode: "FINAL_REVIEW_NOT_BLINDED", detail: "the final reviewer did not describe what it saw before being shown the brief", invalidatedBy: [], record: r };
+    return { accepted: false, reasonCode: "FINAL_REVIEW_NOT_BLINDED", detail: "the final reviewer did not describe what it saw before being shown the brief", invalidatedBy: [], record: r, externalAnchor };
   }
   if (fr.seedGroup !== "FINAL_HOLDOUT_SEEDS") {
-    return { accepted: false, reasonCode: "FINAL_REVIEW_NOT_BLINDED", detail: `the final review was taken on ${fr.seedGroup ?? "an unrecorded seed group"} rather than the holdout`, invalidatedBy: [], record: r };
+    return { accepted: false, reasonCode: "FINAL_REVIEW_NOT_BLINDED", detail: `the final review was taken on ${fr.seedGroup ?? "an unrecorded seed group"} rather than the holdout`, invalidatedBy: [], record: r, externalAnchor };
   }
   // THE THREE ROLES MUST BE THREE. A reviewer that also critiqued has been arguing with the author.
   const criticIds = new Set((r.rounds ?? []).map((x) => x.criticId).filter(Boolean));
   if (fr.reviewerId && criticIds.has(fr.reviewerId)) {
-    return { accepted: false, reasonCode: "FINAL_REVIEW_ROLE_COLLISION", detail: `${fr.reviewerId} was also a development critic on this work`, invalidatedBy: [], record: r };
+    return { accepted: false, reasonCode: "FINAL_REVIEW_ROLE_COLLISION", detail: `${fr.reviewerId} was also a development critic on this work`, invalidatedBy: [], record: r, externalAnchor };
   }
   // EVERY FINDING ANSWERED.
   const unanswered = (r.rounds ?? []).flatMap((x) => {
@@ -354,10 +407,10 @@ export function verifyArtAcceptance(workspace, { configBytes, briefText, runtime
     return (x.findings ?? []).filter((f) => !answered.has(f)).map((f) => `round ${x.round}: ${f}`);
   });
   if (unanswered.length) {
-    return { accepted: false, reasonCode: "CRITIQUE_WITHOUT_AUTHOR_RESPONSE", detail: `unanswered finding(s): ${unanswered.join(", ")}`, invalidatedBy: [], record: r };
+    return { accepted: false, reasonCode: "CRITIQUE_WITHOUT_AUTHOR_RESPONSE", detail: `unanswered finding(s): ${unanswered.join(", ")}`, invalidatedBy: [], record: r, externalAnchor };
   }
 
-  return { accepted: true, reasonCode: "ART_ACCEPTED", record: r, invalidatedBy: [] };
+  return { accepted: true, reasonCode: "ART_ACCEPTED", record: r, invalidatedBy: [], externalAnchor };
 }
 
 /**

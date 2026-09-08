@@ -63,6 +63,28 @@ it.
 **7. Verify.** `npm run kit:artreceipts` reads every committed receipt against the artifacts it
 names, and `npm run kit:holdout` re-runs the containment tests.
 
+**A RECEIPT IS NOT ALLOWED TO BE ITS OWN ONLY EVIDENCE (added 2026-09-08).** Everything a receipt
+names, it also pins — which makes a closed set, and a closed set can be made consistent. Flipping
+`final-review/verdict.json` to `PASS`, flipping the receipt to match and updating the sha256 the
+receipt pinned is three edits in two files; it moved a published round from `0/12` to `1/12` with
+every gate green and `verifyArtAcceptance` returning `accepted: true`. So the verdict is anchored to
+two things the receipt cannot restate:
+
+- **the round record.** `artifacts/<round>/report.json` is written by the harness over all twelve
+  cases and carries each verdict plus the tally the findings document publishes. The tally is
+  re-derived from the REVIEWERS' OWN documents, never from the receipts, so a receipt cannot vote on
+  the aggregate that anchors it. `verifyArtAcceptance` takes the row as `externalVerdict` and refuses
+  a contradiction by name.
+- **git.** The receipt, the verdict document and the blind description must be TRACKED and
+  UNMODIFIED. `description.json` appears in no round record, so this is the anchor the description
+  attack has to cross: recompute the pin with the gate's own algorithm and the in-case check goes
+  quiet, and only `REVIEW_ARTIFACT_NOT_COMMITTED` is left. A repository git cannot read is reported
+  as `GIT_PROVENANCE_UNAVAILABLE` and fails; it is never a pass.
+
+A wholesale rewrite of all of it plus the history is still a forgery no artifact set inside one
+repository can refuse. What it can no longer be is a two-file edit that nothing notices. Watched
+failing by `npm run kit:artreceipts:controls` (17 controls, including the exact attack).
+
 ## Reproducing a round as a reviewer
 
 Given the salt and the round id:

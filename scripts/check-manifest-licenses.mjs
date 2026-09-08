@@ -114,7 +114,27 @@ export function evaluate(manifest, read, tracked) {
     if (!existsSync(abs)) continue; // gitlinks and deleted paths: `export:manifest:check` owns that
     const declared = read(abs);
     counts.filesRead += 1;
-    if (!declared) continue; // a file that states nothing cannot contradict anything
+
+    // R3 -- ASKED OF THE PATH, AND ASKED BEFORE THE HEADER IS REQUIRED (finding CLOSE2-B6).
+    //
+    // This rule used to sit below the `if (!declared) continue` on the next line, so it could only
+    // ever see files that state a license. A vendored file with NO SPDX header at all -- and there
+    // are plenty; a header is a convention, not a requirement -- was skipped by "a file that states
+    // nothing cannot contradict anything" and could be published as MIT, original-clean-room, with
+    // nothing to catch it. But the PATH is evidence on its own: source sitting inside a vendored
+    // third-party tree is not this repository's clean-room work whether or not it says so, and this
+    // rule is the one that reads the path rather than the header. It belongs above the skip.
+    if (isVendoredThirdParty(path) && entry.provenance === "original-clean-room") {
+      failures.push({
+        rule: "VENDORED_ENTRY_CLAIMED_AS_CLEAN_ROOM",
+        path,
+        message:
+          `${path}: vendored third-party source published with provenance original-clean-room` +
+          (declared ? "" : " (and the file states no license of its own, which is why the header rules cannot see it)"),
+      });
+    }
+
+    if (!declared) continue; // a file that states nothing cannot contradict THE HEADER RULES below
     counts.spdxDeclared += 1;
     counts.licenses.add(declared.license);
 
@@ -135,16 +155,6 @@ export function evaluate(manifest, read, tracked) {
         rule: "THIRD_PARTY_LICENSE_CLAIMED_AS_CLEAN_ROOM",
         path,
         message: `${path}: declares "${declared.license}" but the manifest claims provenance original-clean-room`,
-      });
-    }
-
-    // R3 -- the same question asked of the path, so a vendored file that happens to be MIT (most of
-    // them are) still cannot be published as this repository's own work.
-    if (isVendoredThirdParty(path) && entry.provenance === "original-clean-room") {
-      failures.push({
-        rule: "VENDORED_ENTRY_CLAIMED_AS_CLEAN_ROOM",
-        path,
-        message: `${path}: vendored third-party source published with provenance original-clean-room`,
       });
     }
 
@@ -320,6 +330,30 @@ if (IS_ENTRY && CONTROLS) {
         for (const f of m.files) delete f.license;
       },
       expect: "ENTRY_MISSING_LICENSE",
+    },
+    {
+      // FINDING CLOSE2-B6. The rule that reads the PATH used to sit BELOW the "a file that states
+      // nothing cannot contradict anything" skip, so a vendored file with no SPDX header at all
+      // could be published as this repository's own clean-room MIT work and nothing looked. This
+      // control removes the header (through the injected reader, so no file on disk is touched) AND
+      // makes the claim, which is the combination that used to pass.
+      name: "a vendored file with NO header of its own is published as this repository's clean-room work",
+      readOverride: () => {
+        const f = base.files.find((x) => isVendoredThirdParty(x.path) && existsSync(join(ROOT, x.path)) && realRead(join(ROOT, x.path)));
+        if (!f) throw new Error("no vendored entry with a readable header; this control has lost its subject");
+        return {
+          subject: f.path,
+          // The file declares NOTHING, exactly as a header-less vendored file does.
+          read: (abs) => (abs === join(ROOT, f.path) ? null : realRead(abs)),
+        };
+      },
+      apply: (m) => {
+        const f = m.files.find((x) => isVendoredThirdParty(x.path) && existsSync(join(ROOT, x.path)) && realRead(join(ROOT, x.path)));
+        f.provenance = "original-clean-room";
+        f.license = "MIT";
+        delete f.licenseSource;
+      },
+      expect: "VENDORED_ENTRY_CLAIMED_AS_CLEAN_ROOM",
     },
     {
       name: "a file's own header moves under a manifest nobody regenerated",

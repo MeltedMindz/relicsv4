@@ -175,7 +175,7 @@
     },
     {
       "path": "NO_PRIVATE_DATA_ATTESTATION.md",
-      "sha256": "da896993608dd44aa6edd174d3b54c933f8155d142352be797285fd54f03183b",
+      "sha256": "4161d6b0c2102cdefbe4421bb14f6df2c5f39928afca76251ebd3a38044d603d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "licenseSource": "repository-license",
@@ -5839,7 +5839,7 @@
     },
     {
       "path": "docs/creator-kit/autonomous-art-creation.md",
-      "sha256": "3f727bffa41b8fa7561dd0d9bcb27e4611c202d753f2c109da3cc0777b838a94",
+      "sha256": "ba0ba2f0516f93cbdf25934b6c31916251c66ac7d11319f73d8244321212c27b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "licenseSource": "repository-license",
@@ -12263,7 +12263,7 @@
     },
     {
       "path": "packages/art-direction/rounds/README.md",
-      "sha256": "878adb21b627d9d9ec0f2c8bb09e2912d61be8be7be5da87475211911119d009",
+      "sha256": "d05a6b242aa8fa7396b466390896a6998bd775d5d90a6e72b3dd185b1c098470",
       "provenance": "original-clean-room",
       "license": "MIT",
       "licenseSource": "repository-license",
@@ -12279,7 +12279,7 @@
     },
     {
       "path": "packages/art-direction/src/acceptance.js",
-      "sha256": "2a1e24f7fcb235f7992e15ee1176eb2e5c573bc01cf5da88fdb424deb3442003",
+      "sha256": "eaddee3b25f4fcfa226111ab9dfb95df674d8742ccf6e513936512aca83288e2",
       "provenance": "original-clean-room",
       "license": "MIT",
       "licenseSource": "spdx-header",
@@ -12431,7 +12431,7 @@
     },
     {
       "path": "packages/art-direction/test/holdout.test.mjs",
-      "sha256": "5e3fb07a3172b1a756c5786b0247e6035fed2dc237a983295c77c31e804adc62",
+      "sha256": "4ddb8529c40bc1632cb9b498c6309c40e23e7d731879bded0d0e7aff46cb0d8a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "licenseSource": "spdx-header",
@@ -15511,7 +15511,7 @@
     },
     {
       "path": "scripts/check-art-receipts.mjs",
-      "sha256": "ac5bd080b269b0a4e6e98fbbff7c39d328f3e297167f92ea5a81ddf11d60e2dd",
+      "sha256": "71cc6656be162a38f41c125b3d31613f46249381429e553008abb3dd6bb6be29",
       "provenance": "original-clean-room",
       "license": "MIT",
       "licenseSource": "spdx-header",
@@ -15583,7 +15583,7 @@
     },
     {
       "path": "scripts/check-manifest-licenses.mjs",
-      "sha256": "0bbcc08317acf4952d4cdbd9a9d41354463af77528dbf945e467f8e6768f4cf8",
+      "sha256": "b79a3cbf8ac675ec058c50f69acb5aaba8a6a92eceee70acec1f5fc5b0c504ee",
       "provenance": "original-clean-room",
       "license": "MIT",
       "licenseSource": "repository-license",

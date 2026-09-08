@@ -5,10 +5,18 @@ contain. It is provided so an independent reviewer can verify the repository is 
 
 ## Attestation
 
-1. **Clean-room construction.** Every source file, script, test, doc, and config in this
-   repository was **written originally** for this starter. The repository was created from an
-   explicit allowlist (`PUBLIC_EXPORT_ALLOWLIST.md`), not by copying a private repository and
-   removing sensitive files.
+1. **Clean-room construction, and it is SCOPED (amended 2026-09-08).** Every source file, script,
+   test, doc, and config **outside `lib/`** was **written originally** for this starter. The
+   repository was created from an explicit allowlist (`PUBLIC_EXPORT_ALLOWLIST.md`), not by copying
+   a private repository and removing sensitive files.
+
+   `lib/` is **695 tracked files of vendored third-party source** (see item 4), some of it BUSL-1.1
+   and AGPL-3.0, and none of it this repository's work. The word "every" used to have no exception
+   beside it; that made a true statement about the template read as a false one about somebody
+   else's code. What is published per file, and what each file states about itself, are compared by
+   `npm run export:manifest:licenses` -- `MANIFEST_FALSE_CLEAN_ROOM_CLAIMS=0` is the measured form
+   of this clause, and it is checked by PATH as well as by header, so a vendored file that carries
+   no license header of its own still cannot be published as clean-room.
 
 2. **No private material.** This repository contains **no** mnemonics, wallet/keystore files,
    `.env` values, API keys, RPC credentials, incident reports, private runbooks, or any private
@@ -64,8 +72,28 @@ bash scripts/secret-scan.sh
 npm run public:review          # prints TEST_KEY_LEAK_LOCATIONS=<n> and every path:line
 docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest dir /repo --config /repo/.gitleaks.toml
 
-# 2) No third-party source is committed (only submodule gitlinks under lib/):
-git ls-files lib | grep -v '^lib/forge-std$' | grep -v '^lib/uniswap-hooks$' || echo "clean"
+# 2) Third-party source IS committed under lib/, and every file of it is DESCRIBED.
+#
+#    RETIRED 2026-09-08. This step used to read "No third-party source is committed (only
+#    submodule gitlinks under lib/)" and expected the pipeline below to print "clean". There is
+#    no `.gitmodules` in this repository, there are zero gitlinks, and the command lists 695
+#    vendored files -- so the recipe published a claim its own output contradicts, and item 4
+#    above (which says the trees are vendored) has said the opposite since 2026-08-07.
+#
+#    Count what is vendored, rather than asserting there is none of it:
+git ls-files lib | wc -l                    # non-zero BY DESIGN; 695 at the time of writing
+#
+#    Then check the claim that actually matters -- that every one of those files is published
+#    with the license IT states about itself, and that none of it is called this repository's
+#    own clean-room work. `export:manifest:check` proves the manifest is CURRENT and says
+#    nothing about whether it is TRUE; this is the comparison that reads both sides:
+npm run export:manifest:licenses            # MANIFEST_LICENSE_DISAGREEMENTS=0
+                                            # MANIFEST_FALSE_CLEAN_ROOM_CLAIMS=0
+npm run export:manifest:licenses:controls   # and the checker, watched failing 10 ways
+#
+#    Note Uniswap v4-core BUSL-1.1 and solmate AGPL-3.0 in THIRD_PARTY_NOTICES.md. The
+#    clean-room claim in item 1 is about `src/`, `apps/`, `script/`, `test/`, `scripts/`,
+#    `packages/` and `docs/` -- never about `lib/`.
 
 # 3) Everything builds and tests from the checked-in sources:
 forge build && forge test

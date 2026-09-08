@@ -43,13 +43,14 @@
 // final verdict and no receipt is a failure rather than a smaller denominator.
 // ================================================================================================
 
-import { cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { ART_ACCEPTANCE_PATH, verifyVerdictBinding, acceptanceFlags } from "../packages/art-direction/src/acceptance.js";
+import { ART_ACCEPTANCE_PATH, verifyArtAcceptance, verifyVerdictBinding, acceptanceFlags } from "../packages/art-direction/src/acceptance.js";
 import { ACCEPTANCE_PATH, verifyVerdictDocumentBinding } from "../packages/art-review/src/receipt.js";
 import { AUTHOR_VISIBLE_ROOTS, roundIntegrityForSeeds, readRoundRegistry, scanAuthorVisibleSourceForHoldout } from "../packages/art-direction/src/holdout.js";
 import { holdoutSeedsDigest } from "../packages/art-direction/src/seeds.js";
@@ -84,14 +85,66 @@ export function discoverCases(root = ROOT) {
       const receipt = join(cd, ART_ACCEPTANCE_PATH);
       const verdict = join(cd, "final-review", "verdict.json");
       if (!existsSync(receipt) && !existsSync(verdict)) continue;
-      cases.push({ id: `${round}/${entry}`, dir: cd, receipt, verdict });
+      cases.push({ id: `${round}/${entry}`, round, roundDir: rd, caseId: entry, dir: cd, receipt, verdict });
     }
   }
   return cases;
 }
 
+// ------------------------------------------------------------------------------------------------
+// THE ANCHOR OUTSIDE THE CASE DIRECTORY  (finding CLOSE2-B5)
+//
+// Every check below the verdict binding compares the receipt to files the receipt itself names and
+// pins. That is a closed set, and a closed set can be made consistent: flipping
+// `final-review/verdict.json` to PASS, flipping the receipt's `finalReview.verdict` to match, and
+// updating the sha256 the receipt pinned is THREE edits in TWO files, and it moved the published
+// benchmark result from 0/12 to 1/12 with every gate green and `verifyArtAcceptance` -- the
+// launch-path function -- returning accepted:true. Reproduced before this was written.
+//
+// So the verdict is anchored to two things the receipt cannot restate:
+//
+//   THE ROUND RECORD  `artifacts/<round>/report.json` is written by the benchmark harness, once per
+//     round, over all twelve cases. It carries each case's verdict AND the round tally, and the
+//     tally is the number the findings document publishes. A forger must now also move the row, the
+//     tally, and the published prose -- and the tally is re-derived from the REVIEWERS' OWN
+//     documents rather than from the receipts, so the receipts cannot vote on it.
+//
+//   GIT  the review artifacts must be TRACKED and UNMODIFIED. A receipt is evidence about a review
+//     that happened; a verdict document edited in the working tree is not that. This is the anchor
+//     the description attack has to cross, because `description.json` appears in no round record.
+//     Git unavailable is reported as a NON-MEASUREMENT and fails; it is never a pass.
+//
+// WHAT THIS STILL DOES NOT REACH, stated rather than implied: a wholesale rewrite of the receipt,
+// the reviewer's document, the round report, the findings prose and the git history is a forgery of
+// the whole review record, and no artifact set inside one repository can refuse it. What it can no
+// longer be is a two-file edit that nothing notices.
+// ------------------------------------------------------------------------------------------------
+
+/** `BLIND_PASS = 0/12` / `| `BLIND_PASS` | 0/12 |` — the published number, wherever the round states it. */
+const BLIND_PASS_STATED = /BLIND_PASS`?\**\s*(?:=|\|)\s*\**`?(\d+)\s*\/\s*(\d+)/g;
+
+/** Load one round's out-of-case anchors: the harness's report and the published findings prose. */
+export function readRoundAnchors(roundDir) {
+  const reportPath = join(roundDir, "report.json");
+  let report = null;
+  let reportError = null;
+  if (existsSync(reportPath)) {
+    try { report = readJson(reportPath); }
+    catch (err) { reportError = err.message; }
+  }
+  const docs = [];
+  for (const name of readdirSync(roundDir).sort()) {
+    if (!name.endsWith(".md")) continue;
+    const abs = join(roundDir, name);
+    const text = readFileSync(abs, "utf8");
+    const stated = [...text.matchAll(BLIND_PASS_STATED)].map((m) => ({ pass: Number(m[1]), total: Number(m[2]) }));
+    if (stated.length) docs.push({ path: abs, stated });
+  }
+  return { reportPath, report, reportError, docs };
+}
+
 /** Verify one receipt against everything it names. Returns a list of problems; empty is a pass. */
-export function verifyCase(c) {
+export function verifyCase(c, anchors = null) {
   const problems = [];
   const fail = (code, detail) => problems.push({ code, detail });
 
@@ -212,6 +265,69 @@ export function verifyCase(c) {
     }
   }
 
+  // ---- 6b. THE VERDICT IS ANCHORED OUTSIDE THIS DIRECTORY (finding CLOSE2-B5) ------------------
+  //
+  // The authority for the comparison is the REVIEWER'S DOCUMENT, not the receipt: `bound.document`
+  // is the parsed `final-review/verdict.json` the binding check just re-read and re-hashed. Using
+  // the receipt's own copy here would put the forger on both sides of the comparison again.
+  if (anchors) {
+    const documentVerdict = bound.ok ? bound.document?.[r.finalReview?.verdictDocument?.verdictField ?? "verdict"] : undefined;
+    if (anchors.reportError) {
+      fail("ROUND_REPORT_UNREADABLE", `${c.id}: ${relative(ROOT, anchors.reportPath)} did not parse (${anchors.reportError}), so this verdict has no anchor outside its own directory.`);
+    } else if (!anchors.report) {
+      fail(
+        "ROUND_REPORT_MISSING",
+        `${c.id}: there is no ${relative(ROOT, anchors.reportPath)}. Every check on this receipt would then compare it only ` +
+        "to files it names itself, which is a closed set a forger can make consistent.",
+      );
+    } else {
+      const rows = Array.isArray(anchors.report.rows) ? anchors.report.rows : [];
+      const row = rows.find((x) => x?.id === c.caseId);
+      if (!row) {
+        fail("VERDICT_UNANCHORED", `${c.id}: the round report lists no row for ${c.caseId}, so its verdict rests on nothing outside its own directory.`);
+      } else {
+        if (documentVerdict !== undefined && row.verdict !== documentVerdict) {
+          fail(
+            "VERDICT_DISAGREES_WITH_ROUND_REPORT",
+            `${c.id}: the reviewer's own document says ${JSON.stringify(documentVerdict)} and the round report says ` +
+            `${JSON.stringify(row.verdict)}. One of them was edited; the receipt does not get to decide which.`,
+          );
+        }
+        if (r.finalReview?.reviewerId && row.reviewerId && row.reviewerId !== r.finalReview.reviewerId) {
+          fail("VERDICT_DISAGREES_WITH_ROUND_REPORT", `${c.id}: the receipt names reviewer ${JSON.stringify(r.finalReview.reviewerId)} and the round report names ${JSON.stringify(row.reviewerId)}.`);
+        }
+        if (row.acceptedConfigHash && r.acceptedConfigHash && row.acceptedConfigHash !== r.acceptedConfigHash) {
+          fail("VERDICT_DISAGREES_WITH_ROUND_REPORT", `${c.id}: the round report recorded acceptedConfigHash ${String(row.acceptedConfigHash).slice(0, 12)} and the receipt carries ${String(r.acceptedConfigHash).slice(0, 12)}.`);
+        }
+      }
+    }
+  }
+
+  // ---- 6c. THE LAUNCH-PATH FUNCTION ITSELF, RUN WITH THE ANCHOR --------------------------------
+  //
+  // `verifyArtAcceptance` is what an autonomous agent's launch consults, and under the CLOSE2-B5
+  // attack it returned accepted:true. Running it HERE, with the round record supplied, is the
+  // difference between a gate that reports a defect and a gate that exercises the function the
+  // defect was in.
+  if (anchors?.report) {
+    const row = (Array.isArray(anchors.report.rows) ? anchors.report.rows : []).find((x) => x?.id === c.caseId);
+    if (row) {
+      const verdictNow = verifyArtAcceptance(c.dir, {
+        externalVerdict: { verdict: row.verdict, reviewerId: row.reviewerId, source: relative(ROOT, anchors.reportPath) },
+      });
+      if (verdictNow.externalAnchor !== "CHECKED") {
+        fail("LAUNCH_PATH_ANCHOR_NOT_CONSULTED", `${c.id}: verifyArtAcceptance reported externalAnchor=${JSON.stringify(verdictNow.externalAnchor)} while an external record was supplied.`);
+      }
+      if (verdictNow.reasonCode === "FINAL_REVIEW_VERDICT_CONTRADICTS_EXTERNAL_RECORD") {
+        fail("LAUNCH_PATH_VERDICT_CONTRADICTS_ROUND_RECORD", `${c.id}: ${verdictNow.detail}`);
+      }
+      // A PASS verdict the round did not record is the whole attack, arriving through the launch path.
+      if (verdictNow.accepted === true && row.verdict !== "PASS") {
+        fail("LAUNCH_PATH_ACCEPTS_A_VERDICT_THE_ROUND_DID_NOT_RECORD", `${c.id}: verifyArtAcceptance returned accepted:true while ${relative(ROOT, anchors.reportPath)} records ${JSON.stringify(row.verdict)}.`);
+      }
+    }
+  }
+
   // ---- 7. THE PUBLISHED FLAGS AGREE WITH THE RECEIPT -------------------------------------------
   const flags = acceptanceFlags(c.dir);
   if (flags.FINAL_REVIEW_SEEDS_VISIBLE_DURING_AUTHORING === "NO" && r.seedGroups?.holdoutIntegrity !== "HELD") {
@@ -258,6 +374,132 @@ export function liveLeakScan(cases, root = ROOT) {
   return { ok: problems.length === 0, problems, scannedFiles, occurrences, seedSets: sets.size };
 }
 
+/**
+ * THE ROUND TALLY, RE-DERIVED FROM THE REVIEWERS' OWN DOCUMENTS (finding CLOSE2-B5).
+ *
+ * `blindPass` is the number this project publishes. It is checked against the verdicts read out of
+ * `final-review/verdict.json` -- never out of the receipts -- so a receipt cannot vote on the
+ * aggregate that anchors it, and flipping one case now contradicts the round.
+ */
+export function checkRoundTallies(cases, root = ROOT) {
+  const problems = [];
+  let checks = 0;
+  const byRound = new Map();
+  for (const c of cases) {
+    if (!byRound.has(c.round)) byRound.set(c.round, []);
+    byRound.get(c.round).push(c);
+  }
+  for (const [round, members] of [...byRound.entries()].sort()) {
+    const anchors = readRoundAnchors(members[0].roundDir);
+    if (!anchors.report) continue; // reported per case as ROUND_REPORT_MISSING
+    let derivedPass = 0;
+    let readable = 0;
+    for (const c of members) {
+      if (!existsSync(c.verdict)) continue;
+      try {
+        const v = readJson(c.verdict);
+        readable += 1;
+        if (v?.verdict === "PASS") derivedPass += 1;
+      } catch { /* an unparseable verdict document is already a per-case failure */ }
+    }
+    checks += 1;
+    if (readable === 0) {
+      problems.push({ code: "ROUND_TALLY_UNVERIFIABLE", detail: `${round}: no reviewer document in the round could be read, so the published tally is anchored to nothing.` });
+      continue;
+    }
+    if (Number(anchors.report.blindPass) !== derivedPass) {
+      problems.push({
+        code: "ROUND_TALLY_DISAGREES_WITH_REVIEWER_DOCUMENTS",
+        detail:
+          `${round}: ${relative(root, anchors.reportPath)} publishes blindPass=${anchors.report.blindPass} and the reviewers' own ` +
+          `documents give ${derivedPass} of ${readable}. A verdict flipped in one case directory contradicts the round it belongs to.`,
+      });
+    }
+    // THE DENOMINATOR IS THE ROUND'S BRIEFS, NOT ITS CASE DIRECTORIES. Round 3 carries twelve briefs
+    // and eleven case directories: B11 was refused at ADMISSION and never reviewed, so it has a row
+    // and no evidence directory, by design. Using the directory count here reported a false drift on
+    // a correct tree the first time this was run -- which is the shape of finding a gate is supposed
+    // to avoid, not produce.
+    const rows = Array.isArray(anchors.report.rows) ? anchors.report.rows : [];
+    checks += 1;
+    if (Number(anchors.report.total) !== rows.length) {
+      problems.push({
+        code: "ROUND_TALLY_DISAGREES_WITH_REVIEWER_DOCUMENTS",
+        detail: `${round}: the report says total=${anchors.report.total} and carries ${rows.length} row(s).`,
+      });
+    }
+    // The forward direction: a row claiming a REVIEW must have the evidence directory that review
+    // produced. A row refused at admission never had one and does not claim a verdict.
+    const onDisk = new Set(members.map((c) => c.caseId));
+    for (const row of rows) {
+      if (row?.outcome !== "ADMITTED") continue;
+      checks += 1;
+      if (!onDisk.has(row.id)) {
+        problems.push({
+          code: "ROUND_REPORT_ROW_WITHOUT_EVIDENCE",
+          detail: `${round}: the report records ${row.id} as ADMITTED with verdict ${JSON.stringify(row.verdict)} and there is no case directory for it.`,
+        });
+      }
+    }
+    for (const doc of anchors.docs) {
+      for (const stated of doc.stated) {
+        checks += 1;
+        if (stated.pass !== derivedPass || stated.total !== Number(anchors.report.total)) {
+          problems.push({
+            code: "PUBLISHED_BLIND_PASS_DISAGREES_WITH_THE_REVIEWER_DOCUMENTS",
+            detail:
+              `${relative(root, doc.path)} publishes BLIND_PASS = ${stated.pass}/${stated.total} and the reviewers' documents give ` +
+              `${derivedPass}/${anchors.report.total}. The published number and the evidence must move together or neither is evidence.`,
+          });
+        }
+      }
+    }
+  }
+  return { problems, checks };
+}
+
+/**
+ * THE REVIEW ARTIFACTS MUST BE TRACKED AND UNMODIFIED (finding CLOSE2-B5).
+ *
+ * `description.json` appears in no round record, so the cross-artifact anchor above cannot reach the
+ * description attack. This can: a receipt is evidence about a review that HAPPENED, and a reviewer's
+ * document edited in the working tree -- however consistently the receipt's pin was updated beside
+ * it -- is not that. Git is the one authority in this repository that a receipt cannot restate.
+ *
+ * A repository git cannot read is a NON-MEASUREMENT and fails. It is never a pass.
+ */
+export function checkReviewArtifactProvenance(cases, root = ROOT) {
+  const problems = [];
+  const paths = [];
+  for (const c of cases) {
+    for (const p of [c.receipt, c.verdict, join(c.dir, "final-review", "description.json")]) {
+      if (existsSync(p)) paths.push(relative(root, p));
+    }
+  }
+  if (paths.length === 0) return { problems, checked: 0, status: "NO_ARTIFACTS" };
+
+  const status = spawnSync("git", ["status", "--porcelain", "--", ...paths], { cwd: root, encoding: "utf8", timeout: 120_000, maxBuffer: 32 * 1024 * 1024 });
+  if (status.status !== 0 || typeof status.stdout !== "string") {
+    problems.push({
+      code: "GIT_PROVENANCE_UNAVAILABLE",
+      detail:
+        `\`git status\` could not be run over the review artifacts (${(status.stderr ?? "").trim() || `exit ${status.status}`}). ` +
+        "Their provenance is therefore UNMEASURED, and an unmeasured check is not a passing one.",
+    });
+    return { problems, checked: paths.length, status: "UNAVAILABLE" };
+  }
+  for (const line of status.stdout.split("\n").map((l) => l.trim()).filter(Boolean)) {
+    problems.push({
+      code: "REVIEW_ARTIFACT_NOT_COMMITTED",
+      detail:
+        `${line} — a review artifact is modified or untracked in the working tree. A receipt records a review that happened; ` +
+        "an edited reviewer document with the receipt's pin updated beside it is exactly the forgery a self-contained artifact " +
+        "set cannot refuse, and this is the anchor it has to cross.",
+    });
+  }
+  return { problems, checked: paths.length, status: "MEASURED" };
+}
+
 function evaluate(root = ROOT) {
   const failures = [];
   const cases = discoverCases(root);
@@ -271,8 +513,20 @@ function evaluate(root = ROOT) {
     });
   }
 
-  const results = cases.map((c) => verifyCase(c));
+  const anchorsByRound = new Map();
+  for (const c of cases) {
+    if (!anchorsByRound.has(c.round)) anchorsByRound.set(c.round, readRoundAnchors(c.roundDir));
+  }
+  const results = cases.map((c) => verifyCase(c, anchorsByRound.get(c.round) ?? null));
   for (const res of results) for (const p of res.problems) failures.push(p);
+
+  const tallies = checkRoundTallies(cases, root);
+  for (const p of tallies.problems) failures.push(p);
+
+  // Git provenance is a statement about THIS repository; a temporary control tree is not one and is
+  // correctly reported as not measured there rather than silently passing.
+  const provenance = root === ROOT ? checkReviewArtifactProvenance(cases, root) : { problems: [], checked: 0, status: "NOT_THIS_REPOSITORY" };
+  for (const p of provenance.problems) failures.push(p);
 
   const leak = liveLeakScan(cases, root);
   for (const p of leak.problems) failures.push(p);
@@ -281,7 +535,7 @@ function evaluate(root = ROOT) {
   try { registryRounds = readRoundRegistry().rounds.length; }
   catch (err) { failures.push({ code: "ROUND_REGISTRY_UNREADABLE", detail: err.message }); }
 
-  return { failures, cases, results, leak, registryRounds, withReceipts: withReceipts.length };
+  return { failures, cases, results, leak, registryRounds, withReceipts: withReceipts.length, tallies, provenance };
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -297,7 +551,11 @@ function runControls() {
   if (!donor) { console.error("CONTROLS_HAVE_NO_DONOR_CASE: there is no committed receipt to mutate."); process.exit(1); }
 
   const results = [];
-  const withCopy = (label, expect, mutate) => {
+  // The donor's OWN round anchors travel with the copy, so every control is scored against the same
+  // out-of-case record the real run uses (finding CLOSE2-B5). Without them `verifyCase` would run
+  // with `anchors: null` and the new rules would be silently absent from every control.
+  const donorAnchors = readRoundAnchors(donor.roundDir);
+  const withCopy = (label, expect, mutate, opts = {}) => {
     const tmp = mkdtempSync(join(tmpdir(), "art-receipt-control-"));
     try {
       const dir = join(tmp, "case");
@@ -306,7 +564,10 @@ function runControls() {
       mutate(dir);
       const after = existsSync(join(dir, ART_ACCEPTANCE_PATH)) ? readFileSync(join(dir, ART_ACCEPTANCE_PATH), "utf8") : "";
       const touchedReceipt = before !== after;
-      const res = verifyCase({ id: label, dir, receipt: join(dir, ART_ACCEPTANCE_PATH), verdict: join(dir, "final-review", "verdict.json") });
+      const res = verifyCase(
+        { id: label, round: donor.round, roundDir: donor.roundDir, caseId: donor.caseId, dir, receipt: join(dir, ART_ACCEPTANCE_PATH), verdict: join(dir, "final-review", "verdict.json") },
+        opts.anchors === undefined ? donorAnchors : opts.anchors,
+      );
       const caught = res.problems.some((p) => p.code === expect);
       results.push({ control: label, expect, caught, mutationApplied: touchedReceipt || true, got: res.problems.map((p) => p.code) });
     } finally { rmSync(tmp, { recursive: true, force: true }); }
@@ -356,6 +617,111 @@ function runControls() {
     rmSync(join(dir, `round-${withFindings.round}`, "critique.json"));
   });
 
+  // ---- CLOSE2-B5: THE ATTACK THAT WORKED, AND THE ANCHOR THAT NOW STOPS IT --------------------
+  //
+  // C2 above flips the verdict in the receipt AND the reviewer's document and is caught only
+  // because the receipt's PINNED DIGEST no longer matches. Update the pin too and every check
+  // inside the case directory agrees: that is three edits in two files, it moved the published
+  // benchmark result from 0/12 to 1/12, and `verifyArtAcceptance` returned accepted:true.
+  withCopy("C12 the verdict is flipped in the receipt, the document AND the pin", "VERDICT_DISAGREES_WITH_ROUND_REPORT", (dir) => {
+    const vp = join(dir, "final-review", "verdict.json");
+    const v = JSON.parse(readFileSync(vp, "utf8"));
+    v.verdict = "PASS";
+    const bytes = `${JSON.stringify(v, null, 2)}\n`;
+    writeFileSync(vp, bytes);
+    patchReceipt(dir, (r) => {
+      r.finalReview.verdict = "PASS";
+      r.finalReview.verdictDocument.sha256 = sha256(Buffer.from(bytes));
+    });
+  });
+
+  // And the anchor must be REQUIRED, not merely consulted where it happens to exist.
+  withCopy("C13 the round record is missing entirely", "ROUND_REPORT_MISSING", () => {}, { anchors: { reportPath: join(donor.roundDir, "report.json"), report: null, reportError: null, docs: [] } });
+
+  // C14 — the DESCRIPTION attack. `description.json` appears in no round record, so the
+  // cross-artifact anchor cannot reach it: edit the description and recompute the receipt's pinned
+  // hash with the gate's OWN algorithm and DESCRIPTION_ALTERED does not fire. Git is what catches
+  // it. Proved in an ISOLATED repository so the real tree is never touched.
+  {
+    const gitRoot = mkdtempSync(join(tmpdir(), "art-receipt-git-"));
+    try {
+      const caseDir = join(gitRoot, "artifacts", donor.round, donor.caseId);
+      mkdirSync(dirname(caseDir), { recursive: true });
+      cpSync(donor.dir, caseDir, { recursive: true });
+      const git = (...args) => spawnSync("git", args, { cwd: gitRoot, encoding: "utf8" });
+      git("init", "-q");
+      git("-c", "user.email=control@example.invalid", "-c", "user.name=control", "add", "-A");
+      git("-c", "user.email=control@example.invalid", "-c", "user.name=control", "commit", "-q", "-m", "control");
+      const cases = [{ dir: caseDir, receipt: join(caseDir, ART_ACCEPTANCE_PATH), verdict: join(caseDir, "final-review", "verdict.json") }];
+
+      const clean = checkReviewArtifactProvenance(cases, gitRoot);
+      results.push({
+        control: "C14a a committed, unmodified review record is clean",
+        expect: "no problems",
+        caught: clean.problems.length === 0 && clean.status === "MEASURED" && clean.checked >= 3,
+        got: clean.problems.map((p) => p.code),
+      });
+
+      const dp = join(caseDir, "final-review", "description.json");
+      const d = JSON.parse(readFileSync(dp, "utf8"));
+      d.description = "a blind description the reviewer never wrote";
+      writeFileSync(dp, `${JSON.stringify(d, null, 2)}\n`);
+      const rp = join(caseDir, ART_ACCEPTANCE_PATH);
+      const rec = JSON.parse(readFileSync(rp, "utf8"));
+      // The pin, recomputed with the GATE'S OWN algorithm -- so DESCRIPTION_ALTERED cannot fire and
+      // only the anchor outside the receipt is left to catch this.
+      rec.finalReview.visualDescriptionHash = createHash("sha256").update(JSON.stringify(readJson(dp))).digest("hex");
+      writeFileSync(rp, `${JSON.stringify(rec, null, 2)}\n`);
+
+      const selfConsistent = verifyCase({ id: "C14", round: donor.round, roundDir: donor.roundDir, caseId: donor.caseId, dir: caseDir, receipt: rp, verdict: join(caseDir, "final-review", "verdict.json") }, donorAnchors);
+      const dirty = checkReviewArtifactProvenance(cases, gitRoot);
+      results.push({
+        control: "C14 the description is rewritten and the receipt's pin updated consistently",
+        expect: "REVIEW_ARTIFACT_NOT_COMMITTED",
+        caught:
+          dirty.problems.some((p) => p.code === "REVIEW_ARTIFACT_NOT_COMMITTED") &&
+          // AND the point of the control: the in-case checks do NOT catch it, so the anchor is
+          // load-bearing rather than redundant.
+          !selfConsistent.problems.some((p) => p.code === "DESCRIPTION_ALTERED"),
+        got: [...dirty.problems.map((p) => p.code), ...selfConsistent.problems.map((p) => `in-case:${p.code}`)],
+      });
+
+      const unreadable = checkReviewArtifactProvenance(cases, join(gitRoot, "not-a-repository"));
+      results.push({
+        control: "C15 an unreadable repository is a NON-MEASUREMENT, never a pass",
+        expect: "GIT_PROVENANCE_UNAVAILABLE",
+        caught: unreadable.problems.some((p) => p.code === "GIT_PROVENANCE_UNAVAILABLE") || unreadable.status !== "MEASURED",
+        got: [unreadable.status, ...unreadable.problems.map((p) => p.code)],
+      });
+    } finally { rmSync(gitRoot, { recursive: true, force: true }); }
+  }
+
+  // C16 — the round tally must contradict a flipped verdict even with the case directory perfect.
+  {
+    const donorRoundCases = discoverCases().filter((c) => c.round === donor.round);
+    const tallyRoot = mkdtempSync(join(tmpdir(), "art-receipt-tally-"));
+    try {
+      cpSync(join(ROOT, "artifacts", donor.round), join(tallyRoot, "artifacts", donor.round), { recursive: true });
+      const copied = donorRoundCases.map((c) => ({ ...c, roundDir: join(tallyRoot, "artifacts", donor.round), dir: join(tallyRoot, "artifacts", donor.round, c.caseId), verdict: join(tallyRoot, "artifacts", donor.round, c.caseId, "final-review", "verdict.json"), receipt: join(tallyRoot, "artifacts", donor.round, c.caseId, ART_ACCEPTANCE_PATH) }));
+      const baseline = checkRoundTallies(copied, tallyRoot);
+      const vp = copied[0].verdict;
+      const v = JSON.parse(readFileSync(vp, "utf8"));
+      v.verdict = "PASS";
+      writeFileSync(vp, `${JSON.stringify(v, null, 2)}\n`);
+      const mutated = checkRoundTallies(copied, tallyRoot);
+      results.push({
+        control: "C16 one flipped reviewer document contradicts the round tally and the published number",
+        expect: "ROUND_TALLY_DISAGREES_WITH_REVIEWER_DOCUMENTS",
+        caught:
+          baseline.problems.length === 0 &&
+          baseline.checks > 0 &&
+          mutated.problems.some((p) => p.code === "ROUND_TALLY_DISAGREES_WITH_REVIEWER_DOCUMENTS") &&
+          mutated.problems.some((p) => p.code === "PUBLISHED_BLIND_PASS_DISAGREES_WITH_THE_REVIEWER_DOCUMENTS"),
+        got: [`baseline:${baseline.problems.length}`, ...mutated.problems.map((p) => p.code)],
+      });
+    } finally { rmSync(tallyRoot, { recursive: true, force: true }); }
+  }
+
   // C10 — the input floor. An empty artifacts tree must FAIL rather than report a clean sweep.
   const emptyRoot = mkdtempSync(join(tmpdir(), "art-receipt-empty-"));
   const floor = evaluate(emptyRoot);
@@ -392,7 +758,7 @@ function runControls() {
 
 if (CONTROLS) runControls();
 
-const { failures, cases, results, leak, registryRounds, withReceipts } = evaluate();
+const { failures, cases, results, leak, registryRounds, withReceipts, tallies, provenance } = evaluate();
 const pass = failures.length === 0;
 
 if (JSON_OUT) {
@@ -403,6 +769,10 @@ if (JSON_OUT) {
     HOLDOUT_LEAKS_IN_AUTHOR_VISIBLE_SOURCE: leak.occurrences.length,
     AUTHOR_VISIBLE_FILES_SCANNED: leak.scannedFiles,
     HOLDOUT_ROUNDS_REGISTERED: registryRounds,
+    VERDICT_ANCHORED_OUTSIDE_THE_CASE_DIRECTORY: pass ? "YES" : "NO",
+    ROUND_ANCHOR_CHECKS: tallies.checks,
+    REVIEW_ARTIFACT_GIT_PROVENANCE: provenance.status,
+    REVIEW_ARTIFACTS_PROVENANCE_CHECKED: provenance.checked,
     failures,
   }, null, 2));
 } else {
@@ -417,5 +787,9 @@ if (JSON_OUT) {
   console.log(`HOLDOUT_LEAKS_IN_AUTHOR_VISIBLE_SOURCE=${leak.occurrences.length}`);
   console.log(`AUTHOR_VISIBLE_FILES_SCANNED=${leak.scannedFiles}`);
   console.log(`HOLDOUT_ROUNDS_REGISTERED=${registryRounds}`);
+  console.log(`VERDICT_ANCHORED_OUTSIDE_THE_CASE_DIRECTORY=${pass ? "YES" : "NO"}`);
+  console.log(`ROUND_ANCHOR_CHECKS=${tallies.checks}`);
+  console.log(`REVIEW_ARTIFACT_GIT_PROVENANCE=${provenance.status}`);
+  console.log(`REVIEW_ARTIFACTS_PROVENANCE_CHECKED=${provenance.checked}`);
 }
 process.exit(pass ? 0 : 1);

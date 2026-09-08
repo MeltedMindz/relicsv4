@@ -224,6 +224,73 @@ test("the two completed benchmark rounds are recorded COMPROMISED, and one holdo
   assert.ok(integrity.compromise.evidence.length >= 2);
 });
 
+/**
+ * Per ROUND DIRECTORY, not deduplicated. `completedRoundSeedSets()` is keyed by seed digest, so the
+ * two rounds that share a holdout collapse to one entry there -- which is correct for its own
+ * purpose and is exactly the shape that makes "12 of 12 shared" impossible to state.
+ */
+function seedSetsByRoundDirectory() {
+  const artifacts = join(ROOT, "artifacts");
+  const rounds = new Map();
+  if (!existsSync(artifacts)) return rounds;
+  for (const round of readdirSync(artifacts).sort()) {
+    const rd = join(artifacts, round);
+    if (!statSync(rd).isDirectory()) continue;
+    for (const entry of readdirSync(rd).sort()) {
+      const p = join(rd, entry, ".relics-agent", "receipts", "art-acceptance.json");
+      if (!existsSync(p)) continue;
+      const seeds = JSON.parse(readFileSync(p, "utf8"))?.finalReview?.seeds;
+      if (!Array.isArray(seeds) || !seeds.length) continue;
+      const digest = holdoutSeedsDigest(seeds);
+      if (!rounds.has(round)) rounds.set(round, { digests: new Set(), seeds });
+      rounds.get(round).digests.add(digest);
+    }
+  }
+  return rounds;
+}
+
+test("THREE ROUNDS, TWO HOLDOUT SETS: the two COMPROMISED rounds share ALL TWELVE seeds", () => {
+  // FINDING CLOSE2-B6. "Overlap is 0" is a statement about the two SETS. A summary that counts
+  // ROUNDS turns it into "overlap 0 across three rounds", which is the opposite of what happened
+  // between rounds one and two: they are the same twelve seeds, byte for byte. Both halves are
+  // asserted here so neither can be quoted without the other -- and the count is taken PER ROUND
+  // DIRECTORY, because the digest-keyed view collapses the very rounds whose reuse is the point.
+  const byRound = seedSetsByRoundDirectory();
+  assert.ok(byRound.size >= 3, `at least three completed rounds are on disk; found ${byRound.size}`);
+  for (const [round, info] of byRound) assert.equal(info.digests.size, 1, `${round} must use ONE holdout across its cases`);
+
+  const digestOf = (round) => [...byRound.get(round).digests][0];
+  const distinct = new Set([...byRound.keys()].map(digestOf));
+  assert.equal(distinct.size, 2, `three rounds, TWO distinct holdout sets; got ${distinct.size}. The zero-overlap claim is about the SETS.`);
+
+  // Group the rounds by the holdout they used, and require one group of two and one of one.
+  const groups = new Map();
+  for (const round of byRound.keys()) {
+    const d = digestOf(round);
+    if (!groups.has(d)) groups.set(d, []);
+    groups.get(d).push(round);
+  }
+  const sizes = [...groups.values()].map((g) => g.length).sort();
+  assert.deepEqual(sizes, [1, 2], `one holdout served two rounds and one served one; got groups of ${sizes.join("+")}`);
+
+  const reusedDigest = [...groups.entries()].find(([, g]) => g.length === 2)[0];
+  const freshDigest = [...groups.entries()].find(([, g]) => g.length === 1)[0];
+  const [r1, r2] = groups.get(reusedDigest);
+  const a = byRound.get(r1).seeds;
+  const b = byRound.get(r2).seeds;
+  assert.equal(a.length, 12, "a benchmark round is twelve seeds");
+  const bs = new Set(b);
+  assert.equal(a.filter((seed) => bs.has(seed)).length, a.length, `${r1} and ${r2} share every seed -- that is the reuse, and it is 12 of 12, not zero`);
+
+  // And the zero, in the direction it is actually true in.
+  const fresh = byRound.get(groups.get(freshDigest)[0]).seeds;
+  const fs = new Set(fresh);
+  assert.equal(a.filter((seed) => fs.has(seed)).length, 0, "the fresh holdout overlaps the reused one by zero seeds");
+  // The rounds recorded COMPROMISED are exactly the two that shared, and the fresh one is HELD.
+  assert.equal(roundIntegrityForSeeds(a).integrity, "COMPROMISED");
+  assert.equal(roundIntegrityForSeeds(fresh).integrity, "HELD");
+});
+
 test("A ROUND RECORDED HELD SHARES NO SEED WITH A ROUND RECORDED COMPROMISED", () => {
   // THE PROPERTY THE COUNT USED TO IMPLY, ASSERTED DIRECTLY AND OVER EVERY PAIR. A fresh round whose
   // holdout overlapped a round the author had already been exposed to would be a fresh round in name

@@ -55,6 +55,13 @@ Round three's holdout was committed to before the first author run, derived from
 this repository, and overlaps the earlier set by zero seeds — structurally, since the two
 derivations draw from disjoint ranges. It scored 0/12 as well.
 
+**THREE ROUNDS, TWO HOLDOUT SETS — and the zero overlap is between the two SETS, never "across
+three rounds".** Rounds one and two share **all twelve seeds, byte for byte**: that is the reuse,
+it is why they hold ONE registry entry rather than two, and it is exactly the fact a summary loses
+when it counts rounds instead of sets. There are three rounds and three receipts per case, and
+there are only two distinct holdouts. Both facts are re-derived from the committed receipts by
+`packages/art-direction/test/holdout.test.mjs` rather than read out of a sentence.
+
 The round-three refusals are specific and they are worth reading rather than summarising: seven of
 eleven independently reached for the same word for what they were looking at, before any of them
 had read a line of the brief. The findings are in
@@ -127,7 +134,9 @@ npm run kit:artauthority     # the three statuses, proved by execution — 12 ca
 npm run kit:boundary         # no document claims more than the above
 npm run kit:boundary:controls # that gate can both catch and allow
 npm run kit:artreview        # the review loop's own gate
-npm run kit:artreceipts      # every committed receipt, re-verified
+npm run kit:artreceipts      # every committed receipt, re-verified — against the round record and
+                             # git, not only against the files it names itself
+npm run kit:artreceipts:controls # 17 controls, including the three-edit forgery that used to pass
 npm run e2e:autonomous       # the production path, end to end, on a local fork
 ```
 
