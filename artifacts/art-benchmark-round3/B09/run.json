@@ -2,7 +2,7 @@
   "briefId": "B09",
   "axis": "monumental",
   "title": "BARROW",
-  "phase": "AUTHORED",
+  "phase": "AWAITING_FINAL_REVIEW",
   "objectiveBlockers": [],
   "briefSha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
   "admission": {
@@ -900,5 +900,76 @@
         "seedDeMin": 6.42
       }
     }
-  ]
+  ],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-round-3",
+    "seedsDigest": "e853e3b42776348c628d06378005087297e40d14a96df0210b2ea4b6edee4c8d",
+    "reviewerPromptSha256": "5f0430c0e39c75c071d81186e5aedc80b1eb5c38192579bab52c2276d3e1380b",
+    "seeds": [
+      1203347,
+      1243682,
+      1283437,
+      1310661,
+      1366079,
+      1446330,
+      1475115,
+      1561509,
+      1733538,
+      1835793,
+      1985692,
+      1991107
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "959431bfbacfc42bd11bdd02f7c06762719f7c9488fdb58436b4a9d233d586ca",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "bb769379351055a765e18776f6a2cb19ca0f96d18cd7ac87c10540f880de66dd",
+        "bytes": 309918
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "e397b0b282fd31f247977765bf174b6c0d05c203f1701b58062542707b207e5b",
+        "bytes": 122947
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "38e9f3b07c3e30026cae35d827e528785b652e51d65cc2a3904ca4f6affc3e2c",
+        "bytes": 427605
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "1797e0b3ad9ccd39045b8557b763c86fd97bdf18b490e422f048c4d94044801f",
+        "bytes": 165377
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "f956f62c8685789825b511d8f3d834d03ade2eb10aef766159c5a09086a85694",
+        "bytes": 72933
+      }
+    ],
+    "inputHashes": [
+      "bb769379351055a765e18776f6a2cb19ca0f96d18cd7ac87c10540f880de66dd",
+      "e397b0b282fd31f247977765bf174b6c0d05c203f1701b58062542707b207e5b",
+      "38e9f3b07c3e30026cae35d827e528785b652e51d65cc2a3904ca4f6affc3e2c",
+      "1797e0b3ad9ccd39045b8557b763c86fd97bdf18b490e422f048c4d94044801f",
+      "f956f62c8685789825b511d8f3d834d03ade2eb10aef766159c5a09086a85694"
+    ],
+    "measurements": {
+      "inkMean": 0.443,
+      "inkMin": 0.08,
+      "stateDeMean": 14.08,
+      "stateDeMin": 0.2,
+      "seedDeMean": 13.2,
+      "seedDeMin": 4
+    },
+    "frozenAt": "2026-09-08T03:27:10.964Z"
+  }
 }

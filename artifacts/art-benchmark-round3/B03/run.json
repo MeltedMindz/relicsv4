@@ -2,7 +2,7 @@
   "briefId": "B03",
   "axis": "geological-layered",
   "title": "BEDDING",
-  "phase": "AUTHORED",
+  "phase": "AWAITING_FINAL_REVIEW",
   "objectiveBlockers": [],
   "briefSha256": "36c766ba051a2c28f5b9aa7a0c2705ef4edf72dfd51a45a717b05a0932532292",
   "admission": {
@@ -911,5 +911,76 @@
         "seedDeMin": 9.63
       }
     }
-  ]
+  ],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-round-3",
+    "seedsDigest": "e853e3b42776348c628d06378005087297e40d14a96df0210b2ea4b6edee4c8d",
+    "reviewerPromptSha256": "ed6b61165894461a26ef7005a69e43848fcf60a58586406cc6f1337ef8fc7461",
+    "seeds": [
+      1203347,
+      1243682,
+      1283437,
+      1310661,
+      1366079,
+      1446330,
+      1475115,
+      1561509,
+      1733538,
+      1835793,
+      1985692,
+      1991107
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "d0bd0a790fbcfc3eb7742837932ea4fff4ec730ad13dbbf900ddc88ddac63e0b",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "782accd5fb861e2d2c0dba99b6b7dfd198157ecc636fb8cbad4970388935ffd8",
+        "bytes": 93921
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "5ec3e6eb9477af27ebea1146135ed7f1ce26c8452e4c4b511beebd7b59e75578",
+        "bytes": 48868
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "66096d97ce078652568de65352ca7904f980e70324399f975b3a29fe4986a227",
+        "bytes": 122125
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "9e7710eb97173ec80249468973e63b99b6c7d29e9d15956f887d91d8b26ba496",
+        "bytes": 61451
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "d72b6514499c88ec3987b3542e4c31bcdc01a6e34fa95a6ec289dfff117fadc7",
+        "bytes": 19653
+      }
+    ],
+    "inputHashes": [
+      "782accd5fb861e2d2c0dba99b6b7dfd198157ecc636fb8cbad4970388935ffd8",
+      "5ec3e6eb9477af27ebea1146135ed7f1ce26c8452e4c4b511beebd7b59e75578",
+      "66096d97ce078652568de65352ca7904f980e70324399f975b3a29fe4986a227",
+      "9e7710eb97173ec80249468973e63b99b6c7d29e9d15956f887d91d8b26ba496",
+      "d72b6514499c88ec3987b3542e4c31bcdc01a6e34fa95a6ec289dfff117fadc7"
+    ],
+    "measurements": {
+      "inkMean": 0.411,
+      "inkMin": 0.148,
+      "stateDeMean": 5.17,
+      "stateDeMin": 0.35,
+      "seedDeMean": 19.03,
+      "seedDeMin": 5.45
+    },
+    "frozenAt": "2026-09-08T03:26:37.650Z"
+  }
 }

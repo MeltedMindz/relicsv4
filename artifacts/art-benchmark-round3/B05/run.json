@@ -2,7 +2,7 @@
   "briefId": "B05",
   "axis": "minimal",
   "title": "STELE",
-  "phase": "AUTHORED",
+  "phase": "AWAITING_FINAL_REVIEW",
   "objectiveBlockers": [],
   "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
   "admission": {
@@ -807,5 +807,76 @@
         "seedDeMin": 3.26
       }
     }
-  ]
+  ],
+  "finalReviewInput": {
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-round-3",
+    "seedsDigest": "e853e3b42776348c628d06378005087297e40d14a96df0210b2ea4b6edee4c8d",
+    "reviewerPromptSha256": "1aa925658c1e2f4a4621c420357ea6f5951158d7585dfdaf97867b1729996b16",
+    "seeds": [
+      1203347,
+      1243682,
+      1283437,
+      1310661,
+      1366079,
+      1446330,
+      1475115,
+      1561509,
+      1733538,
+      1835793,
+      1985692,
+      1991107
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "marketResponseClaimed": true,
+    "configHashAtUnblind": "5a74b3643ccad287fc8007f6813b54ddd247f6af608be08cebfec3f68121ad76",
+    "objectiveBatteryPassed": true,
+    "sheets": [
+      {
+        "name": "holdout-seeds-256.png",
+        "sha256": "8d92513e10eb496df6c198aabbb5e78b1cee80c2c8d8b530f9c98f9ffb46c065",
+        "bytes": 138367
+      },
+      {
+        "name": "holdout-seeds-120.png",
+        "sha256": "bf9d27c31f7e072fe03c60f8937a686de9964739777121a122b8c3f5c3261e97",
+        "bytes": 58468
+      },
+      {
+        "name": "holdout-states-256.png",
+        "sha256": "f921381dd698a9f0067d21f6ba18b6bc57f3be3c18ee0c1d92596ba5db3d47ca",
+        "bytes": 154035
+      },
+      {
+        "name": "holdout-states-120.png",
+        "sha256": "4dce50efa81b581da2b3e5bb9ddcdf0924fda508ba359e5ed8bf8423aeed7689",
+        "bytes": 64397
+      },
+      {
+        "name": "holdout-single-512.png",
+        "sha256": "182b5a99e0a7487b97babbe332c1aec4f4dd877b2574a2fb6484f8132b969a4f",
+        "bytes": 23725
+      }
+    ],
+    "inputHashes": [
+      "8d92513e10eb496df6c198aabbb5e78b1cee80c2c8d8b530f9c98f9ffb46c065",
+      "bf9d27c31f7e072fe03c60f8937a686de9964739777121a122b8c3f5c3261e97",
+      "f921381dd698a9f0067d21f6ba18b6bc57f3be3c18ee0c1d92596ba5db3d47ca",
+      "4dce50efa81b581da2b3e5bb9ddcdf0924fda508ba359e5ed8bf8423aeed7689",
+      "182b5a99e0a7487b97babbe332c1aec4f4dd877b2574a2fb6484f8132b969a4f"
+    ],
+    "measurements": {
+      "inkMean": 0.355,
+      "inkMin": 0.192,
+      "stateDeMean": 5.9,
+      "stateDeMin": 2.3,
+      "seedDeMean": 9.92,
+      "seedDeMin": 3.05
+    },
+    "frozenAt": "2026-09-08T03:26:47.947Z"
+  }
 }
