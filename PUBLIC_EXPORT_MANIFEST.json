@@ -3,7 +3,7 @@
   "description": "Clean-room educational starter for fully on-chain generative art powered by Uniswap v4 hooks. Not production software; not affiliated with any production project.",
   "generatedBy": "scripts/gen-manifest.mjs",
   "policy": "Built from an explicit allowlist (PUBLIC_EXPORT_ALLOWLIST.md). Contains authorized public chain/API reference data, but no keys, private deployment proofs, private source, or private material. Third-party source is referenced via submodules, not vendored.",
-  "fileCount": 1978,
+  "fileCount": 2013,
   "files": [
     {
       "path": ".env.example",
@@ -1896,8 +1896,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B01/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "64c44f0d1b6ebefe2ca0a963d05235930fbbc9f138af56401da4597673454166",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B01/final-review/brief.md",
       "sha256": "682713ed3290e0629dbf2a67488d05d5ff4ca952a265dcac8b12b7dde5db81ef",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B01/final-review/description.json",
+      "sha256": "a68d53f0f106c70421d7c61c00596547ce6dcaf0271285a2e581b4a3f67c86e1",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -1947,6 +1961,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B01/final-review/sheets/holdout-states-256.png",
       "sha256": "3815a100f7523357345b981ae3fae4aa1680b5e2f921c18a3cfb3ce141765e78",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B01/final-review/verdict.json",
+      "sha256": "e1e0a6b9e619aed33b1c0549abde25aa9eb56e48f1a92b61f6daaadd7b4404cf",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2008,8 +2029,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B02/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "1c57bda173c3b3b533629794266d94eca6fb5fb6412bf1d292b0f9f4f4a5443a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B02/final-review/brief.md",
       "sha256": "df9dffb0063045953c04dfac8f69e90751dd7af4464165bbbbb9a58cdcee2337",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B02/final-review/description.json",
+      "sha256": "e476b1c1af68b03a763652131bb8b9daf9fc320af9c6bc0aceeada8c4f35a0d8",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2059,6 +2094,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B02/final-review/sheets/holdout-states-256.png",
       "sha256": "d07c29ae21856f30dec354d44e837df81ee3fbff68135801739516d18940b859",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B02/final-review/verdict.json",
+      "sha256": "b9d595f0799ae578bb0a46a552103e5c8b032cfdb365d6dc83f516a56d77f994",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2120,8 +2162,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B03/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "4dece981504222fe6d2b28cd842aefdc36130e08a6bd22b62b2a268877f9008a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B03/final-review/brief.md",
       "sha256": "36c766ba051a2c28f5b9aa7a0c2705ef4edf72dfd51a45a717b05a0932532292",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B03/final-review/description.json",
+      "sha256": "0f4606995eae34ff544310c8b1d3d6df7beb97fbfb7cf0a567925f286d3c09bb",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2171,6 +2227,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B03/final-review/sheets/holdout-states-256.png",
       "sha256": "66096d97ce078652568de65352ca7904f980e70324399f975b3a29fe4986a227",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B03/final-review/verdict.json",
+      "sha256": "3cf3125487bb5a0c6439d284d59c0ec488b2c4938c799e73017a3f6686a96939",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2232,8 +2295,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B04/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "0f7ea369ca101eb067e966ac1aea9c59de4bde8433c094d31cd206347a7d8d8e",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B04/final-review/brief.md",
       "sha256": "dcdb452133222c9f5c0cb6cbe2d48f5e363436ec5b4fad1e531d37f368302f9c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B04/final-review/description.json",
+      "sha256": "e2f4b3920922e6232f9fc56953da9004e618ad56f573169516b36fa5ccf4a4a4",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2283,6 +2360,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B04/final-review/sheets/holdout-states-256.png",
       "sha256": "2ab0ef969fa6e0d12fdaf187c17f1b77028f6b37efb67bb4d64102623f65a739",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B04/final-review/verdict.json",
+      "sha256": "fd8f71ccfdec62c4a8ef4d49d056a0389992419bec90aa1f9145578ebb48ed6a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2344,8 +2428,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B05/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "f3134af060c7b6c73345efa19f4f76eddb717b72377db9d24751595162f224c2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B05/final-review/brief.md",
       "sha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B05/final-review/description.json",
+      "sha256": "9183bf779b23d908bf3bbd05cb5bb67c6ddf118ece80b6488ea9248fef5ad39f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2395,6 +2493,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B05/final-review/sheets/holdout-states-256.png",
       "sha256": "f921381dd698a9f0067d21f6ba18b6bc57f3be3c18ee0c1d92596ba5db3d47ca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B05/final-review/verdict.json",
+      "sha256": "c37a2e6b758106f156234132462872fdfcc627e3c29d58e398249d2aab50ae84",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2456,8 +2561,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B06/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "ff60c07b50690cfd6a09b577565cc02c96fe3821ec12c50941a80d803d909df2",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B06/final-review/brief.md",
       "sha256": "5942640f947d40997a893215982db26a79fb01f4d6e98196ad1b67ba6402f757",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B06/final-review/description.json",
+      "sha256": "b254c322bf5216b9cd78e62ecf8cdd9b704972b5666e5f05880cdb84560e5f20",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2507,6 +2626,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B06/final-review/sheets/holdout-states-256.png",
       "sha256": "f4732548dd6ce92a6aa4890e41143a76095c1490a95076e7d3d0ea1540be367a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B06/final-review/verdict.json",
+      "sha256": "4834b36d7a2f19521024058b4b3532e2dcd2c6ed0de485a3bbcaf783dc10d311",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2568,8 +2694,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B07/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "02c0fadfd79c4fdc9e901dc1db3fe5efcaabd1df2fcb07d3c7467e8d1712de22",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B07/final-review/brief.md",
       "sha256": "ee37cb8dce1333e24ca49f4ecb27f486b2efd2180755bf54d7e6e754ea51edc1",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B07/final-review/description.json",
+      "sha256": "e4903839bdd6f4ab2ee742319e23be2f03cf79a11062aad4670d08410d66479d",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2619,6 +2759,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B07/final-review/sheets/holdout-states-256.png",
       "sha256": "4b295bac779f31d1f53ad30919434cc4ca66ab3c6c667fbc18bbf2d71ac272d6",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B07/final-review/verdict.json",
+      "sha256": "65082bbc8ed5cbc900d28d3507a7ef604119310612c6cd3f853a2a514216ae4a",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2680,8 +2827,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B08/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "41cd6dd7aa07a54d116898dd476f20886c38c91b5bb35404905d4b721cd884ce",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B08/final-review/brief.md",
       "sha256": "15214260194dba7849716eb671e28a7517443a224b3eadd304d8573e8656a218",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B08/final-review/description.json",
+      "sha256": "993a0c4ca55da015e4111be9b3d765734f79a6e288b8d14d3d55d6cb6bb610bf",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2731,6 +2892,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B08/final-review/sheets/holdout-states-256.png",
       "sha256": "92e31afe1b959cb404dc1784324d83706603d08246d7b5b7b01a3d979459b345",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B08/final-review/verdict.json",
+      "sha256": "d8f8e0ed45f0ab7ff503f8b66c6f5817921cd6ac32453a5db4110ed27f2b2894",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2792,8 +2960,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B09/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "b8c2c8150c66529a8417210e8540000c013a31bf4e13eabec88dee8eabc35af0",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B09/final-review/brief.md",
       "sha256": "f1bcb0d1651349797fde1de8846dd041e73c535fbd3adb64e84c0d6c9a954d6f",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B09/final-review/description.json",
+      "sha256": "c8e564ea3bf9d7f54c09644d6aae11ec01b55b08d8e979b8b3070c4a9a85d621",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2843,6 +3025,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B09/final-review/sheets/holdout-states-256.png",
       "sha256": "38e9f3b07c3e30026cae35d827e528785b652e51d65cc2a3904ca4f6affc3e2c",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B09/final-review/verdict.json",
+      "sha256": "98f90818bad3aee8f522ca44e580413b53b7a2c4b8c2fb201ec8020596b0e12b",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2904,8 +3093,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B10/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "f7d05572ec99beff7c304c953b66d01015d2e28a8a7a14d711fcdb9155663985",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B10/final-review/brief.md",
       "sha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B10/final-review/description.json",
+      "sha256": "d29c378ef26b38eb1689b864bf8cb87ae284a1d676301f416f756adac07fef77",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -2955,6 +3158,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B10/final-review/sheets/holdout-states-256.png",
       "sha256": "39be9d7a1e3904cde76501dbe6047a0d3430aac5aa2e707acfe6a1d0cb59541a",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B10/final-review/verdict.json",
+      "sha256": "5a643e72eb80f6d2fb8f82b78c81347cc633f8023d658f79ac92d0b03dbdab09",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -3023,8 +3233,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/B12/.relics-agent/receipts/art-acceptance.json",
+      "sha256": "13a2d6ea986b8729770dd3105b7cd789b25ea050aef95348e0b6b8dcda503405",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/B12/final-review/brief.md",
       "sha256": "3a3eb44732a3d5accda9ebb0cbe0c6218712f9812abb04a03f695012e7fc5271",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B12/final-review/description.json",
+      "sha256": "4107469ec5d7df196e6c860dba1921c2b99d5d87f10c0e200405874d54f41bc9",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -3074,6 +3298,13 @@
     {
       "path": "artifacts/art-benchmark-round3/B12/final-review/sheets/holdout-states-256.png",
       "sha256": "b3e692eb6bb25ece5b924c323552a366e8ee2300e9b795725c6de01e3a5924eb",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/B12/final-review/verdict.json",
+      "sha256": "e2a09705153787e611bff92d2fec134a8215605793a1fd9b8b32f358abc3cc3f",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -3135,8 +3366,22 @@
       "publicSafe": true
     },
     {
+      "path": "artifacts/art-benchmark-round3/ROUND-3-FINDINGS.md",
+      "sha256": "fbcbdc567b461dae7eabffe05610508c081c246f31d9976d154fe614dd73539b",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
       "path": "artifacts/art-benchmark-round3/directions.json",
       "sha256": "4432a4af6652d97b777f594eb885118a58eabad0b8a6398466a827eed0df28ca",
+      "provenance": "original-clean-room",
+      "license": "MIT",
+      "publicSafe": true
+    },
+    {
+      "path": "artifacts/art-benchmark-round3/report.json",
+      "sha256": "38ad71f34aba4f78d70045f83c7d2f0b5def50749238a909a8dd227d12ca8f30",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

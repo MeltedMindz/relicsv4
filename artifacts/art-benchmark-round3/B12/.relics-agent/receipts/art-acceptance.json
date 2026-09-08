@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "ART_ACCEPTANCE",
-  "acceptedAt": "2026-09-08T03:34:30.896Z",
+  "acceptedAt": "2026-09-08T03:41:48.353Z",
   "runtimeId": "GEOMETRIC_RECURSION_V1",
   "templateId": "GEOMETRIC_RECURSION_V1/compass",
   "chainId": 8453,
@@ -137,13 +137,13 @@
       "caf8c721d8ac181e241d20c716fc059267570c00f8f904270cd5b38ca6b2565b",
       "6540bafc645298a8ba6be06f2ec39a4e07c68d14f3c3055368a8ab52a5e9c77d"
     ],
-    "visualDescriptionHash": "e1941919f6bf859762af4fa442ff482ca71faec8f925794e6e8ae0d3272686ee",
+    "visualDescriptionHash": "249c6e751aeef039af289ced47fea6779a63ccb43deecb349559c13c68032801",
     "verdictDocument": {
       "path": "final-review/verdict.json",
       "sha256": "e2a09705153787e611bff92d2fec134a8215605793a1fd9b8b32f358abc3cc3f",
       "verdictField": "verdict"
     },
-    "hash": "e0cccb942c00d3e88c337e9dbd48aa01dccadb85a2fbc19ff994b41456a8eaf7"
+    "hash": "aada03dbae4ccc7d31cfce7ccaf1aa3257c0e732bd97f7a13ecf85c1466ec792"
   },
   "seedGroups": {
     "authorSawHoldout": false,
