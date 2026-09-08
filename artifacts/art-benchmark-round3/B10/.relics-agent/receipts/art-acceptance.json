@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-08T03:34:30.893Z",
+  "runtimeId": "VECTOR_COMPOSITION_V1",
+  "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+  "chainId": 8453,
+  "runtimeAddress": "0x24d7800d56B4534BF7f100d053aF4e49845cB722",
+  "runtimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+  "acceptedConfigHash": "9d18e5d503481b543dd05ca44ea2200f4aabf52f0384825a1c5b7cb1d1f18ae8",
+  "acceptedConfigBytes": 88,
+  "briefSha256": "9aee5f036f38ff00a2f5c6373a41ab7c5f048aa525afc5fbf6d791e6d356c465",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "VECTOR_COMPOSITION_V1/alluvium",
+    "requiredCapabilities": {
+      "MEDIUM": [
+        "LINEWORK",
+        "RADIAL_SYSTEM",
+        "PER_TOKEN_SYMMETRY_VARIATION"
+      ],
+      "MOTIF": [],
+      "AESTHETIC": [
+        "MONUMENTAL",
+        "DELICATE"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [
+      "PER_TOKEN_SYMMETRY_VARIATION"
+    ],
+    "hash": "1599fbbe3fde31ba20dddd828dae15b39fcc18a10d39e1be2b6833ed922b5aec"
+  },
+  "direction": {
+    "hash": "663fdf7e6a3eeeb39e66145334f9fad85cd91f0a91c046cca5ce869db0de8e81",
+    "createdAt": "2026-09-08T03:24:14.492Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "VECTOR_COMPOSITION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "fields[n].layout",
+      "fields[n].primitive",
+      "fields[n].sizeMax",
+      "fieldCount, and the site budget",
+      "fields[n].spreadMax",
+      "fields[n].symmetry",
+      "fields[n].countMin / countMax",
+      "palette, groundMode, PALETTE_SHIFT",
+      "fields[n].stroke and the OUTLINE flag",
+      "fields[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "fields[n].layout",
+        "facets": [
+          "failureMode"
+        ]
+      },
+      {
+        "parameter": "fieldCount, and the site budget",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].symmetry",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, groundMode, PALETTE_SHIFT",
+        "facets": [
+          "safeExpressiveRange",
+          "marketBindingSuitability"
+        ]
+      },
+      {
+        "parameter": "fields[n].stroke and the OUTLINE flag",
+        "facets": [
+          "interactions",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "fields[n].drive x sensor x curve",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": [
+      "fields[n].drive x sensor x curve"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": null,
+      "configHash": "9d18e5d503481b543dd05ca44ea2200f4aabf52f0384825a1c5b7cb1d1f18ae8",
+      "critiqueHash": null,
+      "findings": [],
+      "dispositions": [],
+      "responseHash": null,
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B10",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      1203347,
+      1243682,
+      1283437,
+      1310661,
+      1366079,
+      1446330,
+      1475115,
+      1561509,
+      1733538,
+      1835793,
+      1985692,
+      1991107
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "9d18e5d503481b543dd05ca44ea2200f4aabf52f0384825a1c5b7cb1d1f18ae8",
+    "inputHashes": [
+      "9fb51cc51f62592b1fba3be784185670d54da6bd2a6bbe835b81f30b7a220e2a",
+      "6a0c5a3bf226e31e468d3a545c76d85dabb02a8ce22e24d641c2a2c406b2c8bb",
+      "39be9d7a1e3904cde76501dbe6047a0d3430aac5aa2e707acfe6a1d0cb59541a",
+      "e2da5419bcf3bec9bcf2995f879e955d373af3e5b5489b6c865ad56396ebc44a",
+      "91d8c3f465ab3d80320dc5d66977f5bfe63ec8277758c85ed686bc806f74f41e"
+    ],
+    "visualDescriptionHash": "6a0b9bd919eb7bff66076f688fb0ccb29d2079eed5639968e043ca014744c7c9",
+    "verdictDocument": {
+      "path": "final-review/verdict.json",
+      "sha256": "5a643e72eb80f6d2fb8f82b78c81347cc633f8023d658f79ac92d0b03dbdab09",
+      "verdictField": "verdict"
+    },
+    "hash": "51b68e4b37d86a20ad0379e6333756f32430dc94e1a0512c4554fcf8d4fc78e2"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-round-3",
+    "holdoutIntegrity": "HELD",
+    "holdoutDetail": "Round three. The salt lives outside this repository at ~/.relics/holdout/wave1-benchmark-round-3.salt and is not committed anywhere. This entry is published BEFORE the first author run, carrying the commitment and no digest, so the holdout is fixed without being revealed. seedsDigest is pinned when the round is frozen. OVERLAP WITH THE ROUNDS 1+2 HOLDOUT IS 0 AND IT IS STRUCTURAL, NOT LUCK: this derivation draws inside 1,000,000..1,999,999 while the legacy arithmetic set was 9011..10980, so the two ranges cannot intersect. The overlap was also computed directly and is 0. FROZEN 2026-09-07: the eleven admitted cases were rendered on this holdout and the digest pinned from what the freeze printed. The twelfth brief, B11, was refused at admission for a state-driven colour and never reached the author.",
+    "holdoutSeedsDigest": "e853e3b42776348c628d06378005087297e40d14a96df0210b2ea4b6edee4c8d",
+    "liveLeakScan": {
+      "scannedFiles": 44,
+      "occurrences": 0,
+      "files": []
+    }
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}

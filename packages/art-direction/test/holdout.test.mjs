@@ -210,14 +210,37 @@ test("the round registry is readable and every round declares an integrity", () 
 });
 
 test("the two completed benchmark rounds are recorded COMPROMISED, and one holdout served both", () => {
-  const sets = completedRoundSeedSets();
-  assert.equal(sets.size, 1, "both completed rounds used ONE holdout set, byte for byte; that is the reuse, and it is a fact about the artifacts rather than a claim");
-  const [seeds] = [...sets.values()];
-  const integrity = roundIntegrityForSeeds(seeds);
-  assert.equal(integrity.integrity, "COMPROMISED");
+  // SCOPED BY INTEGRITY RATHER THAN BY COUNT, because a third round has since been run and the
+  // count is now three sets over three rounds. The claim this test exists for is unchanged and is
+  // about the COMPROMISED ones: rounds one and two shared a single holdout byte for byte, and that
+  // is a fact re-derived from the receipts rather than a sentence in a registry.
+  const sets = [...completedRoundSeedSets().values()];
+  assert.ok(sets.length > 0, "no committed receipt records the seeds its reviewer judged, so this test scanned for nothing");
+  const compromised = sets.filter((seeds) => roundIntegrityForSeeds(seeds).integrity === "COMPROMISED");
+  assert.equal(compromised.length, 1, "the two COMPROMISED rounds used ONE holdout set, byte for byte; that is the reuse, and it is a fact about the artifacts rather than a claim");
+  const integrity = roundIntegrityForSeeds(compromised[0]);
   assert.equal(integrity.authorSawHoldout, true);
   assert.equal(integrity.compromise.reScoreableWithoutAFreshRound, false);
   assert.ok(integrity.compromise.evidence.length >= 2);
+});
+
+test("A ROUND RECORDED HELD SHARES NO SEED WITH A ROUND RECORDED COMPROMISED", () => {
+  // THE PROPERTY THE COUNT USED TO IMPLY, ASSERTED DIRECTLY AND OVER EVERY PAIR. A fresh round whose
+  // holdout overlapped a round the author had already been exposed to would be a fresh round in name
+  // only, and the count of distinct sets cannot see that: two sets can differ in one seed. This is
+  // re-derived from the receipts, so it holds for any round anybody adds without this test changing.
+  const sets = [...completedRoundSeedSets().values()];
+  const held = sets.filter((s) => roundIntegrityForSeeds(s).integrity === "HELD");
+  const compromised = sets.filter((s) => roundIntegrityForSeeds(s).integrity === "COMPROMISED");
+  assert.ok(held.length > 0, "no completed round is recorded HELD, so this test scanned for nothing");
+  for (const h of held) {
+    const integrity = roundIntegrityForSeeds(h);
+    assert.equal(integrity.authorSawHoldout, false, `a round recorded HELD must measure authorSawHoldout false, and ${integrity.roundId} reads ${integrity.authorSawHoldout}`);
+    for (const c of compromised) {
+      const overlap = h.filter((seed) => c.includes(seed));
+      assert.equal(overlap.length, 0, `${integrity.roundId} shares ${overlap.length} seed(s) with a compromised round's holdout, so it is not a fresh set`);
+    }
+  }
 });
 
 test("seeds that match no registered round are UNKNOWN, never held out", () => {

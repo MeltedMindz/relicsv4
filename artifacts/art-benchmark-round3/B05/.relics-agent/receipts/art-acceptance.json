@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "kind": "ART_ACCEPTANCE",
+  "acceptedAt": "2026-09-08T03:34:30.875Z",
+  "runtimeId": "GEOMETRIC_RECURSION_V1",
+  "templateId": "GEOMETRIC_RECURSION_V1/compass",
+  "chainId": 8453,
+  "runtimeAddress": "0xbb9Eb45ee117397aC4beF47d0732c2a41AF56F69",
+  "runtimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+  "acceptedConfigHash": "5a74b3643ccad287fc8007f6813b54ddd247f6af608be08cebfec3f68121ad76",
+  "acceptedConfigBytes": 85,
+  "briefSha256": "e3105b299a4839c5ff760ed5c61745dc8e393b90ffb6b711df53c1665bf4568a",
+  "admission": {
+    "outcome": "ADMITTED",
+    "admitted": true,
+    "recommended": "GEOMETRIC_RECURSION_V1/compass",
+    "requiredCapabilities": {
+      "MEDIUM": [],
+      "MOTIF": [
+        "ARCHITECTURE",
+        "MONUMENT"
+      ],
+      "AESTHETIC": [
+        "SPARSE",
+        "QUIET"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "concessions": [],
+    "hash": "0ca7de57ff90f3aee483c592f4d3fc19e82913d33c281be708e33b76d094d8bf"
+  },
+  "direction": {
+    "hash": "7f69997f7f90788ea26c1f06b5fb125cfe09bc89e78d629f9358c7b7c583adc1",
+    "createdAt": "2026-09-08T03:23:44.048Z",
+    "containsRuntimeConfig": false
+  },
+  "atlas": {
+    "runtimeId": "GEOMETRIC_RECURSION_V1",
+    "atlasGuidanceSha256": "175e2aeb1044c74946df090788165c8761e1e48a32ab29d84dfeee90eecec351",
+    "atlasRuntimeCodeHash": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+    "freshness": {
+      "fresh": "UNVERIFIED"
+    },
+    "consultedParameters": [
+      "rules[n].shapeSet",
+      "rules[n].ruleSet",
+      "ruleCount",
+      "rules[n].contraction",
+      "rules[n].branch and rules[n].prune",
+      "rules[n].symSet",
+      "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+      "rules[n].depthMin / depthMax",
+      "rules[n].stroke and the OUTLINE flag",
+      "rules[n].drive x sensor x curve"
+    ],
+    "consultationCount": 10,
+    "facetsPerConsultation": [
+      "visibleEffect",
+      "lowHighBehaviour",
+      "interactions",
+      "failureMode",
+      "safeExpressiveRange",
+      "marketBindingSuitability"
+    ],
+    "unmeasuredFacets": [
+      {
+        "parameter": "ruleCount",
+        "facets": [
+          "failureMode",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "palette, paletteCount, paletteIx, DEPTH_PALETTE, groundMode, groundIx, groundIx2",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      },
+      {
+        "parameter": "rules[n].drive x sensor x curve",
+        "facets": [
+          "lowHighBehaviour",
+          "safeExpressiveRange"
+        ]
+      }
+    ],
+    "marketBindingConsultations": [
+      "rules[n].drive x sensor x curve"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "criticId": null,
+      "configHash": "5a74b3643ccad287fc8007f6813b54ddd247f6af608be08cebfec3f68121ad76",
+      "critiqueHash": null,
+      "findings": [],
+      "dispositions": [],
+      "responseHash": null,
+      "boundedChange": null
+    }
+  ],
+  "finalReview": {
+    "reviewerId": "final-B05",
+    "verdict": "REFUSE",
+    "blinded": true,
+    "describedBeforeBrief": true,
+    "seedGroup": "FINAL_HOLDOUT_SEEDS",
+    "seeds": [
+      1203347,
+      1243682,
+      1283437,
+      1310661,
+      1366079,
+      1446330,
+      1475115,
+      1561509,
+      1733538,
+      1835793,
+      1985692,
+      1991107
+    ],
+    "states": [
+      "neutral",
+      "stress",
+      "recovery"
+    ],
+    "configHashAtUnblind": "5a74b3643ccad287fc8007f6813b54ddd247f6af608be08cebfec3f68121ad76",
+    "inputHashes": [
+      "8d92513e10eb496df6c198aabbb5e78b1cee80c2c8d8b530f9c98f9ffb46c065",
+      "bf9d27c31f7e072fe03c60f8937a686de9964739777121a122b8c3f5c3261e97",
+      "f921381dd698a9f0067d21f6ba18b6bc57f3be3c18ee0c1d92596ba5db3d47ca",
+      "4dce50efa81b581da2b3e5bb9ddcdf0924fda508ba359e5ed8bf8423aeed7689",
+      "182b5a99e0a7487b97babbe332c1aec4f4dd877b2574a2fb6484f8132b969a4f"
+    ],
+    "visualDescriptionHash": "676341249e1c90400bc85bb3cff1a94d1a22eddd0d010521e605bcb9659099a1",
+    "verdictDocument": {
+      "path": "final-review/verdict.json",
+      "sha256": "c37a2e6b758106f156234132462872fdfcc627e3c29d58e398249d2aab50ae84",
+      "verdictField": "verdict"
+    },
+    "hash": "c176c7cd9c73a969a2d83b2069c28b574638c5be7c1ccc7e8ca21e0e789bd837"
+  },
+  "seedGroups": {
+    "authorSawHoldout": false,
+    "authoring": "AUTHORING_SEEDS",
+    "development": "DEVELOPMENT_REVIEW_SEEDS",
+    "final": "FINAL_HOLDOUT_SEEDS",
+    "roundId": "wave1-benchmark-round-3",
+    "holdoutIntegrity": "HELD",
+    "holdoutDetail": "Round three. The salt lives outside this repository at ~/.relics/holdout/wave1-benchmark-round-3.salt and is not committed anywhere. This entry is published BEFORE the first author run, carrying the commitment and no digest, so the holdout is fixed without being revealed. seedsDigest is pinned when the round is frozen. OVERLAP WITH THE ROUNDS 1+2 HOLDOUT IS 0 AND IT IS STRUCTURAL, NOT LUCK: this derivation draws inside 1,000,000..1,999,999 while the legacy arithmetic set was 9011..10980, so the two ranges cannot intersect. The overlap was also computed directly and is 0. FROZEN 2026-09-07: the eleven admitted cases were rendered on this holdout and the digest pinned from what the freeze printed. The twelfth brief, B11, was refused at admission for a state-driven colour and never reached the author.",
+    "holdoutSeedsDigest": "e853e3b42776348c628d06378005087297e40d14a96df0210b2ea4b6edee4c8d",
+    "liveLeakScan": {
+      "scannedFiles": 44,
+      "occurrences": 0,
+      "files": []
+    }
+  },
+  "objective": null,
+  "note": "Objective results are a precondition, not evidence of quality. This receipt is valid only for acceptedConfigHash; any render-affecting change to the configuration voids it."
+}
