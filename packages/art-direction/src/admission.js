@@ -42,6 +42,7 @@ import {
   detectImpossibleDemands,
   runtimeCanExpress,
 } from "./capabilities.js";
+import { detectMembers, memberFor, memberParameters, membersFor } from "./member.js";
 import { mechanismAdmission } from "./mechanism.js";
 
 /**
@@ -218,17 +219,42 @@ export function admitBrief(briefText, { catalog = WAVE1_CATALOG } = {}) {
     // A runtime that cannot perform the PRIMARY mechanism is not viable. Secondary mechanisms are
     // recorded as concessions instead: the work can be made without them and the direction has to
     // say so out loud, which is the same rule a SOFT demand already follows.
+    // THE MARK IS AN ADMISSION QUESTION AND IT WAS NOT BEING ASKED.
+    //
+    // B10 asks for "hairline radial threadwork, no filled mass". It was routed to
+    // GEOMETRIC_RECURSION_V1 in both completed rounds, on the strength of its RADIAL_SYSTEM
+    // affinity, and that runtime has NO hairline: it draws a node as a regular SHAPE, and its one
+    // stroke-forced member measures ink120 0.060 against SQUARE's 0.399. Its round-two reviewer
+    // wrote "roughly half the collection reads as filigree; the other half does not". The brief was
+    // satisfiable -- on the other runtime, which carries LINE, POLYLINE and ARC.
+    //
+    // So a mark the candidate cannot draw BLOCKS the candidate, exactly as a subject it cannot
+    // depict does. It is not a concession: there is no reduced version of a work whose mark is
+    // wrong, which is what four of twelve round-two refusals say in the reviewers' own words.
+    const memberRead = detectMembers(String(briefText ?? ""));
+    const memberBlocked = memberRead.best && memberParameters(entry.runtimeId, memberRead.best.id) === null
+      ? [{
+          id: `MEMBER_${memberRead.best.id}`,
+          what: `the mark the brief names: ${memberFor(memberRead.best.id).what}`,
+          class: "MEDIUM",
+          evidence: memberRead.best.phrases.join(", "),
+          citation: `${entry.runtimeId} has no parameter assignment for ${memberRead.best.id}; the marks it draws are ${membersFor(entry.runtimeId).join(", ")}`,
+        }]
+      : [];
     const mechanismBlocked = mech && mech.carriesPrimary === false
       ? [{ id: `MECHANISM_${mechanisms.requested[0].mechanism}`, what: `the market transformation the brief asks for: ${mechanisms.requested[0].mechanism}`, class: "MARKET_TRANSFORMATION", evidence: mechanisms.requested[0].evidence?.[0]?.clause ?? null, citation: mech.cannotExpress[0]?.detail ?? null }]
       : [];
     return {
       ...entry,
-      viable: blocking.length === 0 && mechanismBlocked.length === 0,
+      viable: blocking.length === 0 && mechanismBlocked.length === 0 && memberBlocked.length === 0,
       mechanisms: mech ? { canExpress: mech.canExpress, cannotExpress: mech.cannotExpress, carriesPrimary: mech.carriesPrimary } : null,
       mechanismBlockedBy: mechanismBlocked,
+      memberBlockedBy: memberBlocked,
+      memberRequested: memberRead.best ? { id: memberRead.best.id, family: memberRead.best.family, phrases: memberRead.best.phrases } : null,
       blockedBy: [
         ...blocking.map((d) => ({ id: d.id, what: d.what, class: d.class, evidence: d.evidence[0]?.sentence ?? null, citation: d.citations?.[entry.runtimeId] ?? d.positiveCitation?.[entry.runtimeId] ?? "the runtime's positive capability statement" })),
         ...mechanismBlocked,
+        ...memberBlocked,
       ],
       concessions: [
         ...concessions.map((d) => ({ id: d.id, what: d.what, citation: d.citations?.[entry.runtimeId] ?? d.positiveCitation?.[entry.runtimeId] ?? d.noteCitation?.[entry.runtimeId] ?? null })),

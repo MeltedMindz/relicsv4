@@ -96,11 +96,29 @@ test("a second sensor answers the pairing the primary leaves ambiguous, and it i
   // mechanism's story says the work should thin. The requirement it was a proxy for survives —
   // three states must separate — and it is met by a counter-register on a sensor that reads the
   // same at neutral and stress and rises in recovery.
+  //
+  // THE COUNTER-REGISTER IS NO LONGER ALWAYS THE LAST UNIT, AND THIS TEST NOW ASSERTS THE RULE
+  // RATHER THAN THE POSITION. A composition recipe may PIN a later register — bind it to a sensor
+  // that reads the same in all three states, so the dimension is a project constant instead of a
+  // seed draw — and a pin is the only creator-owned floor either runtime offers. The requirement
+  // is unchanged and the check is now stricter than the one it replaces: unit 0 carries the
+  // mechanism, a counter-register exists somewhere, and EVERY OTHER unit is a declared pin. A
+  // stray sensor on a middle register used to pass and now fails.
   for (const c of CASES) {
-    const sensors = unitsOf(c.authored.config).map((u) => u.sensor);
+    const units = unitsOf(c.authored.config);
+    const sensors = units.map((u) => u.sensor);
     assert.ok(new Set(sensors).size >= 2, `${c.id}: every binding is on ${sensors[0]}, so one market pairing has nothing answering it`);
-    assert.equal(sensors[sensors.length - 1], COUNTER_REGISTER.sensor, `${c.id}: the last register is on ${sensors[sensors.length - 1]}, not the declared counter-register`);
     assert.equal(sensors[0], c.authored.mechanism.sensor, `${c.id}: the primary register is not on the mechanism's sensor`);
+    const pinned = new Set((c.authored.composition?.recipe?.fields ?? c.authored.composition?.recipe?.rules ?? [])
+      .map((u, i) => (u.pin ? i : null)).filter((i) => i !== null));
+    const counters = units.map((u, i) => (i > 0 && !pinned.has(i) ? i : null)).filter((i) => i !== null);
+    assert.ok(counters.length >= 1, `${c.id}: every register after the mechanism's is pinned, so nothing answers the pairing the primary leaves ambiguous`);
+    for (const i of counters) {
+      assert.equal(sensors[i], COUNTER_REGISTER.sensor, `${c.id}: unpinned register ${i} is on ${sensors[i]}, not the declared counter-register`);
+    }
+    for (const i of pinned) {
+      assert.equal(sensors[i], "QUOTE_VOLUME", `${c.id}: register ${i} is declared a composition pin and is on ${sensors[i]}, which is not the constant sensor a pin is defined as`);
+    }
   }
 });
 

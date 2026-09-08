@@ -342,8 +342,20 @@ export function expressibleMechanisms(runtimeId) {
   return Object.entries(t).filter(([, v]) => v.expressible).map(([k]) => k);
 }
 
-/** Can this runtime perform this mechanism at this polarity, and with what? */
-export function realisationFor(runtimeId, mechanismId, polarity) {
+/**
+ * Can this runtime perform this mechanism at this polarity, and with what?
+ *
+ * `constraints.ruleSet` LETS THE COMPOSITION CHOOSE AMONG REALISATIONS INSTEAD OF BEING OVERRULED
+ * BY ONE. `DILATION` on the recursion runtime has two: `CONTRACT`, which moves the EXTENT of the
+ * whole figure but only under RING or BRANCH, and `SPREAD`, which sets the root size and needs no
+ * production at all. Taking the first unconditionally means a brief asking for a form held clear of
+ * every edge — whose composition is INSCRIBE and TRI by measurement — gets RING added to its rule
+ * set to satisfy the drive, and the margin the brief asked for is gone to make the market work.
+ *
+ * So a caller that already knows the production set says so, and the FIRST realisation whose
+ * requirement that set satisfies is chosen. With no constraint the behaviour is exactly as before.
+ */
+export function realisationFor(runtimeId, mechanismId, polarity, constraints = {}) {
   const t = MECHANISM_TABLE[runtimeId];
   if (!t) throw new Error(`no mechanism table for runtime ${runtimeId}`);
   const entry = t[mechanismId];
@@ -363,9 +375,19 @@ export function realisationFor(runtimeId, mechanismId, polarity) {
       evidence: entry.realisations[0].evidence,
     };
   }
-  const chosen = usable[0];
+  const ruleSet = constraints.ruleSet ?? null;
+  const satisfied = ruleSet
+    ? usable.filter((r) => !r.requires.ruleSetIncludes || r.requires.ruleSetIncludes.some((x) => ruleSet.includes(x)))
+    : usable;
+  // A CONSTRAINT THAT NOTHING SATISFIES IS NOT A REASON TO PRETEND IT WAS GIVEN. Fall back to the
+  // unconstrained choice and say so on the record, so the caller can see that its production set
+  // and its mechanism disagree rather than discovering it in the render.
+  const chosen = satisfied[0] ?? usable[0];
+  const constraintHonoured = ruleSet ? satisfied.length > 0 : null;
   return {
     ok: true,
+    constraintHonoured,
+    constrainedBy: ruleSet,
     mechanism: mechanismId,
     polarity,
     drive: chosen.drive,

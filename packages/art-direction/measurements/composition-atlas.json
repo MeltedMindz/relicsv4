@@ -8,7 +8,7 @@
     "so a composition true of the mean can be false of the collection."
   ],
   "schemaVersion": 1,
-  "generatedAt": "2026-09-08T02:34:15.646Z",
+  "generatedAt": "2026-09-08T02:55:26.505Z",
   "chainId": 8453,
   "registry": "0xCB19507D713DfC4cD212BDc545480e1549A9F231",
   "runtimeCodeHash": {
@@ -411,11 +411,11 @@
       "recipeId": "rot6-pinned",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "b626fcbf0c8b87ad389ed236ab35e0d0c709623c9ad72b0685bc2ce25cfa715e",
+      "configSha256": "4cc339ce5da1b79527702f40fc6eec5f957152d481b18a2b9d69e4bdaf3b9523",
       "distribution": {
         "ink": {
-          "min": 0.8342,
-          "mean": 0.9848,
+          "min": 0.9842,
+          "mean": 0.9987,
           "max": 1,
           "n": 36
         },
@@ -438,14 +438,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.4536,
-          "mean": 0.9468,
+          "min": 0.9088,
+          "mean": 0.9924,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.4779,
-          "mean": 0.9521,
+          "min": 0.9445,
+          "mean": 0.9954,
           "max": 1,
           "n": 36
         },
@@ -457,31 +457,31 @@
         },
         "adjacentContrast": {
           "min": 0,
-          "mean": 0.0091,
-          "max": 0.0969,
+          "mean": 0.0014,
+          "max": 0.0164,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9689,
-          "mean": 0.9967,
+          "min": 0.9681,
+          "mean": 0.9973,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
           "min": 0.0331,
-          "mean": 0.0358,
-          "max": 0.0624,
+          "mean": 0.0334,
+          "max": 0.0366,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.3333,
-          "max": 5,
+          "mean": 1.1667,
+          "max": 3,
           "n": 36
         },
         "largestShare": {
-          "min": 0.982,
-          "mean": 0.9985,
+          "min": 0.989,
+          "mean": 0.9991,
           "max": 1,
           "n": 36
         },
@@ -495,7 +495,7 @@
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": true,
         "CENTRED_FIGURE": false,
-        "STRATIFIED": true,
+        "STRATIFIED": false,
         "ALL_OVER_FIELD": false,
         "RADIAL_EMBLEM": true,
         "OFF_CENTRE_WEIGHT": false
@@ -503,7 +503,7 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 3,
+        "STRATIFIED": 0,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -515,12 +515,12 @@
       "recipeId": "rot6-pinned",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "c642d14b28e1ac628047b63e7d01a1612b66a756e200577380883414abdeae59",
+      "configSha256": "d13106a6eade27bfe7a11782ad9cb0d1fcc7d3365060af154763a1c1f9d471de",
       "distribution": {
         "ink": {
-          "min": 0.8762,
-          "mean": 0.9754,
-          "max": 0.9999,
+          "min": 0.9862,
+          "mean": 0.9954,
+          "max": 1,
           "n": 36
         },
         "extentX": {
@@ -542,14 +542,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.6216,
-          "mean": 0.9044,
+          "min": 0.9208,
+          "mean": 0.9741,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.5981,
-          "mean": 0.9255,
+          "min": 0.9186,
+          "mean": 0.9809,
           "max": 1,
           "n": 36
         },
@@ -560,32 +560,32 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0001,
-          "mean": 0.0161,
-          "max": 0.0714,
+          "min": 0,
+          "mean": 0.0046,
+          "max": 0.0124,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9877,
-          "mean": 0.9957,
+          "min": 0.9811,
+          "mean": 0.9955,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
           "min": 0.0331,
-          "mean": 0.0456,
-          "max": 0.0842,
+          "mean": 0.0373,
+          "max": 0.0427,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.1667,
-          "max": 3,
+          "mean": 1,
+          "max": 1,
           "n": 36
         },
         "largestShare": {
-          "min": 0.999,
-          "mean": 0.9999,
+          "min": 1,
+          "mean": 1,
           "max": 1,
           "n": 36
         },
@@ -599,7 +599,7 @@
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": true,
         "CENTRED_FIGURE": false,
-        "STRATIFIED": true,
+        "STRATIFIED": false,
         "ALL_OVER_FIELD": false,
         "RADIAL_EMBLEM": true,
         "OFF_CENTRE_WEIGHT": false
@@ -607,7 +607,7 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 3,
+        "STRATIFIED": 0,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -616,20 +616,20 @@
     {
       "runtimeId": "VECTOR_COMPOSITION_V1",
       "compositionId": "EDGE_TO_EDGE",
-      "recipeId": "rot3-pinned",
+      "recipeId": "rot6-light",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "2f728a19141698e43ee20150d690162a10d71e8490a284ac35e444c2d696d9ce",
+      "configSha256": "cd8aa02086c6a3349faf607bcd59e0bd90f3b2b4e0c7105baacff43abe1bd8ee",
       "distribution": {
         "ink": {
-          "min": 0.6003,
-          "mean": 0.9559,
-          "max": 1,
+          "min": 0.5167,
+          "mean": 0.7831,
+          "max": 0.9413,
           "n": 36
         },
         "extentX": {
-          "min": 0.967,
-          "mean": 0.9972,
+          "min": 1,
+          "mean": 1,
           "max": 1,
           "n": 36
         },
@@ -646,15 +646,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.1404,
-          "mean": 0.8892,
-          "max": 1,
+          "min": 0.1288,
+          "mean": 0.7094,
+          "max": 0.984,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.1853,
-          "mean": 0.8975,
-          "max": 1,
+          "min": 0.1487,
+          "mean": 0.6963,
+          "max": 0.9752,
           "n": 36
         },
         "livingBands": {
@@ -664,39 +664,39 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0,
-          "mean": 0.023,
-          "max": 0.181,
+          "min": 0.0149,
+          "mean": 0.1148,
+          "max": 0.2058,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.8898,
-          "mean": 0.9776,
-          "max": 1,
+          "min": 0.8685,
+          "mean": 0.9638,
+          "max": 0.9963,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0331,
-          "mean": 0.0398,
-          "max": 0.0879,
+          "min": 0.051,
+          "mean": 0.0805,
+          "max": 0.1195,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.9167,
-          "max": 9,
+          "mean": 5.4167,
+          "max": 23,
           "n": 36
         },
         "largestShare": {
-          "min": 0.973,
-          "mean": 0.9963,
+          "min": 0.167,
+          "mean": 0.9032,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
           "min": 0,
-          "mean": 0.0023,
-          "max": 0.0097,
+          "mean": 0.0001,
+          "max": 0.0002,
           "n": 36
         }
       },
@@ -704,15 +704,15 @@
         "EDGE_TO_EDGE": true,
         "CENTRED_FIGURE": false,
         "STRATIFIED": true,
-        "ALL_OVER_FIELD": false,
+        "ALL_OVER_FIELD": true,
         "RADIAL_EMBLEM": true,
         "OFF_CENTRE_WEIGHT": false
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 3,
-        "ALL_OVER_FIELD": 0,
+        "STRATIFIED": 30,
+        "ALL_OVER_FIELD": 3,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
       }
@@ -720,20 +720,20 @@
     {
       "runtimeId": "VECTOR_COMPOSITION_V1",
       "compositionId": "EDGE_TO_EDGE",
-      "recipeId": "rot3-pinned",
+      "recipeId": "rot6-light",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "b1ab3ad545974b4c9f88c62e4c7305dd0e95b00584412811176aae2dc51681bd",
+      "configSha256": "90db8ee7b61b4079cee22dd0ee0d27c518491d548aec6a679f7028b01b1f9e7e",
       "distribution": {
         "ink": {
-          "min": 0.7031,
-          "mean": 0.9021,
-          "max": 0.9938,
+          "min": 0.6326,
+          "mean": 0.7715,
+          "max": 0.9322,
           "n": 36
         },
         "extentX": {
-          "min": 0.992,
-          "mean": 0.9993,
+          "min": 1,
+          "mean": 1,
           "max": 1,
           "n": 36
         },
@@ -750,14 +750,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.3064,
-          "mean": 0.727,
-          "max": 0.968,
+          "min": 0.2856,
+          "mean": 0.7015,
+          "max": 0.9684,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.3324,
-          "mean": 0.7571,
+          "min": 0.3206,
+          "mean": 0.6951,
           "max": 0.9725,
           "n": 36
         },
@@ -768,39 +768,39 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0065,
-          "mean": 0.0573,
-          "max": 0.1453,
+          "min": 0.0294,
+          "mean": 0.1074,
+          "max": 0.1639,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.8396,
-          "mean": 0.947,
-          "max": 0.9858,
+          "min": 0.8556,
+          "mean": 0.9682,
+          "max": 0.9972,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0378,
-          "mean": 0.0858,
-          "max": 0.191,
+          "min": 0.0828,
+          "mean": 0.1444,
+          "max": 0.2414,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 2.1667,
-          "max": 6,
+          "mean": 3.1667,
+          "max": 11,
           "n": 36
         },
         "largestShare": {
-          "min": 0.968,
-          "mean": 0.9964,
+          "min": 0.839,
+          "mean": 0.975,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0023,
-          "mean": 0.0074,
-          "max": 0.0125,
+          "min": 0.0001,
+          "mean": 0.0002,
+          "max": 0.0004,
           "n": 36
         }
       },
@@ -815,7 +815,7 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 15,
+        "STRATIFIED": 30,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -824,14 +824,14 @@
     {
       "runtimeId": "VECTOR_COMPOSITION_V1",
       "compositionId": "EDGE_TO_EDGE",
-      "recipeId": "quad-pinned",
+      "recipeId": "rot6-mid",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "dc2d107b31510454a24cdfaa6fbaaa967f1f6e41767e2d6a8b0ab6317e84dad8",
+      "configSha256": "eedc257ba2dc4c3449e4931c5bcbc41e9aa962873fa8712f0ed141e56e0e8b33",
       "distribution": {
         "ink": {
-          "min": 0.8236,
-          "mean": 0.9818,
+          "min": 0.9164,
+          "mean": 0.9806,
           "max": 1,
           "n": 36
         },
@@ -854,14 +854,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.5728,
-          "mean": 0.9511,
+          "min": 0.6612,
+          "mean": 0.9363,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.4052,
-          "mean": 0.9418,
+          "min": 0.7258,
+          "mean": 0.9351,
           "max": 1,
           "n": 36
         },
@@ -873,135 +873,31 @@
         },
         "adjacentContrast": {
           "min": 0,
-          "mean": 0.0119,
-          "max": 0.076,
+          "mean": 0.0173,
+          "max": 0.0706,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9997,
-          "mean": 1,
+          "min": 0.9303,
+          "mean": 0.9895,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0331,
+          "min": 0.0329,
           "mean": 0.0374,
-          "max": 0.0642,
+          "max": 0.0652,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "largestShare": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "centroidOffset": {
-          "min": 0,
-          "mean": 0,
-          "max": 0,
-          "n": 36
-        }
-      },
-      "anySeedSatisfies": {
-        "EDGE_TO_EDGE": true,
-        "CENTRED_FIGURE": false,
-        "STRATIFIED": true,
-        "ALL_OVER_FIELD": false,
-        "RADIAL_EMBLEM": true,
-        "OFF_CENTRE_WEIGHT": false
-      },
-      "seedsSatisfying": {
-        "EDGE_TO_EDGE": 36,
-        "CENTRED_FIGURE": 0,
-        "STRATIFIED": 6,
-        "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 36,
-        "OFF_CENTRE_WEIGHT": 0
-      }
-    },
-    {
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "compositionId": "EDGE_TO_EDGE",
-      "recipeId": "quad-pinned",
-      "memberId": "FRAME",
-      "legal": true,
-      "configSha256": "c4d14207719a885ec4647cad984b951e74c87eda7700cafa2ed5ebc1c188919d",
-      "distribution": {
-        "ink": {
-          "min": 0.8295,
-          "mean": 0.9606,
-          "max": 1,
-          "n": 36
-        },
-        "extentX": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "extentY": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "marginMin": {
-          "min": 0,
-          "mean": 0,
-          "max": 0,
-          "n": 36
-        },
-        "cornerInk": {
-          "min": 0.4284,
-          "mean": 0.8723,
-          "max": 1,
-          "n": 36
-        },
-        "edgeInk": {
-          "min": 0.5302,
-          "mean": 0.9101,
-          "max": 1,
-          "n": 36
-        },
-        "livingBands": {
-          "min": 8,
-          "mean": 8,
-          "max": 8,
-          "n": 36
-        },
-        "adjacentContrast": {
-          "min": 0,
-          "mean": 0.025,
-          "max": 0.0963,
-          "n": 36
-        },
-        "quadrantEvenness": {
-          "min": 0.9993,
-          "mean": 0.9998,
-          "max": 1,
-          "n": 36
-        },
-        "boundaryShare": {
-          "min": 0.0331,
-          "mean": 0.0599,
-          "max": 0.1144,
-          "n": 36
-        },
-        "components": {
-          "min": 1,
-          "mean": 1.3333,
+          "mean": 1.5833,
           "max": 5,
           "n": 36
         },
         "largestShare": {
-          "min": 0.998,
-          "mean": 0.9998,
+          "min": 0.854,
+          "mean": 0.9862,
           "max": 1,
           "n": 36
         },
@@ -1023,7 +919,527 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 6,
+        "STRATIFIED": 3,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "EDGE_TO_EDGE",
+      "recipeId": "rot6-mid",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "b3c81e680c925e621cdf113bd783eda40b37d2e6809289895cfecf30e8a6cd81",
+      "distribution": {
+        "ink": {
+          "min": 0.9343,
+          "mean": 0.9705,
+          "max": 1,
+          "n": 36
+        },
+        "extentX": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.704,
+          "mean": 0.8934,
+          "max": 1,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.7112,
+          "mean": 0.9124,
+          "max": 1,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0,
+          "mean": 0.0196,
+          "max": 0.0441,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.9615,
+          "mean": 0.9918,
+          "max": 1,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0331,
+          "mean": 0.0578,
+          "max": 0.0808,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.25,
+          "max": 3,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.986,
+          "mean": 0.9987,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0,
+          "mean": 0.0001,
+          "max": 0.0001,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": false,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 36,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 0,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "EDGE_TO_EDGE",
+      "recipeId": "rot3-pinned",
+      "memberId": "PLATE",
+      "legal": true,
+      "configSha256": "52b70efc375e9e8ae08d311e2339ff235e14a65f6ae2965ae98cd4ec5a625cf6",
+      "distribution": {
+        "ink": {
+          "min": 0.9613,
+          "mean": 0.9866,
+          "max": 1,
+          "n": 36
+        },
+        "extentX": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.7776,
+          "mean": 0.9265,
+          "max": 1,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.8394,
+          "mean": 0.9389,
+          "max": 1,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0,
+          "mean": 0.0118,
+          "max": 0.0361,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.9064,
+          "mean": 0.9672,
+          "max": 1,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0327,
+          "mean": 0.034,
+          "max": 0.0364,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.25,
+          "max": 3,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.993,
+          "mean": 0.9989,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0,
+          "mean": 0.0041,
+          "max": 0.012,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": false,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 36,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 0,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "EDGE_TO_EDGE",
+      "recipeId": "rot3-pinned",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "526c40ac155f439d0790a07eef0c3acc45b6d7c090057a4771d976bb6dae9848",
+      "distribution": {
+        "ink": {
+          "min": 0.9076,
+          "mean": 0.9508,
+          "max": 0.998,
+          "n": 36
+        },
+        "extentX": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.6472,
+          "mean": 0.7972,
+          "max": 0.9892,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.6735,
+          "mean": 0.8338,
+          "max": 0.9892,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0.0023,
+          "mean": 0.0395,
+          "max": 0.0675,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.9379,
+          "mean": 0.9587,
+          "max": 0.9931,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0348,
+          "mean": 0.0612,
+          "max": 0.1081,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.75,
+          "max": 6,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.988,
+          "mean": 0.9979,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0.0011,
+          "mean": 0.0063,
+          "max": 0.0103,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": true,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 36,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 3,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "EDGE_TO_EDGE",
+      "recipeId": "quad-pinned",
+      "memberId": "PLATE",
+      "legal": true,
+      "configSha256": "f2048456f9c981fe4998d3cd8d049df97c3097a8bf1d42e6a1e06c9b20f0858c",
+      "distribution": {
+        "ink": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "extentX": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0331,
+          "mean": 0.0331,
+          "max": 0.0331,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": false,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 36,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 0,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "EDGE_TO_EDGE",
+      "recipeId": "quad-pinned",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "68694bb34c70d4801e0374693efafd78ffa2730d99914cfdfc9b04fb1867da1e",
+      "distribution": {
+        "ink": {
+          "min": 0.9706,
+          "mean": 0.9913,
+          "max": 1,
+          "n": 36
+        },
+        "extentX": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.8892,
+          "mean": 0.9618,
+          "max": 1,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.8992,
+          "mean": 0.9846,
+          "max": 1,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0,
+          "mean": 0.008,
+          "max": 0.0238,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.9997,
+          "mean": 0.9998,
+          "max": 1,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0331,
+          "mean": 0.0448,
+          "max": 0.0697,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0,
+          "mean": 0,
+          "max": 0.0001,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": false,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 36,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 0,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -1451,17 +1867,17 @@
       "recipeId": "stack-pinned",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "f9598d7af3dd3bb2a5956787cdfe0375aefd6fa8051564b5b863daf6183b4b55",
+      "configSha256": "a5bbc4cf977affefebc40d848df1b483427964d27823fcf9399f5923a6a693bc",
       "distribution": {
         "ink": {
-          "min": 0.7168,
-          "mean": 0.8266,
-          "max": 0.9272,
+          "min": 0.6262,
+          "mean": 0.7657,
+          "max": 0.911,
           "n": 36
         },
         "extentX": {
-          "min": 0.975,
-          "mean": 0.9931,
+          "min": 0.933,
+          "mean": 0.9771,
           "max": 1,
           "n": 36
         },
@@ -1478,15 +1894,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.44,
-          "mean": 0.6119,
-          "max": 0.7928,
+          "min": 0.2596,
+          "mean": 0.4921,
+          "max": 0.8156,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.3513,
-          "mean": 0.5104,
-          "max": 0.639,
+          "min": 0.3017,
+          "mean": 0.4306,
+          "max": 0.6196,
           "n": 36
         },
         "livingBands": {
@@ -1496,39 +1912,39 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0221,
-          "mean": 0.0996,
-          "max": 0.2324,
+          "min": 0.0371,
+          "mean": 0.0984,
+          "max": 0.1516,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.8208,
-          "mean": 0.8971,
-          "max": 0.9603,
+          "min": 0.7513,
+          "mean": 0.8833,
+          "max": 0.9949,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0422,
-          "mean": 0.0664,
-          "max": 0.0997,
+          "min": 0.0471,
+          "mean": 0.0733,
+          "max": 0.1222,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1,
-          "max": 1,
+          "mean": 1.3333,
+          "max": 4,
           "n": 36
         },
         "largestShare": {
-          "min": 1,
-          "mean": 1,
+          "min": 0.736,
+          "mean": 0.9663,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0017,
-          "mean": 0.0131,
-          "max": 0.0295,
+          "min": 0.0009,
+          "mean": 0.0165,
+          "max": 0.0451,
           "n": 36
         }
       },
@@ -1541,7 +1957,7 @@
         "OFF_CENTRE_WEIGHT": false
       },
       "seedsSatisfying": {
-        "EDGE_TO_EDGE": 36,
+        "EDGE_TO_EDGE": 30,
         "CENTRED_FIGURE": 0,
         "STRATIFIED": 30,
         "ALL_OVER_FIELD": 0,
@@ -1555,17 +1971,17 @@
       "recipeId": "stack-pinned",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "9b5d471af7baa5794e9102e4c9074103be4e051dafb27bfc1b518e3facba8064",
+      "configSha256": "00b0c82e0652338a2d269e1de3a43bbee7033bb5ebca6f0425d809b19d80df7a",
       "distribution": {
         "ink": {
-          "min": 0.6755,
-          "mean": 0.8113,
-          "max": 0.9277,
+          "min": 0.649,
+          "mean": 0.7761,
+          "max": 0.9072,
           "n": 36
         },
         "extentX": {
-          "min": 0.983,
-          "mean": 0.9966,
+          "min": 0.95,
+          "mean": 0.9889,
           "max": 1,
           "n": 36
         },
@@ -1582,15 +1998,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.4176,
-          "mean": 0.6112,
-          "max": 0.9004,
+          "min": 0.2868,
+          "mean": 0.5226,
+          "max": 0.8932,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.3411,
-          "mean": 0.5156,
-          "max": 0.7619,
+          "min": 0.1837,
+          "mean": 0.431,
+          "max": 0.6827,
           "n": 36
         },
         "livingBands": {
@@ -1600,143 +2016,39 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.034,
-          "mean": 0.1049,
-          "max": 0.1972,
+          "min": 0.0437,
+          "mean": 0.0911,
+          "max": 0.1509,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.8351,
-          "mean": 0.8977,
-          "max": 0.9429,
+          "min": 0.7235,
+          "mean": 0.8781,
+          "max": 0.9673,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0561,
-          "mean": 0.134,
-          "max": 0.2461,
+          "min": 0.0631,
+          "mean": 0.1173,
+          "max": 0.1898,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.3333,
-          "max": 2,
+          "mean": 1.5833,
+          "max": 4,
           "n": 36
         },
         "largestShare": {
-          "min": 0.996,
-          "mean": 0.9995,
+          "min": 0.962,
+          "mean": 0.9965,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.003,
-          "mean": 0.0108,
-          "max": 0.0207,
-          "n": 36
-        }
-      },
-      "anySeedSatisfies": {
-        "EDGE_TO_EDGE": true,
-        "CENTRED_FIGURE": false,
-        "STRATIFIED": true,
-        "ALL_OVER_FIELD": false,
-        "RADIAL_EMBLEM": true,
-        "OFF_CENTRE_WEIGHT": false
-      },
-      "seedsSatisfying": {
-        "EDGE_TO_EDGE": 36,
-        "CENTRED_FIGURE": 0,
-        "STRATIFIED": 24,
-        "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 36,
-        "OFF_CENTRE_WEIGHT": 0
-      }
-    },
-    {
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "compositionId": "STRATIFIED",
-      "recipeId": "stack-mirror",
-      "memberId": "PLATE",
-      "legal": true,
-      "configSha256": "3ca0a968f00aa760dc1b1492ecb3ba3567d5a4c7594cd243d826477bf76a825a",
-      "distribution": {
-        "ink": {
-          "min": 0.8242,
-          "mean": 0.8774,
-          "max": 0.9226,
-          "n": 36
-        },
-        "extentX": {
-          "min": 0.95,
-          "mean": 0.9958,
-          "max": 1,
-          "n": 36
-        },
-        "extentY": {
-          "min": 0.975,
-          "mean": 0.9979,
-          "max": 1,
-          "n": 36
-        },
-        "marginMin": {
-          "min": 0,
-          "mean": 0,
-          "max": 0,
-          "n": 36
-        },
-        "cornerInk": {
-          "min": 0.4824,
-          "mean": 0.7054,
-          "max": 0.8864,
-          "n": 36
-        },
-        "edgeInk": {
-          "min": 0.3427,
-          "mean": 0.5524,
-          "max": 0.681,
-          "n": 36
-        },
-        "livingBands": {
-          "min": 8,
-          "mean": 8,
-          "max": 8,
-          "n": 36
-        },
-        "adjacentContrast": {
-          "min": 0.0406,
-          "mean": 0.0706,
-          "max": 0.1028,
-          "n": 36
-        },
-        "quadrantEvenness": {
-          "min": 0.8926,
-          "mean": 0.9597,
-          "max": 0.9959,
-          "n": 36
-        },
-        "boundaryShare": {
-          "min": 0.047,
-          "mean": 0.0573,
-          "max": 0.0785,
-          "n": 36
-        },
-        "components": {
-          "min": 1,
-          "mean": 1.25,
-          "max": 3,
-          "n": 36
-        },
-        "largestShare": {
-          "min": 0.57,
-          "mean": 0.9481,
-          "max": 1,
-          "n": 36
-        },
-        "centroidOffset": {
-          "min": 0.0011,
-          "mean": 0.0064,
-          "max": 0.0157,
+          "min": 0.0023,
+          "mean": 0.0185,
+          "max": 0.0405,
           "n": 36
         }
       },
@@ -1760,26 +2072,26 @@
     {
       "runtimeId": "VECTOR_COMPOSITION_V1",
       "compositionId": "STRATIFIED",
-      "recipeId": "stack-mirror",
-      "memberId": "FRAME",
+      "recipeId": "stack-light",
+      "memberId": "PLATE",
       "legal": true,
-      "configSha256": "189de8c5efad63d33b88cfe04bf7510d4fe3c3dc5f031ee9a985cfbc3aa1c5ee",
+      "configSha256": "bc190bc7e01b313c041eff7eb00a1167ddd82ab1a765df7188e1e4bfa5b6c8ec",
       "distribution": {
         "ink": {
-          "min": 0.8075,
-          "mean": 0.8941,
-          "max": 0.9585,
+          "min": 0.6358,
+          "mean": 0.7579,
+          "max": 0.8906,
           "n": 36
         },
         "extentX": {
-          "min": 1,
-          "mean": 1,
+          "min": 0.858,
+          "mean": 0.9541,
           "max": 1,
           "n": 36
         },
         "extentY": {
-          "min": 0.992,
-          "mean": 0.9993,
+          "min": 0.95,
+          "mean": 0.9958,
           "max": 1,
           "n": 36
         },
@@ -1790,15 +2102,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.4728,
-          "mean": 0.7533,
-          "max": 0.9448,
+          "min": 0.3096,
+          "mean": 0.5433,
+          "max": 0.7392,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.4892,
-          "mean": 0.6277,
-          "max": 0.7953,
+          "min": 0.327,
+          "mean": 0.4462,
+          "max": 0.6245,
           "n": 36
         },
         "livingBands": {
@@ -1808,39 +2120,247 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0338,
-          "mean": 0.0729,
-          "max": 0.1291,
+          "min": 0.064,
+          "mean": 0.0998,
+          "max": 0.1937,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.8456,
-          "mean": 0.963,
-          "max": 0.9934,
+          "min": 0.7468,
+          "mean": 0.8671,
+          "max": 0.9886,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0478,
-          "mean": 0.0832,
-          "max": 0.1721,
+          "min": 0.0484,
+          "mean": 0.064,
+          "max": 0.0998,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.25,
-          "max": 3,
+          "mean": 1.1667,
+          "max": 2,
           "n": 36
         },
         "largestShare": {
-          "min": 0.772,
-          "mean": 0.9673,
+          "min": 0.679,
+          "mean": 0.9477,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
+          "min": 0.0048,
+          "mean": 0.0138,
+          "max": 0.0352,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": true,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 24,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 36,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "STRATIFIED",
+      "recipeId": "stack-light",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "20416b1261e8d4e928733880dadad077be9a1153dcd79e243bff4db4c2e717bf",
+      "distribution": {
+        "ink": {
+          "min": 0.4665,
+          "mean": 0.5928,
+          "max": 0.7462,
+          "n": 36
+        },
+        "extentX": {
+          "min": 0.875,
+          "mean": 0.9702,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 0.967,
+          "mean": 0.9972,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
           "min": 0,
-          "mean": 0.0052,
-          "max": 0.0206,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.2808,
+          "mean": 0.4555,
+          "max": 0.6384,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.1325,
+          "mean": 0.3604,
+          "max": 0.5458,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0.0693,
+          "mean": 0.1147,
+          "max": 0.1722,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.7107,
+          "mean": 0.8441,
+          "max": 0.9293,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.175,
+          "mean": 0.231,
+          "max": 0.3409,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.4167,
+          "max": 3,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.67,
+          "mean": 0.9723,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0.0021,
+          "mean": 0.0188,
+          "max": 0.045,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": true,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 30,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 36,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "STRATIFIED",
+      "recipeId": "stack-mirror",
+      "memberId": "PLATE",
+      "legal": true,
+      "configSha256": "639e6e88e20078dc9df9e21748defa20c733333a2efa02cacddb405a928a0796",
+      "distribution": {
+        "ink": {
+          "min": 0.7312,
+          "mean": 0.8105,
+          "max": 0.9068,
+          "n": 36
+        },
+        "extentX": {
+          "min": 0.95,
+          "mean": 0.9847,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 0.967,
+          "mean": 0.9945,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.404,
+          "mean": 0.5599,
+          "max": 0.7832,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.2252,
+          "mean": 0.4648,
+          "max": 0.6272,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0.0489,
+          "mean": 0.078,
+          "max": 0.0998,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.9033,
+          "mean": 0.9532,
+          "max": 0.9864,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0536,
+          "mean": 0.0679,
+          "max": 0.1132,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.4167,
+          "max": 4,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.699,
+          "mean": 0.9645,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0.0004,
+          "mean": 0.0068,
+          "max": 0.0175,
           "n": 36
         }
       },
@@ -1855,7 +2375,111 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 24,
+        "STRATIFIED": 33,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "STRATIFIED",
+      "recipeId": "stack-mirror",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "d4d6b1dd72d02195898696859f35198e35b5330d8b888647d8115a1c68b1c30e",
+      "distribution": {
+        "ink": {
+          "min": 0.7438,
+          "mean": 0.8466,
+          "max": 0.9568,
+          "n": 36
+        },
+        "extentX": {
+          "min": 0.967,
+          "mean": 0.9931,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 0.983,
+          "mean": 0.9979,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.4216,
+          "mean": 0.6363,
+          "max": 0.928,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.2856,
+          "mean": 0.5171,
+          "max": 0.806,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0.0329,
+          "mean": 0.0717,
+          "max": 0.1303,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.8654,
+          "mean": 0.9514,
+          "max": 0.9993,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0443,
+          "mean": 0.0817,
+          "max": 0.1375,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.5833,
+          "max": 4,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.849,
+          "mean": 0.9824,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0.0016,
+          "mean": 0.0083,
+          "max": 0.0203,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": true,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 36,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 21,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -1867,17 +2491,17 @@
       "recipeId": "scatter-fine",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "2ccb6c937c3356697167787d04bb74e711ef5245884c4cfc7a64d633b80c6b0e",
+      "configSha256": "f5c18c66324e007cee710aa3fc3dd7460a955980fbd945ff61748511dcedc9da",
       "distribution": {
         "ink": {
-          "min": 0.0995,
-          "mean": 0.3224,
-          "max": 0.5484,
+          "min": 0.3276,
+          "mean": 0.4621,
+          "max": 0.5657,
           "n": 36
         },
         "extentX": {
-          "min": 1,
-          "mean": 1,
+          "min": 0.942,
+          "mean": 0.9952,
           "max": 1,
           "n": 36
         },
@@ -1894,15 +2518,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.1092,
-          "mean": 0.3119,
-          "max": 0.5084,
+          "min": 0.1316,
+          "mean": 0.332,
+          "max": 0.5604,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.1255,
-          "mean": 0.4053,
-          "max": 0.6148,
+          "min": 0.0603,
+          "mean": 0.3663,
+          "max": 0.6266,
           "n": 36
         },
         "livingBands": {
@@ -1912,39 +2536,143 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0655,
-          "mean": 0.1402,
-          "max": 0.2713,
+          "min": 0.0919,
+          "mean": 0.1446,
+          "max": 0.2285,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.5305,
-          "mean": 0.7515,
-          "max": 0.9238,
+          "min": 0.5463,
+          "mean": 0.7174,
+          "max": 0.9784,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.2081,
-          "mean": 0.328,
-          "max": 0.5911,
+          "min": 0.1764,
+          "mean": 0.2078,
+          "max": 0.2446,
           "n": 36
         },
         "components": {
-          "min": 11,
-          "mean": 40.1667,
-          "max": 66,
+          "min": 12,
+          "mean": 21.5833,
+          "max": 34,
           "n": 36
         },
         "largestShare": {
-          "min": 0.054,
-          "mean": 0.1445,
-          "max": 0.555,
+          "min": 0.238,
+          "mean": 0.5212,
+          "max": 0.805,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0125,
-          "mean": 0.0376,
-          "max": 0.0777,
+          "min": 0.0212,
+          "mean": 0.0371,
+          "max": 0.0565,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": true,
+        "ALL_OVER_FIELD": true,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 33,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 36,
+        "ALL_OVER_FIELD": 18,
+        "RADIAL_EMBLEM": 30,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "ALL_OVER_FIELD",
+      "recipeId": "scatter-fine",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "3f085b57ab11ee2b38e63dec543ee6e2653ae27b5e0aed46b52ef6d2e8c2c340",
+      "distribution": {
+        "ink": {
+          "min": 0.3418,
+          "mean": 0.5133,
+          "max": 0.6853,
+          "n": 36
+        },
+        "extentX": {
+          "min": 0.95,
+          "mean": 0.9958,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.1408,
+          "mean": 0.3851,
+          "max": 0.6412,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.0954,
+          "mean": 0.4138,
+          "max": 0.6633,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0.0726,
+          "mean": 0.1434,
+          "max": 0.1863,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.5908,
+          "mean": 0.7123,
+          "max": 0.9083,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.1558,
+          "mean": 0.2725,
+          "max": 0.4247,
+          "n": 36
+        },
+        "components": {
+          "min": 3,
+          "mean": 13.0833,
+          "max": 27,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.373,
+          "mean": 0.7254,
+          "max": 0.994,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0.0235,
+          "mean": 0.0388,
+          "max": 0.0577,
           "n": 36
         }
       },
@@ -1960,23 +2688,23 @@
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
         "STRATIFIED": 36,
-        "ALL_OVER_FIELD": 33,
-        "RADIAL_EMBLEM": 27,
+        "ALL_OVER_FIELD": 9,
+        "RADIAL_EMBLEM": 33,
         "OFF_CENTRE_WEIGHT": 0
       }
     },
     {
       "runtimeId": "VECTOR_COMPOSITION_V1",
       "compositionId": "ALL_OVER_FIELD",
-      "recipeId": "scatter-fine",
-      "memberId": "FRAME",
+      "recipeId": "lattice-mirror",
+      "memberId": "PLATE",
       "legal": true,
-      "configSha256": "4f471dcfd3dfe91d9380f05c92419c86a246a7fbe536ea73e20a3cc6e2827832",
+      "configSha256": "a4ca7e5cc42ccc5c08a0141c15154e4f7cdf708ae83cf002e9d78384ff238213",
       "distribution": {
         "ink": {
-          "min": 0.2203,
-          "mean": 0.416,
-          "max": 0.6611,
+          "min": 0.396,
+          "mean": 0.5517,
+          "max": 0.6593,
           "n": 36
         },
         "extentX": {
@@ -1998,15 +2726,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.1836,
-          "mean": 0.3933,
-          "max": 0.6764,
+          "min": 0.1564,
+          "mean": 0.4205,
+          "max": 0.6908,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.2193,
-          "mean": 0.4567,
-          "max": 0.6719,
+          "min": 0.1002,
+          "mean": 0.477,
+          "max": 0.7597,
           "n": 36
         },
         "livingBands": {
@@ -2016,39 +2744,143 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0395,
-          "mean": 0.1348,
-          "max": 0.253,
+          "min": 0.0829,
+          "mean": 0.1589,
+          "max": 0.2621,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.605,
-          "mean": 0.7584,
-          "max": 0.8695,
+          "min": 0.7601,
+          "mean": 0.8824,
+          "max": 0.9995,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.2205,
-          "mean": 0.3615,
-          "max": 0.5432,
+          "min": 0.1639,
+          "mean": 0.2023,
+          "max": 0.2425,
           "n": 36
         },
         "components": {
-          "min": 5,
-          "mean": 29.25,
-          "max": 48,
+          "min": 13,
+          "mean": 24.5833,
+          "max": 43,
           "n": 36
         },
         "largestShare": {
-          "min": 0.099,
-          "mean": 0.2589,
-          "max": 0.942,
+          "min": 0.284,
+          "mean": 0.6068,
+          "max": 0.914,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0132,
-          "mean": 0.0355,
-          "max": 0.0705,
+          "min": 0.0073,
+          "mean": 0.024,
+          "max": 0.0466,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": true,
+        "ALL_OVER_FIELD": true,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 36,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 36,
+        "ALL_OVER_FIELD": 12,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "ALL_OVER_FIELD",
+      "recipeId": "lattice-mirror",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "6b5cdad17ef62bea5a621ce4302b9824c1324dfb0a4d17d61ed8e731d35b4f6b",
+      "distribution": {
+        "ink": {
+          "min": 0.4843,
+          "mean": 0.6607,
+          "max": 0.8201,
+          "n": 36
+        },
+        "extentX": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.2024,
+          "mean": 0.5358,
+          "max": 0.788,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.1584,
+          "mean": 0.5737,
+          "max": 0.8653,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0.0578,
+          "mean": 0.1623,
+          "max": 0.2329,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.751,
+          "mean": 0.8969,
+          "max": 0.9944,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.1177,
+          "mean": 0.2026,
+          "max": 0.292,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 12.3333,
+          "max": 33,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.272,
+          "mean": 0.7931,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0.0018,
+          "mean": 0.0216,
+          "max": 0.0442,
           "n": 36
         }
       },
@@ -2064,215 +2896,7 @@
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
         "STRATIFIED": 33,
-        "ALL_OVER_FIELD": 30,
-        "RADIAL_EMBLEM": 30,
-        "OFF_CENTRE_WEIGHT": 0
-      }
-    },
-    {
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "compositionId": "ALL_OVER_FIELD",
-      "recipeId": "lattice-mirror",
-      "memberId": "PLATE",
-      "legal": true,
-      "configSha256": "491a4d3185adeaea25a88a6cfabe1cacb83adcbef8e7ff9332bb6fe4ed9e756d",
-      "distribution": {
-        "ink": {
-          "min": 0.1948,
-          "mean": 0.477,
-          "max": 0.7277,
-          "n": 36
-        },
-        "extentX": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "extentY": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "marginMin": {
-          "min": 0,
-          "mean": 0,
-          "max": 0,
-          "n": 36
-        },
-        "cornerInk": {
-          "min": 0.2252,
-          "mean": 0.4963,
-          "max": 0.7236,
-          "n": 36
-        },
-        "edgeInk": {
-          "min": 0.2511,
-          "mean": 0.5877,
-          "max": 0.8728,
-          "n": 36
-        },
-        "livingBands": {
-          "min": 8,
-          "mean": 8,
-          "max": 8,
-          "n": 36
-        },
-        "adjacentContrast": {
-          "min": 0.0696,
-          "mean": 0.1541,
-          "max": 0.3074,
-          "n": 36
-        },
-        "quadrantEvenness": {
-          "min": 0.8077,
-          "mean": 0.9065,
-          "max": 0.9788,
-          "n": 36
-        },
-        "boundaryShare": {
-          "min": 0.1758,
-          "mean": 0.3044,
-          "max": 0.5619,
-          "n": 36
-        },
-        "components": {
-          "min": 7,
-          "mean": 38.6667,
-          "max": 93,
-          "n": 36
-        },
-        "largestShare": {
-          "min": 0.05,
-          "mean": 0.263,
-          "max": 0.693,
-          "n": 36
-        },
-        "centroidOffset": {
-          "min": 0.0028,
-          "mean": 0.017,
-          "max": 0.0367,
-          "n": 36
-        }
-      },
-      "anySeedSatisfies": {
-        "EDGE_TO_EDGE": true,
-        "CENTRED_FIGURE": false,
-        "STRATIFIED": true,
-        "ALL_OVER_FIELD": true,
-        "RADIAL_EMBLEM": true,
-        "OFF_CENTRE_WEIGHT": false
-      },
-      "seedsSatisfying": {
-        "EDGE_TO_EDGE": 36,
-        "CENTRED_FIGURE": 0,
-        "STRATIFIED": 36,
-        "ALL_OVER_FIELD": 33,
-        "RADIAL_EMBLEM": 36,
-        "OFF_CENTRE_WEIGHT": 0
-      }
-    },
-    {
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "compositionId": "ALL_OVER_FIELD",
-      "recipeId": "lattice-mirror",
-      "memberId": "FRAME",
-      "legal": true,
-      "configSha256": "1897e48b6041320283a595e8972d9e9f70480dbc85ff62697d46ff7b4dc54f58",
-      "distribution": {
-        "ink": {
-          "min": 0.3907,
-          "mean": 0.6365,
-          "max": 0.8704,
-          "n": 36
-        },
-        "extentX": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "extentY": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "marginMin": {
-          "min": 0,
-          "mean": 0,
-          "max": 0,
-          "n": 36
-        },
-        "cornerInk": {
-          "min": 0.326,
-          "mean": 0.6403,
-          "max": 0.8996,
-          "n": 36
-        },
-        "edgeInk": {
-          "min": 0.4537,
-          "mean": 0.6858,
-          "max": 0.9019,
-          "n": 36
-        },
-        "livingBands": {
-          "min": 8,
-          "mean": 8,
-          "max": 8,
-          "n": 36
-        },
-        "adjacentContrast": {
-          "min": 0.0855,
-          "mean": 0.1475,
-          "max": 0.2152,
-          "n": 36
-        },
-        "quadrantEvenness": {
-          "min": 0.8121,
-          "mean": 0.9185,
-          "max": 0.9953,
-          "n": 36
-        },
-        "boundaryShare": {
-          "min": 0.1252,
-          "mean": 0.2558,
-          "max": 0.4463,
-          "n": 36
-        },
-        "components": {
-          "min": 1,
-          "mean": 15.25,
-          "max": 42,
-          "n": 36
-        },
-        "largestShare": {
-          "min": 0.15,
-          "mean": 0.6046,
-          "max": 1,
-          "n": 36
-        },
-        "centroidOffset": {
-          "min": 0.0005,
-          "mean": 0.0151,
-          "max": 0.0356,
-          "n": 36
-        }
-      },
-      "anySeedSatisfies": {
-        "EDGE_TO_EDGE": true,
-        "CENTRED_FIGURE": false,
-        "STRATIFIED": true,
-        "ALL_OVER_FIELD": true,
-        "RADIAL_EMBLEM": true,
-        "OFF_CENTRE_WEIGHT": false
-      },
-      "seedsSatisfying": {
-        "EDGE_TO_EDGE": 36,
-        "CENTRED_FIGURE": 0,
-        "STRATIFIED": 36,
-        "ALL_OVER_FIELD": 15,
+        "ALL_OVER_FIELD": 6,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
       }
@@ -2283,42 +2907,42 @@
       "recipeId": "orbit-rot6",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "8170d40f3106d4e212b0e0527ca887a905ede3e4d07ed10f0008eaa7ad6bc0ad",
+      "configSha256": "0002b92884f0718cff00b8e64c706579c671d9061dd3208bf9e08ebcd4259c25",
       "distribution": {
         "ink": {
-          "min": 0.6038,
-          "mean": 0.8397,
+          "min": 0.5915,
+          "mean": 0.7787,
           "max": 0.97,
           "n": 36
         },
         "extentX": {
-          "min": 1,
-          "mean": 1,
+          "min": 0.95,
+          "mean": 0.9875,
           "max": 1,
           "n": 36
         },
         "extentY": {
-          "min": 1,
-          "mean": 1,
+          "min": 0.983,
+          "mean": 0.9972,
           "max": 1,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0,
-          "max": 0,
+          "mean": 0.0007,
+          "max": 0.008,
           "n": 36
         },
         "cornerInk": {
-          "min": 0.1092,
-          "mean": 0.4381,
-          "max": 0.8528,
+          "min": 0.0108,
+          "mean": 0.283,
+          "max": 0.8272,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.1325,
-          "mean": 0.4902,
-          "max": 0.8244,
+          "min": 0.0323,
+          "mean": 0.3324,
+          "max": 0.8157,
           "n": 36
         },
         "livingBands": {
@@ -2329,135 +2953,31 @@
         },
         "adjacentContrast": {
           "min": 0.0305,
-          "mean": 0.0945,
-          "max": 0.1806,
+          "mean": 0.1351,
+          "max": 0.2056,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9363,
-          "mean": 0.9757,
-          "max": 0.9993,
+          "min": 0.9226,
+          "mean": 0.9763,
+          "max": 0.9987,
           "n": 36
         },
         "boundaryShare": {
           "min": 0.0302,
-          "mean": 0.0541,
-          "max": 0.1583,
+          "mean": 0.0464,
+          "max": 0.0662,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 2.0833,
-          "max": 7,
+          "mean": 2.5,
+          "max": 13,
           "n": 36
         },
         "largestShare": {
-          "min": 0.954,
-          "mean": 0.9919,
-          "max": 1,
-          "n": 36
-        },
-        "centroidOffset": {
-          "min": 0,
-          "mean": 0.0001,
-          "max": 0.0001,
-          "n": 36
-        }
-      },
-      "anySeedSatisfies": {
-        "EDGE_TO_EDGE": true,
-        "CENTRED_FIGURE": false,
-        "STRATIFIED": true,
-        "ALL_OVER_FIELD": false,
-        "RADIAL_EMBLEM": true,
-        "OFF_CENTRE_WEIGHT": false
-      },
-      "seedsSatisfying": {
-        "EDGE_TO_EDGE": 36,
-        "CENTRED_FIGURE": 0,
-        "STRATIFIED": 27,
-        "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 36,
-        "OFF_CENTRE_WEIGHT": 0
-      }
-    },
-    {
-      "runtimeId": "VECTOR_COMPOSITION_V1",
-      "compositionId": "RADIAL_EMBLEM",
-      "recipeId": "orbit-rot6",
-      "memberId": "FRAME",
-      "legal": true,
-      "configSha256": "8e006a128d0441086bd04d422efa0a935d67b419b537ad2504b51651c964dc4f",
-      "distribution": {
-        "ink": {
-          "min": 0.689,
-          "mean": 0.8499,
-          "max": 0.9754,
-          "n": 36
-        },
-        "extentX": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "extentY": {
-          "min": 1,
-          "mean": 1,
-          "max": 1,
-          "n": 36
-        },
-        "marginMin": {
-          "min": 0,
-          "mean": 0,
-          "max": 0,
-          "n": 36
-        },
-        "cornerInk": {
-          "min": 0.1624,
-          "mean": 0.4591,
-          "max": 0.8928,
-          "n": 36
-        },
-        "edgeInk": {
-          "min": 0.1422,
-          "mean": 0.5051,
-          "max": 0.8427,
-          "n": 36
-        },
-        "livingBands": {
-          "min": 8,
-          "mean": 8,
-          "max": 8,
-          "n": 36
-        },
-        "adjacentContrast": {
-          "min": 0.0286,
-          "mean": 0.0947,
-          "max": 0.1602,
-          "n": 36
-        },
-        "quadrantEvenness": {
-          "min": 0.9473,
-          "mean": 0.9796,
-          "max": 0.9971,
-          "n": 36
-        },
-        "boundaryShare": {
-          "min": 0.0331,
-          "mean": 0.0734,
-          "max": 0.1045,
-          "n": 36
-        },
-        "components": {
-          "min": 1,
-          "mean": 1.1667,
-          "max": 3,
-          "n": 36
-        },
-        "largestShare": {
-          "min": 0.995,
-          "mean": 0.9996,
+          "min": 0.952,
+          "mean": 0.9941,
           "max": 1,
           "n": 36
         },
@@ -2477,7 +2997,111 @@
         "OFF_CENTRE_WEIGHT": false
       },
       "seedsSatisfying": {
-        "EDGE_TO_EDGE": 36,
+        "EDGE_TO_EDGE": 27,
+        "CENTRED_FIGURE": 0,
+        "STRATIFIED": 33,
+        "ALL_OVER_FIELD": 0,
+        "RADIAL_EMBLEM": 36,
+        "OFF_CENTRE_WEIGHT": 0
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "compositionId": "RADIAL_EMBLEM",
+      "recipeId": "orbit-rot6",
+      "memberId": "FRAME",
+      "legal": true,
+      "configSha256": "f5517736e1099f72143ce38ca289c11c4d486177279a8934c184a6c751539a56",
+      "distribution": {
+        "ink": {
+          "min": 0.5865,
+          "mean": 0.7688,
+          "max": 0.9726,
+          "n": 36
+        },
+        "extentX": {
+          "min": 0.967,
+          "mean": 0.9931,
+          "max": 1,
+          "n": 36
+        },
+        "extentY": {
+          "min": 1,
+          "mean": 1,
+          "max": 1,
+          "n": 36
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0,
+          "max": 0,
+          "n": 36
+        },
+        "cornerInk": {
+          "min": 0.0232,
+          "mean": 0.3134,
+          "max": 0.8928,
+          "n": 36
+        },
+        "edgeInk": {
+          "min": 0.0431,
+          "mean": 0.3542,
+          "max": 0.8427,
+          "n": 36
+        },
+        "livingBands": {
+          "min": 8,
+          "mean": 8,
+          "max": 8,
+          "n": 36
+        },
+        "adjacentContrast": {
+          "min": 0.034,
+          "mean": 0.1327,
+          "max": 0.2063,
+          "n": 36
+        },
+        "quadrantEvenness": {
+          "min": 0.9387,
+          "mean": 0.982,
+          "max": 0.9986,
+          "n": 36
+        },
+        "boundaryShare": {
+          "min": 0.0356,
+          "mean": 0.0792,
+          "max": 0.1729,
+          "n": 36
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.8333,
+          "max": 7,
+          "n": 36
+        },
+        "largestShare": {
+          "min": 0.947,
+          "mean": 0.9951,
+          "max": 1,
+          "n": 36
+        },
+        "centroidOffset": {
+          "min": 0,
+          "mean": 0.0001,
+          "max": 0.0003,
+          "n": 36
+        }
+      },
+      "anySeedSatisfies": {
+        "EDGE_TO_EDGE": true,
+        "CENTRED_FIGURE": false,
+        "STRATIFIED": true,
+        "ALL_OVER_FIELD": false,
+        "RADIAL_EMBLEM": true,
+        "OFF_CENTRE_WEIGHT": false
+      },
+      "seedsSatisfying": {
+        "EDGE_TO_EDGE": 33,
         "CENTRED_FIGURE": 0,
         "STRATIFIED": 30,
         "ALL_OVER_FIELD": 0,
@@ -2699,102 +3323,102 @@
       "recipeId": "scatter-sparse",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "f5aca9af5c485455f7378b3cc40729702dff26e72da97a93db183017e7b8aae0",
+      "configSha256": "90cf424baa64b941b7c4ae3a7b1850728b609638b1ae0a252139e68f03be656a",
       "distribution": {
         "ink": {
-          "min": 0.0024,
-          "mean": 0.0994,
-          "max": 0.2842,
+          "min": 0.0407,
+          "mean": 0.1522,
+          "max": 0.3862,
           "n": 36
         },
         "extentX": {
-          "min": 0.208,
-          "mean": 0.5208,
+          "min": 0.425,
+          "mean": 0.6354,
           "max": 0.933,
           "n": 36
         },
         "extentY": {
-          "min": 0.258,
-          "mean": 0.5297,
+          "min": 0.467,
+          "mean": 0.7118,
           "max": 0.858,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.118,
-          "max": 0.35,
+          "mean": 0.0576,
+          "max": 0.225,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0109,
+          "mean": 0.0116,
           "max": 0.1084,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0125,
+          "mean": 0.0158,
           "max": 0.0878,
           "n": 36
         },
         "livingBands": {
-          "min": 0,
-          "mean": 3,
+          "min": 2,
+          "mean": 4.9167,
           "max": 7,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0021,
-          "mean": 0.0749,
-          "max": 0.159,
+          "min": 0.0435,
+          "mean": 0.1068,
+          "max": 0.201,
           "n": 36
         },
         "quadrantEvenness": {
           "min": 0,
-          "mean": 0.0901,
-          "max": 0.4504,
+          "mean": 0.2251,
+          "max": 0.5854,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0634,
-          "mean": 0.231,
-          "max": 0.7353,
+          "min": 0.0703,
+          "mean": 0.1438,
+          "max": 0.256,
           "n": 36
         },
         "components": {
-          "min": 1,
-          "mean": 2.1667,
-          "max": 3,
+          "min": 2,
+          "mean": 3.1667,
+          "max": 6,
           "n": 36
         },
         "largestShare": {
-          "min": 0.382,
-          "mean": 0.7964,
-          "max": 1,
+          "min": 0.429,
+          "mean": 0.7793,
+          "max": 0.992,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0321,
-          "mean": 0.1633,
-          "max": 0.2974,
+          "min": 0.0122,
+          "mean": 0.1104,
+          "max": 0.2452,
           "n": 36
         }
       },
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": false,
         "CENTRED_FIGURE": true,
-        "STRATIFIED": false,
+        "STRATIFIED": true,
         "ALL_OVER_FIELD": false,
-        "RADIAL_EMBLEM": false,
+        "RADIAL_EMBLEM": true,
         "OFF_CENTRE_WEIGHT": true
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 21,
-        "STRATIFIED": 0,
+        "CENTRED_FIGURE": 12,
+        "STRATIFIED": 3,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 0,
-        "OFF_CENTRE_WEIGHT": 27
+        "RADIAL_EMBLEM": 3,
+        "OFF_CENTRE_WEIGHT": 21
       }
     },
     {
@@ -2803,102 +3427,102 @@
       "recipeId": "scatter-sparse",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "aa2c56ad92bd4f965352e912cf84bf598b5448f30012dd7828a98776349f4447",
+      "configSha256": "e98a5795ea7a57bddc9b0eb455dfe2940b87929799ec2c4d6019117b21342a79",
       "distribution": {
         "ink": {
-          "min": 0.0071,
-          "mean": 0.0474,
-          "max": 0.1244,
+          "min": 0.0447,
+          "mean": 0.0892,
+          "max": 0.1829,
           "n": 36
         },
         "extentX": {
-          "min": 0.183,
-          "mean": 0.4672,
+          "min": 0.442,
+          "mean": 0.6508,
           "max": 0.95,
           "n": 36
         },
         "extentY": {
-          "min": 0.175,
-          "mean": 0.4952,
+          "min": 0.467,
+          "mean": 0.7259,
           "max": 0.867,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.1105,
-          "max": 0.342,
+          "mean": 0.0493,
+          "max": 0.217,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0095,
+          "mean": 0.0116,
           "max": 0.0828,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0126,
+          "mean": 0.0177,
           "max": 0.0841,
           "n": 36
         },
         "livingBands": {
-          "min": 0,
-          "mean": 3.1667,
+          "min": 3,
+          "mean": 5.4167,
           "max": 7,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.006,
-          "mean": 0.0373,
-          "max": 0.0894,
+          "min": 0.0297,
+          "mean": 0.0645,
+          "max": 0.1232,
           "n": 36
         },
         "quadrantEvenness": {
           "min": 0,
-          "mean": 0.1041,
-          "max": 0.4602,
+          "mean": 0.2157,
+          "max": 0.5179,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.3017,
-          "mean": 0.493,
-          "max": 0.7671,
+          "min": 0.3176,
+          "mean": 0.4308,
+          "max": 0.6584,
           "n": 36
         },
         "components": {
-          "min": 1,
-          "mean": 2.1667,
-          "max": 5,
+          "min": 2,
+          "mean": 3.3333,
+          "max": 6,
           "n": 36
         },
         "largestShare": {
-          "min": 0.373,
-          "mean": 0.7829,
-          "max": 1,
+          "min": 0.466,
+          "mean": 0.7127,
+          "max": 0.928,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.035,
-          "mean": 0.1693,
-          "max": 0.3595,
+          "min": 0.0286,
+          "mean": 0.1066,
+          "max": 0.1983,
           "n": 36
         }
       },
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": false,
         "CENTRED_FIGURE": true,
-        "STRATIFIED": false,
+        "STRATIFIED": true,
         "ALL_OVER_FIELD": false,
         "RADIAL_EMBLEM": false,
         "OFF_CENTRE_WEIGHT": true
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 21,
-        "STRATIFIED": 0,
+        "CENTRED_FIGURE": 15,
+        "STRATIFIED": 3,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 0,
-        "OFF_CENTRE_WEIGHT": 27
+        "OFF_CENTRE_WEIGHT": 24
       }
     },
     {
@@ -2907,11 +3531,11 @@
       "recipeId": "ring-rot6",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "0746f9fa2b4415202e37934ae9ba98c61b40cc40a844391791d59c9110502a80",
+      "configSha256": "7b420a813e20a5ee57fe777a377722b7ed01f6c5df3a5c946de67a431418f28a",
       "distribution": {
         "ink": {
-          "min": 0.8557,
-          "mean": 0.975,
+          "min": 0.8024,
+          "mean": 0.9597,
           "max": 1,
           "n": 36
         },
@@ -2934,14 +3558,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.4608,
-          "mean": 0.878,
+          "min": 0.374,
+          "mean": 0.8138,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.4564,
-          "mean": 0.8922,
+          "min": 0.3432,
+          "mean": 0.8442,
           "max": 1,
           "n": 36
         },
@@ -2953,20 +3577,20 @@
         },
         "adjacentContrast": {
           "min": 0,
-          "mean": 0.0211,
-          "max": 0.1004,
+          "mean": 0.0292,
+          "max": 0.1023,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9234,
-          "mean": 0.9835,
+          "min": 0.9025,
+          "mean": 0.9722,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0331,
-          "mean": 0.0339,
-          "max": 0.0429,
+          "min": 0.0323,
+          "mean": 0.0347,
+          "max": 0.0487,
           "n": 36
         },
         "components": {
@@ -2999,7 +3623,7 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 6,
+        "STRATIFIED": 8,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -3011,12 +3635,12 @@
       "recipeId": "ring-rot6",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "35d662ca7ba7d7ccf5f7f2ea95053be394a19beea66ab81f512ff5a9dfcd2365",
+      "configSha256": "cb64e337cf83b09d7979149a3d5404cb7c826a42a339839d9b2a691e92e77617",
       "distribution": {
         "ink": {
-          "min": 0.7478,
-          "mean": 0.932,
-          "max": 0.9994,
+          "min": 0.6928,
+          "mean": 0.9172,
+          "max": 0.9993,
           "n": 36
         },
         "extentX": {
@@ -3038,14 +3662,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.2936,
-          "mean": 0.7333,
-          "max": 0.9968,
+          "min": 0.2496,
+          "mean": 0.693,
+          "max": 0.996,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.3244,
-          "mean": 0.7942,
+          "min": 0.2818,
+          "mean": 0.7556,
           "max": 0.9968,
           "n": 36
         },
@@ -3057,31 +3681,31 @@
         },
         "adjacentContrast": {
           "min": 0.0006,
-          "mean": 0.0474,
-          "max": 0.1316,
+          "mean": 0.0546,
+          "max": 0.1403,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9528,
-          "mean": 0.9847,
+          "min": 0.9507,
+          "mean": 0.9812,
           "max": 0.9997,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0343,
-          "mean": 0.0713,
-          "max": 0.1598,
+          "min": 0.0347,
+          "mean": 0.0737,
+          "max": 0.1728,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.3333,
+          "mean": 1.0556,
           "max": 3,
           "n": 36
         },
         "largestShare": {
-          "min": 0.996,
-          "mean": 0.9996,
+          "min": 0.998,
+          "mean": 0.9999,
           "max": 1,
           "n": 36
         },
@@ -3103,7 +3727,7 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 14,
+        "STRATIFIED": 16,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -3115,11 +3739,11 @@
       "recipeId": "branch-rot6",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "adb5ac0c9526754639769f91de1a7ff78fc39685988f902acd0d5737deaead33",
+      "configSha256": "78bb26f04d3b74950d7a051f88f9268f991a8bdee4b02ef62027c7c3218034a1",
       "distribution": {
         "ink": {
-          "min": 0.8587,
-          "mean": 0.9699,
+          "min": 0.8335,
+          "mean": 0.963,
           "max": 1,
           "n": 36
         },
@@ -3142,14 +3766,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.34,
-          "mean": 0.8748,
+          "min": 0.2844,
+          "mean": 0.8428,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.4838,
-          "mean": 0.8877,
+          "min": 0.4186,
+          "mean": 0.8605,
           "max": 1,
           "n": 36
         },
@@ -3161,19 +3785,19 @@
         },
         "adjacentContrast": {
           "min": 0,
-          "mean": 0.0317,
-          "max": 0.1413,
+          "mean": 0.0383,
+          "max": 0.1538,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.8907,
-          "mean": 0.9866,
+          "min": 0.9068,
+          "mean": 0.9849,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0311,
-          "mean": 0.0346,
+          "min": 0.0316,
+          "mean": 0.0345,
           "max": 0.0402,
           "n": 36
         },
@@ -3207,7 +3831,7 @@
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 36,
         "CENTRED_FIGURE": 0,
-        "STRATIFIED": 10,
+        "STRATIFIED": 11,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -3219,12 +3843,12 @@
       "recipeId": "branch-rot6",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "3eb7f3f29eba1d57fcb085d8bfdd3ed4ddf09c5cb80869e818e05798edb75897",
+      "configSha256": "f6843343a1aa03953b0d5668ff05a37a8cb061b1439078a9d4104c9df578a104",
       "distribution": {
         "ink": {
-          "min": 0.854,
-          "mean": 0.9443,
-          "max": 0.996,
+          "min": 0.8065,
+          "mean": 0.9389,
+          "max": 0.9953,
           "n": 36
         },
         "extentX": {
@@ -3246,15 +3870,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.3452,
-          "mean": 0.7935,
-          "max": 0.9904,
+          "min": 0.2796,
+          "mean": 0.7726,
+          "max": 0.9848,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.4779,
-          "mean": 0.85,
-          "max": 0.9908,
+          "min": 0.4116,
+          "mean": 0.8183,
+          "max": 0.9941,
           "n": 36
         },
         "livingBands": {
@@ -3264,32 +3888,32 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0039,
-          "mean": 0.0493,
-          "max": 0.1387,
+          "min": 0.003,
+          "mean": 0.0526,
+          "max": 0.1524,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9038,
-          "mean": 0.9783,
-          "max": 0.9992,
+          "min": 0.9195,
+          "mean": 0.9759,
+          "max": 0.9997,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0419,
-          "mean": 0.0654,
-          "max": 0.1031,
+          "min": 0.0406,
+          "mean": 0.0638,
+          "max": 0.1034,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.0556,
+          "mean": 1.2222,
           "max": 3,
           "n": 36
         },
         "largestShare": {
-          "min": 0.998,
-          "mean": 0.9999,
+          "min": 0.997,
+          "mean": 0.9997,
           "max": 1,
           "n": 36
         },
@@ -3323,11 +3947,11 @@
       "recipeId": "branch-quad",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "b7c7c4b6bbf9fa34cc69f8f98808faad18260d01222d694c62f345367fd06a5c",
+      "configSha256": "7e016a7689e2b097fecab753ece99b1ef155f9f5222cd9fa7b5b7839f57c1019",
       "distribution": {
         "ink": {
-          "min": 0.5213,
-          "mean": 0.8071,
+          "min": 0.4997,
+          "mean": 0.7887,
           "max": 0.9106,
           "n": 36
         },
@@ -3338,8 +3962,8 @@
           "n": 36
         },
         "extentY": {
-          "min": 0.767,
-          "mean": 0.9806,
+          "min": 0.7,
+          "mean": 0.9741,
           "max": 1,
           "n": 36
         },
@@ -3350,15 +3974,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.304,
-          "mean": 0.8959,
+          "min": 0.1984,
+          "mean": 0.8568,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.3147,
-          "mean": 0.6859,
-          "max": 0.7974,
+          "min": 0.3125,
+          "mean": 0.6588,
+          "max": 0.7953,
           "n": 36
         },
         "livingBands": {
@@ -3369,20 +3993,20 @@
         },
         "adjacentContrast": {
           "min": 0.1022,
-          "mean": 0.153,
-          "max": 0.2841,
+          "mean": 0.1639,
+          "max": 0.2857,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9982,
-          "mean": 0.9996,
+          "min": 0.9981,
+          "mean": 0.9997,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
           "min": 0.0378,
-          "mean": 0.0463,
-          "max": 0.0626,
+          "mean": 0.0473,
+          "max": 0.0663,
           "n": 36
         },
         "components": {
@@ -3427,12 +4051,12 @@
       "recipeId": "branch-quad",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "e739563f89c77a34a828f30f014333e1a191b71eb51cb30925b1cb1a1ee6ea18",
+      "configSha256": "4fb3c634ee1599f90201a214522305ee2befc54b0e516f3b88a24bc1f78e5a17",
       "distribution": {
         "ink": {
-          "min": 0.5104,
-          "mean": 0.7475,
-          "max": 0.8785,
+          "min": 0.4913,
+          "mean": 0.7315,
+          "max": 0.8717,
           "n": 36
         },
         "extentX": {
@@ -3442,8 +4066,8 @@
           "n": 36
         },
         "extentY": {
-          "min": 0.783,
-          "mean": 0.9819,
+          "min": 0.717,
+          "mean": 0.9769,
           "max": 1,
           "n": 36
         },
@@ -3454,15 +4078,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.2872,
-          "mean": 0.8088,
-          "max": 0.9904,
+          "min": 0.1992,
+          "mean": 0.7728,
+          "max": 0.988,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.3297,
-          "mean": 0.6419,
-          "max": 0.7683,
+          "min": 0.3254,
+          "mean": 0.613,
+          "max": 0.7813,
           "n": 36
         },
         "livingBands": {
@@ -3472,31 +4096,31 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0929,
-          "mean": 0.1549,
-          "max": 0.2822,
+          "min": 0.0975,
+          "mean": 0.1619,
+          "max": 0.2851,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9962,
-          "mean": 0.9989,
+          "min": 0.9968,
+          "mean": 0.9991,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0787,
-          "mean": 0.1226,
-          "max": 0.1672,
+          "min": 0.0778,
+          "mean": 0.1231,
+          "max": 0.176,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1,
-          "max": 1,
+          "mean": 1.3333,
+          "max": 9,
           "n": 36
         },
         "largestShare": {
-          "min": 0.998,
+          "min": 0.996,
           "mean": 0.9999,
           "max": 1,
           "n": 36
@@ -3504,7 +4128,7 @@
         "centroidOffset": {
           "min": 0,
           "mean": 0.0001,
-          "max": 0.0003,
+          "max": 0.0005,
           "n": 36
         }
       },
@@ -3531,36 +4155,36 @@
       "recipeId": "inscribe-tight",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "bd275a101114c38807a942f7d0c509411c53cb62619deeec9520aa77fa0433d4",
+      "configSha256": "810c60e89cae6890e003a3b1abfa9c14cbc5759bfa90070b165a87325cba061c",
       "distribution": {
         "ink": {
-          "min": 0.0703,
-          "mean": 0.173,
-          "max": 0.3261,
+          "min": 0.1203,
+          "mean": 0.2822,
+          "max": 0.5627,
           "n": 36
         },
         "extentX": {
-          "min": 0.35,
-          "mean": 0.5252,
+          "min": 0.383,
+          "mean": 0.6362,
           "max": 0.783,
           "n": 36
         },
         "extentY": {
-          "min": 0.35,
-          "mean": 0.5275,
+          "min": 0.383,
+          "mean": 0.629,
           "max": 0.783,
           "n": 36
         },
         "marginMin": {
-          "min": 0.108,
-          "mean": 0.2353,
-          "max": 0.325,
+          "min": 0.067,
+          "mean": 0.1767,
+          "max": 0.308,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0,
-          "max": 0,
+          "mean": 0.0245,
+          "max": 0.1584,
           "n": 36
         },
         "edgeInk": {
@@ -3570,27 +4194,27 @@
           "n": 36
         },
         "livingBands": {
-          "min": 2,
-          "mean": 4.3611,
+          "min": 4,
+          "mean": 5.1667,
           "max": 6,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0714,
-          "mean": 0.1268,
-          "max": 0.1933,
+          "min": 0.1013,
+          "mean": 0.1594,
+          "max": 0.2154,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.7851,
-          "mean": 0.9809,
+          "min": 0.5958,
+          "mean": 0.9498,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
           "min": 0.0409,
-          "mean": 0.0659,
-          "max": 0.0922,
+          "mean": 0.056,
+          "max": 0.0906,
           "n": 36
         },
         "components": {
@@ -3607,8 +4231,8 @@
         },
         "centroidOffset": {
           "min": 0,
-          "mean": 0.0014,
-          "max": 0.0199,
+          "mean": 0.005,
+          "max": 0.0488,
           "n": 36
         }
       },
@@ -3625,7 +4249,7 @@
         "CENTRED_FIGURE": 36,
         "STRATIFIED": 0,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 9,
+        "RADIAL_EMBLEM": 18,
         "OFF_CENTRE_WEIGHT": 0
       }
     },
@@ -3635,36 +4259,36 @@
       "recipeId": "inscribe-tight",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "9a8d8d286da0ad10dcc7f55eac4f6d2b9c489e8d63e475e44ae2188a2aabab85",
+      "configSha256": "b6ecf99f5e50758111127bc03939eae72d51b55583c4b33537a48ac6db4013c8",
       "distribution": {
         "ink": {
-          "min": 0.0338,
-          "mean": 0.0714,
-          "max": 0.1099,
+          "min": 0.0854,
+          "mean": 0.149,
+          "max": 0.2365,
           "n": 36
         },
         "extentX": {
-          "min": 0.367,
-          "mean": 0.5507,
+          "min": 0.417,
+          "mean": 0.6627,
           "max": 0.817,
           "n": 36
         },
         "extentY": {
-          "min": 0.375,
-          "mean": 0.552,
+          "min": 0.417,
+          "mean": 0.6547,
           "max": 0.817,
           "n": 36
         },
         "marginMin": {
-          "min": 0.092,
-          "mean": 0.2221,
-          "max": 0.308,
+          "min": 0.067,
+          "mean": 0.1639,
+          "max": 0.292,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0,
-          "max": 0,
+          "mean": 0.0201,
+          "max": 0.1196,
           "n": 36
         },
         "edgeInk": {
@@ -3674,45 +4298,45 @@
           "n": 36
         },
         "livingBands": {
-          "min": 3,
-          "mean": 4.5833,
-          "max": 6,
+          "min": 4,
+          "mean": 5.5,
+          "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0303,
-          "mean": 0.0515,
-          "max": 0.0787,
+          "min": 0.0694,
+          "mean": 0.0901,
+          "max": 0.1203,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.3654,
-          "mean": 0.6144,
-          "max": 0.7653,
+          "min": 0.4606,
+          "mean": 0.6487,
+          "max": 0.77,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.2846,
-          "mean": 0.3695,
-          "max": 0.4913,
+          "min": 0.2803,
+          "mean": 0.3418,
+          "max": 0.4193,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.3333,
+          "mean": 1.1667,
           "max": 2,
           "n": 36
         },
         "largestShare": {
-          "min": 0.632,
-          "mean": 0.9375,
+          "min": 0.504,
+          "mean": 0.9369,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0054,
-          "mean": 0.0262,
-          "max": 0.0795,
+          "min": 0.0068,
+          "mean": 0.0264,
+          "max": 0.0611,
           "n": 36
         }
       },
@@ -3729,216 +4353,216 @@
         "CENTRED_FIGURE": 36,
         "STRATIFIED": 0,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 6,
+        "RADIAL_EMBLEM": 12,
         "OFF_CENTRE_WEIGHT": 0
       }
     },
     {
       "runtimeId": "GEOMETRIC_RECURSION_V1",
       "compositionId": "CENTRED_FIGURE",
-      "recipeId": "quad-tight",
+      "recipeId": "inscribe-dense",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "ce530bbbbed0f968ebe3e92782c976facba4217738d8f1652fa5bf22e3ea01b8",
+      "configSha256": "aa42a949124fb5e6df6da901c1c36d62adf9ce6d66c62f131a45e7187bc00306",
       "distribution": {
         "ink": {
-          "min": 0.1245,
-          "mean": 0.305,
-          "max": 0.5629,
+          "min": 0.1244,
+          "mean": 0.3226,
+          "max": 0.5622,
           "n": 36
         },
         "extentX": {
           "min": 0.383,
-          "mean": 0.6569,
-          "max": 0.967,
+          "mean": 0.6391,
+          "max": 0.783,
           "n": 36
         },
         "extentY": {
           "min": 0.383,
-          "mean": 0.6447,
-          "max": 0.833,
+          "mean": 0.6388,
+          "max": 0.783,
           "n": 36
         },
         "marginMin": {
-          "min": 0,
-          "mean": 0.1553,
+          "min": 0.108,
+          "mean": 0.1803,
           "max": 0.308,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0343,
+          "mean": 0.0359,
           "max": 0.1584,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0005,
-          "max": 0.0189,
+          "mean": 0,
+          "max": 0,
           "n": 36
         },
         "livingBands": {
           "min": 4,
-          "mean": 5.3611,
-          "max": 7,
+          "mean": 5.3333,
+          "max": 6,
           "n": 36
         },
         "adjacentContrast": {
           "min": 0.1013,
-          "mean": 0.1634,
-          "max": 0.2159,
+          "mean": 0.1658,
+          "max": 0.2143,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.4422,
-          "mean": 0.8102,
+          "min": 0.9278,
+          "mean": 0.9909,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0433,
-          "mean": 0.0591,
-          "max": 0.0915,
+          "min": 0.0435,
+          "mean": 0.0543,
+          "max": 0.0893,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.4444,
-          "max": 5,
+          "mean": 1,
+          "max": 1,
           "n": 36
         },
         "largestShare": {
-          "min": 0.959,
-          "mean": 0.9959,
+          "min": 1,
+          "mean": 1,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
           "min": 0,
-          "mean": 0.0209,
-          "max": 0.0892,
+          "mean": 0.0006,
+          "max": 0.0044,
           "n": 36
         }
       },
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": false,
         "CENTRED_FIGURE": true,
-        "STRATIFIED": true,
+        "STRATIFIED": false,
         "ALL_OVER_FIELD": false,
         "RADIAL_EMBLEM": true,
-        "OFF_CENTRE_WEIGHT": true
+        "OFF_CENTRE_WEIGHT": false
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 26,
-        "STRATIFIED": 2,
+        "CENTRED_FIGURE": 36,
+        "STRATIFIED": 0,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 12,
-        "OFF_CENTRE_WEIGHT": 1
+        "RADIAL_EMBLEM": 15,
+        "OFF_CENTRE_WEIGHT": 0
       }
     },
     {
       "runtimeId": "GEOMETRIC_RECURSION_V1",
       "compositionId": "CENTRED_FIGURE",
-      "recipeId": "quad-tight",
+      "recipeId": "inscribe-dense",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "a38b6df8b411a8cd3c1b81f6f426ea237bcb8d1af146fba6074f650a4afaaf2e",
+      "configSha256": "f933706d559129b044ea97de00c78e71eb7464e9be76a195b4026e116611c942",
       "distribution": {
         "ink": {
-          "min": 0.0939,
-          "mean": 0.1741,
-          "max": 0.2781,
+          "min": 0.1213,
+          "mean": 0.2335,
+          "max": 0.3899,
           "n": 36
         },
         "extentX": {
           "min": 0.417,
-          "mean": 0.6801,
-          "max": 0.975,
+          "mean": 0.664,
+          "max": 0.817,
           "n": 36
         },
         "extentY": {
-          "min": 0.45,
-          "mean": 0.6695,
-          "max": 0.85,
+          "min": 0.417,
+          "mean": 0.664,
+          "max": 0.817,
           "n": 36
         },
         "marginMin": {
-          "min": 0,
-          "mean": 0.1445,
-          "max": 0.258,
+          "min": 0.092,
+          "mean": 0.1682,
+          "max": 0.292,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0299,
-          "max": 0.1208,
+          "mean": 0.0344,
+          "max": 0.1536,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0006,
-          "max": 0.021,
+          "mean": 0,
+          "max": 0,
           "n": 36
         },
         "livingBands": {
           "min": 4,
-          "mean": 5.5833,
+          "mean": 5.5,
           "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0687,
-          "mean": 0.1008,
-          "max": 0.1764,
+          "min": 0.0978,
+          "mean": 0.1399,
+          "max": 0.1868,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.3179,
-          "mean": 0.5443,
-          "max": 0.8988,
+          "min": 0.6769,
+          "mean": 0.8845,
+          "max": 0.9875,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.2434,
-          "mean": 0.3246,
-          "max": 0.4096,
+          "min": 0.1608,
+          "mean": 0.2193,
+          "max": 0.2756,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.4444,
-          "max": 4,
+          "mean": 1.3333,
+          "max": 2,
           "n": 36
         },
         "largestShare": {
-          "min": 0.569,
-          "mean": 0.9524,
+          "min": 0.56,
+          "mean": 0.8797,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0047,
-          "mean": 0.046,
-          "max": 0.1184,
+          "min": 0.0004,
+          "mean": 0.0071,
+          "max": 0.0289,
           "n": 36
         }
       },
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": false,
         "CENTRED_FIGURE": true,
-        "STRATIFIED": true,
+        "STRATIFIED": false,
         "ALL_OVER_FIELD": false,
         "RADIAL_EMBLEM": true,
-        "OFF_CENTRE_WEIGHT": true
+        "OFF_CENTRE_WEIGHT": false
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 26,
-        "STRATIFIED": 2,
+        "CENTRED_FIGURE": 36,
+        "STRATIFIED": 0,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 7,
-        "OFF_CENTRE_WEIGHT": 4
+        "RADIAL_EMBLEM": 15,
+        "OFF_CENTRE_WEIGHT": 0
       }
     },
     {
@@ -3947,66 +4571,66 @@
       "recipeId": "bsp-mirror",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "6d8fce255f62541fe2b54ed5e09e2169734f0bba47a5d8f19478085cc80d0583",
+      "configSha256": "1a30e42c58edb84d56a850d0119ac39539cca7f80b3cf2284a932aee661536da",
       "distribution": {
         "ink": {
-          "min": 0.1773,
-          "mean": 0.5625,
-          "max": 0.8153,
+          "min": 0.1732,
+          "mean": 0.5161,
+          "max": 0.8151,
           "n": 36
         },
         "extentX": {
           "min": 0.45,
-          "mean": 0.9026,
+          "mean": 0.8602,
           "max": 1,
           "n": 36
         },
         "extentY": {
           "min": 0.558,
-          "mean": 0.7515,
-          "max": 0.95,
+          "mean": 0.7322,
+          "max": 0.908,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.0236,
-          "max": 0.133,
+          "mean": 0.0465,
+          "max": 0.175,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.2706,
-          "max": 0.7496,
+          "mean": 0.21,
+          "max": 0.6496,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.1938,
-          "max": 0.4688,
+          "mean": 0.14,
+          "max": 0.444,
           "n": 36
         },
         "livingBands": {
           "min": 5,
-          "mean": 6.3611,
+          "mean": 6.2222,
           "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.1217,
-          "mean": 0.2069,
+          "min": 0.1124,
+          "mean": 0.205,
           "max": 0.2857,
           "n": 36
         },
         "quadrantEvenness": {
           "min": 0.3827,
-          "mean": 0.6368,
+          "mean": 0.6909,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0361,
-          "mean": 0.0462,
-          "max": 0.0828,
+          "min": 0.0365,
+          "mean": 0.0482,
+          "max": 0.0837,
           "n": 36
         },
         "components": {
@@ -4016,20 +4640,20 @@
           "n": 36
         },
         "largestShare": {
-          "min": 0.985,
-          "mean": 0.9994,
+          "min": 0.982,
+          "mean": 0.9993,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
           "min": 0,
-          "mean": 0.0668,
-          "max": 0.1182,
+          "mean": 0.0534,
+          "max": 0.1193,
           "n": 36
         }
       },
       "anySeedSatisfies": {
-        "EDGE_TO_EDGE": true,
+        "EDGE_TO_EDGE": false,
         "CENTRED_FIGURE": true,
         "STRATIFIED": true,
         "ALL_OVER_FIELD": false,
@@ -4037,12 +4661,12 @@
         "OFF_CENTRE_WEIGHT": true
       },
       "seedsSatisfying": {
-        "EDGE_TO_EDGE": 1,
-        "CENTRED_FIGURE": 6,
-        "STRATIFIED": 27,
+        "EDGE_TO_EDGE": 0,
+        "CENTRED_FIGURE": 13,
+        "STRATIFIED": 21,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 10,
-        "OFF_CENTRE_WEIGHT": 13
+        "RADIAL_EMBLEM": 14,
+        "OFF_CENTRE_WEIGHT": 8
       }
     },
     {
@@ -4051,89 +4675,89 @@
       "recipeId": "bsp-mirror",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "4ed894588915a45858ae12765315da604342c1c7a748b3f1c4f33c8a5f1fe2e5",
+      "configSha256": "e4a368ac2d243f4f4eba9d1c25f9a44bd08aea61660578e018f4873698f9e653",
       "distribution": {
         "ink": {
-          "min": 0.1629,
-          "mean": 0.4131,
-          "max": 0.6724,
+          "min": 0.1615,
+          "mean": 0.3982,
+          "max": 0.6687,
           "n": 36
         },
         "extentX": {
-          "min": 0.483,
-          "mean": 0.8912,
+          "min": 0.467,
+          "mean": 0.8625,
           "max": 1,
           "n": 36
         },
         "extentY": {
           "min": 0.567,
-          "mean": 0.7606,
-          "max": 0.958,
+          "mean": 0.7424,
+          "max": 0.908,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.032,
-          "max": 0.142,
+          "mean": 0.0477,
+          "max": 0.167,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.1725,
-          "max": 0.544,
+          "mean": 0.1388,
+          "max": 0.528,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.1346,
-          "max": 0.4267,
+          "mean": 0.0896,
+          "max": 0.4192,
           "n": 36
         },
         "livingBands": {
           "min": 5,
-          "mean": 6.5833,
+          "mean": 6.3333,
           "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.1229,
-          "mean": 0.1991,
-          "max": 0.2846,
+          "min": 0.1184,
+          "mean": 0.2011,
+          "max": 0.3483,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.4606,
-          "mean": 0.6827,
-          "max": 0.9933,
+          "min": 0.4452,
+          "mean": 0.6995,
+          "max": 0.9453,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.129,
-          "mean": 0.2304,
-          "max": 0.3482,
+          "min": 0.1139,
+          "mean": 0.2158,
+          "max": 0.3151,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 2.8333,
-          "max": 13,
+          "mean": 1.6111,
+          "max": 5,
           "n": 36
         },
         "largestShare": {
-          "min": 0.963,
-          "mean": 0.9932,
+          "min": 0.984,
+          "mean": 0.9971,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0066,
-          "mean": 0.0534,
-          "max": 0.0967,
+          "min": 0.0063,
+          "mean": 0.0467,
+          "max": 0.1017,
           "n": 36
         }
       },
       "anySeedSatisfies": {
-        "EDGE_TO_EDGE": true,
+        "EDGE_TO_EDGE": false,
         "CENTRED_FIGURE": true,
         "STRATIFIED": true,
         "ALL_OVER_FIELD": false,
@@ -4141,12 +4765,12 @@
         "OFF_CENTRE_WEIGHT": true
       },
       "seedsSatisfying": {
-        "EDGE_TO_EDGE": 1,
-        "CENTRED_FIGURE": 9,
-        "STRATIFIED": 24,
+        "EDGE_TO_EDGE": 0,
+        "CENTRED_FIGURE": 13,
+        "STRATIFIED": 21,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 18,
-        "OFF_CENTRE_WEIGHT": 5
+        "RADIAL_EMBLEM": 16,
+        "OFF_CENTRE_WEIGHT": 3
       }
     },
     {
@@ -4155,41 +4779,41 @@
       "recipeId": "quad-mirror",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "c84b8308fa27adfbd0ffee5bbdf738486a1837e09530b349b1b73cc5c04475a2",
+      "configSha256": "94a428ebaf3b3eedc1e9b9e5dd0561efc757631575c6867798de886ed98e0df0",
       "distribution": {
         "ink": {
-          "min": 0.1875,
-          "mean": 0.5836,
+          "min": 0.1731,
+          "mean": 0.5608,
           "max": 0.8146,
           "n": 36
         },
         "extentX": {
-          "min": 0.633,
-          "mean": 0.9555,
+          "min": 0.517,
+          "mean": 0.9322,
           "max": 1,
           "n": 36
         },
         "extentY": {
           "min": 0.45,
-          "mean": 0.8015,
+          "mean": 0.7999,
           "max": 0.9,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.0141,
-          "max": 0.183,
+          "mean": 0.0174,
+          "max": 0.242,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.4308,
+          "mean": 0.3949,
           "max": 0.58,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.3112,
+          "mean": 0.2616,
           "max": 0.5862,
           "n": 36
         },
@@ -4200,21 +4824,21 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.1006,
-          "mean": 0.1573,
-          "max": 0.2045,
+          "min": 0.1095,
+          "mean": 0.1628,
+          "max": 0.2505,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.2299,
-          "mean": 0.4312,
+          "min": 0.243,
+          "mean": 0.4475,
           "max": 0.6292,
           "n": 36
         },
         "boundaryShare": {
           "min": 0.0375,
-          "mean": 0.0462,
-          "max": 0.0704,
+          "mean": 0.0477,
+          "max": 0.0754,
           "n": 36
         },
         "components": {
@@ -4230,9 +4854,9 @@
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0402,
-          "mean": 0.1295,
-          "max": 0.1866,
+          "min": 0.0401,
+          "mean": 0.1224,
+          "max": 0.1812,
           "n": 36
         }
       },
@@ -4259,41 +4883,41 @@
       "recipeId": "quad-mirror",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "cf8c05557864b744d6ce995403e43c631030b3dd13d8ad77719153ebc74d6d0f",
+      "configSha256": "aa18165e1830fb359325c0c80a454d602f46c46b0a5c8c039b7a0b02169936ef",
       "distribution": {
         "ink": {
-          "min": 0.1703,
-          "mean": 0.4029,
-          "max": 0.5851,
+          "min": 0.1606,
+          "mean": 0.3931,
+          "max": 0.5856,
           "n": 36
         },
         "extentX": {
-          "min": 0.617,
-          "mean": 0.9468,
+          "min": 0.517,
+          "mean": 0.9259,
           "max": 1,
           "n": 36
         },
         "extentY": {
           "min": 0.467,
-          "mean": 0.8153,
+          "mean": 0.8135,
           "max": 0.908,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.0148,
-          "max": 0.192,
+          "mean": 0.0176,
+          "max": 0.242,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.2729,
-          "max": 0.5328,
+          "mean": 0.2639,
+          "max": 0.4812,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.2443,
+          "mean": 0.1953,
           "max": 0.5754,
           "n": 36
         },
@@ -4304,39 +4928,39 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0909,
-          "mean": 0.129,
-          "max": 0.1721,
+          "min": 0.0963,
+          "mean": 0.1353,
+          "max": 0.1967,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.2309,
-          "mean": 0.3898,
-          "max": 0.6317,
+          "min": 0.2412,
+          "mean": 0.3987,
+          "max": 0.6469,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.1529,
-          "mean": 0.2711,
-          "max": 0.4103,
+          "min": 0.1723,
+          "mean": 0.2688,
+          "max": 0.3882,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.75,
-          "max": 16,
+          "mean": 1.7778,
+          "max": 19,
           "n": 36
         },
         "largestShare": {
-          "min": 0.937,
-          "mean": 0.9976,
+          "min": 0.951,
+          "mean": 0.9974,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0397,
-          "mean": 0.1327,
-          "max": 0.1877,
+          "min": 0.0379,
+          "mean": 0.1285,
+          "max": 0.1821,
           "n": 36
         }
       },
@@ -4363,11 +4987,11 @@
       "recipeId": "branch-rot6-flat",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "35254f68509b33e5a38d34d729732f40eabe764c783e99bf17fa2b8f5d85f9bd",
+      "configSha256": "a92bd2a2dcad273517f00ff0d7b9d25bf0d1f137e4c389b6eed6bf35c6802ada",
       "distribution": {
         "ink": {
-          "min": 0.9023,
-          "mean": 0.979,
+          "min": 0.8592,
+          "mean": 0.9706,
           "max": 1,
           "n": 36
         },
@@ -4390,14 +5014,14 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.5736,
-          "mean": 0.9054,
+          "min": 0.464,
+          "mean": 0.8725,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.5927,
-          "mean": 0.9143,
+          "min": 0.4574,
+          "mean": 0.8827,
           "max": 1,
           "n": 36
         },
@@ -4409,20 +5033,20 @@
         },
         "adjacentContrast": {
           "min": 0,
-          "mean": 0.0218,
-          "max": 0.0993,
+          "mean": 0.0276,
+          "max": 0.1111,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9005,
-          "mean": 0.981,
+          "min": 0.9175,
+          "mean": 0.9791,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0329,
-          "mean": 0.0338,
-          "max": 0.0362,
+          "min": 0.0318,
+          "mean": 0.034,
+          "max": 0.0393,
           "n": 36
         },
         "components": {
@@ -4440,7 +5064,7 @@
         "centroidOffset": {
           "min": 0,
           "mean": 0,
-          "max": 0,
+          "max": 0.0001,
           "n": 36
         }
       },
@@ -4467,12 +5091,12 @@
       "recipeId": "branch-rot6-flat",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "afd6932dc15637cc836a447c92f72c72c767647d564866c5d1efa17cf9e7c3e8",
+      "configSha256": "6a924c16a46724b24a2b115b1138641893b0ee7f65f38a0a4020fc9ef081f0d1",
       "distribution": {
         "ink": {
-          "min": 0.8551,
-          "mean": 0.9465,
-          "max": 0.996,
+          "min": 0.8026,
+          "mean": 0.9393,
+          "max": 0.994,
           "n": 36
         },
         "extentX": {
@@ -4494,15 +5118,15 @@
           "n": 36
         },
         "cornerInk": {
-          "min": 0.4196,
-          "mean": 0.7854,
-          "max": 0.9904,
+          "min": 0.3328,
+          "mean": 0.7689,
+          "max": 0.9848,
           "n": 36
         },
         "edgeInk": {
-          "min": 0.5226,
-          "mean": 0.8506,
-          "max": 0.9914,
+          "min": 0.4068,
+          "mean": 0.8242,
+          "max": 0.9978,
           "n": 36
         },
         "livingBands": {
@@ -4512,39 +5136,39 @@
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0039,
-          "mean": 0.0464,
-          "max": 0.1136,
+          "min": 0.0044,
+          "mean": 0.0493,
+          "max": 0.1263,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.9357,
-          "mean": 0.9796,
-          "max": 0.9992,
+          "min": 0.9368,
+          "mean": 0.9761,
+          "max": 0.9997,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0425,
-          "mean": 0.0673,
-          "max": 0.1003,
+          "min": 0.0406,
+          "mean": 0.0663,
+          "max": 0.1083,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.0556,
+          "mean": 1.2222,
           "max": 3,
           "n": 36
         },
         "largestShare": {
-          "min": 0.998,
-          "mean": 0.9999,
+          "min": 0.997,
+          "mean": 0.9997,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
           "min": 0,
           "mean": 0.0001,
-          "max": 0.0002,
+          "max": 0.0003,
           "n": 36
         }
       },
@@ -4571,7 +5195,7 @@
       "recipeId": "ring-separated",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "9b25080a169ecae3e104bafaf390bf0cd5d327188073f9f4c601610cd19a2c3e",
+      "configSha256": "50987e41b7e58f4cbf150d0ed18dc22f42b4837dc471d6130241f0f04a50e865",
       "distribution": {
         "ink": {
           "min": 0.1864,
@@ -4662,7 +5286,7 @@
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 9,
-        "CENTRED_FIGURE": 21,
+        "CENTRED_FIGURE": 18,
         "STRATIFIED": 18,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 24,
@@ -4675,7 +5299,7 @@
       "recipeId": "ring-separated",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "66ef9b26fc0a1acd4e9079c05a6da01c83f9e875f5ff5b6ff61d2ef7b28deb8d",
+      "configSha256": "4ca400a7b41fab89a248ea91aeee6bcc2b32e7cbb234c0262876788f0db7eef5",
       "distribution": {
         "ink": {
           "min": 0.1844,
@@ -4779,66 +5403,66 @@
       "recipeId": "ring-rot3",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "48893d9315d78debf1a690a0c3cb64dc4cdb159552ecea6649ff8092e5f82886",
+      "configSha256": "673221a260f5254a057bad17afc080b4231b83791515fad511315a01a98f2046",
       "distribution": {
         "ink": {
-          "min": 0.3794,
-          "mean": 0.8378,
+          "min": 0.294,
+          "mean": 0.7777,
           "max": 1,
           "n": 36
         },
         "extentX": {
-          "min": 0.8,
-          "mean": 0.9891,
+          "min": 0.708,
+          "mean": 0.9729,
           "max": 1,
           "n": 36
         },
         "extentY": {
-          "min": 0.817,
-          "mean": 0.9864,
+          "min": 0.725,
+          "mean": 0.9771,
           "max": 1,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.003,
-          "max": 0.042,
+          "mean": 0.0072,
+          "max": 0.1,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.5376,
+          "mean": 0.4305,
           "max": 1,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.564,
+          "mean": 0.4546,
           "max": 1,
           "n": 36
         },
         "livingBands": {
-          "min": 7,
-          "mean": 7.9444,
+          "min": 6,
+          "mean": 7.8889,
           "max": 8,
           "n": 36
         },
         "adjacentContrast": {
           "min": 0,
-          "mean": 0.0901,
-          "max": 0.2148,
+          "mean": 0.1114,
+          "max": 0.2126,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.7662,
-          "mean": 0.9258,
+          "min": 0.7694,
+          "mean": 0.8992,
           "max": 1,
           "n": 36
         },
         "boundaryShare": {
           "min": 0.0319,
-          "mean": 0.0402,
-          "max": 0.0642,
+          "mean": 0.0446,
+          "max": 0.0834,
           "n": 36
         },
         "components": {
@@ -4855,23 +5479,23 @@
         },
         "centroidOffset": {
           "min": 0,
-          "mean": 0.007,
-          "max": 0.0294,
+          "mean": 0.0089,
+          "max": 0.0322,
           "n": 36
         }
       },
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": true,
-        "CENTRED_FIGURE": false,
+        "CENTRED_FIGURE": true,
         "STRATIFIED": true,
         "ALL_OVER_FIELD": false,
         "RADIAL_EMBLEM": true,
         "OFF_CENTRE_WEIGHT": false
       },
       "seedsSatisfying": {
-        "EDGE_TO_EDGE": 33,
-        "CENTRED_FIGURE": 0,
-        "STRATIFIED": 21,
+        "EDGE_TO_EDGE": 28,
+        "CENTRED_FIGURE": 2,
+        "STRATIFIED": 27,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
         "OFF_CENTRE_WEIGHT": 0
@@ -4883,98 +5507,98 @@
       "recipeId": "ring-rot3",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "ab5f0b8543b02f622b8065b03ac2a13ff06dd69fc547c378d9c3750da3b6245b",
+      "configSha256": "aca7d15db54e6e6a01eec41a86fd4c5dbb48465d86ef5bd995eb3e0a078b2e93",
       "distribution": {
         "ink": {
-          "min": 0.3565,
-          "mean": 0.7508,
-          "max": 0.986,
+          "min": 0.2892,
+          "mean": 0.7059,
+          "max": 0.98,
           "n": 36
         },
         "extentX": {
-          "min": 0.808,
-          "mean": 0.9914,
+          "min": 0.725,
+          "mean": 0.976,
           "max": 1,
           "n": 36
         },
         "extentY": {
-          "min": 0.825,
-          "mean": 0.9873,
+          "min": 0.742,
+          "mean": 0.9789,
           "max": 1,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.0023,
-          "max": 0.042,
+          "mean": 0.0063,
+          "max": 0.092,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.4119,
-          "max": 0.9588,
+          "mean": 0.3557,
+          "max": 0.9344,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.4716,
-          "max": 0.9564,
+          "mean": 0.3988,
+          "max": 0.9617,
           "n": 36
         },
         "livingBands": {
-          "min": 7,
-          "mean": 7.9722,
+          "min": 6,
+          "mean": 7.8889,
           "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0096,
-          "mean": 0.1073,
-          "max": 0.2068,
+          "min": 0.0167,
+          "mean": 0.1203,
+          "max": 0.2049,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.7699,
-          "mean": 0.9245,
-          "max": 0.9994,
+          "min": 0.7416,
+          "mean": 0.8964,
+          "max": 0.9975,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0518,
-          "mean": 0.1437,
-          "max": 0.2815,
+          "min": 0.0514,
+          "mean": 0.1401,
+          "max": 0.3018,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.2222,
-          "max": 6,
+          "mean": 1.25,
+          "max": 3,
           "n": 36
         },
         "largestShare": {
-          "min": 0.99,
-          "mean": 0.9991,
+          "min": 0.995,
+          "mean": 0.9995,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
           "min": 0,
-          "mean": 0.007,
-          "max": 0.0278,
+          "mean": 0.0086,
+          "max": 0.0322,
           "n": 36
         }
       },
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": true,
-        "CENTRED_FIGURE": false,
+        "CENTRED_FIGURE": true,
         "STRATIFIED": true,
         "ALL_OVER_FIELD": false,
         "RADIAL_EMBLEM": true,
         "OFF_CENTRE_WEIGHT": false
       },
       "seedsSatisfying": {
-        "EDGE_TO_EDGE": 32,
-        "CENTRED_FIGURE": 0,
+        "EDGE_TO_EDGE": 28,
+        "CENTRED_FIGURE": 2,
         "STRATIFIED": 29,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 36,
@@ -4987,66 +5611,66 @@
       "recipeId": "branch-fan",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "e5cda877bb9b8c2e0c38261805fe0563f88a8d78ed590b6e8d7cfab14da986ba",
+      "configSha256": "951ba90b25ceb4d0065994ab9bad5cc78c09e87784808f3884db0dd8a0770684",
       "distribution": {
         "ink": {
-          "min": 0.1512,
-          "mean": 0.2837,
-          "max": 0.4731,
+          "min": 0.1558,
+          "mean": 0.3746,
+          "max": 0.6556,
           "n": 36
         },
         "extentX": {
-          "min": 0.6,
-          "mean": 0.7548,
+          "min": 0.517,
+          "mean": 0.7951,
           "max": 0.892,
           "n": 36
         },
         "extentY": {
-          "min": 0.367,
-          "mean": 0.6217,
-          "max": 0.892,
+          "min": 0.417,
+          "mean": 0.7073,
+          "max": 1,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.0076,
-          "max": 0.083,
+          "mean": 0.0188,
+          "max": 0.175,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0795,
-          "max": 0.2476,
+          "mean": 0.1056,
+          "max": 0.4128,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0804,
-          "max": 0.2042,
+          "mean": 0.0943,
+          "max": 0.2926,
           "n": 36
         },
         "livingBands": {
           "min": 4,
-          "mean": 5.1667,
-          "max": 7,
+          "mean": 5.8333,
+          "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.1164,
-          "mean": 0.1864,
-          "max": 0.2262,
+          "min": 0.1289,
+          "mean": 0.2016,
+          "max": 0.2476,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.1852,
-          "mean": 0.3332,
-          "max": 0.5039,
+          "min": 0.2298,
+          "mean": 0.508,
+          "max": 0.8121,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0461,
-          "mean": 0.0646,
-          "max": 0.0923,
+          "min": 0.0415,
+          "mean": 0.0579,
+          "max": 0.083,
           "n": 36
         },
         "components": {
@@ -5062,27 +5686,27 @@
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.1115,
-          "mean": 0.1478,
-          "max": 0.1799,
+          "min": 0.0263,
+          "mean": 0.1018,
+          "max": 0.184,
           "n": 36
         }
       },
       "anySeedSatisfies": {
         "EDGE_TO_EDGE": false,
-        "CENTRED_FIGURE": false,
+        "CENTRED_FIGURE": true,
         "STRATIFIED": true,
         "ALL_OVER_FIELD": false,
-        "RADIAL_EMBLEM": false,
+        "RADIAL_EMBLEM": true,
         "OFF_CENTRE_WEIGHT": true
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 0,
-        "STRATIFIED": 9,
+        "CENTRED_FIGURE": 4,
+        "STRATIFIED": 14,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 0,
-        "OFF_CENTRE_WEIGHT": 36
+        "RADIAL_EMBLEM": 1,
+        "OFF_CENTRE_WEIGHT": 24
       }
     },
     {
@@ -5091,84 +5715,84 @@
       "recipeId": "branch-fan",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "a0dc88026801a0a25366d5816744e538b63694d5345aeda2f3d88774521c435a",
+      "configSha256": "854da2b54629661b36276d2c64cc7d1313ab8f68476fd40d63fe72ff67038d81",
       "distribution": {
         "ink": {
-          "min": 0.0614,
-          "mean": 0.1183,
-          "max": 0.154,
+          "min": 0.1003,
+          "mean": 0.1864,
+          "max": 0.2857,
           "n": 36
         },
         "extentX": {
-          "min": 0.608,
-          "mean": 0.7681,
+          "min": 0.533,
+          "mean": 0.8092,
           "max": 0.908,
           "n": 36
         },
         "extentY": {
-          "min": 0.383,
-          "mean": 0.6408,
-          "max": 0.908,
+          "min": 0.442,
+          "mean": 0.7266,
+          "max": 1,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.0069,
-          "max": 0.083,
+          "mean": 0.0178,
+          "max": 0.175,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0353,
-          "max": 0.1212,
+          "mean": 0.0692,
+          "max": 0.2176,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0635,
-          "max": 0.173,
+          "mean": 0.0598,
+          "max": 0.2371,
           "n": 36
         },
         "livingBands": {
           "min": 4,
-          "mean": 5.25,
-          "max": 7,
+          "mean": 6.0556,
+          "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0457,
-          "mean": 0.071,
-          "max": 0.1038,
+          "min": 0.0545,
+          "mean": 0.1003,
+          "max": 0.1635,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.1762,
-          "mean": 0.2324,
-          "max": 0.2987,
+          "min": 0.1924,
+          "mean": 0.3515,
+          "max": 0.5507,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.3487,
-          "mean": 0.4252,
-          "max": 0.5498,
+          "min": 0.2842,
+          "mean": 0.3703,
+          "max": 0.4445,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.1667,
-          "max": 3,
+          "mean": 1.0556,
+          "max": 2,
           "n": 36
         },
         "largestShare": {
-          "min": 0.984,
-          "mean": 0.9987,
+          "min": 0.996,
+          "mean": 0.9998,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.1325,
-          "mean": 0.1767,
-          "max": 0.2227,
+          "min": 0.0672,
+          "mean": 0.1319,
+          "max": 0.2159,
           "n": 36
         }
       },
@@ -5182,11 +5806,11 @@
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 3,
-        "STRATIFIED": 6,
+        "CENTRED_FIGURE": 4,
+        "STRATIFIED": 14,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 0,
-        "OFF_CENTRE_WEIGHT": 36
+        "OFF_CENTRE_WEIGHT": 33
       }
     },
     {
@@ -5195,66 +5819,66 @@
       "recipeId": "bsp-fan",
       "memberId": "PLATE",
       "legal": true,
-      "configSha256": "415ff9e6c594a7b67e9a0d5eabb8adbedd52cabed9f7d833bdc1f696be28e71e",
+      "configSha256": "57a917ca4b9570d9ad83634f643cc0e3606ddf557f883527fde777f16c646035",
       "distribution": {
         "ink": {
-          "min": 0.1095,
-          "mean": 0.245,
-          "max": 0.4828,
+          "min": 0.1247,
+          "mean": 0.3318,
+          "max": 0.656,
           "n": 36
         },
         "extentX": {
-          "min": 0.392,
-          "mean": 0.6292,
-          "max": 0.892,
+          "min": 0.467,
+          "mean": 0.7073,
+          "max": 0.917,
           "n": 36
         },
         "extentY": {
-          "min": 0.367,
-          "mean": 0.5903,
-          "max": 0.875,
+          "min": 0.383,
+          "mean": 0.6503,
+          "max": 0.867,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.1243,
-          "max": 0.283,
+          "mean": 0.1038,
+          "max": 0.267,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0349,
-          "max": 0.1696,
+          "mean": 0.0438,
+          "max": 0.2468,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0142,
-          "max": 0.0814,
+          "mean": 0.0188,
+          "max": 0.1756,
           "n": 36
         },
         "livingBands": {
-          "min": 3,
-          "mean": 5.0833,
+          "min": 4,
+          "mean": 5.3611,
           "max": 7,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0975,
-          "mean": 0.1553,
-          "max": 0.2132,
+          "min": 0.1111,
+          "mean": 0.1798,
+          "max": 0.2429,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.2418,
-          "mean": 0.4596,
-          "max": 0.737,
+          "min": 0.3346,
+          "mean": 0.6969,
+          "max": 1,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.0384,
-          "mean": 0.0595,
-          "max": 0.0858,
+          "min": 0.0388,
+          "mean": 0.0525,
+          "max": 0.0817,
           "n": 36
         },
         "components": {
@@ -5270,9 +5894,9 @@
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0211,
-          "mean": 0.0792,
-          "max": 0.1603,
+          "min": 0,
+          "mean": 0.0457,
+          "max": 0.1393,
           "n": 36
         }
       },
@@ -5286,11 +5910,11 @@
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 27,
-        "STRATIFIED": 6,
+        "CENTRED_FIGURE": 23,
+        "STRATIFIED": 7,
         "ALL_OVER_FIELD": 0,
-        "RADIAL_EMBLEM": 3,
-        "OFF_CENTRE_WEIGHT": 18
+        "RADIAL_EMBLEM": 10,
+        "OFF_CENTRE_WEIGHT": 5
       }
     },
     {
@@ -5299,84 +5923,84 @@
       "recipeId": "bsp-fan",
       "memberId": "FRAME",
       "legal": true,
-      "configSha256": "c782270ad2c9a85469dac5592bf2bf0ab9fa3e72fbae3b5adf2aee3dc77cef9e",
+      "configSha256": "029ec00204b571a8dbff8abbecf8548ee9fe3caa1282145c05448f0fb5eba94d",
       "distribution": {
         "ink": {
-          "min": 0.0653,
-          "mean": 0.1356,
-          "max": 0.223,
+          "min": 0.1029,
+          "mean": 0.2029,
+          "max": 0.3644,
           "n": 36
         },
         "extentX": {
-          "min": 0.408,
-          "mean": 0.6456,
-          "max": 0.908,
+          "min": 0.5,
+          "mean": 0.7278,
+          "max": 0.925,
           "n": 36
         },
         "extentY": {
-          "min": 0.383,
-          "mean": 0.6034,
-          "max": 0.892,
+          "min": 0.417,
+          "mean": 0.6741,
+          "max": 0.875,
           "n": 36
         },
         "marginMin": {
           "min": 0,
-          "mean": 0.1229,
-          "max": 0.275,
+          "mean": 0.0963,
+          "max": 0.25,
           "n": 36
         },
         "cornerInk": {
           "min": 0,
-          "mean": 0.0147,
-          "max": 0.0964,
+          "mean": 0.0366,
+          "max": 0.2208,
           "n": 36
         },
         "edgeInk": {
           "min": 0,
-          "mean": 0.0115,
-          "max": 0.069,
+          "mean": 0.0181,
+          "max": 0.1573,
           "n": 36
         },
         "livingBands": {
           "min": 4,
-          "mean": 5.0833,
-          "max": 7,
+          "mean": 5.6389,
+          "max": 8,
           "n": 36
         },
         "adjacentContrast": {
-          "min": 0.0576,
-          "mean": 0.0853,
-          "max": 0.1048,
+          "min": 0.0887,
+          "mean": 0.1216,
+          "max": 0.1876,
           "n": 36
         },
         "quadrantEvenness": {
-          "min": 0.1644,
-          "mean": 0.3576,
-          "max": 0.6525,
+          "min": 0.2485,
+          "mean": 0.5504,
+          "max": 0.9244,
           "n": 36
         },
         "boundaryShare": {
-          "min": 0.2791,
-          "mean": 0.3723,
-          "max": 0.4795,
+          "min": 0.2167,
+          "mean": 0.3108,
+          "max": 0.4172,
           "n": 36
         },
         "components": {
           "min": 1,
-          "mean": 1.25,
-          "max": 3,
+          "mean": 1.1111,
+          "max": 2,
           "n": 36
         },
         "largestShare": {
-          "min": 0.978,
-          "mean": 0.9953,
+          "min": 0.51,
+          "mean": 0.9848,
           "max": 1,
           "n": 36
         },
         "centroidOffset": {
-          "min": 0.0401,
-          "mean": 0.098,
-          "max": 0.1769,
+          "min": 0.0033,
+          "mean": 0.0634,
+          "max": 0.1589,
           "n": 36
         }
       },
@@ -5390,11 +6014,11 @@
       },
       "seedsSatisfying": {
         "EDGE_TO_EDGE": 0,
-        "CENTRED_FIGURE": 27,
-        "STRATIFIED": 6,
+        "CENTRED_FIGURE": 23,
+        "STRATIFIED": 8,
         "ALL_OVER_FIELD": 0,
         "RADIAL_EMBLEM": 6,
-        "OFF_CENTRE_WEIGHT": 21
+        "OFF_CENTRE_WEIGHT": 13
       }
     }
   ]

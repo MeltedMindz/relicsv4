@@ -127,12 +127,27 @@ export const COMPOSITIONS = Object.freeze([
       rx(String.raw`\bone\s+(single\s+)?(form|figure|mass|object)\b(?:\s+\w+){0,6}?\s+(and\s+almost\s+nothing\s+else|alone)\b`),
     ],
     /**
-     * The margin is read at the WORST seed and the corners at the LOUDEST, which is the opposite
-     * pairing to EDGE_TO_EDGE and deliberately so: a centred figure fails if ANY token reaches the
-     * edge, and reaches nothing if the tightest token has no margin.
+     * The margin and the reach are read at their WORST, which is the opposite pairing to
+     * EDGE_TO_EDGE and deliberately so: a centred figure fails if ANY token reaches the edge, and
+     * reaches nothing if the tightest token has no margin.
+     *
+     * A CORNER CLAUSE WAS HERE AND IT WAS GEOMETRICALLY INCOMPATIBLE WITH THE MARGIN CLAUSE.
+     * `cornerOccupancy` samples a corner box of 21% of the frame; a margin of 5% is six pixels of a
+     * 120px frame. So any figure that fills its own bounding box and leaves the 5% margin the first
+     * clause asks for necessarily puts ink in the 21% corner box, and `cornerInk.max <= 0.03`
+     * refused every recipe that satisfied `marginMin.min >= 0.05` on all 36 frames — seven distinct
+     * arrangements, all of them at exactly 27 of 36, all failing on the same clause. That is two
+     * clauses measured at two different scales, not a strict criterion.
+     *
+     * The replacement says what the corner clause was reaching for and says it at the margin's own
+     * scale: the figure does not fill the frame even at its largest draw. `extent.max <= 0.85`
+     * leaves fifteen per cent of both axes unreached on EVERY token, which is the thing a reviewer
+     * means by a form held clear of the edges. This is a correction of a criterion this round wrote
+     * badly, not a floor lowered to admit something — the margin clause and the figure clause are
+     * unchanged, and `inscribe-tight`, which passed the old criterion, passes this one too.
      */
-    criterion: (d) => d.marginMin.min >= 0.05 && d.cornerInk.max <= 0.03 && d.largestShare.mean >= 0.45,
-    criterionText: "marginMin.min >= 0.05 AND cornerInk.max <= 0.03 AND largestShare.mean >= 0.45",
+    criterion: (d) => d.marginMin.min >= 0.05 && d.extentX.max <= 0.85 && d.extentY.max <= 0.85 && d.largestShare.mean >= 0.45,
+    criterionText: "marginMin.min >= 0.05 AND extentX.max <= 0.85 AND extentY.max <= 0.85 AND largestShare.mean >= 0.45",
   }),
   Object.freeze({
     id: "STRATIFIED",
@@ -280,17 +295,39 @@ export const COMPOSITION_RECIPES = Object.freeze({
         id: "rot6-pinned",
         notes: "rotational replication is what carries a cell grid into the corners -- at symmetry NONE the same spread and size reach extentX 0.80 at the worst seed and cornerInk 0.009 -- and the two pins are what stop the one seed in twelve that draws low from being a centred island in a collection that bleeds",
         fields: [
-          { layout: "GRID", sizeMax: 64, spreadMax: 128, count: 20, symmetry: "ROT6", pin: "SIZE" },
-          { layout: "LATTICE", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "ROT6", pin: "SPREAD" },
+          { layout: "GRID", sizeMax: 64, spreadMax: 128, count: 20, symmetry: "ROT6" },
+          { layout: "LATTICE", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "ROT6", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 50, spreadMax: 128, count: 20, symmetry: "ROT6", pin: "SPREAD" },
           { layout: "TILING", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "ROT6" },
+        ],
+      }),
+      Object.freeze({
+        id: "rot6-light",
+        notes: "THE LIGHT END OF THE SAME COMPOSITION, and it exists because a brief may ask for the frame AND for restraint. Two fields, eight sites, a quarter of the size ceiling: it holds every seed at ink 0.62 with a mass member against the three-field recipe's 0.93. The residual is real and is reported rather than chased -- reaching the corners on EVERY seed costs coverage in these runtimes, and the arrangement that costs least is still not sparse",
+        fields: [
+          { layout: "GRID", sizeMax: 26, spreadMax: 128, count: 8, symmetry: "ROT6" },
+          { layout: "LATTICE", sizeMax: 22, spreadMax: 128, count: 8, symmetry: "ROT6", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 22, spreadMax: 128, count: 8, symmetry: "ROT6", pin: "SPREAD" },
+          { layout: "TILING", sizeMax: 20, spreadMax: 128, count: 8, symmetry: "ROT6" },
+        ],
+      }),
+      Object.freeze({
+        id: "rot6-mid",
+        notes: "between the light and the full arrangement: two fields at twelve sites and two thirds of the size ceiling, measured ink 0.87",
+        fields: [
+          { layout: "GRID", sizeMax: 40, spreadMax: 128, count: 12, symmetry: "ROT6" },
+          { layout: "LATTICE", sizeMax: 36, spreadMax: 128, count: 12, symmetry: "ROT6", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 34, spreadMax: 128, count: 12, symmetry: "ROT6", pin: "SPREAD" },
+          { layout: "TILING", sizeMax: 32, spreadMax: 128, count: 12, symmetry: "ROT6" },
         ],
       }),
       Object.freeze({
         id: "rot3-pinned",
         notes: "three-fold replication reaches the frame at roughly a tenth less coverage than six-fold, for a brief that wants the edges without the saturation",
         fields: [
-          { layout: "GRID", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "ROT3", pin: "SIZE" },
-          { layout: "LATTICE", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "ROT3", pin: "SPREAD" },
+          { layout: "GRID", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "ROT3" },
+          { layout: "LATTICE", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "ROT3", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 44, spreadMax: 128, count: 20, symmetry: "ROT3", pin: "SPREAD" },
           { layout: "SCATTER", sizeMax: 40, spreadMax: 128, count: 20, symmetry: "ROT3" },
         ],
       }),
@@ -298,8 +335,9 @@ export const COMPOSITION_RECIPES = Object.freeze({
         id: "quad-pinned",
         notes: "four-fold replication points at the corners of a SQUARE frame rather than at a circle inscribed in it, which is why it measures the highest corner ink per unit of coverage",
         fields: [
-          { layout: "GRID", sizeMax: 64, spreadMax: 128, count: 20, symmetry: "QUAD", pin: "SIZE" },
-          { layout: "TILING", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "QUAD", pin: "SPREAD" },
+          { layout: "GRID", sizeMax: 64, spreadMax: 128, count: 20, symmetry: "QUAD" },
+          { layout: "TILING", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "QUAD", pin: "SIZE" },
+          { layout: "TILING", sizeMax: 52, spreadMax: 128, count: 20, symmetry: "QUAD", pin: "SPREAD" },
           { layout: "LATTICE", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "QUAD" },
         ],
       }),
@@ -327,18 +365,30 @@ export const COMPOSITION_RECIPES = Object.freeze({
         id: "stack-pinned",
         notes: "STACK is the only layout the atlas records as reading as horizontal bands, and it takes its element extent from spread while ignoring sizeMax entirely -- so the SPREAD pin is what makes a bed reach the frame on every seed rather than on most",
         fields: [
-          { layout: "STACK", sizeMax: 34, spreadMax: 128, count: 16, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 34, spreadMax: 128, count: 16, symmetry: "NONE" },
           { layout: "STACK", sizeMax: 26, spreadMax: 128, count: 14, symmetry: "NONE", pin: "SPREAD" },
-          { layout: "LINEFIELD", sizeMax: 20, spreadMax: 128, count: 12, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 24, spreadMax: 128, count: 14, symmetry: "NONE", pin: "SIZE" },
+          { layout: "LINEFIELD", sizeMax: 20, spreadMax: 128, count: 12, symmetry: "NONE" },
+        ],
+      }),
+      Object.freeze({
+        id: "stack-light",
+        notes: "the same three registers at six sites each and two thirds of the size ceiling -- the light end of a section, for a brief that wants beds rather than a wall",
+        fields: [
+          { layout: "STACK", sizeMax: 24, spreadMax: 128, count: 6, symmetry: "NONE" },
+          { layout: "STACK", sizeMax: 18, spreadMax: 128, count: 6, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 17, spreadMax: 128, count: 6, symmetry: "NONE", pin: "SIZE" },
+          { layout: "LINEFIELD", sizeMax: 14, spreadMax: 128, count: 6, symmetry: "NONE" },
         ],
       }),
       Object.freeze({
         id: "stack-mirror",
         notes: "a left-right mirror widens each bed without stacking a second register on top of it, which a rotational symmetry would",
         fields: [
-          { layout: "STACK", sizeMax: 40, spreadMax: 128, count: 18, symmetry: "MIRROR_X", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 40, spreadMax: 128, count: 18, symmetry: "MIRROR_X" },
           { layout: "STACK", sizeMax: 28, spreadMax: 128, count: 16, symmetry: "MIRROR_X", pin: "SPREAD" },
-          { layout: "STACK", sizeMax: 20, spreadMax: 128, count: 14, symmetry: "MIRROR_X", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 26, spreadMax: 128, count: 16, symmetry: "MIRROR_X", pin: "SIZE" },
+          { layout: "STACK", sizeMax: 20, spreadMax: 128, count: 14, symmetry: "MIRROR_X" },
         ],
       }),
     ]),
@@ -347,18 +397,20 @@ export const COMPOSITION_RECIPES = Object.freeze({
         id: "scatter-fine",
         notes: "an even field needs MANY SEPARATE PIECES, so this holds the mark small while holding spread and count up -- the opposite trade to EDGE_TO_EDGE, which wants few large marks that merge. Measured: 40 components at largestShare 0.14, against the frame-filling recipe's 1 component at 0.999",
         fields: [
-          { layout: "SCATTER", sizeMax: 14, spreadMax: 128, count: 34, symmetry: "NONE", pin: "SPREAD" },
-          { layout: "LATTICE", sizeMax: 14, spreadMax: 128, count: 34, symmetry: "NONE", pin: "SPREAD" },
-          { layout: "GRID", sizeMax: 14, spreadMax: 128, count: 28, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "SCATTER", sizeMax: 14, spreadMax: 128, count: 34, symmetry: "NONE" },
+          { layout: "LATTICE", sizeMax: 14, spreadMax: 128, count: 28, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "LATTICE", sizeMax: 14, spreadMax: 128, count: 26, symmetry: "NONE", pin: "SIZE" },
+          { layout: "GRID", sizeMax: 14, spreadMax: 128, count: 26, symmetry: "NONE" },
         ],
       }),
       Object.freeze({
         id: "lattice-mirror",
         notes: "a cell grid distributes more evenly than a scatter and the mirror fills the half a single grid draw leaves light -- quadrant evenness 0.81 against the scatter's 0.53",
         fields: [
-          { layout: "SCATTER", sizeMax: 12, spreadMax: 128, count: 38, symmetry: "MIRROR_X", pin: "SPREAD" },
-          { layout: "LATTICE", sizeMax: 12, spreadMax: 128, count: 38, symmetry: "MIRROR_X", pin: "SPREAD" },
-          { layout: "GRID", sizeMax: 12, spreadMax: 128, count: 32, symmetry: "MIRROR_X", pin: "SPREAD" },
+          { layout: "SCATTER", sizeMax: 12, spreadMax: 128, count: 38, symmetry: "MIRROR_X" },
+          { layout: "LATTICE", sizeMax: 12, spreadMax: 128, count: 28, symmetry: "MIRROR_X", pin: "SPREAD" },
+          { layout: "LATTICE", sizeMax: 12, spreadMax: 128, count: 26, symmetry: "MIRROR_X", pin: "SIZE" },
+          { layout: "GRID", sizeMax: 12, spreadMax: 128, count: 26, symmetry: "MIRROR_X" },
         ],
       }),
     ]),
@@ -367,9 +419,10 @@ export const COMPOSITION_RECIPES = Object.freeze({
         id: "orbit-rot6",
         notes: "the polar family is what a brief forbidding a centred emblem forbids, in the atlas's own words, so it is elected only where one is asked for",
         fields: [
-          { layout: "RADIAL", sizeMax: 34, spreadMax: 112, count: 18, symmetry: "ROT6", pin: "SPREAD" },
+          { layout: "RADIAL", sizeMax: 34, spreadMax: 112, count: 18, symmetry: "ROT6" },
           { layout: "ORBIT", sizeMax: 26, spreadMax: 112, count: 16, symmetry: "ROT6", pin: "SPREAD" },
-          { layout: "SPIRAL", sizeMax: 20, spreadMax: 112, count: 14, symmetry: "ROT6", pin: "SPREAD" },
+          { layout: "ORBIT", sizeMax: 24, spreadMax: 112, count: 16, symmetry: "ROT6", pin: "SIZE" },
+          { layout: "SPIRAL", sizeMax: 20, spreadMax: 112, count: 14, symmetry: "ROT6" },
         ],
       }),
     ]),
@@ -387,6 +440,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "a three-element scatter at the widest spread: the most displaced arrangement available outside SUBDIVIDE, and the comparison that shows SUBDIVIDE is doing the work",
         fields: [
           { layout: "SCATTER", sizeMax: 56, spreadMax: 128, count: 3, symmetry: "NONE" },
+          { layout: "SCATTER", sizeMax: 40, spreadMax: 128, count: 3, symmetry: "NONE" },
         ],
       }),
     ]),
@@ -399,7 +453,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         rules: [
           { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 10 },
           { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 25, pin: "CONTRACT" },
-          { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40, pin: "CONTRACT" },
+          { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40 },
         ],
       }),
       Object.freeze({
@@ -408,7 +462,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         rules: [
           { ruleSet: ["BRANCH"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 10 },
           { ruleSet: ["BRANCH"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 25, pin: "CONTRACT" },
-          { ruleSet: ["BRANCH"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40, pin: "CONTRACT" },
+          { ruleSet: ["BRANCH"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40 },
         ],
       }),
       Object.freeze({
@@ -417,7 +471,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         rules: [
           { ruleSet: ["BRANCH"], symSet: ["QUAD"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 10 },
           { ruleSet: ["BRANCH"], symSet: ["QUAD"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 25, pin: "CONTRACT" },
-          { ruleSet: ["BRANCH"], symSet: ["QUAD"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40, pin: "CONTRACT" },
+          { ruleSet: ["BRANCH"], symSet: ["QUAD"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40 },
         ],
       }),
     ]),
@@ -427,14 +481,16 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "INSCRIBE places every child inside its parent, so the figure never grows past the root and the margin is structural rather than tuned. Contraction 55 rather than 70: at 65 one frame of thirty-six lost its margin, and at 75 six did",
         rules: [
           { ruleSet: ["INSCRIBE", "TRI"], symSet: ["NONE"], contraction: 55, branch: 2, depth: 4, prune: 2, rotation: 12 },
+          { ruleSet: ["INSCRIBE", "TRI"], symSet: ["NONE"], contraction: 55, branch: 2, depth: 3, prune: 2, rotation: 26 },
         ],
       }),
       Object.freeze({
-        id: "quad-tight",
-        notes: "QUAD and TRI keep children at the parent's corners and edge midpoints, which the atlas measures flat at extentX 0.79 across the whole contraction range",
+        id: "inscribe-dense",
+        notes: "THE SAME FIGURE WITH ENOUGH INK TO SURVIVE A STROKED MARK. INSCRIBE alone -- no TRI, whose children sit at the parent's edge midpoints and push the silhouette outward -- over three rules at branch 3. The one-rule recipe is the right picture and the wrong weight: with a stroked mark it drew a frame at 0.029, under the battery's 0.04 blank floor, because stroking cuts recursion coverage to a third (ink120 0.399 filled against 0.121 stroked). This reads 0.123 at its emptiest.",
         rules: [
-          { ruleSet: ["QUAD", "TRI"], symSet: ["NONE"], contraction: 55, branch: 3, depth: 3, prune: 6, rotation: 12 },
-          { ruleSet: ["INSCRIBE", "TRI"], symSet: ["NONE"], contraction: 55, branch: 2, depth: 3, prune: 2, rotation: 24, pin: "CONTRACT" },
+          { ruleSet: ["INSCRIBE"], symSet: ["NONE"], contraction: 60, branch: 3, depth: 3, prune: 6, rotation: 12 },
+          { ruleSet: ["INSCRIBE"], symSet: ["NONE"], contraction: 60, branch: 3, depth: 3, prune: 6, rotation: 26, pin: "CONTRACT" },
+          { ruleSet: ["INSCRIBE"], symSet: ["NONE"], contraction: 60, branch: 3, depth: 3, prune: 6, rotation: 40 },
         ],
       }),
     ]),
@@ -445,7 +501,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         rules: [
           { ruleSet: ["BSP"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 5, prune: 2, rotation: 0 },
           { ruleSet: ["BSP"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 5, prune: 2, rotation: 0, pin: "CONTRACT" },
-          { ruleSet: ["BSP"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 5, prune: 2, rotation: 0, pin: "CONTRACT" },
+          { ruleSet: ["BSP"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 5, prune: 2, rotation: 0 },
         ],
       }),
       Object.freeze({
@@ -454,7 +510,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         rules: [
           { ruleSet: ["QUAD"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 4, prune: 2, rotation: 0 },
           { ruleSet: ["QUAD"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 4, prune: 2, rotation: 0, pin: "CONTRACT" },
-          { ruleSet: ["QUAD"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 4, prune: 2, rotation: 0, pin: "CONTRACT" },
+          { ruleSet: ["QUAD"], symSet: ["MIRROR_X"], contraction: 90, branch: 2, depth: 4, prune: 2, rotation: 0 },
         ],
       }),
     ]),
@@ -465,7 +521,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         rules: [
           { ruleSet: ["BRANCH", "RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 10 },
           { ruleSet: ["BRANCH", "RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 25, pin: "CONTRACT" },
-          { ruleSet: ["BRANCH", "RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40, pin: "CONTRACT" },
+          { ruleSet: ["BRANCH", "RING"], symSet: ["ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 40 },
         ],
       }),
       Object.freeze({
@@ -474,7 +530,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         rules: [
           { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 20, branch: 3, depth: 3, prune: 6, rotation: 10 },
           { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 20, branch: 3, depth: 3, prune: 6, rotation: 25, pin: "CONTRACT" },
-          { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 20, branch: 3, depth: 3, prune: 6, rotation: 40, pin: "CONTRACT" },
+          { ruleSet: ["RING"], symSet: ["ROT6"], contraction: 20, branch: 3, depth: 3, prune: 6, rotation: 40 },
         ],
       }),
     ]),
@@ -484,7 +540,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "the runtime's native idiom, and the one six of twelve round-one reviews read into work that never asked for it",
         rules: [
           { ruleSet: ["RING"], symSet: ["ROT3", "ROT6"], contraction: 90, branch: 3, depth: 3, prune: 6, rotation: 10 },
-          { ruleSet: ["RING"], symSet: ["ROT3", "ROT6"], contraction: 85, branch: 3, depth: 3, prune: 6, rotation: 25, pin: "CONTRACT" },
+          { ruleSet: ["RING"], symSet: ["ROT3", "ROT6"], contraction: 85, branch: 3, depth: 3, prune: 6, rotation: 25 },
         ],
       }),
     ]),
@@ -493,14 +549,16 @@ export const COMPOSITION_RECIPES = Object.freeze({
         id: "branch-fan",
         notes: "one rule, no replication, the widest fan and a prune mask that keeps ONE child: the fan then has a direction and the whole figure hangs off the root. Measured centroid offset 0.112 at the worst frame of thirty-six -- the only recursion arrangement that holds it",
         rules: [
-          { ruleSet: ["BRANCH"], symSet: ["NONE"], contraction: 90, branch: 4, depth: 3, prune: 1, rotation: 12, pin: "CONTRACT" },
+          { ruleSet: ["BRANCH"], symSet: ["NONE"], contraction: 90, branch: 4, depth: 3, prune: 1, rotation: 12 },
+          { ruleSet: ["BRANCH"], symSet: ["NONE"], contraction: 90, branch: 3, depth: 3, prune: 1, rotation: 26 },
         ],
       }),
       Object.freeze({
         id: "bsp-fan",
         notes: "BSP places every child at the same offset and alternates the axis by level, which is the most one-sided placement in the production set -- and it measures far weaker than the fan, which is why the fan is the recipe",
         rules: [
-          { ruleSet: ["BSP"], symSet: ["NONE"], contraction: 90, branch: 2, depth: 5, prune: 1, rotation: 0, pin: "CONTRACT" },
+          { ruleSet: ["BSP"], symSet: ["NONE"], contraction: 90, branch: 2, depth: 5, prune: 1, rotation: 0 },
+          { ruleSet: ["BSP"], symSet: ["NONE"], contraction: 90, branch: 2, depth: 4, prune: 1, rotation: 0 },
         ],
       }),
     ]),
@@ -687,6 +745,190 @@ export function assertCompositionCatalogCurrent() {
       if (!COMPOSITION_RECIPES[runtimeId][c.id]) problems.push(`${runtimeId}: no candidate recipe for ${c.id}. A composition with no candidate cannot be honestly refused.`);
     }
   }
+  // UNIT ZERO IS NEVER PINNED, IN ANY RECIPE, ON EITHER RUNTIME.
+  //
+  // A pin takes a dimension away from the seed by giving it to a constant sensor, which is the same
+  // slot the MARKET RESPONSE uses. A recipe that pins every unit is a recipe with nowhere left to
+  // put the mechanism, and the author's only ways out of that are both bad: drop a pin and lose the
+  // guarantee the recipe was measured with, or leave the collection with no market response at all.
+  // So the invariant is structural — unit 0 carries the mechanism, units 1..n carry the guarantee —
+  // and it is asserted rather than remembered.
+  for (const [runtimeId, byComposition] of Object.entries(COMPOSITION_RECIPES)) {
+    for (const [compositionId, recipes] of Object.entries(byComposition)) {
+      for (const r of recipes) {
+        const units = r.fields ?? r.rules ?? [];
+        if (units.length === 0) { problems.push(`${runtimeId}/${compositionId}/${r.id}: declares no units`); continue; }
+        if (units[0].pin) problems.push(`${runtimeId}/${compositionId}/${r.id}: unit 0 is pinned to ${units[0].pin}. Unit 0 carries the market mechanism and may never be pinned.`);
+        // AND THE LAST UNIT MAY NOT BE PINNED EITHER, because it carries the COUNTER-REGISTER.
+        //
+        // A recipe that pins everything after unit 0 leaves the collection with exactly one live
+        // sensor, and one sensor cannot separate three states: the primary answers the pairing its
+        // polarity is about and the other pairing has nothing answering it. The author's own test
+        // suite caught this on the first recipe it was asked to build, which is the test working.
+        // So a recipe needs at least two units, and the two ends of it are the market's.
+        if (units.length < 2) problems.push(`${runtimeId}/${compositionId}/${r.id}: declares ${units.length} unit. A composition needs at least two: one for the mechanism and one for the counter-register.`);
+        if (units.length > 1 && units[units.length - 1].pin) problems.push(`${runtimeId}/${compositionId}/${r.id}: the last unit is pinned to ${units[units.length - 1].pin}. It carries the counter-register, without which one market pairing has nothing answering it.`);
+      }
+    }
+  }
   if (problems.length) throw new Error(`COMPOSITION_CATALOG_STALE — the composition vocabulary disagrees with its own measurement:\n  ${problems.join("\n  ")}`);
   return { ok: true, compositions: COMPOSITIONS.length, recipes: measured.size, runtimes: Object.keys(COMPOSITION_RECIPES) };
+}
+
+/**
+ * The measured ink of one (recipe, member) pair, or null if the probe never rendered it.
+ *
+ * Coverage is read from the atlas rather than predicted, because coverage in these runtimes is the
+ * product of at least four controls and the author has been wrong about it before: five of twelve
+ * round-two development critics measured the coverage far above what their direction asked for,
+ * with a number, on configurations whose density word was SPARSE.
+ */
+export function measuredInk(runtimeId, compositionId, recipeId, memberId) {
+  const row = (compositionAtlas().recipes ?? []).find(
+    (r) => r.runtimeId === runtimeId && r.compositionId === compositionId && r.recipeId === recipeId && r.memberId === memberId && r.legal === true,
+  );
+  return row ? row.distribution.ink.mean : null;
+}
+
+/** The EMPTIEST frame a recipe drew, which is the number the battery's blank floor reads. */
+export function measuredInkFloor(runtimeId, compositionId, recipeId, memberId) {
+  const row = (compositionAtlas().recipes ?? []).find(
+    (r) => r.runtimeId === runtimeId && r.compositionId === compositionId && r.recipeId === recipeId && r.memberId === memberId && r.legal === true,
+  );
+  return row ? row.distribution.ink.min : null;
+}
+
+/**
+ * The coverage floor a chosen recipe must clear, and it is NOT this file's number.
+ *
+ * `@relics/art-review`'s objective battery refuses a configuration whose emptiest sampled frame
+ * falls under `FLOORS.ink = 0.04`, and it refuses it BEFORE a reviewer sees anything. An author
+ * that picks the lightest holding arrangement for a light mark and discovers the floor at the
+ * battery has spent a round learning something the atlas already knew: measured, the recursion
+ * runtime's one-rule centred recipe with a stroked mark drew a frame at 0.029.
+ *
+ * The margin above 0.04 is deliberate and it is the estimate's, not the floor's: the mark scale is
+ * a ratio between two measurements taken on different arrangements, so a recipe estimated at
+ * exactly the floor is a recipe that might be under it.
+ */
+export const CHOSEN_RECIPE_INK_FLOOR = 0.06;
+
+/**
+ * How much extra coverage headroom a recipe needs when the MECHANISM drives a dimension whose
+ * bytecode floor is near nothing.
+ *
+ * MEASURED, AND IT COST A CASE. The composition atlas renders every arrangement with the market
+ * response held out — a pin or a pinned count — so its coverage floor is the arrangement's own. A
+ * launched project's is not: `DRIVE_SIZE` resolves from a bytecode floor of 2 of 64 and
+ * `DRIVE_SPREAD` from 40 of 256, and `RECOVERY` reads exactly 0 in the stress state. So a
+ * recursion configuration whose arrangement floors at 0.09 drew 0.029 once the mechanism was on it
+ * — under the battery's 0.04 blank floor, on a composition the atlas correctly called safe.
+ *
+ * Three is not a tuned constant: `DRIVE_SPREAD`'s floor is 40 of 256, which is under a sixth of
+ * the ceiling, and coverage falls faster than extent. It is deliberately conservative, and a
+ * recipe it excludes is excluded from a CHOICE rather than refused.
+ */
+export const DRIVEN_DIMENSION_INK_HEADROOM = 3;
+
+/** The drives whose resolved floor is a bytecode constant near zero rather than a creator's value. */
+export const LOW_FLOOR_DRIVES = Object.freeze(["SIZE", "SPREAD"]);
+
+/**
+ * The density targets, as COVERAGE against the declared ground on this pipeline.
+ *
+ * Carried over from the author's own calibration and for its reasons: the two shipped Wave-1
+ * templates measure 0.570 (compass) and 0.430 (alluvium), both emphatic works, so a sparse brief
+ * has to land well under alluvium rather than beside compass.
+ */
+export const DENSITY_INK_TARGET = Object.freeze({ SPARSE: 0.20, MODERATE: 0.35, DENSE: 0.55 });
+
+/**
+ * Choose among the recipes that HOLD the composition, by measured coverage.
+ *
+ * THIS IS WHY DENSITY DOES NOT GET TO MOVE THE COMPOSITION'S OWN PARAMETERS. A recipe holds because
+ * of the values it was measured at; scaling those to hit a density word would be spending the
+ * guarantee to buy a coverage the author cannot predict anyway. So the density target SELECTS among
+ * arrangements that already hold, using the coverage each one was measured at, and what it cannot
+ * reach it reports as a residual rather than chasing.
+ *
+ * `inkGap` is that residual, signed, and it travels into the receipt. A positive gap means the
+ * composition the brief asked for is denser than the density word it also asked for, on every
+ * arrangement measured — which is a real tension between two halves of one brief and is worth
+ * saying out loud instead of resolving silently.
+ */
+/**
+ * The member atlas's own coverage reading for one mark on one runtime.
+ *
+ * Read from the MEMBER atlas rather than the composition one, because the two measure different
+ * things: the composition atlas measures an arrangement with a probe mark, and this measures a mark
+ * on a fixed arrangement. Dividing one by the other is how the estimate below is built.
+ */
+function memberInkOf(runtimeId, memberId) {
+  try {
+    const atlas = JSON.parse(readFileSync(join(PKG, "measurements", "member-atlas.json"), "utf8"));
+    const row = (atlas.members ?? []).find((r) => r.runtimeId === runtimeId && r.memberId === memberId && r.legal === true);
+    return row ? row.distribution.ink.mean : null;
+  } catch {
+    return null;
+  }
+}
+
+export function chooseRecipe({ runtimeId, compositionId, densityTarget = "MODERATE", memberFamily = "MASS", memberId = null, mechanismDrive = null }) {
+  const reach = compositionReach(runtimeId, compositionId);
+  if (reach.reach !== "HOLDS" && reach.reach !== "REACHES_NOT_HELD") return { recipe: null, reach: reach.reach, detail: reach.detail };
+  const probeMember = memberFamily === "LINE" ? "FRAME" : "PLATE";
+  const target = DENSITY_INK_TARGET[densityTarget] ?? DENSITY_INK_TARGET.MODERATE;
+  // THE PROBE MARK IS NOT THE BRIEF'S MARK, AND THE DIFFERENCE IS A FACTOR OF TWO.
+  //
+  // Each recipe is measured with PLATE and with FRAME, so the atlas has a coverage reading per
+  // family and not per mark. Measured on the vector runtime at a fixed arrangement, FRAME reads ink
+  // 0.150 and THREAD reads 0.049 — both LINE, three times apart. Choosing an arrangement for a
+  // brief that asks for a thread using the frame's number picked the LIGHTEST holding recipe for
+  // the LIGHTEST mark, and the composition then held on 26 frames of 36. So the reading is scaled
+  // by the ratio the member atlas measures between the brief's own mark and the probe's. It is an
+  // ESTIMATE and it is named one: the true value needs a render, and the author has no chain.
+  const probeInk = memberInkOf(runtimeId, probeMember);
+  const markInk = memberId ? memberInkOf(runtimeId, memberId) : null;
+  const scale = probeInk && markInk ? markInk / probeInk : 1;
+  const candidates = (COMPOSITION_RECIPES[runtimeId]?.[compositionId] ?? [])
+    .filter((r) => reach.recipes.includes(r.id))
+    .map((r) => {
+      const measured = measuredInk(runtimeId, compositionId, r.id, probeMember);
+      const floor = measuredInkFloor(runtimeId, compositionId, r.id, probeMember);
+      return {
+        recipe: r,
+        ink: measured,
+        inkFloor: floor,
+        estimatedInk: measured === null ? null : Number((measured * scale).toFixed(4)),
+        estimatedInkFloor: floor === null ? null : Number((floor * scale).toFixed(4)),
+      };
+    })
+    .filter((c) => c.ink !== null);
+  // THE BLANK FLOOR IS A HARD FILTER AND THE DENSITY TARGET IS A PREFERENCE. A recipe whose
+  // emptiest frame lands under the battery's floor is not a lighter option; it is a configuration
+  // the battery will refuse before any reviewer sees it.
+  const inkFloor = CHOSEN_RECIPE_INK_FLOOR * (LOW_FLOOR_DRIVES.includes(mechanismDrive) ? DRIVEN_DIMENSION_INK_HEADROOM : 1);
+  const aboveFloor = candidates.filter((c) => c.estimatedInkFloor === null || c.estimatedInkFloor >= inkFloor);
+  const dropped = candidates.filter((c) => !aboveFloor.includes(c)).map((c) => ({ id: c.recipe.id, estimatedInkFloor: c.estimatedInkFloor }));
+  if (aboveFloor.length > 0) candidates.length = 0, candidates.push(...aboveFloor);
+  if (candidates.length === 0) {
+    const any = (COMPOSITION_RECIPES[runtimeId]?.[compositionId] ?? [])[0] ?? null;
+    return { recipe: any, reach: reach.reach, ink: null, inkGap: null, detail: `no measured coverage for any holding recipe of ${compositionId} with the ${probeMember} probe; falling back to the first declared candidate and recording the coverage as UNMEASURED` };
+  }
+  candidates.sort((a, b) => Math.abs(a.estimatedInk - target) - Math.abs(b.estimatedInk - target));
+  const best = candidates[0];
+  return {
+    recipe: best.recipe,
+    reach: reach.reach,
+    ink: best.ink,
+    estimatedInk: best.estimatedInk,
+    markScale: Number(scale.toFixed(3)),
+    inkTarget: target,
+    inkGap: Number((best.estimatedInk - target).toFixed(4)),
+    probeMember,
+    inkFloorApplied: inkFloor,
+    droppedUnderInkFloor: dropped,
+    considered: candidates.map((c) => ({ id: c.recipe.id, ink: c.ink, estimatedInk: c.estimatedInk, estimatedInkFloor: c.estimatedInkFloor })),
+    detail: `${best.recipe.id} measured ink ${best.ink} with the ${probeMember} probe, estimated ${best.estimatedInk} for a ${memberId ?? probeMember} mark (x${scale.toFixed(2)}), against a ${densityTarget} target of ${target}`,
+  };
 }

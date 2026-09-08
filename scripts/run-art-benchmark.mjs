@@ -59,7 +59,20 @@ import { runObjectiveBattery, blockingFailures } from "../packages/art-review/sr
 import { finalReviewPrompt, finalReviewPromptHash } from "../packages/art-review/src/finalReview.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const OUT = join(ROOT, "artifacts", "art-benchmark");
+/**
+ * WHERE A ROUND'S ARTIFACTS LAND, and it is an INPUT because a round must not overwrite the round
+ * before it.
+ *
+ * Rounds one and two are `artifacts/art-benchmark-round1` and `artifacts/art-benchmark`, and the
+ * second was written over the first's directory name by hand. That is how two rounds came to share
+ * one holdout byte for byte without anybody noticing: the artifacts of the earlier round were not
+ * beside the later one to compare. `RELICS_ART_BENCHMARK_DIR` names the round's own directory, the
+ * holdout registry records it under `coversBenchmarkRounds`, and `npm run kit:artreceipts`
+ * discovers cases from the filesystem rather than from a list, so a new directory is read without
+ * anything being told about it.
+ */
+const OUT = join(ROOT, process.env.RELICS_ART_BENCHMARK_DIR ?? join("artifacts", "art-benchmark"));
+const OUT_REL = process.env.RELICS_ART_BENCHMARK_DIR ?? join("artifacts", "art-benchmark");
 const BRIEFS = join(ROOT, "packages", "art-direction", "test", "fixtures", "benchmark-briefs.json");
 const REGISTRY = "0xCB19507D713DfC4cD212BDc545480e1549A9F231";
 const CHAIN_ID = 8453;
@@ -301,7 +314,7 @@ async function phaseAuthor() {
       console.log(`${brief.id} ${runtimeId.replace("_V1", "").padEnd(20)} ${authored.mechanism.mechanism.padEnd(11)} ink ${dev.measurements.inkMean} state ${dev.measurements.stateDeMean} seed ${dev.measurements.seedDeMean}`);
     }
   }
-  console.log(`\nAUTHORED ${rows.length} case(s). Critic packets: artifacts/art-benchmark/<id>/round-1/`);
+  console.log(`\nAUTHORED ${rows.length} case(s). Critic packets: ${OUT_REL}/<id>/round-1/`);
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -506,7 +519,7 @@ async function phaseHoldout() {
     writeFileSync(join(dir, "final-review", "brief.md"), briefsById[brief.id].text);
     const prompt = finalReviewPrompt({
       caseId: brief.id,
-      sheetDir: `artifacts/art-benchmark/${brief.id}/final-review/sheets`,
+      sheetDir: `${OUT_REL}/${brief.id}/final-review/sheets`,
       sheets: out.artifacts.map((a) => a.name),
       seedCount: round.seeds.length,
       states: ["neutral", "stress", "recovery"],
