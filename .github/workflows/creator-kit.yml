@@ -68,6 +68,21 @@ jobs:
         # nobody runs is a gate that is already stale.
         run: npm run export:manifest:check
 
+      - name: every license the manifest publishes is the one the file itself declares
+        # export:manifest:check proves the manifest is CURRENT. It says nothing about whether it is
+        # TRUE, and for 161 files it was not: everything under lib/v4-core/ and its vendored solmate
+        # tree was published as MIT / original-clean-room while 50 of those files declare
+        # AGPL-3.0-only and 8 declare BUSL-1.1. This re-opens every file the manifest names and
+        # compares. Emits MANIFEST_LICENSE_DISAGREEMENTS and MANIFEST_FALSE_CLEAN_ROOM_CLAIMS.
+        run: npm run export:manifest:licenses
+
+      - name: and that comparison is proved able to fail
+        # Nine mutations of the real manifest — including relabelling every AGPL file MIT, which is
+        # precisely the defect that shipped — each of which must produce its named rule. Every one
+        # asserts it actually changed the input first, so an anchor that drifts is reported rather
+        # than scored as a pass.
+        run: npm run export:manifest:licenses:controls
+
       - name: every published address matches the chain profile it was generated from
         # An address in a creator kit is a claim that this is the contract a bundle will be launched
         # through, so it is generated and never typed: `kit:deployments:check` compares the records

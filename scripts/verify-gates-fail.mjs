@@ -209,6 +209,24 @@ const GATES = [
     why: "a tracked file changes without the manifest being regenerated",
   },
   {
+    gate: "export:manifest:licenses",
+    sees: "the license every published file declares about ITSELF, against what the manifest publishes about it",
+    // The mutation moves the file, not the manifest, deliberately: it is the only edit that proves
+    // this gate reads DISK rather than checking the manifest for internal consistency. It is also
+    // the plausible one — somebody "normalising" a license header, or a dependency bump that quietly
+    // relicenses a file, with the manifest left describing the license that used to be there.
+    //
+    // Invisible to every other gate except `export:manifest:check`, which is a different question:
+    // that one would go red over the changed DIGEST and would say nothing at all about the license.
+    // Exactly that distinction is why 161 false licensing claims shipped under a green manifest.
+    mutate: (root) => edit(
+      join(root, "lib/v4-core/src/PoolManager.sol"),
+      "// SPDX-License-Identifier: BUSL-1.1",
+      "// SPDX-License-Identifier: MIT",
+    ),
+    why: "a vendored file's own license header moves and the manifest goes on publishing the old one",
+  },
+  {
     gate: "kit:selectorblind",
     sees: "the frozen blind brief corpus, and the structural results every pick must satisfy",
     // THE CORPUS IS THE INPUT NOTHING ELSE READS, so shrinking it is the mutation that is invisible

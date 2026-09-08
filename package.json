@@ -75,6 +75,8 @@
     "kit:deployments:sync": "node scripts/sync-deployments.mjs --sync",
     "export:manifest": "node scripts/gen-manifest.mjs",
     "export:manifest:check": "node scripts/gen-manifest.mjs --check",
+    "export:manifest:licenses": "node scripts/check-manifest-licenses.mjs",
+    "export:manifest:licenses:controls": "node scripts/check-manifest-licenses.mjs --controls",
     "launch:sync": "node scripts/sync-launch-sdk.mjs",
     "launch:parity": "node scripts/check-launch-semantics-parity.mjs",
     "launch:parity:controls": "node scripts/check-launch-semantics-parity.mjs --controls",

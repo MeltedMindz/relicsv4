@@ -77,5 +77,14 @@ inventory with per-file hashes and verdicts is `PUBLIC_EXPORT_MANIFEST.json`.
 - `.gitignore` keeps secrets and build artifacts out of tracking.
 - `.gitleaks.toml` + `scripts/secret-scan.sh` + CI scan for secrets on every push.
 - `scripts/check-links.mjs` verifies docs integrity.
-- `PUBLIC_EXPORT_MANIFEST.json` records a hash and a public-safe verdict for every tracked file;
-  regenerate it with `node scripts/gen-manifest.mjs` after changes.
+- `PUBLIC_EXPORT_MANIFEST.json` records a hash, a provenance, a license and a public-safe verdict
+  for every tracked file; regenerate it with `node scripts/gen-manifest.mjs` after changes.
+- **The license in that manifest is DERIVED from each file's own `SPDX-License-Identifier` line,
+  never assumed.** It used to be assumed, and it was wrong about 161 files: the vendored
+  `lib/v4-core/**` tree and the solmate tree beneath it were published as `MIT` /
+  `original-clean-room` while 50 of those files declare `AGPL-3.0-only` and 8 declare `BUSL-1.1`.
+  `npm run export:manifest:licenses` re-opens every file the manifest names and fails on any
+  disagreement; `npm run export:manifest:check` is a different question and proves only that the
+  manifest is current. A manifest can be perfectly up to date and perfectly wrong. Third-party
+  code is **vendored** here, not referenced by submodule — see `THIRD_PARTY_NOTICES.md` for the
+  component table and the BUSL-1.1 note.

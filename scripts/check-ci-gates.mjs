@@ -80,6 +80,11 @@ const REQUIRED_GATES = [
   { id: "KIT_ECONOMICS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:economics" },
   { id: "KIT_PARITY", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:parity" },
   { id: "EXPORT_MANIFEST", workflow: "creator-kit.yml", job: "kit", needle: "npm run export:manifest:check" },
+  // EXPORT_MANIFEST proves the manifest is CURRENT and cannot tell whether it is TRUE. It was
+  // current and false at the same time for 161 files: `lib/v4-core/**` and the solmate tree beneath
+  // it were published as MIT / original-clean-room over files declaring AGPL-3.0-only and BUSL-1.1.
+  { id: "EXPORT_MANIFEST_LICENSES", workflow: "creator-kit.yml", job: "kit", needle: "npm run export:manifest:licenses\n" },
+  { id: "EXPORT_MANIFEST_LICENSE_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run export:manifest:licenses:controls" },
   // README.md tells a reader to run `kit:status` for the live launch state. If CI never runs it,
   // the command a document points at is unproven.
   { id: "KIT_STATUS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:status" },
