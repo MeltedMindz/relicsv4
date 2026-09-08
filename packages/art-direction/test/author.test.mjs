@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 import { admitBrief } from "../src/admission.js";
 import { authorConfig, deriveIntent, resolveMechanism } from "../src/author.js";
-import { COUNTER_REGISTER, SENSOR_FOR_POLARITY } from "../src/mechanism.js";
+import { COUNTER_REGISTER, COUNTER_REGISTER_BY_PRIMARY, counterRegisterFor, SENSOR_FOR_POLARITY } from "../src/mechanism.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..", "..");
@@ -113,9 +113,18 @@ test("a second sensor answers the pairing the primary leaves ambiguous, and it i
       .map((u, i) => (u.pin ? i : null)).filter((i) => i !== null));
     const counters = units.map((u, i) => (i > 0 && !pinned.has(i) ? i : null)).filter((i) => i !== null);
     assert.ok(counters.length >= 1, `${c.id}: every register after the mechanism's is pinned, so nothing answers the pairing the primary leaves ambiguous`);
+    // A COMPOSITION MAY CARRY TWO COUNTER-REGISTERS AND THEY ARE NOT THE SAME BINDING. The first
+    // answers the pairing the primary's polarity leaves ambiguous; the second either reinforces it
+    // on a different dimension or takes the other pairing, depending on which primary it is —
+    // measured, and recorded in `COUNTER_REGISTER_BY_PRIMARY`. Both are declared; neither is free.
+    // What this asserts is that every unpinned register carries ONE OF THE DECLARED counter
+    // bindings and nothing else, which is stricter than naming a single sensor.
+    const declared = new Set(Object.values(COUNTER_REGISTER_BY_PRIMARY).map((x) => x.sensor));
     for (const i of counters) {
-      assert.equal(sensors[i], COUNTER_REGISTER.sensor, `${c.id}: unpinned register ${i} is on ${sensors[i]}, not the declared counter-register`);
+      assert.ok(declared.has(sensors[i]), `${c.id}: unpinned register ${i} is on ${sensors[i]}, which is not one of the declared counter-registers (${[...declared].join(", ")})`);
+      assert.notEqual(sensors[i], c.authored.mechanism.sensor, `${c.id}: unpinned register ${i} repeats the mechanism's own sensor, so it answers the pairing the primary already owns and nothing answers the other`);
     }
+    assert.equal(sensors[counters[0]], counterRegisterFor(c.authored.mechanism.sensor).sensor, `${c.id}: the FIRST counter-register does not answer the pairing this primary's polarity leaves ambiguous`);
     for (const i of pinned) {
       assert.equal(sensors[i], "QUOTE_VOLUME", `${c.id}: register ${i} is declared a composition pin and is on ${sensors[i]}, which is not the constant sensor a pin is defined as`);
     }

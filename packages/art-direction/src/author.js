@@ -44,7 +44,7 @@ import { createAtlasSession, loudnessRanking, quickReference } from "./atlas.js"
 import { checkBindings } from "./binding.js";
 import { COMPOSITION_PIN, chooseRecipe, compositionReach, detectCompositions, DEFAULT_COMPOSITION } from "./composition.js";
 import { memberFor, resolveMember } from "./member.js";
-import { COUNTER_REGISTER, SENSOR_FOR_POLARITY, mechanismsRequestedBy, realisationFor } from "./mechanism.js";
+import { COUNTER_REGISTER, counterRegisterFor, SENSOR_FOR_POLARITY, mechanismsRequestedBy, realisationFor } from "./mechanism.js";
 
 /**
  * The direction fields a market mechanism is read out of, and why only these two.
@@ -825,8 +825,33 @@ function authorRecursion({ set, session, intent, direction, mechanism, compositi
   // The second shape, so the seed has a categorical draw. Same weight, never lighter: CROSS is
   // stroke-forced and carries ink120 0.060 against SQUARE's 0.399, and TRIANGLE is the next
   // lightest at 0.162 — a sparse set carrying either manufactures near-blank tokens.
-  const SECOND_SHAPE = Object.freeze({ SQUARE: "DIAMOND", CIRCLE: "HEX", HEX: "SQUARE", TRIANGLE: "DIAMOND", DIAMOND: "SQUARE" });
-  const shapeSet = [mark.shape, SECOND_SHAPE[mark.shape] ?? "DIAMOND"];
+  // THREE MEMBERS, NOT TWO, AND THE COLLECTION SWEEP IS WHY.
+  //
+  // The seed's whole categorical draw on this runtime is one shape, one production and one symmetry
+  // per rule. A two-shape set over two rules whose productions and symmetry are fixed by the
+  // composition offers four figures, and a hundred-seed sweep of four moulds contains colliding
+  // pairs by arithmetic: measured on this round's own centred configuration, the closest pair came
+  // back at 0.822 dE against the duplicate floor of 1.2, on a collection whose per-seed MEAN was a
+  // healthy 9.974. Widening to three shapes is the cheapest categorical space available, because
+  // the composition owns the other two draws.
+  //
+  // THE SHAPES ARE ORDERED BY WEIGHT AND THE LIGHT ONES ARE NEVER ADDED. The atlas records ink120
+  // by shape at identical settings -- SQUARE 0.399, CIRCLE 0.316, HEX 0.265, DIAMOND 0.224,
+  // TRIANGLE 0.162, CROSS 0.060 -- and that widening a set downward manufactures near-blank tokens
+  // with no warning. So the neighbours are the two nearest in weight, above or below, and CROSS is
+  // on no path at all.
+  // FOUR MEMBERS, and the fourth is the collection sweep's doing rather than a preference. At three
+  // the closest pair of a hundred seeds measured 0.764 dE against the duplicate floor of 1.2, on a
+  // collection whose per-seed MEAN was 6.735 -- a healthy average hiding a colliding pair, which is
+  // the exact shape of failure the sweep exists to catch and a per-seed mean cannot.
+  const SHAPE_NEIGHBOURS = Object.freeze({
+    SQUARE: ["DIAMOND", "CIRCLE", "HEX"],
+    CIRCLE: ["HEX", "SQUARE", "DIAMOND"],
+    HEX: ["SQUARE", "DIAMOND", "CIRCLE"],
+    DIAMOND: ["SQUARE", "CIRCLE", "HEX"],
+    TRIANGLE: ["DIAMOND", "HEX", "SQUARE"],
+  });
+  const shapeSet = [mark.shape, ...(SHAPE_NEIGHBOURS[mark.shape] ?? ["DIAMOND", "CIRCLE", "HEX"])];
 
   // ---- 1. SILHOUETTE -----------------------------------------------------------------------
   const shapes = session.consult("rules[n].shapeSet");
@@ -870,7 +895,15 @@ function authorRecursion({ set, session, intent, direction, mechanism, compositi
     set("SECONDARY_STRUCTURE", `rules[${i}].prune`, u.prune ?? pruneMaskFor(u.branch, intent.densityTarget));
     set("SECONDARY_STRUCTURE", `rules[${i}].symSet`, [...u.symSet]);
     set("SECONDARY_STRUCTURE", `rules[${i}].rotation`, u.rotation ?? 12 + i * 15);
-    set("SECONDARY_STRUCTURE", `rules[${i}].paletteIx`, nonGroundIndex(pal0.palette.length, groundIx, i === 1 ? [accentIx] : []));
+    // EACH SECONDARY TAKES A DIFFERENT NON-GROUND STOP. Two rules on the same stop draw in the same
+    // colour over one shared centre, and the battery reads the second one's ablation at 0.02 dE --
+    // a register the configuration declares and does not have.
+    set("SECONDARY_STRUCTURE", `rules[${i}].paletteIx`, (() => {
+      const c = [];
+      for (let k = 0; k < pal0.palette.length; k += 1) if (k !== groundIx) c.push(k);
+      if (c.length === 0) throw new Error(`PALETTE_HAS_NO_FIGURE_COLOUR: every stop is the ground index ${groundIx}`);
+      return c[(i - 1) % c.length];
+    })());
     set("SECONDARY_STRUCTURE", `rules[${i}].variant`, mark.variant);
     set("SECONDARY_STRUCTURE", `rules[${i}].stroke`, mark.stroke);
     set("SECONDARY_STRUCTURE", `rules[${i}].depthMin`, u.depth);
@@ -888,7 +921,12 @@ function authorRecursion({ set, session, intent, direction, mechanism, compositi
   set("PALETTE", "groundMode", wantsGradedGround(direction) ? "RADIAL" : "FLAT");
   set("PALETTE", "groundIx", groundIx);
   set("PALETTE", "groundIx2", wantsGradedGround(direction) ? nonGroundIndex(pal0.palette.length, groundIx) : groundIx);
-  set("PALETTE", "rules[0].paletteIx", accentIx);
+  // THE PRIMARY REGISTER IS GUARDED AGAINST THE GROUND INDEX TOO, AND IT WAS NOT.
+  // `nonGroundIndex` guards every secondary and the primary took `accentIx` raw. On a palette whose
+  // accent resolves to the ground stop that paints the loudest register in the background colour --
+  // the exact defect this file records three times over for PALETTE_SHIFT, DEPTH_PALETTE and the
+  // second recursion rule. Measured on B12: rule 0 came out at paletteIx 0 with groundIx 0.
+  set("PALETTE", "rules[0].paletteIx", accentIx === groundIx ? nonGroundIndex(pal0.palette.length, groundIx) : accentIx);
   // DEPTH_PALETTE WALKS THE INDEX BY ONE PER LEVEL AND THE WALK CAN REACH THE GROUND INDEX. It is
   // elected only when the palette is long enough that the walk cannot reach the ground within the
   // deepest generation drawn; otherwise the later rules carry the colour, which the atlas names as
@@ -917,7 +955,7 @@ function authorRecursion({ set, session, intent, direction, mechanism, compositi
   set("MARKET_BEHAVIOUR", "rules[0].sensor", mechanism.sensor);
   set("MARKET_BEHAVIOUR", "rules[0].curve", mechanism.curve);
   const pins = [];
-  let counterRegister = null;
+  const counterRegisters = [];
   for (let i = 1; i < nr; i += 1) {
     if (units[i].pin) {
       set("MARKET_BEHAVIOUR", `rules[${i}].drive`, units[i].pin);
@@ -926,23 +964,37 @@ function authorRecursion({ set, session, intent, direction, mechanism, compositi
       pins.push(`rules[${i}].${units[i].pin}`);
       continue;
     }
-    counterRegister = i;
+    counterRegisters.push(i);
   }
-  if (counterRegister !== null) {
+  let counterIndex = 0;
+  for (const counterRegister of counterRegisters) {
     // THE COUNTER SENSOR IS NOT THE OTHER OF THE PAIR. Bound to DRAWDOWN this register grows
     // precisely where the primary mechanism is meant to be shrinking, and six of twelve critics
     // named that inversion. VOLUME_TIER reads the same at neutral and stress and rises in recovery,
     // so it can only ever answer the pairing the primary leaves ambiguous.
-    set("MARKET_BEHAVIOUR", `rules[${counterRegister}].drive`, "CONTRACT");
-    set("MARKET_BEHAVIOUR", `rules[${counterRegister}].sensor`, COUNTER_REGISTER.sensor);
-    set("MARKET_BEHAVIOUR", `rules[${counterRegister}].curve`, COUNTER_REGISTER.curve);
+    // THE DRIVE IS SPREAD AND NOT CONTRACT, AND THE BATTERY IS WHAT SETTLED IT. The atlas measures
+    // CONTRACT as a real change that is not a COVERAGE change -- "held on CONTRACT, no sensor
+    // separated the three states at 120px, at any contraction ceiling from 30 to 90" -- and SPREAD
+    // as the only recursion drive with a large raster signature (delta 0.184 against every other
+    // drive's 0.000). Measured on this round's own authored configuration: with CONTRACT the
+    // counter-register's ablation moved the picture 1.117 dE against the structural-role floor of
+    // 1.5, which is the battery correctly saying the configuration declares a register it does not
+    // have, and the neutral-to-stress pairing came back at 2.583 against a floor of 3.8.
+    //
+    // SPREAD's floor is the bytecode constant 40 of 256 and VOLUME_TIER never reads zero, so this
+    // carries none of the blank risk that makes SIZE-driven fields dangerous.
+    const counter = counterRegisterFor(mechanism.sensor);
+    counterIndex += 1;
+    set("MARKET_BEHAVIOUR", `rules[${counterRegister}].drive`, "SPREAD");
+    set("MARKET_BEHAVIOUR", `rules[${counterRegister}].sensor`, counter.sensor);
+    set("MARKET_BEHAVIOUR", `rules[${counterRegister}].curve`, counter.curve);
   }
   notes.push({
     stage: "MARKET_BEHAVIOUR",
     why: `mechanism ${mechanism.mechanism} ${mechanism.polarity} -> drive ${mechanism.drive} <- ${mechanism.sensor}/${mechanism.curve} on rule 0` +
       (mechanism.constraintHonoured === false ? `. THE COMPOSITION AND THE MECHANISM DISAGREE: no realisation of ${mechanism.mechanism} is satisfied by the production set ${units[0].ruleSet.join("/")} this composition needs, so the unconstrained realisation was taken and the drive may be quieter than its evidence row` : "") +
       (pins.length ? `; composition pins on ${pins.join(", ")} (${COMPOSITION_PIN.sensor}/${COMPOSITION_PIN.curve}, constant in all three states — NOT market bindings, and checkBindings will correctly call them dead)` : "") +
-      (counterRegister !== null ? `; rule ${counterRegister} carries ${COUNTER_REGISTER.sensor} so recovery separates from neutral` : "") +
+      (counterRegisters.length ? `; rule(s) ${counterRegisters.join(", ")} carry ${counterRegisterFor(mechanism.sensor).sensor}: ${counterRegisterFor(mechanism.sensor).why}` : "") +
       `. ${mechanism.detail}`,
     evidence: mechanism.evidence,
     consulted: drive.parameter,
@@ -1060,7 +1112,7 @@ function authorVector({ set, session, intent, direction, mechanism, composition,
   set("PALETTE", "groundMode", wantsGradedGround(direction) ? "RADIAL" : "FLAT");
   set("PALETTE", "groundIx", groundIx);
   set("PALETTE", "groundIx2", wantsGradedGround(direction) ? nonGroundIndex(pal0.palette.length, groundIx) : groundIx);
-  set("PALETTE", "fields[0].paletteIx", accentIx);
+  set("PALETTE", "fields[0].paletteIx", accentIx === groundIx ? nonGroundIndex(pal0.palette.length, groundIx) : accentIx);
   // PALETTE_SHIFT IS NEVER ELECTED, AND THIS IS THE ROOT CAUSE OF THE BLANK TOKENS. The atlas calls
   // it harmless — ink120 0.059 -> 0.057 — and what it does not say is that the rotation INCLUDES THE
   // GROUND INDEX. Measured on chain: with a four-stop palette and this flag set, one seed came back
@@ -1094,7 +1146,7 @@ function authorVector({ set, session, intent, direction, mechanism, composition,
   set("MARKET_BEHAVIOUR", "fields[0].curve", mechanism.curve);
 
   const pins = [];
-  let counterRegister = null;
+  const counterRegisters = [];
   for (let i = 1; i < nf; i += 1) {
     if (units[i].pin) {
       // A PIN IS NOT A MARKET BINDING. It is the deliberate absence of one: QUOTE_VOLUME reads 687
@@ -1109,9 +1161,15 @@ function authorVector({ set, session, intent, direction, mechanism, composition,
       pins.push(`fields[${i}].${units[i].pin}`);
       continue;
     }
-    counterRegister = i;
+    counterRegisters.push(i);
   }
-  if (counterRegister !== null) {
+  // EVERY UNPINNED REGISTER AFTER THE MECHANISM'S CARRIES THE COUNTER-REGISTER, not only the last.
+  // A register the author writes no binding for is a register whose sensor, curve and drive are
+  // undefined, and the encoder refuses that -- but the failure it would have been is worse than a
+  // refusal: a register left on whatever the recipe happened to carry is a market response nobody
+  // chose.
+  let counterIndex = 0;
+  for (const counterRegister of counterRegisters) {
     // THE COUNTER-REGISTER, WHICH SEPARATES RECOVERY WITHOUT FIGHTING THE MECHANISM. It was bound
     // to the OTHER of DRAWDOWN and RECOVERY, which is how a composition ends up growing exactly
     // where its primary mechanism is meant to be thinning — six of twelve development critics
@@ -1119,18 +1177,87 @@ function authorVector({ set, session, intent, direction, mechanism, composition,
     // `COUNTER_REGISTER` is VOLUME_TIER, which reads IDENTICALLY at neutral and stress on this
     // fixture ring and rises in recovery, so it can only ever answer the pairing the primary
     // leaves ambiguous.
-    set("MARKET_BEHAVIOUR", `fields[${counterRegister}].drive`, "COUNT");
-    set("MARKET_BEHAVIOUR", `fields[${counterRegister}].sensor`, COUNTER_REGISTER.sensor);
-    set("MARKET_BEHAVIOUR", `fields[${counterRegister}].curve`, COUNTER_REGISTER.curve);
-    const floor = units[counterRegister].count;
+    // BOTH PAIRINGS GET A REGISTER WHERE THERE IS ROOM FOR TWO.
+    //
+    // The counter-register the primary's polarity calls for answers the pairing the primary leaves
+    // ambiguous. A composition with a second unpinned register can also answer the OTHER pairing,
+    // and measured it is worth having: giving every counter the polarity-matched binding raised one
+    // case's weakest pairing from 5.94 to 9.91 dE and dropped three others below the floor, because
+    // the register that used to carry the other pairing had stopped carrying it. Two registers, two
+    // pairings, in the order the primary makes urgent.
+    // A SECOND COUNTER-REGISTER ADDS AMPLITUDE TO THE SAME PAIRING, NEVER TO THE OTHER ONE.
+    //
+    // Giving counter 1 the other polarity's counter-register was measured and it is wrong: on a
+    // DRAWDOWN primary that puts a second stress-peaking register into a collection whose stress
+    // pairing already reads 16.87 dE and whose neutral-to-recovery pairing reads 3.035, and the
+    // battery blocked it. The weak pairing is a property of the PRIMARY, so every counter-register
+    // answers the same one and they differ only in the dimension they move.
+    //
+    // COUNT IS NEVER ELECTED ON A STRESS-PEAKING SENSOR. That is the inversion finding: more
+    // members in the damaged state is the reading six of twelve development critics refused.
+    // SPREAD on the same sensor scatters instead, which is damage.
+    // TWO COUNTER-REGISTERS, ONE PER PAIRING, AND ALL THREE ARRANGEMENTS WERE MEASURED.
+    //
+    // Both on the polarity-matched binding: two registers with the same sensor, the same drive and
+    // the same amplitude in two layouts, and the battery calls the second one dead -- ablation
+    // 0.855 to 1.424 dE against the structural-role floor of 1.5, on four cases. One counter and a
+    // second pin: the weak pairing has one register and five of twelve cases fall under the
+    // separation floor. One per pairing: seven of twelve pass, which is the arrangement kept.
+    //
+    // The second answers the pairing the primary OWNS, which sounds redundant and is not. A
+    // register that moves where the primary already moves is a register whose ablation is visible
+    // -- it earns its structural role -- while a duplicate of the first is not, and the pairing it
+    // reinforces is the one whose reading is a claim about the loudest state.
+    // AND THE SECOND COUNTER IS ASYMMETRIC, BECAUSE THE TWO PRIMARIES ARE NOT SYMMETRIC ON THIS
+    // FIXTURE RING. A DRAWDOWN primary reads 20 / 900 / 80: it saturates neutral-to-stress and
+    // stress-to-recovery -- measured 16.9 and 15.9 dE on this round's own cases -- and leaves
+    // neutral-to-recovery at 1.1. A second register on the loud pairing adds nothing to a reading
+    // that is already four times the floor, so BOTH counters answer the quiet one, differing in
+    // the dimension they move. A RECOVERY primary reads 20 / 0 / 820 and leaves neutral-to-stress
+    // quiet without saturating anything, so there its second counter takes the other pairing.
+    const primaryCounter = counterRegisterFor(mechanism.sensor);
+    const counter = counterIndex === 0
+      ? primaryCounter
+      : (mechanism.sensor === "DRAWDOWN"
+        ? { ...primaryCounter, drive: "SPREAD", why: `${primaryCounter.why}; the second one moves SPREAD rather than COUNT so the two are not the same register in two layouts` }
+        : counterRegisterFor("DRAWDOWN"));
+    counterIndex += 1;
+    set("MARKET_BEHAVIOUR", `fields[${counterRegister}].drive`, counter.drive);
+    set("MARKET_BEHAVIOUR", `fields[${counterRegister}].sensor`, counter.sensor);
+    set("MARKET_BEHAVIOUR", `fields[${counterRegister}].curve`, counter.curve);
+    // ITS AMPLITUDE IS THE WHOLE NEUTRAL-TO-RECOVERY SIGNAL, AND A DOUBLING WAS NOT ENOUGH.
+    //
+    // VOLUME_TIER reads 267 per mille at neutral and stress and 467 in recovery, so a driven count
+    // spends two states of three near its floor and the pairing this register exists to separate is
+    // carried entirely by the difference between the floor and what recovery reaches. At
+    // `floor + max(8, floor*0.8)` the neutral-to-recovery pairing measured 2.282 and 1.980 dE on
+    // two cases against a floor of 3.8, and the battery blocked both. Tripling the floor is the
+    // widest range the per-field site ceiling of 40 admits at these counts.
+    // ITS FLOOR IS SCALED TO THE COMPOSITION, NOT TAKEN FROM THE RECIPE'S SMALLEST REGISTER.
+    //
+    // The recipes put their lightest register last, and the last register is the one this loop
+    // hands the market signal to. Measured: at the recipe's own count the second counter-register's
+    // ablation moved the picture 0.855 to 1.424 dE against the battery's structural-role floor of
+    // 1.5 on four cases -- the battery correctly saying the configuration declares a register it
+    // does not have. Three quarters of the primary's count is the smallest floor at which every
+    // declared register earns its place, and count only ADDS coverage, so it cannot cost a reach
+    // composition its hold.
+    const floor = Math.max(units[counterRegister].count, Math.round(units[0].count * 0.75));
     set("SECONDARY_STRUCTURE", `fields[${counterRegister}].countMin`, floor);
-    set("SECONDARY_STRUCTURE", `fields[${counterRegister}].countMax`, Math.min(38, floor + Math.max(8, Math.round(floor * 0.8))));
+    set("SECONDARY_STRUCTURE", `fields[${counterRegister}].countMax`, Math.min(40, Math.max(floor + 12, floor * 3)));
+    // AND IT HAS TO BE BIG ENOUGH TO BE SEEN. The recipes put their smallest register last, so the
+    // register carrying the entire neutral-to-recovery signal was the faintest thing in the frame:
+    // measured, a count that triples on a register at a fifth of the primary's size moved the
+    // pairing 2.6 dE against a floor of 3.8. Ninety per cent of the primary's size ceiling is the
+    // smallest value at which the change reads, and it can only ADD coverage -- the reach and
+    // corner criteria are monotone in it, so raising it cannot cost the composition its hold.
+    set("SECONDARY_STRUCTURE", `fields[${counterRegister}].sizeMax`, Math.max(units[counterRegister].sizeMax, Math.round(units[0].sizeMax * 0.9)));
   }
   notes.push({
     stage: "MARKET_BEHAVIOUR",
     why: `mechanism ${mechanism.mechanism} ${mechanism.polarity} -> drive ${mechanism.drive} <- ${mechanism.sensor}/${mechanism.curve} on register 0` +
       (pins.length ? `; composition pins on ${pins.join(", ")} (${COMPOSITION_PIN.sensor}/${COMPOSITION_PIN.curve}, which reads the same in all three states — these are NOT market bindings and checkBindings will correctly call them dead)` : "") +
-      (counterRegister !== null ? `; register ${counterRegister} carries ${COUNTER_REGISTER.sensor} so recovery separates from neutral without adding to the state the mechanism is about` : "") +
+      (counterRegisters.length ? `; register(s) ${counterRegisters.join(", ")} carry ${counterRegisterFor(mechanism.sensor).sensor} on ${counterRegisterFor(mechanism.sensor).drive}, which is flat on the pairing the primary owns: ${counterRegisterFor(mechanism.sensor).why}` : "") +
       `. ${mechanism.detail}`,
     evidence: mechanism.evidence,
     consulted: drive.parameter,

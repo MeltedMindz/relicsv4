@@ -180,6 +180,58 @@ export const SENSOR_FOR_POLARITY = Object.freeze({
  */
 export const COUNTER_REGISTER = Object.freeze({ sensor: "VOLUME_TIER", curve: "LINEAR" });
 
+/**
+ * WHICH PAIRING THE PRIMARY LEAVES AMBIGUOUS DEPENDS ON ITS POLARITY, AND ONE COUNTER-REGISTER
+ * CANNOT ANSWER BOTH.
+ *
+ * The paragraph above is right about the mechanism whose sensor is `DRAWDOWN` and says nothing
+ * about the other half of the corpus. Read the fixture ring:
+ *
+ *     DRAWDOWN / LINEAR    20 / 900 /  80    neutral and RECOVERY are 60 per mille apart
+ *     RECOVERY / LINEAR    20 /   0 / 820    neutral and STRESS are 20 per mille apart
+ *
+ * A `PEAKS_AT_STRESS` mechanism therefore leaves `nr` ambiguous and a `PEAKS_AT_RECOVERY` one
+ * leaves `ns`, and `VOLUME_TIER` — which is flat on `ns` by construction — can only ever answer the
+ * first. Measured on this round's own authored configurations: the three cases whose primary is
+ * DRAWDOWN came back at nr 2.4 to 2.8 dE against a floor of 3.8 and the battery blocked them, while
+ * the case whose primary is RECOVERY was blocked on ns at 3.377.
+ *
+ * SO THE COUNTER-REGISTER IS CHOSEN BY THE PRIMARY'S POLARITY, and in both cases it is flat on the
+ * pairing the primary owns, which is the whole rule the original one was expressing.
+ *
+ * THE DRIVE MATTERS AS MUCH AS THE SENSOR, AND THIS IS WHERE THE INVERSION FINDING BITES.
+ * `DRAWDOWN` peaks under stress, so a COUNT-driven register on it puts MORE members in the damaged
+ * state — which is exactly the inversion six of twelve development critics named ("stress is the
+ * heaviest, largest state", "under stress the fine beds vanish and survivors get fatter"). Bound to
+ * SPREAD it does the opposite: the members fly APART under stress and gather in the calm, which
+ * reads as damage rather than as growth and separates the pairing the primary cannot. The
+ * inversion finding was never about the SENSOR; it was about a register growing where the story
+ * says the work should be coming apart.
+ */
+export const COUNTER_REGISTER_BY_PRIMARY = Object.freeze({
+  DRAWDOWN: Object.freeze({
+    sensor: "VOLUME_TIER", curve: "LINEAR", drive: "COUNT",
+    why: "the primary peaks under stress and leaves neutral-to-recovery ambiguous; VOLUME_TIER reads 267/267/467, flat on the pairing the primary owns and rising in the one it does not",
+  }),
+  RECOVERY: Object.freeze({
+    sensor: "DRAWDOWN", curve: "LINEAR", drive: "SPREAD",
+    why: "the primary peaks in recovery and leaves neutral-to-stress ambiguous; DRAWDOWN reads 20/900/80, which is 60 per mille apart on the pairing the primary owns. It drives SPREAD rather than COUNT so the damaged state scatters instead of multiplying, which is the inversion finding respected rather than repeated",
+  }),
+});
+
+/** The counter-register for a primary sensor, refusing a primary this table has not measured. */
+export function counterRegisterFor(primarySensor) {
+  const c = COUNTER_REGISTER_BY_PRIMARY[primarySensor];
+  if (!c) {
+    // NOT A FALLBACK TO THE DEFAULT. A primary this table has not measured is a primary whose weak
+    // pairing nobody has read, and guessing produces a register that answers the pairing the
+    // mechanism already owns while leaving the other silent — which is the defect this whole
+    // declaration exists to fix.
+    throw new Error(`COUNTER_REGISTER_UNMEASURED: no counter-register is measured for a primary on ${primarySensor}. The ones that are: ${Object.keys(COUNTER_REGISTER_BY_PRIMARY).join(", ")}.`);
+  }
+  return c;
+}
+
 export const CURVED_READINGS = Object.freeze({
   "DRAWDOWN/LOG2": Object.freeze({ neutral: 326, stress: 981, recovery: 552 }),
   "RECOVERY/LOG2": Object.freeze({ neutral: 326, stress: 0, recovery: 964 }),

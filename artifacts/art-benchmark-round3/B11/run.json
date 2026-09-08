@@ -1,0 +1,166 @@
+{
+  "briefId": "B11",
+  "axis": "market-heavy",
+  "phase": "ADMISSION",
+  "admission": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-09-08T03:24:20.643Z",
+    "briefSha256": "6c6700e88bf407cd39449d9657748f7012fea3e9f9be92837d2a020005358475",
+    "briefSubstance": {
+      "chars": 698,
+      "words": 114,
+      "distinctWords": 73
+    },
+    "catalog": [
+      "GEOMETRIC_RECURSION_V1/compass",
+      "VECTOR_COMPOSITION_V1/alluvium"
+    ],
+    "capabilityMapping": {
+      "demands": 12,
+      "runtimes": [
+        "GEOMETRIC_RECURSION_V1",
+        "VECTOR_COMPOSITION_V1"
+      ]
+    },
+    "outcome": "BRIEF_NOT_REPRESENTABLE_BY_CURRENT_WAVE1_CATALOG",
+    "admitted": false,
+    "requiredCapabilities": {
+      "MEDIUM": [],
+      "MOTIF": [],
+      "AESTHETIC": [
+        "SPARSE",
+        "DENSE"
+      ],
+      "MARKET_TRANSFORMATION": [
+        "RECOVERY_EXPANSION",
+        "STATE_DRIVEN_COLOUR"
+      ],
+      "REPRESENTATIONAL_DEMAND": []
+    },
+    "impossibleDemands": [
+      {
+        "id": "STATE_DRIVEN_COLOUR",
+        "class": "MARKET_TRANSFORMATION",
+        "severity": "HARD",
+        "what": "colour that changes with the market state",
+        "citations": {
+          "GEOMETRIC_RECURSION_V1": "a state-driven colour",
+          "VECTOR_COMPOSITION_V1": "a state-driven colour"
+        },
+        "positiveCitation": {},
+        "occurrences": 3,
+        "evidence": [
+          {
+            "sentence": "Under stress the work should be sparse, broken and cold;",
+            "pattern": "/\\b(under|during|in)\\s+(stress|drawdown|volatil\\w+|recovery|a\\s+crash)\\b[^.]{0,80}\\b(cold|cool|warm|warmer|cooler|colder|red|blue|amber|copper|ochre|slate|iron|grey|gray)\\b/i"
+          },
+          {
+            "sentence": "in recovery it should be dense, whole and warm.",
+            "pattern": "/\\b(under|during|in)\\s+(stress|drawdown|volatil\\w+|recovery|a\\s+crash)\\b[^.]{0,80}\\b(cold|cool|warm|warmer|cooler|colder|red|blue|amber|copper|ochre|slate|iron|grey|gray)\\b/i"
+          },
+          {
+            "sentence": "Slate and iron at one end, ochre and copper at the other.",
+            "pattern": "/\\b(at\\s+one\\s+end|at\\s+the\\s+other\\s+end)\\b[^.]{0,60}\\b(at\\s+the\\s+other|at\\s+one\\s+end)\\b/i"
+          }
+        ],
+        "blockedFor": [
+          "GEOMETRIC_RECURSION_V1",
+          "VECTOR_COMPOSITION_V1"
+        ]
+      }
+    ],
+    "candidates": [
+      {
+        "templateId": "GEOMETRIC_RECURSION_V1/compass",
+        "runtimeId": "GEOMETRIC_RECURSION_V1",
+        "viable": false,
+        "mechanisms": {
+          "canExpress": [],
+          "cannotExpress": [
+            {
+              "mechanism": "FRACTURE",
+              "reason": "NOT_EXPRESSIBLE",
+              "detail": "the figure is one connected mass by construction and stays one under every drive: no recursion row the probe measured moved largestShare below 0.95, and law L5 fixes the root at the canvas centre with the children hung off it. A blind reviewer put it exactly: there are no members in them to separate.",
+              "alternative": "VECTOR_COMPOSITION_V1 fractures with DRIVE_SPREAD over a few large members",
+              "overlapsPrimary": false
+            }
+          ],
+          "carriesPrimary": false
+        },
+        "mechanismBlockedBy": [
+          {
+            "id": "MECHANISM_FRACTURE",
+            "what": "the market transformation the brief asks for: FRACTURE",
+            "class": "MARKET_TRANSFORMATION",
+            "evidence": "Under stress the work should be sparse, broken and cold;",
+            "citation": "the figure is one connected mass by construction and stays one under every drive: no recursion row the probe measured moved largestShare below 0.95, and law L5 fixes the root at the canvas centre with the children hung off it. A blind reviewer put it exactly: there are no members in them to separate."
+          }
+        ],
+        "memberBlockedBy": [],
+        "memberRequested": null,
+        "blockedBy": [
+          {
+            "id": "STATE_DRIVEN_COLOUR",
+            "what": "colour that changes with the market state",
+            "class": "MARKET_TRANSFORMATION",
+            "evidence": "Under stress the work should be sparse, broken and cold;",
+            "citation": "a state-driven colour"
+          },
+          {
+            "id": "MECHANISM_FRACTURE",
+            "what": "the market transformation the brief asks for: FRACTURE",
+            "class": "MARKET_TRANSFORMATION",
+            "evidence": "Under stress the work should be sparse, broken and cold;",
+            "citation": "the figure is one connected mass by construction and stays one under every drive: no recursion row the probe measured moved largestShare below 0.95, and law L5 fixes the root at the canvas centre with the children hung off it. A blind reviewer put it exactly: there are no members in them to separate."
+          }
+        ],
+        "concessions": [],
+        "capability": "one self-similar figure, centred, built by repeating a production on itself over up to 6 levels, drawn in regular primitives, optionally replicated by a symmetry order, over a flat or gradient ground"
+      },
+      {
+        "templateId": "VECTOR_COMPOSITION_V1/alluvium",
+        "runtimeId": "VECTOR_COMPOSITION_V1",
+        "viable": false,
+        "mechanisms": {
+          "canExpress": [
+            "FRACTURE"
+          ],
+          "cannotExpress": [],
+          "carriesPrimary": true
+        },
+        "mechanismBlockedBy": [],
+        "memberBlockedBy": [],
+        "memberRequested": null,
+        "blockedBy": [
+          {
+            "id": "STATE_DRIVEN_COLOUR",
+            "what": "colour that changes with the market state",
+            "class": "MARKET_TRANSFORMATION",
+            "evidence": "Under stress the work should be sparse, broken and cold;",
+            "citation": "a state-driven colour"
+          }
+        ],
+        "concessions": [],
+        "capability": "1 to 6 fields of primitives placed about the canvas centre by one of twelve layouts, each field with its own colour, market sensor and drive, over a flat or gradient ground"
+      }
+    ],
+    "blockers": [
+      {
+        "id": "STATE_DRIVEN_COLOUR",
+        "what": "colour that changes with the market state",
+        "class": "MARKET_TRANSFORMATION",
+        "evidence": "Under stress the work should be sparse, broken and cold;",
+        "citation": "a state-driven colour"
+      },
+      {
+        "id": "MECHANISM_FRACTURE",
+        "what": "the market transformation the brief asks for: FRACTURE",
+        "class": "MARKET_TRANSFORMATION",
+        "evidence": "Under stress the work should be sparse, broken and cold;",
+        "citation": "the figure is one connected mass by construction and stays one under every drive: no recursion row the probe measured moved largestShare below 0.95, and law L5 fixes the root at the canvas centre with the children hung off it. A blind reviewer put it exactly: there are no members in them to separate."
+      }
+    ],
+    "detail": "neither GEOMETRIC_RECURSION_V1/compass nor VECTOR_COMPOSITION_V1/alluvium can express: colour that changes with the market state; the market transformation the brief asks for: FRACTURE. This is a fact about the two deployed Wave-1 runtimes, not a judgement about the brief. The brief is not weakened, reinterpreted or substituted; it is returned unmade."
+  },
+  "sentToAuthor": false
+}

@@ -296,7 +296,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "rotational replication is what carries a cell grid into the corners -- at symmetry NONE the same spread and size reach extentX 0.80 at the worst seed and cornerInk 0.009 -- and the two pins are what stop the one seed in twelve that draws low from being a centred island in a collection that bleeds",
         fields: [
           { layout: "GRID", sizeMax: 64, spreadMax: 128, count: 20, symmetry: "ROT6" },
-          { layout: "LATTICE", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "ROT6", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "ROT6" },
           { layout: "LATTICE", sizeMax: 50, spreadMax: 128, count: 20, symmetry: "ROT6", pin: "SPREAD" },
           { layout: "TILING", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "ROT6" },
         ],
@@ -306,7 +306,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "THE LIGHT END OF THE SAME COMPOSITION, and it exists because a brief may ask for the frame AND for restraint. Two fields, eight sites, a quarter of the size ceiling: it holds every seed at ink 0.62 with a mass member against the three-field recipe's 0.93. The residual is real and is reported rather than chased -- reaching the corners on EVERY seed costs coverage in these runtimes, and the arrangement that costs least is still not sparse",
         fields: [
           { layout: "GRID", sizeMax: 26, spreadMax: 128, count: 8, symmetry: "ROT6" },
-          { layout: "LATTICE", sizeMax: 22, spreadMax: 128, count: 8, symmetry: "ROT6", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 22, spreadMax: 128, count: 8, symmetry: "ROT6" },
           { layout: "LATTICE", sizeMax: 22, spreadMax: 128, count: 8, symmetry: "ROT6", pin: "SPREAD" },
           { layout: "TILING", sizeMax: 20, spreadMax: 128, count: 8, symmetry: "ROT6" },
         ],
@@ -316,7 +316,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "between the light and the full arrangement: two fields at twelve sites and two thirds of the size ceiling, measured ink 0.87",
         fields: [
           { layout: "GRID", sizeMax: 40, spreadMax: 128, count: 12, symmetry: "ROT6" },
-          { layout: "LATTICE", sizeMax: 36, spreadMax: 128, count: 12, symmetry: "ROT6", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 36, spreadMax: 128, count: 12, symmetry: "ROT6" },
           { layout: "LATTICE", sizeMax: 34, spreadMax: 128, count: 12, symmetry: "ROT6", pin: "SPREAD" },
           { layout: "TILING", sizeMax: 32, spreadMax: 128, count: 12, symmetry: "ROT6" },
         ],
@@ -326,7 +326,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "three-fold replication reaches the frame at roughly a tenth less coverage than six-fold, for a brief that wants the edges without the saturation",
         fields: [
           { layout: "GRID", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "ROT3" },
-          { layout: "LATTICE", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "ROT3", pin: "SIZE" },
+          { layout: "LATTICE", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "ROT3" },
           { layout: "LATTICE", sizeMax: 44, spreadMax: 128, count: 20, symmetry: "ROT3", pin: "SPREAD" },
           { layout: "SCATTER", sizeMax: 40, spreadMax: 128, count: 20, symmetry: "ROT3" },
         ],
@@ -336,7 +336,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "four-fold replication points at the corners of a SQUARE frame rather than at a circle inscribed in it, which is why it measures the highest corner ink per unit of coverage",
         fields: [
           { layout: "GRID", sizeMax: 64, spreadMax: 128, count: 20, symmetry: "QUAD" },
-          { layout: "TILING", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "QUAD", pin: "SIZE" },
+          { layout: "TILING", sizeMax: 56, spreadMax: 128, count: 20, symmetry: "QUAD" },
           { layout: "TILING", sizeMax: 52, spreadMax: 128, count: 20, symmetry: "QUAD", pin: "SPREAD" },
           { layout: "LATTICE", sizeMax: 48, spreadMax: 128, count: 20, symmetry: "QUAD" },
         ],
@@ -366,7 +366,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "STACK is the only layout the atlas records as reading as horizontal bands, and it takes its element extent from spread while ignoring sizeMax entirely -- so the SPREAD pin is what makes a bed reach the frame on every seed rather than on most",
         fields: [
           { layout: "STACK", sizeMax: 34, spreadMax: 128, count: 16, symmetry: "NONE" },
-          { layout: "STACK", sizeMax: 26, spreadMax: 128, count: 14, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 26, spreadMax: 128, count: 14, symmetry: "NONE" },
           { layout: "STACK", sizeMax: 24, spreadMax: 128, count: 14, symmetry: "NONE", pin: "SIZE" },
           { layout: "LINEFIELD", sizeMax: 20, spreadMax: 128, count: 12, symmetry: "NONE" },
         ],
@@ -376,7 +376,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "the same three registers at six sites each and two thirds of the size ceiling -- the light end of a section, for a brief that wants beds rather than a wall",
         fields: [
           { layout: "STACK", sizeMax: 24, spreadMax: 128, count: 6, symmetry: "NONE" },
-          { layout: "STACK", sizeMax: 18, spreadMax: 128, count: 6, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 18, spreadMax: 128, count: 6, symmetry: "NONE" },
           { layout: "STACK", sizeMax: 17, spreadMax: 128, count: 6, symmetry: "NONE", pin: "SIZE" },
           { layout: "LINEFIELD", sizeMax: 14, spreadMax: 128, count: 6, symmetry: "NONE" },
         ],
@@ -386,7 +386,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "a left-right mirror widens each bed without stacking a second register on top of it, which a rotational symmetry would",
         fields: [
           { layout: "STACK", sizeMax: 40, spreadMax: 128, count: 18, symmetry: "MIRROR_X" },
-          { layout: "STACK", sizeMax: 28, spreadMax: 128, count: 16, symmetry: "MIRROR_X", pin: "SPREAD" },
+          { layout: "STACK", sizeMax: 28, spreadMax: 128, count: 16, symmetry: "MIRROR_X" },
           { layout: "STACK", sizeMax: 26, spreadMax: 128, count: 16, symmetry: "MIRROR_X", pin: "SIZE" },
           { layout: "STACK", sizeMax: 20, spreadMax: 128, count: 14, symmetry: "MIRROR_X" },
         ],
@@ -398,7 +398,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "an even field needs MANY SEPARATE PIECES, so this holds the mark small while holding spread and count up -- the opposite trade to EDGE_TO_EDGE, which wants few large marks that merge. Measured: 40 components at largestShare 0.14, against the frame-filling recipe's 1 component at 0.999",
         fields: [
           { layout: "SCATTER", sizeMax: 14, spreadMax: 128, count: 34, symmetry: "NONE" },
-          { layout: "LATTICE", sizeMax: 14, spreadMax: 128, count: 28, symmetry: "NONE", pin: "SPREAD" },
+          { layout: "LATTICE", sizeMax: 14, spreadMax: 128, count: 28, symmetry: "NONE" },
           { layout: "LATTICE", sizeMax: 14, spreadMax: 128, count: 26, symmetry: "NONE", pin: "SIZE" },
           { layout: "GRID", sizeMax: 14, spreadMax: 128, count: 26, symmetry: "NONE" },
         ],
@@ -408,7 +408,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "a cell grid distributes more evenly than a scatter and the mirror fills the half a single grid draw leaves light -- quadrant evenness 0.81 against the scatter's 0.53",
         fields: [
           { layout: "SCATTER", sizeMax: 12, spreadMax: 128, count: 38, symmetry: "MIRROR_X" },
-          { layout: "LATTICE", sizeMax: 12, spreadMax: 128, count: 28, symmetry: "MIRROR_X", pin: "SPREAD" },
+          { layout: "LATTICE", sizeMax: 12, spreadMax: 128, count: 28, symmetry: "MIRROR_X" },
           { layout: "LATTICE", sizeMax: 12, spreadMax: 128, count: 26, symmetry: "MIRROR_X", pin: "SIZE" },
           { layout: "GRID", sizeMax: 12, spreadMax: 128, count: 26, symmetry: "MIRROR_X" },
         ],
@@ -420,7 +420,7 @@ export const COMPOSITION_RECIPES = Object.freeze({
         notes: "the polar family is what a brief forbidding a centred emblem forbids, in the atlas's own words, so it is elected only where one is asked for",
         fields: [
           { layout: "RADIAL", sizeMax: 34, spreadMax: 112, count: 18, symmetry: "ROT6" },
-          { layout: "ORBIT", sizeMax: 26, spreadMax: 112, count: 16, symmetry: "ROT6", pin: "SPREAD" },
+          { layout: "ORBIT", sizeMax: 26, spreadMax: 112, count: 16, symmetry: "ROT6" },
           { layout: "ORBIT", sizeMax: 24, spreadMax: 112, count: 16, symmetry: "ROT6", pin: "SIZE" },
           { layout: "SPIRAL", sizeMax: 20, spreadMax: 112, count: 14, symmetry: "ROT6" },
         ],
@@ -480,17 +480,28 @@ export const COMPOSITION_RECIPES = Object.freeze({
         id: "inscribe-tight",
         notes: "INSCRIBE places every child inside its parent, so the figure never grows past the root and the margin is structural rather than tuned. Contraction 55 rather than 70: at 65 one frame of thirty-six lost its margin, and at 75 six did",
         rules: [
-          { ruleSet: ["INSCRIBE", "TRI"], symSet: ["NONE"], contraction: 55, branch: 2, depth: 4, prune: 2, rotation: 12 },
-          { ruleSet: ["INSCRIBE", "TRI"], symSet: ["NONE"], contraction: 55, branch: 2, depth: 3, prune: 2, rotation: 26 },
+          { ruleSet: ["INSCRIBE", "TRI"], symSet: ["NONE", "MIRROR_X"], contraction: 55, branch: 3, depth: 3, prune: 6, rotation: 12 },
+          // THE SECOND RULE IS A DIFFERENT PRODUCTION AT A DIFFERENT ANGLE, because a rule nested
+          // inside the first at the same settings has no structural role: measured, ablating it
+          // moved the picture 0.886 dE against the battery's floor of 1.5, which is the battery
+          // correctly saying the configuration declares a register it does not have. TRI places
+          // children at the parent's edge midpoints rather than at its centre, so it draws where
+          // INSCRIBE does not while staying inside the root's own footprint.
+          { ruleSet: ["QUAD"], symSet: ["NONE", "MIRROR_X"], contraction: 85, branch: 3, depth: 3, prune: 6, rotation: 45 },
         ],
       }),
       Object.freeze({
         id: "inscribe-dense",
         notes: "THE SAME FIGURE WITH ENOUGH INK TO SURVIVE A STROKED MARK. INSCRIBE alone -- no TRI, whose children sit at the parent's edge midpoints and push the silhouette outward -- over three rules at branch 3. The one-rule recipe is the right picture and the wrong weight: with a stroked mark it drew a frame at 0.029, under the battery's 0.04 blank floor, because stroking cuts recursion coverage to a third (ink120 0.399 filled against 0.121 stroked). This reads 0.123 at its emptiest.",
         rules: [
-          { ruleSet: ["INSCRIBE"], symSet: ["NONE"], contraction: 60, branch: 3, depth: 3, prune: 6, rotation: 12 },
-          { ruleSet: ["INSCRIBE"], symSet: ["NONE"], contraction: 60, branch: 3, depth: 3, prune: 6, rotation: 26, pin: "CONTRACT" },
-          { ruleSet: ["INSCRIBE"], symSet: ["NONE"], contraction: 60, branch: 3, depth: 3, prune: 6, rotation: 40 },
+          // THREE PRODUCTIONS, NOT ONE REPEATED THREE TIMES. Three rules of the same production at
+          // the same settings nest inside each other and two of them ablate at 0.41 dE against the
+          // battery's floor of 1.5. INSCRIBE puts children at the parent's centre, TRI at its edge
+          // midpoints and QUAD at its corners, so each draws where the others do not while all
+          // three stay inside the root's own footprint -- which is what keeps the margin.
+          { ruleSet: ["INSCRIBE"], symSet: ["NONE", "MIRROR_X"], contraction: 60, branch: 3, depth: 3, prune: 6, rotation: 12 },
+          { ruleSet: ["TRI"], symSet: ["NONE", "MIRROR_X"], contraction: 75, branch: 3, depth: 3, prune: 6, rotation: 30, pin: "CONTRACT" },
+          { ruleSet: ["QUAD"], symSet: ["NONE", "MIRROR_X"], contraction: 55, branch: 3, depth: 3, prune: 6, rotation: 50 },
         ],
       }),
     ]),
