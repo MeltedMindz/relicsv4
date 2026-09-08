@@ -44,7 +44,10 @@ export function queueWarning(text) {
 
 export function emit(command, payload, { json }) {
   if (PENDING_WARNINGS.length) {
-    payload = { ...payload, warnings: [...PENDING_WARNINGS, ...(payload.warnings ?? [])] };
+    // DEDUPED. `agent run` re-asks the gate at every phase, so the same override is queued once per
+    // command; if a command throws before it emits, its warning is carried onto the next envelope
+    // and would otherwise appear twice. The creator wants to be told, not counted at.
+    payload = { ...payload, warnings: [...new Set([...PENDING_WARNINGS, ...(payload.warnings ?? [])])] };
     PENDING_WARNINGS.length = 0;
   }
   // See the note beside `emit` in agent.js: one exit, one scrub. A credentialled RPC endpoint
