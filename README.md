@@ -2,11 +2,20 @@
 
 ## Create and launch with an AI agent
 
+**Agents can create, test and launch RELICS projects from the terminal.** For unattended
+broadcast, agent-created art must pass RELICS' independent visual gate before anything reaches a
+chain. Human creators remain free to launch valid work after reviewing any artistic warning.
+
 **1. Clone.  2. Run secure setup.  3. Tell your agent what to make.  4. The agent launches it.**
 
 ```
-YOUR IDEA → AI CREATES THE ART → RELICS PROVES IT → AGENT CHOOSES A LIVE CHAIN → PROTECTED SIGNER → ONCHAIN
+YOUR IDEA → AGENT CREATES THE ART → INDEPENDENT VISUAL GATE → RELICS PROVES IT
+          → AGENT CHOOSES A LIVE CHAIN → PROTECTED SIGNER → ONCHAIN
 ```
+
+*The third step is a separate reviewer, not the agent that made the work, and it is where an
+unattended run stops when the art is not right. What that reviewer has and has not accepted so far
+is in [Status, honestly](#status-honestly).*
 
 Steps 1 and 2 are yours and you do them once, at a terminal. Step 3 is one paste. Step 4 is the
 agent, on one command. Nothing in this repository reaches a chain until a person has finished
@@ -910,8 +919,20 @@ template and is here to be read, not forked.
 
 ## Honest limits
 
-Four things this kit does not give you. Each one is a claim somebody would otherwise make on its
+Five things this kit does not give you. Each one is a claim somebody would otherwise make on its
 behalf, and each is a different kind of failure.
+
+**The autonomous art author is EXPERIMENTAL; the autonomous LAUNCH is not.** Two capabilities ship
+in one command surface and they are not at the same maturity, so it is worth separating them by
+hand. Launching a project whose art already carries an acceptance — chain selection, quote
+selection, metadata birth, prepare, predict, simulate, build, policy check, protected signing,
+broadcast, confirmation, verification — is the production path, and `npm run e2e:autonomous` walks
+every phase of it against the deployed factory. Turning a plain-language brief into art good
+enough to launch is not: three rounds have been scored by independent reviewers who never saw the
+brief, and **no configuration has been accepted yet.** So an agent may create, iterate and present
+work, and an agent may launch work that was accepted — but agent-made art that the reviewer has
+not passed cannot be broadcast unattended, and the gate refuses rather than warns. Detail, and the
+measurements behind it: [Autonomous art creation](docs/creator-kit/autonomous-art-creation.md).
 
 **Launch protection is not Sybil resistance.** An election makes immediate acquisition expensive
 and removes the block-one speed advantage. It does not guarantee equal allocation, does not
@@ -947,6 +968,13 @@ Chain (56), which is deferred, and no date is set for it. The RC6 addresses are 
 repository and printed by `npm run kit:status` — see
 [08 — Status](docs/launchpad/08-status.md). Note separately that every launchable template targets
 `SOLIDITY_SVG`, so a JavaScript-runtime bundle cannot be launched on any chain, open or not.
+
+**What the agent can be relied on for, and what it cannot.** An agent driving the launch of a
+project whose art is already accepted is the path this repository proves end to end. An agent
+*authoring* the art from a brief is the part still being worked on: `npm run kit:artauthority`
+reports `AUTONOMOUS_LAUNCH_STATUS=PRODUCTION_READY` beside
+`AUTONOMOUS_ART_CREATION_STATUS=EXPERIMENTAL`, and both values are proved by executing the shipped
+gate rather than asserted. See [Honest limits](#honest-limits).
 
 **What the launch agent adds, honestly.** The chain-facing commands are real and they read real
 chains: `agent capabilities` and `agent preflight` return live evidence, and `agent ready` tells

@@ -46,6 +46,11 @@ them.
    reviewer and do not tell it what you think of the work** — the packet already contains its
    instructions. When the reviewer sends the work back, apply the critique and run the command
    again. See §9a.
+   **Art you made must pass this before an unattended broadcast**, and a refusal here is a normal
+   outcome rather than a fault in your run: the author is EXPERIMENTAL and has not yet produced an
+   accepted configuration in three independently judged rounds. Launching art that is ALREADY
+   accepted is the mature path and is unaffected. Detail:
+   [`docs/creator-kit/autonomous-art-creation.md`](docs/creator-kit/autonomous-art-creation.md).
 6. **`npm run kit -- agent run --workspace <dir> --json`.** One entry point for the whole
    chain-facing tail: preflight, metadata, prepare, predict, simulate, build, policy-check,
    broadcast, confirm, verify — in order, stopping at the first refusal. Export the bundle to
@@ -685,10 +690,25 @@ evidence, not as a claim that the path is untested.
 `agent run` runs `ART_REVIEW` before `METADATA`, and `metadata`, `prepare`, `predict`, `simulate`,
 `build`, `policy-check` and `broadcast` each refuse without a live acceptance. **There is no
 `--skip-art-review`, under any spelling, and there will not be one** — `npm run kit:artreview`
-scans for its reintroduction as a shape rather than as a string. A creator at their own terminal who
-wants to launch art nobody reviewed still can: `goal: "BUILD_ONLY"` builds the transaction and they
-sign it themselves. What is refused is an agent doing that on their behalf, which is the case where
-nobody is looking by construction.
+scans for its reintroduction as a shape rather than as a string.
+
+**A creator at their own terminal can still launch art nobody reviewed, and until recently that
+sentence was false.** It has been in this file and in `agent-launch.js` for a long time; the gate
+read the goal, recorded it on the refusal and branched on nothing, so `BUILD_ONLY` was refused on
+exactly the same line as `LAUNCH`. It is true now because the code makes it true. Two facts decide
+what happens, and they are independent:
+
+| | a reviewer's verdict, or no verdict | a receipt that is not evidence |
+| --- | --- | --- |
+| **your run can broadcast unattended** | REFUSE | REFUSE |
+| **a person is driving it** (`goal: "BUILD_ONLY"`, or `allowBroadcast: false`) | **WARN** — the build proceeds and the creator sees the verdict | REFUSE |
+
+The right-hand column is self-attested, unblinded, role-collided, holdout-compromised,
+mutated-after-unblind or document-altered — cases where what failed is the record rather than the
+work, so there is nothing for a person to overrule. **A warning is never an acceptance:** the
+override writes no receipt, so an unattended run later asks again and is refused again. What stays
+refused, in every mode, is an AGENT launching unreviewed art on a creator's behalf — the case where
+nobody is looking by construction. `npm run kit:artauthority` proves each row by executing it.
 
 
 ---

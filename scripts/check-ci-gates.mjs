@@ -112,6 +112,11 @@ const REQUIRED_GATES = [
   // which no launch path called it. These two ask the other question.
   { id: "ART_GATE_HOLDOUT", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artgateholdout" },
   { id: "ART_GATE_HOLDOUT_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artgateholdout:controls" },
+
+  // --- the two capabilities in this kit are not at the same maturity, and the documents say so ---
+  { id: "ART_AUTHORITY", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artauthority", notSkippable: true },
+  { id: "PRODUCT_BOUNDARY_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:boundary:controls" },
+  { id: "PRODUCT_BOUNDARY", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:boundary", notSkippable: true },
   { id: "TEMPLATE_STATUS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus" },
   { id: "TEMPLATE_STATUS_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus:controls" },
   { id: "KIT_GATES_SELFTEST", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:gates:selftest" },

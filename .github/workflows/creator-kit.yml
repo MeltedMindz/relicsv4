@@ -218,6 +218,26 @@ jobs:
           npm run kit:artgateholdout:controls
           npm run kit:artgateholdout
 
+      - name: the product boundary can both catch and allow
+        # Controls before the scan, as everywhere else here.
+        run: npm run kit:boundary:controls
+
+      - name: refused art cannot broadcast, and a human override writes no acceptance
+        # `kit:artauthority` runs the SHIPPED art gate and the REAL CLI over real receipts and reads
+        # the exit codes rather than describing them. `if: always()` because this is the gate that
+        # answers whether unreviewed art can reach a chain, and an earlier step's failure is not a
+        # reason to stop asking -- that is exactly how the EIP-170 size gate stopped running.
+        if: always()
+        run: npm run kit:artauthority
+
+      - name: no document claims more than the two capabilities can do
+        # The other half: `kit:artauthority` measures what the product DOES, this measures what it
+        # SAYS, and a tree where those disagree is a tree that is selling the experimental half on
+        # the evidence of the production half. It also refuses DELETION of the caveat, so the gate
+        # cannot be satisfied by removing the sentence it exists to require.
+        if: always()
+        run: npm run kit:boundary
+
       - name: no gate passes on zero input
         # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
         # is the only evidence that the rest of this file means anything. It existed, it worked,

@@ -52,6 +52,24 @@
 // A file carrying the private template trips several other patterns on other lines, so the file
 // still fails; what is permitted is a legitimate ticker documented on its own.
 //
+// WHAT A PASS HERE DOES AND DOES NOT SAY — read this before writing "removed" in a commit message.
+//
+// This gate scans the WORKING TREE. `.git` is excluded on purpose, so a PASS is a statement about
+// what the next commit PUBLISHES and says nothing at all about what the repository has ALREADY
+// published. Those are different questions and the difference is not academic: a term deleted from
+// a file today remains readable at every earlier commit, in a repository that is public, forever.
+//
+// Three cleanup commits have used the word "removed" for what was a removal FROM THE TREE ONLY —
+// the term still stands in each of their parent commits, which are pushed. That wording is
+// corrected here rather than by rewriting anything: history rewriting and force-pushing are
+// forbidden in this repository, and they would in any case break provenance that is pinned by
+// content (freeze commits named in `artifacts/`, and a ground-truth blob read with `git show`).
+//
+// SO THE HONEST FORM IS: "removed from the tree; it remains in published history." Never write
+// "removed from the repository", and never treat this gate going green as evidence that it was.
+// Whether anything further should be done about the already-published copies is an OWNER DECISION
+// and is open; no permitted action closes it.
+//
 // COMMENTS ARE IN SCOPE, and that is load-bearing. The scan reads raw lines, so a term inside a
 // `//`, `#`, `<!--`, `/* */` or `///` comment is a hit exactly like code. A runbook comment is the
 // most likely place for this material to survive a cleanup, and it is the one a reader copies into
