@@ -102,6 +102,11 @@ const REQUIRED_GATES = [
   { id: "HOLDOUT_CONTAINMENT_TESTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:holdout" },
   { id: "ART_RECEIPTS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artreceipts" },
   { id: "ART_RECEIPTS_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artreceipts:controls" },
+  // THE HOLDOUT CLAUSE ON THE LAUNCH PATH. HOLDOUT_CONTAINMENT_TESTS above proves the clause
+  // refuses a compromised receipt when called DIRECTLY, and that was green for the whole period in
+  // which no launch path called it. These two ask the other question.
+  { id: "ART_GATE_HOLDOUT", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artgateholdout" },
+  { id: "ART_GATE_HOLDOUT_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:artgateholdout:controls" },
   { id: "TEMPLATE_STATUS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus" },
   { id: "TEMPLATE_STATUS_CONTROLS", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:templatestatus:controls" },
   { id: "KIT_GATES_SELFTEST", workflow: "creator-kit.yml", job: "kit", needle: "npm run kit:gates:selftest" },

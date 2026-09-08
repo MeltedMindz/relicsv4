@@ -70,7 +70,7 @@
     },
     {
       "path": ".github/workflows/creator-kit.yml",
-      "sha256": "dbfa5050b82cf0431fd22b6e89c7f1e219569b88fefbc3c95c363edc1c8d69c8",
+      "sha256": "2126e43360acfd90cd111483f6cc77d1ff7cb3dbed47e8c195d25e7c2086bf53",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -9149,7 +9149,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "9627ba19ac3b30cbf3a2bad66e8806c7b07b8ce151b824c721939916b2dae993",
+      "sha256": "7ade195f1a3626cb0b306b180564d4e1c4de4c6afb08e47f55dc496c60cb30d2",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -9611,7 +9611,7 @@
     },
     {
       "path": "packages/creator-cli/src/commands/agent-art.js",
-      "sha256": "e6b65c347bfd57951d82bf151b5126dc4e31012e5da877ae7a1404176ec60716",
+      "sha256": "e9e04195f22bfaac1011d1783bdd5557df4b1031e7ae684d80fd2d7f449b4450",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true
@@ -12047,7 +12047,7 @@
     },
     {
       "path": "scripts/check-ci-gates.mjs",
-      "sha256": "5a6924591fa0307c0f7d7f1cfdc36e38e46baaff654c3c63421466e8c63fd2a6",
+      "sha256": "7504e47490ce9b54bd79f3daa65341e0fc9dc240984d8e9546f9e0ec1096dc2c",
       "provenance": "original-clean-room",
       "license": "MIT",
       "publicSafe": true

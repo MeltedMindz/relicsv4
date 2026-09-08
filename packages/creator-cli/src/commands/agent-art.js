@@ -39,6 +39,69 @@ async function artReview() {
 }
 
 /**
+ * The art-DIRECTION acceptance check, loaded the same lazy relative way, and for the same reason.
+ *
+ * WHY IT IS HERE AT ALL. The launch gate consulted `@relics/art-review`'s `verifyAcceptance` and
+ * nothing else, and that function contains ZERO holdout logic — grep it. The holdout clause, the
+ * blindness clauses, the role-collision clause and the unanswered-finding clause all live in
+ * `@relics/art-direction`'s `verifyArtAcceptance`, whose only non-test caller was an offline
+ * benchmark harness. So a receipt whose holdout was compromised — a final verdict taken on seeds
+ * the author had already seen — passed `requireArtGate` and launched. The containment existed and
+ * was not on the path that gates anything.
+ *
+ * `art-direction` imports `art-review`, never the reverse (see receipt.js), so the CLI sitting on
+ * top of both is the direction the dependency already runs in.
+ */
+let direction = null;
+async function artDirection() {
+  if (!direction) direction = await import("../../../art-direction/src/acceptance.js");
+  return direction;
+}
+
+/**
+ * THE HOLDOUT CLAUSE, ON THE LAUNCH PATH. Three answers, not two.
+ *
+ *   ART_DIRECTION_ACCEPTED        a receipt is here and every clause in it holds.
+ *   <art-direction's own code>    a receipt is here and a clause refuses it —
+ *                                 FINAL_REVIEW_HOLDOUT_COMPROMISED, FINAL_REVIEW_NOT_BLINDED,
+ *                                 FINAL_REVIEW_ROLE_COLLISION, CRITIQUE_WITHOUT_AUTHOR_RESPONSE,
+ *                                 FINAL_REVIEW_CONFIG_MUTATION_AFTER_UNBLIND, and the three
+ *                                 verdict-binding codes. The launch is REFUSED with that code.
+ *   ART_DIRECTION_RECEIPT_ABSENT  no `art-acceptance.json`. The gate stands aside AND SAYS SO in
+ *                                 the record, rather than passing silently.
+ *
+ * THE LIMIT OF THE ABSENT CASE, STATED RATHER THAN GLOSSED. Nothing in `packages/creator-cli` or
+ * `packages/art-review` writes an art-direction receipt — only `scripts/run-art-benchmark.mjs`
+ * does — so demanding one would refuse every workspace the CLI itself produces, which is a
+ * different change from closing this hole. What the absent case does NOT do is create a new escape:
+ * a workspace with no art-direction receipt is still gated by art-review's SHIP receipt exactly as
+ * before. What it DOES close is the case the finding names — a receipt that exists, records a
+ * compromised holdout, and was never consulted.
+ */
+async function artDirectionAcceptance(workspace, art, briefText) {
+  const AD = await artDirection();
+  const read = AD.readArtAcceptance(workspace);
+  if (!read.ok && read.reasonCode === "NO_ART_ACCEPTANCE") {
+    return { ok: true, present: false, reasonCode: "ART_DIRECTION_RECEIPT_ABSENT", detail: read.detail };
+  }
+  const verdict = AD.verifyArtAcceptance(workspace, {
+    configBytes: art?.ok ? art.configBytes : undefined,
+    briefText,
+    runtimeId: art?.ok ? art.doc.runtimeId : undefined,
+  });
+  if (verdict.accepted) {
+    return { ok: true, present: true, reasonCode: "ART_DIRECTION_ACCEPTED", detail: "every art-direction clause holds, holdout included" };
+  }
+  return {
+    ok: false,
+    present: true,
+    reasonCode: verdict.reasonCode,
+    detail: verdict.detail,
+    invalidatedBy: verdict.invalidatedBy ?? [],
+  };
+}
+
+/**
  * Resolve the chain, the endpoint and the registry for a review.
  *
  * THE REGISTRY ADDRESS COMES FROM THE CHAIN PROFILE, never from the art-review package. That
@@ -251,21 +314,41 @@ export async function requireArtAccepted(workspace, { goal } = {}) {
     };
   }
   const brief = join(workspace, "brief.md");
+  const briefText = existsSync(brief) ? readFileSync(brief, "utf8") : undefined;
   const check = AR.verifyAcceptance(workspace, {
     configBytes: art.ok ? art.configBytes : undefined,
-    briefText: existsSync(brief) ? readFileSync(brief, "utf8") : undefined,
+    briefText,
     runtimeId: art.ok ? art.doc.runtimeId : undefined,
   });
-  if (check.accepted) return { ok: true, applicable: true, record: check.record };
-  return {
-    ok: false,
-    applicable: true,
-    reasonCode: check.reasonCode,
-    goal: goal ?? null,
-    detail: check.detail,
-    invalidatedBy: check.invalidatedBy,
-    remedy: "npm run kit -- agent art-review --workspace <dir> --chain <id> --json",
-  };
+  if (!check.accepted) {
+    return {
+      ok: false,
+      applicable: true,
+      reasonCode: check.reasonCode,
+      goal: goal ?? null,
+      detail: check.detail,
+      invalidatedBy: check.invalidatedBy,
+      remedy: "npm run kit -- agent art-review --workspace <dir> --chain <id> --json",
+    };
+  }
+
+  // THE SECOND HALF OF THE GATE. art-review's verdict is necessary and it is not sufficient: it
+  // says a reviewer wrote SHIP against these exact bytes, and says nothing about whether that
+  // reviewer was looking at held-out seeds. See `artDirectionAcceptance`.
+  const holdout = await artDirectionAcceptance(workspace, art, briefText);
+  if (!holdout.ok) {
+    return {
+      ok: false,
+      applicable: true,
+      reasonCode: holdout.reasonCode,
+      goal: goal ?? null,
+      detail: holdout.detail,
+      invalidatedBy: holdout.invalidatedBy ?? [],
+      artDirection: holdout,
+      remedy: "npm run kit -- agent art-review --workspace <dir> --chain <id> --json  (and re-run the final review on an uncompromised holdout)",
+    };
+  }
+  return { ok: true, applicable: true, record: check.record, artDirection: holdout };
 }
 
 /**

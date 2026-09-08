@@ -189,6 +189,20 @@ jobs:
           npm run kit:artreceipts:controls
           npm run kit:artreceipts
 
+      - name: the holdout clause is on the path that actually gates a launch
+        # THE TWO LANES ABOVE BOTH RAN, AND NEVER MET. `kit:artreview` proves a gate is CALLED
+        # before every launch-proving command; `kit:holdout` proves the holdout clause refuses a
+        # compromised receipt when called directly. Neither asked whether the gate that is called
+        # is the check that contains the clause -- and it was not: `requireArtGate` reached
+        # art-review's `verifyAcceptance`, which has no holdout logic at all, while the clause sat
+        # in art-direction's `verifyArtAcceptance` with no launch path calling it.
+        #
+        # Controls first, then the gate. The controls re-point the launch path back at the
+        # holdout-free check IN THE REAL FILES and require a NAMED test to go red for each.
+        run: |
+          npm run kit:artgateholdout:controls
+          npm run kit:artgateholdout
+
       - name: no gate passes on zero input
         # THE META-GATE. It deliberately breaks each gate and requires every one to go red, which
         # is the only evidence that the rest of this file means anything. It existed, it worked,
