@@ -47,6 +47,8 @@
     "kit:artreceipts:json": "node scripts/check-art-receipts.mjs --json",
     "kit:artreceipts:controls": "node scripts/check-art-receipts.mjs --controls",
     "kit:holdout": "node --test packages/art-direction/test/holdout.test.mjs",
+    "kit:artauthority": "node scripts/check-art-authority.mjs",
+    "kit:artauthority:json": "node scripts/check-art-authority.mjs --json",
     "kit:artgateholdout": "node scripts/check-art-gate-holdout.mjs",
     "kit:artgateholdout:controls": "node scripts/check-art-gate-holdout.mjs --controls",
     "kit:artatlas": "node scripts/sync-art-atlas.mjs --check",

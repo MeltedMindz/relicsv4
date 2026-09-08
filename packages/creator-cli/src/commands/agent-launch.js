@@ -27,7 +27,26 @@ export function envelope(command, { success, result = null, warnings = [], error
   return { schemaVersion: 1, command, success, timestamp: new Date().toISOString(), inputHash, result, warnings, errors, nextActions };
 }
 
+/**
+ * WARNINGS RAISED BEFORE A COMMAND HAS AN ENVELOPE TO PUT THEM IN.
+ *
+ * `requireArtGate` runs as the FIRST statement of seven commands and can decide to let a
+ * human-controlled run proceed past a subjective verdict. That warning has to reach the creator on
+ * the envelope of the command that PROCEEDED — not on a second envelope of its own, which an agent
+ * parsing stdout would read as a separate command, and not dropped, which is how a warning becomes
+ * a silent override. Draining here is one place instead of seven call sites, so a launch command
+ * added later cannot forget to carry it.
+ */
+const PENDING_WARNINGS = [];
+export function queueWarning(text) {
+  PENDING_WARNINGS.push(text);
+}
+
 export function emit(command, payload, { json }) {
+  if (PENDING_WARNINGS.length) {
+    payload = { ...payload, warnings: [...PENDING_WARNINGS, ...(payload.warnings ?? [])] };
+    PENDING_WARNINGS.length = 0;
+  }
   // See the note beside `emit` in agent.js: one exit, one scrub. A credentialled RPC endpoint
   // reaches this envelope only ever by accident — through a transport error that quotes its own
   // request URL — which is precisely why it has to be caught here rather than at each source.
@@ -67,25 +86,50 @@ async function requirePhase(workspace, phase, need, name, json) {
  * independently runnable BY DESIGN — an agent is invited to drive them one at a time — so a gate
  * that lived only in the orchestrator would be a gate with six doors around it.
  *
- * NO ESCAPE HATCH. There is no `--skip-art-review`, no policy field, no environment variable and
- * no goal that exempts an autonomous run. A creator at a terminal who wants to launch art nobody
- * reviewed still can: `goal: "BUILD_ONLY"` builds the transaction and they sign it themselves and
- * own that. What is refused is an AGENT doing it for them, which is the case where nobody is
- * looking by construction.
+ * NO ESCAPE HATCH FOR AN UNATTENDED RUN. There is no `--skip-art-review`, no policy field and no
+ * environment variable that lets a run which can broadcast by itself past a refusal.
+ *
+ * A HUMAN-CONTROLLED RUN IS A DIFFERENT QUESTION, AND THIS COMMENT USED TO GET IT WRONG. It said a
+ * creator who wants to launch art nobody reviewed still can — `goal: "BUILD_ONLY"`, sign it
+ * themselves, own the decision — and the code refused BUILD_ONLY on exactly the same line as
+ * LAUNCH, so the documented escape hatch did not exist. The claim is now true because the code
+ * makes it true: `artGateDisposition` answers WARN when a person is driving the run AND what
+ * failed is a JUDGEMENT rather than a broken receipt. A self-attested, unblinded, holdout-
+ * compromised or post-unblind-mutated receipt still refuses for everybody, because what failed
+ * there is the record and no amount of looking fixes it.
+ *
+ * A WARNING IS NOT AN ACCEPTANCE AND MUST NEVER BECOME ONE. The `ART_REVIEW` receipt is written in
+ * exactly one place — `cmdArtReview`, on a real acceptance — and this path does not write one. So a
+ * creator overruling a subjective verdict on their own build leaves no record claiming a reviewer
+ * approved the work, and a later broadcast-capable run re-asks the same question and refuses.
  *
  * IT STANDS ASIDE WHERE IT DOES NOT APPLY, and says so in the record rather than passing silently.
  * See `artReviewApplies` — three answers, not two.
  */
 async function requireArtGate(name, workspace, json, ctx) {
-  const { requireArtAccepted } = await import("./agent-art.js");
+  const { requireArtAccepted, artGateDisposition } = await import("./agent-art.js");
   const gate = await requireArtAccepted(workspace, { goal: ctx?.policy?.goal });
-  if (gate.ok) return true;
+  const d = artGateDisposition(gate, ctx?.policy);
+  if (d.disposition === "PASS") return true;
+  if (d.disposition === "WARN") {
+    // Emitted, not swallowed. The creator is signing this themselves and is entitled to see the
+    // verdict they are proceeding past — on the run that proceeds, not only on the one that stopped.
+    ctx.artGateWarnings = [...(ctx.artGateWarnings ?? []), d.reasonCode];
+    queueWarning(
+      `${d.reasonCode}: ${d.detail} — proceeding because this run is human-controlled (goal BUILD_ONLY, or allowBroadcast false). ` +
+        "You are signing this transaction yourself and the art carries no acceptance. Nothing here records one, and an unattended run would be refused at this line.",
+    );
+    return true;
+  }
   emit(name, {
     success: false,
-    result: { artGate: gate.reasonCode, invalidatedBy: gate.invalidatedBy ?? [] },
+    result: { artGate: d.reasonCode, refusedBecause: d.refusedBecause, invalidatedBy: gate.invalidatedBy ?? [] },
     errors: [
-      `${gate.reasonCode}: ${gate.detail}`,
+      `${d.reasonCode}: ${d.detail}`,
       "The first legal configuration is not launch-ready art. A configuration can be legal, deterministic, inside its gas budget and byte-distinct across every market state and still draw the wrong thing — that has happened here, and nothing caught it because nothing looked.",
+      d.refusedBecause === "RECEIPT_IS_NOT_EVIDENCE"
+        ? "This is not a subjective verdict you can proceed past: the acceptance record itself does not establish what it claims, so there is nothing for a person to overrule."
+        : "This run can broadcast without a person present. A creator driving the build themselves (goal BUILD_ONLY, or allowBroadcast false) gets a warning here instead and signs it themselves.",
       `Run: ${gate.remedy}`,
     ],
     nextActions: ["REVIEW_ART"],

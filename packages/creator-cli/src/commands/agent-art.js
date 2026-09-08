@@ -352,6 +352,94 @@ export async function requireArtAccepted(workspace, { goal } = {}) {
 }
 
 /**
+ * THE PRODUCT BOUNDARY, DECLARED ONCE.
+ *
+ * Two capabilities ship in one command surface and they are not at the same maturity, so the rule
+ * that separates them is written here and derived everywhere else rather than restated in prose.
+ *
+ *   AUTONOMOUS LAUNCH of art that already carries an acceptance is the production path.
+ *   AUTONOMOUS ART CREATION is experimental, and its output may not reach a chain unattended.
+ *
+ * A HUMAN-CONTROLLED RUN IS A DIFFERENT QUESTION FROM AN UNATTENDED ONE, and conflating them is
+ * how this gate acquired a claim it did not keep. `agent-launch.js` and AGENTS.md both said a
+ * creator who wants to launch art nobody reviewed can set `goal: "BUILD_ONLY"` and sign the built
+ * transaction themselves. They could not: the gate refused every goal identically, so the
+ * documented escape hatch did not exist in the code that would have had to open it. Measured, both
+ * goals returned the same refusal on the same workspace.
+ *
+ * So the disposition is three-valued, and which value you get depends on TWO independent facts:
+ * whether this run can broadcast without a person, and whether the thing that failed is a JUDGEMENT
+ * or a BROKEN RECEIPT.
+ */
+
+/**
+ * Reason codes that mean A REVIEWER FORMED A VIEW, or that no view was formed at all.
+ *
+ * Every one of these is answerable by a person looking at the pictures and deciding to proceed
+ * anyway. None of them asserts anything false: the art is valid, it renders, it is inside its
+ * budget — a judgement went against it, or nobody made one. For a run a person is driving and
+ * signing, that is a WARNING they are entitled to overrule.
+ *
+ * WHAT IS DELIBERATELY NOT HERE. Every other refusal is a statement that the RECEIPT IS NOT
+ * EVIDENCE — self-attested, unblinded, role-collided, holdout-compromised, mutated after unblind,
+ * document altered or missing, unreadable, findings unanswered. Those are not subjective results
+ * and a person cannot overrule them by looking harder, because what failed is the record rather
+ * than the work. They refuse in every mode, for everybody.
+ */
+export const SUBJECTIVE_ART_REASON_CODES = Object.freeze([
+  "NO_ART_ACCEPTANCE",
+  "ART_NOT_ACCEPTED",
+  "ART_QUALITY_NOT_ACCEPTABLE",
+  "ART_ACCEPTANCE_INVALIDATED",
+  "ART_REVIEW_REQUIRED_NO_ART_DOCUMENT",
+]);
+
+/**
+ * Can this run put bytes on a chain without a person present?
+ *
+ * DEFAULTS TO YES ON ANYTHING IT CANNOT READ. An absent policy, an unparsed one, or a shape this
+ * function does not recognise is treated as broadcast-capable, so a policy that fails to load can
+ * never be the reason a refusal became a warning. The permissive answer requires positive evidence.
+ */
+export function isHumanControlledLaunch(policy) {
+  if (!policy || typeof policy !== "object") return false;
+  if (policy.goal === "BUILD_ONLY") return true;
+  if (policy.allowBroadcast === false) return true;
+  return false;
+}
+
+/**
+ * PASS | WARN | REFUSE, from the gate's answer and the run's own authority.
+ *
+ * WARN is reachable only when BOTH halves hold: a person is driving this run, and what failed is a
+ * judgement rather than a receipt. It never writes an acceptance — see the note on the caller.
+ */
+export function artGateDisposition(gate, policy) {
+  if (gate?.ok) return { disposition: "PASS", humanOverride: false, reasonCode: gate.reasonCode ?? "ART_ACCEPTED" };
+  const subjective = SUBJECTIVE_ART_REASON_CODES.includes(gate?.reasonCode);
+  const human = isHumanControlledLaunch(policy);
+  if (subjective && human) {
+    return {
+      disposition: "WARN",
+      humanOverride: true,
+      reasonCode: gate.reasonCode,
+      detail: gate.detail,
+      remedy: gate.remedy,
+    };
+  }
+  return {
+    disposition: "REFUSE",
+    humanOverride: false,
+    reasonCode: gate?.reasonCode ?? "ART_REVIEW_REFUSED",
+    detail: gate?.detail,
+    remedy: gate?.remedy,
+    // Named so a reader can tell WHICH half refused: an unattended run, or a receipt that is not
+    // evidence. Both print the same word and they are not the same finding.
+    refusedBecause: !human ? "RUN_CAN_BROADCAST_UNATTENDED" : "RECEIPT_IS_NOT_EVIDENCE",
+  };
+}
+
+/**
  * Whether this workspace uses the review loop at all.
  *
  * THREE ANSWERS, NOT TWO, and collapsing them is how a guard becomes either a nuisance or a hole.
