@@ -207,3 +207,86 @@ the salt is absent; `authorSawHoldout` is measured by scanning author-visible so
 round's seeds; and `npm run kit:artreceipts` reads every committed receipt and fails on a leak.
 Planting a holdout seed back into `author.js` turns the named test
 `NO HOLDOUT SEED OF A COMPLETED ROUND APPEARS IN AUTHOR-VISIBLE SOURCE` red.
+
+---
+
+# RETRACTION (2026-09-07): "THE CORNERS ARE UNREACHABLE" IS FALSE, AND IT WAS REACHED BY READING SOLIDITY
+
+**The section above headed "1. The corners are unreachable, and nothing in the pipeline could say
+so" is RETRACTED in its structural half.** Its measurements stand. Its conclusion about the
+runtimes does not, and the `EDGE_TO_EDGE_COVERAGE` refusal it proposes was never implemented and
+must not be.
+
+## What was claimed
+
+> **THE CAUSE IS STRUCTURAL AND IT BELONGS AT ADMISSION.** Both runtimes place their marks within a
+> half-extent about the canvas centre, so the reachable region is a DISC inscribed in a square
+> frame. The corners are outside it for every polar and scatter layout by construction […]
+> `EDGE_TO_EDGE_COVERAGE` should be a composition demand alongside `ALL_OVER_FIELD`, refused for
+> both runtimes.
+
+The evidence offered for it was a table of twelve corner-ink readings running 0.000 to **0.130**,
+taken from the twelve configurations this round happened to author, plus a reading of
+`VectorConfigV1`'s own `cannot` list and of law L5.
+
+## What is measured
+
+`node scripts/probe-art-composition.mjs --reproduce`, chain 8453, twelve authoring seeds at
+neutral, `validateConfigV1` returning **0** on both configurations:
+
+| | extentX min | extentY min | ink mean | corner ink min | corner ink mean | corner ink max |
+|---|---|---|---|---|---|---|
+| `VECTOR_COMPOSITION_V1` — symmetry ROT6, sizeMax 64, spreadMax 128, three cell-grid fields | 0.900 | 0.900 | 0.934 | 0.022 | **0.801** | 1.000 |
+| `GEOMETRIC_RECURSION_V1` — shapeSet {SQUARE, HEX}, ruleSet {BRANCH}, symSet {QUAD}, branch 3, depth 3, contraction 90, three rules | 1.000 | 0.867 | 0.929 | 0.206 | **0.927** | 1.000 |
+
+Against the 0.130 the retracted section cites as the ceiling: **6.2x and 7.1x**. Both configurations
+are ordinary — no appendix, no flag, nothing exotic — and both are legal by the runtimes' own
+validators rather than by this repository's opinion of them.
+
+The frozen record is `packages/art-direction/measurements/composition-atlas.json`, under
+`refutation`, with the per-seed numbers.
+
+## Why the reasoning failed, which matters more than the conclusion
+
+Three separate mistakes, and all three are the same mistake.
+
+1. **A capability claim about deployed bytecode was read out of source.** The sentence "both
+   runtimes place their marks within a half-extent about the canvas centre" is a paraphrase of an
+   arithmetic expression. It is even roughly true of ONE element. It stops being true the moment
+   the element is large, replicated by a symmetry, and drawn by three fields at once — none of
+   which the reading covered.
+2. **A property of twelve authored configurations was stated as a property of the runtimes.** The
+   table is real; the twelve rows are twelve points in a space the author never explored, because
+   the author's whole composition control was one intent word reaching one parameter.
+3. **`VectorConfigV1`'s `cannot` clause "an element that fills the frame" was read as "a
+   COMPOSITION that fills the frame".** It says element. One element does not fill the frame;
+   twenty-four of them replicated six ways cover it entirely.
+
+`capabilities.js` opens with the asymmetry that makes this expensive: *a false refusal is
+invisible*. Had `EDGE_TO_EDGE_COVERAGE` been implemented, every brief asking for a frame-filling
+field — B01, B03, B04, B06, B09 among the frozen twelve — would have been refused at admission,
+the refusal would have been cited to a real atlas clause, and the pipeline would have reported
+`IMPOSSIBLE_COMMISSION_SENT_TO_AUTHOR = 0` while turning away five briefs it can satisfy.
+
+## The honest refinement, which is a real finding and not a retreat
+
+Every scalar in both runtimes is a **CEILING the token's seed draws beneath**. So a composition
+property is reachable PER SEED and is not automatically true ACROSS a collection, and a collection
+is judged on its worst member. Measured on the vector runtime at symmetry NONE, spreadMax 128,
+three fields, ten authoring seeds: extent runs 0.80 at the worst seed and 1.00 at the best, corner
+ink 0.009 to 0.36 — **one configuration, two compositions**.
+
+That is the authoring problem round three is actually working on, and it is not the same problem as
+"impossible". The vocabulary that replaces the proposed refusal
+(`packages/art-direction/src/composition.js`) therefore answers three ways rather than two —
+`HOLDS`, `REACHES_NOT_HELD`, `UNREACHABLE` — with every criterion written over the WORST seed in the
+population, and every verdict derived at read time from measured frames rather than stored as a
+flag.
+
+## What is NOT retracted
+
+The refusal taxonomy, the twelve verdicts, the reviewers' reasoning, the round-one-to-round-two
+comparison, the B11 admission finding, and the holdout compromise are all unchanged. Finding 2 of
+that section — that the author cannot choose the member, and reaches nine primitives through a
+two-valued switch — is unchanged and correct, and round three builds the member vocabulary it asks
+for.

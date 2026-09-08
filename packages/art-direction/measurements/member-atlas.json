@@ -1,0 +1,1421 @@
+{
+  "$comment": [
+    "The member axis, measured on ONE fixed composition so a mark's number is a fact about the",
+    "mark. `boundaryShare` is the share of ink pixels sitting on a boundary: a thread is nearly",
+    "all boundary and a plate is nearly none, and it is the one number `inkCoverage` cannot",
+    "produce -- a hairline lattice and a solid slab can carry identical coverage."
+  ],
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-08T02:34:15.646Z",
+  "chainId": 8453,
+  "runtimeCodeHash": {
+    "GEOMETRIC_RECURSION_V1": "0xb68b7469b7d0fde3a7e4a474f367b7fecdc1bb051e78868b3a889048dd2bb56d",
+    "VECTOR_COMPOSITION_V1": "0xd09db0cc246a417df190bfaeded9a2a65aab7fb63c1933f422683c071a486f0f"
+  },
+  "population": {
+    "group": "AUTHORING_SEEDS",
+    "seeds": 12,
+    "states": [
+      "neutral"
+    ]
+  },
+  "probeDensity": {
+    "count": 18,
+    "sizeMax": 30,
+    "spreadMax": 128
+  },
+  "members": [
+    {
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "memberId": "PLATE",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "72e1855e62ed2ed9eb012cd9889aee03e44651fe6b51bc0f86d373b97f1981c0",
+      "distribution": {
+        "ink": {
+          "min": 0.094,
+          "mean": 0.2199,
+          "max": 0.4289,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.35,
+          "mean": 0.5598,
+          "max": 0.95,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.392,
+          "mean": 0.5737,
+          "max": 0.817,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1833,
+          "max": 0.292,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.019,
+          "max": 0.1028,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0013,
+          "max": 0.0162,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 3,
+          "mean": 4.75,
+          "max": 7,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0881,
+          "mean": 0.1378,
+          "max": 0.2053,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.471,
+          "mean": 0.6515,
+          "max": 0.9058,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.0437,
+          "mean": 0.0736,
+          "max": 0.1167,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.5,
+          "max": 3,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.95,
+          "mean": 0.9927,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.005,
+          "mean": 0.0382,
+          "max": 0.0803,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "memberId": "DISC",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "6ad30bb81e8d8d991413dfa957d558c6eb7435f755519104f324166543b17409",
+      "distribution": {
+        "ink": {
+          "min": 0.0878,
+          "mean": 0.2677,
+          "max": 0.5503,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.333,
+          "mean": 0.5659,
+          "max": 0.958,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.367,
+          "mean": 0.5763,
+          "max": 0.833,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1812,
+          "max": 0.308,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0274,
+          "max": 0.148,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0018,
+          "max": 0.0221,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 4,
+          "mean": 5.0833,
+          "max": 7,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0783,
+          "mean": 0.1454,
+          "max": 0.2182,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.617,
+          "mean": 0.7656,
+          "max": 0.8453,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.0391,
+          "mean": 0.0668,
+          "max": 0.0996,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.1667,
+          "max": 2,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.992,
+          "mean": 0.9989,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0043,
+          "mean": 0.0244,
+          "max": 0.0565,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "memberId": "FACET",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "5a3db378fdb93cf58f7dfdaf0145ff03a47a1410c562f111492071a3d8658255",
+      "distribution": {
+        "ink": {
+          "min": 0.1111,
+          "mean": 0.2463,
+          "max": 0.4796,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.35,
+          "mean": 0.5673,
+          "max": 0.958,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.392,
+          "mean": 0.5522,
+          "max": 0.775,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1798,
+          "max": 0.292,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0226,
+          "max": 0.1248,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0014,
+          "max": 0.0172,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 4,
+          "mean": 4.8333,
+          "max": 7,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0951,
+          "mean": 0.1441,
+          "max": 0.2122,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.5663,
+          "mean": 0.7374,
+          "max": 0.9058,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.0439,
+          "mean": 0.0711,
+          "max": 0.1056,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.4167,
+          "max": 3,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.982,
+          "mean": 0.9966,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0044,
+          "mean": 0.0286,
+          "max": 0.0628,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "memberId": "SHARD",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "9e5192b1b52498f15d25cf3d6bdbaed83ca3f0e96851b2922e44ef3521fa4348",
+      "distribution": {
+        "ink": {
+          "min": 0.0581,
+          "mean": 0.2007,
+          "max": 0.4289,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.258,
+          "mean": 0.5437,
+          "max": 0.95,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.358,
+          "mean": 0.5639,
+          "max": 0.817,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1875,
+          "max": 0.317,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.019,
+          "max": 0.1028,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0013,
+          "max": 0.0162,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 2,
+          "mean": 4.4167,
+          "max": 7,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0559,
+          "mean": 0.1269,
+          "max": 0.2053,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.471,
+          "mean": 0.5851,
+          "max": 0.7366,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.0437,
+          "mean": 0.0909,
+          "max": 0.1722,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.5833,
+          "max": 3,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.95,
+          "mean": 0.9922,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.005,
+          "mean": 0.0415,
+          "max": 0.0803,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "memberId": "FRAME",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "c70726e88476be9d64573a4ea0d56d996b164301383ee79e3a3149d1613975ee",
+      "distribution": {
+        "ink": {
+          "min": 0.0683,
+          "mean": 0.1241,
+          "max": 0.201,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.367,
+          "mean": 0.5813,
+          "max": 0.958,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.408,
+          "mean": 0.5952,
+          "max": 0.842,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1771,
+          "max": 0.283,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0183,
+          "max": 0.082,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0015,
+          "max": 0.0178,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 3,
+          "mean": 4.75,
+          "max": 7,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0592,
+          "mean": 0.0875,
+          "max": 0.1776,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.2245,
+          "mean": 0.3442,
+          "max": 0.7965,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.2784,
+          "mean": 0.3231,
+          "max": 0.3822,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.3333,
+          "max": 3,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.958,
+          "mean": 0.9938,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0118,
+          "mean": 0.0767,
+          "max": 0.1529,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "GEOMETRIC_RECURSION_V1",
+      "memberId": "RING",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "b8e3aac5250ee6b143155e6c0870d860e2ba390b2823238316d7f0dbf2240087",
+      "distribution": {
+        "ink": {
+          "min": 0.0685,
+          "mean": 0.1265,
+          "max": 0.2142,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.367,
+          "mean": 0.5854,
+          "max": 0.967,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.383,
+          "mean": 0.5932,
+          "max": 0.85,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1757,
+          "max": 0.3,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0231,
+          "max": 0.098,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0011,
+          "max": 0.0129,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 4,
+          "mean": 5.1667,
+          "max": 8,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0492,
+          "mean": 0.0934,
+          "max": 0.1592,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.2176,
+          "mean": 0.346,
+          "max": 0.8235,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.2847,
+          "mean": 0.3492,
+          "max": 0.428,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 1.0833,
+          "max": 2,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.994,
+          "mean": 0.9993,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.01,
+          "mean": 0.073,
+          "max": 0.1343,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "PLATE",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "d121502f1a4654d7d776a9c4eaf9590cc78e8bccc93c1dd989cdea45c87eec1b",
+      "distribution": {
+        "ink": {
+          "min": 0.0083,
+          "mean": 0.1828,
+          "max": 0.4849,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.35,
+          "mean": 0.7452,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.35,
+          "mean": 0.766,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1062,
+          "max": 0.317,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.1543,
+          "max": 0.934,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.1174,
+          "max": 0.6611,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 4.25,
+          "max": 8,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0104,
+          "mean": 0.1421,
+          "max": 0.3266,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.0727,
+          "mean": 0.4644,
+          "max": 0.8731,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.0569,
+          "mean": 0.2637,
+          "max": 0.8739,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 7,
+          "max": 18,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.069,
+          "mean": 0.5487,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0048,
+          "mean": 0.0577,
+          "max": 0.1653,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "DISC",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "100ccad49c50a254bc3b70417d346f06b56a17b7b58270a1ba786520d102a3ce",
+      "distribution": {
+        "ink": {
+          "min": 0.0064,
+          "mean": 0.1581,
+          "max": 0.4017,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.333,
+          "mean": 0.7361,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.333,
+          "mean": 0.7548,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1153,
+          "max": 0.325,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.1323,
+          "max": 0.8104,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.1089,
+          "max": 0.5911,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 3.8333,
+          "max": 8,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0078,
+          "mean": 0.1315,
+          "max": 0.3126,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.0672,
+          "mean": 0.4464,
+          "max": 0.8836,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.0573,
+          "mean": 0.282,
+          "max": 0.8804,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 7.3333,
+          "max": 18,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.07,
+          "mean": 0.5385,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0038,
+          "mean": 0.0574,
+          "max": 0.1827,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "FACET",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "5e1a5e63b7c96e9ee6d881390339ed6d95ea9151507bfdb6949824442552ed15",
+      "distribution": {
+        "ink": {
+          "min": 0.0008,
+          "mean": 0.136,
+          "max": 0.3417,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.325,
+          "mean": 0.7125,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.325,
+          "mean": 0.7376,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1194,
+          "max": 0.333,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.1112,
+          "max": 0.7236,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0902,
+          "max": 0.5092,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 3.5,
+          "max": 8,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0009,
+          "mean": 0.1176,
+          "max": 0.2846,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0,
+          "mean": 0.4132,
+          "max": 0.8624,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.0677,
+          "mean": 0.3302,
+          "max": 1,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 6.4167,
+          "max": 18,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.079,
+          "mean": 0.5771,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0037,
+          "mean": 0.0664,
+          "max": 0.1841,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "SHARD",
+      "family": "MASS",
+      "legal": true,
+      "configSha256": "6ea52db4739dcb091ed442ff0f822ddf059a37dddfdbea5d2965472dbac378b6",
+      "distribution": {
+        "ink": {
+          "min": 0,
+          "mean": 0.091,
+          "max": 0.2194,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0,
+          "mean": 0.627,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0,
+          "mean": 0.6507,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1668,
+          "max": 0.5,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0726,
+          "max": 0.494,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0583,
+          "max": 0.3114,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 2.8333,
+          "max": 6,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0,
+          "mean": 0.0876,
+          "max": 0.2097,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0,
+          "mean": 0.3676,
+          "max": 0.7644,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0,
+          "mean": 0.3532,
+          "max": 0.7591,
+          "n": 12
+        },
+        "components": {
+          "min": 0,
+          "mean": 7.4167,
+          "max": 17,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0,
+          "mean": 0.3778,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0,
+          "mean": 0.0588,
+          "max": 0.1927,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "FRAME",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "70fa785689edfa35e18cb55229f22c2e0e3a3a995c4dd911432fa4e469b06990",
+      "distribution": {
+        "ink": {
+          "min": 0.0309,
+          "mean": 0.15,
+          "max": 0.3744,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.375,
+          "mean": 0.7583,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.375,
+          "mean": 0.7772,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.0999,
+          "max": 0.308,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0911,
+          "max": 0.334,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0863,
+          "max": 0.3976,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 4,
+          "mean": 4.9167,
+          "max": 8,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.036,
+          "mean": 0.1133,
+          "max": 0.2202,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.0787,
+          "mean": 0.4203,
+          "max": 0.6384,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.1065,
+          "mean": 0.3825,
+          "max": 0.7347,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 6.9167,
+          "max": 18,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.081,
+          "mean": 0.5814,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0054,
+          "mean": 0.0657,
+          "max": 0.1656,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "RING",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "d0a175cb5208a4577437c629bb14241a9974837d3e778f88a97423e3330ffe03",
+      "distribution": {
+        "ink": {
+          "min": 0.0231,
+          "mean": 0.1244,
+          "max": 0.2951,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.35,
+          "mean": 0.7472,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.35,
+          "mean": 0.7639,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1098,
+          "max": 0.317,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0812,
+          "max": 0.3168,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0687,
+          "max": 0.2904,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 3,
+          "mean": 4.75,
+          "max": 8,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0273,
+          "mean": 0.1022,
+          "max": 0.1999,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.0644,
+          "mean": 0.3855,
+          "max": 0.5617,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.1243,
+          "mean": 0.405,
+          "max": 0.7826,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 7.1667,
+          "max": 18,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.072,
+          "mean": 0.5478,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0053,
+          "mean": 0.0673,
+          "max": 0.1797,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "BLADE",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "a9b3315ba3cfc5435aa4b2861bc14fba681c3000ef10107b3e6aab012bf29fa3",
+      "distribution": {
+        "ink": {
+          "min": 0.0018,
+          "mean": 0.072,
+          "max": 0.1881,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.292,
+          "mean": 0.707,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.292,
+          "mean": 0.7181,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1257,
+          "max": 0.35,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0626,
+          "max": 0.4552,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0486,
+          "max": 0.2872,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 2.8333,
+          "max": 5,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0021,
+          "mean": 0.0742,
+          "max": 0.1764,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.0333,
+          "mean": 0.3697,
+          "max": 0.773,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.1823,
+          "mean": 0.5064,
+          "max": 1,
+          "n": 12
+        },
+        "components": {
+          "min": 2,
+          "mean": 8,
+          "max": 16,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.09,
+          "mean": 0.336,
+          "max": 0.858,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0057,
+          "mean": 0.0761,
+          "max": 0.1889,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "THREAD",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "c582745fbd4b1fb99950426ca9bc9145f3bb4b627438fa087cd05b83558d6c6c",
+      "distribution": {
+        "ink": {
+          "min": 0.006,
+          "mean": 0.0487,
+          "max": 0.1206,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.308,
+          "mean": 0.7112,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.3,
+          "mean": 0.7138,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1265,
+          "max": 0.342,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0375,
+          "max": 0.1712,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0303,
+          "max": 0.1503,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 2.3333,
+          "max": 5,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0078,
+          "mean": 0.0522,
+          "max": 0.1178,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.0651,
+          "mean": 0.3169,
+          "max": 0.5317,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.3195,
+          "mean": 0.5752,
+          "max": 0.8721,
+          "n": 12
+        },
+        "components": {
+          "min": 3,
+          "mean": 8.9167,
+          "max": 16,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.093,
+          "mean": 0.3181,
+          "max": 0.817,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0046,
+          "mean": 0.0744,
+          "max": 0.1865,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "FILAMENT",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "b17a6e00c5ceb185c9dd5acc136addb656ac6665ae67d796f534d3e237c4cd36",
+      "distribution": {
+        "ink": {
+          "min": 0.0018,
+          "mean": 0.0274,
+          "max": 0.0805,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.267,
+          "mean": 0.6514,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.283,
+          "mean": 0.7042,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.1347,
+          "max": 0.358,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0235,
+          "max": 0.1176,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0181,
+          "max": 0.0938,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 1.8333,
+          "max": 4,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0025,
+          "mean": 0.0315,
+          "max": 0.1026,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0,
+          "mean": 0.346,
+          "max": 0.6211,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.3734,
+          "mean": 0.6666,
+          "max": 1,
+          "n": 12
+        },
+        "components": {
+          "min": 4,
+          "mean": 10.5833,
+          "max": 15,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.104,
+          "mean": 0.2027,
+          "max": 0.346,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0089,
+          "mean": 0.0716,
+          "max": 0.1821,
+          "n": 12
+        }
+      }
+    },
+    {
+      "runtimeId": "VECTOR_COMPOSITION_V1",
+      "memberId": "HOOK",
+      "family": "LINE",
+      "legal": true,
+      "configSha256": "9a70c9274cdd6cd2e1265b6b41f3931b22b488051e22b6995a5c16c2966b072d",
+      "distribution": {
+        "ink": {
+          "min": 0.007,
+          "mean": 0.0607,
+          "max": 0.1424,
+          "n": 12
+        },
+        "extentX": {
+          "min": 0.3,
+          "mean": 0.7229,
+          "max": 1,
+          "n": 12
+        },
+        "extentY": {
+          "min": 0.317,
+          "mean": 0.7292,
+          "max": 1,
+          "n": 12
+        },
+        "marginMin": {
+          "min": 0,
+          "mean": 0.116,
+          "max": 0.342,
+          "n": 12
+        },
+        "cornerInk": {
+          "min": 0,
+          "mean": 0.0403,
+          "max": 0.1664,
+          "n": 12
+        },
+        "edgeInk": {
+          "min": 0,
+          "mean": 0.0361,
+          "max": 0.1692,
+          "n": 12
+        },
+        "livingBands": {
+          "min": 0,
+          "mean": 2.5833,
+          "max": 5,
+          "n": 12
+        },
+        "adjacentContrast": {
+          "min": 0.0092,
+          "mean": 0.0594,
+          "max": 0.1383,
+          "n": 12
+        },
+        "quadrantEvenness": {
+          "min": 0.0457,
+          "mean": 0.2973,
+          "max": 0.5989,
+          "n": 12
+        },
+        "boundaryShare": {
+          "min": 0.2647,
+          "mean": 0.549,
+          "max": 0.8701,
+          "n": 12
+        },
+        "components": {
+          "min": 1,
+          "mean": 8.3333,
+          "max": 17,
+          "n": 12
+        },
+        "largestShare": {
+          "min": 0.112,
+          "mean": 0.404,
+          "max": 1,
+          "n": 12
+        },
+        "centroidOffset": {
+          "min": 0.0083,
+          "mean": 0.0824,
+          "max": 0.1879,
+          "n": 12
+        }
+      }
+    }
+  ]
+}

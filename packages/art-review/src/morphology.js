@@ -189,3 +189,144 @@ export function componentCount(plane, { threshold = 8, minPixels = 4, groundLab 
     sizes: sizes.sort((a, b) => b - a).slice(0, 12),
   };
 }
+
+/**
+ * Where the drawing's weight sits, as a fraction of the frame, and how far that is from centre.
+ *
+ * THE MEASURE THAT SETTLES AN ARGUMENT ABOUT AN OFF-CENTRE SUBJECT. Both Wave-1 capability
+ * statements refuse an off-centre subject by name -- one cites "an off-centre subject", the other
+ * "per-element coordinates" -- and until this measure existed those refusals rested on reading the
+ * Solidity, which is precisely the method that produced this project's one false structural
+ * conclusion. `offset` makes the claim checkable against the deployed runtimes: sweep the legal
+ * space, read the largest offset any configuration reaches, and let THAT decide whether the
+ * refusal stands.
+ *
+ * An empty frame reports the centre with `empty: true` rather than NaN, for the same reason
+ * `extentOf` does: a caller that treats an empty frame as centred is right; one that divides by it
+ * is not.
+ */
+export function centroidOf(plane, { threshold = 8, groundLab = null } = {}) {
+  const { mask, width, height } = inkMask(plane, threshold, groundLab);
+  let sx = 0;
+  let sy = 0;
+  let n = 0;
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (!mask[y * width + x]) continue;
+      sx += x; sy += y; n += 1;
+    }
+  }
+  if (n === 0) return { empty: true, cx: 0.5, cy: 0.5, offset: 0 };
+  const cx = sx / n / (width - 1);
+  const cy = sy / n / (height - 1);
+  return {
+    empty: false,
+    cx: Number(cx.toFixed(4)),
+    cy: Number(cy.toFixed(4)),
+    offset: Number(Math.hypot(cx - 0.5, cy - 0.5).toFixed(4)),
+  };
+}
+
+/**
+ * Ink per horizontal band, and how sharply adjacent bands differ.
+ *
+ * THE MEASURE A STRATIFICATION BRIEF IS ABOUT. B03 asks for "horizontal beds stacked edge to edge,
+ * a core sample not a landscape", and neither `extentOf` nor `cornerOccupancy` can tell a stack of
+ * registers from an even wash: both can carry the same reach and the same coverage. What separates
+ * them is whether the ink ALTERNATES down the frame, which is what `adjacentContrast` reads.
+ *
+ * IT IS A MEASURE AND NOT A FLOOR. A brief asking for an even all-over field wants this number
+ * LOW, and one asking for beds wants it high; which is right is the brief's business. Eight bands
+ * because a 120px frame gives fifteen pixels a band -- fewer and a bed vanishes into its
+ * neighbour, more and the number starts tracking the rasteriser's antialiasing.
+ */
+export function bandProfile(plane, { threshold = 8, groundLab = null, bands = 8 } = {}) {
+  if (!Number.isInteger(bands) || bands < 2) throw new Error(`bandProfile: ${bands} bands is not a profile`);
+  const { mask, width, height } = inkMask(plane, threshold, groundLab);
+  const rows = [];
+  for (let b = 0; b < bands; b += 1) {
+    const y0 = Math.floor((b * height) / bands);
+    const y1 = Math.floor(((b + 1) * height) / bands);
+    let n = 0;
+    let t = 0;
+    for (let y = y0; y < y1; y += 1) {
+      for (let x = 0; x < width; x += 1) { t += 1; if (mask[y * width + x]) n += 1; }
+    }
+    rows.push(t > 0 ? Number((n / t).toFixed(4)) : 0);
+  }
+  let ac = 0;
+  for (let i = 1; i < rows.length; i += 1) ac += Math.abs(rows[i] - rows[i - 1]);
+  const filled = rows.filter((r) => r >= 0.04).length;
+  return {
+    rows,
+    bands,
+    adjacentContrast: Number((ac / (rows.length - 1)).toFixed(4)),
+    /** How many bands carry drawing at all. A section that stops halfway down is not a section. */
+    livingBands: filled,
+  };
+}
+
+/**
+ * How evenly the ink is spread over the four quadrants.
+ *
+ * `evenness` is min/max, so 1.0 is a perfectly balanced field and 0.0 is a quadrant with nothing in
+ * it. THE MEASURE AN ALL-OVER FIELD BRIEF IS ABOUT, and the one that separates it from a centred
+ * figure whose bounding box happens to be large: a centred figure reaching all four edges still
+ * measures high evenness, so evenness is read BESIDE `cornerOccupancy` and `componentCount`, never
+ * instead of them.
+ */
+export function quadrantBalance(plane, { threshold = 8, groundLab = null } = {}) {
+  const { mask, width, height } = inkMask(plane, threshold, groundLab);
+  const ink = [0, 0, 0, 0];
+  const total = [0, 0, 0, 0];
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const q = (y < height / 2 ? 0 : 2) + (x < width / 2 ? 0 : 1);
+      total[q] += 1;
+      if (mask[y * width + x]) ink[q] += 1;
+    }
+  }
+  const f = ink.map((v, i) => (total[i] > 0 ? v / total[i] : 0));
+  const mn = Math.min(...f);
+  const mx = Math.max(...f);
+  return {
+    quadrants: f.map((v) => Number(v.toFixed(4))),
+    evenness: Number((mx > 0 ? mn / mx : 0).toFixed(4)),
+  };
+}
+
+/**
+ * What KIND of mark the drawing is made of: the share of ink pixels that sit on a boundary.
+ *
+ * THE MEASURE FOUR OF TWELVE ROUND-TWO REFUSALS TURNED ON AND NOTHING COULD STATE. "The dominant
+ * mark is a 10:1 rectangular slab, not a rounded cell"; "there is no stroke anywhere in the work,
+ * everything is filled translucent shape"; "the body is a fan of filled overlapping gold slabs -- a
+ * solid pad, not line work". Every one of those is a claim about the MARK rather than about the
+ * composition, and `inkCoverage` cannot make it: a hairline lattice and a solid slab can carry the
+ * same coverage.
+ *
+ * A thread is nearly all boundary and a plate is nearly none, so this ONE number orders the whole
+ * member vocabulary. Measured at 120px against the declared ground on the deployed runtimes: a
+ * filled RECT reads 0.177 and a POLYLINE reads 0.533, with every other primitive in between.
+ *
+ * NOT A QUALITY SCORE, and it may never become one -- a brief asking for mass wants it low and one
+ * asking for filigree wants it high.
+ */
+export function strokeSignature(plane, { threshold = 8, groundLab = null } = {}) {
+  const { mask, width, height } = inkMask(plane, threshold, groundLab);
+  let ink = 0;
+  let boundary = 0;
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const i = y * width + x;
+      if (!mask[i]) continue;
+      ink += 1;
+      const up = y === 0 || !mask[i - width];
+      const dn = y === height - 1 || !mask[i + width];
+      const lf = x === 0 || !mask[i - 1];
+      const rt = x === width - 1 || !mask[i + 1];
+      if (up || dn || lf || rt) boundary += 1;
+    }
+  }
+  return { inkPixels: ink, boundaryShare: ink > 0 ? Number((boundary / ink).toFixed(4)) : 0 };
+}
