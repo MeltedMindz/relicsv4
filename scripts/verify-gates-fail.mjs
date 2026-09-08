@@ -241,6 +241,36 @@ const GATES = [
     },
     why: "a brief goes missing from the frozen corpus and the run reports success on what is left",
   },
+  {
+    gate: "kit:artauthority",
+    sees: "the shipped art gate, run over real receipts through the real CLI, and the split between a judgement and a broken receipt",
+    // THE MUTATION IS THE ONE THAT WOULD BE MADE ON PURPOSE, by somebody who found the gate
+    // inconvenient: move an INTEGRITY refusal onto the overridable list. Nothing about the
+    // repository looks different afterwards -- the gate still refuses unattended runs, the human
+    // path still warns -- except that a holdout-compromised receipt has quietly become something a
+    // person can proceed past on a build they sign. CASE 08 and CASE 11 are the two that must go
+    // red, and they are separate on purpose: one asks the list, one exercises the real CLI.
+    mutate: (root) => edit(
+      join(root, "packages/creator-cli/src/commands/agent-art.js"),
+      '  "ART_REVIEW_REQUIRED_NO_ART_DOCUMENT",\n]);',
+      '  "ART_REVIEW_REQUIRED_NO_ART_DOCUMENT",\n  "FINAL_REVIEW_HOLDOUT_COMPROMISED",\n]);',
+    ),
+    why: "a compromised holdout becomes a warning a person may overrule, which is the one thing the human path must never be able to do",
+  },
+  {
+    gate: "kit:boundary",
+    sees: "every document in the tree, and whether the boundary is both unclaimed and stated",
+    // THE ORIGINAL CLAIM, PUT BACK. This is the exact line the first screen shipped, and four prose
+    // rules walked past it before the diagram rule existed. Restoring it is therefore not a
+    // synthetic mutation: it is the tree as it actually was, and a gate that goes green on it is a
+    // gate that would not have caught the thing it was written for.
+    mutate: (root) => edit(
+      join(root, "README.md"),
+      "YOUR IDEA → AGENT CREATES THE ART → INDEPENDENT VISUAL GATE → RELICS PROVES IT",
+      "YOUR IDEA → AI CREATES THE ART → RELICS PROVES IT",
+    ),
+    why: "the first screen goes back to promising an unbroken path from an idea to a chain, with no review named anywhere along it",
+  },
 ];
 
 /**

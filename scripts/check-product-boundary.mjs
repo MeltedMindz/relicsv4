@@ -126,6 +126,11 @@ const RULES = [
   },
   {
     id: "PIPELINE_DIAGRAM_ELIDES_THE_ART_GATE",
+    // A BLOCK RULE, NOT A LINE RULE, AND THE SELF-TEST IS WHAT SETTLED THAT. Written line by line
+    // it caught the original one-line diagram and MISSED the same diagram wrapped over two lines --
+    // which is how this README actually formats it. `verify-gates-fail.mjs` restored the original
+    // claim, the gate stayed green, and the mutation was scored VACUOUS. A diagram is a paragraph.
+    block: true,
     // THE CLAIM WITH NO VERB IN IT. The first screen of this README carried
     //   YOUR IDEA -> AI CREATES THE ART -> RELICS PROVES IT -> ... -> ONCHAIN
     // and every rule above walked past it, because a rule written for prose looks for a subject and
@@ -209,12 +214,12 @@ function* walk(dir) {
 }
 
 /** @returns {{rule:string, text:string}[]} */
-function scanLine(line) {
-  const s = strip(line);
+/** Apply a chosen set of rules to one already-stripped string. */
+function apply(rules, s) {
   if (!s) return [];
   if (ALLOW.some((re) => re.test(s))) return [];
   const out = [];
-  for (const rule of RULES) {
+  for (const rule of rules) {
     if (!rule.re.some((re) => re.test(s))) continue;
     // A rule may carry a GUARD: a second condition the regex cannot express. The diagram rule needs
     // one, because "has two arrows" is every ASCII pipeline in the tree and the hit is what the
@@ -222,6 +227,49 @@ function scanLine(line) {
     if (rule.guard && !rule.guard(s)) continue;
     out.push({ rule: rule.id, text: s.slice(0, 140) });
   }
+  return out;
+}
+
+const LINE_RULES = RULES.filter((r) => !r.block);
+const BLOCK_RULES = RULES.filter((r) => r.block);
+
+/**
+ * One line, for the prose rules. Exposed for the controls, which feed it single sentences.
+ *
+ * It also runs the BLOCK rules, so a control may hand it a one-line diagram and get the answer a
+ * one-line diagram deserves. The block pass below is what adds the wrapped case; neither replaces
+ * the other.
+ */
+function scanLine(line) {
+  return apply(RULES, strip(line));
+}
+
+/**
+ * Consecutive non-blank lines, joined, for the rules that read a PARAGRAPH.
+ *
+ * A pipeline diagram wraps. Fenced or not, the chain is one statement and a rule that reads it one
+ * line at a time sees an idea with no chain at the end of it and a chain with no idea at the start,
+ * and clears both halves of a claim it would refuse whole.
+ */
+function scanBlocks(text) {
+  const lines = text.split(/\r?\n/);
+  const out = [];
+  let start = -1;
+  let buf = [];
+  const flush = () => {
+    if (buf.length > 1) {
+      const joined = strip(buf.join(" "));
+      for (const h of apply(BLOCK_RULES, joined)) out.push({ line: start + 1, ...h });
+    }
+    start = -1;
+    buf = [];
+  };
+  lines.forEach((line, i) => {
+    if (strip(line) === "") { flush(); return; }
+    if (start === -1) start = i;
+    buf.push(line);
+  });
+  flush();
   return out;
 }
 
@@ -234,9 +282,18 @@ function scanTree(root) {
     files += 1;
     let text;
     try { text = readFileSync(abs, "utf8"); } catch { continue; }
+    const seen = new Set();
     text.split(/\r?\n/).forEach((line, i) => {
-      for (const h of scanLine(line)) hits.push({ file: rel, line: i + 1, ...h });
+      for (const h of apply(LINE_RULES, strip(line))) {
+        hits.push({ file: rel, line: i + 1, ...h });
+        seen.add(`${h.rule}:${i + 1}`);
+      }
     });
+    // The paragraph pass. A one-line diagram would otherwise be reported twice.
+    for (const h of scanBlocks(text)) {
+      if (seen.has(`${h.rule}:${h.line}`)) continue;
+      hits.push({ file: rel, ...h });
+    }
   }
   return { files, hits };
 }
@@ -298,14 +355,38 @@ if (CONTROLS) {
       missed.push(`FALSE POSITIVE ${hits.map((h) => h.rule).join(",")} <- ${s.slice(0, 80)}`);
     }
   }
+  // THE WRAPPED DIAGRAM. The same claim over two lines, which is how this README formats it, and
+  // which the line-based first draft cleared in both halves. `verify-gates-fail.mjs` found this by
+  // restoring the original claim and watching the gate stay green.
+  const mustCatchBlocks = [
+    "YOUR IDEA → AI CREATES THE ART → RELICS PROVES IT\n          → AGENT CHOOSES A LIVE CHAIN → PROTECTED SIGNER → ONCHAIN",
+    "your brief\n  -> the agent creates the art\n  -> the protected signer\n  -> broadcast",
+  ];
+  const mustAllowBlocks = [
+    "YOUR IDEA → AGENT CREATES THE ART → INDEPENDENT VISUAL GATE → RELICS PROVES IT\n          → AGENT CHOOSES A LIVE CHAIN → PROTECTED SIGNER → ONCHAIN",
+    "preflight → metadata → prepare → predict\n  → simulate → build → broadcast → verify",
+  ];
+  let blockCaught = 0;
+  for (const b of mustCatchBlocks) {
+    if (scanBlocks(b).some((h) => h.rule === "PIPELINE_DIAGRAM_ELIDES_THE_ART_GATE")) blockCaught += 1;
+    else missed.push(`WRAPPED DIAGRAM not caught <- ${b.slice(0, 70).replace(/\n/g, " / ")}`);
+  }
+  for (const b of mustAllowBlocks) {
+    if (scanBlocks(b).length) {
+      falsePositives += 1;
+      missed.push(`FALSE POSITIVE on a wrapped diagram that names its gate <- ${b.slice(0, 70).replace(/\n/g, " / ")}`);
+    }
+  }
+
   // ZERO-INPUT FLOOR. A scanner that reads nothing must not be able to satisfy the catch direction.
-  const zeroInput = scanLine("").length === 0 && scanTree(join(DEFAULT_ROOT, "does-not-exist")).files === 0;
+  const zeroInput = scanLine("").length === 0 && scanBlocks("").length === 0 && scanTree(join(DEFAULT_ROOT, "does-not-exist")).files === 0;
 
   for (const m of missed) console.error(`  ${m}`);
   console.log(`PRODUCT_BOUNDARY_CONTROLS_CAUGHT=${caught}/${mustCatch.length}`);
+  console.log(`PRODUCT_BOUNDARY_WRAPPED_DIAGRAM_CONTROLS_CAUGHT=${blockCaught}/${mustCatchBlocks.length}`);
   console.log(`PRODUCT_BOUNDARY_CONTROL_FALSE_POSITIVES=${falsePositives}`);
   console.log(`PRODUCT_BOUNDARY_CONTROL_ZERO_INPUT_IS_NOT_A_HIT=${zeroInput ? "yes" : "NO"}`);
-  const ok = caught === mustCatch.length && falsePositives === 0 && zeroInput;
+  const ok = caught === mustCatch.length && blockCaught === mustCatchBlocks.length && falsePositives === 0 && zeroInput;
   console.log(`PRODUCT_BOUNDARY_CONTROLS=${ok ? "PASS" : "FAIL"}`);
   process.exit(ok ? 0 : 1);
 }
